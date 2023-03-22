@@ -1,5 +1,6 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
+const path = require("path");
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
@@ -72,11 +73,14 @@ module.exports = {
     [
       "@graphql-markdown/docusaurus",
       {
-        schema: "https://api.swan.io/live-partner/graphql",
+        schema: path.join(
+          process.cwd(),
+          "scripts/graphql/dist/partner-schema.gql"
+        ),
         rootPath: "./docs",
         baseURL: "api",
         loaders: {
-          UrlLoader: "@graphql-tools/url-loader",
+          GraphQLFileLoader: "@graphql-tools/graphql-file-loader",
         },
       },
     ],

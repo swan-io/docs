@@ -1,5 +1,6 @@
 import { createGraphiQLFetcher } from "@graphiql/toolkit";
 import { GraphiQL } from "graphiql";
+import BrowserOnly from "@docusaurus/BrowserOnly";
 import * as React from "react";
 import Layout from "@theme/Layout";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -29,12 +30,16 @@ const Explorer = () => {
       title={`Swan Docs: ${siteConfig.tagline}`}
       description="GraphQL Explorer"
     >
-      <GraphiQL
-        fetcher={fetcher}
-        query={query}
-        onEditQuery={setQuery}
-        plugins={[explorerPlugin]}
-      />
+      <BrowserOnly fallback={<div>Loading...</div>}>
+        {() => (
+          <GraphiQL
+            fetcher={fetcher}
+            query={query}
+            onEditQuery={setQuery}
+            plugins={[explorerPlugin]}
+          />
+        )}
+      </BrowserOnly>
     </Layout>
   );
 };

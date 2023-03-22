@@ -36,6 +36,7 @@ const BrowserExplorer = () => {
 };
 
 const Explorer = () => {
+  const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
       title={`Swan Docs: ${siteConfig.tagline}`}

@@ -1,5 +1,5 @@
 ---
-sidebar_label: ABOUT SWAN
+sidebar_label: About Swan
 slug: /
 ---
 

@@ -24,7 +24,7 @@ module.exports = {
       items: [
         {
           href: "/",
-          label: "About swan",
+          label: "About Swan",
           position: "left",
         },
         {

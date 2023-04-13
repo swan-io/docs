@@ -47,11 +47,11 @@ module.exports = {
       collapsed: false,
       items: [
         'guides/starter-guides/intro',
-        'guides/accounts/intro',
+        'guides/accounts/concepts',
         {
           type: "category",
           label: "Payments",
-          link: {type: 'doc', id: 'guides/payments/intro'},
+          link: {type: 'doc', id: 'guides/payments/concepts'},
           collapsed: true,
           items: [
             {
@@ -61,15 +61,15 @@ module.exports = {
               collapsed: true,
               items: [
                 'guides/payments/credit-transfers/guide-receive-transfers',
-                'guides/payments/credit-transfers/refund-transfer',
-                'guides/payments/credit-transfers/transfer-money',
-                'guides/payments/credit-transfers/set-up-recurring-transfer',
+                'guides/payments/credit-transfers/guide-refund-transfers',
+                'guides/payments/credit-transfers/guide-set-up-recurring-transfers',
+                'guides/payments/credit-transfers/guide-transfer-money',
               ],
             },
-            'guides/payments/direct-debit/intro',
-            'guides/payments/card-payments/intro',
-            'guides/payments/checks/intro',
-            'guides/payments/open-banking/intro',
+            'guides/payments/direct-debit/concepts',
+            'guides/payments/card-payments/concepts',
+            'guides/payments/checks/concepts',
+            'guides/payments/open-banking/concepts',
           ],
         },
       ],

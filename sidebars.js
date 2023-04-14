@@ -19,19 +19,26 @@ module.exports = {
         {
           type: 'category',
           label: 'Starter guides',
+          link: {type: 'doc', id: 'guides/starter-guides/intro'},
           collapsible: true,
           collapsed: true,
           items: [
-            'guides/starter-guides/intro',
+            'guides/starter-guides/activate',
           ],
         },
         {
           type: 'category',
           label: 'Use cases',
+          link: {type: 'doc', id: 'guides/use-cases/intro'},
           collapsible: true,
           collapsed: true,
           items: [
-            'guides/use-cases/intro',
+            'guides/use-cases/bnpl',
+            'guides/use-cases/expense',
+            'guides/use-cases/financial',
+            'guides/use-cases/rental',
+            'guides/use-cases/swan-solo',
+            'guides/use-cases/vertical',
           ],
         },
       ],
@@ -96,14 +103,15 @@ module.exports = {
     {
       type: 'category',
       label: 'PARTNERSHIP WITH SWAN',
+      link: {type: 'doc', id: 'partnership/intro'},
       collapsible: true,
       collapsed: true,
       items: [
-        'partnership/intro',
         'partnership/rules',
         {
           type: 'category',
-          label: 'Guide by country',
+          label: 'Country guides',
+          link: {type: 'doc', id: 'partnership/country-guides/index'},
           collapsible: true,
           collapsed: true,
           items: [
@@ -119,7 +127,6 @@ module.exports = {
       collapsible: true,
       collapsed: true,
       items: [
-        'guides/starter-guides/intro',
         'guides/accounts/concepts',
         {
           type: "category",

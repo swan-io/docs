@@ -15,8 +15,8 @@ module.exports = {
   projectName: "docs", // Usually your repo name.
   themeConfig: {
     algolia: {
-      appId: "LI6T7CQ5U8",
-      apiKey: "c78a649315c0b39c2d8752c61e24da6f",
+      appId: "PWGO6EETLK",
+      apiKey: "55d34883c659e60e4d4d625f78c01fbc",
       indexName: "swan-ioio",
       contextualSearch: true,
       searchParameters: {},

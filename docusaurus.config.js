@@ -14,6 +14,14 @@ module.exports = {
   organizationName: "swan-io", // Usually your GitHub org/user name.
   projectName: "docs", // Usually your repo name.
   themeConfig: {
+    algolia: {
+      appId: "LI6T7CQ5U8",
+      apiKey: "c78a649315c0b39c2d8752c61e24da6f",
+      indexName: "swan-ioio",
+      contextualSearch: true,
+      searchParameters: {},
+      searchPagePath: "search",
+    },
     navbar: {
       title: "Docs",
       logo: {
@@ -33,16 +41,16 @@ module.exports = {
           position: "left",
         },
         {
-          href: "/api",
+          href: "/api-reference",
           label: "API reference",
           position: "left",
         },
       ],
     },
-    footer: {
-      // style: "dark",
-      copyright: `Copyright © ${new Date().getFullYear()} Swan`,
-    },
+    // footer: {
+    //   // style: "dark",
+    //   copyright: `Copyright © ${new Date().getFullYear()} Swan`,
+    // },
     prism: {
       theme: lightCodeTheme,
       darkTheme: darkCodeTheme,
@@ -78,7 +86,7 @@ module.exports = {
           "scripts/graphql/dist/partner-schema.gql"
         ),
         rootPath: "./docs",
-        baseURL: "api",
+        baseURL: "api-reference",
         loaders: {
           GraphQLFileLoader: "@graphql-tools/graphql-file-loader",
         },

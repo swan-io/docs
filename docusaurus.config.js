@@ -47,10 +47,10 @@ module.exports = {
         },
       ],
     },
-    footer: {
-      // style: "dark",
-      copyright: `Copyright © ${new Date().getFullYear()} Swan`,
-    },
+    // footer: {
+    //   // style: "dark",
+    //   copyright: `Copyright © ${new Date().getFullYear()} Swan`,
+    // },
     prism: {
       theme: lightCodeTheme,
       darkTheme: darkCodeTheme,

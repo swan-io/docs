@@ -1,17 +1,8 @@
-/**
- * Creating a sidebar enables you to:
- - create an ordered group of docs
- - render a sidebar for each doc of that group
- - provide next/previous navigation
- The sidebars can be generated from the filesystem, or explicitly defined here.
- Create as many sidebars as you want.
- */
-
 module.exports = {
-  docs: [
+  docSidebar: [
     {
       type: "category",
-      label: "Start here",
+      label: "Introduction",
       collapsible: false,
       collapsed: false,
       items: [
@@ -43,75 +34,36 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Swan API",
+      label: "Use the Swan API",
       collapsible: false,
       collapsed: false,
       items: [
         {
-          type: "link",
-          label: "API Explorer", // The link label
-          href: "https://explorer.swan.io/", // The external URL
-        },
-        {
-          type: "link",
-          label: "API Reference", // The link label
-          href: "https://api-reference.swan.io/", // The external URL
-        },
-        {
           type: "category",
-          label: "Use the API",
+          label: "Access tokens",
+          link: { type: "doc", id: "swan-api/access-tokens/concepts" },
           collapsible: true,
           collapsed: true,
           items: [
-            {
-              type: "category",
-              label: "Access tokens",
-              link: { type: "doc", id: "swan-api/access-tokens/concepts" },
-              collapsible: true,
-              collapsed: true,
-              items: [
-                "swan-api/access-tokens/get-token-project",
+            "swan-api/access-tokens/get-token-project",
                 "swan-api/access-tokens/get-token-user",
-              ],
-            },
-            {
-              type: "category",
-              label: "Errors and rejections",
-              link: { type: "doc", id: "swan-api/rejections/concepts" },
-              collapsible: true,
-              collapsed: true,
-              items: ["swan-api/rejections/using-rejections"],
-            },
-            {
-              type: "category",
-              label: "Webhooks",
-              link: { type: "doc", id: "swan-api/webhooks/concepts" },
-              collapsible: true,
-              collapsed: true,
-              items: ["swan-api/webhooks/using-webhooks"],
-            },
           ],
         },
-      ],
-    },
-    {
-      type: "category",
-      label: "Partnership with Swan",
-      link: { type: "doc", id: "partnership/intro" },
-      collapsible: false,
-      collapsed: false,
-      items: [
-        "partnership/rules",
         {
           type: "category",
-          label: "Country guides",
-          link: { type: "doc", id: "partnership/country-guides/index" },
+          label: "Errors and rejections",
+          link: { type: "doc", id: "swan-api/rejections/concepts" },
           collapsible: true,
           collapsed: true,
-          items: [
-            "partnership/country-guides/france",
-            "partnership/country-guides/spain",
-          ],
+          items: ["swan-api/rejections/using-rejections"],
+        },
+        {
+          type: "category",
+          label: "Webhooks",
+          link: { type: "doc", id: "swan-api/webhooks/concepts" },
+          collapsible: true,
+          collapsed: true,
+          items: ["swan-api/webhooks/using-webhooks"],
         },
       ],
     },
@@ -168,7 +120,55 @@ module.exports = {
           label: "Roadmap", // The link label
           href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22", // The external URL
         },
-        "contact",
+        "guides/contact",
+        {
+          type: "link",
+          label: "Support center", // The link label
+          href: "https://support.swan.io/hc/en-150", // The external URL
+        },
+      ],
+    },
+  ],
+
+  partnershipSidebar: [
+    {
+      type: "category",
+      label: "Partnership with Swan",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        "partnership/intro",
+        "partnership/rules",
+        {
+          type: "category",
+          label: "Country guides",
+          link: { type: "doc", id: "partnership/country-guides/index" },
+          collapsible: true,
+          collapsed: true,
+          items: [
+            "partnership/country-guides/france",
+            "partnership/country-guides/spain",
+          ],
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Resources",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "link",
+          label: "Status page", // The link label
+          href: "https://status.swan.io/", // The external URL
+        },
+        {
+          type: "link",
+          label: "Roadmap", // The link label
+          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22", // The external URL
+        },
+        "partnership/contact",
         {
           type: "link",
           label: "Support center", // The link label

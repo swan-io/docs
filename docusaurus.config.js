@@ -4,7 +4,7 @@ const path = require("path");
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: "Swan Partner Front-End",
+  title: "Swan Docs",
   tagline: "Onboarding & Banking clients for Swan",
   url: "https://swan-io.github.io",
   baseUrl: "/",
@@ -32,17 +32,23 @@ module.exports = {
       items: [
         {
           href: "/",
-          label: "About Swan",
+          label: "Documentation",
           position: "left",
         },
+        {
+          href: "/api-reference",
+          label: "API Reference",
+          position: "left",
+        },
+
         {
           href: "/explorer",
           label: "GraphQL Explorer",
           position: "left",
         },
         {
-          href: "/api-reference",
-          label: "API reference",
+          href: "/partnership/intro",
+          label: "Partnership with Swan",
           position: "left",
         },
       ],

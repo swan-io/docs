@@ -1,6 +1,7 @@
 import { buildClientSchema, getIntrospectionQuery, printSchema } from "graphql";
 import fs from "node:fs";
 import path from "node:path";
+import fetch from "node-fetch";
 
 const introspectionQuery = getIntrospectionQuery();
 

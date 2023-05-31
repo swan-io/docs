@@ -3,24 +3,38 @@ sidebar_label: About Swan
 slug: /
 ---
 
-# About Swan
+# Introduction
 
-Hello
+Welcome to Swan's technical documentation.
 
-:::info
-you can write information in here
-:::
+## Where to start?
 
-Graphs can be done using [Mermaid](https://mermaid.js.org/intro/)
+- **Read this page** to understand more about Swan
+- Check out the [**starter guides**](./guides/starter-guides/intro.mdx) to explore Sandbox, activate your project, and more
+- Find a [**use case**](./guides/use-cases/intro.mdx) that resembles your own and learn how to implement Swan effectively
+- **Browse the navigation** to find your topic
+- Use **global search** to find what you need
 
+## About Swan
 
-```mermaid
----
-title: Managing payments with virtual IBANs
----
-flowchart LR
-    A[Payment #1] --sent to--> B([Virtual IBAN #1])
-    C[Payment #2] --sent to--> D([Virtual IBAN #2])
-    E[Payment #3] --sent to--> F([Virtual IBAN #3])
-    B & D & F --> G((Main IBAN))
-```
+Swan is an **API-first e-money institution** that **integrates directly into other products**, providing financial services for partners and their clients.
+Use cases vary widely, from buy-now/pay-later setups to employee benefits cards to rental management.
+
+## About Swan documentation
+
+This section of Swan's documentation covers two main themes: **concepts**, or explanatory content, and **guides**, providing steps to complete a task.
+
+There is also reference content in the [API reference](./api-reference/generated.md) section, the Swan API Explorer, and regulatory and partnership information in [partnership with Swan](./partnership/intro.mdx).
+
+### Site anatomy
+
+The anatomy of the Swan documentation site has five main sections:
+
+1. **Sidebar navigation**: links to all content for this top navigation section
+1. **Top navigation**: different types of documentation, including the main docs (where you are now), API tools, and information about partnering with Swan
+1. **Search**: global search that unifies all sections in the top navigation, powered by Algolia
+1. **Page navigation**: table of contents for this page only, generated using headers
+1. **Content**: the good stuff!
+1. **Edit link**: if you find errors or would like to contribute something you've discovered, follow this link to the Swan documentation GitHub repository
+
+![callouts of homepage](./images/about-docs.png)

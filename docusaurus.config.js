@@ -7,7 +7,7 @@ module.exports = {
   title: "Swan Partner Front-End",
   tagline: "Onboarding & Banking clients for Swan",
   url: "https://swan-io.github.io",
-  baseUrl: "/docs/",
+  baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.png",

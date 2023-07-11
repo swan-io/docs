@@ -1,0 +1,75 @@
+---
+title: Sandbox
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Sandbox: Supporting document collection
+
+## Simulate updating the status of a document
+
+### Step 1: Get the supporting document collection ID
+
+Get the ID for the supporting document collection using either the **user's onboarding ID** or, if their onboarding is `Finalized`, their **account holder ID**.
+
+<Tabs>
+<TabItem value="onboardingId" label="Onboarding ID">
+
+🔎 [Open the query in API Explorer](https://explorer.preprod.swan.io?query=cXVlcnkgZ2V0Q29sbGVjdGlvbklkIHsKICBvbmJvYXJkaW5nKGlkOiAiJFVTRVJfT05CT0FSRElOR19JRCIpIHsKICAgIHN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb24gewogICAgICBpZAogICAgICByZXF1aXJlZFN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2VzIHsKICAgICAgICBuYW1lCiAgICAgIH0KICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICB9Cn0%3D&tab=api)
+
+```graphql {2} showLineNumbers
+query getCollectionId {
+  onboarding(id: "$USER_ONBOARDING_ID") {
+    supportingDocumentCollection {
+      id
+      requiredSupportingDocumentPurposes {
+        name
+      }
+      statusInfo {
+        status
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="accountHolderId" label="Account holder ID">
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgZ2V0Q29sbGVjdGlvbklkIHsKICBhY2NvdW50SG9sZGVyKGlkOiAiJFVTRVJfQUNDT1VOVF9IT0xERVJfSUQiKSB7CiAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9ucyB7CiAgICAgIGVkZ2VzIHsKICAgICAgICBub2RlIHsKICAgICAgICAgIHJlcXVpcmVkU3VwcG9ydGluZ0RvY3VtZW50UHVycG9zZXMgewogICAgICAgICAgICBuYW1lCiAgICAgICAgICB9CiAgICAgICAgICBpZAogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQ%3D%3D&tab=api)
+
+```graphql {2,9} showLineNumbers
+query getCollectionId {
+  accountHolder(id: "$USER_ACCOUNT_HOLDER_ID") {
+    supportingDocumentCollections {
+      edges {
+        node {
+          requiredSupportingDocumentPurposes {
+            name
+          }
+          id
+        }
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Step 2: Update the status
+
+With the supporting document collection ID, use the Event Simulator to change the [supporting document collection status](./about.mdx#collection-statuses) to any available status.
+
+1. On your Dashboard, go to **Developers** > **Event Simulator**.
+1. Open **Account holders**, then go to the **Update Supporting Document Collection status** tab.
+1. Copy the document ID from the success payload you received during step 1, then paste it into the **Supporting Document Collection ID** field in the Event Simulator.
+1. From the dropdown, choose the status you'd like to simulate.
+1. Click **Simulate**.
+
+![Simulate changing the status of a supporting document collection with the Event Simulator](../../../images/topics/onboarding/sandbox-collection-status.png)
+
+:::note
+At this time, it's only possible to simulate status changes for collections, not individual documents.
+:::

@@ -1,4 +1,4 @@
-const lightCodeTheme = require("prism-react-renderer/themes/github");
+const lightCodeTheme = require("prism-react-renderer/themes/palenight");
 const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
 const path = require("path");
 
@@ -29,23 +29,6 @@ module.exports = {
         src: "img/logo-swan.svg",
         width: 70,
       },
-      items: [
-        {
-          href: "/partnership/intro",
-          label: "Partnership",
-          position: "left",
-        },
-        {
-          href: "/developers/intro",
-          label: "Developers",
-          position: "left",
-        },
-        {
-          href: "/changelog",
-          label: "Changelog",
-          position: "right",
-        },
-      ],
     },
     // footer: {
     //   // style: "dark",

@@ -1,0 +1,89 @@
+---
+title: Individual account onboarding
+---
+
+# Individual account onboarding
+
+import IndividualOnboardingDefinition from '../../definitions/_onboarding-individual.mdx';
+
+***
+
+**Individual account onboarding** *<IndividualOnboardingDefinition />*
+
+import SelfEmployedNote from '../partials/_note-self-employed.mdx';
+
+<SelfEmployedNote accountType="individual" />
+
+***
+
+## Process overview
+
+import OnboardingOverview from '../partials/_overview.mdx';
+
+<OnboardingOverview accountType="an individual" numberSteps="four" />
+
+:::info User flow diagram
+To understand more about your user's onboarding experience, refer to the [user flow diagram for individual account onboarding](../support.mdx).
+:::
+
+## Individual onboarding form
+
+Through the individual onboarding form, Swan collects the following information:
+
+1. User's **email address**.
+1. User's **country of residence** and **residence address**.
+1. Basic details about the **user's employment** and **financial situation**. This information allows Swan to perform two essential tasks:
+    * During onboarding, Swan completes an identity analysis (Know Your Customer, or KYC).
+    * For the lifetime of the account, Swan monitors for fraud.
+1. **Consent** to open the account (consent process requires a mobile device).
+
+## Identify verification recommendations
+
+Swan must verify the identity of every user.
+Swan supports multiple types of identity verification, called `identificationLevels` in the API.
+
+For individual onboarding, the following levels are recommended based on the account country.
+Please refer to the [section on identity verification](https://docs.swan.io/concept/user#identification-level) for more information on identification levels.
+
+| Account country | Recommended level<br/>for individuals | Other supported levels |
+|---|---|---|
+| :fr: France<br/>*includes unregistered<br/>self-employed* | ✓ **PVID** | Expert + first transfer<br/>QES |
+| :de: Germany<br/>*includes self-employed* | ✓ **QES + first transfer** | *none* |
+| :flag-nl: Netherlands | ✓ **Expert** | QES<br/>PVID |
+| :es: Spain | ✓ **Expert** | QES<br/>PVID |
+
+## Country requirements for individual accounts
+
+import CountryReqs from '../partials/_country-reqs.mdx';
+
+<CountryReqs thisAccountType="individual" thatAccountType="company" />
+
+For individual accounts, use the `onboardIndividualAccountHolder` mutation to collect the following information according to your desired account country.
+If the cell is empty, the field is optional.
+
+| API field | :fr:<br/>France | :de:<br/>Germany | :es:<br/>Spain |
+|---|---|---|---|
+|`accountCountry`| ✓ Required (**FRA**) | ✓ Required (**DEU**) | ✓ Required (**ESP**) |
+|`accountName`|  |  |  |
+|`email`| ✓ Required | ✓ Required | ✓ Required |
+|`employmentStatus`| ✓ Required | ✓ Required | ✓ Required |
+|`language`| ✓ Required | ✓ Required | ✓ Required |
+|`monthlyIncome`| ✓ Required | ✓ Required | ✓ Required |
+|`redirectUrl`|  |  |  |
+|`residencyAddress.addressLine1`| ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.addressLine2`|  |  |  |
+|`residencyAddress.city`| ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.country`| ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.postalCode`| ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.state`|  |  |  |
+|`taxIdentificationNumber`|  | ∗ 90 days |  |
+
+∗ *If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
+Otherwise, the account will be suspended.*
+
+## Guides
+
+Use the following guides to start and complete the individual onboarding process.
+
+* [Create an individual onboarding link](./guide-create-onboarding.mdx)
+* [Update an individual onboarding](./guide-update-onboarding.mdx)

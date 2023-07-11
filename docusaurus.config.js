@@ -31,25 +31,19 @@ module.exports = {
       },
       items: [
         {
-          href: "/",
-          label: "Documentation",
+          href: "../partnership/intro",
+          label: "Partnership",
           position: "left",
         },
         {
-          href: "/api-reference",
-          label: "API Reference",
-          position: "left",
-        },
-
-        {
-          href: "/explorer",
-          label: "GraphQL Explorer",
+          href: "../developers/intro",
+          label: "Developers",
           position: "left",
         },
         {
-          href: "/partnership/intro",
-          label: "Partnership with Swan",
-          position: "left",
+          href: "/changelog",
+          label: "Changelog",
+          position: "right",
         },
       ],
     },

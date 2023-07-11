@@ -5,13 +5,13 @@ slug: /
 
 # Introduction
 
-Welcome to Swan's technical documentation.
+Welcome to Swan's product, partnership, and developer documentation.
 
 ## Where to start?
 
 - **Read this page** to understand more about Swan
-- Check out the [**starter guides**](./guides/starter-guides/intro.mdx) to explore Sandbox, activate your project, and more
-- Find a [**use case**](./guides/use-cases/intro.mdx) that resembles your own and learn how to implement Swan effectively
+- Check out the [**starter guides**](./starter-guides/intro.mdx) to explore Sandbox, activate your project, and more
+- Find a [**use case**](./use-cases/intro.mdx) that resembles your own and learn how to implement Swan effectively
 - **Browse the navigation** to find your topic
 - Use **global search** to find what you need
 

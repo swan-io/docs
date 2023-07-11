@@ -10,97 +10,69 @@ module.exports = {
         {
           type: "category",
           label: "Starter guides",
-          link: { type: "doc", id: "guides/starter-guides/intro" },
+          link: { type: "doc", id: "starter-guides/intro" },
           collapsible: true,
           collapsed: true,
-          items: ["guides/starter-guides/activate"],
+          items: ["starter-guides/activate"],
         },
         {
           type: "category",
           label: "Use cases",
-          link: { type: "doc", id: "guides/use-cases/intro" },
+          link: { type: "doc", id: "use-cases/intro" },
           collapsible: true,
           collapsed: true,
           items: [
-            "guides/use-cases/bnpl",
-            "guides/use-cases/expense",
-            "guides/use-cases/financial",
-            "guides/use-cases/rental",
-            "guides/use-cases/swan-solo",
-            "guides/use-cases/vertical",
+            "use-cases/bnpl",
+            "use-cases/expense",
+            "use-cases/financial",
+            "use-cases/rental",
+            "use-cases/swan-solo",
+            "use-cases/vertical",
           ],
         },
       ],
     },
     {
       type: "category",
-      label: "Use the Swan API",
+      label: "Accounts",
       collapsible: false,
       collapsed: false,
       items: [
-        {
-          type: "category",
-          label: "Access tokens",
-          link: { type: "doc", id: "swan-api/access-tokens/concepts" },
-          collapsible: true,
-          collapsed: true,
-          items: [
-            "swan-api/access-tokens/get-token-project",
-                "swan-api/access-tokens/get-token-user",
-          ],
-        },
-        {
-          type: "category",
-          label: "Errors and rejections",
-          link: { type: "doc", id: "swan-api/rejections/concepts" },
-          collapsible: true,
-          collapsed: true,
-          items: ["swan-api/rejections/using-rejections"],
-        },
-        {
-          type: "category",
-          label: "Webhooks",
-          link: { type: "doc", id: "swan-api/webhooks/concepts" },
-          collapsible: true,
-          collapsed: true,
-          items: ["swan-api/webhooks/using-webhooks"],
-        },
+        "topics/accounts/about",
       ],
     },
     {
       type: "category",
-      label: "Guides",
+      label: "Payments",
       collapsible: false,
       collapsed: false,
       items: [
-        "guides/accounts/concepts",
+        "topics/payments/about",
         {
           type: "category",
-          label: "Payments",
-          link: { type: "doc", id: "guides/payments/concepts" },
+          label: "Card payments",
+          link: { type: "doc", id: "topics/payments/card-payments/about" },
           collapsed: true,
           items: [
-            {
-              type: "category",
-              label: "Credit transfers",
-              link: {
-                type: "doc",
-                id: "guides/payments/credit-transfers/concepts",
-              },
-              collapsed: true,
-              items: [
-                "guides/payments/credit-transfers/guide-receive-transfers",
-                "guides/payments/credit-transfers/guide-refund-transfers",
-                "guides/payments/credit-transfers/guide-set-up-recurring-transfers",
-                "guides/payments/credit-transfers/guide-transfer-money",
-              ],
-            },
-            "guides/payments/direct-debit/concepts",
-            "guides/payments/card-payments/concepts",
-            "guides/payments/checks/concepts",
-            "guides/payments/open-banking/concepts",
+            "topics/payments/card-payments/guides/card-payment-initiate",
+          ],
+        },        
+        {
+          type: "category",
+          label: "Credit transfers",
+          link: { type: "doc", id: "topics/payments/credit-transfers/about" },
+          collapsed: true,
+          items: [
+            "topics/payments/credit-transfers/guide-receive-transfers",
+            "topics/payments/credit-transfers/guide-refund-transfers",
+            "topics/payments/credit-transfers/guide-set-up-recurring-transfers",
+            "topics/payments/credit-transfers/guide-transfer-money",
           ],
         },
+        "topics/payments/direct-debit/about",
+        "topics/payments/checks/about",
+        "topics/payments/open-banking/about",
+        "topics/payments/support",
       ],
     },
     {
@@ -109,21 +81,15 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
-        "changelog",
         {
           type: "link",
           label: "Status page", // The link label
           href: "https://status.swan.io/", // The external URL
         },
+        "topics/contact",
         {
           type: "link",
-          label: "Roadmap", // The link label
-          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22", // The external URL
-        },
-        "guides/contact",
-        {
-          type: "link",
-          label: "Support center", // The link label
+          label: "Help Center", // The link label
           href: "https://support.swan.io/hc/en-150", // The external URL
         },
       ],
@@ -163,15 +129,83 @@ module.exports = {
           label: "Status page", // The link label
           href: "https://status.swan.io/", // The external URL
         },
+        "partnership/contact",
         {
           type: "link",
-          label: "Roadmap", // The link label
-          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22", // The external URL
+          label: "Help Center", // The link label
+          href: "https://support.swan.io/hc/en-150", // The external URL
+        },
+      ],
+    },
+  ],
+
+  developersSidebar: [
+    {
+      type: "category",
+      label: "Swan GraphQL API",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        "developers/intro",
+        {
+          type: "category",
+          label: "Webhooks",
+          link: { type: "doc", id: "developers/webhooks/about" },
+          collapsible: true,
+          collapsed: true,
+          items: [
+            "developers/webhooks/using-webhooks",
+          ],
+        },
+        {
+          type: "category",
+          label: "Access tokens",
+          link: { type: "doc", id: "developers/access-tokens/about" },
+          collapsible: true,
+          collapsed: true,
+          items: [
+            "developers/access-tokens/get-token-project",
+                "developers/access-tokens/get-token-user",
+          ],
+        },
+        {
+          type: "category",
+          label: "Errors and rejections",
+          link: { type: "doc", id: "developers/rejections/about" },
+          collapsible: true,
+          collapsed: true,
+          items: ["developers/rejections/using-rejections"],
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Open source",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "link",
+          label: "Swan Banking Frontend", // The link label
+          href: "https://swan-io.github.io/swan-partner-frontend/", // The external URL
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Resources",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "link",
+          label: "Status page", // The link label
+          href: "https://status.swan.io/", // The external URL
         },
         "partnership/contact",
         {
           type: "link",
-          label: "Support center", // The link label
+          label: "Help Center", // The link label
           href: "https://support.swan.io/hc/en-150", // The external URL
         },
       ],

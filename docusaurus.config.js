@@ -31,12 +31,12 @@ module.exports = {
       },
       items: [
         {
-          href: "../partnership/intro",
+          href: "/partnership/intro",
           label: "Partnership",
           position: "left",
         },
         {
-          href: "../developers/intro",
+          href: "/developers/intro",
           label: "Developers",
           position: "left",
         },

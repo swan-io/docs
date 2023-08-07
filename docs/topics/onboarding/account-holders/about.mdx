@@ -39,14 +39,14 @@ Follow the guide to [add additional accounts](./guide-add-additional-account.mdx
 
 ## Verification process
 
-The verification process for a new account holder is thorough, and Swan provides a streamlined process through which each account holder proves they are who they claim to be.
+The verification process for a new account holder is thorough, and Swan provides a streamlined process through which each account holder proves they're who they claim to be.
 
-:::info Account access
 Account holders can access their account immediately after creation.
-However, they account is classified as an `eMoney` account, and the **account is limited until the account holder is verified**.
-With `eMoney` accounts, the account holder can only spend up to 150€ over a 30-day period and an IBAN is not attributed to the account.
+However, while verification is in progress, there are limitations on the account.
 
-**After the account holder is verified**, the account becomes a `PaymentServices` account, spending restrictions are removed, and a main IBAN is attributed to the account.
+:::note IBAN issuing
+IBANs might be issued before limitations are removed from the account.
+Learn more in [IBAN issuing](https://docs.swan.io/concept/iban/iban-issuing).
 :::
 
 ### Components
@@ -64,6 +64,22 @@ To understand more about your user's verification experience, refer to the [user
 :::
 
 ### Account holder verification statuses
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    VR((Verification<br/>requested)) -.-> NS[NotStarted]
+    NS -.-> W[WaitingForInformation]
+    W -.-> P[Pending]
+    P --> V[Verified]
+    P --> RF[Refused]
+    subgraph F[Final status]
+        V
+        RF
+    end
+    style VR fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+```
 
 | Verification status | Explanation |
 |---|---|

@@ -1,0 +1,86 @@
+---
+title: Retrieve a transaction ID
+---
+
+# Retrieve a transaction ID
+
+There are two methods you can use to retrieve a transaction ID.
+
+1. Locate transaction IDs on your **Dashboard**.
+1. **Run an API query** to get the ID.
+
+:::caution 
+This documentation typically explains using the API first.
+However, it's easier to find a precise transaction ID on the Dashboard.
+:::
+
+## Dashboard
+
+All transaction IDs for your project are on your Dashboard.
+
+1. On your Dashboard, go to **Data** > **Transactions**.
+1. Find the transaction you need.
+1. Scroll horizontally to locate the transaction ID, then click to copy.
+
+![Screenshot of Swan Dashboard transactions page with a callout of a single transaction ID](../../../images/topics/payments/retrieve-transaction-id.png)
+
+## API guide
+
+Queries are highly customizable.
+This guide focuses solely on using the `transactions` query to retrieve transaction IDs. 
+Learn more about this query in the guide to [get transaction information](./guide-get-transaction-info.mdx).
+
+1. In the API Explorer, add the `transactions` query.
+1. Check the boxes for `edges` and `node`.
+1. Under `node`, check the boxes for `id`, `createdAt`, and `label`.
+    * `label` often contains a name, which might be helpful.
+    * `createdAt` could help you identity the payment ID you're searching for if you know when the payment was initiated.
+    * Additionally, you might choose to retrieve only the `first` 10 IDs on the list, use [pagination](https://docs.swan.io/api/pagination) to filter further, or add a `totalCount`.
+1. Click **▶ Run**.
+
+### Query
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgUmV0cmlldmVUcmFuc2FjdGlvbklkIHsKICB0cmFuc2FjdGlvbnMgewogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICBpZAogICAgICAgIGNyZWF0ZWRBdAogICAgICAgIGxhYmVsCiAgICAgIH0KICAgIH0KICAgIHRvdGFsQ291bnQKICB9Cn0K&tab=api)
+
+```graphql {2,5-7,10} showLineNumbers
+query RetrieveTransactionId {
+  transactions {
+    edges {
+      node {
+        id
+        createdAt
+        label
+      }
+    }
+    totalCount
+  }
+}
+
+```
+### Payload
+
+```json {3,7-9,14-16,20} showLineNumbers
+{
+  "data": {
+    "transactions": {
+      "edges": [
+        {
+          "node": {
+            "id": "bosco_05582b065b10c5ca8aa03342bb1cf389",
+            "createdAt": "2023-05-15T11:34:10.101Z",
+            "label": "Transfer to Matilde Rana"
+          }
+        },
+        {
+          "node": {
+            "id": "bosci_00d62797731fb95ee2f91ca32f4165e9",
+            "createdAt": "2023-03-30T13:24:39.477Z",
+            "label": "Transfer from Sasha Oliveira"
+          }
+        },
+      ],
+      "totalCount": 2
+    }
+  }
+}
+```

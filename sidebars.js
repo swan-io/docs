@@ -77,6 +77,27 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Payments",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Payments overview",
+          link: { type: "doc", id: "topics/payments/about" },
+          collapsed: true,
+          items: [
+            "topics/payments/overview/guide-get-payment-info",
+            "topics/payments/overview/guide-retrieve-payment-id",
+            "topics/payments/overview/guide-get-transaction-info",
+            "topics/payments/overview/guide-retrieve-transaction-id",
+          ],
+        },
+        "topics/payments/support",
+      ],
+    },
+    {
+      type: "category",
       label: "Resources",
       collapsible: false,
       collapsed: false,

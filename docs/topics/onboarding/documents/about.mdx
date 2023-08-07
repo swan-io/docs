@@ -40,12 +40,21 @@ Each **collection** runs through the following statuses.
 This process starts after an onboarding is created.
 
 ```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    A[Waiting for document] --> B[Pending review]
-    B -.-> A
-    B --> C[Approved]
-    B --> D[Rejected]
-    B --> E[Canceled]
+    CO((Collection<br/>created)) -.-> W[WaitingForDocument]
+    W -.-> PR[PendingReview]
+    PR -.-> W
+    PR --> A[Approved]
+    PR --> RJ[Rejected]
+    PR --> C[Canceled]
+    subgraph F[Final status]
+        A
+        RJ
+        C
+    end
+    style CO fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
 ```
 
 | Collection status | Explanation |
@@ -65,12 +74,23 @@ For each required document, you'll create a document within the collection.
 Each **document** added to a collection runs through the following statuses.
 
 ```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    A[Waiting for upload] --> B[Uploaded]
-    B --> C[Validated]
-    B --> D[Refused]
-    B --> E[Deleted]
-    A & B -.-> F[Not uploaded]
+    DO((Document<br/>created)) -.-> W[WaitingForUpload]
+    W --> NU[NotUploaded]
+    W -.-> U[Uploaded]
+    U --> V[Validated]
+    U --> RF[Refused]
+    U --> D[Deleted]
+    subgraph F[Final status]
+        V
+        RF
+        D
+        NU
+    end
+    U --> NU
+    style DO fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
 ```
 
 | Document status | Explanation |

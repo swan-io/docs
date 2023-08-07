@@ -40,6 +40,20 @@ They have the first membership to the account with **[full permissions](https://
 
 ## Onboarding statuses
 
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    OLC((Onboarding<br/>link created)) -.-> OI[Ongoing Invalid]
+    OLC -.-> OV[Ongoing Valid]
+    OI -.-> OV
+    OV --> F[Finalized]
+    subgraph FS[Final status]
+        F
+    end
+    style OLC fill:#D4D3D5,stroke:#514F59
+    style FS fill:#fffdf4,stroke:#cca922
+```
+
 | Status | Explanation |
 |---|---|
 | `Ongoing (Invalid)` | <ul><li>First status assigned to an onboarding link if **using the frontend**, or, if using the **API**, when **not all required information** is included with your mutation</li><li>Status might change to `Invalid` if required information is removed or if some information is incorrect</li></ul>**Next step**: Submit or update required information to advance to `Ongoing (Valid)` (both you and the end user can submit or update information) |
@@ -62,21 +76,21 @@ participant S as Swan
 participant P as Partner
 participant U as User
     alt Partner decision
-        P ->> P: Determines needs for Swan account
+        P ->> P: Determines need for Swan account
     else User request
     activate U
         U ->> P: Requests Swan account
     end
-    P -->> S: Creates onboarding link
-    S ->> P: Returns onboarding object
+    P ->> S: Creates onboarding link
+    S -->> P: Returns onboarding object
     P ->> U: Sends onboarding link
-    U -->> S: Completes onboarding and logs in
-    S ->> P: Redirects user to partner interface
+    U ->> S: Completes onboarding and logs in
+    S -->> P: Redirects user to partner interface
     deactivate U
-    P -->> S: Requests user access token
-    S ->> P: Returns user access token
-    P -->> S: Finalizes onboarding with user access token
-    S ->> P: Confirms account holder and account creation
+    P ->> S: Requests user access token
+    S -->> P: Returns user access token
+    P ->> S: Finalizes onboarding with user access token
+    S -->> P: Confirms account holder and account creation
 ```
 
 ## Guides

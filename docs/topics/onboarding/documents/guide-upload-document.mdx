@@ -1,0 +1,149 @@
+---
+title: Upload a document
+---
+
+# Upload a document
+
+You can upload supporting documents **using the API** or on the **Dashboard**.
+
+:::tip Prerequisites
+Before you can upload a document, you must have the following:
+
+* [Collection status](./about.mdx#collection-statuses) must be `Waiting for document`.
+* [Document status](./about.mdx#document-statuses) must be `Waiting for upload`.
+:::
+
+## API guide
+
+Use the API to upload required documents in three steps.
+
+### Step 1: Generate upload URL
+
+1. In the API Explorer, add the `generateSupportingDocumentUploadUrl` mutation.
+1. Enter all required information: `supportingDocumentCollectionId`, `filename`, `supportingDocumentPurpose`, and `supportingDocumentType`.
+1. Add the `GenerateSupportingDocumentUploadUrlSuccessPayload` with required `key/value` pairs and `url`.
+1. Add other optional messages to the payload, either for validation or in case of rejection.
+1. Click **▶ Run**.
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBsb2FkRG9jdW1lbnRzIHsKICBnZW5lcmF0ZVN1cHBvcnRpbmdEb2N1bWVudFVwbG9hZFVybCgKICAgIGlucHV0OiB7CiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb25JZDogIiRDT0xMRUNUSU9OX0lEIgogICAgICBmaWxlbmFtZTogIiRET0NVTUVOVF9GSUxFX05BTUUiCiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2U6IENvbXBhbnlSZWdpc3RyYXRpb24KICAgICAgc3VwcG9ydGluZ0RvY3VtZW50VHlwZTogUmVnaXN0ZXJFeHRyYWN0CiAgICB9CiAgKSB7CiAgICAuLi4gb24gR2VuZXJhdGVTdXBwb3J0aW5nRG9jdW1lbnRVcGxvYWRVcmxTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdXBsb2FkIHsKICAgICAgICBmaWVsZHMgewogICAgICAgICAga2V5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KICAgICAgICB1cmwKICAgICAgfQogICAgfQogIH0KfQ%3D%3D&tab=api)
+
+```graphql {4-7,13-15,17} showLineNumbers
+mutation GenerateUploadUrl {
+  generateSupportingDocumentUploadUrl(
+    input: {
+      supportingDocumentCollectionId: "$COLLECTION_ID"
+      filename: "$DOCUMENT_FILE"
+      supportingDocumentPurpose: CompanyRegistration
+      supportingDocumentType: RegisterExtract
+    }
+  ) {
+    ... on GenerateSupportingDocumentUploadUrlSuccessPayload {
+      __typename
+      upload {
+        fields {
+          key
+          value
+        }
+        url
+      }
+    }
+  }
+}
+```
+
+### Step 2: Recover generated URL from payload
+
+Recover the generated `uploadUrl` in the payload, as well as several pairs of keys and values.
+
+:::caution Upload URL expires
+The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
+:::
+
+```json {8-9,12-13,20-21,24-25,28-29,32-33,36-37,40} showLineNumbers
+{
+  "data": {
+    "generateSupportingDocumentUploadUrl": {
+      "__typename": "GenerateSupportingDocumentUploadUrlSuccessPayload",
+      "upload": {
+        "fields": [
+          {
+            "key": "Key",
+            "value": "INPUT/865ed98c-64aa-4288-a51a-e2f199287ab8"
+          },
+          {
+            "key": "X-Amz-Algorithm",
+            "value": "AWS4-HMAC-SHA256"
+          },
+          {
+            "key": "X-Amz-Credential",
+            "value": "ASIAWHEXXLUXL7AGJ4VK/20220705/eu-west-1/s3/aws4_request"
+          },
+          {
+            "key": "X-Amz-Date",
+            "value": "20220705T153359Z"
+          },
+          {
+            "key": "X-Amz-Security-Token",
+            "value": "FwoGZXIvYXdzEJH//////////wEaDCfPIY23o3yUfkdcBiKnBCMRiFV1ec3bQNAeD4yvIkMeVBuI3+XgizJ72OAseCffRFdhIIM9Bx80x6Mrb04IrtggYOm8GZZngpBwVJJwib06sXXYdAbkW59j2NKj7kE1FsiBs5MGq3lGpOgKHTWocr1et3vULY4Et2yLHkE1D+pwW4CExYqW6R2azviUhPJ2MACXLR2FvngTp5WdzkRKHc+AhDnue42JA0NUgJv+sQTJ5giYYMntrHdBBV8EWJfupgDEPNvqlyussVH5TT3uB2eatU1SwWgpaVTxyL7p0v4rWR6zDRRoMMmKi59R8TjHgfQcjEBIu0xnIjULLqmSYHRVhbQcFBnLtAzZdip0S7kpPIm2ZD7NajmTBffP+28GRmy2NgDX5wJ1yBqnXcJ7YGW2NKv2MN83WuHoEEDrYPYZTnPSIRL4gw/i4itcNBi1f54LxO3tsvlutiHk24UBh6HyJ2pzFpXjiKTpfz9LW92x0OqYlpX0XqxOsJMpC9e6aBlaMQymxlD2FsFoGm+zJ9iht7KjFOQZsYzDzzdDzMWK9NPFd5v9FH04ldER7Q9U90HOh7TsXz1ckAmTGF4QqrEFRjzD+080m90YU2P/zyJd8XIgIaN+HSsClbQfOv39uwQJ8tyud2TUdZg0KVCEKfPr7INZyWdoJayK2sNWdfoAglkEcG90pMx0caPH4Vot9oEpX93ej04Ep6lX2d6Spioy/8u9GqujUufWa94uCAgEXCreTe7sKOezkZYGMivr4PRAjuMb7fnDjGzSAXMqhy8xa7z9HSOmiViDgtv8WzKw1PsxoHMtNPET"
+          },
+          {
+            "key": "Policy",
+            "value": "eyJleHBpcmF0aW9uIjoiMjAyMi0wNy0xMlQxNTozMzo1OVoiLCJjb25kaXRpb25zIjpbWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsMCwyMDk3MTUyMF0sWyJlcSIsIiR4LWFtei1tZXRhLXgtc3dhbi1zdXBwb3J0aW5nLWRvY3VtZW50LWlkIiwiODY1ZWQ5OGMtNjRhYS00Mjg4LWE1MWEtZTJmMTk5Mjg3YWI4Il0seyJrZXkiOiJJTlBVVC84NjVlZDk4Yy02NGFhLTQyODgtYTUxYS1lMmYxOTkyODdhYjgifSx7ImJ1Y2tldCI6InN3YW4tc3VwcG9ydGluZy1kb2N1bWVudC1tYXN0ZXItc2FuZGJveCJ9LHsiWC1BbXotQWxnb3JpdGhtIjoiQVdTNC1ITUFDLVNIQTI1NiJ9LHsiWC1BbXotQ3JlZGVudGlhbCI6IkFTSUFXSEVYWExVWEw3QUdKNFZLLzIwMjIwNzA1L2V1LXdlc3QtMS9zMy9hd3M0X3JlcXVlc3QifSx7IlgtQW16LURhdGUiOiIyMDIyMDcwNVQxNTMzNTlaIn0seyJYLUFtei1TZWN1cml0eS1Ub2tlbiI6IkZ3b0daWEl2WVhkekVKSC8vLy8vLy8vLy93RWFEQ2ZQSVkyM28zeVVma2RjQmlLbkJDTVJpRlYxZWMzYlFOQWVENHl2SWtNZVZCdUkzK1hnaXpKNzJPQXNlQ2ZmUkZkaElJTTlCeDgweDZNcmIwNElydGdnWU9tOEdaWm5ncEJ3VkpKd2liMDZzWFhZZEFia1c1OWoyTktqN2tFMUZzaUJzNU1HcTNsR3BPZ0tIVFdvY3IxZXQzdlVMWTRFdDJ5TEhrRTFEK3B3VzRDRXhZcVc2UjJhenZpVWhQSjJNQUNYTFIyRnZuZ1RwNVdkemtSS0hjK0FoRG51ZTQySkEwTlVnSnYrc1FUSjVnaVlZTW50ckhkQkJWOEVXSmZ1cGdERVBOdnFseXVzc1ZINVRUM3VCMmVhdFUxU3dXZ3BhVlR4eUw3cDB2NHJXUjZ6RFJSb01NbUtpNTlSOFRqSGdmUWNqRUJJdTB4bklqVUxMcW1TWUhSVmhiUWNGQm5MdEF6WmRpcDBTN2twUEltMlpEN05ham1UQmZmUCsyOEdSbXkyTmdEWDV3SjF5QnFuWGNKN1lHVzJOS3YyTU44M1d1SG9FRURyWVBZWlRuUFNJUkw0Z3cvaTRpdGNOQmkxZjU0THhPM3Rzdmx1dGlIazI0VUJoNkh5SjJwekZwWGppS1RwZno5TFc5MngwT3FZbHBYMFhxeE9zSk1wQzllNmFCbGFNUXlteGxEMkZzRm9HbSt6SjlpaHQ3S2pGT1Fac1l6RHp6ZER6TVdLOU5QRmQ1djlGSDA0bGRFUjdROVU5MEhPaDdUc1h6MWNrQW1UR0Y0UXFyRUZSanpEKzA4MG05MFlVMlAvenlKZDhYSWdJYU4rSFNzQ2xiUWZPdjM5dXdRSjh0eXVkMlRVZFpnMEtWQ0VLZlByN0lOWnlXZG9KYXlLMnNOV2Rmb0FnbGtFY0c5MHBNeDBjYVBINFZvdDlvRXBYOTNlajA0RXA2bFgyZDZTcGlveS84dTlHcXVqVXVmV2E5NHVDQWdFWENyZVRlN3NLT2V6a1pZR01pdnI0UFJBanVNYjdmbkRqR3pTQVhNcWh5OHhhN3o5SFNPbWlWaURndHY4V3pLdzFQc3hvSE10TlBFVCJ9XX0="
+          },
+          {
+            "key": "X-Amz-Signature",
+            "value": "994a3ba731d27a4606b90f4adc60b85af80ec8d2f048ffc37ebb97833c06657e"
+          },
+          {
+            "key": "X-Amz-Meta-X-Swan-Supporting-Document-Id",
+            "value": "865ed98c-64aa-4288-a51a-e2f199287ab8"
+          }
+        ],
+        "url": "https://s3.eu-west-1.amazonaws.com/swan-supporting-document-master-sandbox"
+      }
+    }
+  }
+}}
+```
+
+### Step 3: Send POST request
+
+Finally, send an HTTP POST request to the `uploadUrl` without a `Content-Type` header.
+You can use this cURL command to try the upload URL.
+Supported formats are `.pdf`, `.png`, and `.jpg`.
+
+```curl showLineNumbers
+curl --location --request POST '$UPLOAD_URL' \
+--form 'Key="INPUT/$ID"' \
+--form 'X-Amz-Algorithm="AWS4-HMAC-SHA256"' \
+--form 'X-Amz-Credential="$CREDENTIAL"' \
+--form 'X-Amz-Date="20220705T135458Z"' \
+--form 'X-Amz-Security-Token="$TOKEN"' \
+--form 'Policy="$POLICY"' \
+--form 'X-Amz-Signature="$SIGNATURE"' \
+--form 'X-Amz-Meta-X-Swan-Supporting-Document-Id="$DOCUMENT_ID"' \
+--form 'file=@"$FILE_PATH"'
+```
+
+*Replace all `$VARIABLES` with your values from step 2.*
+
+:::tip Upload successful
+When you upload a document with the HTTP POST cURL command, Amazon sends a *204: No content error*, **but the document was successfully uploaded**.
+:::
+
+## Dashboard
+
+Use the Dashboard to upload required documents.
+
+1. On your Dashboard, go to **Data** > **Onboardings**.
+1. Open the onboarding for which you'd like to upload documents.
+The onboarding status must be `Ongoing (Valid)`.
+1. Open the **Supporting documents** tab.
+1. Click **+ New** to add a new supporting document.
+1. Attach your document file.
+Supported formats are `.pdf`, `.png`, and `.jpg`.
+1. The name field fills automatically with the name of your file. Feel free to change it.
+1. Choose your document type and purpose from the dropdown options.
+1. Click **Upload** to upload your supporting document.
+
+![Upload a supporting document from the Dashboard](../../../images/topics/onboarding/upload-document.png)

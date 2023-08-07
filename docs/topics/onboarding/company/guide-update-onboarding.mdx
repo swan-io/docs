@@ -1,0 +1,85 @@
+---
+title: Update a company onboarding
+---
+
+# Update a company onboarding
+
+Update company onboardings using the API.
+
+:::caution Updating UBO fields
+Fields about an ultimate beneficial owner (UBO) cannot be updated incrementally.
+If you need to update UBO information, **you must submit all of the fields again**.
+:::
+
+import UpdateOnboardingPrereqs from '../partials/_prereqs-update.mdx';
+
+<UpdateOnboardingPrereqs />
+
+## Guide
+
+To test updating a company onboarding, **change the language**.
+
+1. First, [retrieve the ID](../overview/guide-retrieve-onboarding-id) for the onboarding you need to update.
+1. In the API Explorer, add the `updateCompanyOnboarding` mutation.
+1. Enter the onboarding ID retrieved in step 1.
+1. Check the box for `language`, then enter the language code of your choosing (example: `fr` or `es`). 
+1. Add desired messages to the success payload, either for validation or in case of rejection.
+    * **Recommendation**: Inside the `UpdateCompanyOnboardingSuccessPayload` option, add `onboardingState` and `statusInfo` > `status` to confirm the onboarding is still ongoing and valid after making the update.
+1. Click **▶ Run**.
+
+## API mutation
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQ29tcGFueU9uYm9hcmRpbmcgewogIHVwZGF0ZUNvbXBhbnlPbmJvYXJkaW5nKAogICAgaW5wdXQ6IHsKICAgICAgb25ib2FyZGluZ0lkOiAiJE9OQk9BUkRJTkdfSUQiCiAgICAgIGxhbmd1YWdlOiAiZnIiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFVwZGF0ZUNvbXBhbnlPbmJvYXJkaW5nU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG9uYm9hcmRpbmcgewogICAgICAgIGxhbmd1YWdlCiAgICAgICAgb25ib2FyZGluZ1N0YXRlCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgfQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBtZXNzYWdlCiAgICAgIH0KICAgIH0KICB9Cn0%3D&tab=api)
+
+```graphql {4-5,19-22} showLineNumbers
+mutation UpdateCompanyOnboarding {
+  updateCompanyOnboarding(
+    input: {
+      onboardingId: "$ONBOARDING_ID"
+      language: "fr"
+    }
+  ) {
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on UpdateCompanyOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        languageonboardingState
+        statusInfo {
+          status
+      }
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+      fields {
+        message
+      }
+    }
+  }
+}
+```
+
+## Payload
+
+```json {6-9} showLineNumbers
+{
+  "data": {
+    "updateCompanyOnboarding": {
+      "__typename": "UpdateCompanyOnboardingSuccessPayload",
+      "onboarding": {
+        "language": "fr",
+        "onboardingState": "Ongoing",
+        "statusInfo": {
+          "status": "Valid"
+      }
+    }
+  }
+}
+```

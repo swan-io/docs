@@ -1,0 +1,88 @@
+---
+title: Finalize an onboarding
+---
+
+# Finalize an onboarding
+
+You can finalize onboardings **using the API**.
+
+Your **end users** can also finalize their own onboardings **using the onboarding URLs** you create for [individuals](../individual/guide-create-onboarding.mdx) or [companies](../company/guide-create-onboarding.mdx).
+
+:::tip Prerequisites
+To finalize an onboarding using the API:
+
+* You must have a [user access token](https://docs.swan.io/api/authentication/user-access-token) for the user whose onboarding you're finalizing, and the user must have accessed their onboarding URL at least one time.
+* The [onboarding status](../about.mdx#onboarding-statuses) must be `Ongoing (Valid)`.
+
+If you need to update an onboarding before finalizing it, follow the guides for updating an [individual](../individual/guide-update-onboarding.mdx) or [company](../company/guide-update-onboarding.mdx) onboarding.
+:::
+
+## Guide
+
+Finalize an onboarding using the API.
+
+1. First, [retrieve the ID](../overview/guide-retrieve-onboarding-id) for the onboarding you're finalizing.
+1. In the API Explorer, add the `finalizeOnboarding` mutation.
+1. Enter the onboarding ID retrieved in step 1.
+1. Add optional messages to the success payload, either for validation or in case of rejection.
+1. Confirm you're using the user access token to run the mutation.
+1. Click **▶ Run**.
+
+## Mutation
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gZmluYWxpemVPbmJvYXJkaW5nIHsKICBmaW5hbGl6ZU9uYm9hcmRpbmcoaW5wdXQ6IHsgb25ib2FyZGluZ0lkOiAiJE9OQk9BUkRJTkdfSUQiIH0pIHsKICAgIC4uLiBvbiBGaW5hbGl6ZU9uYm9hcmRpbmdTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgb25ib2FyZGluZyB7CiAgICAgICAgYWNjb3VudCB7CiAgICAgICAgICBpZAogICAgICAgICAgaG9sZGVyIHsKICAgICAgICAgICAgaWQKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBPbmJvYXJkaW5nTm90Q29tcGxldGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0%3D&tab=api)
+
+Notice the request to include the account ID and account holder ID, as well as the onboarding status, in the success payload.
+
+```graphql {2,6-9,13} showLineNumbers
+mutation finalizeOnboarding {
+  finalizeOnboarding(input: { onboardingId: "$ONBOARDING_ID" }) {
+    ... on FinalizeOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        account {
+          id
+          holder {
+            id
+          }
+        }
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on OnboardingNotCompletedRejection {
+      __typename
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+## Payload
+
+Notice the ID for the newly-created account and account holder, as well as the onboarding status `Finalized`.
+
+```json {4,7,9,13} showLineNumbers
+{
+  "data": {
+    "finalizeOnboarding": {
+      "__typename": "FinalizeOnboardingSuccessPayload",
+      "onboarding": {
+        "account": {
+          "id": "$NEW_ACCOUNT_ID",
+          "holder": {
+            "id": "$NEW_ACCOUNT_HOLDER_ID"
+          }
+        },
+        "statusInfo": {
+          "status": "Finalized"
+        }
+      }
+    }
+  }
+}
+```

@@ -61,11 +61,11 @@ flowchart LR
 
 The key difference between push and pull payments lies in **who initiates the payment**.
 
-**Push payments**, such as credit transfers and card payments, refer to transactions where the **debtor initiates the payment**.
+**Push payments**, such as credit transfers, refer to transactions where the **debtor initiates the payment**.
 The debtor authorizes the sending of funds from their account to the creditor's account.
 In other words, the **debtor pushes the funds to the creditor**.
 
-**Pull payments**, such as direct debits, refer to transactions where the **creditor initiates collecting funds** from the debtor's account.
+**Pull payments**, such as direct debits and card payments, refer to transactions where the **creditor initiates collecting funds** from the debtor's account.
 The creditor requests a payment, and the debtor provides the necessary authorization for the transaction.
 In other words, the **creditor pulls the funds from the debtor**.
 
@@ -81,6 +81,7 @@ Additionally, since pull payments are initiated by the creditor and not the debt
 ## Transactions
 
 A single payment is composed of **one or several transactions**.
+Transactions are created asynchronously after a payment is initiated.
 In the API, you'll work **primarily with transactions** when seeking information about payments.
 
 For example, two *transactions* are required if you try to send a SEPA Credit Transfer (SCT) *payment* to an IBAN that does not exist.
@@ -115,7 +116,7 @@ Each payment method uses a different combination of these statuses with specific
 Consider the example from the [transaction introduction](#transactions), where two transactions are required for one failed payment.
 
 * The **entire payment** ends with the payment status `Rejected`.
-* **Transaction #1** ends with the transaction status `Rejected`.
+* **Transaction #1** ends with the transaction status `Booked`.
 * **Transaction #2** ends with the transaction status `Booked`.
 :::
 

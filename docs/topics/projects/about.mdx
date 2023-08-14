@@ -1,0 +1,77 @@
+---
+title: Projects overview
+---
+
+# Projects overview
+
+Using Swan means using projects.
+Partners can have anywhere from one project to a large number of projects depending on the use case.
+
+Users can belong to as many projects as needed.
+They always use the same identifier (their phone number) to sign in.
+
+## Project owner
+
+Projects are owned by the **legal person** who opens a **project's first Live account** when activating a Swan project.
+
+Additionally, the project owner's **legal representative**, or legal rep, can perform specific actions, for example implementing security measures such as server consent or viewing their own card numbers with the API.
+
+In Sandbox, you can use the mutation `promoteAccountHolderToProjectOwner` to promote any account holder in order to test project owner behavior.
+
+## Project ID
+
+Each project has a unique Project ID (`projectId`).
+On the Dashboard, click-to-copy your Project ID from any page.
+
+![Screenshot of Swan Dashboard with a callout of project name and ID](../../images/topics/projects/retrieve-project-id.png)
+
+## Project access tokens
+
+define project access tokens
+
+Project access tokens:
+
+1. Allow you to **act on your own behalf** rather than on behalf of a user.
+1. Allow you to **act as a user within your project**, sometimes referred to as [impersonation](https://docs.swan.io/api/authentication/project-access-token#act-as-a-user-with-a-project-access-token).
+1. Must use the **client credentials** OAuth2 flow (also referred to as *grant type*), intended for server-to-server authentication.
+
+Learn more about project access tokens, including how to [retrieve and use them](https://docs.swan.io/api/authentication/project-access-token), in the [authentication](https://docs.swan.io/api/authentication) section.
+
+## Sandbox and Live projects
+
+Projects always start as Sandbox-only.
+Projects can remain Sandbox-only if you're goal for the project is to test various implementations.
+
+After a project passes to the status `LimitedLiveAccess`, the project owner can begin testing the Live implementation.
+From there, more and more Live access is granted (assuming the project passes reviews).
+
+After a project is Live, you can switch between Sandbox and Live. Use Sandbox to test new features before releasing them to your Live users.
+
+:::caution Can't move between projects
+You can't migrate work between projects.
+If you have a Live project and you'd like to test an implementation in Sandbox before launching, use that Live project's Sandbox mode.
+:::
+
+## Project statuses
+
+:::danger choose table layout
+:::
+
+| Status | Explanation | Availability |
+| --- | --- | --- |
+| `Initiated` | Partner creates a project<br/><br/>**Next**: Partner schedules meeting with Swan | <ul><li>⛔ No Live access</li><li>⛔ No onboarding access</li></ul> |
+| `Initiated` | Partner creates a project<br/><br/>**Next**: Partner schedules meeting with Swan | **Live**: ⛔ No<br/><br/>**Onboarding**: ⛔ No |
+| `MeetingScheduled` | Partner schedules a meeting<br/><br/>**Next**: Partner schedules meeting with Swan | **Live**: ⛔ No<br/><br/>**Onboarding**: ⛔ No |
+| `PendingCompliance` | Swan performs a review of the project for risk and compliance reasons<br/><br/>**Next**: Partner starts investigative development of their implementation while Swan performs the review  | **Live**: ⛔ No<br/><br/>**Onboarding**:<br/>✅ Yes for project owner only<br/>⛔ No for users and companies |
+| `LimitedLiveAccess` | Review accepted; Partner can use Swan for *their own account only*<br/><br/>**Next**: Partner continues testing their development, then requests a review | **Live**: ✅ Yes<br/><br/>**Onboarding**: ⛔ No |
+| `PendingLiveReview` | Partner asks Swan to review; Swan performs a technical review of the Live implementation<br/><br/>**Next**: Partner remains responsive to questions as Swan performs Live review | **Live**: ✅ Yes<br/><br/>**Onboarding**: ⛔ No |
+| `BetaLiveAccess` | Swan approves implementation for a limited number of Live accounts<br/><br/>**Next**: Partner begins onboarding a limited number of accounts  | **Live**: ✅ Yes<br/><br/>**Onboarding**: ✅ Yes *(limited number)* |
+| `FullLiveAccess` | Swan approves implementation for full Live access<br/><br/>**Next**: Partner uses their Swan implementation | **Live**: ✅ Yes<br/><br/>**Onboarding**: ✅ Yes *(unlimited)* |
+| `Disabled` | Project is not longer active (could be due to Partner request, Swan's choice, or a mutual decision)<br/><br/>**Next**: *No next steps* | **Live**: ⛔ No<br/><br/>**Onboarding**: ⛔ No |
+| `Suspended` | Project is suspended, either pending a review by Swan or at the Partner's request<br/><br/>**Next**: If due to *Swan review*, Partner remains responsive to questions as Swan performs the review; if due to *Partner request*, the Partner should communicate with Swan about reactivating the project | **Live**: ⛔ No<br/><br/>**Onboarding**: ⛔ No |
+| `Rejected` | Swan rejects the project (reasons vary and are communicated to the Partner or main point of contact)<br/><br/>**Next**: *No next steps* | **Live**: ⛔ No<br/><br/>**Onboarding**: ⛔ No |
+
+## Guides
+
+* [Activate your project](./guide-activate-project.mdx)
+* [Sandbox](./sandbox.mdx)

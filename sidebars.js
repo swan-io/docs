@@ -98,6 +98,25 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Projects",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Projects overview",
+          link: { type: "doc", id: "topics/projects/about" },
+          collapsed: true,
+          items: [
+            "topics/projects/guide-activate-project",
+            "topics/projects/sandbox",
+          ],
+        },
+        "topics/projects/support",
+      ],
+    },
+    {
+      type: "category",
       label: "Resources",
       collapsible: false,
       collapsed: false,

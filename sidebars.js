@@ -109,7 +109,6 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/projects/guide-activate-project",
-            "topics/projects/sandbox",
           ],
         },
         "topics/projects/support",

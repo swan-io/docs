@@ -1,0 +1,114 @@
+---
+title: Deposit capital in France
+---
+
+# :fr: Deposit capital in France
+
+Depositing share capital in France is a multi-step process involving several key players: you and your end user, Swan, and the notary.
+
+- **You and your end user** are responsible for completing **steps 1 through 5**, as well as **step 8**.
+- Swan completes step 6.
+- The notary completes steps 7 and 9.
+
+:::info General capital deposit information
+Review the **sequence diagram** on the [general capital deposit page](../about.mdx) to see the interactions in more details, plus find information about **statuses**, **shareholders**, and more.
+:::
+
+## Step 1: Create capital deposit case
+
+Use the API to create a capital deposit case object.
+Everything related to your capital deposit, including shareholder information, transfers, and documents, will be collected in the `case` object.
+
+→ Follow the [detailed guide](./guide-create-case.mdx) to create your case, which includes full API mutation examples.
+
+## Step 2: Finalize account creation
+
+Following the guide to create a capital deposit case also launches the account creation process for the future company and individual shareholders.
+
+:::caution Company shareholders
+Creating accounts for company shareholders doesn't happen automatically when creating the capital deposit case.
+Use the guide to [create individual accounts](../../onboarding/individual/guide-create-onboarding.mdx) for all company shareholders.
+:::
+
+The individual Swan accounts serve as **escrow accounts**, and are the only acceptable accounts to which shareholders can transfer their capital deposit funds.
+
+To complete the account creation process:
+
+1. Shareholders need to complete the account onboarding process. [Monitor their progress](../../onboarding/overview/guide-monitor-onboarding.mdx) if needed.
+1. After each shareholder has at least opened their onboarding link, you might choose to use the API to [finalize all account onboardings](../../onboarding/overview/guide-finalize-onboarding.mdx). Shareholders can also finalize their own onboardings.
+
+## Step 3: Verify account holders
+
+After the shareholders complete the onboarding process, they must complete identity verification.
+
+→ Learn more about the [verification process](../../onboarding/account-holders/about.mdx#verification-process) for new account holders.
+
+:::info Identification level
+Swan supports multiple levels to verify your identity.
+For capital deposits, please use the following levels:
+
+- Shareholder accounts: [PVID](https://docs.swan.io/concept/user#prestataires-de-verification-didentite-a-distance-pvid)
+- Company accounts: [Expert](https://docs.swan.io/concept/user#expert)
+:::
+
+## Step 4: Upload capital deposit documents
+
+Use the API to:
+
+1. Generate a unique upload URL for each document you need to upload, and
+1. Upload all required documents.
+
+→ Follow the [detailed guide](./guide-upload-documents.mdx) to generate URLs and upload documents, which includes full API mutation examples.
+
+## Step 5: Transfer capital funds
+
+Each shareholder must transfer their capital share deposit from an **account in their name** to their new Swan account.
+
+Shareholders must **perform this transfer themselves**, and need their **new IBAN** to do so.
+
+A good practice is to configure your integration to send an **automated email** to shareholders with the new IBANs.
+Alternately, they can access the IBAN associated with their Swan account through the Web Banking user interface, or you can access it on the Dashboard and share it with them.
+
+## Step 6: Validate and update case
+
+Here's a quick review.
+At this point, you've done the following for your `CapitalDepositCase`:
+
+- Created Swan accounts for shareholders and the future company
+- Completed the onboarding and identity verification processes for those accounts
+- Transferred the shareholders' capital funds into their individual Swan accounts
+- Uploaded all required documents
+
+To complete step 6, Swan:
+
+- Reviews the entire case.
+- Validates the capital deposit in Swan's system.
+- Updates the [case status](../about.mdx#capital-deposit-case-statuses) to `WaitingForShareDepositCertificate` so it gets sent to the notary.
+
+## Step 7: Upload share deposit certificate
+
+After the notary validates this stage of the capital deposit, they respond with a **capital shares deposit certificate**.
+This process is typically quick, taking up to **two business days**.
+The certificate is assigned the document type `CapitalShareDepositCertificate`.
+
+View the certificate in the capital deposits section of your Dashboard.
+You can also retrieve it with the `capitalDepositCase` API query.
+Be sure to add `documents` > `downloadUrl` in the explorer.
+
+## Step 8: Upload the register extract (KBIS)
+
+Upload your KBIS using the same document upload process as in step 4.
+Choose document type `RegisterExtract`.
+
+→ Follow the [detailed guide](./guide-upload-documents.mdx) to generate an upload URL and upload your KBIS, which includes full API mutation examples.
+
+## Step 9: Transfer funds to company account
+
+After the notary validates the register extract, they'll transfer your capital deposit funds to the company account you created at the beginning of this process.
+This process usually takes up to **two business days**.
+
+:::success Congratulations
+As soon as the capital funds arrive in your company's Swan account, the capital deposit process is complete.
+
+**Best of luck with your endeavor!**
+:::

@@ -77,6 +77,26 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Capital deposits",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        "topics/capital-deposits/about",
+        {
+          type: "category",
+          label: "France",
+          link: { type: "doc", id: "topics/capital-deposits/france/guide" },
+          collapsed: true,
+          items : [
+            "topics/capital-deposits/france/guide-create-case",
+            "topics/capital-deposits/france/guide-upload-documents",
+        ]
+        },
+        "topics/capital-deposits/support",
+      ],
+    },
+    {
+      type: "category",
       label: "Payments",
       collapsible: false,
       collapsed: false,

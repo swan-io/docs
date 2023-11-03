@@ -10,13 +10,18 @@ import CompanyOnboardingDefinition from '../../definitions/_onboarding-company.m
 
 **Company account onboarding** *<CompanyOnboardingDefinition />*
 
-import SelfEmployedNote from '../partials/_note-self-employed.mdx';
-
-<SelfEmployedNote accountType="company" />
+**Self-employed** users hold company accounts.
+Refer to the country requirements section for more information about identity verification for self-employed users.
 
 ***
 
 ## Process overview
+
+Company onboarding supports different types of organizations, including:
+
+- Several types of companies
+- Self-employed workers
+- Associations or not-for-profit organizations
 
 import OnboardingOverview from '../partials/_overview.mdx';
 
@@ -34,23 +39,18 @@ Then, Swan collects the following information:
 1. User's **email address**.
 1. Legal information about the organization, including the **company name**, **registration number** (optional), **VAT number** (optional), and **address**, as well as details about the organization's **activity** and **expected monthly volume**.
 1. Information about the company's **ultimate beneficial owners** (UBO).
-This step only applies if the user selected **company**, **association** (specifically home owner association), or **other** when submitting their preliminary details.
-1. **Required documents** to verify your organization.
-    * During onboarding, Swan completes an identity analysis (Know Your Business, or KYB).
-    * For the lifetime of the account, Swan monitors for fraud.
+This step only applies if the user selected **company**, **home owner association**, or **other** when submitting their preliminary details.
+1. **Required documents** to verify your organization. You might not see this step in your onboarding process.
 1. **Consent** to open the account (consent process requires a mobile device).
 
-:::caution 🇩🇪  Germany
-For German company accounts, Swan also collects the following during steps 1-3:
-
-1. Legal representative's **country of residence** and **residence address**.
-1. Company tax number *(Umsatzsteuer-Identifikationsnummer)*.
-1. UBO's **country of residence**, **residence address**, and, if country of residence is `DEU`, UBO's **tax identification number** *(Steuer-Identifikationsnummer)*.
+:::info Country-specific info
+Requested information can change based on your account country.
+Refer to the tables later on this page for country-specific requirements.
 :::
 
 ## Identify verification recommendations
 
-Swan must verify the identity of every company.
+Swan must verify the identity of the legal representative for each company.
 Swan supports multiple types of identity verification, called `identificationLevels` in the API.
 
 For company onboarding, the following levels are recommended based on the account country.
@@ -58,10 +58,16 @@ Please refer to the [section on identity verification](https://docs.swan.io/conc
 
 | Account country | Recommended level for companies | Other supported levels |
 |---|---|---|
-| :fr: France<br/>*includes registered self-employed* | ✓ **Expert** | QES<br/>PVID |
+| :fr: France | ✓ **Expert** | QES<br/>PVID |
 | :de: Germany | ✓ **Expert** | QES |
 | :flag-nl: Netherlands | ✓ **Expert** | QES<br/>PVID |
 | :es: Spain | ✓ **Expert** | QES<br/>PVID |
+
+:::infoSelf-employed account holders
+- **France unregistered self-employed**: PVID, or Expert and a first transfer to your Swan account
+- **France registered self-employed**: Expert
+- **Germany self-employed**: QES and a first transfer to your Swan account
+:::
 
 ## Country requirements for company accounts
 
@@ -78,29 +84,29 @@ If the cell is empty, the field is optional.
 
 ### Company and account holder information
 
-| API field | :fr:<br/>France | :de:<br/>Germany | :es:<br/>Spain |
-|---|---|---|---|
-|`accountCountry`| ✓ Required (**FRA**) | ✓ Required (**DEU**) | ✓ Required (**ESP**) |
-|`accountName`|  |  |  |
-|`businessActivity`| ✓ Required | ✓ Required | ✓ Required |
-|`businessActivityDescription`| ✓ Required | ✓ Required | ✓ Required |
-|`companyType`| ✓ Required | ✓ Required | ✓ Required |
-|`email`| ✓ Required | ✓ Required | ✓ Required |
-|`isRegistered`| ✓ Required | ✓ Required | ✓ Required |
-|`language`| ✓ Required | ✓ Required | ✓ Required |
-|`monthlyPaymentVolume`| ✓ Required | ✓ Required | ✓ Required |
-|`name` *(company name)* | ✓ Required | ✓ Required | ✓ Required |
-|`redirectUrl`|  |  |  |
-|`registrationNumber`<br/>*(if registered)* | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.addressLine1`| ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.addressLine2`|  |  |  |
-|`residencyAddress.city`| ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.country`| ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.postalCode`| ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.state`|  |  |  |
-|`taxIdentificationNumber`|  | ∗ 90 days | ﹖Maybe |
-|`typeOfRepresentation`| ✓ Required | ✓ Required | ✓ Required |
-|`vatNumber`| | | |
+| API field | :fr:<br/>France | :de:<br/>Germany | :flag-nl:<br/>Netherlands | :es:<br/>Spain |
+|---|---|---|---| ---|
+|`accountCountry`| ✓ Required (**FRA**) | ✓ Required (**DEU**) | ✓ Required (**NLD**) | ✓ Required (**ESP**) |
+|`accountName`|  |  |  |  |
+|`businessActivity`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`businessActivityDescription`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`companyType`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`email`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`isRegistered`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`language`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`monthlyPaymentVolume`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`name` *(company name)* | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`redirectUrl`|  |  |  |  |
+|`registrationNumber`<br/>*(if registered)* | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.addressLine1`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.addressLine2`|  |  |  |  |
+|`residencyAddress.city`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.country`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.postalCode`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`residencyAddress.state`|  |  |  |  |
+|`taxIdentificationNumber`|  | ∗ 90 days |  | ﹖ Conditional |
+|`typeOfRepresentation`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`vatNumber`| | | |  |
 
 ﹖ *Required if both the `accountCountry` and `residencyAddress.country` are Spain.*
 
@@ -113,24 +119,25 @@ Otherwise, the account will be suspended.*
 **UBO** stands for a portion of the API field: `individualUltimateBeneficialOwners`.
 :::
 
-| API field | :fr:<br/>France | :de:<br/>Germany | :es:<br/>Spain |
-|---|---|---|---|
-|`UBO.birthCity`| ✓ Required | | ✓ Required |
-|`UBO.birthCityPostalCode`| ✓ Required | | |
-|`UBO.birthCountryCode`| ✓ Required | ✓ Required | ✓ Required |
-|`UBO.birthDate`| ✓ Required |  | ✓ Required |
-|`UBO.direct`| ✓ Required | ✓ Required | ✓ Required |
-|`UBO.firstName`| ✓ Required | ✓ Required | ✓ Required |
-|`UBO.indirect`| ✓ Required | ✓ Required | ✓ Required |
-|`UBO.lastName`| ✓ Required | ✓ Required | ✓ Required |
-|`UBO.residencyAddress.addressLine1`|  | ✓ Required |  |
-|`UBO.residencyAddress.addressLine2`| | | |
-|`UBO.residencyAddress.city`|  | ✓ Required |  |
-|`UBO.residencyAddress.country`|  | ✓ Required | ✓ Required |
-|`UBO.residencyAddress.state`| | | |
-|`UBO.taxIdentificationNumber`| | ﹖Maybe | |
-|`UBO.totalCapitalPercentage`| ✓ Required | ✓ Required | ✓ Required |
-|`UBO.type`| ✓ Required | ✓ Required | ✓ Required |
+| API field | :fr:<br/>France | :de:<br/>Germany | :flag-nl:<br/>Netherlands | :es:<br/>Spain |
+|---|---|---|---|---|
+|`UBO.birthCity`| ✓ Required | | ✓ Required | ✓ Required |
+|`UBO.birthCityPostalCode`| ✓ Required | | ✓ Required | |
+|`UBO.birthCountryCode`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`UBO.birthDate`| ✓ Required |  | ✓ Required | ✓ Required |
+|`UBO.direct`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`UBO.indirect`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`UBO.firstName`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`UBO.lastName`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`UBO.residencyAddress.addressLine1`|  | ✓ Required |  | ✓ Required |
+|`UBO.residencyAddress.addressLine2`| | | | |
+|`UBO.residencyAddress.city`|  | ✓ Required | | ✓ Required |
+|`UBO.residencyAddress.country`|  | ✓ Required | | ✓ Required |
+|`UBO.residencyAddress.postalCode`| | ✓ Required | | ✓ Required |
+|`UBO.residencyAddress.state`| | | | |
+|`UBO.taxIdentificationNumber`| | ﹖ Conditional | | |
+|`UBO.totalCapitalPercentage`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`UBO.type`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 
 ﹖ *Required if both the `accountCountry` and the UBO's `residencyAddress.country` are Germany.*
 
@@ -140,14 +147,14 @@ Otherwise, the account will be suspended.*
 **lr** stands for a portion of the API field: `legalRepresentative`.
 :::
 
-| API field | :fr:<br/>France | :de:<br/>Germany | :es:<br/>Spain |
-|---|---|---|---|
-|`lrPersonalAddress.addressLine1`| | ✓ Required | |
-|`lrPersonalAddress.addressLine2`| | | |
-|`lrPersonalAddress.city`| | ✓ Required | |
-|`lrPersonalAddress.country`| | ✓ Required | |
-|`lrPersonalAddress.postalCode`| | ✓ Required | |
-|`lrPersonalAddress.state`| | | |
+| API field | :fr:<br/>France | :de:<br/>Germany | :flag-nl:<br/>Netherlands | :es:<br/>Spain |
+|---|---|---|---|---|
+|`lrPersonalAddress.addressLine1`| | ✓ Required | ✓ Required | |
+|`lrPersonalAddress.addressLine2`| | | | |
+|`lrPersonalAddress.city`| | ✓ Required | ✓ Required | |
+|`lrPersonalAddress.country`| | ✓ Required | ✓ Required | |
+|`lrPersonalAddress.postalCode`| | ✓ Required | ✓ Required | |
+|`lrPersonalAddress.state`| | | | |
 
 ## Guides
 

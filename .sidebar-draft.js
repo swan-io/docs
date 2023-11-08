@@ -22,7 +22,7 @@ module.exports = {
           link: { type: "doc", id: "topics/onboarding/about" },
           collapsed: true,
           items: [
-            "topics/onboarding/overview/guide-retrieve-onboarding-id",
+            "topics/onboarding/overview/guide-get-onboarding-info",
             "topics/onboarding/overview/guide-monitor-onboarding",
             "topics/onboarding/overview/guide-finalize-onboarding",
           ],

@@ -22,8 +22,7 @@ module.exports = {
           link: { type: "doc", id: "topics/onboarding/about" },
           collapsed: true,
           items: [
-            "topics/onboarding/overview/guide-retrieve-onboarding-id",
-            "topics/onboarding/overview/guide-monitor-onboarding",
+            "topics/onboarding/overview/guide-get-onboarding-info",
             "topics/onboarding/overview/guide-finalize-onboarding",
           ],
         },
@@ -53,7 +52,6 @@ module.exports = {
           link: { type: "doc", id: "topics/onboarding/documents/about" },
           collapsed: true,
           items: [
-            "topics/onboarding/documents/guide-add-document-webhooks",
             "topics/onboarding/documents/guide-list-documents",
             "topics/onboarding/documents/guide-upload-document",
             "topics/onboarding/documents/guide-retrieve-info",

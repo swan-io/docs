@@ -28,14 +28,13 @@ However, they're split in the documentation to prevent mixing up small but impor
 If you'd like to customize the onboarding experience for your users (while respecting local regulations), check out the open source [Swan Banking Frontend](https://swan-io.github.io/swan-partner-frontend/specs/onboarding/).
 :::
 
-## Result of successful onboarding
+## Purpose of onboarding
 
-After an onboarding is finalized, several events are also complete.
+Completing the onboarding process serves several purposes.
 
 1. **Account holder** is created with the status `Enabled`.
 1. Account holder's **account** is created.
-1. Person who performed the onboarding process is the **legal representative** of the account.
-They have the first membership to the account with **[full permissions](https://docs.swan.io/concept/account-membership#rights-management)**.
+1. If the person who performed the onboarding process is the **legal representative** of the account, they have the first account membership with **[full permissions](https://docs.swan.io/concept/account-membership#rights-management)**. *This isn't true if the person who performed the onboarding did so with power of attorney.*
 1. Your relationship with the account holder is stored in the `partnershipStatusInfofield` of the `account` object.
 
 ## Onboarding statuses
@@ -43,7 +42,7 @@ They have the first membership to the account with **[full permissions](https://
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    OLC((Onboarding<br/>link created)) -.-> OI[Ongoing Invalid]
+    OLC((Onboarding<br/>created)) -.-> OI[Ongoing Invalid]
     OLC -.-> OV[Ongoing Valid]
     OI -.-> OV
     OV --> F[Finalized]
@@ -56,8 +55,8 @@ flowchart LR
 
 | Status | Explanation |
 |---|---|
-| `Ongoing (Invalid)` | <ul><li>First status assigned to an onboarding link if **using the frontend**, or, if using the **API**, when **not all required information** is included with your mutation</li><li>Status might change to `Invalid` if required information is removed or if some information is incorrect</li></ul>**Next step**: Submit or update required information to advance to `Ongoing (Valid)` (both you and the end user can submit or update information) |
-| `Ongoing (Valid)` | <ul><li>First status assigned to an onboarding link if **using the API** and you **included all required information** with your mutation</li><li>Status changes to `Valid` when missing required information is submitted or if incorrect information is updated</li></ul>**Next step**: User completes form, clicks "Finalize," and provides consent to complete the onboarding process |
+| `Ongoing (Invalid)` | <ul><li>This is the first status assigned to an onboarding when **using the frontend**.</li><li>If using the **API**, this is the first status if **not all required information** is included with your mutation.</li><li>Status might change to `Invalid` if required information is removed or if some information is incorrect.</li></ul>**Next step**: Submit or update required information to advance to `Ongoing (Valid)` (both you and the end user can submit or update information) |
+| `Ongoing (Valid)` | <ul><li>This is the first status assigned to an onboarding if **using the API** and you **included all required information** with your mutation.</li><li>Status changes to `Valid` when missing required information is submitted or if incorrect information is updated.</li></ul>**Next step**: User completes form, clicks "Finalize," and provides consent to complete the onboarding process |
 | `Finalized` | Onboarding completed |
 
 ## Country requirements
@@ -79,12 +78,12 @@ participant U as User
         P ->> P: Determines need for Swan account
     else User request
     activate U
-        U ->> P: Requests Swan account
+        U ->> P: Requests Swan account and<br/>provides required information
     end
-    P ->> S: Creates onboarding ID & link
-    S -->> P: Returns onboarding object
-    P ->> U: Sends onboarding link
-    U ->> S: Completes onboarding and logs in
+    P ->> S: Creates onboarding ID
+    S -->> P: Returns onboarding ID
+    P ->> U: Sends onboarding link (OAuth2)
+    U ->> S: Logs in
     S -->> P: Redirects user to partner interface
     deactivate U
     P ->> S: Requests user access token
@@ -97,6 +96,5 @@ participant U as User
 
 The following guides are common to the individual and company onboarding processes.
 
-* [Retrieve an onboarding ID](overview/guide-retrieve-onboarding-id.mdx)
-* [Monitor onboarding progress](overview/guide-monitor-onboarding.mdx)
+* [Get information about an onboarding](overview/guide-get-onboarding-info.mdx)
 * [Finalize an onboarding](overview/guide-finalize-onboarding.mdx)

@@ -1,0 +1,132 @@
+---
+title: Add virtual cards
+---
+
+# Add virtual cards
+
+You can add one or multiple virtual cards, as well as single-use virtual cards.
+After adding a virtual card, you can update that card, view sensitive card information, and cancel or deactivate the card.
+
+:::tip Prerequisites
+You need to [add account memberships](https://docs.swan.io/guide/give-access-to-your-account) before creating cards.
+:::
+
+## Add a virtual card {#add-one}
+
+Add a new card for an existing account member by calling the `addCard` mutation.
+This mutation can only be called on behalf of an account member with the `canManageAccountMembership` rights.
+When you do this, make sure you are authenticated with a user access token in the name of the account member.
+
+The new card is thus created with the `ConsentPending` status.
+A `consentUrl` is returned which invites the user to start Strong Customer Authentication with Swan. 
+After the user completes the Strong Customer Authentication process, the new card changes to `Activated` status.
+
+In the mutation, you can use `cardProductId` field (optional) to choose which card design the user will receive.
+If don't use this field, they'll receive your default card product design.
+
+:::info Users can add virtual cards
+Users with `CanManageCards` permission can add their own virtual card directly from Swan's Web Banking interface, and they can use the virtual card immediately.
+:::
+
+### Mutation
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkVmlydHVhbENhcmQgewogIGFkZENhcmQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJFlPVVJfQUNDT1VOVF9NRU1CRVJTSElQX0lEIgogICAgICB3aXRoZHJhd2FsOiB0cnVlCiAgICAgIGludGVybmF0aW9uYWw6IHRydWUKICAgICAgbm9uTWFpbkN1cnJlbmN5VHJhbnNhY3Rpb25zOiB0cnVlCiAgICAgIGVDb21tZXJjZTogdHJ1ZQogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICAgIG5hbWU6ICJNeSBGaXJzdCBTd2FuIENhcmQiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjYXJkIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBDYXJkQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgaWQKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4,9} showLineNumbers
+mutation AddVirtualCard {
+  addCard(
+    input: {
+      accountMembershipId: "$YOUR_ACCOUNT_MEMBERSHIP_ID"
+      withdrawal: true
+      international: true
+      nonMainCurrencyTransactions: true
+      eCommerce: true
+      consentRedirectUrl: "$REDIRECT_URL"
+      name: "My First Swan Card"
+    }
+  ) {
+    ... on AddCardSuccessPayload {
+      __typename
+      card {
+        statusInfo {
+          ... on CardConsentPendingStatusInfo {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+        id
+      }
+    }
+  }
+}
+```
+
+### Payload
+
+```json {9,12} showLineNumbers
+{
+  "data": {
+    "addCard": {
+      "__typename": "AddCardSuccessPayload",
+      "card": {
+        "statusInfo": {
+          "__typename": "CardConsentPendingStatusInfo",
+          "consent": {
+            "consentUrl": "$YOUR_CONSENT_URL"
+          }
+        },
+        "id": "$YOUR_CARD_ID"
+      }
+    }
+  }
+}
+```
+
+## Add multiple virtual cards {#add-multiple}
+
+Add multiple cards to different existing account members by calling the `addCards` mutation.
+It works nearly the same way as `addCard` with two additional features:
+
+1. Add the physical card at the same time you add the virtual card by using the `physicalCard` field in the `addCards` mutation, plus entering a delivery address.
+1. Configure the spending limit when adding the card with the `spendingLimit` field in the `addCards` mutation.
+
+The new card is thus created with the `ConsentPending` status.
+A `consentUrl` is returned which invites the user to start Strong Customer Authentication with Swan. 
+After the user completes the Strong Customer Authentication process, the new card changes to `Processing` status.
+
+The cards are created asynchronously and then change to the `Enabled` status.
+
+Depending on how many cards you're creating, it can take up to several minutes to complete the process.
+For performance reasons, you can create up to **250 cards** per API call.
+
+## Print physical cards when adding virtual cards {#print-with-virtual}
+
+Call the `addCards` mutation.
+To add the physical card at the same time you add the virtual card, use the `physicalCard` field in the `addCards` mutation and enter a delivery address.
+
+You can also take advantage of [group delivery](../physical/guide-print.mdx#print-group) when adding and printing multiple cards.
+
+## Add single-use virtual cards {#add-suv}
+
+Add new single-use virtual cards to an existing account member by calling the `addSingleUseVirtualCard` mutation.
+
+This mutation can be called on behalf of any account member with the permission `canManageCards`.
+The permission `canManageAccountMembership` is optional.
+Learn more about [permissions and card management](https://docs.swan.io/concept/account-membership#adding-and-viewing-cards).
+
+When you do this, make sure you are authenticated with a user access token using the name of the card's account member.
+The new card is thus created with the `ConsentPending` status and a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan.
+After the user completes the Strong Customer Authentication process, the new card changes to `Enabled` status.
+
+The Single Use Virtual Card is never renewed.
+It cannot be physically printed, and it can't be added to digital Wallets (Apple or Google).
+
+:::info Single-use virtual cards & server-to-server consent
+If you wish to issue single-use virtual cards without having human interaction to consent and reveal card numbers, this is only possible for an account of which you are the holder (not available for your end customer for security and compliance reason) using [server-to-server consent](https://docs.swan.io/api/consent/server-to-server-consent).
+
+For both the single-use virtual card mutations (`addSingleUseVirtualCard` and `addSingleUseVirtualCards`), the `SuccessForProjectOwnerPayload` will return a card in `ConsentPending` status.
+The status changes to `Enabled` after the consent is validated.
+It's recommended to verify the card status before using it.
+:::

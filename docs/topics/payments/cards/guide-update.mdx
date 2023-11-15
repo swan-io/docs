@@ -1,0 +1,93 @@
+---
+title: Update card transaction settings
+---
+
+# Update card transaction settings
+
+:::note Card transactions
+**ADD TO CARDS > GUIDE-UPDATE**
+To update your card transaction settings, including the name, whether physical cards are allowed, and blocking the card, refer to the guide for updating card transaction settings.
+:::
+
+Card settings are **valid for all payments** linked to this card, whether they were made with a virtual, physical, or digital card.
+
+:::note Card product
+To update your [card product](../../cards/index.mdx#card-product) settings, including the name, whether physical cards are allowed, and blocking the card, refer to the [guide for updating card product settings](../../cards/overview/guide-update.mdx).
+:::
+
+## Transaction settings options {#settings-transactions-options}
+
+- `cardContractExpiryDate`:  Date you'd like the card to expire; leave empty if you don't want to set an expiration date
+    - If you don't set an expiration date, the card will be renewed automatically in three years.
+- `international`*:  Allow payments outside of the account holder's country
+- `withdrawal`: Allow or disable cash withdrawals
+- `nonMainCurrencyTransactions`*: Allow or disable transactions outside of the card's currency
+- `eCommerce`: Allow or disable transactions at eCommerce sites
+- `monthlySpendingLimit`: Fixed by the member within the limits set by Swan
+
+:::info `international` & `nonMainCurrencyTransactions`
+- If `international` is disabled, payments can only be made in the account holder's country. They can still pay using other currencies. For example, a cardholder in France can only make payments in France, but in euros as well as other currencies.
+- If `nonMainCurrencyTransactions` is disabled, payments can be made in other countries, but not using other currencies. For example, a cardholder in France can make payments in euros in the United Kingdom, but not in the GBP (Pound Sterling).
+:::
+
+## Suspicions of fraud {#settings-transactions-fraud}
+
+At the slightest suspicion of fraud, updating `eCommerce` to `false` for just that card allows the account member to temporarily block all e-commerce payments.
+The cardholder must then write to fraud@swan.io, after which Swan can renew the card number.
+
+## API guide
+
+1. Update all card settings by calling the `updateCard` mutation.
+1. When updating card settings, make sure you are authenticated with a user access token belonging to the correct account member.
+1. Additionally, the account member must have the permission `canManageCards`.
+    - The permission `canManageAccountMembership` is optional.
+    - Learn more about [permissions and card management](https://docs.swan.io/concept/account-membership#adding-and-viewing-cards).
+1. The request from this mutation returns a newly created consent resource containing the `consentUrl`.
+1. The URL allows you to redirect the user making the modification to Swan's Strong Customer Authentication.
+
+After the consent process is completed, the card is updated and its attribute version is increased by one.
+
+### Mutation {#settings-transactions-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gdXBkYXRlQ2FyZFNldHRpbmdzIHsKICB1cGRhdGVDYXJkKAogICAgaW5wdXQ6IHsKICAgICAgY2FyZElkOiAiM2EyNWNkYjQtODJkOS00OThhLWE4MDUtNGUwZTg1NDVmZjJiIgogICAgICB3aXRoZHJhd2FsOiBmYWxzZQogICAgICBpbnRlcm5hdGlvbmFsOiBmYWxzZQogICAgICBub25NYWluQ3VycmVuY3lUcmFuc2FjdGlvbnM6IGZhbHNlCiAgICAgIGVDb21tZXJjZTogZmFsc2UKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiaHR0cHM6Ly9kb2NzLnN3YW4uaW8vIgogICAgfQogICkgewogICAgLi4uIG9uIFVwZGF0ZUNhcmRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICAgIGlkCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {4,9} showLineNumbers
+mutation updateCardSettings {
+  updateCard(
+    input: {
+      cardId: "3a25cdb4-82d9-498a-a805-4e0e8545ff2b"
+      withdrawal: false
+      international: false
+      nonMainCurrencyTransactions: false
+      eCommerce: false
+      consentRedirectUrl: "https://docs.swan.io/"
+    }
+  ) {
+    ... on UpdateCardSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+        id
+      }
+    }
+  }
+}
+```
+
+### Payload {#settings-transactions-payload}
+
+Open the `consentUrl` returned by the mutation to consent to the update.
+
+```json {6,7} showLineNumbers
+{
+  "data": {
+    "updateCard": {
+      "__typename": "UpdateCardSuccessPayload",
+      "consent": {
+        "consentUrl": "$YOUR_CONSENT_URL",
+        "id": "$YOUR_CONSENT_ID"
+      }
+    }
+  }
+}
+```

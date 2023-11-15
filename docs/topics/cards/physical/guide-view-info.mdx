@@ -1,0 +1,90 @@
+---
+title: View sensitive information
+---
+
+# View sensitive information
+
+The `cardUrl` available in the `card` query leads to website that displays the card with its design and its sensitive hidden information.
+
+Consider integrating it into your product with an iframe or a webview.
+This URL is available for one hour after you query it.
+After one hour, renew the query to get another `cardUrl`.
+
+:::note Information not visible
+If information fails to become visible despite having the appropriate permissions, it may remain hidden due to regulatory restrictions based on your location.
+:::
+
+## View physical card numbers {#view-number}
+
+View the physical card numbers, which is different from the virtual card numbers, by calling the `viewPhysicalCardNumbers` mutation which returns a consent.
+When you do this, make sure you are authenticated with a user access token using the name of the card's account member.
+Then a `consentUrl` is returned, inviting the user to start the Strong Customer Authentication with Swan.
+
+After the consent is accepted, the card's sensitive information is **displayed for five minutes**.
+The client can click to copy any of the sensitive information to their clipboard.
+After they're done with the card info, they can click OK to be redirected to the `redirectUrl` set up during the `viewCardNumbers` mutation.
+
+![Swan card with information masked and revealed](../../../images/topics/cards/cards-view-info.png)
+
+:::info Store `consentId`
+To avoid repeating the Strong Customer Authentication each time the client wants to reveal the card numbers, the same `consentUrl` can be called anytime for five minutes after the consent.
+We advise you to store the `consentId` on your side and run a consent query to check the consent status is `Accepted` and the `updateAt` is less than five minutes, before reusing the `consentUrl`.
+The `consentUrl` only works in the cardholder's browser where the consent was completed.
+:::
+
+## View PIN {#view-pin}
+
+You can display the physical card's PIN by calling the `viewPhysicalCardPinmutation` which returns a consent.
+When you do this, make sure you are authenticated with a user access token using the name of the card's account member.
+Then a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan.
+
+If your card was created before 17:00 CET/CEST, you can call the mutation starting from 17:30 the same day.
+Otherwise, you'll have to wait until the next day at 17:30 to start calling the mutation.
+
+You can check the `isPINReady` boolean (true/false) in the physical card's `statusInfo`, with `ToActivate` status.
+It will be true when the PIN is available.
+
+### Mutation
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gTXlNdXRhdGlvbiB7CiAgdmlld1BoeXNpY2FsQ2FyZFBpbigKICAgIGlucHV0OiB7CiAgICAgIGNhcmRJZDogIjNhMjVjZGI0LTgyZDktNDk4YS1hODA1LTRlMGU4NTQ1ZmYyYiIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiaHR0cHM6Ly9kb2NzLnN3YW4uaW8vIgogICAgfQogICkgewogICAgLi4uIG9uIFZpZXdQaHlzaWNhbENhcmRQaW5TdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gUElOTm90UmVhZHlSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgcGh5c2ljYWxDYXJkSWRlbnRpZmllcgogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4-5} showLineNumbers
+mutation viewPin {
+  viewPhysicalCardPin(
+    input: {
+      cardId: "$YOUR_CARD_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on ViewPhysicalCardPinSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+    ... on PINNotReadyRejection {
+      __typename
+      message
+      physicalCardIdentifier
+    }
+  }
+}
+
+```
+
+### Payload
+
+Open the `consentUrl` returned by the mutation to provide consent, then view the PIN.
+
+```json {6} showLineNumbers
+{
+  "data": {
+    "viewPhysicalCardPin": {
+      "__typename": "ViewPhysicalCardPinSuccessPayload",
+      "consent": {
+        "consentUrl": "$CONSENT_URL"
+      }
+    }
+  }
+}
+```

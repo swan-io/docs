@@ -1,0 +1,104 @@
+---
+title: Print physical cards
+---
+
+# Print physical cards
+
+Learn how to print, activate, and suspend cards, plus cancel and renew them.
+You can also view sensitive information, like the card numbers or PIN.
+
+:::tip Prerequisites
+You need to add virtual cards before printing physical cards.
+:::
+
+## Print a physical card {#print-one}
+
+Permitted users can order their own cards using Swan's Web Banking interface.
+
+When they order a card, print it for them by calling the `printPhysicalCard` mutation which returns a consent.
+When you do this, make sure you are authenticated with a user access token belonging to a member with the `canManageAccountCards` permission.
+Then a `consentUrl` is returned which invites the user to start Strong Customer Authentication with Swan.
+
+Delivery details are available in the `PhysicalCardToActivateStatus` object, with the estimated date of delivery in the `estimatedDeliveryDatefield`.
+The carrier and tracking number are available in the `shippingProvider` and `trackingNumber`.
+The card's status will be `ToActivate` until the card is activated.
+
+Your users will receive their cards as quickly as possible.
+Refer to Swan's [card delivery times](./index.mdx#shipping) for more information.
+
+### Mutation
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkVmlydHVhbENhcmQgewogIGFkZENhcmQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJFlPVVJfQUNDT1VOVF9NRU1CRVJTSElQX0lEIgogICAgICB3aXRoZHJhd2FsOiB0cnVlCiAgICAgIGludGVybmF0aW9uYWw6IHRydWUKICAgICAgbm9uTWFpbkN1cnJlbmN5VHJhbnNhY3Rpb25zOiB0cnVlCiAgICAgIGVDb21tZXJjZTogdHJ1ZQogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICAgIG5hbWU6ICJNeSBGaXJzdCBTd2FuIENhcmQiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjYXJkIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBDYXJkQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgaWQKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4,12} showLineNumbers
+mutation PrintCard {
+  printPhysicalCard(
+    input: {
+      cardId: "$YOUR_CARD_ID"
+      address: {
+        addressLine1: "10 Rue de la Paix "
+        city: "Paris"
+        postalCode: "75000"
+        country: "FRA"
+      }
+      choosePINCode: false
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on PrintPhysicalCardSuccessPayload {
+      __typename
+      physicalCard {
+        statusInfo {
+          ... on PhysicalCardConsentPendingStatusInfo {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload
+
+```json {9} showLineNumbers
+{
+  "data": {
+    "printPhysicalCard": {
+      "__typename": "PrintPhysicalCardSuccessPayload",
+      "physicalCard": {
+        "statusInfo": {
+          "__typename": "PhysicalCardConsentPendingStatusInfo",
+          "consent": {
+            "consentUrl": "$YOUR_CONSENT_URL"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Print a physical card when adding a virtual card {#print-with-virtual}
+
+Call the `addCards` mutation.
+To add the physical card at the same time you add the virtual card, use the `physicalCard` field in the `addCards` mutation and enter a delivery address.
+
+## Print physical cards with an additional line {#print-additional-line}
+
+Add `physicalCardCustomOptions` > `additionalPrintedLine` to the object that corresponds to your chosen mutation.
+
+| Mutation | Object |
+|---|---|
+| `addCards` | Add `physicalCardCustomOptions` > `additionalPrintedLine` to the `physicalCard` object |
+| `addCardsWithGroupDelivery` | Add `physicalCardCustomOptions` > `additionalPrintedLine` to the `cards` object |
+| `printPhysicalCard` | Add `physicalCardCustomOptions` > `additionalPrintedLine` to the `input` |
+
+## Print multiple physical cards with group delivery {#print-group}
+
+To ship a group of cards together to the same address, call the `addCardsWithGroupDelivery` mutation.
+It works just like `addCards` (explained in the [guide to add virtual cards](../virtual/guide-add.mdx#add-multiple)), except all the cards are sent together in one package.
+This method is cost-effective and eco-friendly.

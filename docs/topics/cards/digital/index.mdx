@@ -1,0 +1,81 @@
+---
+title: Digital cards
+---
+
+# Digital cards
+
+Swan cards are compatible with Apple Pay and Google Pay.
+
+If you choose to allow digital cards, your cardholders can add virtual and physical cards to their preferred digital wallet.
+A list of digital cards is available in the `cards` query.
+
+## Certifying your digital card integration {#integration}
+
+You need to certify your digital card integration before your cardholders can use Apple Pay and Google Pay.
+
+Send an email to integration@swan.io specifying that you'd like to activate in-app provisioning for digital payments.
+The team will help you get started.
+
+import CompleteProvisioningGuide from '../partials/_provisioning-guide.mdx';
+
+<CompleteProvisioningGuide />
+
+## Adding cards to digital wallets {#wallets}
+
+Only [enabled virtual cards](../virtual/index.mdx#statuses) and [activated physical cards](../physical/index.mdx#statuses) can be digitized.
+Virtual cards are enabled almost immediately, but make sure your cardholders activate their physical cards before trying to digitize them.
+
+![Logos for Apple Wallet and Google Pay](../../../images/topics/cards/cards-digital-wallets.png)
+
+There are multiple ways to [add cards to a digital wallet](./guide-add.mdx):
+
+1. Your cardholders can do it themselves by entering their virtual or physical card number into the digital wallet.
+1. Your cardholders can use the Swan App and follow the in-app provisioning process.
+1. You can initiate the in-app provisioning process through the `addDigitalCard` mutation.
+
+## Renewing digital cards {#auto-renew}
+
+Swan takes care of updating digital cards with Apple Pay and Google Pay.
+It's a clear advantage, as this requires no action from you nor your client.
+
+## Digital card statuses {#statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    DCA((Digital<br/>card added)) -.-> P[Pending]
+    DCA -.-> CP[ConsentPending]
+    P --> D[Declined]
+    CP -.-> P
+    CP --> CD
+    P --> E[Enabled]
+    E --> CD
+    E <-.-> S[Suspended]
+    S --> CD[Canceled]
+    P --> CD
+    subgraph U[Can use card]
+        E
+    end
+    subgraph F[Final status]
+        CD
+        D
+    end
+    style DCA fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Digital card status | Explanation |
+|---|---|
+| `ConsentPending` | Request to add a digital card was sent with the `addDigitalCard` mutation and is waiting for the cardholder's consent<br/><br/>**Next steps**:<ul><li>If the cardholder consents, the status moves to `Pending`</li><li>If the cardholder doesn't consent, the status moves to `Canceled`</li><li>If you use the API to cancel the card, the status moves to `Canceled`</li></ul> |
+| `Pending` | Cardholder added the card to their digital Wallet manually, or they provided consent after you added the card with the API<br/><br/>**Next steps**:<ul><li>If the card is added to their Wallet successfully, the status moves to `Enabled`</li><li>If the card is declined during provisioning, the status moves to `Declined`</li></ul> |
+| `Enabled` | Digital card is available for use<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Enabled` indefinitely</li><li>`Enabled` cards can also be `Suspended` and `Canceled`</li></ul> |
+| `Suspended` | Digital card is suspended and not available for use<br/><br/>*Cards can be suspended for various reasons, including a request from you or the cardholder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API</li><li>Cancel the card with the API</li></ul> |
+| `Canceled` | Card is canceled, no longer available for use, and can't be reactivated |
+| `Declined` | Card was declined during the provisioning process |
+
+## Guides {#guides}
+
+- [Add digital cards to Apple Pay and Google Pay](./guide-add.mdx)
+- [Renew a digital card](#auto-renew)
+- [Cancel a digital card](./guide-cancel.mdx)

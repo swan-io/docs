@@ -1,0 +1,81 @@
+---
+title: View sensitive information
+---
+
+# View sensitive information
+
+## Prepare to view sensitive information {#view-prepare}
+
+The `cardUrl` available in the `card` query leads to website that displays the card with its design and its sensitive hidden information.
+
+Consider integrating it into your product with an iframe or a webview.
+This URL is available for one hour after you query it.
+After one hour, renew the query to get another `cardUrl`.
+
+:::note Information not visible
+If information fails to become visible despite having the appropriate permissions, it may remain hidden due to regulatory restrictions based on your location.
+:::
+
+## View virtual card numbers {#view-number}
+
+To make online payments you usually need to provide the card numbers, the expiration date, and the CVC.
+All of this data is considered sensitive and is not directly available through the Web Banking interface or the API.
+
+1. When the Account member wants to display sensitive information, you must call the `viewCardNumbers` mutation which returns a consent.
+1. Replace $YOUR_CARD_ID with your card ID, and $YOUR_REDIRECT_URL with the URL you want to redirect the user to after viewing the card numbers.
+1. Make sure you are authenticated with a user access token using the name of the card's account member.
+1. Then a consentUrl is returned which invites the user to start the Strong Customer Authentication with Swan. You need to open a native pop-up to display the consentUrl. This URL will redirect the user to a page with the card numbers displayed with the card design.
+
+### Mutation
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVmlld1NlbnNpdGl2ZUluZm8gewogIHZpZXdDYXJkTnVtYmVycygKICAgIGlucHV0OiB7IGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiLCBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiIH0KICApIHsKICAgIC4uLiBvbiBWaWV3Q2FyZE51bWJlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICAgIGlkCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {4-5,8} showLineNumbers
+mutation ViewSensitiveInfo {
+  viewCardNumbers(
+    input: {
+      cardId: "$YOUR_CARD_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on ViewCardNumbersSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+        id
+      }
+    }
+  }
+}
+```
+
+### Payload
+
+```json {6-7} showLineNumbers
+{
+  "data": {
+    "viewCardNumbers": {
+      "__typename": "ViewCardNumbersSuccessPayload",
+      "consent": {
+        "consentUrl": "$YOUR_CONSENT_URL",
+        "id": "$YOUR_CONSENT_ID"
+      }
+    }
+  }
+}
+```
+
+### After consent
+
+After the consent is accepted, the card's sensitive information is **displayed for five minutes**.
+The client can click to copy any of the sensitive information to their clipboard.
+After they're done with the card info, they can click OK to be redirected to the `redirectUrl` set up during the `viewCardNumbers` mutation.
+
+![Swan card with information masked and revealed](../../../images/topics/cards/cards-view-info.png)
+
+### Store `consentId`
+
+To avoid repeating the Strong Customer Authentication each time the client wants to reveal the card numbers, the same `consentUrl` can be called anytime for five minutes after the consent.
+
+Consider storing the `consentId` on your side and run a consent query to check the consent status is `Accepted` and the `updateAt` is less than five minutes, before reusing the `consentUrl`.
+The `consentUrl` only works in the cardholder's browser where the consent was completed.

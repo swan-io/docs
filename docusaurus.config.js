@@ -22,6 +22,12 @@ module.exports = {
       searchParameters: {},
       searchPagePath: "search",
     },
+    matomo: {
+      matomoUrl: "https://swan.matomo.cloud/",
+      siteId: "5",
+      phpLoader: "matomo.php",
+      jsLoader: "matomo.js",
+    },
     navbar: {
       title: "Docs",
       logo: {
@@ -75,5 +81,6 @@ module.exports = {
         },
       },
     ],
+    "docusaurus-plugin-matomo",
   ],
 };

@@ -19,7 +19,7 @@ module.exports = {
         {
           type: "category",
           label: "Onboarding overview",
-          link: { type: "doc", id: "topics/onboarding/about" },
+          link: { type: "doc", id: "topics/onboarding/index" },
           collapsed: true,
           items: [
             "topics/onboarding/overview/guide-get-onboarding-info",
@@ -30,7 +30,7 @@ module.exports = {
         {
           type: "category",
           label: "Individual accounts",
-          link: { type: "doc", id: "topics/onboarding/individual/about" },
+          link: { type: "doc", id: "topics/onboarding/individual/index" },
           collapsed: true,
           items: [
             "topics/onboarding/individual/guide-create-onboarding",
@@ -40,7 +40,7 @@ module.exports = {
         {
           type: "category",
           label: "Company accounts",
-          link: { type: "doc", id: "topics/onboarding/company/about" },
+          link: { type: "doc", id: "topics/onboarding/company/index" },
           collapsed: true,
           items: [
             "topics/onboarding/company/guide-create-onboarding",
@@ -50,7 +50,7 @@ module.exports = {
         {
           type: "category",
           label: "Onboarding documents",
-          link: { type: "doc", id: "topics/onboarding/documents/about" },
+          link: { type: "doc", id: "topics/onboarding/documents/index" },
           collapsed: true,
           items: [
             "topics/onboarding/documents/guide-add-document-webhooks",
@@ -65,7 +65,7 @@ module.exports = {
         {
           type: "category",
           label: "Account holders",
-          link: { type: "doc", id: "topics/onboarding/account-holders/about" },
+          link: { type: "doc", id: "topics/onboarding/account-holders/index" },
           collapsed: true,
           items: [
             "topics/onboarding/account-holders/guide-add-additional-account",
@@ -150,7 +150,7 @@ module.exports = {
         {
           type: "category",
           label: "Webhooks",
-          link: { type: "doc", id: "developers/webhooks/about" },
+          link: { type: "doc", id: "developers/webhooks/index" },
           collapsible: true,
           collapsed: true,
           items: [
@@ -160,7 +160,7 @@ module.exports = {
         {
           type: "category",
           label: "Access tokens",
-          link: { type: "doc", id: "developers/access-tokens/about" },
+          link: { type: "doc", id: "developers/access-tokens/index" },
           collapsible: true,
           collapsed: true,
           items: [
@@ -171,7 +171,7 @@ module.exports = {
         {
           type: "category",
           label: "Errors and rejections",
-          link: { type: "doc", id: "developers/rejections/about" },
+          link: { type: "doc", id: "developers/rejections/index" },
           collapsible: true,
           collapsed: true,
           items: ["developers/rejections/using-rejections"],

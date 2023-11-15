@@ -4,9 +4,17 @@ title: Capital deposits overview
 
 # Capital deposits
 
+import CapitalDepositDefinition from '../definitions/_capital-deposit.mdx';
+
+***
+
+**Capital deposit** *<CapitalDepositDefinition />*
+
+***
+
 When **creating a new company**, you're required to **deposit your share capital** before registering the company.
 
-## Overview
+## Overview {#overview}
 
 Several key stakeholders are involved in the capital deposit process: **you**; **your client**, their future company, and their shareholders; **Swan** (and Swan's API); and Swan's partner **notary**.
 
@@ -28,7 +36,7 @@ Learn more about the stakeholders and their interactions to complete a capital d
 Review this page, **relevant for all capital deposits**, before continuing to your country-specific content.
 :::
 
-## Capital deposit case
+## Capital deposit case {#api-case}
 
 The [`CapitalDepositCase`](https://api-reference.swan.io/#definition-CapitalDepositCase) API object compiles all information for a capital deposit case, including:
 
@@ -37,7 +45,7 @@ The [`CapitalDepositCase`](https://api-reference.swan.io/#definition-CapitalDepo
 1. Shareholder information
 1. Capital deposit documents
 
-### Case statuses
+### Case statuses {#api-case-statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -64,13 +72,13 @@ flowchart LR
 | `WaitingForNotaryTransfer` | ***Notary*** *reviews the register extract* |
 | `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete |
 
-## Required documents
+## Required documents {#documents}
 
 Processing your capital shares deposit **requires several documents**.
 These can be uploading using the API.
 Documents must meet Swan's requirements; otherwise, the document will be assigned the status `Refused` and you'll need to upload the document again.
 
-### List of required documents
+### List of required documents {#documents-list}
 
 All documents are **mandatory** unless marked *if requested*.
 
@@ -122,7 +130,7 @@ All documents are **mandatory** unless marked *if requested*.
    </table>
 
 
-### Document statuses
+### Document statuses {#documents-statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -146,14 +154,14 @@ flowchart LR
 | `Validated` | Swan validated the document |
 | `Refused` | Swan refused the document |
 
-## Shareholders
+## Shareholders {#shareholders}
 
 A shareholder is a physical or legal person who deposits funds in exchange for ownership of the future company.
 
 In order to deposit funds, the shareholder opens a temporary Swan payment account, which is then assigned an IBAN.
-This also means that each shareholder must go through the [onboarding](../onboarding/about.mdx) and [verification](../onboarding/account-holders/about.mdx#verification-process) processes.
+This also means that each shareholder must go through the [onboarding](../onboarding/index.mdx) and [verification](../onboarding/account-holders/index.mdx#verification-process) processes.
 
-### Proof of address
+### Proof of address {#shareholders-address}
 
 Shareholders must provide proof of their residence address.
 Only official documents will be validated.
@@ -173,7 +181,7 @@ Acceptable documents:
 If you aren't sure a document complies with these requirements, please send an email to kyc@swan.io.
 :::
 
-### Shareholder statuses
+### Shareholder statuses {#shareholders-statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -192,12 +200,12 @@ flowchart LR
 | Status | Explanation |
 | --- | ------ |
 | `PendingOnboarding` | Default status after the shareholder is created; shareholder must **complete their onboarding** and their **account must be created** to continue |
-| `WaitingForVerification` | Possible status if the account holder verification isn't complete at the moment the shareholder's account is created<br/><br/>*Status bypassed if the [account holder status](../onboarding/account-holders/about.mdx#account-holder-verification-statuses) is already `Verified`* |
+| `WaitingForVerification` | Possible status if the account holder verification isn't complete at the moment the shareholder's account is created<br/><br/>*Status bypassed if the [account holder status](../onboarding/account-holders/index.mdx#account-holder-verification-statuses) is already `Verified`* |
 | `WaitingForTransfer` | Waiting for the shareholder to deposit the full share capital in their Swan account created during onboarding, which **must** be transferred from an account belonging to the shareholder  |
 | `CapitalTransferred` | Waiting for the rest of the capital deposit case to be ready and the funds to be transferred to the notary |
 | `CapitalFundsWiredToNotary` | Still waiting for the rest of the capital deposit case to be ready, but now the funds are with the notary |
 
-## Sequence diagram
+## Sequence diagram {#diagram}
 
 ```mermaid
 sequenceDiagram

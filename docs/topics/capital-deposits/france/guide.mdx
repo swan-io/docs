@@ -11,17 +11,17 @@ Depositing share capital in France is a multi-step process involving several key
 - The notary completes steps 7 and 9.
 
 :::info General capital deposit information
-Review the **sequence diagram** on the [general capital deposit page](../about.mdx) to see the interactions in more details, plus find information about **statuses**, **shareholders**, and more.
+Review the **sequence diagram** on the [general capital deposit page](../index.mdx) to see the interactions in more details, plus find information about **statuses**, **shareholders**, and more.
 :::
 
-## Step 1: Create capital deposit case
+## Step 1: Create capital deposit case {#create-api-case}
 
 Use the API to create a capital deposit case object.
 Everything related to your capital deposit, including shareholder information, transfers, and documents, will be collected in the `case` object.
 
 → Follow the [detailed guide](./guide-create-case.mdx) to create your case, which includes full API mutation examples.
 
-## Step 2: Finalize account creation
+## Step 2: Finalize account creation {#finalize-account-creation}
 
 Following the guide to create a capital deposit case also launches the account creation process for the future company and individual shareholders.
 
@@ -37,11 +37,11 @@ To complete the account creation process:
 1. Shareholders need to complete the account onboarding process. [Monitor their progress](../../onboarding/overview/guide-get-onboarding-info.mdx) if needed.
 1. After each shareholder has at least opened their onboarding link, you might choose to use the API to [finalize all account onboardings](../../onboarding/overview/guide-finalize-onboarding.mdx). Shareholders can also finalize their own onboardings.
 
-## Step 3: Verify account holders
+## Step 3: Verify account holders {#verify-account-holders}
 
 After the shareholders complete the onboarding process, they must complete identity verification.
 
-→ Learn more about the [verification process](../../onboarding/account-holders/about.mdx#verification-process) for new account holders.
+→ Learn more about the [verification process](../../onboarding/account-holders/index.mdx#verification-process) for new account holders.
 
 :::info Identification level
 Swan supports multiple levels to verify your identity.
@@ -51,7 +51,7 @@ For capital deposits, please use the following levels:
 - Company accounts: [Expert](https://docs.swan.io/concept/user#expert)
 :::
 
-## Step 4: Upload capital deposit documents
+## Step 4: Upload capital deposit documents {#upload-documents}
 
 Use the API to:
 
@@ -60,7 +60,7 @@ Use the API to:
 
 → Follow the [detailed guide](./guide-upload-documents.mdx) to generate URLs and upload documents, which includes full API mutation examples.
 
-## Step 5: Transfer capital funds
+## Step 5: Transfer capital funds {#transfer-capital-funds}
 
 Each shareholder must transfer their capital share deposit from an **account in their name** to their new Swan account.
 
@@ -69,7 +69,7 @@ Shareholders must **perform this transfer themselves**, and need their **new IBA
 A good practice is to configure your integration to send an **automated email** to shareholders with the new IBANs.
 Alternately, they can access the IBAN associated with their Swan account through the Web Banking user interface, or you can access it on the Dashboard and share it with them.
 
-## Step 6: Validate and update case
+## Step 6: Validate and update case {#validate-case}
 
 Here's a quick review.
 At this point, you've done the following for your `CapitalDepositCase`:
@@ -83,9 +83,9 @@ To complete step 6, Swan:
 
 - Reviews the entire case.
 - Validates the capital deposit in Swan's system.
-- Updates the [case status](../about.mdx#capital-deposit-case-statuses) to `WaitingForShareDepositCertificate` so it gets sent to the notary.
+- Updates the [case status](../index.mdx#api-case-statuses) to `WaitingForShareDepositCertificate` so it gets sent to the notary.
 
-## Step 7: Upload share deposit certificate
+## Step 7: Upload share deposit certificate {#upload-certificate}
 
 After the notary validates this stage of the capital deposit, they respond with a **capital shares deposit certificate**.
 This process is typically quick, taking up to **two business days**.
@@ -95,14 +95,14 @@ View the certificate in the capital deposits section of your Dashboard.
 You can also retrieve it with the `capitalDepositCase` API query.
 Be sure to add `documents` > `downloadUrl` in the explorer.
 
-## Step 8: Upload the register extract (KBIS)
+## Step 8: Upload the register extract (KBIS) {#upload-kbis}
 
 Upload your KBIS using the same document upload process as in step 4.
 Choose document type `RegisterExtract`.
 
 → Follow the [detailed guide](./guide-upload-documents.mdx) to generate an upload URL and upload your KBIS, which includes full API mutation examples.
 
-## Step 9: Transfer funds to company account
+## Step 9: Transfer funds to company account {#transfer-funds-company}
 
 After the notary validates the register extract, they'll transfer your capital deposit funds to the company account you created at the beginning of this process.
 This process usually takes up to **two business days**.

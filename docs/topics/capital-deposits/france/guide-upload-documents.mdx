@@ -9,7 +9,7 @@ This page explains how to upload documents for steps 4 and 8 of a **multi-step p
 Refer to the [France guide](./guide.mdx) for the whole process.
 :::
 
-## Step 1: Generate upload URL
+## Step 1: Generate upload URL  {#generate-url}
 
 Use the `generateCapitalDepositDocumentUploadUrl` mutation to generate an upload URL.
 
@@ -37,9 +37,9 @@ mutation MyMutation {
 }
 ```
 
-## Step 2: Recover generated URL from payload
+## Step 2: Retrieve generated URL from payload {#retrieve-url}
 
-Recover the generated `uploadUrl` in the payload.
+Retrieve the generated `uploadUrl` in the payload.
 
 :::caution Upload URL expires
 The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
@@ -55,7 +55,7 @@ The `uploadUrl` is **only valid for seven days**, after which you'd need to gene
 }
 ```
 
-## Step 3: Send HTTP PUT request
+## Step 3: Send HTTP PUT request {#send-http-request}
 
 Send an HTTP PUT request to the `uploadUrl` with a `Content-Type: multipart/form-data` header.
 
@@ -65,7 +65,7 @@ Send an HTTP PUT request to the `uploadUrl` with a `Content-Type: multipart/form
 curl --upload-file $YOUR_FILE https://$UPLOAD_URL
 ```
 
-## Step 4: Repeat
+## Step 4: Repeat {#repeat-steps}
 
 Repeat steps 1-3 to upload additional documents, as needed.
-You can also change the documents you already uploaded as long as the [document status](../about.mdx#capital-deposit-document-statuses) remains `Uploaded`.
+You can also change the documents you already uploaded as long as the [document status](../index.mdx#documents-statuses) remains `Uploaded`.

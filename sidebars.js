@@ -5,6 +5,7 @@ module.exports = {
       label: "Introduction",
       collapsible: false,
       collapsed: false,
+      link: { type: "doc", id: "index" },
       items: [
         "index",
         "glossary",
@@ -15,11 +16,12 @@ module.exports = {
       label: "Account onboarding",
       collapsible: false,
       collapsed: false,
+      link: { type: "doc", id: "topics/onboarding/index" },
       items: [
         {
           type: "category",
-          label: "Onboarding overview",
-          link: { type: "doc", id: "topics/onboarding/about" },
+          label: "Account onboarding overview",
+          link: { type: "doc", id: "topics/onboarding/index" },
           collapsed: true,
           items: [
             "topics/onboarding/overview/guide-get-onboarding-info",
@@ -29,7 +31,7 @@ module.exports = {
         {
           type: "category",
           label: "Individual accounts",
-          link: { type: "doc", id: "topics/onboarding/individual/about" },
+          link: { type: "doc", id: "topics/onboarding/individual/index" },
           collapsed: true,
           items: [
             "topics/onboarding/individual/guide-create-onboarding",
@@ -39,7 +41,7 @@ module.exports = {
         {
           type: "category",
           label: "Company accounts",
-          link: { type: "doc", id: "topics/onboarding/company/about" },
+          link: { type: "doc", id: "topics/onboarding/company/index" },
           collapsed: true,
           items: [
             "topics/onboarding/company/guide-create-onboarding",
@@ -49,7 +51,7 @@ module.exports = {
         {
           type: "category",
           label: "Onboarding documents",
-          link: { type: "doc", id: "topics/onboarding/documents/about" },
+          link: { type: "doc", id: "topics/onboarding/documents/index" },
           collapsed: true,
           items: [
             "topics/onboarding/documents/guide-list-documents",
@@ -63,7 +65,7 @@ module.exports = {
         {
           type: "category",
           label: "Account holders",
-          link: { type: "doc", id: "topics/onboarding/account-holders/about" },
+          link: { type: "doc", id: "topics/onboarding/account-holders/index" },
           collapsed: true,
           items: [
             "topics/onboarding/account-holders/guide-add-additional-account",
@@ -78,8 +80,9 @@ module.exports = {
       label: "Capital deposits",
       collapsible: false,
       collapsed: false,
+      link: { type: "doc", id: "topics/capital-deposits/index" },
       items: [
-        "topics/capital-deposits/about",
+        "topics/capital-deposits/index",
         {
           type: "category",
           label: "France",
@@ -90,28 +93,6 @@ module.exports = {
             "topics/capital-deposits/france/guide-upload-documents",
         ]
         },
-        "topics/capital-deposits/support",
-      ],
-    },
-    {
-      type: "category",
-      label: "Payments",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Payments overview",
-          link: { type: "doc", id: "topics/payments/about" },
-          collapsed: true,
-          items: [
-            "topics/payments/overview/guide-get-payment-info",
-            "topics/payments/overview/guide-retrieve-payment-id",
-            "topics/payments/overview/guide-get-transaction-info",
-            "topics/payments/overview/guide-retrieve-transaction-id",
-          ],
-        },
-        "topics/payments/support",
       ],
     },
     {
@@ -119,11 +100,12 @@ module.exports = {
       label: "Projects",
       collapsible: false,
       collapsed: false,
+      link: { type: "doc", id: "topics/projects/index" },
       items: [
         {
           type: "category",
           label: "Projects overview",
-          link: { type: "doc", id: "topics/projects/about" },
+          link: { type: "doc", id: "topics/projects/index" },
           collapsed: true,
           items: [
             "topics/projects/guide-activate-project",
@@ -143,12 +125,12 @@ module.exports = {
           label: "Status page", // The link label
           href: "https://status.swan.io/", // The external URL
         },
-        "topics/contact",
         {
           type: "link",
-          label: "Help Center", // The link label
+          label: "Support Center", // The link label
           href: "https://support.swan.io/hc/en-150", // The external URL
         },
+        "topics/contact",
       ],
     },
   ],

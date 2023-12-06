@@ -1,0 +1,114 @@
+---
+title: Cards overview
+---
+
+# Cards
+
+Swan offers Mastercard debit cards to all of your account members.
+Swan cards can be used everywhere Mastercard is accepted.
+
+Individual account holders are issued consumer debit cards, while company account holders receive business debit cards.
+Note that cards don't come with insurance.
+
+## Types of cards {#types}
+
+Swan supports three types of cards:
+
+- [Virtual](./virtual/index.mdx): card that only exists on the computer, perfect for e-commerce transactions
+- [Physical](./physical/index.mdx): classic plastic card used to complete swipe, chip and PIN, and contactless payments
+- [Digital](./digital/index.mdx): virtual or physical card that's added to a digital wallet, such as Apple Pay or Google Pay
+
+### Creation order {#types-order}
+
+Swan is enthusiastically **virtual first** (similar to digital first), meaning the priority is on a **dematerialized user experience**.
+
+![Image displaying connection between account membership, virtual card, then digital and physical cards](../../images/topics/cards/cards-types.png)
+
+1. Create **account memberships** before creating cards.
+1. Create **virtual cards** before physical cards.
+1. Create **physical** and **digital cards**. Note that physical cards aren't required to create digital cards—you can add a virtual card directly into your favorite digital wallet.
+
+Consider the example of Kafka Tamura:
+
+![Image displaying possible timeline between creating a virtual card, adding a digital card, and deciding to order a standard physical card](../../images/topics/cards/cards-timeline.png)
+
+1. **Instantly**: Kafka requests and receives a virtual card, usable right away for e-commerce transactions.
+1. **Day 2**: Kafka adds his virtual card to Apple Pay, digitizing the card. He uses it to make contactless payments.
+1. **Day 4**: Kafka decides to add the virtual card to his Apple watch as well.
+1. **Day 7**: Finally, Kafka decides to order a physical card, just in case.
+
+## Security and consent
+
+To keep the cards you supply secure, all card-related mutations that initiate a sensitive action require consent.
+Learn more about [consent with Swan](https://docs.swan.io/api/consent#consent-on-mobile).
+
+| Action | Mutations |
+|---|---|
+| Adding cards | <ul><li>`addCard`</li><li>`addCards`</li><li>`addCardsWithGroupDelivery`</li><li>`addDigitalCard`</li><li>`addSingleUseVirtualCard`</li><li>`addSingleUseVirtualCards`</li></ul> |
+| Printing, activating, and updating cards | <ul><li>`printPhysicalCard`</li><li>`activatePhysicalCard`</li><li>`resumePhysicalCard`</li><li>`updateCard`</li></ul> |
+| Viewing sensitive information | <ul><li>`viewCardNumbers`</li><li>`viewPhysicalCardPin`</li></ul> |
+
+## Card products {#card-product}
+
+import CardProductExplanation from './partials/_card-product.mdx';
+
+<CardProductExplanation />
+
+Learn more about designing your card products in the [card design](./design/index.mdx) section.
+
+### Card product settings {#settings}
+
+You can update your card product's name and whether physical cards are allowed, plus you can block the card.
+
+Manage card settings on your **Dashboard** > **Settings** > **Cards**.
+You can (1) manage existing card products that are already validated, or (2) create a new standard card product.
+
+![Screenshot of the Dashboard cards page with callouts on an existing card and create new](../../images/topics/cards/cards-dashboard-settings.png)
+
+## Cards and account memberships {#cards-account-memberships}
+
+No matter how many members are attached to an account—1, 50, or 500—you can issue cards to each member.
+Every member has access to the same pot of money.
+Any payments made with the card are debited from the account the member belongs to.
+
+Thus, an account membership must be created *before* adding a card for an account member.
+
+### Multiple memberships, multiple cards {#cards-account-memberships-example-multiple}
+
+![Image displaying connection between account holders, account, account membership, and cards](../../images/topics/cards/cards-flow-multiple.png)
+
+1. MyBrand is a verified account holder with a company account.
+1. As an account holder, MyBrand has one account with money in it.
+1. Attached to the account are three account members: Rae, Mika, and Sasha.
+    1. Each member is identified by their email address.
+    1. They all have different permissions.
+1. Only two members, Rae and Mika, have cards associated with their account membership. Any money spent with these cards is taken from the MyBrand company account.
+
+### One membership, one card {#cards-account-memberships-example-one}
+
+![Image displaying connection between account holders, account, account membership, and cards](../../images/topics/cards/cards-flow-single.png)
+
+1. Dillon is a verified account holder with an individual account.
+1. As an account holder, Dillon has one account with money in it.
+1. Dillon is the only account member, identified by her email address. She has membership and card permissions automatically.
+1. Dillon also has a card associated with her account membership.
+
+## Card language {#language}
+
+Your card's language (the language that will appear on payment terminals, for example) is usually the same as the language chosen for the Swan account.
+
+For Swan's **no-code** and **open source** Web Banking interface, the card language is determined by the default language of the browser where the card is created.
+
+When using the **API**, the card language is the same as the Swan account language unless otherwise communicated.
+You can update the default language by calling the `bindAccountMembership` mutation and adding `accept-language` to the HTTP header.
+This allows the users to choose their card language.
+
+## Card statuses {#statuses}
+
+Card statuses depend on the type of card.
+Refer to the corresponding sections for [virtual](./virtual/index.mdx#virtual-card-statuses), [physical](./physical/index.mdx#physical-card-statuses), and [digital](./digital/index.mdx#digital-card-statuses) cards.
+
+## Guides {#guides}
+
+- [Issue cards](./overview/guide-issue.mdx)
+- [Update card product](./overview/guide-update.mdx)

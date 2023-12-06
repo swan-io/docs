@@ -1,0 +1,132 @@
+---
+title: Physical cards
+---
+
+# Physical cards
+
+You can order a physical card for each virtual card.
+Swan physical cards are typical plastic cards that can be used for swipe, chip and PIN, contactless, and online transactions.
+Your [design](../design/index.mdx) will be printed on all physical cards.
+
+## Card numbers {#number}
+
+Each physical card has a unique card number, different even from the virtual card added before the physical card was printed.
+
+Swan makes the physical card's number, CVC, expiry date, and the PIN available in Web Banking.
+The **card number**, **CVC**, and **PIN** are considered sensitive data and must be **masked by default**.
+The cardholder must complete a **consent request** before the numbers can be unmasked.
+
+import VirtualPhysicalCardNumbers from '../partials/_card-numbers.mdx';
+
+:::info Virtual and physical card numbers
+<VirtualPhysicalCardNumbers />
+:::
+
+## PIN {#pin}
+
+Physical cards have a **four-digit PIN**, or personal identification number.
+PINs are assigned when the card is printed and **can't be changed**.
+
+The PIN for each physical card is available to the cardholder on Swan's Web Banking interface.
+PINs aren't available on your Dashboard because only the cardholder should have easy access to the PIN for their card.
+
+If a cardholder **forgets their PIN**, they can view it on your interface.
+If needed, you can use the `ViewPhysicalCardPin` mutation to view the numbers yourself, which requires a user access token associated with the cardholder.
+Note that if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`.
+
+:::caution
+If a cardholder shares their PIN, Swan can't take responsibility for fraud associated with that card.
+:::
+
+### Incorrect PIN attempts {#pin-incorrect-attempts}
+
+If the cardholer enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical can be made online or in person.
+
+Note that a physical card blocked for three incorrect PIN attempts will have the reason `IncorrectPinCodeAttemptsExceeded` (on the `PhysicalCardSuspendedStatusInfo`).
+You'll have to wait 24 hours before being able to [unblock the physical card](./guide-block-unblock.mdx).
+
+You can continue to use both virtual and digital cards.
+
+## Shipping cards {#shipping}
+
+Delivery time for physical cards depends on the type of material you select and your cardholders' location.
+Please note that the delivery times listed here are estimates and aren't contractual.
+
+- :fr: **France metropolitan**: 2-3 business days
+- :de: **Germany**: 3-5 business days
+- :flag-nl: **Netherlands**: 3-4 business days
+- :flag-pt: **Portugal**: 2-3 weeks
+- :es: **Spain**: 3-4 weeks
+
+:::info Shipping options & delivery times
+Taking note of Swan's standard, non-contractual delivery estimates, let your Technical Account Manager know your preferred shipping option:
+
+- Tracked within France
+- Untracked within Europe
+- Tracked within Europe (additional cost)
+
+Note that if your cardholder never receives their physical card, you can refer them to the [Swan Support Center](https://support.swan.io/hc/en-150/articles/5503032519837).
+:::
+
+## Physical card statuses {#statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    PCA((Physical<br/>card added)) -.-> I[Initiated]
+    TA <-.-> S
+    I -.-> CP[ConsentPending]
+    CP -.-> P[Processing]
+    P -.-> TA[ToActivate]
+    TA --> A[Activated]
+    A <-.-> S[Suspended]
+    S -.-> CL[Canceling]
+    CL --> CD[Canceled]
+    CP -.-> TA
+    CP -.-> CL
+    CP --> CD
+    P -.-> CL
+    TA -.-> CL
+    A -.-> CL
+    subgraph U[Can use card]
+        A
+    end
+        subgraph IR[Irreversible]
+        CL
+    end
+    subgraph F[Final status]
+        CD
+    end
+    style PCA fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style IR fill:#f6ddcc,stroke:#c12236
+```
+
+| Physical card status | Explanation |
+|---|---|
+| `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation |
+| `ConsentPending` | Request to print a physical card was received and is waiting for the cardholder's consent<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the cardholder consents, the status moves to `Processing`</li><li>If you used the `printPhysicalCard` mutation and the cardholder consents, the status moves to `ToActivate`</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`</li></ul> |
+| `Processing` | Consent has been received and the card is in the process being printed and delivered<br/><br/>**Next steps**:<ul><li>If you cancel the card with the API *before* the card is printed, the status moves to `Canceling`</li><li>If the card is printed and delivered successfully, the status moves to `ToActivate`</li></ul> |
+| `ToActivate` | Cardholder received the physical card, but needs to activate it by performing a first transaction and entering the PIN; you can also activate the card with the `activatePhysicalCard` mutation<br/><br/>**Next steps**:<ul><li>If the cardholder performs the transaction successfully, or you activate the card with the API, the status moves to `ToActivate`</li><li>If the cardholder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`</li></ul> |
+| `Activated` | Physical card is available for use<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Activated` until the renewal period</li><li>`Activated` cards can also be `Suspended` and `Canceled` (example: if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`)</li></ul> |
+| `Suspended` | Physical card is suspended and not available for use<br/><br/>*Cards can be suspended for various reasons, including a request from you or the cardholder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API</li><li>Cancel the card with the API</li></ul> |
+| `Canceling` | Card is in the process of being canceled<br/><br/>**Next steps**: Card is `Canceled`; after a card is assigned the `Canceling` status, the process can't be reversed |
+| `Canceled` | Card is canceled, no longer available for use, and can't be reactivated |
+
+## Guides {#guides}
+
+- [Print physical cards](./guide-print.mdx)
+    - Print a physical card
+    - Print multiple physical cards
+    - Print a custom physical card
+    - Print multiple physical cards with group delivery
+- [Activate physical cards](./guide-activate.mdx)
+- [View sensitive information](./guide-view-info.mdx)
+    - View physical card number
+    - View PIN
+- [Block & unblock physical cards](./guide-block-unblock.mdx)
+    - Temporarily block a physical card
+    - Unblock a physical card
+- [Renew physical cards](./guide-renew.mdx)
+- [Cancel physical cards](./guide-cancel.mdx)

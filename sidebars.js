@@ -5,7 +5,6 @@ module.exports = {
       label: "Introduction",
       collapsible: false,
       collapsed: false,
-      link: { type: "doc", id: "index" },
       items: [
         "index",
         "glossary",
@@ -16,7 +15,6 @@ module.exports = {
       label: "Account onboarding",
       collapsible: false,
       collapsed: false,
-      link: { type: "doc", id: "topics/onboarding/index" },
       items: [
         {
           type: "category",
@@ -80,7 +78,6 @@ module.exports = {
       label: "Capital deposits",
       collapsible: false,
       collapsed: false,
-      link: { type: "doc", id: "topics/capital-deposits/index" },
       items: [
         "topics/capital-deposits/index",
         {
@@ -95,6 +92,70 @@ module.exports = {
         },
       ],
     },
+    {
+      type: "category",
+      label: "Cards",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Cards overview",
+          link: { type: "doc", id: "topics/cards/index" },
+          collapsed: true,
+          items: [
+            "topics/cards/overview/guide-issue",
+            "topics/cards/overview/guide-update",
+          ],
+        },
+        {
+          type: "category",
+          label: "Card design",
+          link: { type: "doc", id: "topics/cards/design/index" },
+          collapsed: true,
+          items : [
+            "topics/cards/design/guide-standard",
+            "topics/cards/design/guide-custom",
+            "topics/cards/design/guide-logo",
+        ]
+        },
+        {
+          type: "category",
+          label: "Virtual cards",
+          link: { type: "doc", id: "topics/cards/virtual/index" },
+          collapsed: true,
+          items : [
+            "topics/cards/virtual/guide-add",
+            "topics/cards/virtual/guide-view-info",
+            "topics/cards/virtual/guide-cancel",
+        ]
+        },
+        {
+          type: "category",
+          label: "Physical cards",
+          link: { type: "doc", id: "topics/cards/physical/index" },
+          collapsed: true,
+          items : [
+            "topics/cards/physical/guide-print",
+            "topics/cards/physical/guide-activate",
+            "topics/cards/physical/guide-view-info",
+            "topics/cards/physical/guide-block-unblock",
+            "topics/cards/physical/guide-renew",
+            "topics/cards/physical/guide-cancel",
+        ]
+        },
+        {
+          type: "category",
+          label: "Digital cards",
+          link: { type: "doc", id: "topics/cards/digital/index" },
+          collapsed: true,
+          items : [
+            "topics/cards/digital/guide-add",
+            "topics/cards/digital/guide-cancel",
+        ]
+        },
+      ],
+    },  
     {
       type: "category",
       label: "Projects",

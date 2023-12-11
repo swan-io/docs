@@ -1,0 +1,121 @@
+---
+title: Initiate a transaction
+---
+
+# Initiate a SEPA Direct Debit transaction
+
+:::tip Prerequisites
+- Debtor's account status: any except `Closing` or `Closed`
+- Merchant profile status: `Enabled`
+- Payment method status: `Enabled`
+- Direct debit payment mandate status: `Enabled`
+- [B2B only] Debtor's account type: `Company`
+:::
+
+## Guide {#guide}
+
+1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions.
+1. Call the `initiateMerchantPaymentCollection` mutation.
+1. Include the amount `value` and `currency`.
+1. Choose `sepaDirectDebit` (line 5), and add the payment mandate ID (line 6) from the [declare a payment mandate](./guide-declare.mdx) guide.
+1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
+
+## Mutation {#mutation}
+
+import DateIso8601 from '../../partials/_iso-8601.mdx';
+
+:::note Dates
+<DateIso8601 />
+
+If the date is left empty, the transaction will be executed as soon as possible.
+If the date indicated is a non-business day, the transaction will be executed on the next business day.
+:::
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVTZGQgewogIGluaXRpYXRlTWVyY2hhbnRQYXltZW50Q29sbGVjdGlvbigKICAgIGlucHV0OiB7CiAgICAgIGFtb3VudDogeyB2YWx1ZTogIjc1IiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgc2VwYURpcmVjdERlYml0OiB7CiAgICAgICAgbWFuZGF0ZUlkOiAiJFlPVVJfTUFOREFURV9JRCIKICAgICAgICByZXF1ZXN0ZWRFeGVjdXRpb25BdDogIjIwMjQtMDQtMTJUMTY6Mjg6MjIuODY3WiIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlTWVyY2hhbnRQYXltZW50Q29sbGVjdGlvblN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXJjaGFudFBheW1lbnRDb2xsZWN0aW9uIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFBheW1lbnRSZWplY3RlZCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIHJlYXNvbgogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIFBheW1lbnRJbml0aWF0ZWQgewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIFBheW1lbnRDb25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIGlkCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgcGF0aAogICAgICAgIG1lc3NhZ2UKICAgICAgICBjb2RlCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+You can also include an optional **label** and **reference**, which are displayed in your transaction history and to the debtor.
+
+```graphql {4,6} showLineNumbers
+mutation InitiateSdd {
+  initiateMerchantPaymentCollection(
+    input: {
+      amount: { value: "75", currency: "EUR" }
+      sepaDirectDebit: {
+        mandateId: "$YOUR_MANDATE_ID"
+        requestedExecutionAt: "2024-04-12T16:28:22.867Z"
+      }
+    }
+  ) {
+    ... on InitiateMerchantPaymentCollectionSuccessPayload {
+      __typename
+      merchantPaymentCollection {
+        statusInfo {
+          status
+          ... on PaymentRejected {
+            __typename
+            status
+            reason
+          }
+          ... on PaymentInitiated {
+            __typename
+            status
+          }
+          ... on PaymentConsentPending {
+            __typename
+            status
+          }
+        }
+      }
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+      fields {
+        path
+        message
+        code
+      }
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+Note the `id` (line 10) for your Internal Direct Debit payment.
+
+```json {6} showLineNumbers
+{
+  "data": {
+    "initiateMerchantPaymentCollection": {
+      "__typename": "InitiateMerchantPaymentCollectionSuccessPayload",
+      "merchantPaymentCollection": {
+        "statusInfo": {
+          "status": "Initiated",
+          "__typename": "PaymentInitiated"
+        },
+        "id": "$YOUR_PAYMENT_ID"
+      }
+    }
+  }
+}
+```
+
+## Next steps {#next}
+
+1. An incoming SEPA Direct Debit (`SepaDirectDebitIn`) is created in the merchant's account with the status `Upcoming`.
+1. On the [settlement date](./index.mdx#settlement), the transaction status changes automatically to `Booked` and [rolling reserve](./index.mdx#rolling-reserve) begins.
+1. After the indicated rolling reserve period, the merchant receives the payment.

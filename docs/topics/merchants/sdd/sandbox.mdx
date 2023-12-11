@@ -1,0 +1,81 @@
+---
+title: Sandbox
+---
+
+# Sandbox: SEPA Direct Debit
+
+When testing your integration, you might need to simulate certain events with the [**Partner Testing API**](https://explorer.swan.io/?tab=test-api).
+
+## Simulate booking an incoming SEPA Direct Debit transaction {#simulate-booking}
+
+```graphql {2} showLineNumbers
+mutation SimulateIncomingSepaDirectDebitBooking {
+  simulateIncomingSepaDirectDebitBooking(input: { transactionId: "$YOUR_TRANSACTION_ID" }) {
+    ... on SimulateIncomingSepaDirectDebitBookingSuccessPayload {
+      __typename
+      transactionId
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+  }
+}
+```
+
+## Simulate releasing rolling reserve {#simulate-release-rr}
+
+```graphql {3} showLineNumbers
+mutation SimulateReleaseRollingReserve {
+  simulateReleaseReservedBalance(
+    input: { transactionId: "$YOUR_TRANSACTION_ID" }
+  ) {
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+    ... on ReleaseReservedBalanceSuccessPayload {
+      __typename
+      transactionId
+    }
+  }
+}
+```
+
+## Simulate rejecting an incoming SEPA Direct Debit transaction {#simulate-reject}
+
+```graphql {3} showLineNumbers
+mutation SimulateIncomingSepaDirectDebitReject {
+  simulateIncomingSepaDirectDebitReject(
+    input: { transactionId: "$YOUR_TRANSACTION_ID", reasonCode: AccountClosed }
+  ) {
+    ... on SimulateIncomingSepaDirectDebitRejectSuccessPayload {
+      __typename
+      transactionId
+    }
+    ... on SimulateIncomingSepaDirectDebitRejectErrorPayload {
+      __typename
+      reason
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+  }
+}
+```

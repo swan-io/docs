@@ -1,0 +1,63 @@
+---
+title: Sandbox
+---
+
+# Sandbox for merchant profiles and payment methods
+
+When testing your integration, you might need to simulate certain events with the [**Partner Testing API**](https://explorer.swan.io/?tab=test-api).
+
+## Merchant profiles {#simulate-profile}
+
+### Simulate updating merchant profile status {#simulate-profile-status}
+
+In Sandbox only, you need to update the merchant profile status to `Enabled`.
+
+1. Open your Swan Dashboard.
+1. Go to **Developers** > **Event Simulator**.
+1. Go to **Accept payments**.
+1. Go to the tab to update the merchant profile status.
+1. Change the merchant profile status to `Enabled`.
+
+## Merchant payment methods {#simulate-payment-method}
+
+### Simulate updating merchant payment method status {#simulate-payment-method-status}
+
+In Sandbox only, you need to update the merchant payment method status to `Enabled`.
+
+1. Open your Swan Dashboard.
+1. Go to **Developers** > **Event Simulator**.
+1. Go to **Accept payments**.
+1. Go to the tab to update the merchant payment method status.
+1. Change the payment method status to `Enabled`.
+
+### Simulate enabling a payment method {#simulate-payment-method-enable}
+
+You can also use the **Partner Testing API**.
+
+- Line 4: Enter the corresponding `merchantProfileId`.
+- Line 5: Choose the `methodType` you'd like to simulate activating.
+
+```graphql {4-5} showLineNumbers
+mutation EnablePaymentMethod {
+  simulateUpdateMerchantProfile(
+    input: {
+      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
+      merchantPaymentMethod: { methodType: $METHOD_TYPE, status: Enabled }
+    }
+  ) {
+    ... on SimulateUpdateMerchantProfileSuccessPayload {
+      __typename
+    }
+    ... on NotFoundRejection {
+      id
+    }
+    ... on MerchantProfileWrongStatusRejection {
+      __typename
+    }
+  }
+}
+```
+
+:::caution SEPA Diret Debit
+For SEPA Direct Debit, you can *only* use the Partner Testing API to update the status of your payment methods.
+:::

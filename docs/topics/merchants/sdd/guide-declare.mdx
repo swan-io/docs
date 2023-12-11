@@ -1,0 +1,132 @@
+---
+title: Declare a payment mandate
+---
+
+# Declare a payment mandate for SEPA Direct Debit
+
+Before accepting payments with SEPA Direct Debit B2B or Core, you need to declare a payment mandate to your Swan account.
+Each debtor must have their own payment mandate.
+
+[Review the requirements](./index.mdx#mandates) for SEPA Direct Debit payment mandates if needed.
+
+:::tip Prerequisites
+- Debtor's account status: any except `Closing` or `Closed`
+- Merchant profile status: `Enabled`
+- Internal Direct Debit B2B payment method status: `Enabled`
+- [B2B only] Debtor's account type: `Company`
+:::
+
+## Guide {#guide}
+
+1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions, and confirm the prerequisites are met.
+1. Call the `addSepaDirectDebitPaymentMandate` mutation. You don't need consent from the debtor.
+1. Replace `$YOUR_PAYMENT_METHOD_ID` with the ID for your payment method, from your Dashboard (line 4).
+1. Choose `Recurring` or `OneOff` (line 5).
+    - [`OneOff` payment mandates](./index.mdx#mandates-oneoff) can only be used once.
+1. Choose the language and signature date for the mandate (lines 6-7).
+1. Add information about the debtor, including `name`, `IBAN`, and their `country` of residence (lines 9-11).
+1. Choose either Core or B2B in your [mandate name](./index.mdx#mandates-info) (line 13).
+1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
+1. The payment mandate is created with the status `Enabled`.
+
+:::info B2B
+For B2B, **declare the mandate to the debtor's bank** as well.
+:::
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkU2RkTWFuZGF0ZSB7CiAgYWRkU2VwYURpcmVjdERlYml0UGF5bWVudE1hbmRhdGUoCiAgICBpbnB1dDogewogICAgICBwYXltZW50TWV0aG9kSWQ6ICIkWU9VUl9QQVlNRU5UX01FVEhPRF9JRCIKICAgICAgc2VxdWVuY2U6IFJlY3VycmluZwogICAgICBsYW5ndWFnZTogaXQKICAgICAgc2lnbmF0dXJlRGF0ZTogIjIwMjMtMTAtMTAiCiAgICAgIGRlYnRvcjogewogICAgICAgIG5hbWU6ICJGcmFuY2VzY2EgVmVycmlsbGkiCiAgICAgICAgSUJBTjogIklUNzVNMDMwMDIwMzI4MDY5MjM1MjI3NTQ4OSIKICAgICAgICBhZGRyZXNzOiB7IGNvdW50cnk6ICJJVEEiIH0KICAgICAgfQogICAgICBuYW1lOiAiQjJCL0NvcmUgU0VQQSBEaXJlY3QgRGViaXQgTWFuZGF0ZSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBBZGRTZXBhRGlyZWN0RGViaXRQYXltZW50TWFuZGF0ZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50TWFuZGF0ZSB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQYXltZW50TWV0aG9kTm90Q29tcGF0aWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogICAgLi4uIG9uIFBheW1lbnRNYW5kYXRlUmVmZXJlbmNlQWxyZWFkeVVzZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBTY2hlbWVXcm9uZ1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIERlYnRvckFjY291bnROb3RBbGxvd2VkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRGVidG9yQWNjb3VudENsb3NlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4-7,9-11,13} showLineNumbers
+mutation AddSddMandate {
+  addSepaDirectDebitPaymentMandate(
+    input: {
+      paymentMethodId: "$YOUR_PAYMENT_METHOD_ID"
+      sequence: Recurring
+      language: it
+      signatureDate: "2023-10-10"
+      debtor: {
+        name: "Francesca Verrilli"
+        IBAN: "IT75M0300203280692352275489"
+        address: { country: "ITA" }
+      }
+      name: "B2B/Core SEPA Direct Debit Mandate"
+    }
+  ) {
+    ... on AddSepaDirectDebitPaymentMandateSuccessPayload {
+      __typename
+      paymentMandate {
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on PaymentMethodNotCompatibleRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+      fields {
+        code
+        message
+        path
+      }
+    }
+    ... on PaymentMandateReferenceAlreadyUsedRejection {
+      __typename
+      message
+    }
+    ... on SchemeWrongRejection {
+      __typename
+      message
+    }
+    ... on DebtorAccountNotAllowedRejection {
+      __typename
+      message
+    }
+    ... on DebtorAccountClosedRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+Note the `id` (line 6) for your Internal Direct Debit payment mandate.
+
+```json {6} showLineNumbers
+{
+  "data": {
+    "addInternalDirectDebitPaymentMandate": {
+      "__typename": "AddInternalDirectDebitPaymentMandateSuccessPayload",
+      "paymentMandate": {
+        "id": "$YOUR_MANDATE_ID"
+      }
+    }
+  }
+}
+```
+
+## Next steps {#next}
+
+Note that received direct debit mandates aren't created until after the mandate is used for the first transaction.
+
+You might want to upload a PDF of the mandate to your Dashboard for easy reference.

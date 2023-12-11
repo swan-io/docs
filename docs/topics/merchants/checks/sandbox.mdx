@@ -1,0 +1,107 @@
+---
+title: Sandbox
+---
+
+# Sandbox: French checks
+
+When testing your integration, you might need to simulate certain events with the [**Partner Testing API**](https://explorer.swan.io/?tab=test-api).
+
+## Simulate booking a check {#simulate-book}
+
+```graphql {2} showLineNumbers
+mutation SimulateCheckBooking {
+  simulateIncomingCheckBooking(
+    input: { transactionId: "bocki_9f411c9ce14919235efa8edb850dea02" }
+  ) {
+    ... on SimulateIncomingCheckBookingSuccessPayload {
+      __typename
+      transactionId
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+  }
+}
+```
+
+## Simulate releasing rolling reserve {#simulate-release-rr}
+
+```graphql {3} showLineNumbers
+mutation SimulateReleaseRollingReserve {
+  simulateReleaseReservedBalance(
+    input: { transactionId: "$YOUR_TRANSACTION_ID" }
+  ) {
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+    ... on ReleaseReservedBalanceSuccessPayload {
+      __typename
+      transactionId
+    }
+  }
+}
+```
+
+## Simulate rejecting a `checkIn` transaction {#simulate-reject}
+
+```graphql {2} showLineNumbers
+mutation SimulateIncomingCheckReject {
+  simulateIncomingCheckReject(
+    input: { transactionId: "$YOUR_TRANSACTION_ID", reasonCode: AccountClosed }
+  ) {
+    ... on SimulateIncomingCheckRejectSuccessPayload {
+      __typename
+      transactionId
+    }
+    ... on SimulateIncomingCheckRejectErrorPayload {
+      __typename
+      reason
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+  }
+}
+```
+
+## Simulate a `checkInReturn` transaction {#simulate-return}
+
+```graphql {2} showLineNumbers
+mutation SimulateCheckInReturn {
+  simulateIncomingCheckReturn(
+    input: { transactionId: "$YOUR_TRANSACTION_ID" }
+  ) {
+    ... on SimulateIncomingCheckReturnSuccessPayload {
+      __typename
+      transactionId
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+  }
+}
+```

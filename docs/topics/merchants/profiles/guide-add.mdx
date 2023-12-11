@@ -1,0 +1,102 @@
+---
+title: Add a merchant profile
+---
+
+# Add a merchant profile
+
+Before your merchant can use Swan to accept payments from customers, you need to add a merchant profile.
+
+:::caution Profile review
+All new merchant profiles are reviewed by Swan.
+Swan might contact you for more information before accepting or rejecting the merchant profile.
+:::
+
+## Guide {#guide}
+
+1. Confirm your account meets the following prerequisites:
+    - Payment level: `Unlimited`.
+    - Account holder type: `Company`.
+    - You have a project access token, or, if you're an account member, a user access token with `CanManageAccountMembership` permissions.
+1. Call the `addMerchantProfile` mutation.
+1. Include all mandatory information: `accountId`, `merchantName`, `productType`, `expectedMonthlyPaymentVolume`, and `expectedAverageBasket`.
+1. Add relevant payload and rejection details to your mutation.
+1. (Optional) Use `merchantLogo` to include a logo for your merchant. The image must be converted to a `base64` encoded string.
+1. The new merchant is created with the status `PendingReview`.
+1. Swan [reviews the new merchant profile](../index.mdx#profiles-risk) and updates the status.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gTWVyY2hhbnRQcm9maWxlIHsKICBhZGRNZXJjaGFudFByb2ZpbGUoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBtZXJjaGFudE5hbWU6ICJNeUJyYW5kIFBhcGVyIEdvb2RzIgogICAgICBwcm9kdWN0VHlwZTogR29vZHMKICAgICAgZXhwZWN0ZWRNb250aGx5UGF5bWVudFZvbHVtZTogeyB2YWx1ZTogIjMwMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICBleHBlY3RlZEF2ZXJhZ2VCYXNrZXQ6IHsgdmFsdWU6ICI1MCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkTWVyY2hhbnRQcm9maWxlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lcmNoYW50UHJvZmlsZSB7CiAgICAgICAgYWNjb3VudElkCiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIEVuYWJsZWRNZXJjaGFudFByb2ZpbGVTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBlbmFibGVkQXQKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIHByb2R1Y3RUeXBlCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+Make sure to replace the highlighted lines with your values.
+
+```graphql {4-6,8-9,12-13,27} showLineNumbers
+mutation MerchantProfile {
+  addMerchantProfile(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      merchantName: "MyBrand Paper Goods"
+      productType: Goods
+      expectedMonthlyPaymentVolume: {
+        value: "3000"
+        currency: "EUR"
+      }
+      expectedAverageBasket: {
+        value: "50"
+        currency: "EUR"
+      }
+    }
+  ) {
+    ... on AddMerchantProfileSuccessPayload {
+      __typename
+      merchantProfile {
+        accountId
+        id
+        statusInfo {
+          status
+          ... on EnabledMerchantProfileStatusInfo {
+            __typename
+            enabledAt
+            status
+          }
+        }
+        productType
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on AccountNotFoundRejection {
+      id
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms your new merchant profile with the status `PendingReview`.
+
+```json {7,9} showLineNumbers
+{
+  "data": {
+    "addMerchantProfile": {
+      "__typename": "AddMerchantProfileSuccessPayload",
+      "merchantProfile": {
+        "accountId": "$YOUR_ACCOUNT_ID",
+        "id": "$YOUR_MERCHANT_PROFILE_ID",
+        "statusInfo": {
+          "status": "PendingReview"
+        },
+        "productType": "Goods"
+      }
+    }
+  }
+}
+```

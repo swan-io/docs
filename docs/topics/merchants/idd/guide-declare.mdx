@@ -1,0 +1,165 @@
+---
+title: Declare a payment mandate
+---
+
+# Declare a payment mandate for Internal Direct Debit
+
+Before accepting payments with Internal Direct Debit B2B or Standard, you need to declare a payment mandate to your Swan account.
+Each debtor must have their own payment mandate.
+
+[Review the requirements](./index.mdx#mandates) for Internal Direct Debit payment mandates if needed.
+
+:::tip Prerequisites
+- Debtor's account status: any except `Closing` or `Closed`
+- Merchant profile status: `Enabled`
+- Internal Direct Debit B2B payment method status: `Enabled`
+- Debtor and merchant have accounts in the same Swan projects
+- [B2B only] Debtor's account type: `Company`
+:::
+
+## Declare a payment mandate {#declare}
+
+1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions, and confirm the prerequisites are met.
+1. Call the `addInternalDirectDebitPaymentMandate` mutation. The debtor is required to consent.
+1. Replace `$YOUR_DEBTOR_ACCOUNT_ID` and `$YOUR_PAYMENT_METHOD_ID` with IDs from your project (lines 4, 5).
+1. Choose either Standard or B2B in your [mandate name](./index.mdx#mandates-info) (line 6).
+1. Choose `Recurring` or `OneOff`.
+    - [`OneOff` payment mandates](./index.mdx#mandates-oneoff) can only be used once.
+1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
+1. The payment mandate is created with the status `Enabled`.
+
+:::info B2B versus standard
+For Standard, merchants can start using the payment method to accept payments immediately.
+
+For B2B, add the received mandate first.
+:::
+
+### Mutation {#mutation-declare}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gTXlNdXRhdGlvbiB7CiAgYWRkSW50ZXJuYWxEaXJlY3REZWJpdFBheW1lbnRNYW5kYXRlKAogICAgaW5wdXQ6IHsKICAgICAgcGF5bWVudE1ldGhvZElkOiAiJFlPVVJfUEFZTUVOVF9NRVRIT0RfSUQiCiAgICAgIGRlYnRvckFjY291bnRJZDogIiRZT1VSX0RFQlRPUl9BQ0NPVU5UX0lEIgogICAgICBuYW1lOiAiU3RhbmRhcmQvQjJCIEludGVybmFsIERpcmVjdCBEZWJpdCBNYW5kYXRlIgogICAgICBzZXF1ZW5jZTogUmVjdXJyaW5nCiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFBheW1lbnRNYW5kYXRlUmVmZXJlbmNlQWxyZWFkeVVzZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBTY2hlbWVXcm9uZ1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIERlYnRvckFjY291bnRDbG9zZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBEZWJ0b3JBY2NvdW50Tm90QWxsb3dlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFkZEludGVybmFsRGlyZWN0RGViaXRQYXltZW50TWFuZGF0ZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50TWFuZGF0ZSB7CiAgICAgICAgaWQKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4-7} showLineNumbers
+mutation AddPaymentMandate {
+  addInternalDirectDebitPaymentMandate(
+    input: {
+      paymentMethodId: "$YOUR_PAYMENT_METHOD_ID"
+      debtorAccountId: "$YOUR_DEBTOR_ACCOUNT_ID"
+      name: "Standard/B2B Internal Direct Debit Mandate"
+      sequence: Recurring
+    }
+  ) {
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on PaymentMandateReferenceAlreadyUsedRejection {
+      __typename
+      message
+    }
+    ... on SchemeWrongRejection {
+      __typename
+      message
+    }
+    ... on DebtorAccountClosedRejection {
+      __typename
+      message
+    }
+    ... on DebtorAccountNotAllowedRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on AddInternalDirectDebitPaymentMandateSuccessPayload {
+      __typename
+      paymentMandate {
+        id
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-declare}
+
+Note the `id` (line 6) for your Internal Direct Debit payment mandate.
+
+```json {6} showLineNumbers
+{
+  "data": {
+    "addInternalDirectDebitPaymentMandate": {
+      "__typename": "AddInternalDirectDebitPaymentMandateSuccessPayload",
+      "paymentMandate": {
+        "id": "$YOUR_MANDATE_ID"
+      }
+    }
+  }
+}
+```
+
+## B2B only: Add received mandate {#add-b2b}
+
+For Internal Direct Debit B2B only, call the `addReceivedInternalDirectDebitB2bMandate` mutation to add the received payment mandate.
+
+### Mutation {#mutation-add}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkUmVjZWl2ZWRJbnRlcm5hbERpcmVjdERlYml0QjJiTWFuZGF0ZSB7CiAgYWRkUmVjZWl2ZWRJbnRlcm5hbERpcmVjdERlYml0QjJiTWFuZGF0ZSgKICAgIGlucHV0OiB7CiAgICAgIHBheW1lbnRNYW5kYXRlSWQ6ICIkWU9VUl9NQU5EQVRFX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9DT05TRU5UX1VSTCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBBZGRSZWNlaXZlZEludGVybmFsRGlyZWN0RGViaXRCMmJNYW5kYXRlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlIHsKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3RhdHVzSW5mb0NvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+1. Add the `id` recovered in the previous payload.
+1. Add your `consentUrl`.
+1. Call the `addReceivedInternalDirectDebitB2bMandate` mutation.
+
+```graphql {4-5} showLineNumbers
+mutation AddReceivedInternalDirectDebitB2bMandate {
+  addReceivedInternalDirectDebitB2bMandate(
+    input: {
+      paymentMandateId: "$YOUR_MANDATE_ID"
+      consentRedirectUrl: "$YOUR_CONSENT_URL"
+    }
+  ) {
+    ... on AddReceivedInternalDirectDebitB2bMandateSuccessPayload {
+      __typename
+      receivedDirectDebitMandate {
+        id
+        statusInfo {
+          ... on ReceivedDirectDebitMandateStatusInfoConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-add}
+
+Note the `id` for the received mandate (line 6), and its status (line 8.)
+
+```json {6,10} showLineNumbers
+{
+  "data": {
+    "addReceivedInternalDirectDebitB2bMandate": {
+      "__typename": "AddReceivedInternalDirectDebitB2bMandateSuccessPayload",
+      "receivedDirectDebitMandate": {
+        "id": "$RECIEVED_MANDATE_ID",
+        "statusInfo": {
+          "__typename": "ReceivedDirectDebitMandateStatusInfoConsentPending",
+          "consent": {
+            "consentUrl": "$YOUR_CONSENT_URL"
+          }
+        }
+      }
+    }
+  }
+}
+```

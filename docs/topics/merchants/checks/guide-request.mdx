@@ -1,0 +1,87 @@
+---
+title: Request French checks
+---
+
+# Request French checks
+
+import RequestPaymentMethodIntro from '../partials/_guide-request-intro.mdx';
+
+<RequestPaymentMethodIntro paymentMethod="French checks" />
+
+## Guide {#guide}
+
+import RequestPaymentMethodSteps from '../partials/_guide-request-steps.mdx';
+
+<RequestPaymentMethodSteps paymentMethod="check" />
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVxdWVzdEZyZW5jaENoZWNrcyB7CiAgcmVxdWVzdE1lcmNoYW50UGF5bWVudE1ldGhvZHMoCiAgICBpbnB1dDogewogICAgICBtZXJjaGFudFByb2ZpbGVJZDogIiRZT1VSX01FUkNIQU5UX1BST0ZJTEVfSUQiCiAgICAgIGNoZWNrOiB7IGFjdGl2YXRlOiB0cnVlIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBSZXF1ZXN0TWVyY2hhbnRQYXltZW50TWV0aG9kc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXJjaGFudFByb2ZpbGUgewogICAgICAgIG1lcmNoYW50UGF5bWVudE1ldGhvZHMgewogICAgICAgICAgLi4uIG9uIENoZWNrTWVyY2hhbnRQYXltZW50TWV0aG9kIHsKICAgICAgICAgICAgbWV0aG9kSWQKICAgICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIH0KICAgICAgICAgICAgdHlwZQogICAgICAgICAgfQogICAgICAgICAgbWV0aG9kSWQKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4-5,13-15} showLineNumbers
+mutation RequestFrenchChecks {
+  requestMerchantPaymentMethods(
+    input: {
+      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
+      check: { activate: true }
+    }
+  ) {
+    ... on RequestMerchantPaymentMethodsSuccessPayload {
+      __typename
+      merchantProfile {
+        merchantPaymentMethods {
+          ... on CheckMerchantPaymentMethod {
+            methodId
+            statusInfo {
+              status
+            }
+            type
+          }
+          methodId
+        }
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      id
+      message
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms that the payment method `Check` was requested successfully with the status `PendingReview`.
+
+```json {8,10,12} showLineNumbers
+{
+  "data": {
+    "requestMerchantPaymentMethods": {
+      "__typename": "RequestMerchantPaymentMethodsSuccessPayload",
+      "merchantProfile": {
+        "merchantPaymentMethods": [
+          {
+            "methodId": "chk_15d5ac1d-da75-4a48-98cd-b76c43e16fa3",
+            "statusInfo": {
+              "status": "PendingReview"
+            },
+            "type": "Check"
+          }
+        ]
+      }
+    }
+  }
+}
+```

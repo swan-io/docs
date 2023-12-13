@@ -48,7 +48,7 @@ If a cardholder shares their PIN, Swan can't take responsibility for fraud assoc
 
 ### Incorrect PIN attempts {#pin-incorrect-attempts}
 
-If the cardholer enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical can be made online or in person.
+If the cardholder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical can be made online or in person.
 
 Note that a physical card blocked for three incorrect PIN attempts will have the reason `IncorrectPinCodeAttemptsExceeded` (on the `PhysicalCardSuspendedStatusInfo`).
 You'll have to wait 24 hours before being able to [unblock the physical card](./guide-block-unblock.mdx).
@@ -87,7 +87,8 @@ flowchart LR
     CP -.-> P[Processing]
     P -.-> TA[ToActivate]
     TA --> A[Activated]
-    A <-.-> S[Suspended]
+    A <-..-> S[Suspended]
+    A -.-> CL
     S -.-> CL[Canceling]
     CL --> CD[Canceled]
     CP -.-> TA
@@ -95,11 +96,10 @@ flowchart LR
     CP --> CD
     P -.-> CL
     TA -.-> CL
-    A -.-> CL
     subgraph U[Can use card]
         A
     end
-        subgraph IR[Irreversible]
+    subgraph IR[Irreversible]
         CL
     end
     subgraph F[Final status]

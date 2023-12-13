@@ -36,13 +36,6 @@ module.exports = {
         src: "img/logo-swan.svg",
         width: 70,
       },
-      items: [
-        {
-          to: "https://api-reference.swan.io",
-          label: "API reference",
-          position: "left",
-        },
-      ],
     },
     // footer: {
     //   // style: "dark",

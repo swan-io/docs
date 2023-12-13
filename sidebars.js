@@ -5,10 +5,7 @@ module.exports = {
       label: "Introduction",
       collapsible: false,
       collapsed: false,
-      items: [
-        "index",
-        "glossary",
-      ],
+      items: ["index", "glossary"],
     },
     {
       type: "category",
@@ -85,10 +82,10 @@ module.exports = {
           label: "France",
           link: { type: "doc", id: "topics/capital-deposits/france/guide" },
           collapsed: true,
-          items : [
+          items: [
             "topics/capital-deposits/france/guide-create-case",
             "topics/capital-deposits/france/guide-upload-documents",
-        ]
+          ],
         },
       ],
     },
@@ -113,49 +110,49 @@ module.exports = {
           label: "Card design",
           link: { type: "doc", id: "topics/cards/design/index" },
           collapsed: true,
-          items : [
+          items: [
             "topics/cards/design/guide-standard",
             "topics/cards/design/guide-custom",
             "topics/cards/design/guide-logo",
-        ]
+          ],
         },
         {
           type: "category",
           label: "Virtual cards",
           link: { type: "doc", id: "topics/cards/virtual/index" },
           collapsed: true,
-          items : [
+          items: [
             "topics/cards/virtual/guide-add",
             "topics/cards/virtual/guide-view-info",
             "topics/cards/virtual/guide-cancel",
-        ]
+          ],
         },
         {
           type: "category",
           label: "Physical cards",
           link: { type: "doc", id: "topics/cards/physical/index" },
           collapsed: true,
-          items : [
+          items: [
             "topics/cards/physical/guide-print",
             "topics/cards/physical/guide-activate",
             "topics/cards/physical/guide-view-info",
             "topics/cards/physical/guide-block-unblock",
             "topics/cards/physical/guide-renew",
             "topics/cards/physical/guide-cancel",
-        ]
+          ],
         },
         {
           type: "category",
           label: "Digital cards",
           link: { type: "doc", id: "topics/cards/digital/index" },
           collapsed: true,
-          items : [
+          items: [
             "topics/cards/digital/guide-add",
             "topics/cards/digital/guide-cancel",
-        ]
+          ],
         },
       ],
-    },  
+    },
     {
       type: "category",
       label: "Projects",
@@ -168,9 +165,7 @@ module.exports = {
           label: "Projects overview",
           link: { type: "doc", id: "topics/projects/index" },
           collapsed: true,
-          items: [
-            "topics/projects/guide-activate-project",
-          ],
+          items: ["topics/projects/guide-activate-project"],
         },
         "topics/projects/support",
       ],
@@ -181,6 +176,11 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
+        {
+          type: "link",
+          label: "API reference",
+          href: "https://api-reference.swan.io/",
+        },
         {
           type: "link",
           label: "Status page", // The link label

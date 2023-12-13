@@ -21,6 +21,7 @@ module.exports = {
       contextualSearch: true,
       searchParameters: {},
       searchPagePath: "search",
+      externalUrlRegex: "api-reference\\.swan\\.io",
     },
     matomo: {
       matomoUrl: "https://swan.matomo.cloud/",
@@ -66,21 +67,5 @@ module.exports = {
       },
     ],
   ],
-  plugins: [
-    [
-      "@graphql-markdown/docusaurus",
-      {
-        schema: path.join(
-          process.cwd(),
-          "scripts/graphql/dist/partner-schema.gql"
-        ),
-        rootPath: "./docs",
-        baseURL: "api-reference",
-        loaders: {
-          GraphQLFileLoader: "@graphql-tools/graphql-file-loader",
-        },
-      },
-    ],
-    "docusaurus-plugin-matomo",
-  ],
+  plugins: ["docusaurus-plugin-matomo"],
 };

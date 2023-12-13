@@ -171,11 +171,11 @@ All documents are **mandatory** unless marked _if requested_.
 flowchart LR
     DC((Document<br/>created)) -.-> P[Pending]
     P -.-> U[Uploaded]
+    U -.-> RF[Refused]
+    RF -.-> U
     U --> V[Validated]
-    U --> RF[Refused]
     subgraph F[Final status]
         V
-        RF
     end
     style DC fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
@@ -185,8 +185,8 @@ flowchart LR
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Pending`   | Place for the document is created, but the document isn't uploaded yet                                                                                                                                  |
 | `Uploaded`  | Document successfully uploaded; you can change and re-upload the document as long it retains the status `Uploaded`<br/><br/>**Next step**: Swan reviews the document and either validates or refuses it |
-| `Validated` | Swan validated the document                                                                                                                                                                             |
-| `Refused`   | Swan refused the document                                                                                                                                                                               |
+| `Validated` | Swan validated the document |
+| `Refused`   | Document doesn't meet requirements<br/><br/>**Next step**: Upload a new document, then the status returns to `Uploaded` |
 
 ## Shareholders {#shareholders}
 

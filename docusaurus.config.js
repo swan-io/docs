@@ -38,8 +38,9 @@ module.exports = {
       },
       items: [
         {
-          to: "https://api-reference.swan.io",
-          label: "API reference",
+          to: "developers/intro",
+          activeBasePath: "developers",
+          label: "Developers",
           position: "left",
         },
       ],

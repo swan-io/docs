@@ -1,0 +1,110 @@
+---
+title: Initiate a transaction
+---
+
+# Initiate a transaction with French checks
+
+:::tip Prerequisites
+- Debtor's account status: any except `Closing` or `Closed`
+- Merchant profile status: `Enabled`
+- Check payment method status: `Enabled`
+:::
+
+## Guide {#guide}
+
+1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions.
+1. Call the `initiateMerchantPaymentCollection` mutation with `check`, completing all mandatory fields: `amount`, `currency`, `CMC7`, `rmlcKey`, and `merchantProfileId`.
+1. You can also include an optional **label** and **reference**, which are displayed in your transaction history and to the debtor.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gaW5pdGlhdGVDaGVjayB7CiAgaW5pdGlhdGVNZXJjaGFudFBheW1lbnRDb2xsZWN0aW9uKAogICAgaW5wdXQ6IHsKICAgICAgYW1vdW50OiB7IHZhbHVlOiAiNTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgY2hlY2s6IHsKICAgICAgICBtZXJjaGFudFByb2ZpbGVJZDogIiRZT1VSX01FUkNIQU5UX1BST0ZJTEVfSUQiCiAgICAgICAgY21jNzogIjM3NjM0NDUwNzUwMDA2MTg5MDgwNTgzMTEwMzg0MDQiCiAgICAgICAgcmxtY0tleTogIjU1IgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVNZXJjaGFudFBheW1lbnRDb2xsZWN0aW9uU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lcmNoYW50UGF5bWVudENvbGxlY3Rpb24gewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+import DateIso8601 from '../../partials/_iso-8601.mdx';
+
+:::note Dates
+<DateIso8601 />
+
+If the date is left empty, the transaction will be executed as soon as possible.
+If the date indicated is a non-business day, the transaction will be executed on the next business day.
+:::
+
+```graphql {4-8,12,15-17} showLineNumbers
+mutation initiateCheck {
+  initiateMerchantPaymentCollection(
+    input: {
+      amount: { value: "500", currency: "EUR" }
+      check: {
+        merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
+        cmc7: "3763445075000618908058311038404"
+        rlmcKey: "55"
+      }
+    }
+  ) {
+    ... on InitiateMerchantPaymentCollectionSuccessPayload {
+      __typename
+      merchantPaymentCollection {
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+Note the `id` for your check payment (line 6) and the status `Initiated` (line 8).
+
+```json {6,8} showLineNumbers
+{
+  "data": {
+    "initiateMerchantPaymentCollection": {
+      "__typename": "InitiateMerchantPaymentCollectionSuccessPayload",
+      "merchantPaymentCollection": {
+        "id": "spi_b753501f7b0769a9ba5c106087a14881",
+        "statusInfo": {
+          "status": "Initiated"
+        }
+      }
+    }
+  }
+}
+```
+
+## Next steps {#next}
+
+At this stage, the transaction has been initiated and the following events occur:
+
+1. **Swan**:
+    1. Confirms that the check amount does not exceed 10 000€.
+    1. Verifies that the field formats are consistent with the check provider's specifications.
+    1. Creates a `checkIn` transaction with the status `Upcoming`. `checkIn` transactions retain the status `Upcoming` until the check amount is credited to the Swan settlement account.
+1. **Merchant**:
+    1. The merchant sends the check to Swan's check provider by physical mail within 30 days of the `initiateMerchantPaymentCollection` mutation call.
+1. **Swan's check provider**:
+    1. The check provider processes the check, after which the status changes to `Booked`. This can take up to two days.
+
+After a check is `Booked`, the [rolling reserve](./index.mdx#rolling-reserve) window starts.
+After the rolling reserve window, the check amount is added to the account's available balance.
+
+If funds are insufficient for the check deposit, a `checkInReturn` will appear on your transaction history.

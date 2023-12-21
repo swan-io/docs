@@ -155,10 +155,68 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Merchants",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Merchants overview",
+          link: { type: "doc", id: "topics/merchants/index" },
+          collapsed: true,
+          items: [
+            "topics/merchants/profiles/guide-add",
+            "topics/merchants/profiles/guide-update",
+            "topics/merchants/profiles/guide-get-info",
+            "topics/merchants/sandbox",
+          ],
+        },
+        {
+          type: "category",
+          label: "SEPA Direct Debit for merchants",
+          link: { type: "doc", id: "topics/merchants/sdd/index" },
+          collapsed: true,
+          items: [
+            "topics/merchants/sdd/guide-sdd",
+            "topics/merchants/sdd/guide-request",
+            "topics/merchants/sdd/guide-declare",
+            "topics/merchants/sdd/guide-initiate",
+            "topics/merchants/sdd/sandbox",
+          ],
+        },
+        {
+          type: "category",
+          label: "Internal Direct Debit for merchants",
+          link: { type: "doc", id: "topics/merchants/idd/index" },
+          collapsed: true,
+          items: [
+            "topics/merchants/idd/guide-idd",
+            "topics/merchants/idd/guide-request",
+            "topics/merchants/idd/guide-declare",
+            "topics/merchants/idd/guide-initiate",
+            "topics/merchants/idd/guide-refund",
+            "topics/merchants/idd/sandbox",
+          ],
+        },
+        {
+          type: "category",
+          label: "French checks for merchants",
+          link: { type: "doc", id: "topics/merchants/checks/index" },
+          collapsed: true,
+          items: [
+            "topics/merchants/checks/guide-checks",
+            "topics/merchants/checks/guide-request",
+            "topics/merchants/checks/guide-initiate",
+            "topics/merchants/checks/sandbox",
+          ],
+        },
+      ],
+    },  
+    {
+      type: "category",
       label: "Projects",
       collapsible: false,
       collapsed: false,
-      link: { type: "doc", id: "topics/projects/index" },
       items: [
         {
           type: "category",

@@ -1,0 +1,31 @@
+---
+title: Sandbox
+---
+
+# Sandbox: Internal Direct Debit
+
+When testing your integration, you might need to simulate certain events with the [**Partner Testing API**](https://explorer.swan.io/?tab=test-api).
+
+## Simulate releasing rolling reserve
+
+```graphql {3} showLineNumbers
+mutation SimulateReleaseRollingReserve {
+  simulateReleaseReservedBalance(
+    input: { transactionId: "$YOUR_TRANSACTION_ID" }
+  ) {
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+    ... on ReleaseReservedBalanceSuccessPayload {
+      __typename
+      transactionId
+    }
+  }
+}
+```

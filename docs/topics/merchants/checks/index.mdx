@@ -1,0 +1,93 @@
+---
+title: French checks for merchants
+---
+
+# French checks for merchants
+
+:::caution beta
+French checks are currently in private beta.
+:::
+
+Merchants can accept payments using French checks if the debtor's bank is located in France.
+
+## About French checks for merchants {#about}
+
+While paper checks are not the most convenient or secure payment method, they are still a valid way to exchange money.
+Some users prefer checks, and merchants can accept French checks if they activate this payment method for accepting payments.
+
+There isn't a Swan user interface for accepting checks.
+This feature is only available using the API.
+
+## Required API fields {#fields}
+
+When declaring checks with the API, there are five mandatory API fields:
+
+1. `amount`: monetary amount of the check (can't exceed 10 000€)
+1. `currency`: `EUR` (only euros are supported)
+1. `CMC7` (Caractères Magnétiques Codés à 7 bâtonnets): 31-digit code composed of 3 series of numbers
+    - Series 1: check number; 7 digits
+    - Series 2: interbank codes; 12 digits
+    - Series 3: account number; 12 digits
+1. `rlmcKey` (Recomposition de la Ligne Magnétique du Chèque): 2-digit code surrounded by chevrons `< >` or parentheses `( )` calculated based on the CMC7
+1. `merchantProfileId`: your developers should enter the merchant's profile ID number
+
+## Rolling reserve {#rolling-reserve}
+
+import RollingReserve from '../partials/_rolling-reserve.mdx';
+
+<RollingReserve />
+
+| Payment method | Rolling reserve | Default amount |
+| --- | --- | --- |
+| French checks | ✓ **Yes** | 100% over 10 business days |
+
+## Settlement date and booked time {#settlement}
+
+Checks received by the check provider by **09:00 CET/CEST** should be processed the same day.
+
+import DayTimeStandard from '../../partials/_day-time.mdx';
+
+<DayTimeStandard />
+
+## R-transactions {#r-transactions}
+
+### Rejected {#r-transactions-rejected}
+
+Checks can be rejected by Swan's check provider and returned to the merchant by mail.
+
+A check transaction might be rejected for the following reasons (this list is not exhaustive):
+
+- Problem with the signature
+- Suspicion of fraud
+- Check was received by Swan's check provider more than 30 days after the check was declared
+
+Merchants can resubmit rejected checks within 30 days of receipt.
+They need to fix the issue and initiate a new `checkIn` transaction before sending the check to Swan's check provider.
+
+### Returned {#r-transactions-returned}
+
+Checks can be returned up to 11 business days after the transaction is `Booked`, and this window can be extended to 90 calendar days based on the reason for return.
+
+A check transaction might be returned for the following reasons (this list is not exhaustive):
+
+- Insufficient funds
+- Account closed
+- Loss or theft
+
+By the time a check is returned, the merchant's account has already be credited.
+Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `checkInReturn` transaction is created automatically.
+
+### Canceled {#r-transactions-canceled}
+
+Creditors can cancel a received check with the `Upcoming` status.
+In this case, the check status switches automatically to `Canceled`.
+This transaction won't impact the account's available balance.
+
+Additionally, all checks not sent to Swan's check provider within 30 days of being declared will be automatically `Canceled`.
+
+## Guides {#guides}
+
+- [**Step-by-step**: Accept payments with French checks](./guide-checks.mdx)
+- [Request French checks payment method](./guide-request.mdx)
+- [Initiate a French check transaction](./guide-initiate.mdx)
+- [Sandbox](./sandbox.mdx)

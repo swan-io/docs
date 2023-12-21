@@ -1,0 +1,91 @@
+---
+title: Update a merchant profile
+---
+
+# Update a merchant profile
+
+You can request an update to a merchant profile with the API, and merchants can also request their own update from your Web Banking interface.
+All updates must be reviewed by Swan.
+
+:::info Update process
+
+Updating a merchant profile produces the following events:
+
+- The [merchant profile status](../index.mdx#profiles-statuses) doesn't change (remains `Enabled`), and the merchant can continue to use their merchant profile with the existing information.
+- The update status is `PendingReview`, and Swan must review the new information to ensure it meets requirements. 
+- After Swan reviews the request, the update status changes to `Enabled` and the updates are pushed live to the merchant profile.
+:::
+
+## Guide {#guide}
+
+1. To request an update with the API, call the `requestMerchantProfileUpdate` mutation. You don't need consent.
+1. Include all the original mandatory information, **changing only the field you wish to update**.
+    - Required fields: `merchantName`, `productType`, `expectedMonthlyPaymentVolume`, `expectedAverageBasket`.
+    - `expectedAverageBasket` is the expected average amount per transaction.
+1. Configure the success payload to display the updated information in case you need to verify it.
+1. Add relevant payload and rejection details to your mutation.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUHJvZmlsZVVwZGF0ZSB7CiAgcmVxdWVzdE1lcmNoYW50UHJvZmlsZVVwZGF0ZSgKICAgIGlucHV0OiB7CiAgICAgIG1lcmNoYW50UHJvZmlsZUlkOiAiJFlPVVJfTUVSQ0hBTlRfUFJPRklMRV9JRCIKICAgICAgbWVyY2hhbnROYW1lOiAiTXlCcmFuZCBQYXBlciBHb29kcyIKICAgICAgcHJvZHVjdFR5cGU6IEdvb2RzCiAgICAgIGV4cGVjdGVkTW9udGhseVBheW1lbnRWb2x1bWU6IHsgdmFsdWU6ICIzMDAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgZXhwZWN0ZWRBdmVyYWdlQmFza2V0OiB7IHZhbHVlOiAiNzUiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgfQogICkgewogICAgLi4uIG9uIFJlcXVlc3RNZXJjaGFudFByb2ZpbGVVcGRhdGVTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgcmVxdWVzdE1lcmNoYW50UHJvZmlsZVVwZGF0ZSB7CiAgICAgICAgc3RhdHVzCiAgICAgICAgZXhwZWN0ZWRBdmVyYWdlQmFza2V0IHsKICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+In this example, the `expectedAverageBasket`, or expected average transaction, changed from €50 to €75 (line 8).
+Therefore, it requests the status and the updated basket in the success payload (lines 14-17).
+
+```graphql {8,11,14-17} showLineNumbers
+mutation ProfileUpdate {
+  requestMerchantProfileUpdate(
+    input: {
+      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
+      merchantName: "MyBrand Paper Goods"
+      productType: Goods
+      expectedMonthlyPaymentVolume: { value: "3000", currency: "EUR" }
+      expectedAverageBasket: { value: "75", currency: "EUR" }
+    }
+  ) {
+    ... on RequestMerchantProfileUpdateSuccessPayload {
+      __typename
+      requestMerchantProfileUpdate {
+        status
+        expectedAverageBasket {
+          currency
+          value
+        }
+      }
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on AccountNotFoundRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms your update request to an average basket of €75 with the  status `PendingReview`.
+
+```json {6,9} showLineNumbers
+{
+  "data": {
+    "requestMerchantProfileUpdate": {
+      "__typename": "RequestMerchantProfileUpdateSuccessPayload",
+      "requestMerchantProfileUpdate": {
+        "status": "PendingReview",
+        "expectedAverageBasket": {
+          "currency": "EUR",
+          "value": "75"
+        }
+      }
+    }
+  }
+}
+```

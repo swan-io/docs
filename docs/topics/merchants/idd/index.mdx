@@ -1,0 +1,194 @@
+---
+title: Internal Direct Debit
+---
+
+# Internal Direct Debit for merchants
+
+## Overview {#overview}
+
+Merchants can use Internal Direct Debit to accept payments when the merchant and the debtor are using Swan accounts within the same Swan project.
+Swan plays the role of the merchant bank, the clearing and settlement mechanism, and the debtor bank.
+
+If the merchant and debtor aren't using Swan accounts within the same Swan project, use [SEPA Direct Debit for merchants](../sdd/index.mdx) instead.
+
+:::caution Merchants only
+This section only applies to merchants using Swan to accept payments.
+Visit **Payments** > [Internal Direct Debit](https://docs.swan.io/concept/payment/direct-debit#internal-direct-debit) for information about non-merchant use cases.
+:::
+
+## Advantages of using direct debit {#advantages}
+
+import DirectDebitAdvantages from '../partials/_direct-debit-advantages.mdx';
+
+<DirectDebitAdvantages />
+
+## Schemes: Standard and B2B {#schemes}
+
+Swan offers two Internal Direct Debit schemes: `Standard` and `B2B`.
+You can choose to use one or both schemes according to your use case.
+
+| Feature | Standard | B2B |
+| --- | --- | --- |
+| Debtor account type | Individual and company | Company |
+| Refund requested by debtor | Up to 8 calendar weeks after due date and time, with no questions asked | Not possible |
+| Returned by Swan | Up to 5 business days for insufficient funds | Up to 3 business days for insufficient funds |
+| Debtor consent required for received direct debit mandate | Not required | Mandatory |
+| Refusal and rejection timeline | Up to the date and time of settlement execution | Up to the date and time of settlement execution |
+| Merchant cancellation | Up to the due date and time | Up to the due date and time |
+| Merchant reversal | Up to 5 business days after due date and time | Up to 5 business days after due date and time |
+| Frequency | One-off and recurring | One-off and recurring |
+
+## Rolling reserve {#rolling-reserve}
+
+import RollingReserve from '../partials/_rolling-reserve.mdx';
+
+<RollingReserve />
+
+| Payment method | Rolling reserve | Default amount |
+| --- | --- | --- |
+| Internal Direct Debit - Standard | ✓ **Yes** | Determined by a merchant profile risk assessment |
+| Internal Direct Debit - B2B | ☒ No | n/a |
+
+## Payment mandates {#mandates}
+
+:::caution Mandatory mandates
+Payment mandates are mandatory for B2B Internal Direct Debit transactions.
+Mandates are optional but recommended for Standard.
+:::
+
+Partners are responsible for handling payment mandates.
+You can either include them in your Terms and Conditions or generate mandates and have them signed using electronic signature.
+
+When the mandate is ready, [declare it to Swan](./guide-declare.mdx) through the API.
+
+### Required information {#mandates-info}
+
+Internal Direct Debit payment mandates must include the following information.
+Otherwise, the mandate is considered invalid.
+
+| Information | Description |
+| --- | --- |
+| Mandate title | Choose one of the following options:<ul><li>Standard Internal Direct Debit Mandate</li><li>B2B Internal Direct Debit Mandate</li></ul> |
+| Mandate reference | Unique identifier for the mandate, visible on the debtor's bank statement |
+| Payment type | Choose one of the following options:<ul><li>Recurring</li><li>One-off</li></ul> |
+| Merchant (beneficiary) information | <ul><li>Merchant name</li><li>Merchant account holder address</li></ul> |
+| Debtor information | Choose one of the following options:<ul><li>Debtor's account number</li><li>Debtor's IBAN</li></ul><br/>If the debtor doesn't have a Swan account upon creation of the mandate, include their identification information instead:<ul><li>Individual: given name, family date, and date of birth</li><li>Legal: name and SIREN</li></ul> |
+
+### Sample content {#mandates-content}
+
+#### Mandate for a debtor with a Swan account {#mandates-content-with-account}
+
+If the debtor has a Swan account, you can include the following content in the mandate or in your Terms and Conditions.
+
+> By confirming this mandate form, you authorize [merchant name] to send instructions to Swan to debit your account and Swan to debit your account, in accordance with the instructions from Swan.
+>
+> This mandate is only intended for business-to-business transactions.
+>
+> You are not entitled to a refund from your bank after your account has been debited, but you are entitled to request your bank not to debit your account up until the day the payment is due.
+
+#### Mandate for a debtor without a Swan account {#mandates-content-no-account}
+
+If the debtor does not have a Swan account when the mandate is generated, you might choose to include the following content in your Terms and Conditions.
+
+> By confirming this mandate form, you authorize [merchant name] to send instructions to Swan to debit the account that will be opened in your name at Swan once you agree to these Terms & Conditions and Swan to debit your account, in accordance with the instructions from Swan.
+>
+> This mandate is only intended for business-to-business transactions.
+>
+> You are not entitled to a refund from your bank after your account has been debited, but you are entitled to request your bank not to debit your account up until the day the payment is due.
+
+:::caution Timeline: debtor without Swan account
+The debtor must create a Swan account within **seven days** of signing the mandate.
+
+After the debtor creates their Swan account, you are responsible for sending them an updated PDF version of the signed mandate.
+The PDF must include the original signature date, and either their **Swan account number** or their **Swan BIC and IBAN**.
+:::
+
+### Signature {#mandates-signature}
+
+Your clients need to sign the payment mandate for Swan to accept it.
+You can either use a qualified electronic signature or have your client check a Terms and Conditions checkbox.
+
+:::info Local requirements
+We recommend confirming local requirements as laws and regulations vary by location.
+:::
+
+#### Qualified electronic signature {#mandates-signature-qes}
+
+Signing the payment mandate with a **qualified electronic signature** must meet the following criteria:
+
+1. The person who signed the mandate is **clearly identified**, often based on information included in your commercial contract with the debtor. They might also identify themselves by logging in to your platform.
+1. **Strong customer authentication** is complete. It must include two factors:
+    1. Personal identification number (PIN) or a password, and
+    1. One-time password (OTP) sent by a text message to the person's mobile phone.
+1. Complete **authorization** through the electronic signature.
+
+#### Terms and conditions checkbox {#mandates-signature-checkbox}
+
+Your clients can also sign the payment mandate by **checking a Terms and Conditions checkbox**.
+Your client is already clearly identified by being logged in to your platform.
+
+### Received mandates {#mandates-received}
+
+A **received direct debit mandate** is created after the debtor's account receives the `InternalDirectDebitOut` transaction.
+The process is different for B2B and Standard, and one-off mandates are also possible.
+
+| Received mandate type | Description |
+| --- | --- |
+| B2B | <ol><li>Mandate created with the status `ConsentInitiationPending`.</li><li>Before the debtor can consent, you must [declare the payment mandate](https://docs.swan.io/guide/accept-payments-merchants/accept-payments-with-internal-direct-debit#declare-a-payment-mandate-for-idd).</li><li>Debtor must consent, but only the first time the mandate is used.</li></ol> |
+| Standard | <ol><li>Mandate created after a first payment is accepted.</li><li>You must enable the mandate by using the debtor's user access token with `CanInitiatePayments` permissions to call the `enableReceivedDirectDebitMandate` mutation.</li><li>Exception: if a mandate with the same `merchantIdentifier`, `reference`, and `accountId` already exists, a new mandate is not created.</li></ol> |
+
+### One-off mandates {#mandates-oneoff}
+
+Some mandates can only be used one time.
+
+When the sequence value is `OneOff` (instead of `Recurring`), the received internal direct debit payment mandate is canceled automatically after the transaction is executed, regardless of the transaction status.
+
+## Settlement date and booked time {#settlement}
+
+Internal Direct Debit transactions are **booked at 18:00 CET/CEST** on the settlement date.
+
+For both B2B and Standard, the settlement date is one day after (D+1) initiating the debit if transactions are sent before **12 noon**.
+
+import DayTimeStandard from '../../partials/_day-time.mdx';
+
+<DayTimeStandard />
+
+## R-transactions {#r-transactions}
+
+:::caution R-transaction availability
+Returns and refunds are only possible with **Standard** and can be requested up to 8 calendar weeks after due date and time.
+:::
+
+### Rejected {#r-transactions-rejected}
+
+When an Internal Direct Debit Standard transaction is **rejected**, the debtor's account is not debited.
+
+An Internal Direct Debit Standard transaction might be rejected for the following reasons (this list is not exhaustive):
+
+- Incorrect account number
+- Debtor canceled the payment mandate
+- Insufficient funds
+
+Regardless of the reason, the merchant receives a notification and can attempt a new Internal Direct Debit at a later date.
+
+### Returned {#r-transactions-returned}
+
+When an Internal Direct Debit Standard transaction is **returned**, the debtor's account is debited the amount, but the payment is reversed and the funds return to the debtor's account.
+
+An Internal Direct Debit Standard transaction might be returned for the following reasons (this list is not exhaustive):
+
+- Debtor disputes the payment
+- Payment was made in error
+- Insufficient funds
+
+Regardless of the reason, the merchant is notified about the return.
+They can investigate the reason for return and take whatever action is necessary, which might be refunding the payment or disputing the return with the debtor's bank.
+
+## Guides {#guides}
+
+- [**Step-by-step**: Accept payments with Internal Direct Debit](./guide-idd.mdx)
+- [Request Internal Direct Debit payment method](./guide-request.mdx)
+- [Declare a payment mandate](./guide-declare.mdx)
+- [Initiate an Internal Direct Debit transaction](./guide-initiate.mdx)
+- [Refund an Internal Direct Debit transaction](./guide-refund.mdx)
+- [Sandbox](./sandbox.mdx)

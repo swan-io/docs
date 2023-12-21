@@ -1,0 +1,176 @@
+---
+title: SEPA Direct Debit
+---
+
+# SEPA Direct Debit for merchants
+
+## Overview {#overview}
+
+Merchants can accept payments with SEPA Direct Debit.
+
+:::caution Merchants only
+This section only applies to merchants using Swan to accept payments.
+Visit **Payments** > [SEPA Direct Debit](https://docs.swan.io/concept/payment/direct-debit#sepa-direct-debit) for information about other use cases.
+:::
+
+## Direct debit advantages {#advantages}
+
+import DirectDebitAdvantages from '../partials/_direct-debit-advantages.mdx';
+
+<DirectDebitAdvantages />
+
+:::info SEPA transaction fees
+Refer to the [billing fees section](https://docs.swan.io/concept/account/billing#fees) for information about fees associated with merchant SEPA Direct Debit transactions.
+:::
+
+## Schemes: Core & B2B {#schemes}
+
+Swan offers two SEPA Direct Debit schemes: `Core` and `B2B`.
+You can choose to use one or both schemes according to your use case.
+
+| Feature | Core | B2B |
+| --- | --- | --- |
+| Debtor account type | Individual and company | Company |
+| Refund requested by debtor | Up to 8 calendar weeks after execution, no questions asked<br/><br/>Up to 13 months after execution if there wasn't a valid mandate or if the payment wasn't authorized | Not possible |
+| Returned by debtor's bank | Up to 5 business days for insufficient funds | Up to 3 business days for insufficient funds |
+| Mandate registered by the debtor's payment service provider (PSP) | Not required | Mandatory |
+| Refusal and rejection timeline | Up to the date and time of settlement execution | Up to the date and time of settlement execution |
+| Merchant cancellation | Up to the due date and time | Up to the due date and time |
+| Merchant reversal | Up to 5 business days after due date and time | Up to 5 business days after due date and time |
+| Frequency | One-off and recurring | One-off and recurring |
+
+## SEPA Creditor Identifier (SCI) {#sci}
+
+SEPA Creditor Identifiers are unique reference codes that identify each creditor participating in a SEPA Direct Debit scheme.
+These identifiers are unique to each merchant and help banks sort transactions by merchant to ensure those transactions are routed correctly.
+
+SCIs include several elements, including:
+
+1. ISO country code
+1. Two-digit checksum
+1. Creditor business activity code
+1. National identification feature
+
+For example, `FR12ABC0123456789` is an SCI from France (`FR`) with the check number `12`, and the business activity code `ABC`, ending with the national identification feature that can change country to country (here, `0123456789`).
+
+### Options for SEPA Creditor Identifiers {#sci-options}
+
+Swan provides an SCI, and merchants can also choose to use their own.
+
+Both meet all SCI requirements.
+It's important to note, however, that **Swan's provided SCI always mentions Swan**, which appears on a user's transaction history.
+
+Merchants might prefer to **use their own SCI for a more customized user experience**.
+Users would see the merchant's name instead of Swan on their transaction history, **reducing friction** and the risk of transactions looking suspicious to users.
+The merchant's bank would also see the label Swan in disputes, so having the merchant name appear instead could also **ease bank relations**.
+
+:::note Personal SCI
+If a merchant in France expresses interest in using their own SCI but they don't have one, Swan can help them get their identifier.
+Send an email to support@swan.io to start the process.
+:::
+
+## Rolling reserve {#rolling-reserve}
+
+import RollingReserve from '../partials/_rolling-reserve.mdx';
+
+<RollingReserve />
+
+| Payment method | Rolling reserve | Default amount |
+| --- | --- | --- |
+| SEPA Direct Debit - Core | ✓ **Yes** | 15% over 15 business days |
+| SEPA Direct Debit - B2B | ✓ **Yes** | 100% over 3 business days |
+
+## Payment mandates {#mandates}
+
+A payment mandate is a written authorization from a debtor that allows a creditor to initiate a direct debit transaction from their account.
+Without a mandate, the creditor can't legally debit the debtor's account.
+
+Payment mandates are mandatory for all SEPA Direct Debit transactions.
+One payment mandate can cover as many debit transactions as needed between the debtor and the merchant, provided the mandate is `Recurring`.
+
+### Declaring mandates {#mandates-declare}
+
+Partners are responsible for obtaining and declaring payment mandates.
+You can either include them in your Terms and Conditions or generate mandates and have them signed using electronic signature.
+When the mandate is ready, [declare it to Swan](./guide-declare.mdx) through our API.
+
+After declaring the mandate, you can upload it to your Swan Dashboard as a PDF.
+This isn't mandatory but might be helpful if a debtor's bank requests a copy of the signed mandate.
+Note that **B2B mandates must be declared to the debtor's bank**.
+
+### One-off mandates {#mandates-oneoff}
+
+Some mandates can only be used one time.
+
+When the sequence value is `OneOff` (instead of `Recurring`), the received SEPA Direct Debit payment mandate is **canceled automatically** after the transaction is executed, regardless of the transaction status.
+
+### Required information {#mandates-info}
+
+In addition to a clear description of payment rights, SEPA Direct Debit payment mandates must include the following information.
+Otherwise, the mandate is considered invalid.
+
+| Information | Description |
+| --- | --- |
+| Mandate title | Choose one of the following options:<ul><li>Core SEPA Direct Debit Mandate</li><li>B2B SEPA Direct Debit Mandate</li></ul> |
+| Mandate reference | <ul><li>Unique identifier for the mandate</li><li>Visible on the debtor's bank statement</li></ul> |
+| Payment type | Choose one of the following options:<ul><li>Recurring</li><li>One-off</li></ul> |
+| Merchant (beneficiary) information | <ul><li>Merchant name</li><li>Merchant account holder address</li></ul> |
+| Debtor information | <ul><li>Debtor's IBAN</li><li>Debtor's address</li></ul> |
+
+## Settlement date and booked time {#settlement}
+
+SEPA Direct Debit transactions are **booked at 20:00 CET/CEST** on the settlement date if no rejection or cancellation has been issued or received.
+Note that settlements dates exclude weekends and SEPA holidays.
+
+| Transaction initiated | Booked |
+| --- | --- |
+| Before 11:30 CET/CEST | Same day at 20:00 CET/CEST |
+| After 11:30 CET/CEST | Within two business days at 20:00 CET/CEST |
+
+<br/>
+
+import DayTimeStandard from '../../partials/_day-time.mdx';
+
+<DayTimeStandard />
+
+## R-transactions {#r-transactions}
+
+:::caution R-transaction availability
+Returns and refunds are only possible with **Core** and can be requested up to 8 calendar weeks after due date and time.
+:::
+
+### Rejected {#r-transactions-rejected}
+
+When a SEPA Direct Debit Core transaction is **rejected**, the debtor's account is not debited.
+
+A SEPA Direct Debit Core transaction might be rejected for the following reasons (this list is not exhaustive):
+
+- Incorrect account number
+- Debtor canceled the payment mandate
+- Account is closed
+- Insufficient funds
+- Technical issue
+- Debtor requested refusal of the debit before the date and time of the settlement execution
+
+When a SEPA Direct Debit Core transaction is rejected, regardless of the reason, the merchant receives a notification and can attempt a new SEPA Direct Debit at a later date.
+
+### Returned {#r-transactions-returned}
+
+When a SEPA Direct Debit Core transaction is **returned**, the debtor's account is debited the amount, but the payment is reversed and the funds return to the debtor's account.
+
+A SEPA Direct Debit Core transaction might be returned for the following reasons (this list is not exhaustive):
+
+- Debtor disputes the payment
+- Insufficient funds
+- Invalid payment mandate (example: the mandate was not declared to the debtor bank)
+
+When a SEPA Direct Debit Core transaction is returned, regardless of the reason, the merchant is notified about the return.
+They can investigate the reason for return and take whatever action is necessary, which might be refunding the payment or disputing the return with the debtor's bank.
+
+## Guides {#guides}
+
+- [**Step-by-step**: Accept payments with SEPA Direct Debit](./guide-sdd.mdx)
+- [Request SEPA Direct Debit payment method](./guide-request.mdx)
+- [Declare a payment mandate](./guide-declare.mdx)
+- [Initiate a SEPA Direct Debit transaction](./guide-initiate.mdx)
+- [Sandbox](./sandbox.mdx)

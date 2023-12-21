@@ -1,0 +1,111 @@
+---
+title: Request SEPA Direct Debit
+---
+
+# Request SEPA Direct Debit
+
+import RequestPaymentMethodIntro from '../partials/_guide-request-intro.mdx';
+
+<RequestPaymentMethodIntro paymentMethod="SEPA Direct Debit" />
+
+## Guide {#guide}
+
+import RequestPaymentMethodSteps from '../partials/_guide-request-steps.mdx';
+
+<RequestPaymentMethodSteps paymentMethod="sepaDirectDebitCore/sepaDirectDebitB2b" />
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVxdWVzdFNlcGFEaXJlY3REZWJpdCB7CiAgcmVxdWVzdE1lcmNoYW50UGF5bWVudE1ldGhvZHMoCiAgICBpbnB1dDogewogICAgICBtZXJjaGFudFByb2ZpbGVJZDogIiRZT1VSX01FUkNIQU5UX1BST0ZJTEVfSUQiCiAgICAgIHNlcGFEaXJlY3REZWJpdEIyQjogewogICAgICAgIGFjdGl2YXRlOiB0cnVlCiAgICAgICAgdXNlU3dhblNlcGFDcmVkaXRvcklkZW50aWZpZXI6IHRydWUKICAgICAgfQogICAgICBzZXBhRGlyZWN0RGViaXRDb3JlOiB7CiAgICAgICAgYWN0aXZhdGU6IHRydWUKICAgICAgICB1c2VTd2FuU2VwYUNyZWRpdG9ySWRlbnRpZmllcjogdHJ1ZQogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmVxdWVzdE1lcmNoYW50UGF5bWVudE1ldGhvZHNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVyY2hhbnRQcm9maWxlIHsKICAgICAgICBtZXJjaGFudFBheW1lbnRNZXRob2RzIHsKICAgICAgICAgIGlkCiAgICAgICAgICAuLi4gb24gU2VwYURpcmVjdERlYml0QjJCTWVyY2hhbnRQYXltZW50TWV0aG9kIHsKICAgICAgICAgICAgbWV0aG9kSWQKICAgICAgICAgICAgdHlwZQogICAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIFNlcGFEaXJlY3REZWJpdENvcmVNZXJjaGFudFBheW1lbnRNZXRob2QgewogICAgICAgICAgICBtZXRob2RJZAogICAgICAgICAgICB0eXBlCiAgICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+This example uses Swan's [SEPA creditor identifier](./index.mdx#sci).
+If your merchant already has their own SEPA creditor identifier, choose `false` (lines 7, 11).
+
+```graphql {4-7,9-11,20-24,27-31} showLineNumbers
+mutation RequestSepaDirectDebit {
+  requestMerchantPaymentMethods(
+    input: {
+      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
+      sepaDirectDebitB2B: {
+        activate: true
+        useSwanSepaCreditorIdentifier: true
+      }
+      sepaDirectDebitCore: {
+        activate: true
+        useSwanSepaCreditorIdentifier: true
+      }
+    }
+  ) {
+    ... on RequestMerchantPaymentMethodsSuccessPayload {
+      __typename
+      merchantProfile {
+        merchantPaymentMethods {
+          id
+          ... on SepaDirectDebitB2BMerchantPaymentMethod {
+            methodId
+            type
+            statusInfo {
+              status
+            }
+          }
+          ... on SepaDirectDebitCoreMerchantPaymentMethod {
+            methodId
+            type
+            statusInfo {
+              status
+            }
+          }
+        }
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      id
+      message
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms that both `SepaDirectDebitCore` and `SepaDirectDebitB2b` were requested successfully with the status `PendingReview`.
+
+```json {8-9,11,15-16,18} showLineNumbers
+{
+  "data": {
+    "requestMerchantPaymentMethods": {
+      "__typename": "RequestMerchantPaymentMethodsSuccessPayload",
+      "merchantProfile": {
+        "merchantPaymentMethods": [
+          {
+            "methodId": "sddcore_15d5ac1d-da75-4a48-98cd-b76c43e16fa3",
+            "type": "SepaDirectDebitCore",
+            "statusInfo": {
+              "status": "PendingReview"
+            }
+          },
+          {
+            "methodId": "sddb2b_15d5ac1d-da75-4a48-98cd-b76c43e16fa3",
+            "type": "SepaDirectDebitB2b",
+            "statusInfo": {
+              "status": "PendingReview"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```

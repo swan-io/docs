@@ -19,8 +19,8 @@ module.exports = {
           link: { type: "doc", id: "topics/onboarding/index" },
           collapsed: true,
           items: [
-            "topics/onboarding/overview/guide-get-onboarding-info",
-            "topics/onboarding/overview/guide-finalize-onboarding",
+            "topics/onboarding/overview/guide-get-info",
+            "topics/onboarding/overview/guide-finalize",
           ],
         },
         {
@@ -29,8 +29,8 @@ module.exports = {
           link: { type: "doc", id: "topics/onboarding/individual/index" },
           collapsed: true,
           items: [
-            "topics/onboarding/individual/guide-create-onboarding",
-            "topics/onboarding/individual/guide-update-onboarding",
+            "topics/onboarding/individual/guide-create",
+            "topics/onboarding/individual/guide-update",
           ],
         },
         {
@@ -39,8 +39,8 @@ module.exports = {
           link: { type: "doc", id: "topics/onboarding/company/index" },
           collapsed: true,
           items: [
-            "topics/onboarding/company/guide-create-onboarding",
-            "topics/onboarding/company/guide-update-onboarding",
+            "topics/onboarding/company/guide-create",
+            "topics/onboarding/company/guide-update",
           ],
         },
         {
@@ -49,11 +49,11 @@ module.exports = {
           link: { type: "doc", id: "topics/onboarding/documents/index" },
           collapsed: true,
           items: [
-            "topics/onboarding/documents/guide-list-documents",
-            "topics/onboarding/documents/guide-upload-document",
-            "topics/onboarding/documents/guide-retrieve-info",
+            "topics/onboarding/documents/guide-get-list",
+            "topics/onboarding/documents/guide-upload",
+            "topics/onboarding/documents/guide-get-info",
             "topics/onboarding/documents/guide-request-collection-review",
-            "topics/onboarding/documents/guide-delete-document",
+            "topics/onboarding/documents/guide-delete",
             "topics/onboarding/documents/sandbox",
           ],
         },
@@ -165,7 +165,7 @@ module.exports = {
           label: "Projects overview",
           link: { type: "doc", id: "topics/projects/index" },
           collapsed: true,
-          items: ["topics/projects/guide-activate-project"],
+          items: ["topics/projects/guide-activate"],
         },
         "topics/projects/support",
       ],

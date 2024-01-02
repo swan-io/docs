@@ -1,0 +1,224 @@
+---
+title: Errors and rejections
+---
+
+# Errors and rejections
+
+Swan added the `Rejection` type into the API due to how GraphQL chose to handle errors.
+
+## GraphQL errors {#errors-graphql}
+
+In GraphQL, all the errors, or rather non-nominal responses, go through the `errors` field, which contains a list of non-typed objects.
+Because errors aren't [strongly typed](../index.mdx#graphql-types) like the rest of the GraphQL schema, there's **no guaranteed format or structure** to error responses.
+
+This is by design and part of [GraphQL's specifications](https://github.com/graphql/graphql-spec/blob/main/spec/Section%207%20--%20Response.md).
+
+:::caution Swan's responsibility
+It's Swan's responsibility as a financial institution and a business to make sure responses to API calls that request modifications (mutations) can be thoroughly reviewed and understood by all API consumers.
+
+As a result, Swan implemented the `Rejection` type in the API instead of relying on GraphQL's default, un-typed `errors` field to provide you with as much information as possible about failed mutations.
+:::
+
+### Swan API errors {#errors-swan}
+
+Adding `Rejections` doesn't mean the `error` fields disappeared from Swan's API.
+
+`Rejections` are implemented for all mutations with anticipated errors caused by business rules.
+For unexpected errors, and all query errors, the API returns a classic GraphQL `error` field.
+
+## Rejection object {#rejections}
+
+A `Rejection` is a GraphQL type returned by mutations—and only mutations—from the Swan API when a request is **rejected due to a business rule**.
+
+### Object structure {#rejections-structure}
+
+In the Swan [schema](../index.mdx#graphql-schema), a `Rejection` is an object containing a descriptive message.
+
+```graphql title="Rejection structure" {2} showLineNumbers
+interface Rejection {
+  message: String!
+}
+```
+
+Each business rule that can provoke a `Rejection` will have a type extending the `Rejection` interface.
+For example, if you try to access a consent that doesn't exist, you receive a `Rejection` in return, described like this, which also includes the `consentId`:
+
+```graphql title="Consent not found rejection" {2,3} showLineNumbers
+type ConsentNotFoundRejection implements Rejection {
+  message: String!
+  consentId: String!
+}
+```
+
+### Union: success or rejection {#rejections-union}
+
+Therefore, all Swan mutations are either **successful** or **return a `Rejection`**.
+Swan implemented this concept using a [GraphQL union](https://graphql.org/learn/schema/#union-types).
+
+Consider the `cancelConsent` mutation:
+
+```graphql title="Cancel consent" {5} showLineNumbers
+type Mutation {
+  cancelConsent(input: CancelConsentInput!): CancelConsentPayload!
+}
+
+union CancelConsentPayload = CancelConsentSuccessPayload | ConsentNotFoundRejection
+
+type CancelConsentSuccessPayload {
+  consent: Consent!
+}
+```
+A canceled consent returns the `CancelConsentPayload`.
+However, if the consent couldn't be found, the API returns the `ConsentNotFoundRejection`.
+
+## Extract possible rejections {#rejections-extract}
+
+In the Swan Banking Frontend open source project, there is a script to extract every object that implements a `Rejection`.
+The script then compiles the list of objects in a `locales` file with all rejection keys (`rejection.{name}`).
+
+You can download the [**`extractRejections` TypeScript file**](https://github.com/swan-io/lake/blob/main/scripts/graphql/extractRejections.ts) file from GitHub.
+
+## Using rejections {#using-rejections}
+
+You can add rejections to all mutation calls, and Swan encourages you to do so.
+In fact, all API mutation examples included in the documentation feature rejections.
+
+Continuing with the `cancelConsent` example, consider how Swan handles different `Rejection` cases.
+
+While this example is basic, consider how helpful the additional information is in each rejection payload.
+
+### No rejection added {#using-rejections-none}
+
+The following code block illustrates a mutation fetching a consent, but only a success payload is added to the call (line 3), not a `Rejection`.
+
+Note that the success payload looks good: the consent ID is returned as requested (line 17).
+
+However, the rejection payload contains no information (lines 27).
+
+```graphql title="No rejection added" {3,17,27} showLineNumbers
+mutation NoRejection {
+  cancelConsent(input: {consentId: "$YOUR_CONSENT_ID"}) {
+    ... on CancelConsentSuccessPayload {
+      consent {
+        id
+      }
+    }
+  }
+}
+
+# Success payload
+
+{
+  "data": {
+    "cancelConsent": {
+			"consent": {
+				"id" : "$YOUR_CONSENT_ID"
+      }
+		}
+  }
+}
+
+# Rejection payload
+
+{
+  "data": {
+    "cancelConsent": {}
+  }
+}
+```
+
+### Add basic rejection {#using-rejections-basic}
+
+Now, add a basic rejection to the same `cancelConsent` mutation.
+
+The success payload still looks good (line 20).
+
+This time, though, the API provides a reason in the rejection payload: the consent ID wasn't found (lines 31).
+
+```graphql title="No rejection added" {8,20,31} showLineNumbers
+mutation BasicRejection {
+  cancelConsent(input: {consentId: "$YOUR_CONSENT_ID"}) {
+    ... on CancelConsentSuccessPayload {
+      consent {
+        id
+      }
+    }
+    ... on Rejection {
+      message
+    }
+  }
+}
+
+# Success payload
+
+{
+  "data": {
+    "cancelConsent": {
+			"consent": {
+				"id" : "$YOUR_CONSENT_ID"
+      }
+		}
+  }
+}
+
+# Rejection payload
+
+{
+  "data": {
+    "cancelConsent": {
+      "message": "Consent with id '$YOUR_CONSENT_ID' was not found."
+    }
+  }
+}
+```
+
+### Add detailed rejection {#using-rejections-detailed}
+
+Add a detailed rejection to the same `cancelConsent` mutation (line 9).
+
+Again, the success payload looks good (line 24).
+
+Now, the API provides more information about why the mutation was rejected, including the consent ID you were looking for, the `__typename`, and that the consent ID wasn't found (lines 35-37).
+
+```graphql title="No rejection added" {9,24,35-37} showLineNumbers
+mutation MyMutation {
+  cancelConsent(input: {consentId: "$YOUR_CONSENT_ID"}) {
+    ... on CancelConsentSuccessPayload {
+      consent {
+        id
+      }
+    }
+    ... on Rejection {
+      ... on ConsentNotFoundRejection{
+        __typename
+        consentId
+      }
+      message
+    }
+  }
+}
+
+# Success payload
+
+{
+  "data": {
+    "cancelConsent": {
+			"consent": {
+				"id" : "$YOUR_CONSENT_ID"
+      }
+		}
+  }
+}
+
+# Rejection payload
+
+{
+  "data": {
+    "cancelConsent": {
+      "__typename": "ConsentNotFoundRejection",
+      "consentId": "$YOUR_CONSENT_ID",
+      "message": "Consent with id '$YOUR_CONSENT_ID' was not found."
+    }
+  }
+}
+```

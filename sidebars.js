@@ -72,6 +72,37 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Authentication & Consent",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Authentication",
+          link: { type: "doc", id: "topics/authentication/index" },
+          collapsed: true,
+          items: [
+            "topics/authentication/guide-get-token-user",
+            "topics/authentication/guide-get-token-project",
+            "topics/authentication/guide-impersonate",            
+          ],
+        },
+        {
+          type: "category",
+          label: "Consent",
+          link: { type: "doc", id: "topics/consent/index" },
+          collapsed: true,
+          items: [
+            "topics/consent/guide-configure-notifications",
+            "topics/consent/guide-create-multiconsent",
+            "topics/consent/guide-implement-s2s",
+            "topics/consent/guide-integrate-sca",
+          ],
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Capital deposits",
       collapsible: false,
       collapsed: false,
@@ -250,6 +281,69 @@ module.exports = {
           href: "https://support.swan.io/hc/en-150", // The external URL
         },
         "topics/contact",
+      ],
+    },
+  ],
+  developersSidebar: [
+    {
+      type: "category",
+      label: "Overview",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        "developers/index",
+        {
+          type: "link",
+          label: "API Reference",
+          href: "https://api-reference.swan.io/",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Tools",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Tools overview",
+          link: { type: "doc", id: "developers/tools/index" },
+          collapsed: true,
+          items: [
+            "developers/tools/api-explorer",
+            "developers/tools/testing-api",
+            "developers/tools/event-simulator",
+            "developers/tools/sandbox-users",
+            "developers/tools/postman-collection",
+          ],
+        },
+        "developers/tools/guide-test-tools",
+      ],
+    },
+    {
+      type: "category",
+      label: "Using the API",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        "developers/using-api/errors-rejections",
+        "developers/using-api/pagination",
+        "developers/using-api/payment-control",
+        "developers/using-api/webhooks",
+      ],
+    },
+    {
+      type: "category",
+      label: "Open Source",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "link",
+          label: "Swan Banking Frontend",
+          href: "https://swan-io.github.io/swan-partner-frontend/getting-started",
+        },
       ],
     },
   ],

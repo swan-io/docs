@@ -1,0 +1,274 @@
+---
+title: Integrate Strong Customer Authentication (SCA)
+---
+
+# Integrate Strong Customer Authentication (SCA)
+
+If you prefer to embed Swan into your own mobile app, you'll want to integrate Strong Customer Authentication (SCA) using in-app browsers.
+Your users will have the security of Swan's SCA directly from your app.
+
+## Overview {#overview}
+
+To integrate SCA, you'll need:
+
+1. In-app browser package.
+1. Custom URL scheme with a deep link listener package.
+1. Backend server (this guide uses https://awesome-backend.com).
+
+Check out [Swan's GitHub repository](https://github.com/swan-io/swan-partner-mobile) for an **integration demo**.
+
+:::caution Fullscreen required
+For security reasons, all links must open to be fullscreen.
+
+Therefore, **don't use webviews or iFrames** to display URLs (`consentUrl` or `oAuthUrl`).
+Step 1 describes a method that complies with the fullscreen requirement. 
+:::
+
+## Step 1: Set up your in-app browser {#browser}
+
+Use the documentation for your system's recommended API to set up your in-app browser.
+
+| System | Recommended API |
+| --- | --- |
+| iOS | [SF Safari View Controller API](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller) |
+| System | [Chrome Custom Tabs API](https://developer.android.com/jetpack/androidx/releases/browser) |
+
+There are also several wrappers available for these APIs:
+
+- [React Native](https://www.npmjs.com/package/react-native-inappbrowser-reborn)
+- [Flutter](https://pub.dev/packages/flutter_inappwebview)
+- [Capacitor](https://capacitorjs.com/docs/apis/browser)
+- [Ionic Cordova](https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-inappbrowser/)
+
+## Step 2: Set up your deep link listener {#deep-link-listener}
+
+Use the documentation for your system's recommended tutorial to set up the deep link listener for your app.
+
+| System | Recommended API |
+| --- | --- |
+| iOS | [Define custom URL scheme](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) |
+| System | [Create deep links](https://developer.android.com/training/app-links/deep-linking) |
+
+There are also several libraries available to listen for deep link visits:
+
+- [React Native](https://reactnative.dev/docs/linking)
+- [Flutter](https://docs.flutter.dev/development/ui/navigation/deep-linking)
+- [Capacitor](https://capacitorjs.com/docs/apis/app#addlistenerappurlopen-)
+- [Ionic Cordova](https://github.com/ionic-team/ionic-plugin-deeplinks)
+
+## Step 3: Configure the sign-in process {#configure-signin}
+
+This five-step process describes an ideal path for your users to sign in.
+
+### 3.1 Sign-in button {#configure-signin-button}
+
+First, the user clicks a sign-in button in your app
+Clicking this button opens an in-app browser and starts listening for deep links.
+
+```js showLineNumbers
+const onSignInWithSwanButtonPress = () => {
+  const listener = Linking.addListener("url", ({ url }) => {
+    // Called when deep link is visited
+  });
+
+  InAppBrowser.open("https://awesome-backend.com/auth")
+    // Executed when the browser is closed
+    .then(() => listener.remove());
+};
+```
+
+### 3.2 Authorization URL {#configure-signin-url}
+
+Next, your server constructs a Swan authorization URL and redirects the user.
+
+```js showLineNumbers
+app.get("/auth", async (req, reply) => {
+  const params = querystring.encode({
+    client_id: "$YOUR_CLIENT_ID",
+    response_type: "code",
+    redirect_uri: "https://awesome-backend.com/auth/callback", // must be registered in our dashboard
+    scope: ["openid", "offline"].join(" "),
+    state: generateUserState(req),
+  });
+
+  return reply.redirect(`https://oauth.swan.io/oauth2/auth?${params}`);
+});
+```
+
+### 3.3 User logs in {#configure-signin-login}
+
+The user logs in and is redirected to https://awesome-backend.com/auth/callback.
+
+### 3.4 Server responds {#configure-signin-server}
+
+Your server:
+
+1. Reads the authorization code.
+1. Exchanges it for a user access token.
+1. Stores the token using a unique identifier.
+1. Redirects the user to a deep link.
+
+```js showLineNumbers
+app.get("/auth/callback", async (req, reply) => {
+  if (req.query.state !== generateUserState(req)) {
+    throw new Error("Something isn't right, abort");
+  }
+
+  const token = await client.post("https://oauth.swan.io/oauth2/token", {
+    client_id: "$YOUR_CLIENT_ID",
+    client_secret: "$YOUR_CLIENT_SECRET",
+    grant_type: "authorization_code",
+    code: req.query.code,
+    redirect_uri: "https://awesome-backend.com/auth/callback",
+  });
+
+  const sessionId = randomUUID();
+  await storeTokenInKeyValueStore(sessionId, token);
+
+  return reply.redirect(`com.awesome.app://browser/close?sessionId=${sessionId}`);
+});
+```
+
+### 3.5 Close browser and store identifier {#configure-signin-close-store}
+
+Finally, the listener closes the in-app browser and stores the identifier.
+
+```js showLineNumbers
+const onSignInWithSwanButtonPress = () => {
+  const listener = Linking.addListener("url", ({ url }) => {
+    if (url.startsWith("com.awesome.app://browser/close")) {
+      InAppBrowser.close();
+
+      const { query } = parseUrl(url);
+
+      if (query.sessionId) {
+        AsyncStorage.setItem("sessionId", query.sessionId);
+      }
+    }
+  });
+
+  InAppBrowser.open("https://yourmobilebackend.com/swan/auth")
+    // Executed when the browser is closed
+    .then(() => listener.remove());
+}
+```
+
+## Step 4: Configure the consent process {#configure-consent}
+
+This six-step process describes an ideal path for your users to consent.
+This example uses the action of creating a card.
+
+It's important that, when clicked, **consent links respect one of the following behaviors**:
+
+1. The link opens a pop-up that redirects the user to another page. Upon redirect, the pop-up closes automatically.
+1. The link opens within the same page, then redirects the user to the rest of the flow.
+
+### 4.1 Create card button {#configure-consent-button}
+
+First, the user clicks a **Create a card** button in your app.
+Your server API receives the call with the following `sessionId` header.
+
+```js showLineNumbers
+const onAddCardButtonPress = async () => {
+  const sessionId = await AsyncStorage.getItem("sessionId");
+
+  await client.post("https://awesome-backend.com/add-card", {
+    headers: { sessionId },
+  });
+}
+```
+
+### 4.2 Consent URL {#configure-consent-url}
+
+Your server calls the Swan API with a user access token and returns the `consentUrl`.
+
+```js showLineNumbers
+app.get("/add-card", async (req, reply) => {
+  const token = await getTokenFromKeyValueStore(req.headers.sessionId);
+
+  const { consentUrl } = await swanClient.addCard(
+    {
+      input: {
+        // …
+        consentRedirectUrl: "https://awesome-backend.com/add-card/callback",
+      },
+    },
+    {
+      headers: {
+        Authorization: `Bearer $TOKEN`,
+      },
+    },
+  );
+
+  return reply.json({ consentUrl });
+});
+```
+
+### 4.3 Open browser and start listening {#configure-consent-open-listen}
+
+The app opens an in-app browser and starts listening for deep links.
+
+```js showLineNumbers
+const onAddCardButtonPress = async () => {
+  const sessionId = await AsyncStorage.getItem("sessionId");
+
+  const { consentUrl } = await client.post("https://awesome-backend.com/add-card", {
+    headers: { sessionId },
+  });
+
+  const listener = Linking.addListener("url", ({ url }) => {
+    // Called when deep link is visited
+  });
+
+  InAppBrowser.open(consentUrl)
+    // Executed when the browser is closed
+    .then(() => listener.remove());
+};
+```
+
+### 4.4 User consents {#configure-consent-user}
+
+The user consents and is redirected to https://awesome-backend.com/add-card/callback.
+
+During redirection, Swan adds these query parameters to the URL.
+You might consider doing the same.
+
+- `consentId`
+- `env`: Sandbox or Live environment
+- `status`: *Accepted*, *CustomerRefused*, *OperationCommitting*, *CredentialRefused*, *Created*, *Started*, *Expired*, *Failed*, or *Canceled* (adding the status doesn't replace the need to query Swan's API to confirm the consent)
+- `resourceId`: If the consent only impacts one resource, you can add that resource's ID 
+
+### 4.5 Additional operations {#configure-consent-additional-ops}
+
+Your server performs any necessary additional operations, then redirects the user to a deep link.
+
+```js showLineNumbers
+app.get("/add-card/callback", async (req, reply) => {
+  // Perform additional operations…
+  return reply.redirect("com.awesome.app://browser/close");
+});
+```
+
+### 4.6 Close browser {#configure-consent-close}
+
+Finally, the listener closes the in-app browser.
+
+```js showLineNumbers
+const onAddCardButtonPress = async () => {
+  const sessionId = await AsyncStorage.getItem("sessionId");
+
+  const { consentUrl } = await client.post("https://awesome-backend.com/add-card", {
+    headers: { sessionId },
+  });
+
+  const listener = Linking.addListener("url", ({ url }) => {
+    if (url.startsWith("com.awesome.app://browser/close")) {
+      InAppBrowser.close();
+    }
+  });
+
+  InAppBrowser.open("https://yourmobilebackend.com/swan/auth")
+    // Executed when the browser is closed
+    .then(() => listener.remove());
+};
+```

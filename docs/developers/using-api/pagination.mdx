@@ -1,0 +1,165 @@
+---
+title: Pagination
+---
+
+# Pagination
+
+import PaginationDefinition from '../../topics/definitions/_pagination.mdx';
+
+<PaginationDefinition />
+
+Pagination in Swan's API follows the [GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm) from Relay.
+Consider reading Relay's specifications for a full explanation.
+
+## Elements {#elements}
+
+An `element` is a single item in your list.
+You can always add the optional `totalCount` object, or the total number of elements in your list.
+
+## Connections {#connections}
+
+Connections are GraphQL objects that must have `edges` and `pageInfo`.
+They can also have other optional fields.
+
+### Edges {#connections-edges}
+
+Edges are *edge types*, and are GraphQL objects.
+
+The `edges` field returns a list defined by the edge type with the following required fields:
+
+- `node`: returns a scalar, enum, object, interface, union, or a non-null wrapper around one of those types; can't return a list
+- `cursor`: returns a type that serializes as a string (example: custom scalar that serializes as a string)
+
+### PageInfo {#connections-pageinfo}
+
+The `pageInfo` field returns a non-null `pageInfo` object with the following required fields:
+
+- `hasPreviousPage`, `hasNextPage`: non-null Booleans (must be true or false)
+- `startCursor`, `endCursor`: opaque strings, can be null
+
+## Arguments {#arguments}
+
+When a field returns a connection type, it must also return forward or backward pagination arguments, or both.
+These arguments define the edges required for all connections.
+
+Both `before` and `after` require an **index**, which is a unique reference to a specific element in string form.
+Specifically, the index is a [cursor type](https://relay.dev/graphql/connections.htm#sec-Cursor).
+
+
+- **Forward arguments**
+    - `first`: takes a non-negative integer `n` and loads only the *first* `n` elements from your list (maximum: 100)
+    - `after`: loads all elements occurring *after* the provided index
+- **Backward arguments**
+    - `last`: takes a non-negative integer `n` and loads only the *last* `n` elements from your list (maximum: 100)
+    - `before`: loads all elements occurring *before* the provided index
+
+
+## Examples {#examples}
+
+Take the `accountMembership` query as an example.
+
+### Example 1: Use `first` argument {#example-first}
+
+Imagine you want to retrieve the most recent account to which you became an account member.
+
+Use the forward argument `first` and the positive integer `1`.
+Submit the query as follows.
+
+Note the returned account number (line 23) and the cursor or index (line 26).
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=ewogIGFjY291bnRNZW1iZXJzaGlwcyhmaXJzdDogMSkgewogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICBhY2NvdW50IHsKICAgICAgICAgIG51bWJlcgogICAgICAgIH0KICAgICAgfQogICAgICBjdXJzb3IKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql title="MembershipsFirst1" {2,23,26} showLineNumbers
+{  
+  accountMemberships(first: 1) {
+		edges {
+      node {
+        account {
+	        number
+	      }
+      }
+      cursor
+    }
+  }  
+}
+
+# Payload
+
+{
+  "data": {
+    "accountMemberships": {
+      "edges": [
+        {
+          "node": {
+            "account": {
+              "number": "15102197881"
+            }
+          },
+          "cursor": "MmNlMzk2OT=="
+        }
+      ]
+    }
+  }
+}
+```
+
+### Example 2: Use index cursor {#example-index}
+
+Now, add the index to list the 10 account memberships from before the indexed membership.
+This query would return a long list, so the payload isn't included here.
+
+```graphql title="MembershipsIndex" {2,23,26} showLineNumbers
+{  
+  accountMemberships(first: 10, before: "MmNlMzk2OT==") {
+		edges {
+      node {
+        account {
+	        number
+	      }
+      }
+      cursor
+    }
+  }  
+}
+```
+
+### Example 3: Use `pageInfo` field {#example-pageinfo}
+
+Finally, add `pageInfo` to know if there are more pages of account memberships.
+
+```graphql title="MembershipsPageInfo" {2,12-14,28-30} showLineNumbers
+{
+  accountMemberships(first: 2) {
+    totalCount
+    edges {
+      node {
+        account {
+          number
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+
+# Payload
+
+{
+  "data": {
+    "accountMemberships": {
+      "totalCount": 8,
+      "edges": [
+        {...} # list of account memberships
+      ],
+      "pageInfo": {
+        "endCursor": $OPAQUE_STRING,
+        "hasNextPage": true
+      }
+    }
+  }
+}
+```

@@ -1,0 +1,116 @@
+---
+title: Create a multi-consent
+---
+
+# Create a multi-consent
+
+Multiple consent allows you to group multiple consents for sensitive operations into a single consent, so your user can **consent to multiple operations at the same time**.
+
+## Guide {#guide}
+
+1. For each sensitive operation the user initiates, retrieve the `consentId`.
+1. Confirm that all child consents must have the status `Created`. Otherwise, the API returns a `ConsentsNotAllInCreatedStatusRejection` rejection.
+1. Call the `CreateMultiConsent` mutation.
+1. Send the `consentUrl` to your user to grant multiple consent.
+1. Your end user now needs to perform [Strong Customer Authentication](./index.mdx#sca).
+
+:::info Same user
+All child consents must be from the same user represented by a user access token, or with the same project access token impersonating that user.
+:::
+
+### Mutation {#mutation-create}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gTXVsdGlwbGVDb25zZW50IHsKICBjcmVhdGVNdWx0aUNvbnNlbnQoCiAgICBpbnB1dDogewogICAgICByZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgb3JkZXJlZENvbnNlbnRJZHM6IFsKICAgICAgICB7IGNvbnNlbnRJZDogIiRDT05TRU5UX0lEXzEiIH0KICAgICAgICB7IGNvbnNlbnRJZDogIiRDT05TRU5UX0lEXzIiIH0KICAgICAgICB7IGNvbnNlbnRJZDogIiRDT05TRU5UX0lEXzMiIH0KICAgICAgXQogICAgfQogICkgewogICAgLi4uIG9uIENyZWF0ZU11bHRpQ29uc2VudFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {15} showLineNumbers
+mutation MultipleConsent {
+  createMultiConsent(
+    input: {
+      redirectUrl: "$YOUR_REDIRECT_URL"
+      orderedConsentIds: [
+        { consentId: "$CONSENT_ID_1" }
+        { consentId: "$CONSENT_ID_2" }
+        { consentId: "$CONSENT_ID_3" }
+      ]
+    }
+  ) {
+    ... on CreateMultiConsentSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-create}
+
+Make sure to send the `consentUrl` (line 6) to your user.
+
+```json {6} showLineNumbers
+{
+  "data": {
+    "createMultiConsent": {
+      "__typename": "CreateMultiConsentSuccessPayload",
+      "consent": {
+        "consentUrl": "$YOUR_CONSENT_URL"
+      }
+    }
+  }
+}
+```
+
+## Choose order of consents {#choose-order}
+
+You can choose the order in which to perform child consents with the order parameter.
+The order begins with `0` and continues `1`, `2`, and so forth.
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQ2hvb3NlT3JkZXIgewogIGNyZWF0ZU11bHRpQ29uc2VudCgKICAgIGlucHV0OiB7CiAgICAgIG9yZGVyZWRDb25zZW50SWRzOiBbCiAgICAgICAgeyBjb25zZW50SWQ6ICIkQ09OU0VOVF9JRF8xIiwgb3JkZXI6IDEgfQogICAgICAgIHsgY29uc2VudElkOiAiJENPTlNFTlRfSURfMiIsIG9yZGVyOiAxIH0KICAgICAgICB7IGNvbnNlbnRJZDogIiRDT05TRU5UX0lEXzMiLCBvcmRlcjogMSB9CiAgICAgICAgeyBjb25zZW50SWQ6ICIkQ09OU0VOVF9JRF80Iiwgb3JkZXI6IDEgfQogICAgICAgIHsgY29uc2VudElkOiAiJENPTlNFTlRfSURfNSIsIG9yZGVyOiAxIH0KICAgICAgICB7IGNvbnNlbnRJZDogIiRDT05TRU5UX0lEXzYiLCBvcmRlcjogMCB9CiAgICAgICAgeyBjb25zZW50SWQ6ICIkQ09OU0VOVF9JRF83Iiwgb3JkZXI6IDIgfQogICAgICAgIHsgY29uc2VudElkOiAiJENPTlNFTlRfSURfOCIsIG9yZGVyOiAxIH0KICAgICAgICB7IGNvbnNlbnRJZDogIiRDT05TRU5UX0lEXzkiLCBvcmRlcjogMSB9CiAgICAgIF0KICAgICAgcmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQ3JlYXRlTXVsdGlDb25zZW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvbnNlbnQgewogICAgICAgIGNvbnNlbnRVcmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIENvbnNlbnRzTm90QWxsSW5DcmVhdGVkU3RhdHVzUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50SWRzCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDb25zZW50c05vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBpZHMKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDb25zZW50c0FscmVhZHlMaW5rZWRUb011bHRpQ29uc2VudFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudElkcwogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql showLineNumbers
+mutation ChooseOrder {
+  createMultiConsent(
+    input: {
+      orderedConsentIds: [
+        { consentId: "$CONSENT_ID_1", order: 1 }
+        { consentId: "$CONSENT_ID_2", order: 1 }
+        { consentId: "$CONSENT_ID_3", order: 1 }
+        { consentId: "$CONSENT_ID_4", order: 1 }
+        { consentId: "$CONSENT_ID_5", order: 1 }
+        { consentId: "$CONSENT_ID_6", order: 0 }
+        { consentId: "$CONSENT_ID_7", order: 2 }
+        { consentId: "$CONSENT_ID_8", order: 1 }
+        { consentId: "$CONSENT_ID_9", order: 1 }
+      ]
+      redirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on CreateMultiConsentSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+    ... on ConsentsNotAllInCreatedStatusRejection {
+      __typename
+      consentIds
+      message
+    }
+    ... on ConsentsNotFoundRejection {
+      __typename
+      ids
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+    ... on ConsentsAlreadyLinkedToMultiConsentRejection {
+      __typename
+      consentIds
+      message
+    }
+  }
+}
+```

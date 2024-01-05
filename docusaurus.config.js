@@ -36,6 +36,19 @@ module.exports = {
         src: "img/logo-swan.svg",
         width: 70,
       },
+      items: [
+        {
+          type: 'doc',
+          position: 'left',
+          docId: 'developers/index',
+          label: 'Developers',
+        },
+        {
+          position: 'right',
+          href: "https://docs.swan.io/help/changelog",
+          label: 'Changelog',
+        },
+      ],
     },
     // footer: {
     //   // style: "dark",

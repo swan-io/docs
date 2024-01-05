@@ -1,0 +1,102 @@
+---
+title: Authentication
+---
+
+# Authentication
+
+Swan uses OAuth 2.0 and Bearer authentication to authenticate both you and your users to the API.
+
+## OAuth 2.0 {#oauth2}
+
+[**OAuth 2.0**](https://oauth.net/2/), an authorization protocol, grants limited access to user data on a web server for an API client.
+Major platforms like GitHub, Google, and Facebook use OAuth 2.0.
+The protocol relies on authentication scenarios, known as flows, allowing the resource owner to **share protected content** from the resource server **without disclosing their credentials**.
+
+The OAuth 2.0 protocol is defined in [RFC 6749](https://datatracker.ietf.org/doc/html/rfc6749).
+
+## Bearer authentication {#bearer-auth}
+
+Bearer authentication, also known as **token authentication**, functions as an [HTTP authentication protocol](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication) using access tokens.
+In the context of Swan, access tokens are generated in response to OAuth 2.0 authorization requests. These tokens consist of a cryptic string, enabling you to **access protected resources** on behalf of the resource owner.
+
+The Bearer authentication protocol, integral to OAuth 2.0, is defined in [RFC 6750](https://datatracker.ietf.org/doc/html/rfc6750).
+
+## Overview of access tokens {#tokens}
+
+Swan generates two types of access tokens: **user** and **project**.
+Access tokens are provided through an HTTP authorization header, such as `Authorization: Bearer {access token}`.
+
+| ↓ Token type \| Can call → | Queries | Non-sensitive<br/>mutations | Sensitive<br/>mutations |
+| --- | --- | --- | --- |
+| User access token | ✓ **Yes** ∗ | ✓ **Yes** | ✓ **Yes** |
+| Project access token | ✓ **Yes** | ✓ **Yes** | ☒ No |
+| Impersonate user with<br/>project access token  | ✓ **Yes** ∗ | ✓ **Yes** | ✓ **Yes** |
+
+∗ *User access tokens, as well as project access tokens used to impersonate a user, **can't be used** to call **`transactions` queries**.*
+
+## User access tokens {#tokens-user}
+
+User access tokens allow you to act on behalf of an individual user in your project, often with the goal of executing sensitive operations.
+They must use the grant type **authorization code**.
+
+User access tokens are **valid for one hour** (3600 seconds), after which you can refresh it or get a new token.
+When API calls are made with an **expired token**, the API **returns an invalid grant or authentication failure** (HTTP 401 Unauthorized).
+
+Swan doesn't store your user access tokens.
+Consider storing them at the **user level** (not the project level) in your database.
+
+### Refresh tokens {#tokens-user-refresh}
+
+To prolong the validity of your user access token, Swan provides refresh tokens with every successful user access token request.
+Refresh tokens can be used one time to refresh, or extend, your user access token.
+
+The best time to use a refresh token is either:
+
+1. When **logging into the app**, or
+1. When a **request returns an error** because the token is expired.
+
+Because refresh tokens are single-use, a new one is provided each time you refresh your user access token.
+Store your refresh token securely, replacing it with the new one each time.
+
+Learn about refreshing your user access tokens in the [user access token guide](./guide-get-token-user.mdx#refresh-token).
+
+:::caution Using refresh tokens responsibly
+**Swan discourages frequent use of refresh tokens** for refreshing your user access token due to high resource consumption.
+It's also often unnecessary, considering that a project access token can be used for most of Swan's API operations.
+
+Consider **reserving the use** of user access tokens for **sensitive operations**.
+This practice ensures responsible consumption of resources and aligns with best practices for efficient API usage.
+:::
+
+### Redirect URIs {#tokens-user-uri}
+
+When using a user access token, it's recommended to add your pre-approved URIs, or Uniform Resource Identifiers, to your Dashboard.
+This step is essential for maintaining the integrity and security of the OAuth 2.0 flow.
+
+Adding URIs creates an allowlist to which your users can be redirected, thus ensuring that your users are redirected securely.
+This minimizes the security risk of being redirected to a malicious endpoint and compromising sensitive data.
+
+You'll be prompted to add a redirect URI in [step 1](./guide-get-token-user.mdx#get-credentials-add-uri) of the guide to get a user access token.
+
+## Project access tokens {#tokens-project}
+
+Project access tokens allow you to **act on your own behalf** rather than on behalf of a user.
+Use them to read information and execute non-sensitive operations.
+
+Project access tokens must use the grant type **client credential**, intended for server-to-server authentication.
+They're **valid for one hour** (3600 seconds), after which you need to get a new token.
+
+### Impersonation {#tokens-project-impersonate}
+
+You can also use a project access token to act as a user within your project, referred to as [impersonation](./guide-impersonate.mdx).
+
+User access tokens are necessary to know who is connected (`userId`) and who is performing sensitive operations, but they expire.
+If expiring user access tokens interrupt your automations, consider impersonating the user with a project access token instead.
+
+Learn about impersonation in the [dedicated guide](./guide-impersonate.mdx).
+
+## Guides {#guides}
+
+- [Get a user access token](./guide-get-token-user.mdx)
+- [Get a project access token](./guide-get-token-project.mdx)
+- [Impersonate a user](./guide-impersonate.mdx)

@@ -1,0 +1,39 @@
+---
+title: Impersonate a user
+---
+
+# Impersonate a user
+
+You can add information in your HTTP header to any GraphQL API request to [impersonate the specified user](./index.mdx#tokens-project-impersonate).
+However, this method doesn't work with the OAuth 2.0 API.
+
+:::tip Approved use cases
+1. Act as the legal representative to perform [server-to-server consent](../consent/index.mdx#s2s) operations.
+1. Get updated or refreshed user data with a [webhook notification](../../developers/using-api/webhooks.mdx) on the `user` object.
+1. Illustrate a user's problem to Partners and Swan support teams.
+1. Use the Swan API on behalf of a user:
+    - Without a user access token,
+    - Without asking the user to reconnect, and
+    - Without using the refresh token.
+:::
+
+## Guide {#guide}
+
+To impersonate a user with a project access token:
+
+1. Verify the user has signed into your project at least one time.
+1. Collect the Swan `userId` from the OAuth 2.0 process to get a user access token.
+1. Bind it with your own `userId` in your system.
+1. Add the HTTP header `x-swan-user-id` **with the `userId`** (sample HTTP header line 2).
+
+Then, you'll experience the environment as if you had used a user access token.
+
+## HTTP header sample {#http-header}
+
+```curl showLineNumbers
+curl --location 'https://api.swan.io/live-partner/graphql' \
+--header 'x-swan-user-id: 4d102f73-cc4a-4f2e-8734-e2885df95abd' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $PROJECT_ACCESS_TOKEN' \
+--data '{"query":"query accounts {\n user {\n firstName\n lastName\n mobilePhoneNumber\n id\n }\n \n \n}\n","variables":{}}'
+```

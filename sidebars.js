@@ -293,26 +293,27 @@ module.exports = {
       collapsed: false,
       items: [
         "partnership/index",
+        "partnership/protections",
+        "partnership/country-coverage",
       ],
     },  
     {
       type: "category",
-      label: "Countries",
+      label: "Country guides",
       collapsible: false,
       collapsed: false,
       items: [
-        "partnership/countries/index",
         {
           type: "category",
-          label: "Guides by country",
-          link: { type: "doc", id: "partnership/countries/guides" },
+          label: "🇫🇷 France",
+          link: { type: "doc", id: "partnership/countries/france/index" },
           collapsed: true,
           items: [
-            "partnership/countries/france",
-            "partnership/countries/germany",
-            "partnership/countries/spain",
+            "partnership/countries/france/guide-orias",
           ],
         },
+        "partnership/countries/germany",
+        "partnership/countries/spain",
       ],
     },
     {

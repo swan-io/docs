@@ -55,9 +55,15 @@ import DayTimeStandard from '../../partials/_day-time.mdx';
 
 ### Rejected {#r-transactions-rejected}
 
-Checks can be rejected by Swan's check provider and returned to the merchant by mail.
+Checks can be rejected by Swan's check provider and **returned to the merchant by mail**.
+They'll receive helpful information about why the check has been rejected, and then they can **fix and resend the rejected checks**.
 
-A check transaction might be rejected for the following reasons.
+**Before resending the rejected check**, the merchant should create a new `checkIn` transaction.
+If they send the check without creating the new `checkIn` transaction, the check **remains rejected** and will be returned to the merchant again.
+
+Additionally, all checks not sent to Swan's check provider within 30 days of being declared will be automatically `Rejected`.
+
+A check transaction can be rejected for the following reasons:
 
 | Rejection reason | Explanation |
 | --- | --- |
@@ -71,12 +77,6 @@ A check transaction might be rejected for the following reasons.
 | `InvalidOrMissingAmount` | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters) |
 | `SignatureMissing` | Signature is missing, or there was a problem with the signature |
 | `SuspiciousCheck` | Suspicion of fraud |
-
-Merchants can **fix and resend rejected checks**.
-To do this, the merchant should create a new `checkIn` transaction before sending the check to Swan's provider.
-If they send the check without creating the new `checkIn` transaction, the check remains rejected and will be returned to the merchant again.
-
-Additionally, all checks not sent to Swan's check provider within 30 days of being declared will be automatically `Rejected`.
 
 ### Returned {#r-transactions-returned}
 

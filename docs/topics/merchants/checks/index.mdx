@@ -22,14 +22,16 @@ This feature is only available using the API.
 
 When declaring checks with the API, there are five mandatory API fields:
 
-1. `amount`: monetary amount of the check (can't exceed 10 000€)
-1. `currency`: `EUR` (only euros are supported)
-1. `CMC7` (Caractères Magnétiques Codés à 7 bâtonnets): 31-digit code composed of 3 series of numbers
+1. `amount`: monetary amount of the check (can't exceed 10 000€).
+1. `currency`: `EUR` (only euros are supported).
+1. `CMC7` (Caractères Magnétiques Codés à 7 bâtonnets): 31-digit code composed of 3 series of numbers.
     - Series 1: check number; 7 digits
     - Series 2: interbank codes; 12 digits
     - Series 3: account number; 12 digits
-1. `rlmcKey` (Recomposition de la Ligne Magnétique du Chèque): 2-digit code surrounded by chevrons `< >` or parentheses `( )` calculated based on the CMC7
-1. `merchantProfileId`: your developers should enter the merchant's profile ID number
+1. `rlmcKey` (Recomposition de la Ligne Magnétique du Chèque): 2-digit code surrounded by chevrons `< >` or parentheses `( )` calculated based on the CMC7.
+1. `merchantProfileId`: your developers should enter the merchant's profile ID number.
+
+On the **back of the check**, the merchant must write their Swan account number as well as provide their signature.
 
 ## Rolling reserve {#rolling-reserve}
 
@@ -55,14 +57,26 @@ import DayTimeStandard from '../../partials/_day-time.mdx';
 
 Checks can be rejected by Swan's check provider and returned to the merchant by mail.
 
-A check transaction might be rejected for the following reasons (this list is not exhaustive):
+A check transaction might be rejected for the following reasons.
 
-- Problem with the signature
-- Suspicion of fraud
-- Check was received by Swan's check provider more than 30 days after the check was declared
+| Rejection reason | Explanation |
+| --- | --- |
+| `AmountMismatch` | Amount on the check and amount declared through the API don't match |
+| `BeneficiaryMissingOrIncorrect` | Merchant's name is missing or incorrect |
+| `CheckReceivedLate` | Check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check |
+| `DateMissing` | There's no date on the check |
+| `DateInvalid` | Date on the check is in the future or isn't valid |
+| `DebtorNameMissing` | Debtor's name (merchant's customer) must appear on the check |
+| `EndorsementMissing` | Merchant didn't sign the back of the check or provide their Swan account number |
+| `InvalidOrMissingAmount` | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters) |
+| `SignatureMissing` | Signature is missing, or there was a problem with the signature |
+| `SuspiciousCheck` | Suspicion of fraud |
 
-Merchants can resubmit rejected checks within 30 days of receipt.
-They need to fix the issue and initiate a new `checkIn` transaction before sending the check to Swan's check provider.
+Merchants can **fix and resend rejected checks**.
+To do this, the merchant should create a new `checkIn` transaction before sending the check to Swan's provider.
+If they send the check without creating the new `checkIn` transaction, the check remains rejected and will be returned to the merchant again.
+
+Additionally, all checks not sent to Swan's check provider within 30 days of being declared will be automatically `Rejected`.
 
 ### Returned {#r-transactions-returned}
 
@@ -82,8 +96,6 @@ Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `check
 Creditors can cancel a received check with the `Upcoming` status.
 In this case, the check status switches automatically to `Canceled`.
 This transaction won't impact the account's available balance.
-
-Additionally, all checks not sent to Swan's check provider within 30 days of being declared will be automatically `Canceled`.
 
 ## Guides {#guides}
 

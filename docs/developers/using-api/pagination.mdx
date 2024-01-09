@@ -39,20 +39,14 @@ The `pageInfo` field returns a non-null `pageInfo` object with the following req
 
 ## Arguments {#arguments}
 
-When a field returns a connection type, it must also return forward or backward pagination arguments, or both.
+When a field returns a connection type, it must also return a forward pagination argument.
 These arguments define the edges required for all connections.
 
-Both `before` and `after` require an **index**, which is a unique reference to a specific element in string form.
+Note that `after` requires an **index**, which is a unique reference to a specific element in string form.
 Specifically, the index is a [cursor type](https://relay.dev/graphql/connections.htm#sec-Cursor).
 
-
-- **Forward arguments**
-    - `first`: takes a non-negative integer `n` and loads only the *first* `n` elements from your list (maximum: 100)
-    - `after`: loads all elements occurring *after* the provided index
-- **Backward arguments**
-    - `last`: takes a non-negative integer `n` and loads only the *last* `n` elements from your list (maximum: 100)
-    - `before`: loads all elements occurring *before* the provided index
-
+- `first`: takes a non-negative integer `n` and loads only the *first* `n` elements from your list (maximum: 100)
+- `after`: loads all elements occurring *after* the provided index
 
 ## Examples {#examples}
 
@@ -65,23 +59,24 @@ Imagine you want to retrieve the most recent account to which you became an acco
 Use the forward argument `first` and the positive integer `1`.
 Submit the query as follows.
 
-Note the returned account number (line 23) and the cursor or index (line 26).
+Note the returned account number (line 24) and the cursor or index (line 27).
 
-🔎 [Open the query in API Explorer](https://explorer.swan.io?query=ewogIGFjY291bnRNZW1iZXJzaGlwcyhmaXJzdDogMSkgewogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICBhY2NvdW50IHsKICAgICAgICAgIG51bWJlcgogICAgICAgIH0KICAgICAgfQogICAgICBjdXJzb3IKICAgIH0KICB9Cn0K&tab=api)
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgRmlyc3RNZW1iZXJzaGlwIHsKICBhY2NvdW50TWVtYmVyc2hpcHMoZmlyc3Q6IDEpIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgYWNjb3VudCB7CiAgICAgICAgICBudW1iZXIKICAgICAgICB9CiAgICAgIH0KICAgICAgY3Vyc29yCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
-```graphql title="MembershipsFirst1" {2,23,26} showLineNumbers
-{  
+```graphql title="MembershipsFirst1" {2,24,27} showLineNumbers
+query FirstMembership {
   accountMemberships(first: 1) {
-		edges {
+    edges {
       node {
         account {
-	        number
-	      }
+          number
+        }
       }
       cursor
     }
-  }  
+  }
 }
+
 
 # Payload
 
@@ -108,18 +103,20 @@ Note the returned account number (line 23) and the cursor or index (line 26).
 Now, add the index to list the 10 account memberships from before the indexed membership.
 This query would return a long list, so the payload isn't included here.
 
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgVGVuQmVmb3JlIHsKICBhY2NvdW50TWVtYmVyc2hpcHMoZmlyc3Q6IDEwLCBiZWZvcmU6ICJNbU5sTXprMk9UPT0iKSB7CiAgICBlZGdlcyB7CiAgICAgIG5vZGUgewogICAgICAgIGFjY291bnQgewogICAgICAgICAgbnVtYmVyCiAgICAgICAgfQogICAgICB9CiAgICAgIGN1cnNvcgogICAgfQogIH0KfQo%3D&tab=api)
+
 ```graphql title="MembershipsIndex" {2,23,26} showLineNumbers
-{  
+query TenBefore {
   accountMemberships(first: 10, before: "MmNlMzk2OT==") {
-		edges {
+    edges {
       node {
         account {
-	        number
-	      }
+          number
+        }
       }
       cursor
     }
-  }  
+  }
 }
 ```
 
@@ -127,8 +124,10 @@ This query would return a long list, so the payload isn't included here.
 
 Finally, add `pageInfo` to know if there are more pages of account memberships.
 
-```graphql title="MembershipsPageInfo" {2,12-14,28-30} showLineNumbers
-{
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgUGFnZUluZm8gewogIGFjY291bnRNZW1iZXJzaGlwcyhmaXJzdDogMikgewogICAgdG90YWxDb3VudAogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICBhY2NvdW50IHsKICAgICAgICAgIG51bWJlcgogICAgICAgIH0KICAgICAgfQogICAgICBjdXJzb3IKICAgIH0KICAgIHBhZ2VJbmZvIHsKICAgICAgZW5kQ3Vyc29yCiAgICAgIGhhc05leHRQYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql title="MembershipsPageInfo" {2-3,12-14,24,28-30} showLineNumbers
+query PageInfo {
   accountMemberships(first: 2) {
     totalCount
     edges {

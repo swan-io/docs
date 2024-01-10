@@ -11,6 +11,7 @@ module.exports = {
       type: "category",
       label: "Account onboarding",
       collapsible: false,
+      link: { type: "doc", id: "topics/onboarding/index" },
       collapsed: false,
       items: [
         {
@@ -84,7 +85,7 @@ module.exports = {
           items: [
             "topics/authentication/guide-get-token-user",
             "topics/authentication/guide-get-token-project",
-            "topics/authentication/guide-impersonate",            
+            "topics/authentication/guide-impersonate",
           ],
         },
         {
@@ -242,7 +243,7 @@ module.exports = {
           ],
         },
       ],
-    },  
+    },
     {
       type: "category",
       label: "Projects",

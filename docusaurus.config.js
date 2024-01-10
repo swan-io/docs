@@ -30,7 +30,6 @@ module.exports = {
       jsLoader: "matomo.js",
     },
     navbar: {
-      title: "Docs",
       logo: {
         alt: "Swan",
         src: "img/logo-swan.svg",
@@ -38,15 +37,27 @@ module.exports = {
       },
       items: [
         {
-          type: 'doc',
-          position: 'left',
-          docId: 'developers/index',
-          label: 'Developers',
+          type: "doc",
+          position: "left",
+          docId: "index",
+          label: "Documentation",
         },
         {
-          position: 'right',
+          type: "doc",
+          position: "left",
+          docId: "developers/index",
+          label: "Developers",
+        },
+        {
+          to: "https://api-reference.swan.io",
+          label: "API Reference",
+          position: "left",
+          target: "_self",
+        },
+        {
+          position: "right",
           href: "https://docs.swan.io/help/changelog",
-          label: 'Changelog',
+          label: "Changelog",
         },
       ],
     },

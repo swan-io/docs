@@ -41,6 +41,12 @@ module.exports = {
           label: "Documentation",
         },
         {
+          type: 'doc',
+          position: 'left',
+          docId: 'partnership/index',
+          label: 'Partnership',
+        },
+        {
           type: "doc",
           position: "left",
           docId: "developers/index",

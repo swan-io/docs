@@ -1,6 +1,4 @@
-const lightCodeTheme = require("prism-react-renderer/themes/palenight");
-const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
-const path = require("path");
+const prism = require("prism-react-renderer");
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
@@ -66,8 +64,8 @@ module.exports = {
     //   copyright: `Copyright © ${new Date().getFullYear()} Swan`,
     // },
     prism: {
-      theme: lightCodeTheme,
-      darkTheme: darkCodeTheme,
+      theme: prism.themes.palenight,
+      darkTheme: prism.themes.oceanicNext,
     },
   },
   markdown: {

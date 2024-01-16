@@ -285,6 +285,62 @@ module.exports = {
       ],
     },
   ],
+  partnershipSidebar: [
+    {
+      type: "category",
+      label: "Overview",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        "partnership/index",
+        "partnership/protections",
+        "partnership/country-coverage",
+      ],
+    },  
+    {
+      type: "category",
+      label: "Country guides",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "🇫🇷 France",
+          link: { type: "doc", id: "partnership/countries/france/index" },
+          collapsed: true,
+          items: [
+            "partnership/countries/france/guide-orias",
+          ],
+        },
+        "partnership/countries/germany",
+        "partnership/countries/spain",
+      ],
+    },
+    {
+      type: "category",
+      label: "Resources",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "link",
+          label: "API reference",
+          href: "https://api-reference.swan.io/",
+        },
+        {
+          type: "link",
+          label: "Status page", // The link label
+          href: "https://status.swan.io/", // The external URL
+        },
+        {
+          type: "link",
+          label: "Support Center", // The link label
+          href: "https://support.swan.io/hc/en-150", // The external URL
+        },
+        "partnership/contact",
+      ],
+    },
+  ],
   developersSidebar: [
     {
       type: "category",
@@ -345,6 +401,25 @@ module.exports = {
           label: "Swan Banking Frontend",
           href: "https://swan-io.github.io/swan-partner-frontend/getting-started",
         },
+      ],
+    },
+    {
+      type: "category",
+      label: "Resources",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "link",
+          label: "Status page", // The link label
+          href: "https://status.swan.io/", // The external URL
+        },
+        {
+          type: "link",
+          label: "Support Center", // The link label
+          href: "https://support.swan.io/hc/en-150", // The external URL
+        },
+        "developers/contact",
       ],
     },
   ],

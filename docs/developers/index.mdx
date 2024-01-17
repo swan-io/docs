@@ -6,38 +6,12 @@ title: About the Swan API
 
 ## Overview {#overview}
 
-Swan uses a **GraphQL API**, an API language that emerged in 2015 and quickly became an interesting alternative to `REST` or `x-rpc`.
-From [GraphQL](https://graphql.org/learn/):
+Swan uses a **GraphQL API**, explained in more detail on [About GraphQL](./graphql.mdx).
 
-> GraphQL is a query language for your API, and a server-side runtime for executing queries using a type system you define for your data. GraphQL isn't tied to any specific database or storage engine and is instead backed by your existing code and data.
-
-:::info Learning GraphQL
-
-This page explains GraphQL concepts required to work with the Swan API.
-If you're new to GraphQL, consider reviewing the [GraphQL documentation](https://graphql.org/learn/), or following this tutorial from [How to GraphQL](https://www.howtographql.com/).
-:::
-
-## Endpoints {#endpoints}
-
-| Name | Endpoint |
-| --- | --- |
-| Server OAuth 2.0 | https://oauth.swan.io/oauth2 |
-| Sandbox | https://api.swan.io/sandbox-partner/graphql |
-| Sandbox (Testing API) | https://api.swan.io/sandbox-partner-admin/graphql |
-| Live | https://api.swan.io/live-partner/graphql |
-
-## Time-to-live {#ttl}
-
-Swan's Partner Dashboard and the Web Banking user interface each have a time-to-live (TTL) after which the session is discontinued automatically.
-
-- **Dashboard**: 72 hours; sessions refresh every time you call the API.
-- **Web Banking**: 5 minutes; session tokens refresh as long as the page stays open.
-
-## Basic API flow {#flow}
-
-With Swan's GraphQL API, you can request data and perform actions on your accounts, cards, transactions, and more.
+With Swan's API, you can request data and perform actions on your accounts, cards, transactions, and more.
 In this communication process, the API consumer asks Swan to execute operations and Swan responds.
 
+This sequence diagram shows the most basic interactions between Swan's API, your users, and you.
 Note that the flow changes when [webhooks](./using-api/webhooks.mdx) are involved.
 
 ```mermaid
@@ -51,174 +25,85 @@ participant S as Swan
     P ->> U: Displays data
 ```
 
-## Advantages of GraphQL {#advantages}
+## Environments {#environments}
 
-1. **Strongly typed**, permitting a robust API contract between Swan and API consumers. It's easy for clients to generate code to consume Swan's API, and easy to test a smooth integration (with [contract testing](https://pactflow.io/blog/what-is-contract-testing/), for example).
-1. **Resilience**. By giving power back to API clients, GraphQL has created a new class of APIs that are especially resilient to evolution.
-1. **Finer command** over the data you wish to fetch or over the way you wish to batch their requests thanks to GraphQL's request capacity. The freedom you have to consume Swan's API will also help you analyze client behavior and better respond to their needs.
-1. **Introspection System**, which allows you to ask Swan's server about which queries the API supports. A new developer can easily refer to it as built-in documentation. Learn more about [introspection](https://graphql.org/learn/introspection/).
-1. **Community**. GraphQL creators helped create a powerful community from the start. Consider [Apollo](https://www.apollographql.com/) and [The Guild](https://the-guild.dev/).
-1. **Future oriented**. GraphQL is forward-thinking. In the Golden Age of APIs, when everything seems to come from APIs, GraphQL creates meta-graphs consolidating multiple different suppliers. With a stable and sustainable model, Swan believes GraphQL is the future of APIs.
+Swan hosts two environments: **Live** and **Sandbox**.
+They are completely separate with different endpoints.
+This means that access tokens, user credentials, URLs, and more, won't work between environments.
+[Projects are also environment-dependent](../topics/projects/index.mdx#environments).
 
-## GraphQL building blocks {#graphql-blocks}
+In short, **test in Sandbox, build in Live**—and remember, you can't move anything between the two.
 
-### Schema {#graphql-schema}
+## Calling the API {#call-api}
 
-The **GraphQL Schema** is the **overarching structure** that defines the entire API.
+### Endpoints {#endpoints}
 
-The schema includes root types—queries and mutations—which provide the entry point to get and modify information.
-The schema also describes the relationship between different types, and specifies what you can do with the API.
+| Name | Endpoint |
+| --- | --- |
+| Server OAuth 2.0 | https://oauth.swan.io/oauth2 |
+| Sandbox | https://api.swan.io/sandbox-partner/graphql |
+| Sandbox (Testing API) | https://api.swan.io/sandbox-partner-admin/graphql |
+| Live | https://api.swan.io/live-partner/graphql |
 
-With schemas, you can validate the exact composition of your requests, and know in advance exactly what you'll get back.
-The schema is always up to date and is your main point of reference to integrate Swan.
+### Rate limiting {#rate-limits}
 
-### Queries {#graphql-queries}
+Swan imposes rate limits on the endpoints to protect the API.
 
-Entry point to the API used to request information from the server.
-These are read-only operations, used only to fetch data from the remote API.
-Queries are similar to `GET` requests in a REST API.
+The default limit for each IP is **2,000 requests every 5 minutes**.
+If you send over 2,000 requests for a single endpoint, you'll receive an HTTP 429 Too Many Requests response.
+This limit applies to all endpoints.
 
-Queries always begin with the keyword `query`, after which you'll choose the fields for which you want to fetch data.
+If you need to increase the rate limits for your use case, request it through email: integration@swan.io. 
 
-#### Query example {#graphql-queries-example}
+### Backend communication {#backend}
 
-Consider the following example, which queries `user` > `mobilePhoneNumber`.
-The payload returns the user's `mobilePhoneNumber`.
+Swan is designed to communicate between the Swan backend and yours.
+For security reasons, Swan doesn't allow API calls originating from a frontend application; all calls must come from the backend.
 
-Note that this is a basic example.
-Consider a [query example from onboarding](../topics/onboarding/overview/guide-get-info.mdx#query) to see more complexity, including nested fields.
-You can also explore all of Swan's queries in [API Explorer](https://explorer.swan.io/).
+If you try to call the API from the frontend, you'll get a Cross-Origin Resource Sharing (CORS) error.
 
-```graphql title="Query" showLineNumbers
-query { 
-  user(id: "$SWAN_USER_ID") { #query name
-    mobilePhoneNumber #field
-  }
-}
+### Using cURL {#curl}
+
+You can test the Swan API using cURL or any other HTTP client.
+
+The following example is a query to get the IDs and IBANs of all the accounts in your project.
+Replace `$YOUR_ACCESS_TOKEN` with the a valid [user or project access token](../topics/authentication/index.mdx) before sending your request.
+
+```curl title="Request" showLineNumbers
+curl -X POST https://api.swan.io/sandbox-partner/graphql \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer $YOUR_ACCESS_TOKEN' \
+-d '{"query":"query MyQuery{ accounts { edges { node { id IBAN } } } }"}'
 ```
 
-```json title="Payload" {4} showLineNumbers
+```json title="Response" {4} showLineNumbers
 {
-  "data": {
-    "user": {
-      "mobilePhoneNumber": "$USER_PHONE_NUMBER"
+    "data": {
+        "accounts": {
+            "edges": [
+                {
+                    "node": {
+                        "id": "$YOUR_ID",
+                        "IBAN": "$YOUR_IBAN"
+                    }
+                }
+            ]
+        }
     }
-  }
 }
 ```
 
-:::note Query options
-Swan often has two query options per object, such as `user` and `users`.
+## Time-to-live {#ttl}
 
-- `user` requires an `id` and returns data about a single user.
-- `users` doesn't require an `id` and returns data about all of your users.
-:::
+Swan's Partner Dashboard and the Web Banking user interface each have a time-to-live (TTL) after which the session is discontinued automatically.
 
-### Mutations {#graphql-mutations}
+- **Dashboard**: 72 hours; sessions refresh every time you call the API.
+- **Web Banking**: 5 minutes; session tokens refresh as long as the page stays open.
 
-There are entry points to a GraphQL API to make requests, which both take inputs.
+## Troubleshooting {#troubleshooting}
 
-| Request type | Purpose | `REST` comparison |
-|---|---|---|
-| Mutations | Make a change | `PUT` or `POST` |
-| Queries | Fetch data from the remote API | `GET` |
+If you experience an issue or a bug working with Swan's API, complete the following steps:
 
-Each request starts with the keyword `query` or `mutation`, then specifies the field or fields you want to get back in the response.
-
-#### Mutation example {#graphql-mutations-example}
-
-Consider the following example, which calls the mutation `updateAccount` to update the account's language.
-Note the `... on UpdateAccountSuccessPayload`, in which you can choose to return the account's language in the payload.
-Swan recommends adding validations systematically, as well as rejections.
-
-Note that this is a basic example.
-Consider a [requesting a merchant payment method](../topics/merchants/sdd/guide-request.mdx) to see more complexity.
-You can also explore all of Swan's mutations in API Explorer, [including this one](https://explorer.swan.io?query=bXV0YXRpb24gTXlNdXRhdGlvbiB7CiAgdXBkYXRlQWNjb3VudChpbnB1dDogeyBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIiwgbGFuZ3VhZ2U6IGVuIH0pIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGFjY291bnQgewogICAgICAgIGxhbmd1YWdlCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api).
-
-```graphql title="Mutation" {3,5} showLineNumbers
-mutation ChangeLanguage {
-  updateAccount( #mutation name
-    input: { accountId: "$YOUR_ACCOUNT_ID", language: en } #input information
-  ) {
-    ... on UpdateAccountSuccessPayload { #validation
-      __typename
-      account {
-        language #returns account language in payload
-      }
-    }
-  }
-}
-
-```
-
-```json title="Payload" {4,6} showLineNumbers
-{
-  "data": {
-    "updateAccount": {
-      "__typename": "UpdateAccountSuccessPayload",
-      "account": {
-        "language": "en"
-      }
-    }
-  }
-}
-```
-
-### Types {#graphql-types}
-
-Types are the building blocks of a GraphQL schema.
-
-Each type represents a specific kind of data, such as objects, scalars, or enums.
-
-- **Objects**: Composite types that can contain fields, representing related data.
-- **Scalars**: Atomic types like `Int`, `String`, and `Boolean`, representing simple values.
-- **Enums**: Defines a set of possible values for a field.
-
-Queries, mutations, and all of their inputs are strongly typed, making the schema not only possible but clean.
-
-You can [query every type in Swan's schema](https://explorer.swan.io?query=cXVlcnkgewogIF9fc2NoZW1hIHsKICAgIHR5cGVzIHsKICAgICAgbmFtZQogICAgICBkZXNjcmlwdGlvbgogICAgfQogIH0KfQo%3D&tab=api) using GraphQL's built-in introspection.
-
-```graphql title="Schema query" showLineNumbers
-query {
-  __schema {
-    types {
-      name
-      description
-    }
-  }
-}
-```
-
-```json title="Payload" showLineNumbers
-{
-  "data": {
-    "__schema": {
-      "types": [
-        {
-          "name": "Account",
-          "description": "Whether you call it a wallet, monetary account, payment account or bank account, the notion of account is fundamental at Swan. All payment flows necessarily go through an account."
-        },
-        {
-          "name": "ID",
-          "description": "The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `\"4\"`) or integer (such as `4`) input value will be accepted as an ID."
-        },
-        {
-          "name": "String",
-          "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
-        },
-        {
-          "name": "Boolean",
-          "description": "The `Boolean` scalar type represents `true` or `false`."
-        },
-        {
-          "name": "Int",
-          "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1."
-        },
-
-        {...} //response contains thousands of lines
-
-      ]
-    }
-  }
-}
-```
+1. **Check the [status page](https://status.swan.io/)** to see if there's planned maintenance or an outage that could impact services.
+1. **Search the documentation** with keywords about your specific problem. It could be an expected behavior or something else explained in the docs.
+1. Otherwise, **submit a ticket** through your Dashboard, or **send an email** to integration@swan.io.

@@ -98,6 +98,7 @@ module.exports = {
             "topics/consent/guide-create-multiconsent",
             "topics/consent/guide-implement-s2s",
             "topics/consent/guide-integrate-sca",
+            "topics/consent/support",
           ],
         },
       ],
@@ -294,6 +295,7 @@ module.exports = {
       items: [
         "partnership/index",
         "partnership/protections",
+        "partnership/rules-regulations",
         "partnership/country-coverage",
       ],
     },  
@@ -366,6 +368,7 @@ module.exports = {
       collapsed: false,
       items: [
         "developers/index",
+        "developers/graphql",
         {
           type: "link",
           label: "API Reference",

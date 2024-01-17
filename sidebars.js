@@ -46,7 +46,7 @@ module.exports = {
         },
         {
           type: "category",
-          label: "Onboarding documents",
+          label: "Supporting documents",
           link: { type: "doc", id: "topics/onboarding/documents/index" },
           collapsed: true,
           items: [
@@ -310,10 +310,27 @@ module.exports = {
           collapsed: true,
           items: [
             "partnership/countries/france/guide-orias",
+            "partnership/countries/france/documents",
           ],
         },
-        "partnership/countries/germany",
-        "partnership/countries/spain",
+        {
+          type: "category",
+          label: "🇩🇪 Germany",
+          link: { type: "doc", id: "partnership/countries/germany/index" },
+          collapsed: true,
+          items: [
+            "partnership/countries/germany/documents",
+          ],
+        },
+        {
+          type: "category",
+          label: "🇪🇸 Spain",
+          link: { type: "doc", id: "partnership/countries/spain/index" },
+          collapsed: true,
+          items: [
+            "partnership/countries/spain/documents",
+          ],
+        },
       ],
     },
     {

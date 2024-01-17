@@ -46,7 +46,7 @@ module.exports = {
         },
         {
           type: "category",
-          label: "Onboarding documents",
+          label: "Supporting documents",
           link: { type: "doc", id: "topics/onboarding/documents/index" },
           collapsed: true,
           items: [

@@ -26,13 +26,13 @@ The Bearer authentication protocol, integral to OAuth 2.0, is defined in [RFC 67
 Swan generates two types of access tokens: **user** and **project**.
 Access tokens are provided through an HTTP authorization header, such as `Authorization: Bearer {access token}`.
 
-| ↓ Token type \| Can call → | Queries | Non-sensitive<br/>mutations | Sensitive<br/>mutations |
+| Can call →<br />↓ Token type | Queries | Non-sensitive<br/>mutations | Sensitive<br/>mutations |
 | --- | --- | --- | --- |
 | User access token | ✓ **Yes** ∗ | ✓ **Yes** | ✓ **Yes** |
 | Project access token | ✓ **Yes** | ✓ **Yes** | ☒ No |
 | Impersonate user with<br/>project access token  | ✓ **Yes** ∗ | ✓ **Yes** | ✓ **Yes** |
 
-∗ *User access tokens, as well as project access tokens used to impersonate a user, **can't be used** to call **`transactions` queries**.*
+∗ *User access tokens, as well as project access tokens used to impersonate a user, **can't be used** to call `transactions` queries.*
 
 ## User access tokens {#tokens-user}
 
@@ -61,16 +61,16 @@ Store your refresh token securely, replacing it with the new one each time.
 Learn about refreshing your user access tokens in the [user access token guide](./guide-get-token-user.mdx#refresh-token).
 
 :::caution Using refresh tokens responsibly
-**Swan discourages frequent use of refresh tokens** for refreshing your user access token due to high resource consumption.
+**Swan discourages frequent use of refresh tokens** due to high resource consumption.
 It's also often unnecessary, considering that a project access token can be used for most of Swan's API operations.
 
-Consider **reserving the use** of user access tokens for **sensitive operations**.
+Consider **reserving the use** of user access tokens to **sensitive operations**.
 This practice ensures responsible consumption of resources and aligns with best practices for efficient API usage.
 :::
 
 ### Redirect URIs {#tokens-user-uri}
 
-When using a user access token, it's recommended to add your pre-approved URIs, or Uniform Resource Identifiers, to your Dashboard.
+When using a user access token, it's recommended to add your pre-approved URIs (Uniform Resource Identifiers) to your Dashboard.
 This step is essential for maintaining the integrity and security of the OAuth 2.0 flow.
 
 Adding URIs creates an allowlist to which your users can be redirected, thus ensuring that your users are redirected securely.

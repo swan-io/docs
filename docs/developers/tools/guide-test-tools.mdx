@@ -6,74 +6,43 @@ title: Work with Swan tools
 
 Consider this example that uses several tools to create a new Sandbox user, validate their identity, then receive and return a SEPA Credit Transfer.
 
-## Step 1: Testing API → Add Sandbox user {#add-sandbox-user}
+## Step 1: Dashboard → Add Sandbox user {#add-sandbox-user}
 
-This tutorial is for demonstrative purposes; you can also add a Sandbox user directly from your Dashboard.
-
-1. Call the `createSandboxUser` mutation to [create a new Sandbox user](https://explorer.swan.io?query=bXV0YXRpb24gU2FuZGJveFVzZXJXaXRoQXBpIHsKICBjcmVhdGVTYW5kYm94VXNlcigKICAgIGlucHV0OiB7CiAgICAgIGZpcnN0TmFtZTogIkRpbGxvbiIKICAgICAgbGFzdE5hbWU6ICJCeXJuZSIKICAgICAgYmlydGhEYXRlOiAiMTk5MC0wOS0yNCIKICAgICAgbmF0aW9uYWxpdHlDQ0EzOiAiSVJMIgogICAgICBpZGVudGlmaWNhdGlvblN0YXR1czogSW52YWxpZElkZW50aXR5CiAgICAgIGF1dG9Db25zZW50OiB0cnVlCiAgICAgIHZlcmlmaWNhdGlvblN0YXR1czogVmVyaWZpZWQKICAgIH0KICApIHsKICAgIC4uLiBvbiBDcmVhdGVTYW5kYm94VXNlclN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBzYW5kYm94VXNlciB7CiAgICAgICAgaWQKICAgICAgICBpZGVudGlmaWNhdGlvblN0YXR1cwogICAgICB9CiAgICB9CiAgICAuLi4gb24gTmF0aW9uYWxpdHlOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgaWRlbnRpZmllcgogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=test-api) connected to your user access token.
-1. The sample mutation includes all required fields. Change any information you'd like.
-1. Choose `InvalidIdentity` for testing purposes only (line 8).
-1. Click **⏵ Run**.
-
-```graphql title="Mutation" {8} showLineNumbers
-mutation SandboxUserWithApi {
-  createSandboxUser(
-    input: {
-      firstName: "Dillon"
-      lastName: "Byrne"
-      birthDate: "1990-09-24"
-      nationalityCCA3: "IRL"
-      identificationStatus: InvalidIdentity
-      autoConsent: true
-      verificationStatus: Verified
-    }
-  ) {
-    ... on CreateSandboxUserSuccessPayload {
-      __typename
-      sandboxUser {
-        id
-      }
-    }
-    ... on NationalityNotFoundRejection {
-      __typename
-      identifier
-      message
-    }
-    ... on ForbiddenRejection {
-      __typename
-      message
-    }
-  }
-}
-
-```
-
-```json title="Payload" {6,7} showLineNumbers
-{
-  "data": {
-    "createSandboxUser": {
-      "__typename": "CreateSandboxUserSuccessPayload",
-      "sandboxUser": {
-        "id": "$YOUR_SANDBOX_USER_ID",
-        "identificationStatus": "InvalidIdentity"
-      }
-    }
-  }
-}
-```
-
-## Step 2: Dashboard → Validate Sandbox user's identity {#validate-identity}
+This tutorial is for demonstrative purposes; you can also call the `createSandboxUser` mutation in the Testing API to add a Sandbox user.
 
 1. Go to **Dashboard** > **Developers** > **Sandbox users**.
-1. Click the line for your new Sandbox user.
+1. Click **+ New** to add a new Sandbox user.
 
-![Image of Dashboard Sandbox users page](../../images/developers/tools/test-dashboard-validate-1.png)
+![Image of Event Simulator SEPA Credit Transfers section](../../images/developers/tools/test-add-1.png)
 
-3. Select the radio button for **Log as *your Sandbox user***.
-1. Change the identification status to **Valid identity**.
+3. Choose whether to activate auto consent for your new Sandbox user.
+1. Enter your Sandbox user's information.
 1. Click **Save**.
 
-![Image of one specific Sandbox user page](../../images/developers/tools/test-dashboard-validate-2.png)
+![Image of Event Simulator SEPA Credit Transfers section](../../images/developers/tools/test-add-2.png)
+
+## Step 2: Event Simulator → Validate Sandbox user's identity {#validate-sandbox-user}
+
+Your new Sandbox user is created with the identification status `Uninitiated`.
+You need to validate their identity before they can perform operations.
+
+1. **Click to copy** the Sandbox user ID.
+
+![Image of Sandbox users with user ID called out](../../images/developers/tools/test-validate-1.png)
+
+2. Go to **Dashboard** > **Developers** > **Event Simulator**
+1. Open **Sandbox users**.
+
+![Image of Event Simulator SEPA Credit Transfers section](../../images/developers/tools/test-validate-2.png)
+
+4. Enter the Sandbox user ID, choose an identification process, and choose a status for each level you see.
+1. Click **Simulate**.
+1. The status changes to `Success` and a new identification ID appears for the Sandbox user.
+
+You can now perform operations with this Sandbox user.
+
+![Image of Event Simulator SEPA Credit Transfers section](../../images/developers/tools/test-validate-3.png)
+
 
 ## Step 3: Testing API → Simulate receiving a transfer {#receive-transfer}
 
@@ -135,7 +104,7 @@ mutation SimulateReceivingTransfer {
 ![Image of Dashboard Event Simulator page](../../images/developers/tools/test-simulator-return-1.png)
 
 2. Open the **Return an Incoming Transfer** tab.
-1. Enter the transaction ID collected in 3.iii.
+1. Enter the transaction ID collected in [step 3.3](#receive-transfer).
 1. Click **Simulate**.
 1. The status changes to `Success` and a new transaction ID appears for the return transaction.
 

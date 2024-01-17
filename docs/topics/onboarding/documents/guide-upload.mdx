@@ -7,9 +7,7 @@ title: Upload a document
 You can upload supporting documents **using the API** or on the **Dashboard**.
 
 :::tip Prerequisites
-Before you can upload a document, you must have the following:
-
-* [Collection status](./index.mdx#collection-statuses) must be `Waiting for document`.
+Before you can upload a document, the [collection status](./index.mdx#collection-statuses) must be `Waiting for document`.
 :::
 
 ## API guide
@@ -18,11 +16,10 @@ Use the API to upload required documents in three steps.
 
 ### Step 1: Generate upload URL
 
-1. Add the `generateSupportingDocumentUploadUrl` mutation.
+1. Call the `generateSupportingDocumentUploadUrl` mutation.
 1. Enter all required information: `supportingDocumentCollectionId`, `filename`, `supportingDocumentPurpose`, and `supportingDocumentType`.
 1. Add the `GenerateSupportingDocumentUploadUrlSuccessPayload` with required `key/value` pairs and `url`.
 1. Add other optional messages to the payload, either for validation or in case of rejection.
-1. **▶ Run** your mutation.
 
 🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBsb2FkRG9jdW1lbnRzIHsKICBnZW5lcmF0ZVN1cHBvcnRpbmdEb2N1bWVudFVwbG9hZFVybCgKICAgIGlucHV0OiB7CiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb25JZDogIiRDT0xMRUNUSU9OX0lEIgogICAgICBmaWxlbmFtZTogIiRET0NVTUVOVF9GSUxFX05BTUUiCiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2U6IENvbXBhbnlSZWdpc3RyYXRpb24KICAgICAgc3VwcG9ydGluZ0RvY3VtZW50VHlwZTogUmVnaXN0ZXJFeHRyYWN0CiAgICB9CiAgKSB7CiAgICAuLi4gb24gR2VuZXJhdGVTdXBwb3J0aW5nRG9jdW1lbnRVcGxvYWRVcmxTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdXBsb2FkIHsKICAgICAgICBmaWVsZHMgewogICAgICAgICAga2V5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KICAgICAgICB1cmwKICAgICAgfQogICAgfQogIH0KfQ%3D%3D&tab=api)
 
@@ -54,7 +51,7 @@ mutation GenerateUploadUrl {
 
 Recover the generated `uploadUrl` in the payload, as well as several pairs of keys and values.
 
-:::caution Upload URL expires
+:::caution Upload URL expiration
 The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
 :::
 

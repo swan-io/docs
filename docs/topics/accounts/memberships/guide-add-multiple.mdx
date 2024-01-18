@@ -1,0 +1,166 @@
+---
+title: Add multiple memberships
+---
+
+# Add multiple memberships
+
+Add multiple account memberships with the API.
+You can add up to **200 memberships** in a single API call.
+
+import PrerequisiteAddMembers from '../partials/_add-member-prereq.mdx';
+
+<PrerequisiteAddMembers />
+
+## Step 1: Add account memberships {#api-add}
+
+1. Call the `addAccountMemberships` mutation.
+1. Add the account ID to which you're adding a invited account member (line 4) and your `consentRedirectUrl` (line 5).
+1. Add one invited account member block for each invitee (lines 7-20).
+    - Take note of the syntax: <mark>necessary (ask dev)?</mark>
+        - The entire `memberships` object is surounded by `[square brackets]` (lines 6, 48) with no commas.
+        - Each invited account member block is surrounded by `{curly brackets}`, again with no commas (lines 7, 20, 21, 33, 34, and 47).
+1. In each `restrictedTo` object, add information about the invited account members.
+    - If you're only granting `canViewAccount` permissions, or you're [not granting any permissions](./index.mdx#permissions-none), the invited account member's `birthDate` isn't required.
+    - Include a `+` in front of the phone number.
+1. Choose `true` for the permissions you'd like to grant to the invited account member.
+1. Add the success payload, including any information you'd like to review (line 51).
+1. Add the consent URL to the success payload (line 59): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
+
+:::note Can Manage Cards
+The `CanManageCards` permissions is technically optional.
+However, it's recommended to choose true or false for this permission anyway.
+If you don't include the `CanManageCards` permission in your API call, it inherits the same value as `canManageAccountMembership`.
+:::
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkTXVsdGlwbGVNZW1iZXJzIHsKICBhZGRBY2NvdW50TWVtYmVyc2hpcHMoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICJodHRwczovL2RvY3Muc3dhbi5pby8iCiAgICAgIG1lbWJlcnNoaXBzOiBbCiAgICAgICAgewogICAgICAgICAgZW1haWw6ICJhbGJlcnRvQG15YnJhbmQuaW8iCiAgICAgICAgICByZXN0cmljdGVkVG86IHsKICAgICAgICAgICAgZmlyc3ROYW1lOiAiQWxiZXJ0byIKICAgICAgICAgICAgbGFzdE5hbWU6ICJSb21lbm8iCiAgICAgICAgICAgIGJpcnRoRGF0ZTogIjE5ODAtMDItMjAiCiAgICAgICAgICAgIHBob25lTnVtYmVyOiAiKzMzNjAwMDAwMDAwIgogICAgICAgICAgfQogICAgICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUJlbmVmaWNpYXJpZXM6IHRydWUKICAgICAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUFjY291bnRNZW1iZXJzaGlwOiB0cnVlCiAgICAgICAgICBjYW5NYW5hZ2VDYXJkczogZmFsc2UKICAgICAgICB9CiAgICAgICAgewogICAgICAgICAgZW1haWw6ICJzb2ZpYUBteWJyYW5kLmlvIgogICAgICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgICAgIGZpcnN0TmFtZTogIlNvZmlhIgogICAgICAgICAgICBsYXN0TmFtZTogIlJhbWlyZXoiCiAgICAgICAgICAgIHBob25lTnVtYmVyOiAiKzMzNjAwMDAwMDAwIgogICAgICAgICAgfQogICAgICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUJlbmVmaWNpYXJpZXM6IGZhbHNlCiAgICAgICAgICBjYW5Jbml0aWF0ZVBheW1lbnRzOiBmYWxzZQogICAgICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IGZhbHNlCiAgICAgICAgICBjYW5NYW5hZ2VDYXJkczogZmFsc2UKICAgICAgICB9CiAgICAgICAgewogICAgICAgICAgZW1haWw6ICJyYWVAbXlicmFuZC5pbyIKICAgICAgICAgIHJlc3RyaWN0ZWRUbzogewogICAgICAgICAgICBmaXJzdE5hbWU6ICJSYWUiCiAgICAgICAgICAgIGxhc3ROYW1lOiAiU2NobWlkdCIKICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk4Ni0wOS0wMiIKICAgICAgICAgICAgcGhvbmVOdW1iZXI6ICIrMzM2MDAwMDAwMDAiCiAgICAgICAgICB9CiAgICAgICAgICBjYW5WaWV3QWNjb3VudDogdHJ1ZQogICAgICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogdHJ1ZQogICAgICAgICAgY2FuSW5pdGlhdGVQYXltZW50czogdHJ1ZQogICAgICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUNhcmRzOiB0cnVlCiAgICAgICAgfQogICAgICBdCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkQWNjb3VudE1lbWJlcnNoaXBzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGFjY291bnRNZW1iZXJzaGlwcyB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcENvbnNlbnRQZW5kaW5nU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4,5,7-20,51,59} showLineNumbers
+mutation AddMultipleMembers {
+  addAccountMemberships(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "https://docs.swan.io/"
+      memberships: [
+        {
+          email: "alberto@mybrand.io"
+          restrictedTo: {
+            firstName: "Alberto"
+            lastName: "Romeno"
+            birthDate: "1980-02-20"
+            phoneNumber: "+33600000000"
+          }
+          canViewAccount: true
+          canManageBeneficiaries: true
+          canInitiatePayments: true
+          canManageAccountMembership: true
+          canManageCards: false
+        }
+        {
+          email: "sofia@mybrand.io"
+          restrictedTo: {
+            firstName: "Sofia"
+            lastName: "Ramirez"
+            phoneNumber: "+33600000000"
+          }
+          canViewAccount: true
+          canManageBeneficiaries: false
+          canInitiatePayments: false
+          canManageAccountMembership: false
+          canManageCards: false
+        }
+        {
+          email: "rae@mybrand.io"
+          restrictedTo: {
+            firstName: "Rae"
+            lastName: "Schmidt"
+            birthDate: "1986-09-02"
+            phoneNumber: "+33600000000"
+          }
+          canViewAccount: true
+          canManageBeneficiaries: true
+          canInitiatePayments: true
+          canManageAccountMembership: true
+          canManageCards: true
+        }
+      ]
+    }
+  ) {
+    ... on AddAccountMembershipsSuccessPayload {
+      __typename
+      accountMemberships {
+        id
+        statusInfo {
+          ... on AccountMembershipConsentPendingStatusInfo {
+            __typename
+            consent {
+              consentUrl
+            }
+            status
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+## Step 2: Get consent to add member {#get-consent}
+
+The account holder, legal representative of the account, or account member with `canManageAccountMembership` permissions consents to adding all of the invited account members with a single consent process.
+
+1. Get the `consentUrl`, included in the payload (lines 11).
+    - All consent URLs are the same when adding members in bulk.
+    - Remember, the payload only provides the `consentUrl` if you added it in step 1.7.
+1. Send the `consentUrl` to the account holder, legal representative of the account, or account member with `canManageAccountMembership` permissions.
+1. As soon as consent is provided, they're redirected to your `consentRedirectUrl` defined in the initial API call, which fetches an OAuth 2.0 authorization code and a user access token.
+1. **Store** the invited account member's new `accountMembershipId`. You'll need it to bind the membership.
+
+```json {7,11,13,17,27} showLineNumbers
+{
+  "data": {
+    "addAccountMemberships": {
+      "__typename": "AddAccountMembershipsSuccessPayload",
+      "accountMemberships": [
+        {
+          "id": "$ACCOUNT_MEMBERSHIP_ID_ALBERTO",
+          "statusInfo": {
+            "__typename": "AccountMembershipConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+            },
+            "status": "ConsentPending"
+          }
+        },
+        {
+          "id": "$ACCOUNT_MEMBERSHIP_ID_SOFIA",
+          "statusInfo": {
+            "__typename": "AccountMembershipConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+            },
+            "status": "ConsentPending"
+          }
+        },
+        {
+          "id": "$ACCOUNT_MEMBERSHIP_ID_RAE",
+          "statusInfo": {
+            "__typename": "AccountMembershipConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+            },
+            "status": "ConsentPending"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+## Step 3: Bind the invited account member {#bind-member}
+
+import AddMemberBind from '../partials/_add-member-bind.mdx';
+
+<AddMemberBind />

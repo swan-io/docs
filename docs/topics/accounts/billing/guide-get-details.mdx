@@ -1,0 +1,69 @@
+---
+title: Get invoice details
+---
+
+# Get invoice details
+
+Get details about a single invoice with the API.
+
+You can also review each invoice on your **Dashboard** > **Data** > **Accounts**.
+Open the account for which you want to review invoices, then go to the **Invoices** tab and find the invoice you'd like to review.
+
+## Guide {#guide}
+
+1. Call the `accountInvoice` query.
+1. Add the invoice ID.
+1. Add all information you'd like to review about the invoice (lines 3-16).
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgU2luZ2xlSW52b2ljZSB7CiAgYWNjb3VudEludm9pY2UoaW52b2ljZUlkOiAiJFlPVVJfSU5WT0lDRV9JRCIpIHsKICAgIGFtb3VudCB7CiAgICAgIGN1cnJlbmN5CiAgICAgIHZhbHVlCiAgICB9CiAgICBjbG9zaW5nRGF0ZQogICAgY3JlYXRlZEF0CiAgICBleHBpcmVzQXQKICAgIGlkCiAgICBuYW1lCiAgICBvcGVuaW5nRGF0ZQogICAgc3RhdHVzCiAgICB1cGRhdGVkQXQKICAgIHVybAogICAgdHlwZQogIH0KfQo%3D&tab=api)
+
+```graphql {2} showLineNumbers
+query SingleInvoice {
+  accountInvoice(invoiceId: "$YOUR_INVOICE_ID") {
+    amount {
+      currency
+      value
+    }
+    closingDate
+    createdAt
+    expiresAt
+    id
+    name
+    openingDate
+    status
+    updatedAt
+    url
+    type
+  }
+}
+```
+
+## Payload {#payload}
+
+The query returns all of the information about the invoice.
+
+```json {} showLineNumbers
+{
+  "data": {
+    "accountInvoice": {
+      "amount": {
+        "currency": "EUR",
+        "value": "1"
+      },
+      "closingDate": "2023-02-28T22:59:59.999Z",
+      "createdAt": "2023-02-17T08:18:09.415Z",
+      "expiresAt": "2023-04-21T09:28:11.310Z",
+      "id": "e910c799-e25a-4c8d-9469-4fa14016bc4c",
+      "name": "INVOICE-20230228",
+      "openingDate": "2023-01-31T23:00:00.000Z",
+      "status": "Paid",
+      "updatedAt": "2023-02-17T08:18:09.807Z",
+      "url": "https://invoices.sandbox.swan.io/sample-invoice.pdf?Expires=1682069291310&Key-Pair-Id=K27GLF05V96LSD&Signature=svkxgaVz1L9vtfePPFuBp0b5mEYa0X9Ty~OC3QXEoqONu3d7~aCwNYouyeKtBdt-kyIdfWCeQj1uxwQyUqEfn4KmByrx1JTK3rIs05~bjcE9ADIhPn8tr~0bKFruWMZvXo62p1UyXj4Vcv0falWX-amSIr0UmmUfQrNTV44Ln2lRPj~Co~RCnmcQ-HU3-QRNw5QFDSkPtPCpBvh-BfP-F50Q054UWiuGfZ8sbdKZqIp0L7-EDwhH~SCqpTMH66YpQr5u0Ftcw4rbq09x0I6uphMFA1xoX45E1Pk-UDf~OhSIZ3DiCVH0tUp3PJZzBPUSK9gKayhh97JuyROgL4~hdw__",
+      "type":"Invoice"
+    }
+  }
+}
+```
+

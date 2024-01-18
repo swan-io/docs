@@ -1,0 +1,76 @@
+---
+title: Initiate a funding request
+---
+
+# Initiate a funding request
+
+Initiate a funding request with the API.
+
+:::tip Prerequisites
+An `Enabled` payment mandate from the Swan account holder who is funding their account.
+:::
+
+## Guide {#guide}
+
+1. Call the `initiateFundingRequest` mutation.
+1. Add your `fundingSourceId` and `consentRedirectUrl`.
+1. Add the amount to send the account, and its currency.
+1. Optionally, add a `label`, `reference`, and anything other information you'd like.
+1. Add the `InitiateFundingRequestSuccessPayload` success payload.
+1. Add rejections (not shown).
+
+:::info Consent
+No consent is required to initiate the funding request.
+The consent was already provided through the payment mandate.
+:::
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVSZXF1ZXN0IHsKICBpbml0aWF0ZUZ1bmRpbmdSZXF1ZXN0KAogICAgaW5wdXQ6IHsKICAgICAgZnVuZGluZ1NvdXJjZUlkOiAiMjgxZTc3ZjAtOGIyZi00YmMzLTk0MjEtMjQyZjk2ZTQyNWE5IgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICJodHRwczovL2RvY3Muc3dhbi5pby8iCiAgICAgIGFtb3VudDogeyB2YWx1ZTogIjEwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVGdW5kaW5nUmVxdWVzdFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFBheW1lbnRJbml0aWF0ZWQgewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogICAgLi4uIG9uIEZ1bmRpbmdMaW1pdEV4Y2VlZGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gUHJvamVjdEZ1bmRpbmdMaW1pdEV4Y2VlZGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gR2xvYmFsRnVuZGluZ0xpbWl0RXhjZWVkZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGdW5kaW5nU291cmNlV3JvbmdTdGF0dXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGN1cnJlbnRTdGF0dXMKICAgICAgZXhwZWN0ZWRTdGF0dXMKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZ1bmRpbmdTb3VyY2VOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnN1ZmZpY2llbnRGdW5kc1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEluc3RhbnRGdW5kaW5nTGltaXRFeGNlZWRlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFByb2plY3RJbnN0YW50RnVuZGluZ0xpbWl0RXhjZWVkZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBHbG9iYWxJbnN0YW50RnVuZGluZ0xpbWl0RXhjZWVkZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50VmVyaWZpY2F0aW9uV3JvbmdTdGF0dXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {4-6,9} showLineNumbers
+mutation InitiateRequest {
+  initiateFundingRequest(
+    input: {
+      fundingSourceId: "$YOUR_FUNDING_SOURCE_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      amount: { value: "100", currency: "EUR" }
+    }
+  ) {
+    ... on InitiateFundingRequestSuccessPayload {
+      __typename
+      payment {
+        statusInfo {
+          status
+          ... on PaymentInitiated {
+            __typename
+            status
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows the account funding payment status `Initiated`.
+
+On your transaction history, you'll see a SEPA Direct Debit transaction with the status `Upcoming`.
+
+```json {7} showLineNumbers
+{
+  "data": {
+    "initiateFundingRequest": {
+      "__typename": "InitiateFundingRequestSuccessPayload",
+      "payment": {
+        "statusInfo": {
+          "status": "Initiated",
+          "__typename": "PaymentInitiated"
+        }
+      }
+    }
+  }
+}
+```

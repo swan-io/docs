@@ -1,0 +1,68 @@
+---
+title: Disable a membership
+---
+
+# Disable a membership
+
+You might need to **permanently block**, or **disable**, an account member from accessing the account.
+
+Note that you can also **suspend** (temporarily block) account memberships and **resume** access for suspended account memberships.
+Learn more in the [guide to suspend and resume account memberships](./guide-suspend-resume.mdx).
+
+:::tip Web Banking
+Your users can disable, or permanently block, account memberships from Swan's Web Banking interface.
+:::
+
+## Guide {#guide}
+
+:::note permanently block
+**Disabling** is referred to as **permanently blocking** on the Swan's Web Banking interface.
+You can't disable the legal representative's account membership.
+:::
+
+1. Call the `disableAccountMembership` mutation.
+1. Add the account membership ID.
+1. Add the success payload with the status.
+1. Add any rejections you'd like.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRGlzYWJsZU1lbWJlcnNoaXAgewogIGRpc2FibGVBY2NvdW50TWVtYmVyc2hpcCgKICAgIGlucHV0OiB7IGFjY291bnRNZW1iZXJzaGlwSWQ6ICIkQUNDT1VOVF9NRU1CRVJTSElQX0lEIiB9CiAgKSB7CiAgICAuLi4gb24gRGlzYWJsZUFjY291bnRNZW1iZXJzaGlwU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGFjY291bnRNZW1iZXJzaGlwIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICB1cGRhdGVkQXQKICAgICAgfQogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwQ2Fubm90QmVEaXNhYmxlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudE1lbWJlcnNoaXBJZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTGVnYWxSZXByZXNlbnRhdGl2ZUFjY291bnRNZW1iZXJzaGlwQ2Fubm90QmVEaXNhYmxlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudE1lbWJlcnNoaXBJZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVXNlck5vdEFsbG93ZWRUb0Rpc2FibGVJdHNPd25BY2NvdW50TWVtYmVyc2hpcFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudE1lbWJlcnNoaXBJZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {3} showLineNumbers
+mutation DisableMembership {
+  disableAccountMembership(
+    input: { accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID" }
+  ) {
+    ... on DisableAccountMembershipSuccessPayload {
+      __typename
+      accountMembership {
+        statusInfo {
+          status
+        }
+        updatedAt
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows that the account membership is `Disabled`.
+
+```json {7} showLineNumbers
+{
+  "data": {
+    "disableAccountMembership": {
+      "__typename": "DisableAccountMembershipSuccessPayload",
+      "accountMembership": {
+        "statusInfo": {
+          "status": "Disabled"
+        },
+        "updatedAt": "2023-06-01T12:59:12.763Z"
+      }
+    }
+  }
+}
+```

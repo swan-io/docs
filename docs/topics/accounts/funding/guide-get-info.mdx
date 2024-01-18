@@ -1,0 +1,66 @@
+---
+title: Get information about a funding request
+---
+
+# Get information about a funding request
+
+You can get information about each funding source with the API.
+
+## Guide {#guide}
+
+The sample query retrieves the statuses for both the funding source and payment mandate, as well as some other information.
+
+1. Call the `fundingSource` query.
+1. Add your `accountId`.
+1. Add all the information you'd like to review. This query includes `statusInfo` and `status` for both the `fundingSource` and `paymentMandate`.
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer]
+
+```graphql {2,4,14} showLineNumbers
+query GetStatuses {
+  fundingSource(id: "$YOUR_FUNDING_SOURCE_ID") {
+    statusInfo {
+      status
+    }
+    updatedAt
+    ... on DirectDebitFundingSource {
+      id
+      paymentMandate {
+        id
+        ... on SEPAPaymentDirectDebitMandate {
+          id
+          statusInfo {
+            status
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows that ...
+
+```json {5,12} showLineNumbers
+{
+  "data": {
+    "fundingSource": {
+      "statusInfo": {
+        "status": "Enabled"
+      },
+      "updatedAt": "2024-01-22T16:53:54.753Z",
+      "id": "$YOUR_FUNDING_SOURCE_ID",
+      "paymentMandate": {
+        "id": "$YOUR_PAYMENT_MANDATE_ID",
+        "statusInfo": {
+          "status": "Enabled"
+        }
+      }
+    }
+  }
+}
+```

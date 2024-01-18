@@ -1,0 +1,60 @@
+---
+title: Update a membership
+---
+
+# Update a membership
+
+<mark>Add payload</mark>
+
+You can update the permissions for an existing account membership, as well as the account member's personal information.
+
+If you have an account membership with a **user binding error**, you can use the `updateAccountMembership` mutation to fix it.
+
+:::tip Web Banking
+Your users can update their account member's rights from Swan's Web Banking interface.
+:::
+
+## Guide {#guide}
+
+1. Call the `updateAccountMembership` mutation.
+1. Add the account membership ID.
+1. Add any information you'd like to update or permissions you'd like to change.
+1. Add the success payload.
+1. Add any rejections you'd like.
+
+## API mutation {#suspend-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlTWVtYmVyc2hpcCB7CiAgdXBkYXRlQWNjb3VudE1lbWJlcnNoaXAoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJEFDQ09VTlRfTUVNQkVSU0hJUF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfQ09OU0VOVF9SRURJUkVDVF9VUkwiCiAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IHRydWUKICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogdHJ1ZQogICAgICBjYW5NYW5hZ2VDYXJkczogdHJ1ZQogICAgICBjYW5WaWV3QWNjb3VudDogdHJ1ZQogICAgfQogICkgewogICAgLi4uIG9uIFVwZGF0ZUFjY291bnRNZW1iZXJzaGlwU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBDYW5ub3RCZVVwZGF0ZWRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {4} showLineNumbers
+mutation UpdateMembership {
+  updateAccountMembership(
+    input: {
+      accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
+      consentRedirectUrl: "$YOUR_CONSENT_REDIRECT_URL"
+      canInitiatePayments: true
+      canManageAccountMembership: true
+      canManageBeneficiaries: true
+      canManageCards: true
+      canViewAccount: true
+    }
+  ) {
+    ... on UpdateAccountMembershipSuccessPayload {
+      __typename
+    }
+    ... on AccountMembershipCannotBeUpdatedRejection {
+      id
+      message
+    }
+  }
+}
+
+```
+
+## Payload {#suspend-payload}
+
+The payload shows that the account membership ...
+
+```json {} showLineNumbers
+
+```

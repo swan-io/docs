@@ -1,0 +1,169 @@
+---
+title: Account memberships
+---
+
+# Account memberships
+
+## Overview {#overview}
+
+Account membership **grants rights** to a Swan user who **isn't the account holder**.
+
+The Swan user who performs the account's onboarding is the first account member and becomes the account's legal representative.
+All Swan accounts have at least one account member: the legal representative, and they're considered the admin of the account.
+The admin can then grant other Swan users permission to perform certain actions for the account; each of these users is an account member.
+
+> Consider a real-life example: a grandparent might want their grandchild to have access to an account to purchase groceries.
+> The grandparent is the account holder, and the grandchild, an account member.
+
+Account memberships are **especially useful for company accounts**.
+The legal representative grants permissions to other employees.
+Employees can then manage their own payments, such as software or sales expenses, independently.
+The company's accountant can use their membership to access account statements.
+With enough permissions, managers can add cards for their team.
+How you use account memberships and the corresponding permissions is up to you—the possibilities are almost endless to fulfill your use case.
+
+Swan users can have memberships to an **unlimited** number of Swan accounts.
+
+Consider the following example, where Sasha Oliveira has account memberships to account for MyBrand and eFounders.
+Sasha can access and manage memberships for both accounts, but only manage cards for one.
+
+![Visual depiction of multiple account memberships with different permissions](../../../images/topics/accounts/membership-overview.png)
+
+## Membership permissions {#permissions}
+
+Account members can be assigned **different rights to an account**, allowing access to only the desired actions and information.
+These rights are referred to as **permissions** in the Swan API and Web Banking interface.
+
+Swan doesn't offer role-base access control (RBAC).
+Instead, you choose exactly what each account member can see and do on a member-by-member basis.
+
+| Permission | Account member can... |
+| --- | --- |
+| `canViewAccount` | View the account and information about the account, including main and virtual IBANs, beneficiaries, payment mandates, list of transactions and transaction details, and more |
+| `canManageBeneficiaries` | Add or remove beneficiaries |
+| `canInitiatePayments` | Initiate (send) transfers to beneficiaries |
+| `canManageAccountMembership` | Add, modify, or remove account memberships |
+| `canManageCards` | View, add, and update their own cards and cards for account memberships they manage |
+
+### Granting permissions {#permissions-grant}
+
+In order to grant permissions to other account members, the account member must have the permission `canManageAccountMembership`.
+They can only grant permissions they already have.
+
+For example, if an account member doesn't have the `canManageCards` permission, they can't grant it to another account member.
+If they try to grant the `canManageCards` permission anyway, the API returns a `PermissionCannotBeGrantedRejection` error.
+
+### Adding cards {#permissions-cards}
+
+Whether your account members can add cards and for whom depends on both `canManageAccountMembership` and `canManageCards` permissions.
+
+| `canManage`... | `AccountMembership` = true | `AccountMembership` = false |
+| --- | --- | --- |
+| `Cards` = **true** | ✓ View, add, and update cards for self<br />✓ View, add, and update cards for others∗ | ✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others |
+| `Cards` = **false** | ✓ View my own cards<br />☒ Can't add or update cards for self<br />☒ Can't view, add, or update cards for others | ✓ View my own cards<br />☒ Can't add or update cards for self<br />☒ Can't view, add, or update cards for others |
+| `Cards` = **not provided** | ✓ View, add, and update cards for self<br />✓ View, add, and update cards for others | ✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others |
+
+∗ *others* → other account members
+
+### No permissions {#permissions-none}
+
+You can add account members without granting them any membership permissions.
+For example, if you want to give a user a card associated with the account, but you don't want them to view account information or perform any actions for the account, you'd add an account membership with no permissions.
+
+In this case, all membership permission booleans are `false`.
+This type of invitation doesn't require consent from the account holder and skips the status `InvitationSent`.
+
+
+## Account membership statuses {#statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    AMA((Account<br/>membership<br/>added)) -.-> CP[ConsentPending]
+    CP -.-> IS[InvitationSent]
+    CP -.-> D[Disabled]
+    IS -.-> E[Enabled]
+    IS -.-> B[BindingUserError]
+    B -.-> E
+    E <-.-> S[Suspended]
+    B -.-> D
+    E -.-> D
+    S -.-> D
+    IS -.-> D
+    subgraph U[Can use membership]
+        E
+    end
+    subgraph F[Final status]
+        D
+    end
+    style AMA fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Digital card status | Explanation |
+|---|---|
+| `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent<br/><br/>**Next steps**:<ul><li>If the account holder consents, the status moves to `InvitationSent`</li><li>If the account holder doesn't consent, the status moves to `Disabled`</li></ul> |
+| `InvitationSent` | An invitation was sent to the invited account member<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
+| `Enabled` | All user information matches, the account member is ID verified, and the account member can use their account membership and corresponding permissions |
+| `BindingUserError` | The personal information submitted by the invited account member doesn't match the information provided to Swan during account onboarding. The mismatch must be solved before continuing.<br/><br/>Refer to the [section on user binding errors](#binding-error) for more information. |
+| `Suspended` | Account membership is suspended and not available for use<br/><br/>*Account memberships can be suspended for various reasons, including a request from you or the account holder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
+| `Disabled` | Account membership is disabled and no longer available for use |
+
+### Binding user errors {#status-binding-errors}
+
+When the personal information submitted by the invited account member doesn't match the information provided to Swan during account onboarding, the account membership has the status `BindingUserError`.
+
+At least one of the following booleans must be true for an account membership to have a binding error:
+
+- `firstNameMatchError` → If `true`, mismatch with first or given name
+- `lastNameMatchError` → If `true`, mismatch with last or family name
+- `birthDateMatchError` → If `true`, mismatch with birth date
+- `mobilePhoneMatchError` → If `true`, mismatch with mobile phone number
+- `idVerifiedMatchError` → If `true`, mismatch with ID verification
+
+Account members whose membership status is `BindingUserError` can still access basic account and card information, but they can't perform any [sensitive operations](../../consent/index.mdx#sensitive), such as making a transfer or viewing their card numbers.
+
+Other account members with the `canManageAccountMembership` permission and status `Enabled` can fix the mismatch.
+If fraud is suspected, suspend the membership instead.
+
+## Closed accounts and memberships {#closed}
+
+When Swan [accounts are closed](../index.mdx#closure), the account memberships are impacted as well.
+
+As soon as an [account status](../index.mdx#statuses) changes to `Closing`, account members can no longer initiate payments or manage account memberships and beneficiaries.
+When the account status changes to `Closed`, account members can view the account for one year, after which all memberships to the closed account are `Disabled`.
+
+## Sequence diagram: Adding account memberships {#diagrams-add}
+
+*Requester: account holder/legal rep/account member with manage membership permissions
+
+```mermaid
+sequenceDiagram
+autonumber
+participant I as Invitee
+participant U as Requester*
+participant P as Partner (you)
+participant S as Swan
+    U ->> P: Requests account access for invitee
+    P ->> S: Calls `addAccountMembership` mutation
+    S ->> U: Requests consent
+    U ->> S: Requests consent
+    S ->> P: Returns `accountMembershipId`
+    P ->> I: Sends invitee login URL
+    I ->> S: Logs into Swan with OAuth 2.0
+    S ->> I: Redirects to Partner's interface with OAuth 2.0 access code
+    I ->> P: Redirected to Partner's interface with OAuth 2.0 access code
+    P ->> S: Requests invitee's user access token
+    S ->> P: Returns invitee's user access token
+    P ->> S: Calls `bindAccountMembership` mutation with<br />`accountMembershipId` using invitee's user access token
+    S ->> P: Confirms account membership success,<br />meaning invitee is bound to account
+```
+
+## Guides {#guides}
+
+- [Add a membership](./guide-add-one.mdx)
+- [Add multiple memberships](./guide-add-multiple.mdx)
+- [Update a membership](./guide-update.mdx)
+- [Suspend (temporarily block) or resume a membership](./guide-suspend-resume.mdx)
+- [Disable (permanently block) a membership](./guide-disable.mdx)

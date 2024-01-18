@@ -1,0 +1,63 @@
+---
+title: Cancel a funding source
+---
+
+# Cancel a funding source
+
+Cancel a funding source with the API.
+
+You can cancel a funding source with a [project access token](../../authentication/index.mdx#tokens-project).
+Account members with the `canManageAccountMembership` permission can also cancel funding sources.
+
+## Guide {#guide}
+
+1. Call the `cancelFundingSource` mutation.
+1. Enter the ID for the funding source you'd like to cancel.
+1. Add the success payload and rejections.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsU291cmNlIHsKICBjYW5jZWxGdW5kaW5nU291cmNlKGlucHV0OiB7IGlkOiAiJFlPVVJfRlVORElOR19TT1VSQ0VfSUQiIH0pIHsKICAgIC4uLiBvbiBDYW5jZWxGdW5kaW5nU291cmNlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZ1bmRpbmdTb3VyY2UgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2} showLineNumbers
+mutation CancelSource {
+  cancelFundingSource(input: { id: "$YOUR_FUNDING_SOURCE_ID" }) {
+    ... on CancelFundingSourceSuccessPayload {
+      __typename
+      fundingSource {
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      id
+      message
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+The payload shows that the funding source is `Canceled` and can't be used anymore.
+
+```json {7} showLineNumbers
+{
+  "data": {
+    "cancelFundingSource": {
+      "__typename": "CancelFundingSourceSuccessPayload",
+      "fundingSource": {
+        "statusInfo": {
+          "status": "Canceled"
+        }
+      }
+    }
+  }
+}
+```

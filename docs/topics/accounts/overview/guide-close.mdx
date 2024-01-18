@@ -1,0 +1,130 @@
+---
+title: Close an account
+---
+
+# Close an account
+
+You might need to close a Swan account for several reasons.
+
+:::tip Different closure processes
+The account closure process depends on who is closing the account.
+
+1. **You or a legal representative**: Your guides are on this page.
+1. **Swan or a third party**: Refer to the [explanatory content](../index.mdx#closure) about account closures when requested by a third party, such as a notary or a liquidator, or decided by Swan.
+1. **Account holder**: Swan's end-user [Support Center](https://support.swan.io/hc/en-150/articles/14642306196765-Account-closure-process) documents the process for your users.
+:::
+
+:::info Limited or Unlimited
+As a Swan Partner, your process depends on the account's payment level: `Limited` or `Unlimited`.
+You can find the payment level by going to **Dashboard** > **Data** > **Accounts**, then clicking the account you're trying to close.
+The payment level is part of the account's general information.
+:::
+
+## Close a `Limited` account {#limited}
+
+### Step 1: Submit closure request {#limited-submit}
+
+import SubmitClosureRequestLimited from '../partials/_partner-close-account.mdx';
+
+<SubmitClosureRequestLimited />
+
+### Step 2: Swan reviews request {#limited-review}
+
+For `Limited` accounts, consent from the account holder isn't required.
+Therefore, Swan proceeds with account closure without contacting the account holder.
+
+Before changing the account status to `Closing`, Swan confirms several details:
+
+1. If the **account status** is `Suspended`, the account holder is already communicating with Swan about the suspension. The same Swan team takes over account closure.
+1. If the account balance is **positive**, or if **transactions** have already been made from the account, Swan follows the process to close an `Unlimited` account instead.
+1. If the account balance is **negative**, Swan can't close the account.
+
+### Step 3: Swan changes account status {#limited-status}
+
+If the process to close the account doesn't need to change based on details confirmed in step 2, Swan changes the account status to `Closing`.
+
+Since the account was never used, passing from `Closing` to `Closed` happens quickly; there isn't a required notice period.
+
+## Close an `Unlimited` account {#unlimited}
+
+### Step 1: Submit closure request {#unlimited-submit}
+
+import SubmitClosureRequestUnlimited from '../partials/_partner-close-account.mdx';
+
+<SubmitClosureRequestUnlimited />
+4. Additionally, make sure to tell Swan *when* you'd like the account to close.
+There are **three options**, explained in the following table.
+
+| Option | Explanation | Requirements |
+| :---: | --- | --- |
+| 1 | Account closed in 60 days | *None* |
+| 2 | Account closed on a specific date more than 60 days in the future | Share the specific date with Swan |
+| 3 | Account closed on a specific date within fewer than 60 days | Provide signed document with consent from account holder (contractual evidence) |
+
+5. If you choose option 3, **send Swan the contractual evidence**.
+    - Contractual evidence is a document signed by the account holder stating that they agree to close their Swan account on the specific date.
+    - The document is required by law to close an account within fewer than 60 days.
+
+### Step 2: Swan reviews request {#unlimited-review}
+
+Before notifying the account holder of their upcoming account closure, Swan confirms several details:
+
+1. If the **account status** is `Suspended`, the account holder is already communicating with Swan about the suspension. The same Swan team takes over account closure.
+1. If the account balance is **negative**, Swan asks the account holder to transfer funds to their account so the balance reaches zero.
+
+### Step 3: Swan initiates account closure {#unlimited-initiate}
+
+After reviewing the request, Swan initiates the actual account closure.
+
+1. **Swan emails the account holder** informing them that their account will be closed.
+    - The email specifies whether the account will close in two months or on a specific date, based on the option you selected in step 1.
+    - Swan must send the email. It's generic and straightforward for all account holders.
+1. Swan **changes the account status** to `Closing` after two months or on the specific date.
+1. The account **undergoes the closing process**. Refer to the [account statuses](../index.mdx#statuses) section for an overview of what happens while an account is `Closing`.
+1. After the account status changes to `Closed`, Swan **sends a final email** to the account holder informing them that their account is officially closed.
+
+## Close an account by legal representative request {#legal-rep}
+
+If the account holder's [legal representative](../../../glossary.mdx#legal-representative) requests an account closure, the process **starts with the API**.
+
+1. Call the `closeAccount` mutation with the legal representative's [user access token](../../authentication/index.mdx#tokens-user).
+1. The API returns a `consentUrl`.
+1. Send the `consentUrl` to your user so they can complete [Strong Customer Authentication](../../consent/index.mdx#sca).
+1. As soon as the user consents, the account status changes to `Closing`.
+
+Refer to the [account statuses](../index.mdx#statuses) section for an overview of what happens while an account is `Closing`.
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gY2xvc2VBY2NvdW50IHsKICBjbG9zZUFjY291bnQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICJhZjE5NGZiMC0wMjAzLTRjZGMtODFkMi1mNGUzMTcyYWFiYzAiCiAgICAgIHJlYXNvbjogeyB0eXBlOiBDbG9zaW5nUmVxdWVzdGVkIH0KICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiaHR0cHM6Ly9kb2NzLnN3YW4uaW8vIgogICAgfQogICkgewogICAgLi4uIG9uIENsb3NlQWNjb3VudFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQmFkQWNjb3VudFN0YXR1c1JlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql title="Mutation" {4-6,12} showLineNumbers
+mutation closeAccount {
+  closeAccount(
+    input: {
+      accountId: "$ACCOUNT_ID"
+      reason: { type: ClosingRequested }
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on CloseAccountSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+  }
+}
+
+```
+
+```graphql title="Payload" {6} showLineNumbers
+{
+  "data": {
+    "closeAccount": {
+      "__typename": "CloseAccountSuccessPayload",
+      "consent": {
+        "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+      }
+    }
+  }
+}
+```

@@ -1,0 +1,71 @@
+---
+title: Generate account statement
+---
+
+# Generate account statement
+
+Generate an account statement for a custom time period.
+
+You can also generate statements on your **Dashboard** > **Data** > **Accounts**.
+Open the account for which you want to generate a statement, then go to the **Account statements** tab.
+Click **+ New**, enter required information, and click **Save**.
+
+## Guide {#guide}
+
+1. Call the `generateAccountStatement` mutation.
+1. Add the account ID.
+1. Add the opening and closing dates with the following format: `YYYY-MM-DDT00:00:00.000Z`.
+1. Add all information you'd like to review about the statement (lines 9-19).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gR2VuZXJhdGVBY2NvdW50U3RhdGVtZW50IHsKICBnZW5lcmF0ZUFjY291bnRTdGF0ZW1lbnQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICJhZjE5NGZiMC0wMjAzLTRjZGMtODFkMi1mNGUzMTcyYWFiYzAiCiAgICAgIG9wZW5pbmdEYXRlOiAiMjAyMy0xMS0wMVQwMDowMDowMC4wMDBaIgogICAgICBjbG9zaW5nRGF0ZTogIjIwMjQtMDEtMDFUMDA6MDA6MDAuMDAwWiIKICAgIH0KICApIHsKICAgIGNsb3NpbmdEYXRlCiAgICBjcmVhdGVkQXQKICAgIGZlZXMgewogICAgICBjdXJyZW5jeQogICAgICB2YWx1ZQogICAgfQogICAgaWQKICAgIG9wZW5pbmdEYXRlCiAgICBwZXJpb2QKICAgIHN0YXR1cwogICAgdXBkYXRlZEF0CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {4-6} showLineNumbers
+mutation GenerateAccountStatement {
+  generateAccountStatement(
+    input: {
+      accountId: "af194fb0-0203-4cdc-81d2-f4e3172aabc0"
+      openingDate: "2023-11-01T00:00:00.000Z"
+      closingDate: "2024-11-01T00:00:00.000Z"
+    }
+  ) {
+    closingDate
+    createdAt
+    fees {
+      currency
+      value
+    }
+    id
+    openingDate
+    period
+    status
+    updatedAt
+  }
+}
+```
+
+## Payload {#payload}
+
+The mutation returns all of the requested information as well as the status `Pending` (line 13).
+
+```json {} showLineNumbers
+{
+  "data": {
+    "generateAccountStatement": {
+      "closingDate": "2024-01-01T00:00:00.000Z",
+      "createdAt": "2024-01-19T10:08:17.082Z",
+      "fees": {
+        "currency": "EUR",
+        "value": "0"
+      },
+      "id": "9b2b9e4f-36ed-40a8-bf8d-7d86bea8c256",
+      "openingDate": "2023-11-01T00:00:00.000Z",
+      "period": "Custom",
+      "status": "Pending",
+      "updatedAt": "2024-01-19T10:08:17.084Z"
+    }
+  }
+}
+```
+

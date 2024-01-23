@@ -1,0 +1,61 @@
+---
+title: Cancel a virtual IBAN
+---
+
+# Cancel a virtual IBAN
+
+Cancel a virtual IBAN with the API.
+Note that canceling a virtual IBAN is **permanent**; they can't be reactivated.
+
+## Guide {#guide}
+
+1. Call the `cancelVirtualIbanEntry` mutation.
+1. Enter the ID for the virtual IBAN you'd like to cancel (`virtualIbanEntryId`).
+1. Add the success payload, including any information you'd like to review.
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsVmlydHVhbCB7CiAgY2FuY2VsVmlydHVhbEliYW5FbnRyeSgKICAgIGlucHV0OiB7IHZpcnR1YWxJYmFuRW50cnlJZDogIiRZT1VSX1ZJUlRVQUxfSUJBTl9JRCIgfQogICkgewogICAgLi4uIG9uIENhbmNlbFZpcnR1YWxJYmFuRW50cnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmlydHVhbEliYW5FbnRyeSB7CiAgICAgICAgQklDCiAgICAgICAgaWQKICAgICAgICBibG9ja1NERAogICAgICAgIGxhYmVsCiAgICAgICAgc3RhdHVzCiAgICAgICAgSUJBTgogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEJhZEFjY291bnRTdGF0dXNSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {3} showLineNumbers
+mutation CancelVirtual {
+  cancelVirtualIbanEntry(
+    input: { virtualIbanEntryId: "$YOUR_VIRTUAL_IBAN_ID" }
+  ) {
+    ... on CancelVirtualIbanEntrySuccessPayload {
+      __typename
+      virtualIbanEntry {
+        BIC
+        id
+        blockSDD
+        label
+        status
+        IBAN
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows the IBAN status changed to `Canceled`.
+
+```json {10} showLineNumbers
+{
+  "data": {
+    "cancelVirtualIbanEntry": {
+      "__typename": "CancelVirtualIbanEntrySuccessPayload",
+      "virtualIbanEntry": {
+        "BIC": "SWNBFR22",
+        "id": "$YOUR_VIRTUAL_IBAN_ID",
+        "blockSDD": false,
+        "label": "Virtual",
+        "status": "Canceled",
+        "IBAN": "FR7617328899000000000000000"
+      }
+    }
+  }
+}
+```

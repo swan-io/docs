@@ -1,0 +1,98 @@
+---
+title: Add a funding source
+---
+
+# Add a funding source
+
+Add a funding source with the API.
+
+:::tip Prerequisites
+Adding a funding source is a [sensitive operation](../../consent/index.mdx#sensitive), so you must call the mutation with a user access token associated with the account holder who will sign the direct debit mandate (the debtor).
+They must consent to the operation.
+
+Account members with `canManageAccountMembership` and `canViewAccount` permissions can add funding sources, in addition to the account holder.
+However, the non-Swan account must belong to the Swan account holder.
+:::
+
+## Guide {#guide}
+
+1. Call the `addDirectDebitFundingSource` mutation.
+1. Choose the `SepaDirectDebitB2b` scheme. Though `Core` is an option in the API, it's not actually available for account funding.
+1. Add your `accountId`, `iban`, `consentRedirectUrl`, and a `name` for your funding source (name is primarily for your reference).
+1. Add the `AddDirectDebitFundingSourceSuccessPayload` success payload.
+1. Add the consent URL to the success payload: `fundingSource` > `DirectDebitFundingSource` > `paymentMandate` > `SEPAPaymentDirectDebitMandate` > `statusInfo` > `PaymentMandateConsentPendingStatusInfo` > `consent` > `consentUrl`
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkU2RkQjJiIHsKICBhZGREaXJlY3REZWJpdEZ1bmRpbmdTb3VyY2UoCiAgICBpbnB1dDogewogICAgICBzY2hlbWU6IFNlcGFEaXJlY3REZWJpdEIyYgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBpYmFuOiAiJFlPVVJfSUJBTiIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBuYW1lOiAiJFlPVVJfRlVORElOR19TT1VSQ0VfTkFNRSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBBZGREaXJlY3REZWJpdEZ1bmRpbmdTb3VyY2VTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZnVuZGluZ1NvdXJjZSB7CiAgICAgICAgLi4uIG9uIERpcmVjdERlYml0RnVuZGluZ1NvdXJjZSB7CiAgICAgICAgICBpZAogICAgICAgICAgbmFtZQogICAgICAgICAgcGF5bWVudE1hbmRhdGUgewogICAgICAgICAgICAuLi4gb24gU0VQQVBheW1lbnREaXJlY3REZWJpdE1hbmRhdGUgewogICAgICAgICAgICAgIGlkCiAgICAgICAgICAgICAgbmFtZQogICAgICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAgICAgLi4uIG9uIFBheW1lbnRNYW5kYXRlQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50VmVyaWZpY2F0aW9uQWxyZWFkeVJlamVjdGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSUJBTk5vdFJlYWNoYWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4,11,25} showLineNumbers
+mutation AddSddB2b {
+  addDirectDebitFundingSource(
+    input: {
+      scheme: SepaDirectDebitB2b
+      accountId: "$YOUR_ACCOUNT_ID"
+      iban: "$YOUR_IBAN"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      name: "$YOUR_FUNDING_SOURCE_NAME"
+    }
+  ) {
+    ... on AddDirectDebitFundingSourceSuccessPayload {
+      __typename
+      fundingSource {
+        ... on DirectDebitFundingSource {
+          id
+          name
+          paymentMandate {
+            ... on SEPAPaymentDirectDebitMandate {
+              id
+              name
+              statusInfo {
+                ... on PaymentMandateConsentPendingStatusInfo {
+                  __typename
+                  consent {
+                    consentUrl
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+Share the consentUrl (line 14) with your Swan account holder so they can consent to the operation.
+After they consent to the payment mandate, the funding source status changes to `Enabled` and you can pull money to fund the Swan account.
+
+Note you also receive a funding source ID (line 6) and a payment mandate ID (line 9).
+
+```json {6,9,14} showLineNumbers
+{
+  "data": {
+    "addDirectDebitFundingSource": {
+      "__typename": "AddDirectDebitFundingSourceSuccessPayload",
+      "fundingSource": {
+        "id": "$YOUR_FUNDING_SOURCE_ID",
+        "name": "Awesome Funding Source Name",
+        "paymentMandate": {
+          "id": "$YOUR_PAYMENT_MANDATE_ID",
+          "name": null,
+          "statusInfo": {
+            "__typename": "PaymentMandateConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```

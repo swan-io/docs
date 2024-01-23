@@ -1,0 +1,91 @@
+---
+title: Update a membership
+---
+
+# Update a membership
+
+You can update the permissions for an existing account membership, as well as the account member's personal information, with the API.
+You can also update the membership to **fix user binding errors**.
+
+If you use Swan's Web Banking interface, your users can also update account memberships from their Web Banking accounts.
+
+:::tip Prerequisites
+- You have the **`canManageAccountMembership`** permission.
+- You have a [**user access token**](../../authentication/index.mdx#tokens-user) associated with the account membership you're updating because updating a membership is a [sensitive operation](../../consent/index.mdx#sensitive).
+- The [account membership **status**](./index.mdx#statuses) **isn't** `ConsentPending` or `Disabled`.
+- You're not updating the legal representative's membership (unless you're the legal representative).
+- If you're granting a permission to another account member, you have that permission already. You can't grant permissions you don't have.
+:::
+
+## Update a membership {#guide-update}
+
+1. Call the `updateAccountMembership` mutation.
+1. Add the account membership ID and your redirect URL.
+1. Add any information or permissions you'd like to update.
+1. Add the success payload with the `consentUrl`.
+1. Add any rejections you'd like.
+1. Get the `consentUrl` from the payload and send it to the user updating the account membership. Their consent finalizes the update.
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlTWVtYmVyc2hpcCB7CiAgdXBkYXRlQWNjb3VudE1lbWJlcnNoaXAoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJEFDQ09VTlRfTUVNQkVSU0hJUF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfQ09OU0VOVF9SRURJUkVDVF9VUkwiCiAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IHRydWUKICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogdHJ1ZQogICAgICBjYW5NYW5hZ2VDYXJkczogdHJ1ZQogICAgICBjYW5WaWV3QWNjb3VudDogdHJ1ZQogICAgfQogICkgewogICAgLi4uIG9uIFVwZGF0ZUFjY291bnRNZW1iZXJzaGlwU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvbnNlbnQgewogICAgICAgIGNvbnNlbnRVcmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwQ2Fubm90QmVVcGRhdGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4-5} showLineNumbers
+mutation UpdateMembership {
+  updateAccountMembership(
+    input: {
+      accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
+      consentRedirectUrl: "$YOUR_CONSENT_REDIRECT_URL"
+      canInitiatePayments: true
+      canManageAccountMembership: true
+      canManageBeneficiaries: true
+      canManageCards: true
+      canViewAccount: true
+    }
+  ) {
+    ... on UpdateAccountMembershipSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+    ... on AccountMembershipCannotBeUpdatedRejection {
+      id
+      message
+    }
+  }
+}
+```
+
+## Fix a user binding error {#guide-fix}
+
+1. Call the `updateAccountMembership` mutation.
+1. Add the account membership ID and your redirect URL.
+1. Add the invited account member's information that caused the error to the `restrictedTo` object.
+1. Add the success payload with the `consentUrl`.
+1. Add any rejections you'd like (not shown).
+1. Get the `consentUrl` from the payload and send it to the invited account member. Their consent finalizes the update.
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRml4QmluZGluZ0Vycm9yIHsKICB1cGRhdGVBY2NvdW50TWVtYmVyc2hpcCgKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRNZW1iZXJzaGlwSWQ6ICIkQUNDT1VOVF9NRU1CRVJTSElQX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9DT05TRU5UX1JFRElSRUNUX1VSTCIKICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgYmlydGhEYXRlOiAiJENPUlJFQ1RfQklSVEhfREFURSIKICAgICAgICBmaXJzdE5hbWU6ICIkQ09SUkVDVF9GSVJTVF9OQU1FIgogICAgICAgIGxhc3ROYW1lOiAiJENPUlJFQ1RfTEFTVF9OQU1FIgogICAgICAgIHBob25lTnVtYmVyOiAiJENPUlJFQ1RfUEhPTkVfTlVNQkVSIgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlQWNjb3VudE1lbWJlcnNoaXBTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBDYW5ub3RCZVVwZGF0ZWRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnZhbGlkUGhvbmVOdW1iZXJSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQZXJtaXNzaW9uQ2Fubm90QmVHcmFudGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVXNlck5vdEFsbG93ZWRUb01hbmFnZUFjY291bnRNZW1iZXJzaGlwUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {4-5} showLineNumbers
+mutation FixBindingError {
+  updateAccountMembership(
+    input: {
+      accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
+      consentRedirectUrl: "$YOUR_CONSENT_REDIRECT_URL"
+      restrictedTo: {
+        birthDate: "$CORRECT_BIRTH_DATE"
+        firstName: "$CORRECT_FIRST_NAME"
+        lastName: "$CORRECT_LAST_NAME"
+        phoneNumber: "$CORRECT_PHONE_NUMBER"
+      }
+    }
+  ) {
+    ... on UpdateAccountMembershipSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+  }
+}
+```

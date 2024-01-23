@@ -1,0 +1,99 @@
+---
+title: Get a list of invoices
+---
+
+# Get a list of invoices
+
+Get a list of invoices with details about each invoices using the API.
+
+You can also review all invoices on your **Dashboard** > **Data** > **Accounts**.
+Open the account for which you want to review invoices, then go to the **Invoices** tab.
+
+## Guide {#guide}
+
+1. Call the `account` query.
+1. Add the account ID.
+1. Add all information you'd like to review about each invoice.
+1. Add [pagination](../../../developers/using-api/pagination.mdx#arguments) if you're looking for invoices for a certain interval.
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgUmV0cmlldmVJbnZvaWNlcyB7CiAgYWNjb3VudChhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIikgewogICAgaW52b2ljZXMoYWZ0ZXI6ICIiLCBmaXJzdDogMTApIHsKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgY2xvc2luZ0RhdGUKICAgICAgICAgIGNyZWF0ZWRBdAogICAgICAgICAgZXhwaXJlc0F0CiAgICAgICAgICBuYW1lCiAgICAgICAgICBpZAogICAgICAgICAgb3BlbmluZ0RhdGUKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgdXBkYXRlZEF0CiAgICAgICAgICB1cmwKICAgICAgICB9CiAgICAgIH0KICAgICAgcGFnZUluZm8gewogICAgICAgIGhhc05leHRQYWdlCiAgICAgICAgaGFzUHJldmlvdXNQYWdlCiAgICAgIH0KICAgICAgdG90YWxDb3VudAogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2-3} showLineNumbers
+query RetrieveInvoices {
+  account(accountId: "$YOUR_ACCOUNT_ID") {
+    invoices(after: "", first: 10) {
+      edges {
+        node {
+          closingDate
+          createdAt
+          expiresAt
+  	  name
+          id
+          openingDate
+          status
+          updatedAt
+          url
+          type
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The query returns all of the information about two invoices.
+
+```json {} showLineNumbers
+{
+  "data": {
+    "account": {
+      "invoices": {
+        "edges": [
+          {
+            "node": {
+              "closingDate": "2023-02-28T22:59:59.999Z",
+              "createdAt": "2023-02-16T16:04:51.331Z",
+              "expiresAt": "2023-02-17T16:08:32.832Z",
+              "name": "INVOICE-20230228",
+              "id": "dc43f0f6-7bae-4f05-8b35-82363a1a17cf",
+              "openingDate": "2023-01-31T23:00:00.000Z",
+              "status": "Paid",
+              "updatedAt": "2023-02-16T16:04:52.582Z",
+              "url": "$INVOICE_URL",
+              "type":"Invoice"
+            }
+          },
+          {
+            "node": {
+              "closingDate": "2023-02-28T22:59:59.999Z",
+              "createdAt": "2023-02-16T16:02:55.416Z",
+              "expiresAt": "2023-02-17T16:08:32.832Z",
+              "name": "INVOICE-20230228",
+              "id": "b9ccad06-417a-48e0-8a08-37fee4ea39a3",
+              "openingDate": "2023-01-31T23:00:00.000Z",
+              "status": "Voided",
+              "updatedAt": "2023-02-16T16:04:50.888Z",
+              "url": null,
+              "type":"Invoice"
+            }
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "hasPreviousPage": true
+        },
+        "totalCount": 2
+      }
+    }
+  }
+}
+```

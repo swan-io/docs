@@ -1,0 +1,120 @@
+---
+title: Validate an IBAN
+---
+
+# Validate an IBAN
+
+Check the format of your IBAN before using it to perform operations with Swan's API.
+
+:::tip possible use cases
+1. Check the format of your IBAN before using the [`initiateCreditTransfers` mutation](https://api-reference.swan.io/mutations/initiate-credit-transfers/).
+1. Get the bank information with the API if your [bank details PDF](../index.mdx#bank-details) isn't readily available.
+:::
+
+## Guide and query {#guide}
+
+1. Call the `ibanValidation` query.
+1. Add an IBAN. You can test IBANs from any issuer and any [country Swan covers](../../../partnership/overview/country-coverage.mdx).
+1. Add both the `ValidIban` and `InvalidIban` unions.
+1. Add anything other information you'd like to review.
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgQ2hlY2tJYmFuRm9ybWF0IHsKICBpYmFuVmFsaWRhdGlvbihpbnB1dDogeyBpYmFuOiAiJFlPVVJfSUJBTiIgfSkgewogICAgLi4uIG9uIFZhbGlkSWJhbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudE51bWJlcgogICAgfQogICAgLi4uIG9uIEludmFsaWRJYmFuIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGNvZGUKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {2} showLineNumbers
+query CheckIbanFormat {
+  ibanValidation(input: { iban: "FR7699999001001510219788187" }) {
+    ... on ValidIban {
+      __typename
+      accountNumber
+      checksum
+      iban
+      bank {
+        branch
+        name
+      }
+      reachability {
+        sepaCreditTransfer
+        sepaCreditTransferInst
+        sepaDirectDebitB2b
+        sepaDirectDebitCore
+      }
+    }
+    ... on InvalidIban {
+      __typename
+      message
+      code
+      iban
+    }
+  }
+}
+
+```
+
+## Valid IBAN example {#payload-valid}
+
+> *All of this data is from a Swan Sandbox account and can't be used in real life.*
+
+Payload responses for valid IBANs provide valuable information if included in the query.
+In fact, it can return everything in a valid IBAN's anatomy; you can review [local IBANs supported by Swan](./index.mdx#local).
+
+This payload shows that:
+
+1. The IBAN is valid (line 4).
+1. The issuer is Swan (line 10).
+1. The IBAN can be used for all SEPA transactions (lines 13-16).
+
+```graphql title="Valid example payload" {4,10,13-16} showLineNumbers
+{
+  "data": {
+    "ibanValidation": {
+      "__typename": "ValidIban",
+      "accountNumber": "1510219788187",
+      "checksum": "76",
+      "iban": "FR7699999001001510219788187",
+      "bank": {
+        "branch": "00",
+        "name": "Swan (FR)"
+      },
+      "reachability": {
+        "sepaCreditTransfer": true,
+        "sepaCreditTransferInst": true,
+        "sepaDirectDebitB2b": true,
+        "sepaDirectDebitCore": true
+      }
+    }
+  }
+}
+```
+
+## Invalid IBAN example {#payload-invalid}
+
+There are numerous responses for invalid IBANs.
+Here are two examples.
+
+1. `IBAN FR76182060016265`: The payload shows that the IBAN is invalid because it's too short.
+Review the anatomy of each [local IBAN supported by Swan](./index.mdx#local).
+1. `IBAN FR7817569000305414384277J07`: The payload shows that the IBAN is invalid because the bank referenced in the IBAN couldn't be found.
+
+```graphql title="Invalid example payload" {6-7,17-18} showLineNumbers
+# Response 1 for IBAN FR76182060016265
+{
+  "data": {
+    "ibanValidation": {
+      "__typename": "InvalidIban",
+      "message": "IBAN is invalid",
+      "code": "InvalidLength"
+    }
+  }
+}
+
+# Response 2 for IBAN FR7817569000305414384277J07
+{
+  "data": {
+    "ibanValidation": {
+      "__typename": "InvalidIban",
+      "message": "Bank referenced in IBAN could not be found",
+      "code": "InvalidBank"
+    }
+  }
+}
+```

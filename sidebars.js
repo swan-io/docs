@@ -73,6 +73,75 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Accounts",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Accounts overview",
+          link: { type: "doc", id: "topics/accounts/index" },
+          collapsed: true,
+          items: [
+            "topics/accounts/overview/guide-close",
+            "topics/accounts/overview/guide-generate-statement",
+            "topics/accounts/overview/guide-get-bank-details",
+          ],
+        },
+        {
+          type: "category",
+          label: "Account memberships",
+          link: { type: "doc", id: "topics/accounts/memberships/index" },
+          collapsed: true,
+          items: [
+            "topics/accounts/memberships/guide-add-one",
+            "topics/accounts/memberships/guide-add-multiple",
+            "topics/accounts/memberships/guide-update",
+            "topics/accounts/memberships/guide-suspend-resume",
+            "topics/accounts/memberships/guide-disable",
+          ],
+        },{
+          type: "category",
+          label: "Account funding",
+          link: { type: "doc", id: "topics/accounts/funding/index" },
+          collapsed: true,
+          items: [
+            "topics/accounts/funding/guide-add-source",
+            "topics/accounts/funding/guide-cancel-source",
+            "topics/accounts/funding/guide-initiate-request",
+            "topics/accounts/funding/guide-cancel-request",
+            "topics/accounts/funding/guide-get-info",
+            "topics/accounts/funding/sandbox",
+          ],
+        },
+        {
+          type: "category",
+          label: "Billing",
+          link: { type: "doc", id: "topics/accounts/billing/index" },
+          collapsed: true,
+          items: [
+            "topics/accounts/billing/guide-compliant-billing",
+            "topics/accounts/billing/guide-get-list",
+            "topics/accounts/billing/guide-get-details",
+            "topics/accounts/billing/sandbox",
+          ],
+        },
+        {
+          type: "category",
+          label: "IBANs",
+          link: { type: "doc", id: "topics/accounts/ibans/index" },
+          collapsed: true,
+          items: [
+            "topics/accounts/ibans/guide-validate",
+            "topics/accounts/ibans/guide-add-virtual",
+            "topics/accounts/ibans/guide-cancel-virtual",
+            "topics/accounts/ibans/guide-get-info",
+          ],
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Authentication & Consent",
       collapsible: false,
       collapsed: false,
@@ -293,44 +362,35 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
-        "partnership/index",
-        "partnership/protections",
-        "partnership/rules-regulations",
-        "partnership/country-coverage",
+        {
+          type: "category",
+          label: "Partnership with Swan",
+          link: { type: "doc", id: "partnership/index" },
+          collapsed: true,
+          items: [
+            "partnership/overview/guide-orias",
+          ],
+        },
+        "partnership/overview/protections",
+        "partnership/overview/rules-regulations",
+        "partnership/overview/country-coverage",
       ],
-    },  
+    },
     {
       type: "category",
-      label: "Country guides",
+      label: "Document center",
       collapsible: false,
       collapsed: false,
       items: [
+        "partnership/document-center/index",
         {
           type: "category",
-          label: "🇫🇷 France",
-          link: { type: "doc", id: "partnership/countries/france/index" },
+          label: "Company registration",
           collapsed: true,
           items: [
-            "partnership/countries/france/guide-orias",
-            "partnership/countries/france/documents",
-          ],
-        },
-        {
-          type: "category",
-          label: "🇩🇪 Germany",
-          link: { type: "doc", id: "partnership/countries/germany/index" },
-          collapsed: true,
-          items: [
-            "partnership/countries/germany/documents",
-          ],
-        },
-        {
-          type: "category",
-          label: "🇪🇸 Spain",
-          link: { type: "doc", id: "partnership/countries/spain/index" },
-          collapsed: true,
-          items: [
-            "partnership/countries/spain/documents",
+            "partnership/document-center/company-registration/france",
+            "partnership/document-center/company-registration/germany",
+            "partnership/document-center/company-registration/spain",
           ],
         },
       ],
@@ -341,11 +401,6 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
-        {
-          type: "link",
-          label: "API reference",
-          href: "https://api-reference.swan.io/",
-        },
         {
           type: "link",
           label: "Status page", // The link label

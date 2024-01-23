@@ -1,0 +1,37 @@
+---
+title: Cancel a funding request
+---
+
+# Cancel a funding request
+
+Cancel a funding request with the API.
+
+There isn't a dedicated mutation to cancel a funding transaction.
+Instead, use the same `cancelTransaction` mutation used to cancel any other transaction.
+
+## Guide {#guide}
+
+1. Call the `cancelTransaction` mutation.
+1. Enter the transaction ID for the account funding request.
+1. Add the success payload and rejections.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsRnVuZGluZ1JlcXVlc3QgewogIGNhbmNlbFRyYW5zYWN0aW9uKGlucHV0OiB7IHRyYW5zYWN0aW9uSWQ6ICIkRlVORElOR19UUkFOU0FDVElPTl9JRCIgfSkgewogICAgLi4uIG9uIENhbmNlbFRyYW5zYWN0aW9uU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {3} showLineNumbers
+mutation CancelFundingRequest {
+  cancelTransaction(
+    input: { transactionId: "$FUNDING_TRANSACTION_ID" }
+  ) {
+    ... on CancelTransactionSuccessPayload {
+      __typename
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+  }
+}
+```

@@ -136,21 +136,19 @@ When the account status changes to `Closed`, account members can view the accoun
 
 ## Sequence diagram: Adding account memberships {#diagrams-add}
 
-*Requester: account holder/legal rep/account member with manage membership permissions
-
 ```mermaid
 sequenceDiagram
 autonumber
 participant I as Invitee
-participant U as Requester*
+participant U as Requester∗
 participant P as Partner (you)
 participant S as Swan
     U ->> P: Requests account access for invitee
     P ->> S: Calls `addAccountMembership` mutation
-    S ->> U: Requests consent
-    U ->> S: Requests consent
+    S ->> U: Sends request for consent
+    U ->> S: Provides consent
     S ->> P: Returns `accountMembershipId`
-    P ->> I: Sends invitee login URL
+    P ->> I: Sends login URL to invitee
     I ->> S: Logs into Swan with OAuth 2.0
     S ->> I: Redirects to Partner's interface with OAuth 2.0 access code
     I ->> P: Redirected to Partner's interface with OAuth 2.0 access code
@@ -159,11 +157,14 @@ participant S as Swan
     P ->> S: Calls `bindAccountMembership` mutation with<br />`accountMembershipId` using invitee's user access token
     S ->> P: Confirms account membership success,<br />meaning invitee is bound to account
 ```
+∗ The **requester** can be the account holder, the account's legal representative, or an account member with the `canManageAccountMembership` permission.
+The requester provides consent (diagram line 4).
 
 ## Guides {#guides}
 
 - [Add a membership](./guide-add-one.mdx)
 - [Add multiple memberships](./guide-add-multiple.mdx)
+- [Fix a user binding error](./guide-fix-bind.mdx)
 - [Update a membership](./guide-update.mdx)
 - [Suspend (temporarily block) or resume a membership](./guide-suspend-resume.mdx)
 - [Disable (permanently block) a membership](./guide-disable.mdx)

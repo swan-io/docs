@@ -96,6 +96,7 @@ module.exports = {
           items: [
             "topics/accounts/memberships/guide-add-one",
             "topics/accounts/memberships/guide-add-multiple",
+            "topics/accounts/memberships/guide-fix-bind",
             "topics/accounts/memberships/guide-update",
             "topics/accounts/memberships/guide-suspend-resume",
             "topics/accounts/memberships/guide-disable",
@@ -132,11 +133,10 @@ module.exports = {
           link: { type: "doc", id: "topics/accounts/ibans/index" },
           collapsed: true,
           items: [
-            "topics/accounts/ibans/guide-get-info",
             "topics/accounts/ibans/guide-validate",
             "topics/accounts/ibans/guide-add-virtual",
-            "topics/accounts/ibans/guide-add-virtual-local",
-            "topics/accounts/ibans/guide-manage-virtual", 
+            "topics/accounts/ibans/guide-cancel-virtual",
+            "topics/accounts/ibans/guide-get-info",
           ],
         },
       ],

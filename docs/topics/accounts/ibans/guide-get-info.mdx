@@ -1,28 +1,91 @@
 ---
-title: Get information about an IBAN
+title: Get information about an account's IBANs
 ---
 
-# Get information about an IBAN
+# Get information about an account's IBANs
 
-intro
+Get information about an account's IBANs with the API.
 
 ## Guide {#guide}
 
-1. Call the `ibanValidation` query.
-1. 
+1. Call the `account` query.
+1. Enter your accound ID.
+1. Add the information you need. This sample includes information relevant to IBANs, both main and virtual.
+1. Add [pagination](../../../developers/using-api/pagination.mdx) if you're expecting a long payload (line 6).
 
 ## Query {#query}
 
-🔎 [Open the query in API Explorer]
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0QWNjb3VudEliYW5JbmZvIHsKICBhY2NvdW50KGFjY291bnRJZDogIiRZT1VSX0FDQ09VTlRfSUQiKSB7CiAgICBJQkFOCiAgICBwYXltZW50QWNjb3VudFR5cGUKICAgIHBheW1lbnRMZXZlbAogICAgdmlydHVhbEliYW5FbnRyaWVzKGZpcnN0OiAyKSB7CiAgICAgIGVkZ2VzIHsKICAgICAgICBub2RlIHsKICAgICAgICAgIEJJQwogICAgICAgICAgSUJBTgogICAgICAgICAgaWQKICAgICAgICAgIGxhYmVsCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgICAgcGFnZUluZm8gewogICAgICAgIGhhc05leHRQYWdlCiAgICAgICAgaGFzUHJldmlvdXNQYWdlCiAgICAgIH0KICAgICAgdG90YWxDb3VudAogICAgfQogIH0KfQo%3D&tab=api)
 
-```graphql {3} showLineNumbers
-
+```graphql {2,6} showLineNumbers
+query GetAccountIbanInfo {
+  account(accountId: "$YOUR_ACCOUNT_ID") {
+    IBAN
+    paymentAccountType
+    paymentLevel
+    virtualIbanEntries(first: 2) {
+      edges {
+        node {
+          BIC
+          IBAN
+          id
+          label
+          status
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+}
 ```
 
 ## Payload {#payload}
 
-The payload shows that ...
+There's a lot to learn from this payload response.
 
-```json {7} showLineNumbers
+1. The account has a main `IBAN` (line 4), which means the `paymentAccountType` must be `PaymentService` (line 5). Main IBANs are issued when the account type changes from `EMoney` to `PaymentService`.
+1. The `paymentLevel` is `Unlimited`, meaning virtual IBANs can be added to the account.
+1. There are nine total virtual IBANs (line 32), and only two are listed in this response because of pagination.
 
+```json {4-6,32} showLineNumbers
+{
+  "data": {
+    "account": {
+      "IBAN": "$ACCOUNT_MAIN_IBAN",
+      "paymentAccountType": "PaymentService",
+      "paymentLevel": "Unlimited",
+      "virtualIbanEntries": {
+        "edges": [
+          {
+            "node": {
+              "BIC": "SWNBFR22",
+              "IBAN": "$VIRTUAL_IBAN_1",
+              "id": "$VIRTUAL_IBAN_1_ID",
+              "label": "Virtual",
+              "status": "Enabled"
+            }
+          },
+          {
+            "node": {
+              "BIC": "SWNBFR22",
+              "IBAN": "$VIRTUAL_IBAN_2",
+              "id": "$VIRTUAL_IBAN_2_ID",
+              "label": "Virtual",
+              "status": "Canceled"
+            }
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": true,
+          "hasPreviousPage": false
+        },
+        "totalCount": 9
+      }
+    }
+  }
+}
 ```

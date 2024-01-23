@@ -6,7 +6,7 @@ title: Add a membership
 
 Add a single account membership with the API or from Swan's Web Banking interface.
 
-import PrerequisiteAddMembers from '../partials/_add-member-prereq.mdx';
+import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 
 <PrerequisiteAddMembers />
 
@@ -26,7 +26,7 @@ import PrerequisiteAddMembers from '../partials/_add-member-prereq.mdx';
 
 :::note Can Manage Cards
 The `CanManageCards` permissions is technically optional.
-However, it's recommended to choose true or false for this permission anyway.
+However, it's recommended to choose `true` or `false` for this permission anyway.
 If you don't include the `CanManageCards` permission in your API call, it inherits the same value as `canManageAccountMembership`.
 :::
 
@@ -76,7 +76,7 @@ mutation AddMember {
 ### Step 2: Get consent to add member {#get-consent}
 
 1. Get the `consentUrl`, included in the payload (line 11). Remember, the payload only provides the `consentUrl` if you added it in step 1.6.
-1. Send the `consentUrl` to the account holder, legal representative of the account, or account member with `canManageAccountMembership` permissions.
+1. Send the `consentUrl` to the account holder, the account's legal representative, or the account member with `canManageAccountMembership` permissions.
 1. As soon as consent is provided, they're redirected to your `consentRedirectUrl` defined in the initial API call, which fetches an OAuth 2.0 authorization code and a user access token.
 1. **Store** the invited account member's new `accountMembershipId`. You'll need it to bind the membership.
 
@@ -103,7 +103,7 @@ mutation AddMember {
 
 ### Step 3: Bind the invited account member {#bind-member}
 
-import AddMemberBind from '../partials/_add-member-bind.mdx';
+import AddMemberBind from './partials/_add-member-bind.mdx';
 
 <AddMemberBind />
 

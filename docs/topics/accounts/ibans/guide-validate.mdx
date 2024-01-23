@@ -11,18 +11,16 @@ Check the format of your IBAN before using it to perform operations with Swan's 
 1. Get the bank information with the API if your [bank details PDF](../index.mdx#bank-details) isn't readily available.
 :::
 
-## Guide {#guide}
+## Guide and query {#guide}
 
 1. Call the `ibanValidation` query.
 1. Add an IBAN. You can test IBANs from any issuer and any [country Swan covers](../../../partnership/overview/country-coverage.mdx).
 1. Add both the `ValidIban` and `InvalidIban` unions.
 1. Add anything other information you'd like to review.
 
-## Query {#query}
-
 🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgQ2hlY2tJYmFuRm9ybWF0IHsKICBpYmFuVmFsaWRhdGlvbihpbnB1dDogeyBpYmFuOiAiJFlPVVJfSUJBTiIgfSkgewogICAgLi4uIG9uIFZhbGlkSWJhbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudE51bWJlcgogICAgfQogICAgLi4uIG9uIEludmFsaWRJYmFuIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGNvZGUKICAgIH0KICB9Cn0K&tab=api)
 
-```graphql {3} showLineNumbers
+```graphql {2} showLineNumbers
 query CheckIbanFormat {
   ibanValidation(input: { iban: "FR7699999001001510219788187" }) {
     ... on ValidIban {
@@ -52,7 +50,7 @@ query CheckIbanFormat {
 
 ```
 
-## Valid example {#payload-valid}
+## Valid IBAN example {#payload-valid}
 
 > *All of this data is from a Swan Sandbox account and can't be used in real life.*
 
@@ -65,7 +63,7 @@ This payload shows that:
 1. The issuer is Swan (line 10).
 1. The IBAN can be used for all SEPA transactions (lines 13-16).
 
-```graphql {4,10,13-16} showLineNumbers
+```graphql title="Valid example payload" {4,10,13-16} showLineNumbers
 {
   "data": {
     "ibanValidation": {
@@ -88,7 +86,7 @@ This payload shows that:
 }
 ```
 
-## Invalid example {#payload-invalid}
+## Invalid IBAN example {#payload-invalid}
 
 There are numerous responses for invalid IBANs.
 Here are two examples.
@@ -97,7 +95,7 @@ Here are two examples.
 Review the anatomy of each [local IBAN supported by Swan](./index.mdx#local).
 1. `IBAN FR7817569000305414384277J07`: The payload shows that the IBAN is invalid because the bank referenced in the IBAN couldn't be found.
 
-```graphql {6-7,17-18} showLineNumbers
+```graphql title="Invalid example payload" {6-7,17-18} showLineNumbers
 # Response 1 for IBAN FR76182060016265
 {
   "data": {

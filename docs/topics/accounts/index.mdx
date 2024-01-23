@@ -20,7 +20,7 @@ You **choose your account's country** during the **onboarding** process.
 The account country then determines IBAN country codes.
 For example, consider the sample mutation to [create an individual onboarding link](../onboarding/individual/guide-create.mdx#mutation).
 The account country chosen on line 4 is France (`accountCountry: FRA`).
-All IBANs associated with this account with have the prefix `FR`.
+All IBANs associated with this account have the prefix `FR`.
 
 Swan offers the following account countries:
 
@@ -55,12 +55,11 @@ The only exception is the automatic [billing of banking fees](./billing/index.md
 There are four different account balances.
 
 | Balance | Includes | Equal to |
-| --- | --- | --- |
+| :---: | --- | --- |
 | `Booked` | Transactions that are already debited or credited | Sum of all `Booked` transactions |
 | `Pending` | Transactions that were authorized but haven't been debited or credited yet | Sum of all `Pending` transactions |
 | `Reserved` | Transactions that require [rolling reserve](https://docs.swan.io/concept/account-funding/rolling-reserve) according to the policy for that payment method<br /><br />`Reserved` amount is included in the `Booked` balance | Sum of all `Booked` transactions for which the funds are still in rolling reserve |
 | `Available` | Balance that is actually available to be used | `Booked` - (`Pending` + `Reserved`) |
-
 
 <h3 id="example-insufficient-funds">Example: Insufficient funds</h3>
 
@@ -170,8 +169,6 @@ Refer to the [account statuses](#statuses) section for an overview of what happe
 
 ## Account statuses {#statuses}
 
-<mark>DRAFT</mark>
-
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
@@ -202,10 +199,6 @@ flowchart LR
 
 | Status | Explanation |
 | --- | --- |
-| `Pending` | Explanation |
-| `Verified` | Explanation |
-| `Opened` | Explanation |
-| `Suspended` | Explanation |
 | `Closing` | While an account is closing, the following events occur:<br/><br/><ol><li>All cards are canceled.</li><li>Incoming SEPA Credit Transfers are automatically returned.</li><li>All standing orders are canceled.</li><li>All SEPA Direct Debit mandates are canceled.</li><li>No new members can be added to the account.</li></ol>The account status remains `Closing` until:<br/><br/><ul><li>The `Booked` balance is zero.∗</li><li>The last SEPA Direct Debit transaction happened more than 30 days ago.</li><li>The last SEPA Credit Transfer transaction happened more than 5 days ago.</li></ul> |
 | `Closed` | For all `Closed` accounts, access and account statements remain available for one year through the API or with Swan's Web Banking interface. |
 
@@ -218,3 +211,10 @@ As long as the `Booked` balance doesn't equal zero:
 
 If funds remain in a `Closing` account **after 10 years**, Swan transfers the funds to France's *Caisse des dépôts et consignations* (Deposits and Consignments Fund).
 :::
+
+## Guides {#guides}
+
+- [Close an account](./overview/guide-close.mdx)
+- [Generate an account statement](./overview/guide-generate-statement.mdx)
+- [Get bank details PDF](./overview/guide-get-bank-details.mdx)
+- Review the guide in IBANs: [Get information about an account](./ibans/guide-get-info.mdx)

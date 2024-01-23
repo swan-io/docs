@@ -6,11 +6,12 @@ title: Account funding
 
 ## Overview {#overview}
 
+Account funding is essentially adding money to your Swan account.
+You might use account funding if it's the first time you're sending money to your Swan account, or if you'd like to fund your account on a recurring basis from your account at another financial institution.
 
+If you use `requestedExecutionAt` to schedule your funding requests, you can schedule them up to one year in advance.
+Your scheduled requests must be for at least two business days in the future.
 
-<mark>**Notes**</mark>
-
-- A funding request can be scheduled up to 1 year ahead and at least 2 inter-bank business days ahead using the requestedExecutionAt input.
 
 ## Funding sources {#sources}
 
@@ -76,12 +77,12 @@ flowchart LR
     style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
 ```
 
-| Digital card status | Explanation |
+| Funding source status | Explanation |
 |---|---|
-| `Pending` | Added a funding source with the `addDirectDebitFundingSource` mutation<br/><br/>**Next steps**: <mark>complete pending</mark> <ul><li>... consents, the status moves to `Enabled`</li><li>... doesn't consent, the status moves to `Canceled`</li></ul> |
-| `Enabled` | Account funding source can be used |
-| `Suspended` | Swan can suspend a funding source if there's suspicion of fraud; while suspended, the funding source can't be used |
-| `Canceled` | Account funding source is canceled and no longer available for use |
+| `Pending` | Added a funding source with the `addDirectDebitFundingSource` mutation and are waiting for consent. |
+| `Enabled` | Account funding source can be used. |
+| `Suspended` | Swan can suspend a funding source if there's suspicion of fraud. While suspended, the funding source can't be used. |
+| `Canceled` | Account funding source is canceled and no longer available for use. |
 
 ## Payment mandates {#mandates}
 
@@ -116,16 +117,16 @@ flowchart LR
     style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
 ```
 
-| Digital card status | Explanation |
+| Payment mandate status | Explanation |
 |---|---|
 | `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](./guide-add-source.mdx) with the `addDirectDebitFundingSource` mutation<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`</li><li>If the debtor doesn't consent to the mandate, the status moves to `Canceled`</li></ul> |
 | `Enabled` | Payment mandate can be used to fund the account |
-| `Rejected` | <mark>Mandate was rejected....</mark> |
+| `Rejected` | Payment mandate was rejected |
 | `Canceled` | Payment mandate is canceled and no longer available for use<br/><br/>Account funding payment mandates expire 36 months after being created, or earlier if there's a suspicion of fraud |
 
 ## Rolling reserve {#rolling-reserve}
 
-When using SEPA Direct Debit to fund your account, Swan reserves <mark>what percentage</mark> of your total transaction amount for three business days, after which the reserved amount is released to your account.
+When using SEPA Direct Debit to fund your account, Swan reserves a percentage of your total transaction amount for three business days, after which the reserved amount is released to your account.
 Reserved funds are typically released around 20:00 CET on the last day of the rolling reserve period.
 
 import RollingReserveDefinition from '../../definitions/_rolling-reserve.mdx';
@@ -145,7 +146,7 @@ import DayTimeStandard from '../../partials/_day-time.mdx';
 ## Guides {#guides}
 
 - [Add a funding source](./guide-add-source.mdx)
-- [Initiate a funding request](./guide-initiate-request.mdx)
 - [Cancel a funding source](./guide-cancel-source.mdx)
+- [Initiate a funding request](./guide-initiate-request.mdx)
 - [Cancel a funding request](./guide-cancel-request.mdx)
 - [Get information about a funding request](./guide-get-info.mdx)

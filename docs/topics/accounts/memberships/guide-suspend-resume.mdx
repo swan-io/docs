@@ -4,17 +4,17 @@ title: Suspend or resume a membership
 
 # Suspend or resume a membership
 
-<mark>Add payloads</mark>
-
 You might need to **block** an account member from accessing the account **temporarily**, referred to as **suspend** in the API.
 You can also **resume**, or restore, access for an account member who was temporarily blocked.
 
-You can't suspend the legal representative's account membership.
+If you use Swan's Web Banking interface, your users can also block and resume account memberships from their Web Banking accounts.
 
 To block account members permanently, follow the guide to [disable an account membership](./guide-disable.mdx).
 
-:::tip Web Banking
-Your users can block and resume account memberships from Swan's Web Banking interface.
+:::tip Prerequisites
+- You have the **`canManageAccountMembership`** permission.
+- You have a [**user access token**](../../authentication/index.mdx#tokens-user) associated with the account membership you're suspending or resuming as they are [sensitive operations](../../consent/index.mdx#sensitive).
+- You're not suspending yourself or the legal representative's membership.
 :::
 
 ## Suspend a membership {#guide-suspend}
@@ -23,8 +23,6 @@ Your users can block and resume account memberships from Swan's Web Banking inte
 1. Add the account membership ID.
 1. Add the success payload with the status.
 1. Add any rejections you'd like.
-
-### Mutation: Suspend {#suspend-mutation}
 
 🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU3VzcGVuZE1lbWJlcnNoaXAgewogIHN1c3BlbmRBY2NvdW50TWVtYmVyc2hpcCgKICAgIGlucHV0OiB7IGFjY291bnRNZW1iZXJzaGlwSWQ6ICIkQUNDT1VOVF9NRU1CRVJTSElQX0lEIiB9CiAgKSB7CiAgICAuLi4gb24gU3VzcGVuZEFjY291bnRNZW1iZXJzaGlwU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGFjY291bnRNZW1iZXJzaGlwIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwU3VzcGVuZGVkU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgcmVhc29uCiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBMZWdhbFJlcHJlc2VudGF0aXZlQWNjb3VudE1lbWJlcnNoaXBDYW5ub3RCZVN1c3BlbmRlZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBVc2VyTm90QWxsb3dlZFRvTWFuYWdlQWNjb3VudE1lbWJlcnNoaXBSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBVc2VyTm90QWxsb3dlZFRvU3VzcGVuZEl0c093bkFjY291bnRNZW1iZXJzaGlwUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBhY2NvdW50TWVtYmVyc2hpcElkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
 
@@ -76,15 +74,6 @@ mutation SuspendMembership {
 }
 
 ```
-
-### Payload: Suspend {#suspend-payload}
-
-The payload shows that the account membership is `Suspended`.
-
-```json {} showLineNumbers
-
-```
-
 ## Resume a membership {#guide-resume}
 
 :::note Suspended only
@@ -96,8 +85,6 @@ You can't resume `Disabled`, or permanently blocked, memberships.
 1. Add the account membership ID.
 1. Add the success payload with the status.
 1. Add any rejections you'd like.
-
-### Mutation: Resume {#resume-mutation}
 
 🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVzdW1lTWVtYmVyc2hpcCB7CiAgcmVzdW1lQWNjb3VudE1lbWJlcnNoaXAoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJEFDQ09VTlRfTUVNQkVSU0hJUF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfQ09OU0VOVF9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmVzdW1lQWNjb3VudE1lbWJlcnNoaXBTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBVc2VyTm90QWxsb3dlZFRvTWFuYWdlQWNjb3VudE1lbWJlcnNoaXBSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
 
@@ -131,12 +118,4 @@ mutation ResumeMembership {
     }
   }
 }
-```
-
-### Payload: Resume {#resume-payload}
-
-The payload shows that the account membership is `Enabled`.
-
-```json {} showLineNumbers
-
 ```

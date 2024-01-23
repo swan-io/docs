@@ -103,14 +103,14 @@ flowchart LR
 
 | Digital card status | Explanation |
 |---|---|
-| `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent<br/><br/>**Next steps**:<ul><li>If the account holder consents, the status moves to `InvitationSent`</li><li>If the account holder doesn't consent, the status moves to `Disabled`</li></ul> |
-| `InvitationSent` | An invitation was sent to the invited account member<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
-| `Enabled` | All user information matches, the account member is ID verified, and the account member can use their account membership and corresponding permissions |
+| `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the account holder consents, the status moves to `InvitationSent`</li><li>If the account holder doesn't consent, the status moves to `Disabled`</li></ul> |
+| `InvitationSent` | An invitation was sent to the invited account member.<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
+| `Enabled` | All user information matches, the account member is ID verified, and the account member can use their account membership and corresponding permissions. |
 | `BindingUserError` | The personal information submitted by the invited account member doesn't match the information provided to Swan during account onboarding. The mismatch must be solved before continuing.<br/><br/>Refer to the [section on user binding errors](#binding-error) for more information. |
-| `Suspended` | Account membership is suspended and not available for use<br/><br/>*Account memberships can be suspended for various reasons, including a request from you or the account holder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
-| `Disabled` | Account membership is disabled and no longer available for use |
+| `Suspended` | Account membership is suspended and not available for use.<br/><br/>Account memberships can be suspended for various reasons, including a request from you or the account holder, or a Swan action in the case of suspicious activity.<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
+| `Disabled` | Account membership is disabled, is no longer available for use, and can't be restored. |
 
-### Binding user errors {#status-binding-errors}
+### Binding user errors {#binding-errors}
 
 When the personal information submitted by the invited account member doesn't match the information provided to Swan during account onboarding, the account membership has the status `BindingUserError`.
 
@@ -127,6 +127,21 @@ Account members whose membership status is `BindingUserError` can still access b
 Other account members with the `canManageAccountMembership` permission and status `Enabled` can fix the mismatch.
 If fraud is suspected, suspend the membership instead.
 
+## Removing ID verification {#remove-verification}
+
+Verifying your account members' identity is a required step in most circumstances.
+However, with a detailed agreement with Swan, you might be allowed to bypass ID verification for certain membership permissions.
+
+- To bypass ID verification, the account member **can't have** the following permissions:
+    - `canManageAccountMembership`
+    - `canInitiatePayments`
+    - `canManageBeneficiaries`
+- Whether the account member has `canViewAccount` and `CanManageCards` permissions doesn't impact removing ID verification.
+
+Only after making an agreement with Swan, you can bypass ID verification with your API calls by setting the `idVerified` parameter to `false`.
+
+Contact your Technical Account Manager to ask about removing ID verification.
+
 ## Closed accounts and memberships {#closed}
 
 When Swan [accounts are closed](../index.mdx#closure), the account memberships are impacted as well.
@@ -134,7 +149,16 @@ When Swan [accounts are closed](../index.mdx#closure), the account memberships a
 As soon as an [account status](../index.mdx#statuses) changes to `Closing`, account members can no longer initiate payments or manage account memberships and beneficiaries.
 When the account status changes to `Closed`, account members can view the account for one year, after which all memberships to the closed account are `Disabled`.
 
-## Sequence diagram: Adding account memberships {#diagrams-add}
+## Versioning {#versioning}
+
+Account memberships have a `version` attribute.
+
+When a new membership is added, the `version` is `0`, then increases by a factor of 1 with each change.
+Changes includes including suspending, resuming, and updating the membership.
+
+## Sequence diagram  {#diagrams-add}
+
+> **Adding account memberships**
 
 ```mermaid
 sequenceDiagram
@@ -164,7 +188,6 @@ The requester provides consent (diagram line 4).
 
 - [Add a membership](./guide-add-one.mdx)
 - [Add multiple memberships](./guide-add-multiple.mdx)
-- [Fix a user binding error](./guide-fix-bind.mdx)
-- [Update a membership](./guide-update.mdx)
+- [Update a membership](./guide-update.mdx) (use to fix a user binding error)
 - [Suspend (temporarily block) or resume a membership](./guide-suspend-resume.mdx)
 - [Disable (permanently block) a membership](./guide-disable.mdx)

@@ -96,7 +96,6 @@ module.exports = {
           items: [
             "topics/accounts/memberships/guide-add-one",
             "topics/accounts/memberships/guide-add-multiple",
-            "topics/accounts/memberships/guide-fix-bind",
             "topics/accounts/memberships/guide-update",
             "topics/accounts/memberships/guide-suspend-resume",
             "topics/accounts/memberships/guide-disable",
@@ -108,8 +107,8 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/accounts/funding/guide-add-source",
-            "topics/accounts/funding/guide-initiate-request",
             "topics/accounts/funding/guide-cancel-source",
+            "topics/accounts/funding/guide-initiate-request",
             "topics/accounts/funding/guide-cancel-request",
             "topics/accounts/funding/guide-get-info",
             "topics/accounts/funding/sandbox",

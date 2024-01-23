@@ -11,31 +11,32 @@ You can get information about each funding source with the API.
 The sample query retrieves the statuses for both the funding source and payment mandate, as well as some other information.
 
 1. Call the `fundingSource` query.
-1. Add your `accountId`.
-1. Add all the information you'd like to review. This query includes `statusInfo` and `status` for both the `fundingSource` and `paymentMandate`.
+1. Add your funding source ID.
+1. Add all the information you'd like to review. This query includes information for canceled funding sources because the funding source being used to test has the status `Canceled`.
 
 ## Query {#query}
 
-🔎 [Open the query in API Explorer]
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlSW5mbyB7CiAgZnVuZGluZ1NvdXJjZShpZDogIiRZT1VSX0ZVTkRJTkdfU09VUkNFX0lEIikgewogICAgY3JlYXRlZEF0CiAgICBpZAogICAgbmFtZQogICAgdXBkYXRlZEF0CiAgICBzdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICAgIC4uLiBvbiBDYW5jZWxlZEZ1bmRpbmdTb3VyY2VTdGF0dXNJbmZvIHsKICAgICAgICBlbmFibGVkQXQKICAgICAgICBjYW5jZWxlZEF0CiAgICAgICAgcmVhc29uQ29kZQogICAgICAgIHN0YXR1cwogICAgICB9CiAgICB9CiAgICAuLi4gb24gRGlyZWN0RGViaXRGdW5kaW5nU291cmNlIHsKICAgICAgaWQKICAgICAgbmFtZQogICAgfQogIH0KfQo%3D&tab=api)
 
-```graphql {2,4,14} showLineNumbers
-query GetStatuses {
+```graphql {2} showLineNumbers
+query GetSourceInfo {
   fundingSource(id: "$YOUR_FUNDING_SOURCE_ID") {
+    createdAt
+    id
+    name
+    updatedAt
     statusInfo {
       status
+      ... on CanceledFundingSourceStatusInfo {
+        enabledAt
+        canceledAt
+        reasonCode
+        status
+      }
     }
-    updatedAt
     ... on DirectDebitFundingSource {
       id
-      paymentMandate {
-        id
-        ... on SEPAPaymentDirectDebitMandate {
-          id
-          statusInfo {
-            status
-          }
-        }
-      }
+      name
     }
   }
 }
@@ -43,22 +44,24 @@ query GetStatuses {
 
 ## Payload {#payload}
 
-The payload shows that ...
+The payload shows that this funding source was canceled by the user.
 
-```json {5,12} showLineNumbers
+```json {9,15} showLineNumbers
 {
   "data": {
     "fundingSource": {
-      "statusInfo": {
-        "status": "Enabled"
-      },
-      "updatedAt": "2024-01-22T16:53:54.753Z",
+      "createdAt": "2024-01-22T16:53:34.658Z",
       "id": "$YOUR_FUNDING_SOURCE_ID",
-      "paymentMandate": {
-        "id": "$YOUR_PAYMENT_MANDATE_ID",
-        "statusInfo": {
-          "status": "Enabled"
-        }
+      "name": "Funding Source Name",
+      "updatedAt": "2024-01-22T17:53:44.958Z",
+      "statusInfo": {
+        "status": "Canceled",
+        "enabledAt": {
+          "_tag": "Some",
+          "value": "2024-01-22T16:53:54.753Z"
+        },
+        "canceledAt": "2024-01-22T17:53:44.958Z",
+        "reasonCode": "UserCanceled"
       }
     }
   }

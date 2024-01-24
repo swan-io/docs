@@ -1,0 +1,123 @@
+---
+title: Get a list of transactions
+---
+
+# Get a list of transactions
+
+You can **call the API** to get a list of all transactions executed from an account.
+
+Transaction information is also available on your **Dashboard** > **Data** > **Transactions**, as well as Swan's Web Banking interface if you're using it.
+
+:::tip Prerequisites
+You need a **project access token** call the query.
+:::
+
+## Guide {#guide}
+
+1. Call the `account` query.
+1. Add the account ID.
+1. Add all information you'd like to review about each transaction. This example queries for transactions with the status `Upcoming`, retrieves their future `executionDate`, and [includes the `reference`](../credit-transfers/index.mdx#label-reference).
+1. Add [pagination](../../../developers/using-api/pagination.mdx#arguments) if you're looking for transactions for a certain interval, or you're expecting a long list.
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgVXBjb21pbmdUcmFuc2FjdGlvbnMgewogIGFjY291bnQoYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIpIHsKICAgIGJhbGFuY2VzIHsKICAgICAgYXZhaWxhYmxlIHsKICAgICAgICBjdXJyZW5jeQogICAgICAgIHZhbHVlCiAgICAgIH0KICAgIH0KICAgIHRyYW5zYWN0aW9ucyhmaXJzdDogMTAsIGZpbHRlcnM6IHsgc3RhdHVzOiBVcGNvbWluZyB9KSB7CiAgICAgIGVkZ2VzIHsKICAgICAgICBub2RlIHsKICAgICAgICAgIGFtb3VudCB7CiAgICAgICAgICAgIHZhbHVlCiAgICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB9CiAgICAgICAgICBpZAogICAgICAgICAgdHlwZQogICAgICAgICAgbGFiZWwKICAgICAgICAgIGNyZWF0ZWRBdAogICAgICAgICAgcmVmZXJlbmNlCiAgICAgICAgICBzaWRlCiAgICAgICAgICB1cGRhdGVkQXQKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAuLi4gb24gVXBjb21pbmdUcmFuc2FjdGlvblN0YXR1c0luZm8gewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBleGVjdXRpb25EYXRlCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgICAgdG90YWxDb3VudAogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2,9,24,26} showLineNumbers
+query UpcomingTransactions {
+  account(accountId: "$YOUR_ACCOUNT_ID") {
+    balances {
+      available {
+        currency
+        value
+      }
+    }
+    transactions(first: 2, filters: { status: Upcoming }) {
+      edges {
+        node {
+          amount {
+            value
+            currency
+          }
+          id
+          type
+          label
+          createdAt
+          reference
+          side
+          updatedAt
+          statusInfo {
+            ... on UpcomingTransactionStatusInfo {
+              __typename
+              executionDate
+            }
+          }
+        }
+      }
+      totalCount
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+Review the first two `Upcoming` transactions and their `executionDate`.
+
+```json {27,46} showLineNumbers
+{
+  "data": {
+    "account": {
+      "balances": {
+        "available": {
+          "currency": "EUR",
+          "value": "2075.00"
+        }
+      },
+      "transactions": {
+        "edges": [
+          {
+            "node": {
+              "amount": {
+                "value": "100.00",
+                "currency": "EUR"
+              },
+              "id": "$YOUR_TRANSACTION_ID",
+              "type": "SepaDirectDebitIn",
+              "label": "MyBrand - SWAN",
+              "createdAt": "2024-01-22T18:16:31.801Z",
+              "reference": "YourReference",
+              "side": "Credit",
+              "updatedAt": "2024-01-22T18:16:31.842Z",
+              "statusInfo": {
+                "__typename": "UpcomingTransactionStatusInfo",
+                "executionDate": "2024-04-12T18:00:00.000Z"
+              }
+            }
+          },
+          {
+            "node": {
+              "amount": {
+                "value": "15.00",
+                "currency": "EUR"
+              },
+              "id": "$YOUR_TRANSACTION_ID",
+              "type": "SepaDirectDebitIn",
+              "label": "MyBrand - SWAN",
+              "createdAt": "2024-01-22T18:15:53.765Z",
+              "reference": "YourReference",
+              "side": "Credit",
+              "updatedAt": "2024-01-22T18:15:53.770Z",
+              "statusInfo": {
+                "__typename": "UpcomingTransactionStatusInfo",
+                "executionDate": "2024-01-31T18:00:00.000Z"
+              }
+            }
+          },
+        ],
+        "totalCount": 7
+      }
+    }
+  }
+}
+```

@@ -1,0 +1,545 @@
+---
+title: Get beneficiary information
+---
+
+# Get beneficiary information
+
+import BetaWarning from './_beta.mdx';
+
+<BetaWarning />
+
+Get beneficiary information for a Swan International Credit Transfer.
+
+Use the `internationalBeneficiaryDynamicForms` query to find out what information you'll need to include about your beneficiary, both in the transaction details query and when you initiate your transfer.
+
+:::note Example only
+This example is for **illustrative purposes only** using United States Dollars (USD).
+
+The required key/value pairs change based on currency, country, and route.
+Additionally, the pairs aren't controlled by Swan and can change without advance notice.
+:::
+
+## Step 1: Call query {#call-query-first}
+
+1. Call the `internationalBeneficiaryDynamicForms` query.
+1. Add required, non-dynamic information: enter the `value` and `currency` for `amount`, and optionally, choose a `language`.
+1. Add all desired fields. Make sure to include `remainingFieldsToRefreshCount` for the whole query, plus `refreshDynamicFieldsOnChange` for each field type.
+
+<br />
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgQmVuZWZpY2lhcnlEeW5hbWljRm9ybSB7CiAgaW50ZXJuYXRpb25hbEJlbmVmaWNpYXJ5RHluYW1pY0Zvcm1zKAogICAgYW1vdW50OiB7IHZhbHVlOiAiNTAwIiwgY3VycmVuY3k6ICJVU0QiIH0KICAgIGxhbmd1YWdlOiBlbgogICkgewogICAgc2NoZW1lcyB7CiAgICAgIHR5cGUKICAgICAgdGl0bGUKICAgICAgcmVtYWluaW5nRmllbGRzVG9SZWZyZXNoQ291bnQKICAgICAgZmllbGRzIHsKICAgICAgICBrZXkKICAgICAgICBuYW1lCiAgICAgICAgcmVxdWlyZWQKICAgICAgICAuLi4gb24gRGF0ZUZpZWxkIHsKICAgICAgICAgIGV4YW1wbGUKICAgICAgICAgIHZhbGlkYXRpb25SZWdleAogICAgICAgICAga2V5CiAgICAgICAgICBuYW1lCiAgICAgICAgICByZXF1aXJlZAogICAgICAgIH0KICAgICAgICAuLi4gb24gUmFkaW9GaWVsZCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBrZXkKICAgICAgICAgIG5hbWUKICAgICAgICAgIHJlZnJlc2hEeW5hbWljRmllbGRzT25DaGFuZ2UKICAgICAgICAgIHJlcXVpcmVkCiAgICAgICAgICBhbGxvd2VkVmFsdWVzIHsKICAgICAgICAgICAga2V5CiAgICAgICAgICAgIG5hbWUKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgLi4uIG9uIFNlbGVjdEZpZWxkIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIGtleQogICAgICAgICAgbmFtZQogICAgICAgICAgcmVmcmVzaER5bmFtaWNGaWVsZHNPbkNoYW5nZQogICAgICAgICAgcmVxdWlyZWQKICAgICAgICAgIGFsbG93ZWRWYWx1ZXMgewogICAgICAgICAgICBrZXkKICAgICAgICAgICAgbmFtZQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICAuLi4gb24gVGV4dEZpZWxkIHsKICAgICAgICAgIGRpc3BsYXlGb3JtYXQKICAgICAgICAgIGV4YW1wbGUKICAgICAgICAgIGtleQogICAgICAgICAgbWF4TGVuZ3RoCiAgICAgICAgICBtaW5MZW5ndGgKICAgICAgICAgIG5hbWUKICAgICAgICAgIHJlZnJlc2hEeW5hbWljRmllbGRzT25DaGFuZ2UKICAgICAgICAgIHJlcXVpcmVkCiAgICAgICAgICB2YWxpZGF0aW9uUmVnZXgKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+<details>
+  <summary>**Open to review the query** to compile information for an international beneficiary</summary>
+  <div>
+
+```graphql {3,4,9,25,36,50} showLineNumbers
+query BeneficiaryDynamicForm {
+  internationalBeneficiaryDynamicForms(
+    amount: { value: "500", currency: "USD" }
+    language: en
+  ) {
+    schemes {
+      type
+      title
+      remainingFieldsToRefreshCount
+      fields {
+        key
+        name
+        required
+        ... on DateField {
+          example
+          validationRegex
+          key
+          name
+          required
+        }
+        ... on RadioField {
+          __typename
+          key
+          name
+          refreshDynamicFieldsOnChange
+          required
+          allowedValues {
+            key
+            name
+          }
+        }
+        ... on SelectField {
+          __typename
+          key
+          name
+          refreshDynamicFieldsOnChange
+          required
+          allowedValues {
+            key
+            name
+          }
+        }
+        ... on TextField {
+          displayFormat
+          example
+          key
+          maxLength
+          minLength
+          name
+          refreshDynamicFieldsOnChange
+          required
+          validationRegex
+        }
+      }
+    }
+  }
+}
+```
+  </div>
+</details>
+
+## Step 2: Review first payload {#review-first-payload}
+
+The query example results in the following payload, which provides several key/value pairs.
+
+:::note partial payload
+Note this is a **partial payload** (signaled by the `...` on lines 6 and 118).
+It only includes the route `type` `FedwireLocal` to reduce the length, and **country codes were removed** and replaced with placeholders (lines 76-77).
+The full payload contains over 3,000 lines.
+
+Objects in the API Explorer's secondary terminal (where you receive the payload) are collapsible, so consider collapsing sections of the payload that aren't relevant to your use case.
+:::
+
+From this payload, note the following details:
+
+1. Locate your desired route `type`. This excerpt shows `FedwireLocal` (line 10).
+1. Locate `remainingFieldsToRefreshCount` to know how many dynamic fields you'll need to add in the next section (line 11).
+1. Locate all required key/value pairs. This excerpt contains key/value pairs on lines 14, 31, 42, 53, 70, 83, 94, and 105:
+    - `legalType`*
+    - `abartn`
+    - `accountNumber`
+    - `accountType`
+    - `address.country`*
+    - `address.city`
+    - `address.firstLine`
+    - `address.postCode`
+1. Identify key/value pairs where `"refreshDynamicFieldsOnChange": true`, needed for step 3 (lines 28, 80).
+
+<details>
+  <summary>**Open to review the first payload** for your international beneficiary query</summary>
+  <div>
+
+```json {6,10-11,14,28,31,42,53,70,76-77,80,83,94,105,118} showLineNumbers
+{
+  "data": {
+    "internationalBeneficiaryDynamicForms": {
+      "schemes": [
+        
+        {...}
+        
+        {
+          "title": "Wire",
+          "type": "FedwireLocal"
+          "remainingFieldsToRefreshCount": 2,
+          "fields": [
+            {
+              "key": "legalType",
+              "name": "Recipient type",
+              "required": true,
+              "__typename": "SelectField",
+              "allowedValues": [
+                {
+                  "key": "PRIVATE",
+                  "name": "Person"
+                },
+                {
+                  "key": "BUSINESS",
+                  "name": "Business"
+                }
+              ],
+              "refreshDynamicFieldsOnChange": true
+            },
+            {
+              "key": "abartn",
+              "name": "Fedwire routing number",
+              "required": true,
+              "displayFormat": null,
+              "example": "020123456",
+              "maxLength": 9,
+              "minLength": 9,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^\\d{9}$"
+            },
+            {
+              "key": "accountNumber",
+              "name": "Account number",
+              "required": true,
+              "displayFormat": null,
+              "example": "12345678",
+              "maxLength": 17,
+              "minLength": 4,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^\\d{4,17}$"
+            },
+            {
+              "key": "accountType",
+              "name": "Account type",
+              "required": true,
+              "__typename": "RadioField",
+              "allowedValues": [
+                {
+                  "key": "CHECKING",
+                  "name": "Checking"
+                },
+                {
+                  "key": "SAVINGS",
+                  "name": "Savings"
+                }
+              ],
+              "refreshDynamicFieldsOnChange": false
+            },
+            {
+              "key": "address.country",
+              "name": "Country",
+              "required": true,
+              "__typename": "SelectField",
+              "allowedValues": [
+                {
+                  "key": "XX",
+                  "name": "Country name"
+                },
+              ],
+              "refreshDynamicFieldsOnChange": true
+            },
+            {
+              "key": "address.city",
+              "name": "City",
+              "required": true,
+              "displayFormat": null,
+              "example": "",
+              "maxLength": 255,
+              "minLength": 1,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^.{1,255}$"
+            },
+            {
+              "key": "address.firstLine",
+              "name": "Recipient address",
+              "required": true,
+              "displayFormat": null,
+              "example": "",
+              "maxLength": 255,
+              "minLength": 1,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^.{1,255}$"
+            },
+            {
+              "key": "address.postCode",
+              "name": "ZIP code",
+              "required": true,
+              "displayFormat": null,
+              "example": "",
+              "maxLength": 32,
+              "minLength": 1,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^\\d{5}$"
+            }
+          ],
+        },
+        
+        {...}
+        
+      ]
+    }
+  }
+}
+```
+  </div>
+</details>
+
+## Step 3: Call query with updated dynamic fields {#call-query-update}
+
+1. Call the `internationalBeneficiaryDynamicForms` query again.
+1. Include the key/value pairs marked `"refreshDynamicFieldsOnChange": true` in your updated query.
+    - In this example, the required fields to update are `legalType` and `address.country` (lines 6, 7).
+
+<br />
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgVXBkYXRlUXVlcnkgewogIGludGVybmF0aW9uYWxCZW5lZmljaWFyeUR5bmFtaWNGb3JtcygKICAgIGFtb3VudDogeyB2YWx1ZTogIjUwMCIsIGN1cnJlbmN5OiAiVVNEIiB9CiAgICBsYW5ndWFnZTogZW4KICAgIGR5bmFtaWNGaWVsZHM6IFsKICAgICAgeyBrZXk6ICJsZWdhbFR5cGUiLCB2YWx1ZTogIlBSSVZBVEUiIH0KICAgICAgeyBrZXk6ICJhZGRyZXNzLmNvdW50cnkiLCB2YWx1ZTogIlVTIiB9CiAgICBdCiAgKSB7CiAgICBzY2hlbWVzIHsKICAgICAgdHlwZQogICAgICB0aXRsZQogICAgICByZW1haW5pbmdGaWVsZHNUb1JlZnJlc2hDb3VudAogICAgICBmaWVsZHMgewogICAgICAgIGtleQogICAgICAgIG5hbWUKICAgICAgICByZXF1aXJlZAogICAgICAgIC4uLiBvbiBEYXRlRmllbGQgewogICAgICAgICAgZXhhbXBsZQogICAgICAgICAgdmFsaWRhdGlvblJlZ2V4CiAgICAgICAgICBrZXkKICAgICAgICAgIG5hbWUKICAgICAgICAgIHJlcXVpcmVkCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBSYWRpb0ZpZWxkIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIGtleQogICAgICAgICAgbmFtZQogICAgICAgICAgcmVmcmVzaER5bmFtaWNGaWVsZHNPbkNoYW5nZQogICAgICAgICAgcmVxdWlyZWQKICAgICAgICAgIGFsbG93ZWRWYWx1ZXMgewogICAgICAgICAgICBrZXkKICAgICAgICAgICAgbmFtZQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICAuLi4gb24gU2VsZWN0RmllbGQgewogICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAga2V5CiAgICAgICAgICBuYW1lCiAgICAgICAgICByZWZyZXNoRHluYW1pY0ZpZWxkc09uQ2hhbmdlCiAgICAgICAgICByZXF1aXJlZAogICAgICAgICAgYWxsb3dlZFZhbHVlcyB7CiAgICAgICAgICAgIGtleQogICAgICAgICAgICBuYW1lCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIC4uLiBvbiBUZXh0RmllbGQgewogICAgICAgICAgZGlzcGxheUZvcm1hdAogICAgICAgICAgZXhhbXBsZQogICAgICAgICAga2V5CiAgICAgICAgICBtYXhMZW5ndGgKICAgICAgICAgIG1pbkxlbmd0aAogICAgICAgICAgbmFtZQogICAgICAgICAgcmVmcmVzaER5bmFtaWNGaWVsZHNPbkNoYW5nZQogICAgICAgICAgcmVxdWlyZWQKICAgICAgICAgIHZhbGlkYXRpb25SZWdleAogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+<details>
+  <summary>**Open to review the updated query** with required dynamic fields</summary>
+  <div>
+```graphql {5-7} showLineNumbers
+query UpdateQuery {
+  internationalBeneficiaryDynamicForms(
+    amount: { value: "500", currency: "USD" }
+    language: en
+    dynamicFields: [
+      { key: "legalType", value: "PRIVATE" }
+      { key: "address.country", value: "US" }
+    ]
+  ) {
+    schemes {
+      type
+      title
+      remainingFieldsToRefreshCount
+      fields {
+        key
+        name
+        required
+        ... on DateField {
+          example
+          validationRegex
+          key
+          name
+          required
+        }
+        ... on RadioField {
+          __typename
+          key
+          name
+          refreshDynamicFieldsOnChange
+          required
+          allowedValues {
+            key
+            name
+          }
+        }
+        ... on SelectField {
+          __typename
+          key
+          name
+          refreshDynamicFieldsOnChange
+          required
+          allowedValues {
+            key
+            name
+          }
+        }
+        ... on TextField {
+          displayFormat
+          example
+          key
+          maxLength
+          minLength
+          name
+          refreshDynamicFieldsOnChange
+          required
+          validationRegex
+        }
+      }
+    }
+  }
+}
+
+```
+  </div>
+</details>
+
+
+## Step 4: Review second payload {#review-second-payload}
+
+This second query payload contains two important changes:
+
+1. The  remainingFieldsToRefreshCount now equals zero (line 11). This means you have all of the required key/value pairs and don't need to run the query again.
+1. An additional required key/value pair appeared in the payload (line 105).
+    - Because the `address.country` is `US`, the `address.state` is also required.
+    - Additional key/value pairs can be added to the payload for all refreshable dynamic fields. This example only adds one key/value pair, but the quantity can change based on the information you provide.
+
+:::note partial payload
+As with the payload in step 2, this is a **partial payload** (signaled by the `...` on lines 6 and 132).
+It only includes the route `type` `FedwireLocal` to reduce the length, and **country and state codes were removed** and replaced with placeholders (lines 76-77, 112-113).
+:::
+
+<details>
+  <summary>**Open to review the second payload** for your international beneficiary query</summary>
+  <div>
+```json {6,11,105,109,112-113,132} showLineNumbers
+{
+  "data": {
+    "internationalBeneficiaryDynamicForms": {
+      "schemes": [
+        
+        {...}
+        
+        {
+          "type": "FedwireLocal",
+          "title": "Wire",
+          "remainingFieldsToRefreshCount": 0,
+          "fields": [
+            {
+              "key": "legalType",
+              "name": "Recipient type",
+              "required": true,
+              "__typename": "SelectField",
+              "refreshDynamicFieldsOnChange": true,
+              "allowedValues": [
+                {
+                  "key": "PRIVATE",
+                  "name": "Person"
+                },
+                {
+                  "key": "BUSINESS",
+                  "name": "Business"
+                }
+              ]
+            },
+            {
+              "key": "abartn",
+              "name": "Fedwire routing number",
+              "required": true,
+              "displayFormat": null,
+              "example": "020123456",
+              "maxLength": 9,
+              "minLength": 9,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^\\d{9}$"
+            },
+            {
+              "key": "accountNumber",
+              "name": "Account number",
+              "required": true,
+              "displayFormat": null,
+              "example": "12345678",
+              "maxLength": 17,
+              "minLength": 4,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^\\d{4,17}$"
+            },
+            {
+              "key": "accountType",
+              "name": "Account type",
+              "required": true,
+              "__typename": "RadioField",
+              "refreshDynamicFieldsOnChange": false,
+              "allowedValues": [
+                {
+                  "key": "CHECKING",
+                  "name": "Checking"
+                },
+                {
+                  "key": "SAVINGS",
+                  "name": "Savings"
+                }
+              ]
+            },
+            {
+              "key": "address.country",
+              "name": "Country",
+              "required": true,
+              "__typename": "SelectField",
+              "refreshDynamicFieldsOnChange": true,
+              "allowedValues": [
+                {
+                  "key": "XX",
+                  "name": "Country name"
+                }
+              ]
+            },
+            {
+              "key": "address.city",
+              "name": "City",
+              "required": true,
+              "displayFormat": null,
+              "example": "",
+              "maxLength": 255,
+              "minLength": 1,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^.{1,255}$"
+            },
+            {
+              "key": "address.firstLine",
+              "name": "Recipient address",
+              "required": true,
+              "displayFormat": null,
+              "example": "",
+              "maxLength": 255,
+              "minLength": 1,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^.{1,255}$"
+            },
+            {
+              "key": "address.state",
+              "name": "State",
+              "required": true,
+              "__typename": "SelectField",
+              "refreshDynamicFieldsOnChange": false,
+              "allowedValues": [
+                {
+                  "key": "XX",
+                  "name": "State name"
+                }
+              ]
+            },
+            {
+              "key": "address.postCode",
+              "name": "ZIP code",
+              "required": true,
+              "displayFormat": null,
+              "example": "",
+              "maxLength": 32,
+              "minLength": 1,
+              "refreshDynamicFieldsOnChange": false,
+              "validationRegex": "^\\d{5}$"
+            }
+          ]
+        },
+
+        
+        {...}
+        
+      ]
+    }
+  }
+}
+```
+  </div>
+</details>
+
+## Step 5: Repeat {#repeat}
+
+If `remainingFieldsToRefreshCount` is not equal to zero, **repeat steps three and four** to retrieve the rest of your required key/value pairs.
+
+Repeat until `"remainingFieldsToRefreshCount": 0`.
+
+## Step 6: Compile beneficiary input {#compile-input}
+
+For the next query, you'll need to provide all of the key value pairs for your chosen route `type`.
+
+Consider this beneficiary input example using the `FedwireLocal` key/value pairs, retrieved from the query payloads in steps two and four.
+
+1. key: `legalType`; value: `PRIVATE` or `BUSINESS`
+1. key: `abartn`; value: Fedwire routing number, 9 characters
+1. key: `accountNumber`; value: recipient's account number
+1. key: `accountType`; value: `CHECKING` or `SAVINGS`
+1. key: `address.country`; value: recipient's [2-letter country code in capital letters](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) (`US`)
+1. key: `address.city`; value: recipient's city of residence
+1. key: `address.firstLine`; value: recipient's address
+1. key: `address.state`; value: recipient's 2-letter state code in capital letters (`NY`)
+1. key: `address.postCode`; value: recipient's zip or postal code
+
+Keep your list of beneficiary key/value pairs ready.
+You'll need them to compile the next query and to initiate your transfer.
+
+```graphql title="Beneficiary input example" showLineNumbers
+
+  {...}
+
+      internationalBeneficiary: {
+        name: "Emilia Brunner"
+        currency: "USD"
+        details: [
+          { key: "legalType", value: "PRIVATE" },
+          { key: "abartn", value: "020123456" },
+          { key: "accountNumber", value: "12345678" },
+          { key: "accountType", value: "CHECKING" },
+          { key: "address.country", value: "US" },
+          { key: "address.city", value: "Utica" },
+          { key: "address.firstLine", value: "1 Canoga Blvd" },
+          { key: "address.state", value: "NY" },
+          { key: "address.postCode", value: "13505" }
+        ]
+        route: FedwireLocal
+      }
+
+  {...}
+
+```

@@ -1,0 +1,305 @@
+---
+title: International Credit Transfers
+---
+
+# International Credit Transfers
+
+import BetaWarning from './_beta.mdx';
+
+<BetaWarning />
+
+## Overview {#overview}
+
+Send and receive money almost anywhere in the world using a Swan International Credit Transfer.
+
+With Swan International Credit Transfers, you can:
+
+Exchange euros for a different currency, then transfer that money on either local rails or the SWIFT network.
+1. Transfer euros outside of the eurozone using the SWIFT network.
+1. Receive credit transfers initiated outside of the eurozone. You'll receive these transfers in euros as Swan doesn't store money in currency other than euros.
+
+:::tip statuses
+International Credit Transfers follow the standard [credit transfer status flow](../index.mdx#statuses) with one exception: they can't have the status `Upcoming`.
+:::
+
+### Risk with international transfers {#risk}
+
+International transfers *can* introduce more significant risk than transfers that don't cross borders or change currencies.
+Additionally, since more legal jurisdictions are involved, Swan International Credit Transfers must follow regulations for multiple regions.
+
+Potential areas for increased risk and friction include: instability in the target region, diverging requirements for consent or identity documents, different reactions in the case of disputed transactions, fluctuation in currency value and exchange rate, and more.
+
+Therefore, **Swan prioritizes a risk-based approach**, which applies to you and your end users.
+In addition to increased scrutiny in the transaction-review process, both automated and manual, Swan uses dynamic forms in the International Credit Transfer API.
+
+## Fees {#fees}
+
+There are fees for executing international transfers according to the non-euro currency selected.
+The fees listed on this page are always paid by the Swan user.
+
+:::info Fees can vary
+This section shares Swan's **standard pricing**, which might vary based on your contract.
+:::
+
+| Fee group | Outgoing transfer fee ∗ | Incoming transfer fee ∗∗ |
+| --- | --- | --- |
+| Group 1 | 5€ + 0.6% | 5€ (+ 0.6%) |
+| Group 2 | 5€ + 1% | 5€ (+ 1%) |
+| Group 3 | 5€ + 2% | 5€ (+ 2%) |
+| Group 4 | 5€ + 5% | 5€ (+ 5%) |
+
+∗ For outgoing transfers, an **additional** 5€ fee is charged when sending **USD**, **GBP**, and **EUR** through SWIFT. For these currencies, the total fee is 10€ + the percentage % indicated in the table.<br />
+∗∗ For incoming transfers, the additional fee percentage (in parentheses) only applies to transfers not already converted into euros.
+
+### Fee groups {#fees-groups}
+
+Each country that supports an eligible currency is assigned to a fee group, numbered 1 through 4.
+Swan determined the groups based on how much it costs to execute a transfer with that currency.
+For example, it costs less to execute a transfer between euros and a currency in Group 1 than with a currency in Group 3.
+
+| Group 1 | Group 2 | Group 3 | Group 4 |
+| --- | --- | --- | --- |
+| 🇦🇺 Australia<br />🇨🇦 Canada<br />🇭🇺 Hungary<br />🇳🇿 New Zealand<br />🇸🇪 Sweden<br />🇨🇭 Switzerland<br />🇬🇧 United Kingdom<br />🇺🇸 United States | 🇧🇬 Bulgaria<br />🇭🇰 Hong Kong<br />🇮🇳 India<br />🇮🇩 Indonesia<br />🇯🇵 Japan<br />🇰🇪 Kenya<br />🇲🇾 Malaysia<br />🇲🇽 Mexico<br />🇵🇰 Pakistan<br />🇵🇭 Philippines<br />🇸🇬 Singapore<br />🇱🇰 Sri Lanka<br />🇹🇭 Thailand<br />🇻🇳 Vietnam | 🇦🇷 Argentina<br />🇧🇩 Bangladesh<br />🇧🇷 Brazil<br />🇨🇳 China<br />🇪🇬 Egypt<br />🇬🇭 Ghana<br />🇳🇵 Nepal<br />🇷🇺 Russia<br />🇰🇷 South Korea<br />🇹🇿 Tanzania<br />🇹🇷 Turkey<br />🇺🇬 Uganda<br />🇦🇪 United Emirates | 🇧🇼 Botswana<br />🇨🇱 Chile<br />🇨🇴 Colombia<br />🇨🇷 Costa Rica<br />🇫🇯 Fiji<br />🇮🇱 Israel<br />🇲🇦 Morocco<br />🇿🇦 South Africa<br />🇺🇾 Uruguay<br />🇿🇲 Zambia |
+
+### Currency exchange {#fees-exchange}
+
+Transferring money internationally requires **currency exchange**.
+Think of currency exchange as the cost to sell one currency to purchase another.
+
+#### Outgoing {#fees-exchange-out}
+
+Currency exchange is **always charged for outgoing transfers**.
+Swan uses a **mid-market rate**, or the midpoint between the buy and sell prices for the two currencies involved in a transfer, with **no added spread**.
+For outgoing International Credit Transfers, the `exchangeRate` is determined when a transfer is initiated.
+
+After initiating the transfer, the **exchange rate is locked for one business day**, even if the market rate changes.
+During this time, users must provide consent to execute the transfer.
+If the day passes without consent, Swan no longer guarantees the exchange rate.
+Therefore, the transfer will be rejected and the user would need to initiate a new transfer.
+
+Find the exchange rate, as well as fees, in the success payload of the `initiateInternationalCreditTransfer` mutation, as well as when consenting to the transfer.
+
+#### Incoming {#fees-exchange-in}
+
+For incoming transfers, you can view the `exchangeRate` in the `InternationalCreditTransferTransaction` type, created when the [transaction is booked](#incoming-booked).
+
+Other currency exchange information isn't available for incoming transfers.
+
+Typically, incoming transfers arrive in euros.
+If Swan performs the currency exchange, the additional fees in parentheses listed in the [fees table for incoming transfers](#fees) are charged.
+For example, if Swan receives a transfer in United States Dollars, 0.6% of the received amount is charged along with the standard €5 fee.
+
+### Fee transactions {#fees-transactions}
+
+Fees are charged in their own transaction.
+
+Therefore, each International Credit Transfer **creates two transactions** on your transaction history: one for the transfer and one for fees.
+Fees and transfer transactions are created, booked, and rejected simultaneously.
+Both transactions have the same status.
+
+## Outgoing transfers {#outgoing}
+
+### Payment rails {#outgoing-rails}
+
+Initiate transfers using one of two payment rails: **local** or **SWIFT**.
+Choose your rail when declaring your beneficiary.
+
+| Payment rail | Description | Benefit |
+| --- | --- | --- |
+| **Local bank transfers** | <ul><li>Pay beneficiaries out of a local bank account</li><li>Example: a transfer to the UK would be paid out of an account based in GBP already in the UK</li></ul> | Faster, less expensive |
+| **SWIFT network** | <ul><li>SWIFT: Society for Worldwide Interbank Financial Telecommunication</li><li>Messaging network used by banks worldwide to send and receive financial information</li><li>Takes a bit longer and might involve intermediary banks</li></ul> | Wider availability |
+
+### Available currencies and rails {#outgoing-rails-available}
+
+∗ Currencies marked with a single asterisk can't be sent from a Swan company account.<br />
+∗∗ Currencies marked with two asterisks can't be sent to a Swan company account.
+
+| Currency code | Name | Rails | Fee group |
+| --- | --- | --- | :---: |
+| 🇦🇪 AED | United Arab Emirates Dirham | `emirates` | 3 |
+| 🇦🇷 ARS | Argentine Peso | `argentina` | 3 |
+| 🇦🇺 AUD | Australian Dollar | `australian`, `australian_bpay` | 1 |
+| 🇧🇬 BGN | Bulgarian Lev | `iban` | 2 |
+| 🇧🇷 BRL∗ | Brazilian Real | `brazil` | 3 |
+| 🇨🇦 CAD | Canadian Dollar | `iban` | 1 |
+| 🇨🇭 CHF | Swiss Franc | `iban` | 1 |
+| 🇨🇱 CLP | Chilean Peso | `chile` | 4 |
+| 🇨🇷 CRC | Costa Rican Colón | `costa_rica` | 4 |
+| 🇪🇬 EGP | Egyptian Pound | `iban` | 3 |
+| 🇫🇯 FJD∗∗ | Fijian Dollar | `fiji_mobile` | 4 |
+| 🇬🇧 GBP | Pound Sterling | `iban`, `sort_code` | 1 |
+| 🇭🇰 HKD | Hong Kong Dollar | `hongkong`, `hong_kong_fps` | 2 |
+| 🇭🇺 HUF | Hungarian Forint | `iban`, `hungarian` | 1 |
+| 🇮🇱 ILS | Israeli New Shekel | `israeli_local` | 4 |
+| 🇮🇳 INR | Indian Rupee | `indian`, `indian_upi` | 2 |
+| 🇯🇵 JPY | Japanese Yen | `japanese` | 2 |
+| 🇰🇪 KES | Kenyan Shilling | `kenya_mobile`, `kenya_local` | 2 |
+| 🇰🇷 KRW | South Korean Won | `south_korean_paygate`, `south_korean_paygate_business` | 3 |
+| 🇲🇦 MAD | Moroccan Dirham | `morocco` | 4 |
+| 🇲🇽 MXN | Mexican Peso | `mexican` | 2 |
+| 🇲🇾 MYR∗ | Malaysian Ringgit | `malaysian`, `malaysian_duitnow` | 2 |
+| 🇳🇵 NPR∗∗ | Nepalese Rupee | `nepal` | 3 |
+| 🇳🇿 NZD | New Zealand Dollar | `newzealand` | 1 |
+| 🇵🇭 PHP | Philippine Peso | `philippines`, `philippinesmobile` | 2 |
+| 🇸🇬SGD | Singapore Dollar | `singapore`, `singapore_paynow` | 2 |
+| 🇹🇭 THB | Thai Baht | `thailand` | 2 |
+| 🇹🇷 TRY | Turkish lira | `turkish_earthport` | 3 |
+| 🇺🇸 USD | United States Dollar | `fedwire_local`, `swift_code`, `aba` | 1 |
+| 🇿🇦 ZAR | South African Rand | `southafrica` | 4 |
+
+### Outgoing transaction statuses {#outgoing-statuses}
+
+Outgoing International Credit Transfers cycle through three possible transaction statuses.
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    TI((Transfer<br/>initiated)) -.-> P[Pending]
+    P -.-> B[Booked]
+    P -.-> R[Rejected]
+    subgraph F[Final status]
+        B
+        R
+    end
+    style TI fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+```
+
+| Status | Explanation |
+| --- | --- |
+| `Pending` | Status assigned when the transfer is initiated; the transfer retains the status `Pending` while the transactions associated with the transfer follow the standard transaction status flow |
+| `Booked` | Funds arrived in the beneficiary's account |
+| `Rejected` | Transfer isn't executed for any of several reasons, including insufficient funds, lack of consent, and more |
+
+### Rejected transactions {#outgoing-r-transactions}
+
+There are several reasons an International Credit Transfer might be **rejected**.
+For example, some of the account or bank details might be incorrect, the account might be closed, or a required mandate was never provided.
+
+However, a common reason for all rejections is **insufficient funds**.
+
+For all outgoing International Credit Transfers, Swan checks the account balance to make sure there is enough money to cover both the transfer amount and the fees.
+If there isn't enough money in the account to **cover both the transfer amount and the fees**, the transfer will be **rejected** for insufficient funds.
+
+If a transfer is **rejected**, fees aren't charged.
+If a transfer is **returned**, fees are also refunded.
+
+### Outgoing sequence diagram {#outgoing-diagram}
+
+```mermaid
+sequenceDiagram
+autonumber
+participant U as User
+participant P as Partner (you)
+participant S as Swan
+    U ->> P: Initiates International Credit Transfer
+    P ->> S: Calls `initiateInternationalCreditTransfer` mutation
+    S ->> S: Generates quote
+    S ->> U: Requests consent
+    U ->> P: Consents to transfer
+    P ->> S: Creates transfer and fee transactions
+    S ->> S: Processes and initiates transfer
+```
+
+## API dynamic forms {#dynamic-forms}
+
+Swan's outgoing International Credit Transfer API uses dynamic forms.
+
+Dynamic forms mean that the **information requested changes** based on the information you submit in each query.
+For example, the required information will be different for a beneficiary in India than for a beneficiary in the UK.
+
+### Integrating dynamic forms {#dynamic-forms-integrate}
+
+Dynamic forms make this feature **more challenging to integrate** for your custom integrations.
+
+In your integration, you should only request the most basic information per query, as shown in the API Explorer.
+Specific logic is then required to retrieve the correct key/value pairs according to the information submitted in the dynamic fields.
+
+The concept of **refreshable dynamic fields** is illustrated in the [guide to get beneficiary information]. 
+
+:::caution If they're more complex, why use dynamic forms?
+
+Dynamic forms allow Swan to **collect only required information** from your end users, collected in the format of key/value pairs.
+Some locations require a few key/value pairs while others might require 10 or more.
+
+Since the required information changes frequently and is outside of Swan's control, **dynamic forms provide the best way** to only collect the correct information, which also minimizes risk and ensures secure transactions.
+:::
+
+### Query and mutation order {#dynamic-forms-order}
+
+Due to these dynamic forms, it's critical to **run the queries in order** *before* running the mutation.
+
+1. Optionally, [**get a quote**].
+    - This query provides a quote for the exchange rate and fees.
+    - The quote isn't guaranteed.
+1. Next, get the list of required key/value pairs for your [**beneficiary**].
+    - They're based on the target currency and the beneficiary's country of residence.
+1. Then, get the list of required key/value pairs for your [**transaction**].
+    - They're based on the transfer's destination.
+1. Finally, [**initiate your transfer**].
+
+## Incoming transfers {#incoming}
+
+Debtors can send credit transfers to Swan accounts, regardless of the debtor's account currency.
+Swan's existing BICs—French, German, Spanish, and Dutch—are connected to SWIFT, so Swan users don't need an additional IBAN to receive SWIFT transfers.
+
+### Standard flow {#incoming-flow}
+
+Consider the following image:
+
+![Visual depiction of standard International Credit Transfer flow exactly as described in numbered list](../../../../images/topics/payments/international-incoming-flow.png)
+
+1. Debtor initiates a transfer for £1,000 (GBP) to a Swan account.
+1. Debtor's bank charges them a processing fee.
+1. Debtor's bank then passes the £1,000 to a first intermediary bank.
+1. Swan only has euro-based accounts, so intermediary bank A converts the transfer from GBP to EUR.
+    - They charge a £50 fee to convert the currency.
+    - They charge an additional €100 (EUR) processing fee.
+    - Since the transfer was initiated with shared fees, intermediary bank A deducts their fees directly from the transfer amount.
+1. Intermediary bank A then passes the transfer on to a second intermediary bank.
+    - After the conversion and the fees deduction, €900 remains.
+1. Intermediary bank B charges a €50 processing fee and deducts it from the transfer amount.
+1. Intermediary bank B passes the transfer on to Swan.
+    - After the conversion and the fees deduction, €850 remains.
+1. Swan books the incoming SWIFT transfer's remaining amount (€850) immediately to the Swan user's account.
+1. Swan charges a €5 processing fee separately from the transfer.
+
+### SWIFT details {#incoming-swift}
+
+Incoming International Credit Transfers sent on SWIFT can be sent with one of the following specifications:
+
+1. **`SHA`**: Splits fees between the debtor and their beneficiary. For instance, the payer might pay the fees charges by their bank and the beneficiary might pay the intermediary banks fees. The standard flow example uses `SHA`.
+1. **`BEN`**: All fees paid by the beneficiary by deducting them from the transaction amount.
+1. **`OUR`**: All fees paid by the debtor. Some banks might not respect this, though, so it’s possible to receive an intermediary bank fee as a beneficiary anyway.
+
+### Booked transfers {#incoming-booked}
+
+When Swan receives an incoming International Credit Transfer, Swan books it immediately and creates a `InternationalCreditTransferTransaction` type (step 8 in the standard flow described).
+
+Use the `transactions` query with the ID for your International Credit Transfer to [get information].
+
+### Notifications {#incoming-notifications}
+
+You can use the `Transaction.Booked` [webhook](../../../../developers/using-api/webhooks.mdx) to be notified any time a transaction is created.
+
+```json {3,5,7} ShowLineNumbers
+{
+  "eventDate": "2023-11-22T14:25:32.133Z",
+  "eventId": $WEBHOOK_EVENT_ID,
+  "eventType": "Transaction.Booked",
+  "projectId": $YOUR_PROJECT_ID,
+  "secret": null,
+  "resourceId": $INCOMING_TRANSACTION_ID,
+  "retryCount": 0
+}
+```
+
+## Guides {#guides}
+
+- Outgoing transfers
+    - [Get a quote](./guide-quote.mdx)
+    - [Get beneficiary information](./guide-beneficiary.mdx)
+    - [Get transaction details](./guide-transaction-details.mdx)
+    - [Initiate an outgoing International Credit Transfer](./guide-initiate.mdx)
+- [Get information about a transfer](./guide-get-info.mdx)
+- [Sandbox](./sandbox.mdx), including how to simulate receiving an incoming International Credit Transfer

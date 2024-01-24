@@ -1,0 +1,164 @@
+---
+title: Get payment information
+---
+
+# Get payment information
+
+You can query information about a single payment and multiple payments **using the API**.
+
+:::tip Prerequisites
+You need a **project access token** run these queries.
+:::
+
+## Multiple payments
+
+Get information about multiple payments using the API.
+This sample queries the project's `Rejected` payments.
+
+1. Call the `payments` query.
+1. Add all the information you'd like to review.
+    * The sample query uses several `payments` query options, including filtering for only `Rejected` payments.
+1. Add optional messages to the success payload, either for validation or in case of rejection.
+    * The sample query adds a more thorough `Rejected` payload.
+
+### Query
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgUmVqZWN0ZWRQYXltZW50cyB7CiAgcGF5bWVudHMoZmlsdGVyczogeyBzdGF0dXM6IFJlamVjdGVkIH0pIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFBheW1lbnRSZWplY3RlZCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgcmVhc29uCiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICB1cGRhdGVkQXQKICAgICAgfQogICAgfQogICAgdG90YWxDb3VudAogIH0KfQo%3D&tab=api)
+
+```graphql {2,9-12} showLineNumbers
+query RejectedPayments {
+  payments(filters: { status: Rejected }) {
+    edges {
+      node {
+        createdAt
+        id
+        statusInfo {
+          status
+          ... on PaymentRejected {
+            __typename
+            reason
+            status
+          }
+        }
+        updatedAt
+      }
+    }
+    totalCount
+  }
+}
+```
+
+### Payload
+
+Review all `Rejected` payments for your project and the reason for rejection.
+
+```json showLineNumbers
+{
+  "data": {
+    "payments": {
+      "edges": [
+        {
+          "node": {
+            "createdAt": "2023-03-30T14:12:18.874Z",
+            "id": "$PAYMENT_ID",
+            "statusInfo": {
+              "status": "Rejected",
+              "__typename": "PaymentRejected",
+              "reason": "Expired"
+            },
+            "updatedAt": "2023-03-30T14:12:18.989Z"
+          }
+        },
+        {
+          "node": {
+            "createdAt": "2023-03-30T14:12:18.874Z",
+            "id": "$PAYMENT_ID",
+            "statusInfo": {
+              "status": "Rejected",
+              "__typename": "PaymentRejected",
+              "reason": "AccountNotFound"
+            },
+            "updatedAt": "2023-03-30T14:12:18.989Z"
+          }
+        },
+      ],
+      "totalCount": 2
+    }
+  }
+}
+```
+
+## Single payment
+
+Get information about a single payment using the API.
+
+1. Call the `payment` query.
+1. Enter the [payment ID](./guide-get-payment-id.mdx) for the payment you're querying.
+1. Add all the information you'd like to review. The sample query uses several `payment` query options.
+1. Add optional messages to the success payload, either for validation or in case of rejection.
+
+### Query
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgUGF5bWVudEluZm8gewogIHBheW1lbnQoaWQ6ICIkWU9VUl9QQVlNRU5UX0lEIikgewogICAgY3JlYXRlZEF0CiAgICBpZAogICAgc3RhdHVzSW5mbyB7CiAgICAgIHN0YXR1cwogICAgICAuLi4gb24gUGF5bWVudFJlamVjdGVkIHsKICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgcmVhc29uCiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICAgIHRyYW5zYWN0aW9ucyB7CiAgICAgIHRvdGFsQ291bnQKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgYW1vdW50IHsKICAgICAgICAgICAgY3VycmVuY3kKICAgICAgICAgICAgdmFsdWUKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIHVwZGF0ZWRBdAogIH0KfQo%3D&tab=api)
+
+```graphql {2} showLineNumbers
+query PaymentInfo {
+  payment(id: "$YOUR_PAYMENT_ID") {
+    createdAt
+    id
+    statusInfo {
+      status
+      ... on PaymentRejected {
+        __typename
+        reason
+        status
+      }
+    }
+    transactions {
+      totalCount
+      edges {
+        node {
+          amount {
+            currency
+            value
+          }
+        }
+      }
+    }
+    updatedAt
+  }
+}
+
+```
+
+### Payload
+
+View all the requested information about the single payment.
+
+```json showLineNumbers
+{
+  "data": {
+    "payment": {
+      "createdAt": "2023-05-03T12:34:05.227Z",
+      "id": "$PAYMENT_ID",
+      "statusInfo": {
+        "status": "Initiated"
+      },
+      "transactions": {
+        "totalCount": 1,
+        "edges": [
+          {
+            "node": {
+              "amount": {
+                "currency": "EUR",
+                "value": "250.00"
+              }
+            }
+          }
+        ]
+      },
+      "updatedAt": "2023-05-03T12:34:05.227Z"
+    }
+  }
+}
+```

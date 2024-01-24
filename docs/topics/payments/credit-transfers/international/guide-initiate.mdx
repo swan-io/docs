@@ -1,0 +1,108 @@
+---
+title: Initiate a transfer
+---
+
+# Initiate an International Credit Transfer
+
+import BetaWarning from './_beta.mdx';
+
+<BetaWarning />
+
+Send money around the world using an International Credit Transfer.
+
+:::tip Prerequisites
+1. You ran the queries to get beneficiary information and transaction details, and have your key/value pairs ready to add to the mutation.
+1. Optional: You ran the `internationalCreditTransferQuote` query to understand how much you'll pay.
+1. You have a [user access token](../../../authentication/index.mdx#tokens-user).
+:::
+
+## Guide {#guide}
+
+1. Call the `initiateInternationalCreditTransfer` mutation.
+1. Add all **beneficiary** and **transaction details** key/value pairs.
+1. Add the `route`, as well as an optional Swan `accountId` or `accountNumber`.
+1. Add the `InitiateInternationalCreditTransferResponseSuccessPayload` success payload.
+1. Add the consent URL to the success payload (line 29): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gU2VuZFRyYW5zZmVyIHsKICBpbml0aWF0ZUludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlcigKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRZT1VSX0FDQ09VTlRfSUQiCiAgICAgIGludGVybmF0aW9uYWxCZW5lZmljaWFyeTogewogICAgICAgIG5hbWU6ICJFbWlsaWEgQnJ1bm5lciIKICAgICAgICBjdXJyZW5jeTogIlVTRCIKICAgICAgICBkZXRhaWxzOiBbCiAgICAgICAgICB7IGtleTogImxlZ2FsVHlwZSIsIHZhbHVlOiAiUFJJVkFURSIgfQogICAgICAgICAgeyBrZXk6ICJhYmFydG4iLCB2YWx1ZTogIiRGRURXSVJFX1JPVVRJTkdfTlVNQkVSIiB9CiAgICAgICAgICB7IGtleTogImFjY291bnROdW1iZXIiLCB2YWx1ZTogIiRBQ0NPVU5UX05VTUJFUiIgfQogICAgICAgICAgeyBrZXk6ICJhY2NvdW50VHlwZSIsIHZhbHVlOiAiQ0hFQ0tJTkciIH0KICAgICAgICAgIHsga2V5OiAiYWRkcmVzcy5jb3VudHJ5IiwgdmFsdWU6ICJVUyIgfQogICAgICAgICAgeyBrZXk6ICJhZGRyZXNzLmNpdHkiLCB2YWx1ZTogIlV0aWNhIiB9CiAgICAgICAgICB7IGtleTogImFkZHJlc3MuZmlyc3RMaW5lIiwgdmFsdWU6ICIxIENhbm9nYSBCbHZkIiB9CiAgICAgICAgICB7IGtleTogImFkZHJlc3Muc3RhdGUiLCB2YWx1ZTogIk5ZIiB9CiAgICAgICAgICB7IGtleTogImFkZHJlc3MucG9zdENvZGUiLCB2YWx1ZTogIjEzNTA1IiB9CiAgICAgICAgXQogICAgICAgIHJvdXRlOiBGZWR3aXJlTG9jYWwKICAgICAgfQogICAgICBpbnRlcm5hdGlvbmFsQ3JlZGl0VHJhbnNmZXJEZXRhaWxzOiB7CiAgICAgICAga2V5OiAicmVmZXJlbmNlIgogICAgICAgIHZhbHVlOiAiWW91ciByZWZlcmVuY2UgbWVzc2FnZSIKICAgICAgfQogICAgICB0YXJnZXRBbW91bnQ6IHsgdmFsdWU6ICI1MDAiLCBjdXJyZW5jeTogIlVTRCIgfQogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVJbnRlcm5hdGlvbmFsQ3JlZGl0VHJhbnNmZXJSZXNwb25zZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {5,19,21,29} showLineNumbers
+mutation SendTransfer {
+  initiateInternationalCreditTransfer(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      internationalBeneficiary: {
+        name: "Emilia Brunner"
+        currency: "USD"
+        details: [
+          { key: "legalType", value: "PRIVATE" }
+          { key: "abartn", value: "$FEDWIRE_ROUTING_NUMBER" }
+          { key: "accountNumber", value: "$ACCOUNT_NUMBER" }
+          { key: "accountType", value: "CHECKING" }
+          { key: "address.country", value: "US" }
+          { key: "address.city", value: "Utica" }
+          { key: "address.firstLine", value: "1 Canoga Blvd" }
+          { key: "address.state", value: "NY" }
+          { key: "address.postCode", value: "13505" }
+        ]
+        route: FedwireLocal
+      }
+      internationalCreditTransferDetails: {
+        key: "reference"
+        value: "Your reference message"
+      }
+      targetAmount: { value: "500", currency: "USD" }
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on InitiateInternationalCreditTransferResponseSuccessPayload {
+      __typename
+      payment {
+        createdAt
+        id
+        statusInfo {
+          status
+          ... on PaymentConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+Assuming all required information was added correctly and there was no other reason for the mutation to fail (such as insufficient funds), you'll receive a success payload with all selected information.
+
+This International Credit Transfer was initiated with the status `ConsentPending` (line 9).
+The `consentUrl` (line 12) is sent to your user by text message, unless your configuration is different.
+
+```json {9,12} showLineNumbers
+{
+  "data": {
+    "initiateInternationalCreditTransfer": {
+      "__typename": "InitiateInternationalCreditTransferResponseSuccessPayload",
+      "payment": {
+        "createdAt": "2023-10-27T10:18:18.895Z",
+        "id": "fct_c64ada1e687a7e7cd6d24b32e0de0747",
+        "statusInfo": {
+          "status": "ConsentPending"
+          "__typename": "PaymentConsentPending",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox",
+        },
+        "updatedAt": "2023-10-27T10:18:18.897Z"
+      }
+    }
+  }
+}
+```

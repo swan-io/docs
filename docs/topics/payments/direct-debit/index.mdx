@@ -4,6 +4,8 @@ title: Direct debit
 
 # Direct debit
 
+## Overview {#overview}
+
 Direct debit is initiated by a creditor to debit the account of a debtor.
 Common creditors who use direct debit include untility companies and real estate rental agencies.
 
@@ -17,49 +19,53 @@ Swan also supports **accepting online payments** with direct debit.
 Refer to the [merchants section about supported payment methods](../../merchants/index.mdx#methods) for more information.
 :::
 
-## Swan Internal Direct Debit {#idd}
+### SEPA Direct Debit {#sdd}
 
-Some use cases require that direct debit transactions occur between two Swan accounts in the same project.
-For example, perhaps you want to receive fees directly from your user's Swan account.
-
-Swan Internal Direct Debit is available for both individual and company accounts.
-
-- Use **Standard** to debit **individual** and **company** accounts (natural or legal persons).
-- Use **B2B** to debit only **company** accounts (legal persons).
-
-For Internal Direct Debit, Swan is the creditor bank, the Clearing and Settlement Mechanism (CSM), *and* the debtor bank.
-Internal Direct Debit doesn't pass through the SEPA network.
-Instead, these transactions must follow the rules defined by France's *Code Monétaire et Financier*.
-
-## SEPA Direct Debit {#sdd}
-
-Companies can issue SEPA Direct Debits in euros between accounts in the [Single Euro Payments Area (SEPA)](../../index.mdx#sepa).
+Companies can issue SEPA Direct Debits in euros between accounts in the [Single Euro Payments Area (SEPA)](../index.mdx#sepa).
 There are two types of SEPA Direct Debit: Core and B2B (Business-to-Business).
 
 import SddCoreB2bSchemeTable from '../../partials/_sdd-scheme-table.mdx';
 
 <SddCoreB2bSchemeTable creditorType="Creditor" />
 
-## Direct debit statuses {#statuses}
+### Swan Internal Direct Debit {#idd}
+
+Some use cases require that direct debit transactions occur between two Swan accounts in the same project.
+For example, perhaps you want to receive fees directly from your user's Swan account.
+
+Swan Internal Direct Debit is available for both individual and company accounts.
+
+- **Standard**: debit **individual** and **company** accounts (natural or legal persons)
+- **B2B**: debit only **company** accounts (legal persons)
+
+For Internal Direct Debit, Swan is the creditor bank, the Clearing and Settlement Mechanism (CSM), *and* the debtor bank.
+Internal Direct Debit doesn't pass through the SEPA network.
+Instead, these transactions must follow the rules defined by France's *Code Monétaire et Financier*.
+
+### Direct debit statuses {#statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    TI((Debit<br/>instructed)) -.-> R[Rejected]
-    TI -.-> P[Pending]
-    TI -.-> U[Upcoming]
+    DI((Debit<br/>instructed)) -.-> R[Rejected]
+    U -.-> P[Pending]
+    DI -.-> U[Upcoming]
     U -.-> R[Rejected]
-    U -.-> P
-    P -.-> B[Booked]
+    DI -.-> P
+    P --> B[Booked]
     U -.-> CD[Canceled]
     P -.-> R
+    subgraph S[Successful]
+        B
+    end
     subgraph F[Final status]
         CD
-        B
         R
+        S
     end
-    style TI fill:#D4D3D5,stroke:#514F59
+    style DI fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
+    style S fill:#dfedf2,stroke:#4d8296,stroke-width:3px
 ```
 
 :::info Account balances
@@ -67,13 +73,17 @@ There's a **close link** between **transaction statuses** and **account balances
 Refer to explanations of types of account balances in the [accounts section](../../accounts/index.mdx#balances).
 :::
 
+<mark>Please confirm</mark><br /><br />
+
 | Transaction status | Explanation |
 |---|---|
-| `Upcoming` | Transfers are initiated and consent was granted, but the transfers aren't executed yet. Often, this is because the transfer was planned for a future date using the `requestedExecutionAt` input. `Upcoming` transfers don't impact the account balance.<br /><br />*International Credit Transfers can't be `Upcoming`* |
-| `Pending` | Transfers are initiated, consent was granted, and the transfer is set to happen within a few days. The transfers aren't debited from the account yet, but they impact the account's `Pending` balance.<br /><br />Sometimes, transfers might stay `Pending` for longer than expected. This could be for a few reasons, including the possibility that the transaction required a manual review from Swan, or a SEPA Credit Transfer was initiated on a [TARGET closing day](../index.mdx#sepa-availability). |
-| `Booked` | Completed credit transfers that are displayed on the official account statement. These transfers have been debited from the account, and they impact the account's `Booked` balance. |
-| `Canceled` | An `Upcoming` transaction is canceled by someone with the right to do so, such as the [account holder](../../../glossary.mdx#account-holder), an [account member](../../../glossary.mdx#account-membership), or a [merchant](../../../glossary.mdx#merchants). Only transfers with the status `Upcoming` can be `Canceled`, and `Canceled` transfers don't impact the account balance. |
-| `Rejected` | Declined or refused transfers. For example, the beneficiary account might be closed, or the account's `Available` balance isn't sufficient to complete the transfer without resulting in a negative balance. |
+| `Upcoming` | Debit instruction is initiated and consent was granted, but the debit isn't executed yet. Often, this is because the debit was planned for a future date using the `requestedExecutionAt` input. `Upcoming` debits don't impact the account balance. |
+| `Pending` | Debits are initiated, consent was granted, and the debit is set to happen within a few days. The debits aren't debited from the account yet, but they impact the account's `Pending` balance.<br /><br />Sometimes, debits might stay `Pending` for longer than expected. This could be for a few reasons, including the possibility that the transaction required a manual review from Swan, or a SEPA Direct Debit was initiated on a [TARGET closing day](../index.mdx#sepa-availability). |
+| `Booked` | Completed debits that are displayed on the official account statement. These debits have been debited from the account, and they impact the account's `Booked` balance. |
+| `Canceled` | An `Upcoming` transaction is canceled by someone with the right to do so, such as the [account holder](../../../glossary.mdx#account-holder), an [account member](../../../glossary.mdx#account-membership), or a [merchant](../../../glossary.mdx#merchants). Only debits with the status `Upcoming` can be `Canceled`, and `Canceled` debits don't impact the account balance. |
+| `Rejected` | Declined or refused debits. For example, the beneficiary account might be closed, or the account's `Available` balance isn't sufficient to complete the debit without resulting in a negative balance. |
+
+## Received direct debit instruction {#recieved-instruction}
 
 ## Payment mandates {#mandates}
 
@@ -116,7 +126,7 @@ flowchart LR
 ```
 
 | Payment mandate status | Explanation |
-| :---: |---|
+| --- |---|
 | `ConsentPending` | B2B payment mandate was added while [setting up a direct debit] with the `mutation` mutation<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`</li><li>If the <mark>something</mark>, the status moves to `Suspended`</li><li>If the debtor doesn't consent to the mandate, the status moves to `Canceled`</li></ul> |
 | `Enabled` | Payment mandate is valid and direct debit instructions can be issued |
 | `Suspended` | Payment mandate was suspended  |
@@ -124,28 +134,41 @@ flowchart LR
 
 ## R-transactions {#r-transactions}
 
-
-
+After direct debits are instructed, other transactions, such as R-transactions, can be linked to the direct debit transaction.
 
 ### Rejected {#rejected}
 
-- Any account member with CanInitiatePayments rights on the account for which a SEPA direct debit instruction has been received can contact Swan to ask for a rejection of the concerned transaction while it still has Upcoming status (i.e. before it is actually debited).
-- The transaction is then switched to Rejected status.
-- This does not impact the account's available balance.
+If you need to request that an `Upcoming` SEPA Direct Debit (Core or B2B) instruction be `Rejected`, a qualified account member can contact Swan directly.
+Qualified account members are those with the `CanInitiatePayments` membership permission.
+
+If your request to reject the transaction is accepted, the status changes from `Upcoming` to `Rejected`.
+`Rejected` transactions don't impact the account balance.
 
 ### Refunded {#refunded}
 
-- Any account member with CanInitiatePayments rights on the account for which a SEPA direct debit Core instruction has been debited (therefore in the Booked status) can contact Swan to ask for a refund (within 8 weeks following debit date) of the concerned transaction.
-- A SepaDirectDebitOutReturn transaction is then created with Booked status.
+If you need to request a refund for a `Booked` SEPA Direct Debit Core transaction, a qualified account member can contact Swan directly.
+Qualified account members are those with the `CanInitiatePayments` membership permission.
+Confirm you're within the [time window allowed](#sdd).
+
+If the refund is approved, a new `SepaDirectDebitOutReturn` transaction is created with the status `Booked`.
 
 ### Reversed {#reversed}
 
-- A received SEPA direct debit transaction with Booked status can be reversed by the creditor up to 5 days following the debit date.
-- A SepaDirectDebitOutReversal transaction is then created with Booked status.
+Creditors can reverse `Booked` SEPA Direct Debit transactions within a specific [time window](#sdd).
+In the case of a reversal, a new `SepaDirectDebitOutReversal` transaction is created with the status `Booked`.
 
 ### Canceled {#canceled}
 
-- A received SEPA direct debit instruction with Upcoming status can be canceled by the creditor and is then automatically switched to Canceled status.
-- This transaction will not impact the account's available balance.
+Creditors can cancel `Upcoming` SEPA Direct Debit transactions.
+
+If a creditor cancels an `Upcoming` transaction, the status automatically changes to `Canceled`.
+`Canceled` transactions don't impact the account balance.
 
 ## Guides {#guides}
+
+- Payment mandates
+    - [Add a payment mandate](./guide-add-mandate.mdx)
+    - [Update a payment mandate](./guide-update-mandate.mdx)
+    - [Suspend a payment mandate](./guide-suspend-mandate.mdx)
+    - [Enable a payment mandate](./guide-enable-mandate.mdx)
+    - [Cancel a payment mandate](./guide-cancel-mandate.mdx)

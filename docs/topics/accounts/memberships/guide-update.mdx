@@ -23,22 +23,24 @@ If you use Swan's Web Banking interface, your users can also update account memb
 1. Add the account membership ID and your redirect URL.
 1. Add any information or permissions you'd like to update.
 1. Add the success payload with the `consentUrl`.
-1. Add any rejections you'd like.
+1. Add rejections (not shown).
 1. Get the `consentUrl` from the payload and send it to the user updating the account membership. Their consent finalizes the update.
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlTWVtYmVyc2hpcCB7CiAgdXBkYXRlQWNjb3VudE1lbWJlcnNoaXAoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJEFDQ09VTlRfTUVNQkVSU0hJUF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfQ09OU0VOVF9SRURJUkVDVF9VUkwiCiAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IHRydWUKICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogdHJ1ZQogICAgICBjYW5NYW5hZ2VDYXJkczogdHJ1ZQogICAgICBjYW5WaWV3QWNjb3VudDogdHJ1ZQogICAgfQogICkgewogICAgLi4uIG9uIFVwZGF0ZUFjY291bnRNZW1iZXJzaGlwU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvbnNlbnQgewogICAgICAgIGNvbnNlbnRVcmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwQ2Fubm90QmVVcGRhdGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlTWVtYmVyc2hpcCB7CiAgdXBkYXRlQWNjb3VudE1lbWJlcnNoaXAoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJFlPVVJfTUVNQkVSU0hJUF9JRCIKICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IGZhbHNlCiAgICAgIGNhbk1hbmFnZUJlbmVmaWNpYXJpZXM6IGZhbHNlCiAgICAgIGNhbk1hbmFnZUNhcmRzOiBmYWxzZQogICAgICBjYW5Jbml0aWF0ZVBheW1lbnRzOiBmYWxzZQogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICAgIGVtYWlsOiAiJE1FTUJFUl9FTUFJTCIKICAgICAgdGF4SWRlbnRpZmljYXRpb25OdW1iZXI6ICIkTUVNQkVSX1RBWF9JRCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50TWVtYmVyc2hpcFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcENhbm5vdEJlVXBkYXRlZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIEludmFsaWRQaG9uZU51bWJlclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICAgIC4uLiBvbiBQZXJtaXNzaW9uQ2Fubm90QmVHcmFudGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIFVzZXJOb3RBbGxvd2VkVG9NYW5hZ2VBY2NvdW50TWVtYmVyc2hpcFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogIH0KfQo%3D&tab=api)
 
-```graphql {4-5} showLineNumbers
+```graphql {4} showLineNumbers
 mutation UpdateMembership {
   updateAccountMembership(
     input: {
-      accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
-      consentRedirectUrl: "$YOUR_CONSENT_REDIRECT_URL"
-      canInitiatePayments: true
-      canManageAccountMembership: true
-      canManageBeneficiaries: true
-      canManageCards: true
+      accountMembershipId: "$YOUR_MEMBERSHIP_ID"
       canViewAccount: true
+      canManageAccountMembership: false
+      canManageBeneficiaries: false
+      canManageCards: false
+      canInitiatePayments: false
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      email: "$MEMBER_EMAIL"
+      taxIdentificationNumber: "$MEMBER_TAX_ID"
     }
   ) {
     ... on UpdateAccountMembershipSuccessPayload {
@@ -47,9 +49,19 @@ mutation UpdateMembership {
         consentUrl
       }
     }
-    ... on AccountMembershipCannotBeUpdatedRejection {
-      id
-      message
+  }
+}
+
+```
+
+```json title="Payload" {6} showLineNumbers
+{
+  "data": {
+    "updateAccountMembership": {
+      "__typename": "UpdateAccountMembershipSuccessPayload",
+      "consent": {
+         "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+      }
     }
   }
 }

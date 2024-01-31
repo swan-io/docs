@@ -1,0 +1,97 @@
+---
+title: Get a quote
+---
+
+# Get a quote
+
+import BetaWarning from './_beta.mdx';
+
+<BetaWarning />
+
+Get a quote for a Swan International Credit Transfer.
+
+Call the `internationalCreditTransferQuote` query to get a quote for your transfer, which includes:
+
+- Current `exchangeRate`.
+- Amount you're sending in your currency (`sourceAmount`).
+- Fees (`feeAmount`).
+- Amount your recipient should receive in their currency (`targetAmount`).
+
+:::note For information only
+The exchange rate in the quote is for your information only, so **running this query is optional**.
+Only after initiating an International Credit Transfer is the exchange rate locked for one business day.
+:::
+
+## Guide {#guide}
+
+1. Call the `internationalCreditTransferQuote` query.
+1. Add your account ID.
+1. Check the boxes for all fields:
+    - `targetAmount`, `currency`, and `value`
+    - `exchangeRate`
+    - `feesAmount`, `currency`, and `value`
+    - `sourceAmount`, `currency`, and `value`
+    - `targetAmount`, `currency`, and `value`
+1. For `targetAmount`, enter the currency and, for value, the amount you'd like to send.
+    - Use 3-letter currency codes with capital letters, according to [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217).
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgZ2V0UXVvdGUgewogIGludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlclF1b3RlKAogICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgIHRhcmdldEFtb3VudDogeyB2YWx1ZTogIjUwMCIsIGN1cnJlbmN5OiAiVVNEIiB9CiAgKSB7CiAgICBleGNoYW5nZVJhdGUKICAgIGZlZXNBbW91bnQgewogICAgICBjdXJyZW5jeQogICAgICB2YWx1ZQogICAgfQogICAgc291cmNlQW1vdW50IHsKICAgICAgY3VycmVuY3kKICAgICAgdmFsdWUKICAgIH0KICAgIHRhcmdldEFtb3VudCB7CiAgICAgIGN1cnJlbmN5CiAgICAgIHZhbHVlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {3-4,6-7,11,15} showLineNumbers
+query getQuote {
+  internationalCreditTransferQuote(
+    accountId: "$YOUR_ACCOUNT_ID"
+    targetAmount: { value: "500", currency: "USD" }
+  ) {
+    exchangeRate
+    feesAmount {
+      currency
+      value
+    }
+    sourceAmount {
+      currency
+      value
+    }
+    targetAmount {
+      currency
+      value
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+In the response, you'll receive:
+
+1. The exchange rate.
+1. The currency and value amount for both the fees (`feesAmount`) and the transfer (`sourceAmount`).
+    - The debtor must have sufficient funds to cover `feesAmount` **and** `sourceAmount`.
+1. The `targetAmount`, or the amount the beneficiary will receive.
+
+In this example, the payer must have at least **482.58 EUR** in their account.
+The beneficiary will receive **500 USD**.
+
+```json {4,7,11,15} showLineNumbers
+{
+  "data": {
+    "internationalCreditTransferQuote": {
+      "exchangeRate": "1.09003",
+      "feesAmount": {
+        "currency": "EUR",
+        "value": "7.75"
+      },
+      "sourceAmount": {
+        "currency": "EUR",
+        "value": "458.70"
+      },
+      "targetAmount": {
+        "currency": "USD",
+        "value": "500.00"
+      }
+    }
+  }
+}
+```

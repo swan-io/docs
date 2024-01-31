@@ -1,0 +1,120 @@
+---
+title: Get transaction details
+---
+
+# Get transaction details
+
+import BetaWarning from './_beta.mdx';
+
+<BetaWarning />
+
+Get transaction details for a Swan International Credit Transfer.
+
+Use the `internationalCreditTransferTransactionDetailsDynamicForm` query to find out what information you'll need to include about your transaction when you initiate your transfer.
+
+:::note Example only
+This example is for **illustrative purposes only** using United States Dollars (USD) and the `FedwireLocal` route.
+
+The required key/value pairs change based on currency, country, and route.
+Additionally, the pairs aren't controlled by Swan and can change without advance notice.
+:::
+
+## Step 1: Call query {#call-query-first}
+
+1. Call the `internationalCreditTransferTransactionDetailsDynamicForm` query.
+1. Enter the beneficiary's `name`, as well as the `currency` and `route`.
+1. Enter all beneficiary information, including the key/value pairs from the `internationalBeneficiaryDynamicForms` query (lines 8-16).
+    - Note: Even if you are testing this feature in Sandbox, the `abartn` (Fedwire routing number) and `accountNumber` keys **must contain valid numbers**.
+1. In the `amount` object, enter the `value` and `currency`. Also, choose a `language`.
+1. Add all desired fields. Make sure to include `remainingFieldsToRefreshCount` for the whole query, plus `refreshDynamicFieldsOnChange` for each field type.
+
+*Note: The sample doesn't include all API unions, but they're included if you open the query in API Explorer.*
+
+🔎 [Open the query in API Explorer](https://explorer.preprod.swan.io?query=cXVlcnkgVHJhbnNhY3Rpb25EZXRhaWxzRHluYW1pY0Zvcm0gewogIGludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlclRyYW5zYWN0aW9uRGV0YWlsc0R5bmFtaWNGb3JtKAogICAgaW50ZXJuYXRpb25hbEJlbmVmaWNpYXJ5OiB7CiAgICAgIG5hbWU6ICJFbWlsaWEgQnJ1bm5lciIKICAgICAgY3VycmVuY3k6ICJVU0QiCiAgICAgIHJvdXRlOiBGZWR3aXJlTG9jYWwKICAgICAgZGV0YWlsczogWwogICAgICAgIHsga2V5OiAibGVnYWxUeXBlIiwgdmFsdWU6ICJQUklWQVRFIiB9CiAgICAgICAgeyBrZXk6ICJhYmFydG4iLCB2YWx1ZTogIiRGRURXSVJFX1JPVVRJTkdfTlVNQkVSIiB9CiAgICAgICAgeyBrZXk6ICJhY2NvdW50TnVtYmVyIiwgdmFsdWU6ICIkQUNDT1VOVF9OVU1CRVIiIH0KICAgICAgICB7IGtleTogImFjY291bnRUeXBlIiwgdmFsdWU6ICJDSEVDS0lORyIgfQogICAgICAgIHsga2V5OiAiYWRkcmVzcy5jb3VudHJ5IiwgdmFsdWU6ICJVUyIgfQogICAgICAgIHsga2V5OiAiYWRkcmVzcy5jaXR5IiwgdmFsdWU6ICJVdGljYSIgfQogICAgICAgIHsga2V5OiAiYWRkcmVzcy5maXJzdExpbmUiLCB2YWx1ZTogIjEgQ2Fub2dhIEJsdmQiIH0KICAgICAgICB7IGtleTogImFkZHJlc3Muc3RhdGUiLCB2YWx1ZTogIk5ZIiB9CiAgICAgICAgeyBrZXk6ICJhZGRyZXNzLnBvc3RDb2RlIiwgdmFsdWU6ICIxMzUwNSIgfQogICAgICBdCiAgICB9CiAgICB0YXJnZXRBbW91bnQ6IHsgdmFsdWU6ICI1MDAiLCBjdXJyZW5jeTogIlVTRCIgfQogICAgbGFuZ3VhZ2U6IGVuCiAgKSB7CiAgICBmaWVsZHMgewogICAgICBrZXkKICAgICAgbmFtZQogICAgICByZXF1aXJlZAogICAgICAuLi4gb24gRGF0ZUZpZWxkIHsKICAgICAgICBleGFtcGxlCiAgICAgICAgdmFsaWRhdGlvblJlZ2V4CiAgICAgICAga2V5CiAgICAgICAgbmFtZQogICAgICAgIHJlcXVpcmVkCiAgICAgIH0KICAgICAgLi4uIG9uIFJhZGlvRmllbGQgewogICAgICAgIF9fdHlwZW5hbWUKICAgICAgICBhbGxvd2VkVmFsdWVzIHsKICAgICAgICAgIGtleQogICAgICAgICAgbmFtZQogICAgICAgIH0KICAgICAgICBrZXkKICAgICAgICBuYW1lCiAgICAgICAgcmVmcmVzaER5bmFtaWNGaWVsZHNPbkNoYW5nZQogICAgICAgIHJlcXVpcmVkCiAgICAgIH0KICAgICAgLi4uIG9uIFNlbGVjdEZpZWxkIHsKICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgYWxsb3dlZFZhbHVlcyB7CiAgICAgICAgICBrZXkKICAgICAgICAgIG5hbWUKICAgICAgICB9CiAgICAgICAga2V5CiAgICAgICAgbmFtZQogICAgICAgIHJlZnJlc2hEeW5hbWljRmllbGRzT25DaGFuZ2UKICAgICAgICByZXF1aXJlZAogICAgICB9CiAgICAgIC4uLiBvbiBUZXh0RmllbGQgewogICAgICAgIGRpc3BsYXlGb3JtYXQKICAgICAgICBleGFtcGxlCiAgICAgICAga2V5CiAgICAgICAgbWF4TGVuZ3RoCiAgICAgICAgbWluTGVuZ3RoCiAgICAgICAgbmFtZQogICAgICAgIHJlZnJlc2hEeW5hbWljRmllbGRzT25DaGFuZ2UKICAgICAgICByZXF1aXJlZAogICAgICAgIHZhbGlkYXRpb25SZWdleAogICAgICB9CiAgICB9CiAgICByZW1haW5pbmdGaWVsZHNUb1JlZnJlc2hDb3VudAogIH0KfQo%3D&tab=api)
+
+```graphql {4-6,8-16,19-20,67} showLineNumbers
+query TransactionDetailsDynamicForm {
+  internationalCreditTransferTransactionDetailsDynamicForm(
+    internationalBeneficiary: {
+      name: "Emilia Brunner"
+      currency: "USD"
+      route: FedwireLocal
+      details: [
+        { key: "legalType", value: "PRIVATE" }
+        { key: "abartn", value: "$FEDWIRE_ROUTING_NUMBER" }
+        { key: "accountNumber", value: "$ACCOUNT_NUMBER" }
+        { key: "accountType", value: "CHECKING" }
+        { key: "address.country", value: "US" }
+        { key: "address.city", value: "Utica" }
+        { key: "address.firstLine", value: "1 Canoga Blvd" }
+        { key: "address.state", value: "NY" }
+        { key: "address.postCode", value: "13505" }
+      ]
+    }
+    targetAmount: { value: "500", currency: "USD" }
+    language: en
+  ) {
+    remainingFieldsToRefreshCount
+    fields {
+      key
+      name
+      required
+    }
+  }
+}
+```
+
+## Step 2: Review first payload {#review-first-payload}
+
+The query example results in the following response.
+
+In this case, there are no `remainingFieldsToRefreshCount`, and only one additional (optional) key/value pair.
+Please remember that your real query responses can be different.
+
+```json {6,17} showLineNumbers
+{
+  "data": {
+    "internationalCreditTransferTransactionDetailsDynamicForm": {
+      "fields": [
+        {
+          "key": "reference",
+          "name": "Transfer reference",
+          "required": false,
+          "displayFormat": null,
+          "example": null,
+          "maxLength": 30,
+          "minLength": null,
+          "refreshDynamicFieldsOnChange": false,
+          "validationRegex": null
+        }
+      ],
+      "remainingFieldsToRefreshCount": 0
+    }
+  }
+}
+```
+
+## Step 3: Repeat {#repeat}
+
+If `remainingFieldsToRefreshCount` isn't zero, update all `dynamicFields` with the required key/value pairs and run the query again.
+Refer to steps three and four of the [beneficiary query guide](./guide-beneficiary.mdx#call-query-update) for examples.
+
+Repeat until `"remainingFieldsToRefreshCount": 0`.
+
+## Step 4: Compile beneficiary input {#compile-input}
+
+Keep your list of transaction details key/value pairs ready.
+You'll need them to initiate your transfer.
+
+```graphql title="Transaction details input example" showLineNumbers
+
+  {...}
+  
+      internationalCreditTransferDetails: {
+        key: "reference"
+        value: "Your reference message"
+      }
+      
+  {...}
+  
+```

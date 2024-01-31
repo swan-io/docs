@@ -1,0 +1,192 @@
+---
+title: Get transaction information
+---
+
+# Get transaction information
+
+You can query information about a single transaction and multiple transactions **using the API**.
+Transaction information is also available on **Dashboard** > **Data** > **Transactions**.
+
+:::tip Prerequisites
+You need a **project access token** run these queries.
+:::
+
+## Multiple transactions {#guide-multiple}
+
+Get information about multiple transactions using the API.
+This sample queries the project's `Booked` transactions.
+
+1. Call the `transactions` query.
+1. Add all the information you'd like to review.
+    - The sample query uses several `transactions` query options, including filtering for only `Booked` transactions and adding the transaction type.
+    - It also exposes the creditors' full IBANs and BICs for SEPA Credit Transfers.
+1. Add optional messages to the success payload, either for validation or in case of rejection.
+    - The sample query adds a more thorough `Booked` payload.
+
+### Query {#query-multiple}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgQm9va2VkVHJhbnNhY3Rpb25zIHsKICB0cmFuc2FjdGlvbnMoZmlsdGVyczogeyBzdGF0dXM6IEJvb2tlZCB9KSB7CiAgICBlZGdlcyB7CiAgICAgIG5vZGUgewogICAgICAgIGFtb3VudCB7CiAgICAgICAgICBjdXJyZW5jeQogICAgICAgICAgdmFsdWUKICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBCb29rZWRUcmFuc2FjdGlvblN0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGJvb2tpbmdEYXRlCiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB2YWx1ZURhdGUKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdHlwZQogICAgICAgIC4uLiBvbiBTRVBBQ3JlZGl0VHJhbnNmZXJUcmFuc2FjdGlvbiB7CiAgICAgICAgICBjcmVkaXRvciB7CiAgICAgICAgICAgIEJJQwogICAgICAgICAgICBJQkFOCiAgICAgICAgICAgIG1hc2tlZElCQU4KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIHRvdGFsQ291bnQKICB9Cn0K&tab=api)
+
+```graphql {2,11-15,19-23} showLineNumbers
+query BookedTransactions {
+  transactions(filters: { status: Booked }) {
+    edges {
+      node {
+        amount {
+          currency
+          value
+        }
+        statusInfo {
+          status
+          ... on BookedTransactionStatusInfo {
+            __typename
+            bookingDate
+            status
+            valueDate
+          }
+        }
+        type
+        ... on SEPACreditTransferTransaction {
+          creditor {
+            BIC
+            IBAN
+            maskedIBAN
+          }
+        }
+      }
+    }
+    totalCount
+  }
+}
+
+```
+
+### Payload {#payload-multiple}
+
+Review all `Booked` transactions for your project, the type of transaction, and the BIC and IBAN for all creditors.
+
+```json {12,17,19-20} showLineNumbers
+{
+  "data": {
+    "transactions": {
+      "edges": [
+        {
+          "node": {
+            "amount": {
+              "currency": "EUR",
+              "value": "22.00"
+            },
+            "statusInfo": {
+              "status": "Booked",
+              "__typename": "BookedTransactionStatusInfo",
+              "bookingDate": "2024-01-25T18:27:27.987Z",
+              "valueDate": "2024-01-25T18:27:27.987Z"
+            },
+            "type": "SepaInstantCreditTransferIn",
+            "creditor": {
+              "BIC": "SWNBFR22",
+              "IBAN": "FR7699999001001510219788187",
+              "maskedIBAN": "FR7699999001001510******187"
+            }
+          }
+        },
+        {
+          "node": {
+            "amount": {
+              "currency": "EUR",
+              "value": "15.00"
+            },
+            "statusInfo": {
+              "status": "Booked",
+              "__typename": "BookedTransactionStatusInfo",
+              "bookingDate": "2024-01-25T18:25:16.415Z",
+              "valueDate": "2024-01-25T18:25:16.415Z"
+            },
+            "type": "SepaCreditTransferOutReturn",
+            "creditor": {
+              "BIC": "SWNBFR22",
+              "IBAN": "FR7699999001001510219788187",
+              "maskedIBAN": "FR7699999001001510******187"
+            }
+          }
+        }
+      ],
+      "totalCount": 2
+    }
+  }
+}
+```
+
+## Single transaction {#guide-single}
+
+Get information about a single transaction using the API.
+
+1. Call the `transaction` query.
+1. Enter the [transaction ID](./guide-get-transaction-id.mdx) for the transaction you're querying.
+1. Add all the information you'd like to review.
+    * The sample query uses several `transaction` query options, including the `counterparty`, custom `label`, and `reference`.
+1. Add optional messages to the success payload, either for validation or in case of rejection.
+
+### Query {#query-single}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgVHJhbnNhY3Rpb25JbmZvIHsKICB0cmFuc2FjdGlvbihpZDogIiRZT1VZUl9UUkFOU0FDVElPTl9JRCIpIHsKICAgIGFjY291bnQgewogICAgICBJQkFOCiAgICB9CiAgICBhbW91bnQgewogICAgICBjdXJyZW5jeQogICAgICB2YWx1ZQogICAgfQogICAgYm9va2VkQmFsYW5jZUFmdGVyIHsKICAgICAgY3VycmVuY3kKICAgICAgdmFsdWUKICAgIH0KICAgIGNvdW50ZXJwYXJ0eQogICAgbGFiZWwKICAgIHJlZmVyZW5jZQogICAgc3RhdHVzSW5mbyB7CiAgICAgIHN0YXR1cwogICAgfQogICAgdHlwZQogICAgaWQKICAgIHVwZGF0ZWRBdAogIH0KfQo%3D&tab=api)
+
+```graphql {2} showLineNumbers
+query TransactionInfo {
+  transaction(id: "$YOUR_TRANSACTION_ID") {
+    account {
+      IBAN
+    }
+    amount {
+      currency
+      value
+    }
+    bookedBalanceAfter {
+      currency
+      value
+    }
+    counterparty
+    label
+    reference
+    statusInfo {
+      status
+    }
+    type
+    id
+    updatedAt
+  }
+}
+```
+
+### Payload {#payload-single}
+
+View all the requested information about the single transaction.
+
+```json showLineNumbers
+{
+  "data": {
+    "transaction": {
+      "account": {
+        "IBAN": "FR7699999001001383799322594"
+      },
+      "amount": {
+        "currency": "EUR",
+        "value": "250.00"
+      },
+      "bookedBalanceAfter": {
+        "currency": "EUR",
+        "value": "1350.00"
+      },
+      "counterparty": "Catharijne Janssen",
+      "label": "Sample Payment",
+      "reference": "internal-note-765",
+      "statusInfo": {
+        "status": "Booked"
+      },
+      "type": "SepaCreditTransferIn",
+      "id": "$TRANSACTION_ID",
+      "updatedAt": "2023-05-03T12:34:05.339Z"
+    }
+  }
+}
+```

@@ -1,0 +1,180 @@
+---
+title: Schedule a Standing Order
+---
+
+# Schedule a Standing Order
+
+Scheudle a Standing Order to send money on a recurring basis using the SEPA network.
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
+1. You're authenticating with a [user access token](../../../authentication/index.mdx#tokens-user).
+:::
+
+## Schedule a fixed amount {#guide-fixed}
+
+The example schedules a fixed monthly Standing Order.
+
+1. Call the `scheduleStandingOrder` mutation.
+1. Add all required information, including `period`, account ID, your redirect URL, your `beneficiary`, and whether or not the IBAN belongs to you (lines 4-14).
+    - For `period`, choose Monthly.
+    - Add the `amount` object with your fixed `value` and its `currency`.
+    - Don't add the `targetAvailableBalance` object.
+1. Add the consent URL to the success payload (line 29): `statusInfo` > `StandingOrderConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
+
+### Mutation {#fixed-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRml4ZWRNb250aGx5IHsKICBzY2hlZHVsZVN0YW5kaW5nT3JkZXIoCiAgICBpbnB1dDogewogICAgICBwZXJpb2Q6IE1vbnRobHkKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBsYWJlbDogIllvdXIgY3VzdG9tIGxhYmVsIgogICAgICBmaXJzdEV4ZWN1dGlvbkRhdGU6ICIyMDI0LTA5LTIxVCIKICAgICAgbGFzdEV4ZWN1dGlvbkRhdGU6ICIyMDI1LTAxLTAxVCIKICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgaWJhbjogIk5MNzlSQUJPNzExNDUwNzI4MyIKICAgICAgICBuYW1lOiAiQ2F0aGFyaWpuZSBKYW5zc2VuIgogICAgICAgIGlzTXlPd25JYmFuOiBmYWxzZQogICAgICAgIHNhdmU6IGZhbHNlCiAgICAgIH0KICAgICAgcmVmZXJlbmNlOiAiWW91ciBjdXN0b20gcmVmZXJlbmNlIgogICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgfQogICkgewogICAgLi4uIG9uIFNjaGVkdWxlU3RhbmRpbmdPcmRlclN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBzdGFuZGluZ09yZGVyIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFN0YW5kaW5nT3JkZXJDb25zZW50UGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBpZAogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludmFsaWRBcmd1bWVudFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29kZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {4-14,16-17,20,25,28} showLineNumbers
+mutation FixedMonthly {
+  scheduleStandingOrder(
+    input: {
+      period: Monthly
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      label: "Your custom label"
+      firstExecutionDate: "2024-09-21T"
+      lastExecutionDate: "2025-01-01T"
+      sepaBeneficiary: {
+        iban: "NL79RABO7114507283"
+        name: "Catharijne Janssen"
+        isMyOwnIban: false
+        save: false
+      }
+      reference: "Your custom reference"
+      amount: { value: "100", currency: "EUR" }
+    }
+  ) {
+    ... on ScheduleStandingOrderSuccessPayload {
+      __typename
+      standingOrder {
+        statusInfo {
+          status
+          ... on StandingOrderConsentPendingStatusInfo {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+        id
+      }
+    }
+  }
+}
+```
+
+### Payload {#fixed-payload}
+
+The payload shows the Standing Order created with the status `ConsentPending` (line 7), and provides the `consentUrl` (line 10).
+
+```json {7,10} showLineNumbers
+{
+  "data": {
+    "scheduleStandingOrder": {
+      "__typename": "ScheduleStandingOrderSuccessPayload",
+      "standingOrder": {
+        "statusInfo": {
+          "status": "ConsentPending",
+          "__typename": "StandingOrderConsentPendingStatusInfo",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+          }
+        },
+        "id": "$YOUR_STANDING_ORDER_ID"
+      }
+    }
+  }
+}
+```
+
+## Schedule a target balance {#guide-target}
+
+The example schedules a daily target balance Standing Order.
+
+1. Call the `scheduleStandingOrder` mutation.
+1. Add all required information, including `period`, account ID, amount with `currency` and `value`, your redirect URL, your `beneficiary`, and whether or not the IBAN belongs to you (lines 4-14).
+    - For `period`, choose Daily.
+    - Add the `targetAvailableBalance` object with your target balance `value` and its `currency`.
+    - Don't add the `amount` object.
+1. Add the consent URL to the success payload (line 29): `statusInfo` > `StandingOrderConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add your `targetAvailableBalance` information to the payload (lines 33-35)
+1. Add rejections (not shown).
+
+### Mutation {#target-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVGFyZ2V0RGFpbHkgewogIHNjaGVkdWxlU3RhbmRpbmdPcmRlcigKICAgIGlucHV0OiB7CiAgICAgIHBlcmlvZDogRGFpbHkKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBsYWJlbDogIllvdXIgY3VzdG9tIGxhYmVsIgogICAgICBmaXJzdEV4ZWN1dGlvbkRhdGU6ICIyMDI0LTA5LTIxVCIKICAgICAgbGFzdEV4ZWN1dGlvbkRhdGU6ICIyMDI1LTAxLTAxVCIKICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgaWJhbjogIkRFODg1MDAxMDUxNzE1Nzk4MzM3MzEiCiAgICAgICAgbmFtZTogIlJhZSBTY2htaWR0IgogICAgICAgIGlzTXlPd25JYmFuOiBmYWxzZQogICAgICAgIHNhdmU6IGZhbHNlCiAgICAgIH0KICAgICAgcmVmZXJlbmNlOiAiWW91ciBjdXN0b20gcmVmZXJlbmNlIgogICAgICB0YXJnZXRBdmFpbGFibGVCYWxhbmNlOiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBTY2hlZHVsZVN0YW5kaW5nT3JkZXJTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgc3RhbmRpbmdPcmRlciB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBTdGFuZGluZ09yZGVyQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgaWQKICAgICAgICB0YXJnZXRBdmFpbGFibGVCYWxhbmNlIHsKICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnZhbGlkQXJndW1lbnRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvZGUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4-14,16-17,20,25,28,33-35} showLineNumbers
+mutation TargetDaily {
+  scheduleStandingOrder(
+    input: {
+      period: Daily
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      label: "Your custom label"
+      firstExecutionDate: "2024-09-21T"
+      lastExecutionDate: "2025-01-01T"
+      sepaBeneficiary: {
+        iban: "DE88500105171579833731"
+        name: "Rae Schmidt"
+        isMyOwnIban: false
+        save: false
+      }
+      reference: "Your custom reference"
+      targetAvailableBalance: { value: "100", currency: "EUR" }
+    }
+  ) {
+    ... on ScheduleStandingOrderSuccessPayload {
+      __typename
+      standingOrder {
+        statusInfo {
+          status
+          ... on StandingOrderConsentPendingStatusInfo {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+        id
+        targetAvailableBalance {
+          currency
+          value
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload {#target-payload}
+
+The payload shows the Standing Order created with the status `ConsentPending` (line 7), and provides the `consentUrl` (line 10).
+Your `targetAvailableBalance` information is also provided (lines 14-16).
+
+```json {7,10,14-16} showLineNumbers
+{
+  "data": {
+    "scheduleStandingOrder": {
+      "__typename": "ScheduleStandingOrderSuccessPayload",
+      "standingOrder": {
+        "statusInfo": {
+          "status": "ConsentPending",
+          "__typename": "StandingOrderConsentPendingStatusInfo",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+          }
+        },
+        "id": "$YOUR_STANDING_ORDER_ID",
+        "targetAvailableBalance": {
+          "currency": "EUR",
+          "value": "100"
+        }
+      }
+    }
+  }
+}
+```

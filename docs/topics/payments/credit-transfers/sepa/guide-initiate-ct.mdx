@@ -1,0 +1,284 @@
+---
+title: Initiate a credit transfer
+---
+
+# Initiate a credit transfer
+
+Send SEPA Credit Transfers, Instant SEPA Credit Transfers, and Swan Internal Credit Transfers with the API.
+Review sample mutations for all three, as well as a payload.
+
+If you use [Swan's Web Banking frontend](https://swan-io.github.io/swan-partner-frontend/specs/banking/transfer), your users can send transfers from their account directly.
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
+1. You're authenticating with a [user access token](../../../authentication/index.mdx#tokens-user).
+:::
+
+## Send a SEPA Credit Transfer {#guide-sepa}
+
+Send a SEPA Credit Transfer to a beneficiary within the SEPA network.
+
+1. Call the `initiateCreditTransfers` mutation.
+1. Add all required information, marked by an (*) asterisk in API Explorer, including your Swan `accountId` (line 5), and information such as your redirect URL and your transfer amount. 
+1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 9-10).
+1. For `mode`, choose `Regular` to send a basic SEPA Credit Transfer.
+1. Add the `InitiateCreditTransfersSuccessPayload` payload.
+1. Add the consent URL to the success payload (line 27): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2VwYURlZmF1bHQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBjcmVkaXRUcmFuc2ZlcnM6IHsKICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgIHNlcGFCZW5lZmljaWFyeTogewogICAgICAgICAgaWJhbjogIklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIKICAgICAgICAgIG5hbWU6ICJGcmFuY2VzY2EgVmVycmlsbGkiCiAgICAgICAgICBpc015T3duSWJhbjogZmFsc2UKICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgfQogICAgICAgIG1vZGU6IFJlZ3VsYXIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIGNyZWF0ZWRBdAogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {5,9-10,14,18,24,27} showLineNumbers
+mutation SepaDefault {
+  initiateCreditTransfers(
+    input: {
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      accountId: "$YOUR_ACCOUNT_ID"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "IT23P0300203280632123553748"
+          name: "Francesca Verrilli"
+          isMyOwnIban: false
+          save: false
+        }
+        mode: Regular
+      }
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      __typename
+      payment {
+        createdAt
+        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Send an Instant SEPA Credit Transfer {#guide-instant}
+
+Send an Instant SEPA Credit Transfer to a beneficiary within the SEPA network.
+
+1. Call the `initiateCreditTransfers` mutation.
+1. Add all required information, marked by an (*) asterisk in API Explorer, including your Swan `accountId` (line 5), and information such as your redirect URL and your transfer amount.
+1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 9-10).
+1. For `mode`, choose `InstantWithFallback`, which begins as an instant transfer but falls back to a regular transfer if instant isn't available.
+    - If you'd rather cancel the transfer if instant isn't available, choose `InstantWithoutFallback` instead.
+1. Add the `InitiateCreditTransfersSuccessPayload` payload.
+1. Add the consent URL to the success payload (line 27): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2VwYUluc3RhbnQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBjcmVkaXRUcmFuc2ZlcnM6IHsKICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgIHNlcGFCZW5lZmljaWFyeTogewogICAgICAgICAgaWJhbjogIklFMjdCT0ZJOTAwMDE3MjQyNTIxIgogICAgICAgICAgbmFtZTogIkRpbGxvbiBCeXJuZSIKICAgICAgICAgIGlzTXlPd25JYmFuOiBmYWxzZQogICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICB9CiAgICAgICAgbW9kZTogSW5zdGFudFdpdGhGYWxsYmFjawogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgcGF5bWVudCB7CiAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBQYXltZW50Q29uc2VudFBlbmRpbmcgewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEFjY291bnROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {5,9-10,14,18,24,27} showLineNumbers
+mutation SepaInstant {
+  initiateCreditTransfers(
+    input: {
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      accountId: "$YOUR_ACCOUNT_ID"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "IE27BOFI900017242521"
+          name: "Dillon Byrne"
+          isMyOwnIban: false
+          save: false
+        }
+        mode: InstantWithFallback
+      }
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      __typename
+      payment {
+        createdAt
+        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Send a Swan Internal Credit Transfer {#guide-internal}
+
+Send a credit transfer from one Swan account to another within the same Swan project.
+
+1. Call the `initiateCreditTransfers` mutation.
+1. Add all required information, marked by an (*) asterisk in API Explorer, including your Swan `accountId` (line 5), and information such as your redirect URL and your transfer amount. 
+1. For this use case, add information about your `swanAccountBeneficiary`, including their name and Swan `accountNumber` (note it's the account number, not the account ID) (lines 9-10).
+1. Add the `InitiateCreditTransfersSuccessPayload` payload.
+1. Add the consent URL to the success payload (line 27): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU3dhbkludGVybmFsIHsKICBpbml0aWF0ZUNyZWRpdFRyYW5zZmVycygKICAgIGlucHV0OiB7CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzd2FuQWNjb3VudEJlbmVmaWNpYXJ5OiB7CiAgICAgICAgICBhY2NvdW50TnVtYmVyOiAiJFNXQU5fQUNDT1VOVF9OVU1CRVIiCiAgICAgICAgICBuYW1lOiAiSGVucmkgRHVwb250IgogICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICB9CiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {5,9-10,16,23,27} showLineNumbers
+mutation SwanInternal {
+  initiateCreditTransfers(
+    input: {
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      accountId: "$YOUR_ACCOUNT_ID"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        swanAccountBeneficiary: {
+          accountNumber: "$SWAN_ACCOUNT_NUMBER"
+          name: "Henri Dupont"
+          save: false
+        }
+      }
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      __typename
+      payment {
+        createdAt
+        id
+        statusInfo {
+          status
+          ... on PaymentConsentPending {
+            __typename
+            status
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Send multiple credit transfers {#guide-multiple}
+
+Send multiple credit transfers in a single API call.
+You can send a mix of SEPA Credit Transfers, Instant SEPA Credit Transfers, and Swan Internal Credit Transfers in the same mutation.
+
+1. Call the `initiateCreditTransfers` mutation.
+1. Add all required information, marked by an (*) asterisk in API Explorer, including your Swan `accountId` (line 5), and information such as your redirect URL.
+1. Add a beneficiary block for each of your beneficiaries. The beneficiary block includes:
+    - `amount`, meaning you can send a different amount to each beneficiary (in euros).
+    - `sepaBeneficiary` or `swanAccountBeneficiary` object.
+    - `mode` (optional), meaning you can send instant and regular transfers with the same API call.
+    - The example blocks (lines 8-15, 18-25, and 28-34) model different configurations.
+1. Add the `InitiateCreditTransfersSuccessPayload` payload.
+1. Add the consent URL to the success payload (line 48): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gTXVsdGlwbGVUcmFuc2ZlcnMgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBjcmVkaXRUcmFuc2ZlcnM6IFsKICAgICAgICB7CiAgICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIyMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgICAgIGliYW46ICJJVDIzUDAzMDAyMDMyODA2MzIxMjM1NTM3NDgiCiAgICAgICAgICAgIG5hbWU6ICJGcmFuY2VzY2EgVmVycmlsbGkiCiAgICAgICAgICAgIGlzTXlPd25JYmFuOiBmYWxzZQogICAgICAgICAgICBzYXZlOiBmYWxzZQogICAgICAgICAgfQogICAgICAgICAgbW9kZTogSW5zdGFudFdpdGhGYWxsYmFjawogICAgICAgIH0KICAgICAgICB7CiAgICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgICAgIGliYW46ICJHQjYxQkFSQzIwMDM1MzY4NzY2MTc4IgogICAgICAgICAgICBuYW1lOiAiRGlsbG9uIEJ5cm5lIgogICAgICAgICAgICBpc015T3duSWJhbjogZmFsc2UKICAgICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICAgIH0KICAgICAgICAgIG1vZGU6IFJlZ3VsYXIKICAgICAgICB9CiAgICAgIF0KICAgIH0KICApIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBheW1lbnRDb25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {5,8-15,18-25,28-34,39,45,48} showLineNumbers
+mutation MultipleTransfers {
+  initiateCreditTransfers(
+    input: {
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      accountId: "$YOUR_ACCOUNT_ID"
+      creditTransfers: [
+        {
+          amount: { value: "200", currency: "EUR" }
+          sepaBeneficiary: {
+            iban: "IT23P0300203280632123553748"
+            name: "Francesca Verrilli"
+            isMyOwnIban: false
+            save: false
+          }
+          mode: InstantWithFallback
+        }
+        {
+          amount: { value: "100", currency: "EUR" }
+          sepaBeneficiary: {
+            iban: "GB61BARC20035368766178"
+            name: "Dillon Byrne"
+            isMyOwnIban: false
+            save: false
+          }
+          mode: Regular
+        }
+        {
+          amount: { value: "100", currency: "EUR" }
+          swanAccountBeneficiary: {
+            accountNumber: "21077522761"
+            name: "Henri Dupont"
+            save: false
+          }
+          mode: Regular
+        }
+      ]
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      __typename
+      payment {
+        createdAt
+        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload is similar for all the sample mutations on this page.
+
+The payload shows the Standing Order created with the status `ConsentPending` (line 9), and provides the `consentUrl` (line 12).
+Send the `consentUrl` to your user.
+
+If you're sending multiple transfers, your user consents to all of them with a single `consentUrl`.
+
+:::note no consent
+Most `initiateCreditTransfer` requests require consent.
+However, Swan *can* determine consent isn't required based on the context of the payment, in which case the payment is created with the status `Initiated`.
+:::
+
+```json {9,12} showLineNumbers
+{
+  "data": {
+    "initiateCreditTransfers": {
+      "__typename": "InitiateCreditTransfersSuccessPayload",
+      "payment": {
+        "createdAt": "2024-01-25T16:16:09.859Z",
+        "id": "$YOUR_PAYMENT_ID",
+        "statusInfo": {
+          "status": "ConsentPending",
+          "__typename": "PaymentConsentPending",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+:::danger Rejected
+If your transaction is created with the status `Rejected`, learn why in the `rejectedReasonCode` field.
+For example, the rejection could be due to insufficient funds, or communication between Swan and the other bank timed out.
+:::

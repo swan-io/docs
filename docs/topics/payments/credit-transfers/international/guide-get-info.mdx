@@ -1,0 +1,107 @@
+---
+title: Get information about a transfer
+---
+
+# Get information about an International Credit Transfer
+
+When Swan receives an incoming International Credit Transfer, Swan books it immediately and creates a `InternationalCreditTransferTransaction` type (step 8 in the [standard flow](./index.mdx#incoming-flow) for incoming transfers). 
+
+## Guide {#guide}
+
+1. Call the `transaction` query.
+1. Add the transaction ID for the incoming International Credit Transfer.
+1. Add the information you want to review.
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgSW5jb21pbmdJbnRlcm5hdGlvbmFsQ3JlZGl0VHJhbnNmZXIgewogIHRyYW5zYWN0aW9uKGlkOiAiJElOQ09NSU5HX1RSQU5TQUNUSU9OX0lEIikgewogICAgLi4uIG9uIEludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlclRyYW5zYWN0aW9uIHsKICAgICAgYW1vdW50IHsKICAgICAgICBjdXJyZW5jeQogICAgICAgIHZhbHVlCiAgICAgIH0KICAgICAgY291bnRlcnBhcnR5CiAgICAgIGN1cnJlbmN5RXhjaGFuZ2UgewogICAgICAgIGV4Y2hhbmdlUmF0ZQogICAgICB9CiAgICAgIGRlYnRvciB7CiAgICAgICAgY3VycmVuY3kKICAgICAgICBkZXRhaWxzIHsKICAgICAgICAgIGtleQogICAgICAgICAgdmFsdWUKICAgICAgICB9CiAgICAgICAgbmFtZQogICAgICAgIHJvdXRlCiAgICAgIH0KICAgICAgaW5zdHJ1Y3RlZEFtb3VudCB7CiAgICAgICAgY3VycmVuY3kKICAgICAgICB2YWx1ZQogICAgICB9CiAgICAgIGludGVybWVkaWFyeUJhbmtGZWVzIHsKICAgICAgICBjdXJyZW5jeQogICAgICAgIHZhbHVlCiAgICAgIH0KICAgICAgc2lkZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2} showLineNumbers
+query IncomingInternationalCreditTransfer {
+  transaction(id: "$INCOMING_TRANSACTION_ID") {
+    ... on InternationalCreditTransferTransaction {
+      amount { #amount credited to the Swan user's account
+        currency
+        value
+      }
+      counterparty #name of the counterparty
+      currencyExchange { 
+        exchangeRate
+      }
+      debtor {
+        currency
+        details {
+          key
+          value
+        }
+        name
+        route
+      }
+      instructedAmount { #amount the debtor sent in their original currency when initiating the transfer
+        currency
+        value
+      }
+      intermediaryBankFees { #list of all fees charged by intermediary banks (doesn't include Swan)
+        currency
+        value
+      }
+      side
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+Review the information provided in the payload about the incoming International Credit Transfer.
+
+```json {6,10,13,28,32,36,40} showLineNumbers
+{
+  "data": {
+    "transaction": {
+      "amount": {
+        "currency": "EUR",
+        "value": "850.00"
+      },
+      "counterparty": "Debtor",
+      "currencyExchange": {
+        "exchangeRate": "1.05263"
+      },
+      "debtor": {
+        "currency": "GBP",
+        "details": [
+          {
+            "key": "legalType",
+            "value": "BUSINESS"
+          },
+          {
+            "key": "Iban",
+            "value": "GB12345678901234567890"
+          }
+        ],
+        "name": "My debtor",
+        "route": "SwiftCode",
+        "instructedAmount": {
+            "currency": "GBP",
+            "value": "1000.00"
+            },
+            "intermediaryBankFees": [
+                {
+                    "value": "50.00",
+                    "currency": "GBP"
+                },
+                {
+                    "value": "100.00",
+                    "currency": "EUR"
+                },
+				{
+                    "value": "50.00",
+                    "currency": "EUR"
+                    }
+                ],
+            "side": "credit"
+      }
+    }
+  }
+}
+```

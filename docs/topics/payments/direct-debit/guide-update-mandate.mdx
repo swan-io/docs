@@ -1,0 +1,83 @@
+---
+title: Update a payment mandate
+---
+
+# Update a payment mandate
+
+Update SEPA Direct Debit B2B received payment mandates with the API.
+Note that you **can't update** the sequence (`OneOff` or `Recurrent`).
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../accounts/memberships/index.mdx#permissions).
+1. You're authenticating with a [user access token](../../authentication/index.mdx#tokens-user).
+:::
+
+## Guide {#guide}
+
+1. Call the `updateReceivedSepaDirectDebitB2bMandate` mutation.
+1. Add the ID for the mandate you're updating.
+1. Add the information you'd like to update. This example shows an updated `mandateReference`.
+1. Add your consent redirect URL (consent is required to update the mandate).
+1. If you add the `version` (line 22), you'll see an increase in the payload, meaning the mandate was updated successfully.
+1. Add the `UpdateReceivedSepaDirectDebitB2bMandateSuccessPayload`, including the `consentUrl`.
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlTWFuZGF0ZSB7CiAgdXBkYXRlUmVjZWl2ZWRTZXBhRGlyZWN0RGViaXRCMmJNYW5kYXRlKAogICAgaW5wdXQ6IHsKICAgICAgcmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGVJZDogIiRZT1VSX01BTkRBVEVfSUQiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgbWFuZGF0ZVJlZmVyZW5jZTogIlVwZGF0ZWRVbmlxdWVNYW5kYXRlUmVmZXJlbmNlIgogICAgfQogICkgewogICAgLi4uIG9uIFVwZGF0ZVJlY2VpdmVkU2VwYURpcmVjdERlYml0QjJiTWFuZGF0ZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICByZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZSB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZVN0YXR1c0luZm9Db25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICB2ZXJzaW9uCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZU5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlQWxyZWFkeUV4aXN0UmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlTm90QjJiUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {4-6,9,14,18,22} showLineNumbers
+mutation UpdateMandate {
+  updateReceivedSepaDirectDebitB2bMandate(
+    input: {
+      receivedDirectDebitMandateId: "$YOUR_MANDATE_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      mandateReference: "UpdatedUniqueMandateReference"
+    }
+  ) {
+    ... on UpdateReceivedSepaDirectDebitB2bMandateSuccessPayload {
+      __typename
+      receivedDirectDebitMandate {
+        statusInfo {
+          status
+          ... on ReceivedDirectDebitMandateStatusInfoConsentPending {
+            __typename
+            status
+            consent {
+              consentUrl
+            }
+          }
+        }
+        version
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload provides the `consentUrl` (line 10) and the status `ConsentPending`.
+Make sure to send the `consentUrl` to your user so they can provide consent for the update.
+
+Notice the increased version (line 13).
+
+```json {7,10,13} showLineNumbers
+{
+  "data": {
+    "updateReceivedSepaDirectDebitB2bMandate": {
+      "__typename": "UpdateReceivedSepaDirectDebitB2bMandateSuccessPayload",
+      "receivedDirectDebitMandate": {
+        "statusInfo": {
+          "status": "ConsentPending",
+          "__typename": "ReceivedDirectDebitMandateStatusInfoConsentPending",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+          }
+        },
+        "version": "3"
+      }
+    }
+  }
+}
+```

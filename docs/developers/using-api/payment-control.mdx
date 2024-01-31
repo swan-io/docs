@@ -4,10 +4,14 @@ title: Payment control
 
 # Payment control
 
-Mastercard requires Swan to accept or reject all transactions.
+Mastercard requires Swan to accept (authorize) or reject all transactions.
 
 To comply, Swan performs certain tests on all card transactions, and also provides a feature called payment control so you can participate, too.
 Using payment control, you can let Swan know whether you **accept or reject most card transactions** within your project.
+
+:::tip Card payments section
+Refer to the [card payments section](../../topics/payments/cards/index.mdx) for more information about card transaction authorization and clearing.
+:::
 
 ## Payment control flow {#flow}
 
@@ -37,7 +41,7 @@ Though rare, it's possible that Mastercard rejects a transaction even if you and
 ## Time-sensitive operation {#time-sensitive}
 
 Payment control is a time-sensitive operation.
-If Swan doesn't receive your decision quickly enough, the payment operation times out and the cardholder's transaction is rejected.
+If Swan doesn't receive your decision quickly enough, the payment operation times out and the card holder's transaction is rejected.
 
 Therefore, you'll want to test this feature thoroughly using the [tools](../tools/index.mdx) available to you.
 You can also set a default answer in case of timeout.
@@ -51,7 +55,7 @@ The following settings are available for your payment control configuration:
 
 1. `endpoint`: Your endpoint (mandatory).
 1. `protocol`: HTTP / JSON protocol.
-1. `defaultResponse`: In case of timeout, choose whether you accept or reject the transaction (true or false). Swan suggests setting the default response to `true` for a better cardholder experience.
+1. `defaultResponse`: In case of timeout, choose whether you accept or reject the transaction (true or false). Swan suggests setting the default response to `true` for a better card holder experience.
 1. `timeoutMs`: Timeout is up to 10 seconds in Sandbox and 1.5 seconds in Live.
 1. `secret`: Your secret is added to a `x-swan-secret` header.
 1. `enabled`: Only enabled payment control endpoints can be used by Swan.

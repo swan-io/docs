@@ -1,0 +1,229 @@
+---
+title: Direct debit
+---
+
+# Direct debit
+
+## Overview {#overview}
+
+Direct debit is initiated by a creditor to take funds from a debtor's account.
+Common creditors who use direct debit include utility companies and real estate rental agencies.
+
+Swan supports several types of direct debit.
+Note the acronyms; while the documentation doesn't use them, the acronyms are sometimes present in the API and used in written and verbal communication.
+
+| Direct debit type | Description | Acronym |
+| --- | --- | --- |
+| SEPA Direct Debit **Core** | Issued by companies to individual or company accounts in euros between accounts in the [Single Euro Payments Area (SEPA)](../index.mdx#sepa). | SDD Core |
+| SEPA Direct Debit **B2B** | Issued by companies to company accounts in euros between accounts in [SEPA](../index.mdx#sepa). | SDD B2B |
+| Swan Internal Direct Debit **Standard** | Issued by a Swan company account to individual or company accounts within the same Swan project. | IDD Standard |
+| Swan Internal Direct Debit **B2B** | Issued by a Swan company account to company accounts within the same Swan project. | IDD B2B |
+
+:::info Swan Internal Direct Debit
+Some use cases require that direct debit transactions occur between two Swan accounts in the same project.
+For example, perhaps you want to receive fees directly from your user's Swan account.
+
+For Internal Direct Debit, Swan is the creditor bank, the Clearing and Settlement Mechanism (CSM), *and* the debtor bank.
+Internal Direct Debit doesn't pass through the SEPA network.
+Instead, these transactions must follow the rules defined by France's *Code Monétaire et Financier*.
+:::
+
+### Specifications {#specifications}
+
+import DirectDebitTable from '../../partials/_direct-debit-scheme-table.mdx';
+
+<DirectDebitTable directDebitScheme="SEPA Core & Internal Standard" creditorType="Creditor" psp="the debtor's PSP" />
+
+*PSP stands for payment services provider.*<br />
+*Learn more about [mandates](#mandates) in the dedicated section later on this page.*
+
+:::tip Accepting payments
+Swan also supports **accepting online payments** with direct debit.
+Refer to the [merchants section about supported payment methods](../../merchants/index.mdx#methods) for more information.
+:::
+
+### Statuses {#statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    DI((Debit<br/>instructed)) -.-> R[Rejected]
+    U -.-> P[Pending]
+    DI -.-> U[Upcoming]
+    U -.-> R[Rejected]
+    DI -.-> P
+    P --> B[Booked]
+    U -.-> CD[Canceled]
+    P -.-> R
+    subgraph S[Successful]
+        B
+    end
+    subgraph F[Final status]
+        CD
+        R
+        S
+    end
+    style DI fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style S fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+```
+
+:::info Account balances
+There's a **close link** between **transaction statuses** and **account balances**.
+Refer to explanations of types of account balances in the [accounts section](../../accounts/index.mdx#balances).
+:::
+
+<mark>Please confirm</mark><br /><br />
+
+| Transaction status | Explanation |
+|---|---|
+| `Upcoming` | Debit instruction is initiated and consent was granted, but the debit isn't executed yet. Often, this is because the debit was planned for a future date using the `requestedExecutionAt` input. `Upcoming` debits don't impact the account balance. |
+| `Pending` | Debits are initiated, consent was granted, and the debit is set to happen within a few days. The debits aren't debited from the account yet, but they impact the account's `Pending` balance.<br /><br />Sometimes, debits might stay `Pending` for longer than expected. This could be for a few reasons, including the possibility that the transaction required a manual review from Swan, or a SEPA Direct Debit was initiated on a [TARGET closing day](../index.mdx#sepa-availability). |
+| `Booked` | Completed debits that are displayed on the official account statement. These debits have been debited from the account, and they impact the account's `Booked` balance. |
+| `Canceled` | An `Upcoming` transaction is canceled by someone with the right to do so, such as the [account holder](../../../glossary.mdx#account-holder), an [account member](../../../glossary.mdx#account-membership), or a [merchant](../../../glossary.mdx#merchants). Only debits with the status `Upcoming` can be `Canceled`, and `Canceled` debits don't impact the account balance. |
+| `Rejected` | Declined or refused debits. For example, the beneficiary account might be closed, or the account's `Available` balance isn't sufficient to complete the debit without resulting in a negative balance. |
+
+## Received direct debit instructions {#received-instructions}
+
+To start a SEPA Direct Debit transaction, the creditor's bank must send instructions to the debtor's payment services provider—in this case, Swan—before the scheduled transaction date.
+The date should be indicated in the instruction sent to Swan.
+
+After receiving instructions to debit an account, Swan checks the embedded mandate information to see if it's a new instruction, or if Swan already knows about the instruction.
+
+### New instruction {#received-instructions-new}
+
+If the **instruction is new to Swan**, the following events occur:
+
+1. SEPA Direct Debit Core
+    1. Swan adds the SEPA Direct Debit received payment mandate with the status `Enabled`.
+    1. Swan creates a `SepaDirectDebitOut` transaction with the status `Upcoming`.
+    1. Swan executes the transaction on the requested date, indicated in the instruction.
+1. SEPA Direct Debit B2B
+    1. Swan adds the SEPA Direct Debit received payment mandate with the status `ConsentInitiationPending`. After the debtor consents to the mandate, the status changes to `Enabled`.
+    1. Swan creates a `SepaDirectDebitOut` transaction with the status `Upcoming`.
+    1. Swan confirms with the debtor that they approve the transaction.
+    1. After Swan receives all required consent and confirmation, Swan executes the transaction on the requested date, indicated in the instruction.
+
+### Known instruction {#received-instructions-known}
+
+If the **instruction is known to Swan**, Swan checks the received payment mandate's status.
+
+1. If the mandate's status is `Enabled`, Swan creates a `SepaDirectDebitOut` transaction with the status `Upcoming`.
+1. If the mandate's status is `Canceled` or `Suspended`, Swan creates a `SepaDirectDebitOut` transaction with the status `Rejected`.
+
+### Execution date and time {#received-instructions-execution}
+
+At 6 AM Central European [Summer] Time (CET/CEST) on the date indicated in the SEPA Direct Debit instruction, Swan verifies a few details before executing the debit.
+
+If **either of the following is true**, the instructions are rejected. 
+The `SepaDirectDebitOut` transaction status changes to `Rejected`, and the reason is available in the `rejectedReasonCode` field with the API.
+
+- The received payment mandate's status is anything other than `Enabled`.
+- The debtor account's `Available` balance won't cover the instructed amount.
+
+If the received payment mandate's status is `Enabled` and the `Available` balance is sufficient to cover the instructed amount, the **transaction continues** and the following events occur:
+
+1. The amount is debited from the account.
+1. The account's `Available` balance is updated accordingly.
+1. The `SepaDirectDebitOut` transaction status changes to `Booked`.
+
+## Received payment mandates {#mandates}
+
+Prior to issuing SEPA Direct Debit instructions, the creditor must obtain a formal authorization from the debtor to take money from the debtor's account.
+This formal authorization is a **received payment mandate**.
+Received payment mandates can be `one-off`, valid for a single transaction, or `recurrent`, for multiple transactions.
+
+Received payment mandates are created by creditors and authorized by debtors.
+Creating and authorizing mandates happens off of the SEPA network, and the mandates must be declared to the SEPA network with two unique identifiers:
+
+1. **Unique Mandate Reference (UMR)**: Each received payment mandate has a unique reference number.
+1. **SEPA Creditor Identifier (SCI)**: Each creditor is identified on the SEPA network with their unique identifier.
+
+The combination of the SEPA Creditor Identifier and Unique Mandate Reference must be **unique across the SEPA network**, meaning one received payment mandate per creditor-debtor pair.
+Information about the received payment mandate is embedded in each SEPA Direct Debit instruction sent by the creditor bank to the debtor bank.
+
+Received payment mandates are stored in the API's `receivedDirectDebitMandate` object.
+
+### Received mandate specifications {#mandates-specifications}
+
+The specifications of the received payment mandate depend on whether the mandate authorizes Core or B2B SEPA Direct Debit instructions.
+**All are signed by the debtor**; otherwise, requirements are different.
+
+| Direct debit type | Specifications |
+| --- | --- |
+| SEPA Direct Debit **Core** | <ol><li>Core received payment mandates don't need to be provided to Swan (or the creditor's bank).</li><li>Swan isn't required to verify a mandate's validity with the debtor.</li><li>The debtor is entitled to a refund of an authorized debit, no questions asked, according to the timeline listed in the [overview table](#overview).</li></ol> |
+| SEPA Direct Debit **B2B** | <ol><li>B2B received payment mandates must be provided by the debtor to Swan.</li><li>Swan **must** validity of the instruction against the mandate or mandate information received from the debtor.</li><li>The debtor isn't entitled to a refund of an authorized debit.</li></ol> |
+| Swan Internal Direct Debit **Standard** | <ol><li>Internal received payment mandates are handled within Swan.</li><li>Swan isn't required to verify a mandate's validity with the debtor.</li><li>The debtor is entitled to a refund of an authorized debit, no questions asked, according to the timeline listed in the [overview table](#overview).</li></ol> |
+| Swan Internal Direct Debit **B2B** | <ol><li>Internal received payment mandates are handled within Swan.</li><li>Swan **must** validity of the instruction against the mandate or mandate information received from the debtor.</li><li>The debtor isn't entitled to a refund of an authorized debit.</li></ol> |
+
+### Received mandate statuses {#mandates-statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    B2B((B2B mandate<br/>added)) -.-> CP[ConsentPending]
+    COR((Core mandate<br/>added)) --> E[Enabled]
+    CP ---> E
+    CP <-.-> S[Suspended]
+    CP -.-> C[Canceled]
+    E -.-> C
+    E <-.-> S
+    S -.-> C
+    subgraph U[Can use mandate]
+        E
+    end
+    subgraph F[Final status]
+        C
+    end
+    style B2B fill:#D4D3D5,stroke:#514F59
+    style COR fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Payment mandate status | Explanation |
+| --- |---|
+| `ConsentPending` | B2B received payment mandate was added while [setting up a direct debit] with the `mutation` mutation.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`</li><li>If requested by the debtor, the status moves to `Suspended`</li><li>If the debtor doesn't consent to the mandate, the status moves to `Canceled`.</li></ul>*Core received mandates never have the status `ConsentPending`.* |
+| `Enabled` | Received payment mandate is valid and direct debit instructions can be fulfilled. |
+| `Suspended` | Debtor requested the received payment mandate be suspended.<br/><br/>For example, you want to stop a creditor from taking money from the account temporarily, and you'll inform Swan when to change the status back to `Enabled`.  |
+| `Canceled` | Received payment mandate is canceled and no longer available for use. Note that Swan cancels `OneOff` mandates **automatically** after they're used. |
+
+## R-transactions {#r-transactions}
+
+After direct debits are instructed, other transactions, such as R-transactions, can be linked to the direct debit transaction.
+
+### Rejected {#rejected}
+
+If you need to request that an `Upcoming` SEPA Direct Debit (Core or B2B) instruction be `Rejected`, a qualified account member can contact Swan directly.
+Qualified account members are those with the `CanInitiatePayments` membership permission.
+
+If your request to reject the transaction is accepted, the status changes from `Upcoming` to `Rejected`.
+`Rejected` transactions don't impact the account balance.
+
+### Refunded {#refunded}
+
+If you need to request a refund for a `Booked` SEPA Direct Debit Core transaction, a qualified account member can contact Swan directly.
+Qualified account members are those with the `CanInitiatePayments` membership permission.
+Confirm you're within the [time window allowed](#overview).
+
+If the refund is approved, a new `SepaDirectDebitOutReturn` transaction is created with the status `Booked`.
+
+### Reversed {#reversed}
+
+Creditors can reverse `Booked` SEPA Direct Debit transactions within a specific [time window](#overview).
+In the case of a reversal, a new `SepaDirectDebitOutReversal` transaction is created with the status `Booked`.
+
+### Canceled {#canceled}
+
+Creditors can cancel `Upcoming` SEPA Direct Debit transactions.
+
+If a creditor cancels an `Upcoming` transaction, the status automatically changes to `Canceled`.
+`Canceled` transactions don't impact the account balance.
+
+## Guides {#guides}
+
+- Payment mandates
+    - [Add a payment mandate](./guide-add-mandate.mdx)
+    - [Update a payment mandate](./guide-update-mandate.mdx)
+    - [Suspend a payment mandate](./guide-suspend-mandate.mdx)
+    - [Enable a payment mandate](./guide-enable-mandate.mdx)

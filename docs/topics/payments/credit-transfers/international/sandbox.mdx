@@ -1,0 +1,73 @@
+---
+title: Sandbox
+---
+
+# Sandbox for International Credit Transfers
+
+## Simulate an incoming International Credit Transfer {#simulate-ict-in}
+
+Use the [Testing API](../../../../developers/tools/testing-api.mdx) to simulate receiving an International Credit Transfer.
+
+Refer to the [standard flow](./index.mdx#incoming-flow) for an incoming International Credit Transfer if needed.
+
+### Step 1: Call the mutation {#guide-partner}
+
+1. Call the `simulateIncomingInternationalCreditTransferReception` mutation.
+1. Enter the amount, including your `value` and `currency=EUR`.
+1. Enter a Swan IBAN for the `creditorIban`.
+1. Enter a placeholder, non-euro based IBAN for `debtorIban`.
+1. Enter any placeholder information for the rest of the fields.
+1. Click **Run**.
+
+### Step 2: Swan API adds information {#guide-swan}
+
+After you click **Run**, the Swan API adds the following information to your simulation automatically:
+
+1. Adds a fee from intermediary bank A between €1-5.
+1. Randomly chooses a currency for the instructed amount.
+1. Applies a 1.1234 exchange rate.
+1. Adds a fee from intermediary bank B of 10 in the target currency chosen in #2.
+
+### Mutation {#mutation}
+
+🔎 [Open the mutation in Testing API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVJbmNvbWluZ0ludGVybmF0aW9uYWwgewogIHNpbXVsYXRlSW5jb21pbmdJbnRlcm5hdGlvbmFsQ3JlZGl0VHJhbnNmZXJSZWNlcHRpb24oCiAgICBpbnB1dDogewogICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICBjcmVkaXRvckliYW46ICJGUjc2IDk5OTkgOTAwMSAwMDEzIDgzNzUgMjI2OCA5NjEiCiAgICAgIGNyZWRpdG9yTmFtZTogIk1hbGlrYSBOZ29tYSIKICAgICAgZGVidG9ySWJhbjogIk1BNTczOTQ2NjE5NTQ4NjYyNjU5NDQ0OTQ0MTMiCiAgICAgIGRlYnRvck5hbWU6ICJMZWlsYSBUYXppIgogICAgICByZWZlcmVuY2U6ICJSZWZlcmVuY2UiCiAgICAgIGxhYmVsOiAiQ3VzdG9tIGxhYmVsIgogICAgfQogICkgewogICAgLi4uIG9uIEFjY291bnROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBTaW11bGF0ZUluY29taW5nSW50ZXJuYXRpb25hbENyZWRpdFRyYW5zZmVyU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHRyYW5zYWN0aW9uSWQKICAgIH0KICB9Cn0K&tab=test-api)
+
+```graphql showLineNumbers
+mutation SimulateIncomingInternational {
+  simulateIncomingInternationalCreditTransferReception(
+    input: {
+      amount: { value: "100", currency: "EUR" }
+      creditorIban: "FR7699999001001383752268961"
+      creditorName: "Malika Ngoma"
+      debtorIban: "MA57394661954866265944494413"
+      debtorName: "Leila Tazi"
+      reference: "Reference"
+      label: "Custom label"
+    }
+  ) {
+    ... on AccountNotFoundRejection {
+      id
+      message
+    }
+    ... on SimulateIncomingInternationalCreditTransferSuccessPayload {
+      __typename
+      transactionId
+    }
+  }
+}
+```
+
+### Payload {#payload}
+
+If successful, the response contains the simulated `transactionId`.
+
+```json {5} showLineNumbers
+{
+  "data": {
+    "simulateIncomingInternationalCreditTransferReception": {
+      "__typename": "SimulateIncomingInternationalCreditTransferSuccessPayload",
+      "transactionId": "bofci_bda2f35f262fe5ef6daed99ae6ed21c2"
+    }
+  }
+}
+```

@@ -50,22 +50,19 @@ No refunds are authorized for the B2B funding method.
 
 Direct debits are classified as **pull payments**, meaning the money was requested, then sent as a response by the debtor.
 Pull payments come with risk because the debtor can dispute the payments.
-
-:::caution Direct debit
 Using direct debit to fund your account is more complex, so the majority of the documentation is dedicated to these funding sources.
-:::
 
-### Funding source statuses {#statuses}
+## Funding source statuses {#statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
     AMA((Source<br/>added)) -.-> P[Pending]
-    P -.-> E[Enabled]
-    P --> C[Canceled]
+    P ---> E[Enabled]
+    P -.-> C[Canceled]
     E -.-> S[Suspended]
-    S -.-> E
-    E ---> C
+    S --> E
+    E -.-> C
     subgraph U[Can use source]
         E
     end
@@ -78,11 +75,16 @@ flowchart LR
 ```
 
 | Funding source status | Explanation |
-|---|---|
+|:---:|---|
 | `Pending` | Added a funding source with the `addDirectDebitFundingSource` mutation and are waiting for consent. |
 | `Enabled` | Account funding source can be used. |
 | `Suspended` | Swan can suspend a funding source if there's suspicion of fraud. While suspended, the funding source can't be used. |
 | `Canceled` | Account funding source is canceled and no longer available for use. |
+
+:::info Account verification status
+The account verification status doesn't impact SEPA Direct Debit B2B account funding.
+The funding source status can be `Enabled` even if the account verification status is `PendingVerification`.
+:::
 
 ## Payment mandates {#mandates}
 
@@ -101,7 +103,7 @@ In order for a SEPA Direct Debit B2B funding source to move to the status `Enabl
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
     AMA((Mandate<br/>added)) -.-> CP[ConsentPending]
-    CP -.-> E[Enabled]
+    CP ---> E[Enabled]
     CP -.-> C[Canceled]
     E -.->R[Rejected]
     E -.-> C
@@ -118,16 +120,16 @@ flowchart LR
 ```
 
 | Payment mandate status | Explanation |
-|---|---|
-| `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](./guide-add-source.mdx) with the `addDirectDebitFundingSource` mutation<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`</li><li>If the debtor doesn't consent to the mandate, the status moves to `Canceled`</li></ul> |
-| `Enabled` | Payment mandate can be used to fund the account |
-| `Rejected` | Payment mandate was rejected |
-| `Canceled` | Payment mandate is canceled and no longer available for use<br/><br/>Account funding payment mandates expire 36 months after being created, or earlier if there's a suspicion of fraud |
+| :---: |---|
+| `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](./guide-add-source.mdx) with the `addDirectDebitFundingSource` mutation.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`.</li><li>If the debtor doesn't consent to the mandate, the status moves to `Canceled`.</li></ul> |
+| `Enabled` | Payment mandate can be used to fund the account.  |
+| `Rejected` | Payment mandate was rejected, possibly because the external account's IBAN and Swan payment mandate list different account holders. |
+| `Canceled` | Payment mandate is canceled and no longer available for use.<br/><br/>Account funding payment mandates expire 36 months after being created, or earlier if there's a suspicion of fraud. |
 
 ## Rolling reserve {#rolling-reserve}
 
 When using SEPA Direct Debit to fund your account, Swan reserves a percentage of your total transaction amount for three business days, after which the reserved amount is released to your account.
-Reserved funds are typically released around 20:00 CET on the last day of the rolling reserve period.
+Reserved funds are typically released around 20:00 Central European [Summer] Time (CET/CEST) on the last day of the rolling reserve period.
 
 import RollingReserveDefinition from '../../definitions/_rolling-reserve.mdx';
 

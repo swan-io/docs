@@ -1,0 +1,65 @@
+---
+title: Refund a credit transfer
+---
+
+# Refund a credit transfer
+
+Refund incoming transfers with the API.
+
+## Guide {#guide}
+
+1. Call the `refund` mutation.
+1. Add the `originTransactionId`, `consentRedirectUrl`, and `amount`.
+1. Add the `RefundSuccessPayload` payload.
+1. Add the consent URL to the success payload (line 48): `consent` > `consentUrl`.
+1. Add the `RefundRejection` rejection in case of error.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVmdW5kQ3JlZGl0VHJhbnNmZXIgewogIHJlZnVuZCgKICAgIGlucHV0OiB7CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgcmVmdW5kVHJhbnNhY3Rpb25zOiB7CiAgICAgICAgb3JpZ2luVHJhbnNhY3Rpb25JZDogIiRZT1VSX09SSUdJTl9UUkFOU0FDVElPTl9JRCIKICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIyMiIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBSZWZ1bmRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgaWQKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBSZWZ1bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvZGUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {6,15} showLineNumbers
+mutation RefundCreditTransfer {
+  refund(
+    input: {
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      refundTransactions: {
+        originTransactionId: "YOUR_ORIGIN_TRANSACTION_ID"
+        amount: { value: "22", currency: "EUR" }
+      }
+    }
+  ) {
+    ... on RefundSuccessPayload {
+      __typename
+      consent {
+        id
+        consentUrl
+      }
+    }
+    ... on RefundRejection {
+      __typename
+      code
+      message
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+The payload provides the `consentUrl` to finalize the refund.
+
+```json {7} showLineNumbers
+{
+  "data": {
+    "refund": {
+      "__typename": "RefundSuccessPayload",
+      "consent": {
+        "id": "YOUR_REFUND_ID",
+        "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+      }
+    }
+  }
+}
+```

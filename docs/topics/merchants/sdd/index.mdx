@@ -28,16 +28,11 @@ Refer to the [billing fees section](https://docs.swan.io/concept/account/billing
 Swan offers two SEPA Direct Debit schemes: `Core` and `B2B`.
 You can choose to use one or both schemes according to your use case.
 
-| Feature | Core | B2B |
-| --- | --- | --- |
-| Debtor account type | Individual and company | Company |
-| Refund requested by debtor | Up to 8 calendar weeks after execution, no questions asked<br/><br/>Up to 13 months after execution if there wasn't a valid mandate or if the payment wasn't authorized | Not possible |
-| Returned by debtor's bank | Up to 5 business days for insufficient funds | Up to 3 business days for insufficient funds |
-| Mandate registered by the debtor's payment service provider (PSP) | Not required | Mandatory |
-| Refusal and rejection timeline | Up to the date and time of settlement execution | Up to the date and time of settlement execution |
-| Merchant cancellation | Up to the due date and time | Up to the due date and time |
-| Merchant reversal | Up to 5 business days after due date and time | Up to 5 business days after due date and time |
-| Frequency | One-off and recurrent | One-off and recurrent |
+import DirectDebitTable from '../../partials/_direct-debit-scheme-table.mdx';
+
+<DirectDebitTable directDebitScheme="Core" creditorType="Creditor" psp="the debtor's PSP" />
+
+*PSP stands for payment services provider.*
 
 ## SEPA Creditor Identifier (SCI) {#sci}
 
@@ -133,7 +128,7 @@ import DayTimeStandard from '../../partials/_day-time.mdx';
 Returns and refunds are only possible with **Core** and can be requested up to 8 calendar weeks after due date and time.
 :::
 
-### Rejected {#r-transactions-rejected}
+### Rejected {#rejected}
 
 When a SEPA Direct Debit Core transaction is **rejected**, the debtor's account is not debited.
 
@@ -148,7 +143,7 @@ A SEPA Direct Debit Core transaction might be rejected for the following reasons
 
 When a SEPA Direct Debit Core transaction is rejected, regardless of the reason, the merchant receives a notification and can attempt a new SEPA Direct Debit at a later date.
 
-### Returned {#r-transactions-returned}
+### Returned {#returned}
 
 When a SEPA Direct Debit Core transaction is **returned**, the debtor's account is debited the amount, but the payment is reversed and the funds return to the debtor's account.
 

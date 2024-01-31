@@ -1,31 +1,83 @@
 ---
-title: Enable a payment mandate
+title: Resume a payment mandate
 ---
 
-# Enable a payment mandate
+# Resume a payment mandate
 
-Enable a SEPA Direct Debit received payment mandates with the API.
+Resume the previous status for a SEPA Direct Debit received payment mandates with the API.
+This mutation returns the received payment mandate to its most recent status before being suspended.
 
-[From old doc](https://docs.swan.io/concept/payment/direct-debit#re-enablement-of-a-received-sepa-direct-debit-mandate): A received SEPA direct debit mandate with Suspended status can be switched back to its last status (Enabled for SEPA Direct Debit Core mandates, Enabled or ConsentPending for SEPA Direct Debit B2B mandates) by any accountMembership with CanInitiatePayments rights on the account to which the received SEPA direct debit mandate is associated using the enableReceivedDirectDebitMandate mutation.
+- For SEPA Direct Debit Core mandates, resume the `Enabled` status.
+- For SEPA Direct Debit B2B mandates, resume either the `ConsentPending` or `Enabled` status.
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../accounts/memberships/index.mdx#permissions).
+1. You're authenticating with a [user access token](../../authentication/index.mdx#tokens-user).
+:::
 
 ## Guide {#guide}
 
 1. Call the `enableReceivedDirectDebitMandate` mutation.
-1. Add your ....
-1. Add the payload and rejection.
+1. Add the ID for the mandate you're resuming.
+1. If you're resuming a B2B mandate, add your consent redirect URL.
+1. Add the `EnableReceivedDirectDebitMandateSuccessPayload` (include the `consentUrl` for B2B).
+1. Add rejections (not shown).
 
 ## Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer]
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVzdW1lTWFuZGF0ZSB7CiAgZW5hYmxlUmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGUoCiAgICBpbnB1dDogewogICAgICByZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZUlkOiAiJFlPVVJfTUFOREFURV9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgfQogICkgewogICAgLi4uIG9uIEVuYWJsZVJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3RhdHVzSW5mb0VuYWJsZWQgewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGVuYWJsZWRBdAogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3RhdHVzSW5mb0NvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZU5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlQ2FuY2VsZWRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
-```graphql {2} showLineNumbers
-
+```graphql {4-5,8,20} showLineNumbers
+mutation ResumeMandate {
+  enableReceivedDirectDebitMandate(
+    input: {
+      receivedDirectDebitMandateId: "$YOUR_MANDATE_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on EnableReceivedDirectDebitMandateSuccessPayload {
+      __typename
+      receivedDirectDebitMandate {
+        statusInfo {
+          status
+          ... on ReceivedDirectDebitMandateStatusInfoEnabled {
+            __typename
+            enabledAt
+          }
+          ... on ReceivedDirectDebitMandateStatusInfoConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
 ## Payload {#payload}
 
-The payload shows the ... (line 7).
+The payload shows the mandate status returned to `ConsentPending`, and provides the `consentUrl` (line 10).
 
-```json {5} showLineNumbers
+Make sure to send the `consentUrl` to your user so they can provide consent for the mandate.
 
+```json {7,10} showLineNumbers
+{
+  "data": {
+    "enableReceivedDirectDebitMandate": {
+      "__typename": "EnableReceivedDirectDebitMandateSuccessPayload",
+      "receivedDirectDebitMandate": {
+        "statusInfo": {
+          "status": "ConsentPending",
+          "__typename": "ReceivedDirectDebitMandateStatusInfoConsentPending",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+          }
+        }
+      }
+    }
+  }
+}
 ```

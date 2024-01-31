@@ -4,35 +4,85 @@ title: Add a payment mandate
 
 # Add a payment mandate
 
-Add SEPA Direct Debit received payment mandates with the API.
+Add SEPA Direct Debit B2B received payment mandates with the API.
+Note that when **Swan receives** [new SEPA Direct Debit instructions](./index.mdx#received-instructions-new), the corresponding mandate is added **automatically**.
 
-[From old doc](https://docs.swan.io/concept/payment/direct-debit#creation-of-a-received-sepa-direct-debit-mandate)
-
-Received SEPA direct debit mandates can be created in two different ways:
-
-1. Automatically by Swan from a received SEPA direct debit instruction:
-    - SEPA Direct Debit Core: the received SEPA direct debit mandate is deemed valid by default and is created by Swan under the SepaDirectDebitCore scheme with the Enabled status
-    - SEPA Direct Debit B2B: the received SEPA direct debit mandate needs to be consented to by an accountMembership with the CanInitiatePayments rights on the account being debited. It is created by Swan under the SepaDirectDebitB2b scheme with the ConsentInitiationPending status and switched to Enabled status once consent has been given using the enableReceivedDirectDebitMandate mutation
-1. SEPA Direct Debit B2B only: by any accountMembership with the CanInitiatePayments rights on the account to which the received SEPA Direct Debit B2B mandate needs to be associated with, using the addReceivedSepaDirectDebitB2bMandate mutation with consent.
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../accounts/memberships/index.mdx#permissions).
+1. You're authenticating with a [user access token](../../authentication/index.mdx#tokens-user).
+:::
 
 ## Guide {#guide}
 
-1. Call the `enableReceivedDirectDebitMandate` mutation.
-1. Add your ....
-1. Add the payload and rejection.
+1. Call the `addReceivedSepaDirectDebitB2bMandate` mutation.
+1. Add the Unique Mandate Reference (`mandateReference`) and SEPA Creditor Identifier (`creditorIdentifier`).
+1. Add the creditor's name, plus your Swan IBAN and consent redirect URL.
+1. Choose whether the mandate can be used once (`OneOff`) or multiple times (`Recurrent`).
+1. Add the `AddReceivedSepaDirectDebitB2bMandateSuccessPayload`, including the `consentUrl`.
+1. Add rejections (not shown).
 
 ## Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer]
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkUmVjZWl2ZWRNYW5kYXRlIHsKICBhZGRSZWNlaXZlZFNlcGFEaXJlY3REZWJpdEIyYk1hbmRhdGUoCiAgICBpbnB1dDogewogICAgICBtYW5kYXRlUmVmZXJlbmNlOiAiJFlPVVJfVVJNIgogICAgICBjcmVkaXRvcklkZW50aWZpZXI6ICIkWU9VUl9TQ0kiCiAgICAgIGNyZWRpdG9yTmFtZTogIkthdGhlcmluZSBKb2huc29uIgogICAgICBpYmFuOiAiJFNXQU5fSUJBTiIKICAgICAgc2VxdWVuY2U6IE9uZU9mZgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkUmVjZWl2ZWRTZXBhRGlyZWN0RGViaXRCMmJNYW5kYXRlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3RhdHVzSW5mb0NvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgICAuLi4gb24gUmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGVTdGF0dXNJbmZvRW5hYmxlZCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgZW5hYmxlZEF0CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
 
-```graphql {2} showLineNumbers
+```graphql {4-9,12,17,20} showLineNumbers
+mutation AddReceivedMandate {
+  addReceivedSepaDirectDebitB2bMandate(
+    input: {
+      mandateReference: "$YOUR_URM"
+      creditorIdentifier: "$YOUR_SCI"
+      creditorName: "Katherine Johnson"
+      iban: "$SWAN_IBAN"
+      sequence: OneOff
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on AddReceivedSepaDirectDebitB2bMandateSuccessPayload {
+      __typename
+      receivedDirectDebitMandate {
+        statusInfo {
+          status
+          ... on ReceivedDirectDebitMandateStatusInfoConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+            status
+          }
+          ... on ReceivedDirectDebitMandateStatusInfoEnabled {
+            __typename
+            enabledAt
+            status
+          }
+        }
+      }
+    }
+  }
+}
 
 ```
 
 ## Payload {#payload}
 
-The payload shows the ... (line 7).
+The payload shows the mandate was added successfully with the status `ConsentPending`, and provides the `consentUrl` (line 10).
 
-```json {5} showLineNumbers
+Make sure to send the `consentUrl` to your user so they can provide consent for the mandate.
 
+```json {7,10} showLineNumbers
+{
+  "data": {
+    "addReceivedSepaDirectDebitB2bMandate": {
+      "__typename": "AddReceivedSepaDirectDebitB2bMandateSuccessPayload",
+      "receivedDirectDebitMandate": {
+        "statusInfo": {
+          "status": "ConsentPending",
+          "__typename": "ReceivedDirectDebitMandateStatusInfoConsentPending",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+          }
+        }
+      }
+    }
+  }
+}
 ```

@@ -5,32 +5,64 @@ title: Suspend a payment mandate
 # Suspend a payment mandate
 
 Suspend SEPA Direct Debit received payment mandates with the API.
+SEPA Direct Debit instructions associated with a [`Suspended` received payment mandate](./index.mdx#received-instructions-execution) are `Rejected`.
 
-[From old doc](https://docs.swan.io/concept/payment/direct-debit#suspension-of-a-received-sepa-direct-debit-mandate):
-
-- A received SEPA direct debit mandate can be suspended using the suspendReceivedDirectDebitMandate mutation, by any accountMembership with the CanInitiatePayments rights on the account to which the received SEPA direct debit mandate is associated.
-- Once the mutation is successfully executed, the received SEPA direct debit mandate is switched to Suspended status.
-- At the reception date and debit date of a SEPA direct debit instruction, Swan verifies among other things the status of the underlying received SEPA direct debit mandate.
-- The transaction is automatically rejected if the latter has Suspended status.
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../accounts/memberships/index.mdx#permissions).
+1. You only need a [project access token](../../authentication/index.mdx#tokens-project) for this mutation.
+:::
 
 ## Guide {#guide}
 
 1. Call the `suspendReceivedDirectDebitMandate` mutation.
-1. Add your ....
-1. Add the payload and rejection.
+1. Add the ID for the mandate you're suspending.
+1. Add the `SuspendReceivedDirectDebitMandateSuccessPayload`, including the `suspendedAt` if you'd like to review the exact time and date at which the mandate was suspended.
+1. Add rejections (not shown).
 
 ## Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer]
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU3VzcGVuZE1hbmRhdGUgewogIHN1c3BlbmRSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZSgKICAgIGlucHV0OiB7IHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlSWQ6ICIkWU9VUl9NQU5EQVRFX0lEIiB9CiAgKSB7CiAgICAuLi4gb24gU3VzcGVuZFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlIHsKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgICAuLi4gb24gUmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGVTdGF0dXNJbmZvU3VzcGVuZGVkIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBzdXNwZW5kZWRBdAogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIFN1c3BlbmRSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgcmVhc29uCiAgICB9CiAgICAuLi4gb24gUmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGVOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZUNhbmNlbGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
 
-```graphql {2} showLineNumbers
-
+```graphql {3,10-11,13} showLineNumbers
+mutation SuspendMandate {
+  suspendReceivedDirectDebitMandate(
+    input: { receivedDirectDebitMandateId: "$YOUR_MANDATE_ID" }
+  ) {
+    ... on SuspendReceivedDirectDebitMandateSuccessPayload {
+      __typename
+      receivedDirectDebitMandate {
+        id
+        statusInfo {
+          status
+          ... on ReceivedDirectDebitMandateStatusInfoSuspended {
+            __typename
+            suspendedAt
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
 ## Payload {#payload}
 
-The payload shows the ... (line 7).
+The payload shows the status `Suspended`, as well as the date and time at which is was suspended..
 
-```json {5} showLineNumbers
-
+```json {8,10} showLineNumbers
+{
+  "data": {
+    "suspendReceivedDirectDebitMandate": {
+      "__typename": "SuspendReceivedDirectDebitMandateSuccessPayload",
+      "receivedDirectDebitMandate": {
+        "id": "$YOUR_MANDATE_ID",
+        "statusInfo": {
+          "status": "Suspended",
+          "__typename": "ReceivedDirectDebitMandateStatusInfoSuspended",
+          "suspendedAt": "2024-01-31T13:49:13.620765Z"
+        }
+      }
+    }
+  }
+}
 ```

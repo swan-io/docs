@@ -343,6 +343,17 @@ module.exports = {
         },
         {
           type: "category",
+          label: "Card payments",
+          link: { type: "doc", id: "topics/payments/cards/index" },
+          collapsed: true,
+          items: [
+            "topics/payments/cards/guide-get-list",
+            "topics/payments/cards/guide-update",
+            "topics/payments/cards/sandbox",
+          ],
+        },
+        {
+          type: "category",
           label: "Credit transfers",
           link: { type: "doc", id: "topics/payments/credit-transfers/index" },
           collapsed: true,
@@ -387,18 +398,7 @@ module.exports = {
             "topics/payments/direct-debit/guide-update-mandate",
             "topics/payments/direct-debit/guide-suspend-mandate",
             "topics/payments/direct-debit/guide-enable-mandate",
-            "topics/payments/direct-debit/guide-cancel-mandate",
-          ],
-        },
-        {
-          type: "category",
-          label: "Card payments",
-          link: { type: "doc", id: "topics/payments/cards/index" },
-          collapsed: true,
-          items: [
-            "topics/payments/cards/guide-get-list",
-            "topics/payments/cards/guide-update",
-            "topics/payments/cards/sandbox",
+            "topics/payments/direct-debit/sandbox",
           ],
         },
       ],

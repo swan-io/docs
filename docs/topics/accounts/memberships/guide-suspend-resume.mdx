@@ -72,8 +72,21 @@ mutation SuspendMembership {
     }
   }
 }
-
 ```
+
+```json title="Suspend payload" showLineNumbers
+{
+  "data": {
+    "suspendAccountMembership": {
+      "__typename": "SuspendAccountMembershipSuccessPayload",
+      "accountMembership": {
+        "id": "$YOUR_MEMBERSHIP_ID"
+      }
+    }
+  }
+}
+```
+
 ## Resume a membership {#guide-resume}
 
 :::note Suspended only
@@ -114,6 +127,29 @@ mutation ResumeMembership {
         code
         message
         path
+      }
+    }
+  }
+}
+```
+
+```json title="Resume payload" showLineNumbers
+{
+  "data": {
+    "resumeAccountMembership": {
+      "__typename": "ResumeAccountMembershipSuccessPayload",
+      "consent": {
+        "status": "Created",
+        "id": "$YOUR_CONSENT_ID",
+        "user": {
+          "id": "$YOUR_USER_ID",
+          "idVerified": false,
+          "identificationLevels": {
+            "PVID": false,
+            "QES": false,
+            "expert": false
+          }
+        }
       }
     }
   }

@@ -1,0 +1,80 @@
+---
+title: Get information about a single user
+---
+
+# Get information about a single user
+
+You can **call the API** to get information about a single user within your project.
+
+Identification information is also available on your **Dashboard** > **Data** > **Users**.
+
+:::tip Prerequisites
+You need a **project access token** call the query.
+:::
+
+## Guide {#guide}
+
+1. Call the `user` query.
+1. Add the user ID.
+1. Add all information you'd like to review. The sample query returns the number of account memberships and cards, as well as the user's identity information and mobile number.
+1. Add [pagination](../../../developers/using-api/pagination.mdx) if you want to narrow the results.
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgSW5mb09uZVVzZXIgewogIHVzZXIoaWQ6ICIkWU9VUl9VU0VSX0lEIikgewogICAgYWNjb3VudE1lbWJlcnNoaXBzIHsKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgaWQKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICAgIGNhcmRzIHsKICAgICAgICAgICAgdG90YWxDb3VudAogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgICB0b3RhbENvdW50CiAgICB9CiAgICBpZFZlcmlmaWVkCiAgICBpZGVudGlmaWNhdGlvblN0YXR1cwogICAgbW9iaWxlUGhvbmVOdW1iZXIKICB9Cn0K&tab=api)
+
+```graphql {2,3,10,,17-19} showLineNumbers
+query InfoOneUser {
+  user(id: "$YOUR_USER_ID") {
+    accountMemberships {
+      edges {
+        node {
+          id
+          statusInfo {
+            status
+          }
+          cards {
+            totalCount
+          }
+        }
+      }
+      totalCount
+    }
+    idVerified
+    identificationStatus
+    mobilePhoneNumber
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows that this user has one account membership, three cards, and isn't `idVerified` but does have a valid identity.
+
+```json {8,10,12-13,18,20-21} showLineNumbers
+{
+  "data": {
+    "user": {
+      "accountMemberships": {
+        "edges": [
+          {
+            "node": {
+              "id": "$YOUR_MEMBERSHIP_ID",
+              "statusInfo": {
+                "status": "Enabled"
+              },
+              "cards": {
+                "totalCount": 3
+              }
+            }
+          }
+        ],
+        "totalCount": 1
+      },
+      "idVerified": false,
+      "identificationStatus": "ValidIdentity",
+      "mobilePhoneNumber": "+33600000000"
+    }
+  }
+}
+```

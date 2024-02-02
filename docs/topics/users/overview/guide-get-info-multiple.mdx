@@ -1,0 +1,105 @@
+---
+title: Get information about multiple users
+---
+
+# Get information about multiple users
+
+You can **call the API** to get information about multiple users within your project
+
+Identification information is also available on your **Dashboard** > **Data** > **Users**.
+
+:::tip Prerequisites
+You need a **project access token** call the query.
+:::
+
+## Guide {#guide}
+
+1. Call the `users` query.
+1. Add all information you'd like to review. The sample query retrieves user IDs, when the users joined the project, their identification status, and the language they used to authenticate, as well as the total count of users in the project.
+1. Add [pagination](../../../developers/using-api/pagination.mdx) to get only the most recent PVID result (line 9-11).
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgSW5mb011bHRpcGxlVXNlcnMgewogIHVzZXJzIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgaWQKICAgICAgICBqb2luZWRBdAogICAgICAgIGlkZW50aWZpY2F0aW9uU3RhdHVzCiAgICAgICAgYXV0aGVudGljYXRvcnMgewogICAgICAgICAgYWNjZXB0TGFuZ3VhZ2UKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIHRvdGFsQ291bnQKICB9Cn0K&tab=api)
+
+```graphql {5-7,9,13} showLineNumbers
+query InfoMultipleUsers {
+  users {
+    edges {
+      node {
+        id
+        joinedAt
+        identificationStatus
+        authenticators {
+          acceptLanguage
+        }
+      }
+    }
+    totalCount
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows four users, each authenticating with a different language.
+
+```json {7-9,12,24,36,48,54} showLineNumbers
+{
+  "data": {
+    "users": {
+      "edges": [
+        {
+          "node": {
+            "id": "$USER_ID_1",
+            "joinedAt": "2024-01-18T13:42:50.106Z",
+            "identificationStatus": "ValidIdentity",
+            "authenticators": [
+              {
+                "acceptLanguage": "en"
+              }
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "$USER_ID_2",
+            "joinedAt": "2024-01-18T13:44:22.504Z",
+            "identificationStatus": "InvalidIdentity",
+            "authenticators": [
+              {
+                "acceptLanguage": "fr"
+              }
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "$USER_ID_3",
+            "joinedAt": "2023-06-20T12:54:59.855Z",
+            "identificationStatus": "ValidIdentity",
+            "authenticators": [
+              {
+                "acceptLanguage": "de"
+              }
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "$USER_ID_4",
+            "joinedAt": "2023-02-28T10:38:35.035Z",
+            "identificationStatus": "ValidIdentity",
+            "authenticators": [
+              {
+                "acceptLanguage": "es"
+              }
+            ]
+          }
+        }
+      ],
+      "totalCount": 4
+    }
+  }
+}
+```

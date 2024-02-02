@@ -1,0 +1,175 @@
+---
+title: Get a list of users
+---
+
+# Get a list of users
+
+You can **call the API** to get a list of all users who have signed in to your project at least one time.
+
+User information is also available on your **Dashboard** > **Data** > **Users**.
+
+:::tip Prerequisites
+You need a **project access token** call the query.
+:::
+
+## Guide {#guide}
+
+1. Call the `users` query.
+1. Add all information you'd like to review. The sample query gathers almost all information available when calling this query.
+1. If you want to know when the user provided their first [OAuth 2.0 consent](../../consent/index.mdx#sca), include the `joinedAt` attribute.
+1. Consider adding [pagination](../../../developers/using-api/pagination.mdx) if you're expecting a long list.
+
+:::tip
+Include the `joinedAt` attribute to know when the user provided their first [OAuth 2.0 consent](../../consent/index.mdx#sca).
+:::
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0VXNlcnNMaXN0IHsKICB1c2VycyB7CiAgICBlZGdlcyB7CiAgICAgIG5vZGUgewogICAgICAgIGlkCiAgICAgICAgam9pbmVkQXQKICAgICAgICBsYXN0TmFtZQogICAgICAgIG1vYmlsZVBob25lTnVtYmVyCiAgICAgICAgbmF0aW9uYWxpdHlDQ0EzCiAgICAgICAgcHJlZmVycmVkTm90aWZpY2F0aW9uQ2hhbm5lbAogICAgICAgIHVwZGF0ZWRBdAogICAgICAgIGlkZW50aWZpY2F0aW9uU3RhdHVzCiAgICAgICAgaWRWZXJpZmllZAogICAgICAgIGlkZW50aWZpY2F0aW9uTGV2ZWxzIHsKICAgICAgICAgIGV4cGVydAogICAgICAgICAgUUVTCiAgICAgICAgICBQVklECiAgICAgICAgfQogICAgICAgIGZpcnN0TmFtZQogICAgICAgIGNyZWF0ZWRBdAogICAgICAgIGJpcnRoRGF0ZQogICAgICAgIGF1dGhlbnRpY2F0b3JzIHsKICAgICAgICAgIGFjY2VwdExhbmd1YWdlCiAgICAgICAgICBicmFuZAogICAgICAgICAgdHlwZQogICAgICAgICAgdXNlckFnZW50CiAgICAgICAgICBvcwogICAgICAgICAgbW9kZWwKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIHRvdGFsQ291bnQKICB9Cn0K&tab=api)
+
+```graphql {6} showLineNumbers
+query GetUsersList {
+  users {
+    edges {
+      node {
+        id
+        joinedAt
+        lastName
+        mobilePhoneNumber
+        nationalityCCA3
+        preferredNotificationChannel
+        updatedAt
+        identificationStatus
+        idVerified
+        identificationLevels {
+          expert
+          QES
+          PVID
+        }
+        firstName
+        createdAt
+        birthDate
+        authenticators {
+          acceptLanguage
+          brand
+          type
+          userAgent
+          os
+          model
+        }
+      }
+    }
+    totalCount
+  }
+}
+```
+
+## Payload {#payload}
+
+In the payload, note the IDs, name information, mobile number, identification status, the true or false for each identification level, and more.
+Because it was added in the query, you also know when each user joined your project (line 8).
+
+```json {8} showLineNumbers
+{
+  "data": {
+    "users": {
+      "edges": [
+        {
+          "node": {
+            "id": "$USER_1_ID",
+            "joinedAt": "2024-01-18T13:42:50.106Z",
+            "lastName": "Ngoma",
+            "mobilePhoneNumber": "$MOBILE_NUMBER",
+            "nationalityCCA3": "FRA",
+            "preferredNotificationChannel": null,
+            "updatedAt": "2024-01-25T15:26:25.829Z",
+            "identificationStatus": "ValidIdentity",
+            "idVerified": true,
+            "identificationLevels": {
+              "expert": true,
+              "QES": false,
+              "PVID": false
+            },
+            "firstName": "Malika",
+            "createdAt": "2024-01-17T15:14:01.480Z",
+            "birthDate": "1986-12-11",
+            "authenticators": [
+              {
+                "acceptLanguage": "en",
+                "brand": "Apple",
+                "type": "SwanWeb",
+                "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1",
+                "os": "iOS",
+                "model": "iPhone"
+              }
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "$USER_2_ID",
+            "joinedAt": "2024-01-18T13:44:22.504Z",
+            "lastName": "Byrne",
+            "mobilePhoneNumber": "$MOBILE_NUMBER",
+            "nationalityCCA3": "IRL",
+            "preferredNotificationChannel": null,
+            "updatedAt": "2024-01-21T15:00:37.810Z",
+            "identificationStatus": "ValidIdentity",
+            "idVerified": true,
+            "identificationLevels": {
+              "expert": true,
+              "QES": true,
+              "PVID": true
+            },
+            "firstName": "Dillon",
+            "createdAt": "2024-01-02T17:28:03.935Z",
+            "birthDate": "1990-09-24",
+            "authenticators": [
+              {
+                "acceptLanguage": "en",
+                "brand": "Apple",
+                "type": "SwanWeb",
+                "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1",
+                "os": "iOS",
+                "model": "iPhone"
+              }
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "$USER_3_ID",
+            "joinedAt": "2023-06-20T12:54:59.855Z",
+            "lastName": "Fleury",
+            "mobilePhoneNumber": "$MOBILE_NUMBER",
+            "nationalityCCA3": "FRA",
+            "preferredNotificationChannel": "Sms",
+            "updatedAt": "2024-01-24T20:01:54.388Z",
+            "identificationStatus": "ValidIdentity",
+            "idVerified": false,
+            "identificationLevels": {
+              "expert": false,
+              "QES": false,
+              "PVID": false
+            },
+            "firstName": "Jules",
+            "createdAt": "2023-03-30T13:08:55.578Z",
+            "birthDate": "1988-08-06",
+            "authenticators": [
+              {
+                "acceptLanguage": "en",
+                "brand": "Apple",
+                "type": "SwanWeb",
+                "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1",
+                "os": "iOS",
+                "model": "iPhone"
+              }
+            ]
+          }
+        },
+      ],
+      "totalCount": 3
+    }
+  }
+}
+```

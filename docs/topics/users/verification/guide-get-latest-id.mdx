@@ -1,0 +1,77 @@
+---
+title: Get latest identification status
+---
+
+# Get latest identification status
+
+You can **call the API** to get a user's latest identification status.
+
+Identification information is also available on your **Dashboard** > **Data** > **Users**.
+
+:::tip Prerequisites
+You need a **project access token** call the query.
+:::
+
+## Guide {#guide}
+
+1. Call the `user` query.
+1. Add the user ID.
+1. Add all information you'd like to review.
+    - The sample query retrieves the user's latest PVID identification status.
+1. Add [pagination](../../../developers/using-api/pagination.mdx) to get only the most recent PVID result (line 9-11).
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgTGF0ZXN0UHZpZElkU3RhdHVzIHsKICB1c2VyKGlkOiAiJFlPVVJfVVNFUl9JRCIpIHsKICAgIGlkZW50aWZpY2F0aW9uTGV2ZWxzIHsKICAgICAgUFZJRAogICAgICBleHBlcnQKICAgICAgUUVTCiAgICB9CiAgICBpZGVudGlmaWNhdGlvbnMoCiAgICAgIGZpbHRlcnM6IHsgcHJvY2Vzc2VzOiBQVklEIH0KICAgICAgb3JkZXJCeTogeyBmaWVsZDogdXBkYXRlZEF0LCBkaXJlY3Rpb246IERlc2MgfQogICAgICBmaXJzdDogMQogICAgKSB7CiAgICAgIGVkZ2VzIHsKICAgICAgICBub2RlIHsKICAgICAgICAgIGlkCiAgICAgICAgICBwcm9jZXNzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2,9-11} showLineNumbers
+query LatestPvidIdStatus {
+  user(id: "$YOUR_USER_ID") {
+    identificationLevels {
+      PVID
+      expert
+      QES
+    }
+    identifications(
+      filters: { processes: PVID }
+      orderBy: { field: updatedAt, direction: Desc }
+      first: 1
+    ) {
+      edges {
+        node {
+          id
+          process
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows that this user is successfully identified using PVID.
+
+```json {5,13-14} showLineNumbers
+{
+  "data": {
+    "user": {
+      "identificationLevels": {
+        "PVID": true,
+        "expert": true,
+        "QES": true
+      },
+      "identifications": {
+        "edges": [
+          {
+            "node": {
+              "id": "$YOUR_IDENTIFICATION_ID",
+              "process": "PVID"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```

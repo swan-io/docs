@@ -59,11 +59,11 @@ We might contact you for more information before accepting or rejecting the new 
 flowchart LR
     MPR((Profile<br/>requested)) -.-> PR[PendingReview]
     PR -.-> R[Rejected]
-    PR -.-> E[Enabled]
-    E -.-> S[Suspended]
-    S -.-> E
+    PR --> E[Enabled]
+    E <-.-> S[Suspended]
     S -.-> CD[Canceled]
     E -.-> CD
+    S -.-> R
     subgraph U[Can use profile]
         E
     end
@@ -75,6 +75,14 @@ flowchart LR
     style F fill:#fffdf4,stroke:#cca922
     style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
 ```
+
+| Profile status | Explanation |
+|---|---|
+| `PendingReview` | Profile was submitted and is pending a review by Swan. |
+| `Enabled` | Profile is active and can be used to request payment methods and accept payments with activated payment methods. |
+| `Suspended` | Status assigned by Swan when the merchant's use of the accept payments feature needs to be reviewed. |
+| `Rejected` | Final status assigned by Swan when Swan decides the risk of this profile is too high, or for some other risk-related reason. |
+| `Canceled` | Automated status assigned by Swan. |
 
 ## Payment methods {#methods}
 
@@ -121,22 +129,33 @@ We might contact you for more information before accepting or rejecting the paym
 flowchart LR
     MPMR((Merchant payment<br/>method requested)) -.-> PR[PendingReview]
     PR -.-> R[Rejected]
-    PR -.-> E[Enabled]
+    PR --> E[Enabled]
+    E <-.-> S[Suspended]
+    S -.-> R
     E -.-> D[Disabled]
-    D -.-> E
-    D -.-> CD[Canceled]
-    E -.-> CD
+    E -.-> C[Canceled]
+    PR -.-> C
     subgraph U[Can use method]
         E
     end
     subgraph F[Final status]
-        CD
+        D
         R
+        C
     end
     style MPMR fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
     style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
 ```
+
+| Payment method status | Explanation |
+|---|---|
+| `PendingReview` | Request to activate this payment method was submitted and is pending a review by Swan. |
+| `Enabled` | Payment method has been reviewed and is active. It can be used to accept payments. |
+| `Suspended` | Status assigned by Swan when the use of the payment method for the associated merchant needs to be reviewed. The status can't return to `Enabled` without a review. |
+| `Rejected` | Final status assigned by Swan when Swan decides the risk of this payment method for the associated merchant is too high, or for some other risk-related reason. |
+| `Disabled` | Final status, set by the `requestMerchantPaymentMethods` mutation. |
+| `Canceled` | Automated status assigned by Swan if the merchant submits an additional request for a payment method for which their original request is `PendingReview`. |
 
 ## Rolling reserve {#rolling-reserve}
 

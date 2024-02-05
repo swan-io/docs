@@ -142,38 +142,6 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Authentication & Consent",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Authentication",
-          link: { type: "doc", id: "topics/authentication/index" },
-          collapsed: true,
-          items: [
-            "topics/authentication/guide-get-token-user",
-            "topics/authentication/guide-get-token-project",
-            "topics/authentication/guide-impersonate",
-          ],
-        },
-        {
-          type: "category",
-          label: "Consent",
-          link: { type: "doc", id: "topics/consent/index" },
-          collapsed: true,
-          items: [
-            "topics/consent/guide-configure-notifications",
-            "topics/consent/guide-create-multiconsent",
-            "topics/consent/guide-implement-s2s",
-            "topics/consent/guide-integrate-sca",
-            "topics/consent/support",
-          ],
-        },
-      ],
-    },
-    {
-      type: "category",
       label: "Capital deposits",
       collapsible: false,
       collapsed: false,
@@ -417,6 +385,60 @@ module.exports = {
           items: ["topics/projects/guide-activate"],
         },
         "topics/projects/support",
+      ],
+    },
+    {
+      type: "category",
+      label: "Users",
+      collapsible: false,
+      link: { type: "doc", id: "topics/users/index" },
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Users overview",
+          link: { type: "doc", id: "topics/users/index" },
+          collapsed: true,
+          items: [
+            "topics/users/overview/guide-get-list",
+            "topics/users/overview/guide-get-info-multiple",
+            "topics/users/overview/guide-get-info-one",
+          ],
+        },
+        {
+          type: "category",
+          label: "Authentication",
+          link: { type: "doc", id: "topics/authentication/index" },
+          collapsed: true,
+          items: [
+            "topics/authentication/guide-get-token-user",
+            "topics/authentication/guide-get-token-project",
+            "topics/authentication/guide-impersonate",
+          ],
+        },
+        {
+          type: "category",
+          label: "Consent",
+          link: { type: "doc", id: "topics/consent/index" },
+          collapsed: true,
+          items: [
+            "topics/consent/guide-configure-notifications",
+            "topics/consent/guide-create-multiconsent",
+            "topics/consent/guide-implement-s2s",
+            "topics/consent/guide-integrate-sca",
+            "topics/consent/support",
+          ],
+        },
+        {
+          type: "category",
+          label: "Identity verification",
+          link: { type: "doc", id: "topics/users/verification/index" },
+          collapsed: true,
+          items: [
+            "topics/users/verification/guide-get-identifications",
+            "topics/users/verification/guide-get-latest-id",
+          ],
+        },
       ],
     },
     {

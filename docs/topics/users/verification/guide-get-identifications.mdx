@@ -1,0 +1,152 @@
+---
+title: Get a list of identifications
+---
+
+# Get a list of identifications
+
+You can **call the API** to get a list of all of your user's identifications.
+
+Identification information is also available on your **Dashboard** > **Data** > **Users**.
+
+:::tip Prerequisites
+You need a **project access token** to call the query.
+:::
+
+## Guide {#guide}
+
+1. Call the `user` query.
+1. Add the user ID.
+1. Add all information you'd like to review. The sample query adds all status information, as well as the `totalCount` of identifications.
+    - Notice the nodes `process`, `status`, and `updatedAt`, which provide information about which process was used and the identification status with that process.
+    - Further, notice the `levels`, and the information that will be shared if there is an invalid status connected to that level.
+1. Consider adding [pagination](../../../developers/using-api/pagination.mdx) if you're expecting a long list.
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgTGlzdE9mSWRlbnRpZmljYXRpb25zIHsKICB1c2VyKGlkOiAiJFlPVVJfVVNFUl9JRCIpIHsKICAgIGlkZW50aWZpY2F0aW9ucyB7CiAgICAgIGVkZ2VzIHsKICAgICAgICBub2RlIHsKICAgICAgICAgIHByb2Nlc3MKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgdXBkYXRlZEF0CiAgICAgICAgICBsZXZlbHMgewogICAgICAgICAgICBleHBlcnQgewogICAgICAgICAgICAgIC4uLiBvbiBJbnZhbGlkSWRlbnRpZmljYXRpb25MZXZlbFN0YXR1c0luZm8gewogICAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgICAgcmVhc29ucwogICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIC4uLiBvbiBWYWxpZElkZW50aWZpY2F0aW9uTGV2ZWxTdGF0dXNJbmZvIHsKICAgICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgICAgICBxZXMgewogICAgICAgICAgICAgIC4uLiBvbiBJbnZhbGlkSWRlbnRpZmljYXRpb25MZXZlbFN0YXR1c0luZm8gewogICAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAuLi4gb24gVmFsaWRJZGVudGlmaWNhdGlvbkxldmVsU3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgcHZpZCB7CiAgICAgICAgICAgICAgLi4uIG9uIEludmFsaWRJZGVudGlmaWNhdGlvbkxldmVsU3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIC4uLiBvbiBWYWxpZElkZW50aWZpY2F0aW9uTGV2ZWxTdGF0dXNJbmZvIHsKICAgICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgICB0b3RhbENvdW50CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2,11,16,22,25,31,34,42} showLineNumbers
+query ListOfIdentifications {
+  user(id: "$YOUR_USER_ID") {
+    identifications {
+      edges {
+        node {
+          process
+          status
+          updatedAt
+          levels {
+            expert {
+              ... on InvalidIdentificationLevelStatusInfo {
+                __typename
+                reasons
+                status
+              }
+              ... on ValidIdentificationLevelStatusInfo {
+                __typename
+                status
+              }
+            }
+            qes {
+              ... on InvalidIdentificationLevelStatusInfo {
+                __typename
+              }
+              ... on ValidIdentificationLevelStatusInfo {
+                __typename
+                status
+              }
+            }
+            pvid {
+              ... on InvalidIdentificationLevelStatusInfo {
+                __typename
+              }
+              ... on ValidIdentificationLevelStatusInfo {
+                __typename
+                status
+              }
+            }
+          }
+        }
+      }
+      totalCount
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+In the payload, note the **`Valid`** `PVID` and `Expert` processes (lines 9, 24).
+
+The `QES` process, however, is **`Invalid`**.
+This is because, when completing the `Expert` level identification (which qualifies for the `QES` process), the user had `BadDocumentLighting` (line 48), which is just one possible [rejection reason](./index.mdx#tracking-reason-codes).
+
+Finally, note the empty `{}` when there is no information to share based on the query parameters.
+This is expected behavior.
+
+```json {8-9,13-14,23-24,41-42,45-48,50,52-53,60} showLineNumbers
+{
+  "data": {
+    "user": {
+      "identifications": {
+        "edges": [
+          {
+            "node": {
+              "process": "Expert",
+              "status": "Valid",
+              "updatedAt": "2023-11-29T09:15:25.978Z",
+              "levels": {
+                "expert": {
+                  "__typename": "ValidIdentificationLevelStatusInfo",
+                  "status": "Valid"
+                },
+                "qes": {},
+                "pvid": {}
+              }
+            }
+          },
+          {
+            "node": {
+              "process": "PVID",
+              "status": "Valid",
+              "updatedAt": "2023-11-28T17:00:23.903Z",
+              "levels": {
+                "expert": {
+                  "__typename": "ValidIdentificationLevelStatusInfo",
+                  "status": "Valid"
+                },
+                "qes": {},
+                "pvid": {
+                  "__typename": "ValidIdentificationLevelStatusInfo",
+                  "status": "Valid"
+                }
+              }
+            }
+          },
+          {
+            "node": {
+              "process": "QES",
+              "status": "Invalid",
+              "updatedAt": "2023-11-24T10:49:40.470Z",
+              "levels": {
+                "expert": {
+                  "__typename": "InvalidIdentificationLevelStatusInfo",
+                  "reasons": [
+                    "BadDocumentLightning"
+                  ],
+                  "status": "Invalid"
+                },
+                "qes": {
+                  "__typename": "InvalidIdentificationLevelStatusInfo"
+                },
+                "pvid": {}
+              }
+            }
+          },
+        ],
+        "totalCount": 3
+      }
+    }
+  }
+}
+```

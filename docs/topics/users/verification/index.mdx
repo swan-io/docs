@@ -41,19 +41,6 @@ If your users aren't completing identity verification despite these automated ef
 1. Follow the [guide to get a user access token](../../authentication/guide-get-token-user.mdx#auth-code).
 1. In step 2.1, add the `idverified` parameter to the `scope` (line 9; also includes `openid` and `offline`).
 
-### Processes and levels {#process-vs-level}
-Identification processes and levels have the **same names** within Swan's API.
-
-The process depends on your use case and location.
-Your required process might be able to be fulfilled by several levels.
-For example, *both* the `Expert` and `PVID` **levels** meet the requirement for the `PVID` **process**.
-
-| Process →<br />↓ Fulfilled by | `Expert` process | `PVID` process | `QES` process |
-| :---: | :---: | :---: | :---: |
-| `Expert` level | ✓ **Yes** | ✓ **Yes** | ✓ **Yes** |
-| `PVID` level | ☒ No | ✓ **Yes** | ☒ No |
-| `QES` level | ☒ No | ☒ No | ✓ **Yes** |
-
 ## Identification processes {#processes}
 
 Swan offers three identification processes.
@@ -107,7 +94,21 @@ Any individual opening an account with a French IBAN can use PVID to complete id
 To start a PVID identity verification, follow the [guide to get a user access token](../../authentication/guide-get-token-user.mdx#auth-code).
 In step 2.1, set the optional parameter `identificationLevel` to `PVID`.
 
-### Recommendations {#processes-recommendations}
+### Processes and levels {#process-vs-level}
+
+Identification processes and levels have the **same names** within Swan's API.
+
+The process depends on your use case and location.
+Your required process might be able to be fulfilled by several levels.
+For example, *both* the `Expert` and `PVID` **levels** meet the requirement for the `PVID` **process**.
+
+| Process →<br />↓ Fulfilled by | `Expert` process | `PVID` process | `QES` process |
+| :---: | :---: | :---: | :---: |
+| `Expert` level | ✓ **Yes** | ✓ **Yes** | ✓ **Yes** |
+| `PVID` level | ☒ No | ✓ **Yes** | ☒ No |
+| `QES` level | ☒ No | ☒ No | ✓ **Yes** |
+
+### Process recommendations {#processes-recommendations}
 
 Accepted identification processes vary by country based on local regulations.
 For each [account country](../../accounts/index.mdx#account-country) and type of account, Swan recommends a process and, if possible, offers other acceptable processes.
@@ -160,7 +161,7 @@ flowchart LR
 |---|---|
 | `Uninitiated` | The user has been created with Swan, but the identity verification process hasn't started yet. |
 | `Processing` | The identity verification process is in progress.<br /><br />**Next steps**:<ul><li>If the user verifies their identity successful for Expert or PVID, the status changes to `ValidIdentity`</li><li>If the user verifies their identity successful for QES, the status changes to `ReadyToSign` and the user is prompted to provide an electronic signature to finalize their identity verification</li><li>If the identity verification is unsuccessful because their identity is flagged as invalid, the status changes to `InvalidIdentity`</li><li>If the identity verification is unsuccessful because of any of the rejection reasons listed in the next section, the status changes to the corresponding `RejectionReasonCode`</li></ul> |
-| `ReadyToSign` | The user's identity was verified using the QES process, and the user now needs to sign to finalize the process.<br /><br />**Next steps**:<ul><li>If the user signs successfully, the status changes to `ValidIdentity`</li><li>If the user's signature isn't valid or isn't submitted, the status changes to the corresponding `RejectionReasonCode`</li></ul> |
+| `ReadyToSign` | The user's identity was verified using the QES process, and the user now needs to sign electronically to finalize the process.<br /><br />**Next steps**:<ul><li>If the user signs successfully, the status changes to `ValidIdentity`</li><li>If the user's signature isn't valid or isn't submitted, the status changes to the corresponding `RejectionReasonCode`</li></ul> |
 | `ValidIdentity` | The user's identity is verified. They can continue to account holder verification if applicable. |
 | `InvalidIdentity` | The user's identity is invalid. They can try again using the same level or a different level. |
 | `RejectionReasonCode` | Identity verifications can be rejected for numerous reasons, detailed in the following section. When rejected, that verification attempt is final; the user must try again with a new identity verification instance. |

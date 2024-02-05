@@ -27,7 +27,6 @@ Internal transfers are usually quicker than SEPA Credit Transfers.
 Otherwise, SEPA Credit Transfers and Internal Credit Transfers function almost identically within Swan, and both use the payment product SEPA Credit Transfer, displayed on your **Dashboard** > **Data** > **Accounts** > **Transactions** list.
 :::
 
-
 ### Consent {#consent}
 
 Initiating credit transfers is a [sensitive operation](../../../consent/index.mdx#sensitive) and requires consent from an authorized representative of the debtor account, such as the [account holder](../../../../glossary.mdx#account-holder), the account's [legal representative](../../../../glossary.mdx#legal-representative), or an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
@@ -49,13 +48,22 @@ If the automated assessment flags the transfer, it triggers a manual review by S
 If one of your transactions is flagged, Swan might contact you for more information.
 Due to the manual review, flagged SEPA Credit Transfers take longer to execute.
 
+### Verifying beneficiaries {#beneficiary-verification}
+
+**IBAN verification** is a service that allows Swan to verify that credit transfers are sent to the right beneficiary *before* initiating the transfer, thus reducing errors and potential fraud.
+When performing IBAN verification, Swan confirms that the beneficiary's name matches the name registered for the IBAN provided.
+
+Swan allows IBAN verification for all transfers between accounts with Dutch IBANs, meaning both IBANs involved begin with `NL`.
+Refer to [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to see the other IBANs for which Swan plans to integrate IBAN verification. 
+
+Additionally, Swan **validates the format** of all beneficiary IBANs.
+You can [check the format of your IBANs](../../../accounts/ibans/guide-validate.mdx) with the API before using them to send a transfer.
+
 ### Transfer limitations {#limitations}
 
 1. Credit transfers can't be sent if [**account holder verification**](../../../onboarding/account-holders/index.mdx#verification-process) is still **in progress**.
 While finalizing verification, the account's `paymentLevel` is `Limited` and the `initiateCreditTransfers` mutation returns an error.
 1. Swan accounts aren't designed to have a **negative balance**. Therefore, Swan checks an account's `Available` balance before executing credit transfers every time. If there isn't enough in the account, the transfer is rejected for insufficient funds.
-1. For all outgoing transfers, Swan **validates the beneficiary's IBAN**.
-You can [check the format of your IBANs](../../../accounts/ibans/guide-validate.mdx) with the API before using them to send a transfer.
 1. If you'd like to plan credit transfers in advance, you can do so **up to one year in the future** using the `requestedExecutionAt` input when initiating your transfer.
 
 ## Instant SEPA Credit Transfers {#instant}

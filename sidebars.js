@@ -5,7 +5,19 @@ module.exports = {
       label: "Introduction",
       collapsible: false,
       collapsed: false,
-      items: ["index", "glossary"],
+      items: [
+        "index",
+      {
+        type: "category",
+        label: "Get started with Swan",
+        link: { type: "doc", id: "topics/get-started/index" },
+        collapsed: true,
+        items: [
+          "glossary",
+          "topics/get-started/choose-integration",
+        ],
+      },
+    ],
     },
     {
       type: "category",

@@ -408,14 +408,14 @@ module.exports = {
         {
           type: "category",
           label: "Consent",
-          link: { type: "doc", id: "topics/consent/index" },
+          link: { type: "doc", id: "topics/users/consent/index" },
           collapsed: true,
           items: [
-            "topics/consent/guide-configure-notifications",
-            "topics/consent/guide-create-multiconsent",
-            "topics/consent/guide-implement-s2s",
-            "topics/consent/guide-integrate-sca",
-            "topics/consent/support",
+            "topics/users/consent/guide-configure-notifications",
+            "topics/users/consent/guide-create-multiconsent",
+            "topics/users/consent/guide-implement-s2s",
+            "topics/users/consent/guide-integrate-sca",
+            "topics/users/consent/support",
           ],
         },
         {

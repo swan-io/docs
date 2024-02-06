@@ -407,17 +407,6 @@ module.exports = {
         },
         {
           type: "category",
-          label: "Authentication",
-          link: { type: "doc", id: "topics/authentication/index" },
-          collapsed: true,
-          items: [
-            "topics/authentication/guide-get-token-user",
-            "topics/authentication/guide-get-token-project",
-            "topics/authentication/guide-impersonate",
-          ],
-        },
-        {
-          type: "category",
           label: "Consent",
           link: { type: "doc", id: "topics/consent/index" },
           collapsed: true,
@@ -575,6 +564,17 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
+        {
+          type: "category",
+          label: "Authentication",
+          link: { type: "doc", id: "developers/using-api/authentication/index" },
+          collapsed: true,
+          items: [
+            "developers/using-api/authentication/guide-get-token-user",
+            "developers/using-api/authentication/guide-get-token-project",
+            "developers/using-api/authentication/guide-impersonate",
+          ],
+        },
         "developers/using-api/errors-rejections",
         "developers/using-api/pagination",
         "developers/using-api/payment-control",

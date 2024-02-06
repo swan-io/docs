@@ -7,15 +7,15 @@ title: Consent
 ## Overview {#overview}
 
 Consent is built-in to Swan's offer, meaning you don't handle it yourself.
-In fact, you can't—it's part of Swan's [regulatory responsibility](../../../../partnership/index.mdx#license) to manage consent.
+In fact, you can't—it's part of Swan's [regulatory responsibility](../../../partnership/index.mdx#license) to manage consent.
 
 Additionally, **consent can't be deactivated**.
-When using the Sandbox environment, you can [activate the auto consent setting](../../../../developers/tools/sandbox-users.mdx#settings) for your Sandbox users.
+When using the Sandbox environment, you can [activate the auto consent setting](../../../developers/tools/sandbox-users.mdx#settings) for your Sandbox users.
 
 
 Some operations at Swan are considered sensitive, and **sensitive operations always require user consent**.
 To perform sensitive operations **using the API**, you need authenticate with an access token.
-You can either use a [user access token](../../../../developers/using-api/authentication/index.mdx#tokens-user) in the name of the user wanting to make the payment, or with a [project access token](../../../../developers/using-api/authentication/index.mdx#tokens-project) impersonating that user.
+You can either use a [user access token](../../../developers/using-api/authentication/index.mdx#tokens-user) in the name of the user wanting to make the payment, or with a [project access token](../../../developers/using-api/authentication/index.mdx#tokens-project) impersonating that user.
 Users must consent to granting a user access token.
 
 ## Strong Customer Authentication (SCA) {#sca}
@@ -110,7 +110,7 @@ As the multi-consent executes, if any child consent fails, the status of the who
 Any child consents that were `Accepted` before the failed child consent remain valid.
 Any child consents that were still waiting to be executed are canceled.
 
-Since execution is asynchronous, consider subscribing to [consent webhooks](../../../../developers/using-api/webhooks.mdx#events-consent) to stay updated on the progress of each child consent.
+Since execution is asynchronous, consider subscribing to [consent webhooks](../../../developers/using-api/webhooks.mdx#events-consent) to stay updated on the progress of each child consent.
 
 Learn how to **create a multi-consent** in the [dedicated guide](./guide-create-multiconsent.mdx).
 
@@ -161,13 +161,13 @@ import ReplacePublicKey from './_s2s-replace-key.mdx';
 
 ### Role of projects and legal reps {#s2s-project-legal-rep}
 
-For security and regulatory purposes, server-to-server consent is **bound to a project**, more specifically to the **project's [legal representative](../../../../glossary.mdx#legal-representative)**.
+For security and regulatory purposes, server-to-server consent is **bound to a project**, more specifically to the **project's [legal representative](../../../glossary.mdx#legal-representative)**.
 You can't apply S2S consent configured in one project to operations in another project.
 Instead, implement S2S consent in both projects independently.
 
 The keys, both public and private, are attributed to the project's legal representative.
 Only the legal rep can perform operations with server-to-server consent.
-With consent, you can also [impersonate the legal rep](../../../../developers/using-api/authentication/index.mdx#tokens-project-impersonate) with a project access token.
+With consent, you can also [impersonate the legal rep](../../../developers/using-api/authentication/index.mdx#tokens-project-impersonate) with a project access token.
 
 Any operation required to [set up or modify S2S consent](./guide-implement-s2s.mdx) (such as installing the public key or adding IP addresses) must be consented to by the legal rep using [Strong Customer Authentication](./index.mdx#sca).
 

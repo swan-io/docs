@@ -92,14 +92,16 @@ mutation SuspendMembership {
 :::note Suspended only
 You can only resume a membership if the account membership's status was `Suspended`, or temporarily blocked.
 You can't resume `Disabled`, or permanently blocked, memberships.
+
+Only account members with the `canManageAccountMembership` permission can resume an account membership, which requires consent.
 :::
 
 1. Call the `resumeAccountMembership` mutation.
 1. Add the account membership ID.
-1. Add the success payload with the status.
+1. Add the success payload with the `consentUrl`.
 1. Add any rejections you'd like.
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVzdW1lTWVtYmVyc2hpcCB7CiAgcmVzdW1lQWNjb3VudE1lbWJlcnNoaXAoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJEFDQ09VTlRfTUVNQkVSU0hJUF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfQ09OU0VOVF9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmVzdW1lQWNjb3VudE1lbWJlcnNoaXBTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBVc2VyTm90QWxsb3dlZFRvTWFuYWdlQWNjb3VudE1lbWJlcnNoaXBSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVzdW1lTWVtYmVyc2hpcCB7CiAgcmVzdW1lQWNjb3VudE1lbWJlcnNoaXAoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJEFDQ09VTlRfTUVNQkVSU0hJUF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfQ09OU0VOVF9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmVzdW1lQWNjb3VudE1lbWJlcnNoaXBTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVXNlck5vdEFsbG93ZWRUb01hbmFnZUFjY291bnRNZW1iZXJzaGlwUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
 ```graphql {4} showLineNumbers
 mutation ResumeMembership {
@@ -111,6 +113,9 @@ mutation ResumeMembership {
   ) {
     ... on ResumeAccountMembershipSuccessPayload {
       __typename
+      consent {
+        consentUrl
+      }
     }
     ... on ForbiddenRejection {
       __typename
@@ -131,16 +136,19 @@ mutation ResumeMembership {
     }
   }
 }
+
 ```
 
-```json title="Resume payload" showLineNumbers
+The account holder, legal representative of the account, or account member with `canManageAccountMembership` permissions must consents to resuming the membership.
+
+```json {7} title="Resume payload" showLineNumbers
 {
   "data": {
     "resumeAccountMembership": {
       "__typename": "ResumeAccountMembershipSuccessPayload",
       "consent": {
         "status": "Created",
-        "id": "$YOUR_CONSENT_ID",
+          "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
         "user": {
           "id": "$YOUR_USER_ID",
           "idVerified": false,

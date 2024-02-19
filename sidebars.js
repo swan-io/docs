@@ -80,7 +80,6 @@ module.exports = {
             "topics/onboarding/account-holders/sandbox",
           ],
         },
-        "topics/onboarding/support",
       ],
     },
     {
@@ -161,7 +160,7 @@ module.exports = {
         "topics/capital-deposits/index",
         {
           type: "category",
-          label: "France",
+          label: "🇫🇷 France",
           link: { type: "doc", id: "topics/capital-deposits/france/guide" },
           collapsed: true,
           items: [
@@ -396,7 +395,6 @@ module.exports = {
           collapsed: true,
           items: ["topics/projects/guide-activate"],
         },
-        "topics/projects/support",
       ],
     },
     {
@@ -427,7 +425,6 @@ module.exports = {
             "topics/users/consent/guide-create-multiconsent",
             "topics/users/consent/guide-implement-s2s",
             "topics/users/consent/guide-integrate-sca",
-            "topics/users/consent/support",
           ],
         },
         {
@@ -450,18 +447,18 @@ module.exports = {
       items: [
         {
           type: "link",
-          label: "API reference",
-          href: "https://api-reference.swan.io/",
+          label: "Status page",
+          href: "https://status.swan.io/",
         },
         {
           type: "link",
-          label: "Status page", // The link label
-          href: "https://status.swan.io/", // The external URL
+          label: "Support Center",
+          href: "https://support.swan.io/hc/en-150",
         },
         {
           type: "link",
-          label: "Support Center", // The link label
-          href: "https://support.swan.io/hc/en-150", // The external URL
+          label: "Roadmap",
+          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22",
         },
         "topics/contact",
       ],
@@ -515,13 +512,18 @@ module.exports = {
       items: [
         {
           type: "link",
-          label: "Status page", // The link label
-          href: "https://status.swan.io/", // The external URL
+          label: "Status page",
+          href: "https://status.swan.io/",
         },
         {
           type: "link",
-          label: "Support Center", // The link label
-          href: "https://support.swan.io/hc/en-150", // The external URL
+          label: "Support Center",
+          href: "https://support.swan.io/hc/en-150",
+        },
+        {
+          type: "link",
+          label: "Roadmap",
+          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22",
         },
         "partnership/contact",
       ],
@@ -614,13 +616,18 @@ module.exports = {
       items: [
         {
           type: "link",
-          label: "Status page", // The link label
-          href: "https://status.swan.io/", // The external URL
+          label: "Status page",
+          href: "https://status.swan.io/",
         },
         {
           type: "link",
-          label: "Support Center", // The link label
-          href: "https://support.swan.io/hc/en-150", // The external URL
+          label: "Support Center",
+          href: "https://support.swan.io/hc/en-150",
+        },
+        {
+          type: "link",
+          label: "Roadmap",
+          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22",
         },
         "developers/contact",
       ],

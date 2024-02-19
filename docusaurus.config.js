@@ -60,6 +60,11 @@ module.exports = {
         },
         {
           position: "right",
+          href: "https://explorer.swan.io/",
+          label: "API Explorer",
+        },
+        {
+          position: "right",
           href: "https://docs.swan.io/help/changelog",
           label: "Changelog",
         },

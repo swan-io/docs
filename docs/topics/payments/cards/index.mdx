@@ -106,7 +106,7 @@ For example, they might ask Swan to check that the card holder has enough money 
 
 Authorizations occur predominantly online, requiring the merchant to be connected to the internet and card network.
 Offline authorizations can be accepted in certain circumstances.
-All authorization transactions are linked to the same payment, including authorizations, debits, credits, and chargebacks.
+All transactions are linked to the same payment, including authorizations, debits, credits, and chargebacks.
 
 #### Authorization transactions {#authorization-transactions}
 
@@ -161,6 +161,13 @@ This transaction impacts the account's `Booked` balance.
 
 If the credit request is to reverse a previous debit transaction, a new `CardOutDebitReversal` transaction is created linked to the original debit payment.
 
+#### Partial and exceeding debits {#clearing-partial-exceeding}
+
+In situations where **only part of an authorized amount is debited** (for example, when only part of an order can be fulfilled), Swan updates the initial transaction to reflect the reduced `Pending` amount.
+
+If the debit amount **exceeds the amount initially authorized**, Swan links both transactions under the same payment to ensure accurate accounting and tracking.
+This also applies if a debit occurs after the authorization expires.
+
 #### Initiating a debit transaction {#clearing-debit}
 
 When a merchant requests debit on a card, Swan receives the information asynchronously and creates a new `CardOutDebit` transaction with the status `Booked`.
@@ -168,13 +175,6 @@ This transaction impacts the account's `Booked` balance.
 
 When a debit transaction is linked to an authorization, the corresponding `Pending` `CardOutAuthorization` transaction is updated with the remaining amount to be debited, and the card's spending limit is updated accordingly.
 If the updated authorization amount is equal to or less than zero, the status changes to `Released`; otherwise, the status remains `Pending`.
-
-#### Partial and exceeding debits {#clearing-partial-exceeding}
-
-In situations where **only part of an authorized amount is debited** (for example, when only part of an order can be fulfilled), Swan updates the initial transaction to reflect the reduced `Pending` amount.
-
-If the debit amount **exceeds the amount initially authorized**, Swan links both transactions under the same payment to ensure accurate accounting and tracking.
-This also applies if a debit occurs after the authorization expires.
 
 ### Examples {#examples}
 
@@ -368,7 +368,7 @@ Consider the following examples:
 If you feel your use case requires an increased spending limit, create a ticket from your Swan Dashboard.
 Swan will evaluate your need and increase the limit if approved.
 
-Note that you can set a lower `monthlySpendingLimit` by [updating the card](../../cards/overview/guide-update.mdx), but you can't set any type of additional limit for ATM withdrawals.
+Note that you can set a lower monthly `spendingLimit` by [updating the card](../../cards/overview/guide-update.mdx), but you can't set any type of additional limit for ATM withdrawals.
 :::
 
 ### Limits imposed by account holders {#limits-account-holders}
@@ -378,13 +378,13 @@ If a spending limit is set that exceeds Swan's spending limits, transactions are
 
 Companies and individual account holders can impose spending limits over three possible periods:
 
-- 24 hours rolling
-- 7 days rolling
-- 30 days rolling
+- 24 hours rolling (`Daily`)
+- 7 days rolling (`Weekly`)
+- 30 days rolling (`Monthly`)
 
 ### Limited forever cards {#limits-forever-cards}
 
-Limited forever cards allow companies and individual account holders to provide a card with a limited lifetime spending amount.
+Limited forever cards (`Always`) allow companies and individual account holders to provide a card with a limited lifetime spending amount.
 After the amount is spent, the card is no longer valid and can't be recharged.
 
 Limited forever cards still must respect Swan's spending limits, though there is no limit to the amount you can add to these cards.
@@ -443,9 +443,6 @@ participant CM as Cardholder's mobile device
         S ->> CH: Redirects to Partner's redirect URL
     end
     CH->> M: Redirected to Partner's redirect URL
-    M ->> S: Queries the consent
-    S ->> M: Returns confirmed consent
-    M ->> CH: Confirms online payment
 ```
 
 ## Guides {#guides}

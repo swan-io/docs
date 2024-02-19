@@ -36,8 +36,8 @@ However, if it is vital that you perform KYC and KYB processes yourself, please 
 
 ### One account holder, multiple accounts {#verifying-account-holders-multi-account}
 
-For company accounts, you can open multiple accounts for the same account holder.
-In this case, Swan only needs to perform identity verification (Know Your Business [KYB] verification) if a KYB has not been performed within the last three months.
+For individual accounts, you can open multiple accounts for the same account holder.
+In this case, Swan only needs to perform identity verification (Know Your Customer [KYC] verification) if a KYC has not been performed within the last three months.
 
 Follow the guide to [add additional accounts](./guide-add-additional-account.mdx) for an existing account holder.
 
@@ -53,12 +53,11 @@ Learn more in [IBAN issuing](https://docs.swan.io/concept/iban/iban-issuing).
 ### Components {#verification-process-components}
 
 1. **Onboarding**: Process is finalized for either an [**individual**](../individual/index.mdx) or a [**company**](../company/index.mdx), which creates an *account holder*, an *account*, and a *user*.
-1. **Identity verification**: Newly-created [**individual**](../individual/index.mdx#id-verification-recommendations) or [**company**](../company/index.mdx#id-verification-recommendations) account holder completes identity verification with an ID document and a picture or video.
+1. **Identity verification**: User that opened the [**individual**](../individual/index.mdx#id-verification-recommendations) or [**company**](../company/index.mdx#id-verification-recommendations) account completes identity verification with an ID document and a picture or video.
 1. **Document collection**: Swan collects [**required documents**](../documents/index.mdx).
 1. **Review**: Swan reviews onboarding, identity verification, and collected documents.
 
-After Swan **validates the review**, the account holder is verified and the restrictions on their account are lifted, meaning they're no longer limited to 150€ in outgoing payments.
-Their account will also receive its primary IBAN.
+After Swan **validates the review**, the account holder is verified and their account receives its primary IBAN.
 
 :::info User flow diagram
 To understand more about your user's verification experience, refer to the [user flow diagram for identity verification](../support.mdx).
@@ -96,37 +95,27 @@ This diagram **details a common flow** of how Swan, the account holder, and you 
 Your integration might flow differently.
 
 ```mermaid
-sequenceDiagram
-participant S as Swan
+sequenceDiagram autoNumber
 participant P as Partner
-participant AH as Account<br/>holder
-participant ID as Identity<br/>verification<br/>provider
-    rect rgb(237,223,251)
+participant U as User
+participant S as Swan
     P ->> S: Creates onboarding link
-    S -->> P: Returns onboarding object
-    P ->> AH: Sends onboarding link
-    AH -->> S: Completes onboarding
-    end
-    rect rgb(253,235,219)
-    S ->> AH: Sends text message inviting the account<br/>holder to complete identity verification
-    AH -->> ID: Provides identity verification provider<br/>with required elements
-    ID ->> ID: Verifies identity
-    ID ->> S: Communicates result of identity verification
-    end
-    rect rgb(255,246,212)
+    S ->> P: Returns onboarding object
+    P ->> U: Sends onboarding link
+    U -->> S: Completes onboarding
+    S ->> U: Sends text message inviting the account<br/>holder to complete identity verification
+    U ->> S: Provides identity verification provider<br/>with required elements
+    S ->> S: Verifies identity
     alt Partner provides documents
         S ->> P: Sends webhook about missing supporting documents
-        P ->> AH: Requests documents
-        AH -->> P: Provides documents
-        P -->>S: Uploads documents with the API
+        P ->> U: Requests documents
+        U ->> P: Provides documents
+        P ->>S: Uploads documents with the API
     else Account holder provides documents
-        S ->> AH: Sends email requesting supporting documents
-        AH -->> S: Uploads documents to banking interface
+        S ->> U: Sends email requesting supporting documents
+        U ->> S: Uploads documents to banking interface
     end
-    end
-    rect rgb(250,217,233)
     S ->> S: Swan reviews identity<br/>verification and documents
-    end
 ```
 
 ## Guides {#guides}

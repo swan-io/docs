@@ -31,7 +31,7 @@ module.exports = {
       logo: {
         alt: "Swan",
         src: "img/logo-swan.svg",
-        width: 70,
+        width: 130,
       },
       items: [
         {
@@ -41,10 +41,10 @@ module.exports = {
           label: "Documentation",
         },
         {
-          type: 'doc',
-          position: 'left',
-          docId: 'partnership/index',
-          label: 'Partnership',
+          type: "doc",
+          position: "left",
+          docId: "partnership/index",
+          label: "Partnership",
         },
         {
           type: "doc",

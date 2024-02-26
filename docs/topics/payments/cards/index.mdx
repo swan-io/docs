@@ -22,26 +22,9 @@ Each card `transaction` object contains specific payment data in the [`CardTrans
 - **Merchant ID**: unique identifier of the merchant in the Mastercard network
 - Merchant **name**
 - Merchant **city**
+- Merchant **postal code**
 - Merchant Category Code (**MCC**)
 - Original **amount** and **currency**
-
-### Transaction settings {#transaction-settings}
-
-You can set several parameters for your card transactions.
-There are some card details included in these settings, as well.
-
-| Setting | Explanation |
-| --- | --- |
-| `cardContractExpiryDate` | Date you'd like the card to expire.<br /><br />Leave it empty if you don't want to set an expiration date, in which case, the card is be renewed automatically in three years. |
-| `international`∗ | Allow or disable payments outside of the account holder's country. |
-| `withdrawal` | Allow or disable cash withdrawals, such as at ATMs. |
-| `nonMainCurrencyTransactions`∗∗ | Allow or disable transactions outside of the card's currency. |
-| `eCommerce` | Allow or disable transactions at eCommerce sites. |
-| `monthlySpendingLimit` | Fixed by the account holder or qualifying account member, within the limits set by Swan. [Spending limits](#limits) are explained later on this page. |
-
-∗ If `international` is disabled, payments can only be made in the account holder's country. They can still pay using other currencies. For example, a card holder in France can only make payments in France, but in euros as well as other currencies.
-
-∗∗ If `nonMainCurrencyTransactions` is disabled, payments can be made in other countries, but not using other currencies. For example, a card holder in France can make payments in euros in the United Kingdom, but not in the GBP (Pound Sterling).
 
 ### Fraud and card transactions {#fraud}
 
@@ -60,18 +43,16 @@ import SuspicionOfFraud from '../../partials/_card-fraud-suspicion.mdx';
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
     PI((Payment<br/>initiated)) -.-> P[Pending]
-    P -.-> RJ[Rejected]
-    PI -.-> RJ
-    PI -.-> C[Canceled]
-    P -.-> C
-    PI --> B[Booked]
-    P --> B
+    PI -.-> RJ[Rejected]
+    P -.->RL[Released]
+    PI -.-> B[Booked]
+    P -.-> B
     subgraph S[Successful]
         B
     end
     subgraph F[Final status]
         RJ
-        C
+        RL
         S
     end
     style PI fill:#D4D3D5,stroke:#514F59
@@ -84,11 +65,11 @@ There's a **close link** between **transaction statuses** and **account balances
 Refer to explanations of types of account balances in the [accounts section](../../accounts/index.mdx#balances).
 :::
 
-| Transaction status | Explanation |
+| Card transaction status | Explanation |
 |:---:|---|
-| `Pending` | Card payments was initiated and [authorization](#authorization) received. The payments aren't debited from the account yet, but they impact the account's `Pending` balance. |
+| `Pending` | Card payments initiated with an [authorization](#authorization) granted. The payments aren't debited from the account yet, but they impact the account's `Pending` balance.<br /><br />**Next steps:**<ul><li>When funds are received, the status for the debit transaction changes to `Booked` and the status for the authorization transaction changes to `Released`.</li><li>`Pending` card transactions can also be `Rejected`.</li></ul> |
 | `Booked` | Completed card payments that are displayed on the official account statement. These card payments have been debited from the account, and they impact the account's `Booked` balance. |
-| `Canceled` | An `Upcoming` card payment is canceled by someone with the right to do so, such as the [account holder](../../../glossary.mdx#account-holder), an [account member](../../../glossary.mdx#account-membership), or a [merchant](../../../glossary.mdx#merchants). Only card payments with the status `Upcoming` can be `Canceled`, and `Canceled` card payments don't impact the account balance. |
+| `Released` | Card authorizations are released for specific reasons. Most of the time, the funds are captured when the merchant requests the actual debit. Authorizations might also be released by the merchant, and they can expire.<br /><br />When an authorization is released without a debit (clearing), the account's available balance increases by the amount of the authorization. |
 | `Rejected` | Declined or refused card payments. For example, you, Swan, Mastercard rejected authorization for the payment, or the account's `Available` balance isn't sufficient to complete the card payment without resulting in a negative balance. |
 
 ## Authorization and clearing {#authorization-clearing}
@@ -106,12 +87,12 @@ For example, they might ask Swan to check that the card holder has enough money 
 
 Authorizations occur predominantly online, requiring the merchant to be connected to the internet and card network.
 Offline authorizations can be accepted in certain circumstances.
-All transactions are linked to the same payment, including authorizations, debits, credits, and chargebacks.
+All linked card transactions (authorizations, debits, refunds, and chargebacks) have the same Payment ID.
 
 #### Authorization transactions {#authorization-transactions}
 
 Any time an authorization is requested, a `CardOutAuthorization` transaction is created.
-Swan **shares authorization responsibility** with you through [**payment control**](../../../developers/using-api/payment-control.mdx).
+Swan **shares the authorization decision** with you through [**payment control**](../../../developers/using-api/payment-control.mdx).
 Therefore, the Partner (you), Swan, and Mastercard all work together to accept (authorize) or reject all card transactions.
 
 When an authorization is **accepted** by Swan, Mastercard, ***and*** you, the transaction is created with the status `Pending`.
@@ -135,10 +116,6 @@ It's possible that a physical or in-person point of sale can't complete online a
 For example, some situations in which online authorizations might not work include paying at parking kiosks or toll booths, making purchases while on an airplane or other mode of travel, and network failure.
 In these situations, a Swan card holder can still initiate many payments.
 
-Swan defines a maximum amount that qualifies for an offline authorization.
-Additionally, whether Swan accepts an offline authorization depends on the evaluated risk level for the card or account holder.
-In the case of offline authorizations, Swan takes payments into account at clearing, never using the online authorization process.
-
 #### Partial authorizations {#authorization-partial}
 
 Consider the [gas station example](#examples).
@@ -154,16 +131,10 @@ Clearing usually occurs one to three days after the authorization, depending on 
 The process is not absolute, however, so make sure to review the examples section for several situational flows.
 For example, all of the following can exist: authorizations without debit, debits without authorizations, and multiple debits for the same authorization.
 
-#### Clearing a credit transaction {#clearing-credit}
-
-When a merchant requests credit on a card, Swan receives the information asynchronously and creates a new `CardOutCredit` transaction with the status `Booked`.
-This transaction impacts the account's `Booked` balance.
-
-If the credit request is to reverse a previous debit transaction, a new `CardOutDebitReversal` transaction is created linked to the original debit payment.
-
 #### Partial and exceeding debits {#clearing-partial-exceeding}
 
 In situations where **only part of an authorized amount is debited** (for example, when only part of an order can be fulfilled), Swan updates the initial transaction to reflect the reduced `Pending` amount.
+Users can have several partial debits (consider the online shopping example).
 
 If the debit amount **exceeds the amount initially authorized**, Swan links both transactions under the same payment to ensure accurate accounting and tracking.
 This also applies if a debit occurs after the authorization expires.
@@ -175,6 +146,13 @@ This transaction impacts the account's `Booked` balance.
 
 When a debit transaction is linked to an authorization, the corresponding `Pending` `CardOutAuthorization` transaction is updated with the remaining amount to be debited, and the card's spending limit is updated accordingly.
 If the updated authorization amount is equal to or less than zero, the status changes to `Released`; otherwise, the status remains `Pending`.
+
+#### Clearing a credit transaction {#clearing-credit}
+
+When a merchant requests credit on a card, Swan receives the information asynchronously and creates a new `CardOutCredit` transaction with the status `Booked`.
+This transaction impacts the account's `Booked` balance.
+
+If the credit request is to reverse a previous debit transaction, a new `CardOutDebitReversal` transaction is created linked to the original debit payment.
 
 ### Examples {#examples}
 
@@ -261,7 +239,7 @@ Consider a card holder who orders and returns a package, all online:
   <summary>**In-store return** \| Authorization + debit clearing + refund</summary>
   <div>
 When items are returned in-store, they can be hard to link back to the debit.
-When a merchant needs to refund a customer but can't connect the refund transaction to the original debit, the create a new credit transaction.
+When a merchant needs to refund a customer but can't connect the refund transaction to the original debit, they create a new credit transaction.
 
 Consider a card holder buying then returning an item in-store:
 
@@ -322,73 +300,6 @@ Consider a card holder making a purchase on an airplane (such as food or duty-fr
   </div>
 </details>
 
-## Spending limits {#limits}
-
-A **spending limit** is the **maximum amount** a card holder can spend within a certain **rolling period**.
-Spending limits are imposed for several reasons.
-
-1. Companies impose spending limits to reduce fraud risk.
-1. Individual card holders and companies might impose spending limits over a rolling period to protect their funds when issuing cards to other people.
-    - A company might impose a 100€ spending limits over 7 days rolling for travel expenses.
-    - A parent might give a card to their child, imposing a 50€ spending limit to protect their own money.
-1. Financial institutions (like Swan) impose spending limits to protect themselves from liability.
-
-:::info Rolling spending limit
-A rolling period does not depend on a determined date, day of the week, or time.
-Instead, rolling spending limits consider the amount spent over period of time.
-At Swan, some types of accounts can impose rolling limits of 30 days, 7 days, and 24 hours.
-:::
-
-### Limits imposed by Swan {#limits-swan}
-
-All spending limits are for a period of **30 days rolling**.
-
-Note that **Partners** can define spending limits for all card types, while **account holders** can lower spending limits when creating cards.
-
-| Transaction type | Impacts | Amount |
-| --- | --- | --- |
-| Card | Company **card holder** | 10,000€ per card |
-| Card | Individual **card holder** | 5,000€ per card |
-| ATM withdrawal | Company **account** holder | 3,000€ total |
-| ATM withdrawal | Individual **account** holder | 1,500€ total |
-
-Consider the following examples:
-
-- Company card holder card transaction:
-    - One of your **company card holders** has five company cards.
-    - They can spend a maximum of 50,000€ between the 5 cards during a 30-day period.
-    - Expenses for a single card can't exceed 10,000€.
-- Individual account holder ATM withdrawal:
-    - An **individual account holder** has two individual cards.
-    - They can withdrawal a maximum of 1,500€ total between the 2 cards during a 30-day period.
-    - They **can't withdrawal** a total of 3,000€—the maximum is per account.
-    - The 1,500€ also counts toward their **card** transaction maximum of 5,000€ per card.
-
-:::caution Changing spending limits
-If you feel your use case requires an increased spending limit, create a ticket from your Swan Dashboard.
-Swan will evaluate your need and increase the limit if approved.
-
-Note that you can set a lower monthly `spendingLimit` by [updating the card](../../cards/overview/guide-update.mdx), but you can't set any type of additional limit for ATM withdrawals.
-:::
-
-### Limits imposed by account holders {#limits-account-holders}
-
-Account holder spending limits **can't exceed** Swan spending limits.
-If a spending limit is set that exceeds Swan's spending limits, transactions are rejected.
-
-Companies and individual account holders can impose spending limits over three possible periods:
-
-- 24 hours rolling (`Daily`)
-- 7 days rolling (`Weekly`)
-- 30 days rolling (`Monthly`)
-
-### Limited forever cards {#limits-forever-cards}
-
-Limited forever cards (`Always`) allow companies and individual account holders to provide a card with a limited lifetime spending amount.
-After the amount is spent, the card is no longer valid and can't be recharged.
-
-Limited forever cards still must respect Swan's spending limits, though there is no limit to the amount you can add to these cards.
-
 ## 3-D Secure {#3ds}
 
 3-D Secure (3DS) is an extra security layer for online card payments.
@@ -401,24 +312,19 @@ PSD2 governs all payments in Europe and mandates Strong Customer Authentication 
 **Most European merchants use 3DS for all transactions**, with a few exceptions.
 If a payment *should* require 3DS and doesn't (which probably means the merchant doesn't have the correct configuration), Swan rejects the operation.
 
-### Exceptions {#3ds-exceptions}
-
-Though European merchants use 3DS for most transactions, there are some exceptions.
-Merchants aren't required to request 3DS consent in the following cases:
-
-1. The transaction is an online payment for **less than 30€**.
-1. In the case of recurring payments, such as subscriptions and automatic top-up, the merchant only uses 3DS during setup and **not for subsequent recurring payments**.
-1. Any transaction where the **merchant agrees to accept the risk** in case of fraud.
+:::note 3DS exception
+In the case of recurring payments, such as subscriptions and automatic top-up, the merchant is only required to use 3DS during setup and **not for subsequent recurring payments**.
+:::
 
 ### Consent flow {#3ds-consent}
 
 Swan designed a PSD2-compliant two-factor authentication (2FA) solution based on [Mastercard's 3DS Smart Interface](https://developer.mastercard.com/product/3ds-smart-interface/).
 Swan automatically detects card payments that require additional security and triggers the 3DS consent flow.
-Your card holders are instructed validate their online payments and can do so directly from their mobile phone.
+Your card holders are instructed to validate their online payments and can do so directly from their mobile phone.
 
 There are two notable differences between 3DS and regular consent.
 
-1. With 3DS consent, the Partner (you) doesn't initiate the consent flow. Instead, merchants manage 3DS for their payments. Swan receives the request and immediately redirects the card holder to the 3DS flow.
+1. Swan requires 3DS for online transactions—most transactions without it are refused—but it's up to the merchant to request 3DS which initiates the consent flow.
 1. Cardholders always receive a text message, even if they're already on their mobile device and regardless of your [notification preferences](../../users/consent/index.mdx#notifications).
 
 ```mermaid
@@ -440,9 +346,9 @@ participant CM as Cardholder's mobile device
     CM ->> S: Uses page to consent to the operation
     par
         S ->> CM: Displays confirmation page
-        S ->> CH: Redirects to Partner's redirect URL
+        S ->> CH: Redirects to merchant
     end
-    CH->> M: Redirected to Partner's redirect URL
+    CH->> M: Redirected to merchant
 ```
 
 ## Guides {#guides}

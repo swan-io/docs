@@ -33,8 +33,9 @@ participant E as External event
 
 ### Response time {#overview-response}
 
-Webhooks operate with a near-real-time efficiency, typically responding **within seconds** of the event.
-Sometimes, webhooks can take **up to 10 minutes** to respond.
+Webhooks operate with a near-real-time efficiency, typically delivering responses **within seconds** of the event.
+
+It's worth clarifying that webhooks don't actively *respond* but autonomously send information to your system, potentially introducing delays of up to 10 minutes after the actual action occurs.
 
 ### Security {#overview-security}
 
@@ -54,24 +55,10 @@ If you have security restrictions in your infrastructure, you might need to add 
 
 ### Automatic retry {#overview-retry}
 
-If we encounter an error during a webhook request, we'll retry it up to **8 times**.
-Additionally, outgoing webhook requests have a **timeout of 15 seconds**, after which the webhook event fails and an automatic retry is triggered.
+If we encounter an error during a webhook request, we'll retry every **30 seconds** up to **7 times**.
 
-If all retrys fail, you can retry it manually by selecting **Retry** from your **Dashboard** > **Developers** > **Webhooks**.
+If all retries fail, you can retry it manually by selecting **Retry** from your **Dashboard** > **Developers** > **Webhooks**.
 You can also trigger the webhook manually at any time.
-
-The Swan webhook retry policy is exponential and behaves as follows:
-
-| Retry attempt | Time to trigger retry (approximate) |
-| --- | --- |
-| 1 | 5 seconds |
-| 2 | 17 seconds |
-| 3 | 1 minute |
-| 4 | 3 minutes |
-| 5 | 15 minutes |
-| 6 | 40 minutes |
-| 7 | 2 hours |
-| 8 | 7 hours |
 
 ## Event handling {#event-handling}
 
@@ -80,7 +67,7 @@ Handling webhooks is important to make sure your integration's business logic wo
 ### Delivery method {#event-handling-delivery}
 
 Swan webhooks are designed following the `at-least once` delivery method.
-Taking transactions as an example, the `at-least once` delivery means that for the same `transactionID`, you might receive more than one notification.
+Taking transactions as an example, the `at-least once` delivery means that for the same `eventId`, you might receive more than one notification.
 
 Swan chose `at-least once` delivery deliberately over the `at-most once` delivery; it's better you receive the information multiple times instead of not at all, which can occur with `at-most once` in case of technical error.
 

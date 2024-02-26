@@ -6,11 +6,7 @@ title: Physical cards
 
 import PhysicalCardsDefinition from '../../definitions/_cards-physical.mdx';
 
-***
-
-**Physical cards** *<PhysicalCardsDefinition />*
-
-***
+> <PhysicalCardsDefinition />
 
 You can order a physical card for each virtual card.
 Swan physical cards are typical plastic cards that can be used for swipe, chip and PIN, contactless, and online transactions.
@@ -146,7 +142,7 @@ flowchart LR
 | Physical card status | Explanation |
 |---|---|
 | `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation |
-| `ConsentPending` | Request to print a physical card was received and is waiting for the card holder's consent<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the card holder consents, the status moves to `Processing`</li><li>If you used the `printPhysicalCard` mutation and the card holder consents, the status moves to `ToActivate`</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`</li></ul> |
+| `ConsentPending` | Request to print a physical card was received and is waiting for the card holder's consent<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the card holder consents, the status moves to `Processing`</li><li>If you used the `printPhysicalCard` mutation and the card holder consents, the status moves to `Activated`</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`</li></ul> |
 | `Processing` | Consent has been received and the card is in the process being printed and delivered<br/><br/>**Next steps**:<ul><li>If you cancel the card with the API *before* the card is printed, the status moves to `Canceling`</li><li>If the card is printed and delivered successfully, the status moves to `ToActivate`</li></ul> |
 | `ToActivate` | Cardholder received the physical card, but needs to activate it by performing a first transaction and entering the PIN; you can also activate the card with the `activatePhysicalCard` mutation<br/><br/>**Next steps**:<ul><li>If the card holder performs the transaction successfully, or you activate the card with the API, the status moves to `ToActivate`</li><li>If the card holder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`</li></ul> |
 | `Activated` | Physical card is available for use<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Activated` until the renewal period</li><li>`Activated` cards can also be `Suspended` and `Canceled` (example: if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`)</li></ul> |

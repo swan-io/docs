@@ -194,7 +194,6 @@ module.exports = {
           items: [
             "topics/cards/design/guide-standard",
             "topics/cards/design/guide-custom",
-            "topics/cards/design/guide-logo",
           ],
         },
         {
@@ -327,7 +326,6 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/payments/cards/guide-get-list",
-            "topics/payments/cards/guide-update",
             "topics/payments/cards/sandbox",
           ],
         },

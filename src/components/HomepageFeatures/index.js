@@ -5,31 +5,37 @@ void React;
 
 const FeatureList = [
   {
-    title: "Integrate Swan fast",
+    title: "Documentation",
+    url: "/welcome",
     svg: (
       <svg
-        className={styles.svg}
         width="24"
         height="24"
         fill="none"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
+        className={styles.svg}
       >
         <path
-          d="M2 5.25A3.25 3.25 0 0 1 5.25 2h11.5A3.25 3.25 0 0 1 20 5.25v2.76a4.508 4.508 0 0 0-1.5.096V7h-15v9.75c0 .966.784 1.75 1.75 1.75h7.985l-.441.764a2.457 2.457 0 0 0-.28.736H5.25A3.25 3.25 0 0 1 2 16.75V5.25ZM5.25 3.5A1.75 1.75 0 0 0 3.5 5.25v.25h15v-.25a1.75 1.75 0 0 0-1.75-1.75H5.25ZM19.857 9a3.496 3.496 0 0 0-3.356 1.736 3.5 3.5 0 0 0 .184 3.788l-3.025 5.24a1.459 1.459 0 0 0 2.526 1.458l3.03-5.25a3.5 3.5 0 0 0 2.976-5.761l-1.65 2.858a1.167 1.167 0 1 1-2.021-1.167l1.65-2.858A3.478 3.478 0 0 0 19.857 9Zm-9.554.243a.75.75 0 0 1-.046 1.06L7.86 12.5l2.397 2.197a.75.75 0 0 1-1.014 1.106l-3-2.75a.75.75 0 0 1 0-1.106l3-2.75a.75.75 0 0 1 1.06.046Zm2.954 6.56 2.02-1.852a4.495 4.495 0 0 1-.008-2.91l-2.012-1.844a.75.75 0 0 0-1.014 1.106L14.64 12.5l-2.397 2.197a.75.75 0 0 0 1.014 1.106Z"
+          d="M7 6a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V6Zm1.5 1.5h7v-1h-7v1Z"
+          fill="#6240B5"
+        />
+        <path
+          d="M4 4.5A2.5 2.5 0 0 1 6.5 2H18a2.5 2.5 0 0 1 2.5 2.5v14.25a.75.75 0 0 1-.75.75H5.5a1 1 0 0 0 1 1h13.25a.75.75 0 0 1 0 1.5H6.5A2.5 2.5 0 0 1 4 19.5v-15ZM5.5 18H19V4.5a1 1 0 0 0-1-1H6.5a1 1 0 0 0-1 1V18Z"
           fill="#6240B5"
         />
       </svg>
     ),
     description: (
       <>
-        Start your Swan integration from the <strong>reference implementation</strong>, and
-        increment from a <strong>fully-featured</strong> codebase.
+        Discover the features that power Swan. Unlock your integration’s
+        full potential with Swan’s comprehensive documentation.
       </>
     ),
   },
   {
-    title: "Learn how to build",
+    title: "Partnership",
+    url: "/partnership",
     svg: (
       <svg
         className={styles.svg}
@@ -40,20 +46,21 @@ const FeatureList = [
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M9.909 3.7a3.875 3.875 0 0 1 4.182 0l8.064 5.169a.75.75 0 0 1 .005 1.259L19 12.193v5.557a.75.75 0 0 1-.15.45l-.001.001-.001.002-.003.004-.009.01-.015.02a7.428 7.428 0 0 1-1.662 1.401C16.036 20.33 14.339 21 12 21s-4.036-.67-5.159-1.361a7.427 7.427 0 0 1-1.25-.957 5.317 5.317 0 0 1-.316-.33 2.719 2.719 0 0 1-.124-.15L5.15 18.2a.75.75 0 0 1-.15-.45v-5.557l-2-1.307v5.364a.75.75 0 0 1-1.5 0V9.5a.75.75 0 0 1 .358-.64l8.05-5.16Zm4.21 11.681a3.875 3.875 0 0 1-4.238 0L6.5 13.172v4.297a5.934 5.934 0 0 0 1.127.893C8.536 18.92 9.964 19.5 12 19.5s3.464-.58 4.373-1.139a5.935 5.935 0 0 0 1.127-.892v-4.297l-3.38 2.21Zm-.837-10.419c-.781-.5-1.783-.5-2.564 0L3.63 9.506l7.071 4.62c.79.515 1.809.515 2.598 0l7.07-4.62-7.087-4.544Z"
+          d="M12.24 2.964a.748.748 0 0 0-.58.276l-.058.043a6.295 6.295 0 0 0-6.266 1.553 6.195 6.195 0 0 0-1.736 5.51l-.015.015-.958.951a2.108 2.108 0 0 0 0 2.995 2.136 2.136 0 0 0 1.793.601 2.129 2.129 0 0 0 1.883 1.558 2.13 2.13 0 0 0 2.017 1.942c.026.507.233 1.005.622 1.391.76.756 1.952.821 2.787.197l.387.384a2.151 2.151 0 0 0 3.028 0c.37-.368.577-.838.62-1.318a2.128 2.128 0 0 0 1.94-1.932 2.128 2.128 0 0 0 1.87-1.604 2.136 2.136 0 0 0 1.76-.606 2.108 2.108 0 0 0 0-2.994l-.833-.829.172-.666a5.952 5.952 0 0 0-.525-4.303 6.02 6.02 0 0 0-5.303-3.16h-1.607a4.251 4.251 0 0 0-.206-.004h-.791Zm2.925 4.945 3.464 3.442.003.004.014.013 1.625 1.615a.62.62 0 0 1 0 .88.63.63 0 0 1-.886 0l-1.625-1.615a.756.756 0 0 0-1.064 0l-.016.017a.744.744 0 0 0 0 1.057l1.266 1.259a.62.62 0 0 1 0 .88.63.63 0 0 1-.819.06.756.756 0 0 0-.987.07.744.744 0 0 0-.062.982.62.62 0 0 1-.055.819.63.63 0 0 1-.83.05.756.756 0 0 0-.995.057.744.744 0 0 0-.064.989.63.63 0 0 1-.054.834.64.64 0 0 1-.9 0l-.372-.369.105-.105a2.108 2.108 0 0 0 0-2.994 2.13 2.13 0 0 0-1.4-.618 2.129 2.129 0 0 0-1.954-2.004 2.104 2.104 0 0 0-.617-1.324 2.136 2.136 0 0 0-1.793-.601 2.133 2.133 0 0 0-2.118-1.565A4.705 4.705 0 0 1 6.4 5.892a4.767 4.767 0 0 1 3.581-1.38L8.484 5.645a2.314 2.314 0 0 0-.44 3.253 2.333 2.333 0 0 0 3.258.441l1.889-1.431h1.974ZM9.389 6.842l3.139-2.378h.504a2.752 2.752 0 0 1 .187.005h1.626a4.52 4.52 0 0 1 3.982 2.37c.495.92.65 1.978.444 2.995L16.06 6.638a.75.75 0 0 0-.539-.229h-2.581a.75.75 0 0 0-.453.152l-2.09 1.583a.833.833 0 0 1-1.162-.157.814.814 0 0 1 .155-1.145Zm-3.354 7.955a.62.62 0 0 1 0-.88l.957-.952a.63.63 0 0 1 .886 0 .62.62 0 0 1 .008.872l-.008.008-.957.951-.009.009a.63.63 0 0 1-.877-.008Zm-.491-3.369a.618.618 0 0 1-.01.87l-.957.952a.63.63 0 0 1-.886 0 .62.62 0 0 1 0-.88l.958-.951a.63.63 0 0 1 .886 0l.009.009Zm5.348 7.314a.63.63 0 0 1-.886 0 .62.62 0 0 1 0-.88l.957-.951a.63.63 0 0 1 .886 0 .62.62 0 0 1 0 .88l-.957.951Zm-2.021-2.008a.629.629 0 0 1-.886 0 .62.62 0 0 1-.009-.872l.009-.008.957-.951.008-.009a.63.63 0 0 1 .878.009.62.62 0 0 1 0 .88l-.957.951Z"
           fill="#6240B5"
         />
       </svg>
     ),
     description: (
       <>
-        This repository shows <strong>how Swan's own interfaces are built</strong>, giving you
-        insights on how you can build your own.
+        Discover what it means to Partner with Swan. Learn where Swan operates
+        and review your responsibilities to foster a successful partnership.
       </>
     ),
   },
   {
-    title: "Customize your UX",
+    title: "Developers",
+    url: "/developers",
     svg: (
       <svg
         className={styles.svg}
@@ -64,29 +71,46 @@ const FeatureList = [
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M5.75 2a.75.75 0 0 0-.75.75v11.5a2.25 2.25 0 0 0 2.25 2.25H9.5v3a2.5 2.5 0 1 0 5 0v-3h2.25A2.25 2.25 0 0 0 19 14.25V2.75a.75.75 0 0 0-.75-.75H5.75Zm.75 9V3.5h6v1.752a.75.75 0 1 0 1.5 0V3.5h1v2.751a.75.75 0 1 0 1.5 0V3.5h1V11h-11Zm0 3.25V12.5h11v1.75a.75.75 0 0 1-.75.75h-3a.75.75 0 0 0-.75.75v3.75a1 1 0 0 1-2 0v-3.75a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 1-.75-.75Z"
+          d="m8.066 18.943 6.5-14.5a.75.75 0 0 1 1.404.518l-.036.096-6.5 14.5a.75.75 0 0 1-1.404-.518l.036-.096 6.5-14.5-6.5 14.5ZM2.22 11.47l4.25-4.25a.75.75 0 0 1 1.133.976l-.073.085L3.81 12l3.72 3.719a.75.75 0 0 1-.976 1.133l-.084-.073-4.25-4.25a.75.75 0 0 1-.073-.976l.073-.084 4.25-4.25-4.25 4.25Zm14.25-4.25a.75.75 0 0 1 .976-.073l.084.073 4.25 4.25a.75.75 0 0 1 .073.976l-.073.085-4.25 4.25a.75.75 0 0 1-1.133-.977l.073-.084L20.19 12l-3.72-3.72a.75.75 0 0 1 0-1.06Z"
           fill="#6240B5"
         />
       </svg>
     ),
     description: (
       <>
-        Swan Partner Front-End lets you <strong>fully customize</strong> your onboarding & banking
-        experience.
+        Embrace the elegance of Swan's GraphQL API. Explore the tools available
+        to help you develop your integration seamlessly.
       </>
     ),
   },
 ];
 
-function Feature({ svg, title, description }) {
+function Feature({ svg, url, title, description, index }) {
   return (
-    <div className="col col--4">
+    <a
+      href={url}
+      className={`${styles.featureBlock}`}
+      style={{ animationDelay: `${200 + index * 100}ms` }}
+    >
       <div className={styles.svgContainer}>{svg}</div>
-      <div className="text--center padding-horiz--md">
+      <div className="text--center padding-horiz--md" style={{ flexGrow: 1 }}>
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
-    </div>
+      <svg
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13.704 4.284a1 1 0 1 0-1.403 1.424L17.67 11H4a1 1 0 1 0 0 2h13.665L12.3 18.285a1 1 0 0 0 1.403 1.424l6.925-6.822a1.25 1.25 0 0 0 0-1.78l-6.925-6.823Z"
+          fill="#212121"
+          opacity={0.4}
+        />
+      </svg>
+    </a>
   );
 }
 
@@ -94,9 +118,14 @@ export default function HomepageFeatures() {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div className="row">
+        <div className={styles.featuresRows}>
           {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
+            <>
+              {idx > 0 ? (
+                <div style={{ width: 8, height: 8, flexShrink: 0 }} />
+              ) : null}
+              <Feature key={idx} index={idx} {...props} />
+            </>
           ))}
         </div>
       </div>

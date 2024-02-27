@@ -25,6 +25,20 @@ module.exports = {
     {
       tagName: "meta",
       attributes: {
+        property: "og:image:width",
+        content: `1500`,
+      },
+    },
+    {
+      tagName: "meta",
+      attributes: {
+        property: "og:image:height",
+        content: `777`,
+      },
+    },
+    {
+      tagName: "meta",
+      attributes: {
         name: "twitter:image",
         content: `${url}/img/share.jpg`,
       },

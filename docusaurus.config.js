@@ -1,16 +1,35 @@
 const prism = require("prism-react-renderer");
 
+const url = "https://beta.docs.swan.io";
+
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: "Swan Docs",
   tagline: "Documentation, partnership & developers",
-  url: "https://swan-io.github.io",
+  url,
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.png",
   organizationName: "swan-io", // Usually your GitHub org/user name.
   projectName: "docs", // Usually your repo name.
+  metadata: [{ name: "twitter:card", content: "summary_large_image" }],
+  headTags: [
+    {
+      tagName: "meta",
+      attributes: {
+        property: "og:image",
+        content: `${url}/img/share.jpg`,
+      },
+    },
+    {
+      tagName: "meta",
+      attributes: {
+        name: "twitter:image",
+        content: `${url}/img/share.jpg`,
+      },
+    },
+  ],
   themeConfig: {
     algolia: {
       appId: "PWGO6EETLK",

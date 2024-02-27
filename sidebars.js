@@ -428,12 +428,12 @@ module.exports = {
         },
         {
           type: "category",
-          label: "Identity verification",
-          link: { type: "doc", id: "topics/users/verification/index" },
+          label: "Identifications",
+          link: { type: "doc", id: "topics/users/identifications/index" },
           collapsed: true,
           items: [
-            "topics/users/verification/guide-get-identifications",
-            "topics/users/verification/guide-get-latest-id",
+            "topics/users/identifications/guide-get-identifications",
+            "topics/users/identifications/guide-get-latest-id",
           ],
         },
       ],

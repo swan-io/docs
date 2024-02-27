@@ -10,6 +10,7 @@ Identification information is also available on your **Dashboard** > **Data** > 
 
 :::tip Prerequisites
 You need a **project access token** to call the query.
+You can also use a **user access token** without specifying the user ID, which returns information about the current user.
 :::
 
 ## Guide {#guide}
@@ -21,9 +22,9 @@ You need a **project access token** to call the query.
 
 ## Query {#query}
 
-🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgSW5mb09uZVVzZXIgewogIHVzZXIoaWQ6ICIkWU9VUl9VU0VSX0lEIikgewogICAgYWNjb3VudE1lbWJlcnNoaXBzIHsKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgaWQKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICAgIGNhcmRzIHsKICAgICAgICAgICAgdG90YWxDb3VudAogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgICB0b3RhbENvdW50CiAgICB9CiAgICBpZFZlcmlmaWVkCiAgICBpZGVudGlmaWNhdGlvblN0YXR1cwogICAgbW9iaWxlUGhvbmVOdW1iZXIKICB9Cn0K&tab=api)
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgSW5mb09uZVVzZXIgewogIHVzZXIoaWQ6ICIkWU9VUl9VU0VSX0lEIikgewogICAgYWNjb3VudE1lbWJlcnNoaXBzIHsKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgaWQKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICAgIGNhcmRzIHsKICAgICAgICAgICAgdG90YWxDb3VudAogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgICB0b3RhbENvdW50CiAgICB9CiAgICBtb2JpbGVQaG9uZU51bWJlcgogICAgaWRlbnRpZmljYXRpb25MZXZlbHMgewogICAgICBQVklECiAgICAgIFFFUwogICAgICBleHBlcnQKICAgIH0KICAgIGlkZW50aWZpY2F0aW9ucyB7CiAgICAgIHRvdGFsQ291bnQKICAgIH0KICB9Cn0K&tab=api)
 
-```graphql {2,3,10,17-19} showLineNumbers
+```graphql {2,3,10,17-21,23} showLineNumbers
 query InfoOneUser {
   user(id: "$YOUR_USER_ID") {
     accountMemberships {
@@ -40,40 +41,41 @@ query InfoOneUser {
       }
       totalCount
     }
-    idVerified
-    identificationStatus
     mobilePhoneNumber
+    identificationLevels {
+      PVID
+      QES
+      expert
+    }
+    identifications {
+      totalCount
+    }
   }
 }
 ```
 
 ## Payload {#payload}
 
-The payload shows that this user has one account membership, three cards, and isn't `idVerified` but does have a valid identity.
+The payload shows that this user has a single identification: a `true` Expert identification level.
+They don't have any account memberships or cards.
 
-```json {8,10,12-13,18,20-21} showLineNumbers
+```json {12,15} showLineNumbers
 {
   "data": {
     "user": {
       "accountMemberships": {
-        "edges": [
-          {
-            "node": {
-              "id": "$YOUR_MEMBERSHIP_ID",
-              "statusInfo": {
-                "status": "Enabled"
-              },
-              "cards": {
-                "totalCount": 3
-              }
-            }
-          }
-        ],
-        "totalCount": 1
+        "edges": [],
+        "totalCount": 0
       },
-      "idVerified": false,
-      "identificationStatus": "ValidIdentity",
-      "mobilePhoneNumber": "+33600000000"
+      "mobilePhoneNumber": "+33600000000",
+      "identificationLevels": {
+        "PVID": false,
+        "QES": false,
+        "expert": true
+      },
+      "identifications": {
+        "totalCount": 1
+      }
     }
   }
 }

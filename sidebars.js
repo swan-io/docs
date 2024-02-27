@@ -7,14 +7,15 @@ module.exports = {
       collapsed: false,
       items: [
         "index",
+        "glossary",
       {
         type: "category",
         label: "Get started with Swan",
-        link: { type: "doc", id: "topics/get-started/index" },
         collapsed: true,
         items: [
-          "glossary",
+          "topics/get-started/step-by-step",
           "topics/get-started/choose-integration",
+
         ],
       },
     ],
@@ -602,7 +603,7 @@ module.exports = {
         {
           type: "link",
           label: "Swan Banking Frontend",
-          href: "https://swan-io.github.io/swan-partner-frontend/getting-started",
+          href: "https://swan-io.github.io/swan-partner-frontend/",
         },
       ],
     },

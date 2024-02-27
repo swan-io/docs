@@ -25,12 +25,10 @@ function HomepageHeader() {
 }
 
 export default function Home() {
-  const { siteConfig } = useDocusaurusContext();
-
   return (
     <Layout
-      title={`Swan: ${siteConfig.tagline}`}
-      description="Functional utility types and functions for TypeScript"
+      title={`Swan Docs`}
+      description={`Welcome to Swan's Documentation. Explore our guides and learn how to make the most of your integration.`}
     >
       <HomepageHeader />
       <main>

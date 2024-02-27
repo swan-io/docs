@@ -3,7 +3,7 @@ const prism = require("prism-react-renderer");
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: "Swan Docs",
-  tagline: "Onboarding & Banking clients for Swan",
+  tagline: "Documentation, partnership & developers",
   url: "https://swan-io.github.io",
   baseUrl: "/",
   onBrokenLinks: "throw",

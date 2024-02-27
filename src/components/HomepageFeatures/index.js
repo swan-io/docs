@@ -53,7 +53,7 @@ const FeatureList = [
     ),
     description: (
       <>
-        Discover what it means to Partner with Swan. Learn where Swan operates
+        Discover what it means to partner with Swan. Learn where Swan operates
         and review your responsibilities to foster a successful partnership.
       </>
     ),

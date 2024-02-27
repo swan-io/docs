@@ -81,36 +81,12 @@ module.exports = {
       theme: prism.themes.palenight,
       darkTheme: prism.themes.oceanicNext,
     },
-    metadata: [{ name: "twitter:card", content: "summary_large_image" }],
-    headTags: [
-      {
-        tagName: "meta",
-        attributes: {
-          property: "og:image",
-          content: `${url}/img/share.jpg`,
-        },
-      },
-      {
-        tagName: "meta",
-        attributes: {
-          property: "og:image:width",
-          content: `1500`,
-        },
-      },
-      {
-        tagName: "meta",
-        attributes: {
-          property: "og:image:height",
-          content: `777`,
-        },
-      },
-      {
-        tagName: "meta",
-        attributes: {
-          name: "twitter:image",
-          content: `${url}/img/share.jpg`,
-        },
-      },
+    metadata: [
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:image", content: `${url}/img/share.jpg` },
+      { property: "og:image:width", content: `1500` },
+      { property: "og:image:height", content: `777` },
+      { name: "twitter:image", content: `${url}/img/share.jpg` },
     ],
   },
   markdown: {

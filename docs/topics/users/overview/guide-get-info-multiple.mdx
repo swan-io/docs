@@ -15,23 +15,31 @@ You need a **project access token** to call the query.
 ## Guide {#guide}
 
 1. Call the `users` query.
-1. Add all information you'd like to review. The sample query retrieves user IDs, when the users joined the project, their identification status, and the language they used to authenticate, as well as the total count of users in the project.
-1. Add [pagination](../../../developers/using-api/pagination.mdx) to get only the most recent PVID result (line 9-11).
+1. Add all information you'd like to review.
+    - The sample query retrieves user IDs, when the users joined the project, information about their identifications, and the language they used to authenticate, as well as the total count of users in the project.
+1. Add [pagination](../../../developers/using-api/pagination.mdx) to tailor your response to the information you need.
 
 ## Query {#query}
 
-🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgSW5mb011bHRpcGxlVXNlcnMgewogIHVzZXJzIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgaWQKICAgICAgICBqb2luZWRBdAogICAgICAgIGlkZW50aWZpY2F0aW9uU3RhdHVzCiAgICAgICAgYXV0aGVudGljYXRvcnMgewogICAgICAgICAgYWNjZXB0TGFuZ3VhZ2UKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIHRvdGFsQ291bnQKICB9Cn0K&tab=api)
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgSW5mb011bHRpcGxlVXNlcnMgewogIHVzZXJzIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgaWQKICAgICAgICBqb2luZWRBdAogICAgICAgIGF1dGhlbnRpY2F0b3JzIHsKICAgICAgICAgIGFjY2VwdExhbmd1YWdlCiAgICAgICAgfQogICAgICAgIGlkZW50aWZpY2F0aW9ucyB7CiAgICAgICAgICB0b3RhbENvdW50CiAgICAgICAgICBlZGdlcyB7CiAgICAgICAgICAgIG5vZGUgewogICAgICAgICAgICAgIHByb2Nlc3MKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgdG90YWxDb3VudAogIH0KfQo%3D&tab=api)
 
-```graphql {5-7,9,13} showLineNumbers
+```graphql {5-6,8,10,14,20} showLineNumbers
 query InfoMultipleUsers {
   users {
     edges {
       node {
         id
         joinedAt
-        identificationStatus
         authenticators {
           acceptLanguage
+        }
+        identifications {
+          totalCount
+          edges {
+            node {
+              process
+            }
+          }
         }
       }
     }
@@ -44,7 +52,7 @@ query InfoMultipleUsers {
 
 The payload shows four users, each authenticating with a different language.
 
-```json {7-9,12,24,36,48,54} showLineNumbers
+```json {7-9,11,14-15,19,28-30,32,35-36,40,45,50,58} showLineNumbers
 {
   "data": {
     "users": {
@@ -53,52 +61,56 @@ The payload shows four users, each authenticating with a different language.
           "node": {
             "id": "$USER_ID_1",
             "joinedAt": "2024-01-18T13:42:50.106Z",
-            "identificationStatus": "ValidIdentity",
             "authenticators": [
               {
-                "acceptLanguage": "en"
+                "acceptLanguage": "de"
               }
-            ]
+            ],
+            "identifications": {
+              "totalCount": 1,
+              "edges": [
+                {
+                  "node": {
+                    "process": "Expert"
+                  }
+                }
+              ]
+            }
           }
         },
         {
           "node": {
             "id": "$USER_ID_2",
             "joinedAt": "2024-01-18T13:44:22.504Z",
-            "identificationStatus": "InvalidIdentity",
             "authenticators": [
               {
                 "acceptLanguage": "fr"
               }
-            ]
-          }
-        },
-        {
-          "node": {
-            "id": "$USER_ID_3",
-            "joinedAt": "2023-06-20T12:54:59.855Z",
-            "identificationStatus": "ValidIdentity",
-            "authenticators": [
-              {
-                "acceptLanguage": "de"
-              }
-            ]
-          }
-        },
-        {
-          "node": {
-            "id": "$USER_ID_4",
-            "joinedAt": "2023-02-28T10:38:35.035Z",
-            "identificationStatus": "ValidIdentity",
-            "authenticators": [
-              {
-                "acceptLanguage": "es"
-              }
-            ]
+            ],
+            "identifications": {
+              "totalCount": 3,
+              "edges": [
+                {
+                  "node": {
+                    "process": "QES"
+                  }
+                },
+                {
+                  "node": {
+                    "process": "PVID"
+                  }
+                },
+                {
+                  "node": {
+                    "process": "Expert"
+                  }
+                }
+              ]
+            }
           }
         }
       ],
-      "totalCount": 4
+      "totalCount": 2
     }
   }
 }

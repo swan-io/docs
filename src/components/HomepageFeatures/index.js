@@ -120,12 +120,12 @@ export default function HomepageFeatures() {
       <div className="container">
         <div className={styles.featuresRows}>
           {FeatureList.map((props, idx) => (
-            <>
+            <React.Fragment key={idx}>
               {idx > 0 ? (
                 <div style={{ width: 8, height: 8, flexShrink: 0 }} />
               ) : null}
-              <Feature key={idx} index={idx} {...props} />
-            </>
+              <Feature index={idx} {...props} />
+            </React.Fragment>
           ))}
         </div>
       </div>

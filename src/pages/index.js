@@ -27,8 +27,7 @@ function HomepageHeader() {
 export default function Home() {
   return (
     <Layout
-      title={`Swan Docs`}
-      description={`Welcome to Swan's Documentation. Explore our guides and learn how to make the most of your integration.`}
+      description={`Discover the features that power Swan. Unlock your integration’s full potential with Swan’s comprehensive documentation.`}
     >
       <HomepageHeader />
       <main>

@@ -5,7 +5,8 @@ const url = "https://beta.docs.swan.io";
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: "Swan Docs",
-  tagline: "Documentation, partnership & developers",
+  tagline:
+    "Discover the features that power Swan. Unlock your integration’s full potential with Swan’s comprehensive documentation.",
   url,
   baseUrl: "/",
   onBrokenLinks: "throw",

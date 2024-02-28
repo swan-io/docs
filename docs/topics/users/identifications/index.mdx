@@ -4,7 +4,7 @@ title: Identifications
 
 # Identifications
 
-Swan users need to **prove their identities** at two key points during their user journey: during [account onboarding](../../onboarding/index.mdx), and if they need to reset their password.
+Swan users need to **prove their identities** at key points during their user journey: during [account onboarding](../../onboarding/index.mdx), when accepting an [account membership](../../accounts/memberships/index.mdx), and if they need to reset their password.
 To facilitate the process, Swan provides **secure identification options** using live video and artificial intelligence.
 
 :::note Removing identifications
@@ -26,60 +26,46 @@ Note that users must log into Swan to access the identification process.
 
 ### Encourage identification {#encourage}
 
-Your users have the option to complete their identification when [signing up](../index.mdx#signup) for Swan, which is part of the onboarding process.
-Swan also sends your users a text message with a link they can use to start the process.
-The link can only be opened once time.
+Your users have the option to complete their identification when [signing up](../index.mdx#signup) for Swan.
+
+Swan also sends your users a text message with a link they can use to start their identification.
+The link can be used one time.
+If your users need a new link, they can request a new text message.
 If you're using Swan's provided **Web Banking** interface, your users can also start their identification from the app.
 
 If your users aren't completing their identification despite these automated efforts, you can encourage them by sending an authentication link:
 
 1. Follow the [guide to get a user access token](../../../developers/using-api/authentication/guide-get-token-user.mdx#auth-code).
-1. In step 2.1, add the `idverified` parameter to the `scope` (line 9; also includes `openid` and `offline`).
+1. In step 2.1, add the `identificationLevel` parameter to the `scope`.
 
-## Identification processes {#processes}
+## Levels and processes {#levels-processes}
 
-Swan offers three identification processes.
-The process your users are required to complete depends on the type of account and location.
+Two key terms are essential to understand identifications at Swan: **levels** and **processes**.
 
-1. **Expert**
-1. **QES** (Qualified Electronic Signature)
-1. **PVID** (Prestataires de vérification d'identité à distance)
-    - In English: *Remote Identity Verification Service Providers*
+- **Level**: what your users must be awarded to meet local identification regulatory requirements.
+- **Process**: the specific process your users can follow to fulfill a level.
 
-There is a hierarchy between identification processes, meaning some processes can award more than one identification level.
-Identification processes and levels have the **same names** within Swan's API.
-For example:
+Processes vary in **strength**; in other words, there is a **hierarchy** between them.
+This means that one process can award more than one level.
+The process your users should complete depends on the type of account and location.
 
-- The PVID process is stronger than the Expert process. When a user successfully completes the PVID process, they're awarded both PVID and Expert identification levels.
-- The QES process is stronger than the Expert process. When a user successfully completes the QES process, they're awarded both QES and Expert identification levels.
+Identification levels and processes have the same names in the Swan API.
+The following table **explains each process** and indicates **which levels a successful completion awards**.
+
+| Process | Explanation | Levels awarded |
+| --- | --- | --- |
+| Expert | Requires a manual, asynchronous review by an expert in identifications. It can be used to verify an account holder's legal representative as well as account memberships. | Expert level only |
+| PVID<br />*Prestataires de vérification d'identité à distance* | Verifies a user's identity by capturing and verifying identity documents, then performing facial recognition. Any individual opening an account from an eligible account country can use PVID to complete identification, if you configure it that way. Refer to the table in the recommendations section for eligible account countries.<br /><br />PVID translates to *Remote Identity Verification Service Providers* in English. | PVID and Expert levels |
+| QES<br />*Qualified Electronic Signature* | Confirms who created an identity document, *and* that the document hasn't been altered since being signed. If both elements are confirmed, QES validates the authenticity and integrity of the document. Then, the user signs Swan's Terms and Conditions.<br /><br />Qualified electronic signatures are compliant with [EU Regulation No 910/2014](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv%3AOJ.L_.2014.257.01.0073.01.ENG) ([eIDAS Regulation](https://digital-strategy.ec.europa.eu/en/policies/eidas-regulation)) for electronic transactions within Europe. Qualified electronic signatures are the digital equivalent to handwritten signatures. QES predominantly verifies individual account holders and requires a manual, asynchronous identity review by an expert before starting the signature. | QES and Expert levels |
+
+:::note Examples
+- Your user successfully completes the **PVID process**. They're awarded both **PVID** and **Expert levels**.
+- Your user successfully completes the **QES** process. They're awarded both **QES** and **Expert levels**.
+:::
 
 Find the [list of identificationLevels](https://explorer.swan.io?query=cXVlcnkgTGlzdE9mTGV2ZWxzIHsKICB1c2VyIHsKICAgIGxhc3ROYW1lCiAgICBpZGVudGlmaWNhdGlvbkxldmVscyB7CiAgICAgIGV4cGVydAogICAgICBwdmlkCiAgICAgIHFlcwogICAgfQogICAgaWRlbnRpZmljYXRpb25TdGF0dXMKICAgIGlkVmVyaWZpZWQKICAgIGlkCiAgICBmaXJzdE5hbWUKICAgIGJpcnRoRGF0ZQogICAgYWxsRmlyc3ROYW1lcwogICAgbmF0aW9uYWxpdHlDQ0EzCiAgICBtb2JpbGVQaG9uZU51bWJlcgogIH0KfQo%3D&tab=api) in the `user` query.
 
 To start an identification, follow the [guide to get a user access token](../../../developers/using-api/authentication/guide-get-token-user.mdx#auth-code).
-
-### Expert {#expert}
-
-Expert requires a manual, asynchronous review by an expert in identifications.
-It can be used to verify an account holder's legal representative as well as account memberships.
-
-### QES {#qes}
-
-Qualified Electronic Signature (QES) confirms who created an identity document, *and* that the document hasn't been altered since being signed.
-If both elements are confirmed, QES validates the authenticity and integrity of the document.
-Then, the user signs Swan's Terms and Conditions.
-
-Qualified electronic signatures are compliant with [EU Regulation No 910/2014](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv%3AOJ.L_.2014.257.01.0073.01.ENG) ([eIDAS Regulation](https://digital-strategy.ec.europa.eu/en/policies/eidas-regulation)) for electronic transactions within Europe.
-Qualified electronic signatures are the digital equivalent to handwritten signatures.
-QES predominantly verifies individual account holders and requires a manual, asynchronous identity review by an expert before starting the signature.
-
-### PVID {#pvid}
-
-> French: *Prestataires de vérification d'identité à distance*<br />
-> English: *Remote Identity Verification Service Providers*
-
-PVID verifies a user's identity by capturing and verifying identity documents, then performing facial recognition.
-
-Any individual opening an account with a French IBAN can use PVID to complete identification if you configure it that way.
 
 ### Recommendations {#processes-recommendations}
 
@@ -91,8 +77,8 @@ The first process listed is in bold with a checkmark (✓), indicating it's the 
 
 | Account country | Individual accounts | Company accounts |
 | --- | --- | --- |
-| 🇫🇷 France | **✓ PVID**<br />Expert + [first transfer](#qes-first-transfer)<br />QES | **✓ Expert**<br />QES<br />PVID |
-| 🇩🇪 Germany | **✓ QES** + [first transfer](#qes-first-transfer) | **✓ Expert**<br />QES |
+| 🇫🇷 France | **✓ PVID**<br />Expert + first transfer<br />QES | **✓ Expert**<br />QES<br />PVID |
+| 🇩🇪 Germany | **✓ QES** + first transfer | **✓ Expert**<br />QES |
 | 🇳🇱 Netherlands | **✓ Expert**<br />QES<br />PVID | **✓ Expert**<br />QES<br />PVID |
 | 🇪🇸 Spain | **✓ Expert**<br />QES<br />PVID | **✓ Expert**<br />QES<br />PVID |
 
@@ -105,6 +91,9 @@ For users who are **self-employed** account holders, recommendations depend on t
 :::
 
 ## Rejection reason codes {#tracking-reason-codes}
+
+Learn why your user's **identification** was rejected.
+You can also refer users to the Swan's end-user [Support Center](https://support.swan.io/hc/en-150/articles/16421416513693-Identity-verification-rejection-reasons-and-solutions).
 
 | Reason code | Explanation |
 | ---- | ---- |

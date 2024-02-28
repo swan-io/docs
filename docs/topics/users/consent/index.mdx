@@ -11,7 +11,7 @@ In fact, you can't—it's part of Swan's [regulatory responsibility](../../../pa
 Additionally, **consent can't be deactivated**.
 
 Some operations at Swan are considered sensitive, and **sensitive operations always require user consent**.
-To perform sensitive operations **using the API**, you need authenticate with an access token.
+To initiate sensitive operations **using the API**, you need authenticate with an access token.
 You can either use a [user access token](../../../developers/using-api/authentication/index.mdx#tokens-user) in the name of the user wanting to make the payment, or with a [project access token](../../../developers/using-api/authentication/index.mdx#tokens-project) impersonating that user.
 Users must consent to granting a user access token.
 
@@ -27,11 +27,19 @@ All Swan consent processes use SCA.
 
 Though there's much more happening technically, the user experience to consent to sensitive operations is straightforward and typically quick. 
 
-1. The **user receives the consent link** in a text message from Swan or a notification from you.
-1. The user **opens the link** and follows the instructions.
+1. The user goes to the page to **perform an [identification](../identifications/index.mdx)**.
+    1. **Computer**: they receive the consent link in a text message from Swan or a notification from you. The user opens the link and follows the instructions.
+    1. **Mobile device**: they're redirected to the correct page.
 1. The user **verifies their identity** by entering their 6-digit passcode, using biometrics, or using a passkey.
 1. If the user **doesn't receive a text message**, they can either request the text message be sent again or consent by scanning a QR code.
 1. The user is then redirected to your predefined `redirectUrl`.
+
+<details>
+  <summary>Video completing Strong Customer Authentication on mobile</summary>
+    <div>
+        <img src={require("../../../images/topics/users/consent/sca-flow.gif").default} alt="Map of Swan coverage for individual and company accounts" />
+    </div>
+</details>
 
 :::caution Text message and link validity
 **Text messages are only valid for 5 minutes**, and consent links **time out 20 minutes after** being opened.
@@ -86,6 +94,7 @@ Mutations marked with two arrows [⮂] are eligible for [server-to-server consen
 
 - **Credit transfers**:
     - [`initiateCreditTransfers`](https://api-reference.swan.io/mutations/initiate-credit-transfers/) ⮂
+    - - [`initiateInternationalCreditTransfer`](https://api-reference.swan.io/mutations/initiate-international-credit-transfer/)
     - [`scheduleStandingOrder`](https://api-reference.swan.io/mutations/schedule-standing-order/) ⮂
 - **Direct debit payment mandates**:
     - [`addReceivedSepaDirectDebitB2bMandate`](https://api-reference.swan.io/mutations/add-received-sepa-direct-debit-b2-b-mandate/) ⮂
@@ -133,7 +142,9 @@ If you have thousands of operations waiting for consent, requiring consent direc
 
 For example, you might consider using server-to-server consent to generate single-use virtual cards to pay merchants, perform batch payments, and refund transfers.
 
-Note that it **isn't possible** to implement S2S consent for **end-user accounts**.
+Human interaction for SCA is always required, but Swan makes an exception for your own accounts.
+If you want to implement it, you can use S2S consent to approve sensitive operations.
+Note that your implementation requires approval from Swan.
 
 Refer to the [list of sensitive operations](#sensitive) for mutations eligible for S2S consent, marked with two arrows [⮂].
 Learn how to **implement server-to-server consent** in the [dedicated guide](./guide-implement-s2s.mdx).
@@ -229,11 +240,8 @@ participant UM as User's mobile device
     S ->> P: Returns consent
     P ->> UM: Redirects to consent URL
     UM ->> S: Redirected to consent URL
-    S ->> UM: Displays consent page with Partner's branding and logo
-    UM ->> S: Starts consent flow
     S ->> UM: Displays consent page
     UM ->> S: Uses page to consent to the operation
-    S ->> UM: Displays confirmation page
     S ->> UM: Redirects to Partner's redirect URL
     UM ->> P: Redirected to Partner's redirect URL
     P ->> S: Queries the consent

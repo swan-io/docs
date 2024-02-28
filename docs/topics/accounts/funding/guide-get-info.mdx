@@ -1,67 +1,151 @@
 ---
-title: Get information about a funding request
+title: Get information about a funding source and request
 ---
 
-# Get information about a funding request
+# Get information about a funding source and request
 
-You can get information about each funding source with the API.
+You can get information about funding sources and requests with the API.
 
-## Guide {#guide}
-
-The sample query retrieves the statuses for both the funding source and payment mandate, as well as some other information.
+## Get information about a source {#guide-one}
 
 1. Call the `fundingSource` query.
 1. Add your funding source ID.
-1. Add all the information you'd like to review. This query includes information for canceled funding sources because the funding source being used to test has the status `Canceled`.
+1. Add all the information you'd like to review.
 
-## Query {#query}
+### Query {#query-one}
 
-🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlSW5mbyB7CiAgZnVuZGluZ1NvdXJjZShpZDogIiRZT1VSX0ZVTkRJTkdfU09VUkNFX0lEIikgewogICAgY3JlYXRlZEF0CiAgICBpZAogICAgbmFtZQogICAgdXBkYXRlZEF0CiAgICBzdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICAgIC4uLiBvbiBDYW5jZWxlZEZ1bmRpbmdTb3VyY2VTdGF0dXNJbmZvIHsKICAgICAgICBlbmFibGVkQXQKICAgICAgICBjYW5jZWxlZEF0CiAgICAgICAgcmVhc29uQ29kZQogICAgICAgIHN0YXR1cwogICAgICB9CiAgICB9CiAgICAuLi4gb24gRGlyZWN0RGViaXRGdW5kaW5nU291cmNlIHsKICAgICAgaWQKICAgICAgbmFtZQogICAgfQogIH0KfQo%3D&tab=api)
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlSW5mbyB7CiAgZnVuZGluZ1NvdXJjZShpZDogIiRZT1VSX0ZVTkRJTkdfU09VUkNFX0lEIikgewogICAgLi4uIG9uIERpcmVjdERlYml0RnVuZGluZ1NvdXJjZSB7CiAgICAgIGlkCiAgICAgIG5hbWUKICAgICAgaWJhbgogICAgICBjcmVhdGVkQXQKICAgICAgcGF5bWVudE1hbmRhdGUgewogICAgICAgIC4uLiBvbiBTRVBBUGF5bWVudERpcmVjdERlYml0TWFuZGF0ZSB7CiAgICAgICAgICBpZAogICAgICAgICAgbmFtZQogICAgICAgICAgdHJhbnNhY3Rpb25zIHsKICAgICAgICAgICAgZWRnZXMgewogICAgICAgICAgICAgIG5vZGUgewogICAgICAgICAgICAgICAgbGFiZWwKICAgICAgICAgICAgICAgIGlkCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
-```graphql {2} showLineNumbers
+```graphql {2,3,9} showLineNumbers
 query GetSourceInfo {
   fundingSource(id: "$YOUR_FUNDING_SOURCE_ID") {
-    createdAt
-    id
-    name
-    updatedAt
-    statusInfo {
-      status
-      ... on CanceledFundingSourceStatusInfo {
-        enabledAt
-        canceledAt
-        reasonCode
-        status
-      }
-    }
     ... on DirectDebitFundingSource {
       id
       name
+      iban
+      createdAt
+      paymentMandate {
+        ... on SEPAPaymentDirectDebitMandate {
+          id
+          name
+          transactions {
+            edges {
+              node {
+                label
+                id
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
 ```
 
-## Payload {#payload}
+### Payload {#payload-one}
 
-The payload shows that this funding source was canceled by the user.
+The payload shows that the user used their funding source to perform two transactions.
 
-```json {9,15} showLineNumbers
+```json showLineNumbers
 {
   "data": {
     "fundingSource": {
-      "createdAt": "2024-01-22T16:53:34.658Z",
-      "id": "$YOUR_FUNDING_SOURCE_ID",
-      "name": "Funding Source Name",
-      "updatedAt": "2024-01-22T17:53:44.958Z",
-      "statusInfo": {
-        "status": "Canceled",
-        "enabledAt": {
-          "_tag": "Some",
-          "value": "2024-01-22T16:53:54.753Z"
-        },
-        "canceledAt": "2024-01-22T17:53:44.958Z",
-        "reasonCode": "UserCanceled"
+      "id": "$YOUR_SOURCE_ID",
+      "name": "Your Funding Source Name",
+      "iban": "$YOUR_NON_SWAN_IBAN",
+      "createdAt": "2024-01-22T18:10:26.271Z",
+      "paymentMandate": {
+        "id": "$YOUR_MANDATE_ID",
+        "name": "Your Mandate Name",
+        "transactions": {
+          "edges": [
+            {
+              "node": {
+                "label": "Transaction 1",
+                "id": "$YOUR_TRANSACTION_ID_1"
+              }
+            },
+            {
+              "node": {
+                "label": "Transaction 2",
+                "id": "$YOUR_TRANSACTION_ID_2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+## Get a list of sources {#guide-list}
+
+1. Call the `account` query.
+1. Add your account ID.
+1. Add `fundingSources`, then add the `DirectDebitFundingSource` and `SEPAPaymentDirectDebitMandate` unions.
+
+### Query {#query-list}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlTGlzdCB7CiAgYWNjb3VudChhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIikgewogICAgZnVuZGluZ1NvdXJjZXMgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gRGlyZWN0RGViaXRGdW5kaW5nU291cmNlIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgbmFtZQogICAgICAgICAgICBpYmFuCiAgICAgICAgICAgIHBheW1lbnRNYW5kYXRlIHsKICAgICAgICAgICAgICAuLi4gb24gU0VQQVBheW1lbnREaXJlY3REZWJpdE1hbmRhdGUgewogICAgICAgICAgICAgICAgaWQKICAgICAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {2-3,6,11} showLineNumbers
+query GetSourceList {
+  account(accountId: "$YOUR_ACCOUNT_ID") {
+    fundingSources {
+      edges {
+        node {
+          ... on DirectDebitFundingSource {
+            id
+            name
+            iban
+            paymentMandate {
+              ... on SEPAPaymentDirectDebitMandate {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+### Payload {#payload-list}
+
+The payload provides the list of funding sources for your account.
+
+```json {} showLineNumbers
+{
+  "data": {
+    "account": {
+      "fundingSources": {
+        "edges": [
+          {
+            "node": {
+              "id": "$YOUR_SOURCE_ID_1",
+              "name": "Your Funding Source Name 1",
+              "iban": "$YOUR_NON_SWAN_IBAN_1",
+              "paymentMandate": {
+                "id": "$YOUR_MANDATE_ID_1",
+                "name": "Your Mandate Name 1"
+              }
+            },
+            "node": {
+              "id": "$YOUR_SOURCE_ID_2",
+              "name": "Your Funding Source Name 2",
+              "iban": "$YOUR_NON_SWAN_IBAN_2",
+              "paymentMandate": {
+                "id": "$YOUR_MANDATE_ID_2",
+                "name": "Your Mandate Name 2"
+              }
+            }
+          }
+        ]
       }
     }
   }

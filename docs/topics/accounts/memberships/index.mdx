@@ -4,16 +4,20 @@ title: Account memberships
 
 # Account memberships
 
-## Overview {#overview}
+import AccountMembershipDefinition from '../../definitions/_account-membership.mdx';
 
-An account membership **represents the rights** of a Swan user to use the associated account.
+> <AccountMembershipDefinition />
+
+## Overview {#overview}
 
 The Swan user who performs the account's onboarding is the first account member and becomes the account's legal representative.
 All Swan accounts have at least one account member: the legal representative, and they're considered the admin of the account.
 The admin can then grant other Swan users permission to perform certain actions for the account; each of these users is an account member.
 
-> Consider a real-life example: a grandparent might want their grandchild to have access to an account to purchase groceries.
-> The grandparent is the account holder, and the grandchild, an account member.
+:::note Consider a real-life example
+A grandparent wants their grandchild to have access to an account to purchase groceries.
+The grandparent is the legal representative (and account member), and the grandchild, an account member.
+:::
 
 Account memberships are **especially useful for company accounts**.
 The legal representative grants permissions to other employees.
@@ -53,9 +57,9 @@ They can only grant permissions they already have.
 For example, if an account member doesn't have the `canManageCards` permission, they can't grant it to another account member.
 If they try to grant the `canManageCards` permission anyway, the API returns a `PermissionCannotBeGrantedRejection` error.
 
-### Adding cards {#permissions-cards}
+### Managing cards {#permissions-cards}
 
-Whether your account members can add cards and for whom depends on both `canManageAccountMembership` and `canManageCards` permissions.
+Whether your account members can manage cards and for whom depends on both `canManageAccountMembership` and `canManageCards` permissions.
 
 | `canManage`... | `AccountMembership` = true | `AccountMembership` = false |
 | --- | --- | --- |
@@ -90,7 +94,7 @@ flowchart LR
     CP -.-> D[Disabled]
     IS -.-> E[Enabled]
     IS -.-> B[BindingUserError]
-    B -.-> E
+    B <-.-> E
     E <-.-> S[Suspended]
     B -.-> D
     E -.-> D
@@ -109,16 +113,17 @@ flowchart LR
 
 | Account membership status | Explanation |
 |---|---|
-| `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the account holder consents, the status moves to `InvitationSent`</li><li>If the account holder doesn't consent, the status moves to `Disabled`</li></ul> |
+| `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the invited account member consents, the status moves to `InvitationSent`</li><li>If the invited account member doesn't consent, the status moves to `Disabled`</li></ul> |
 | `InvitationSent` | An invitation was sent to the invited account member.<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
-| `Enabled` | All user information matches, the account member's identity is verified, and the account member can use their account membership and corresponding permissions. |
-| `BindingUserError` | The personal information submitted by the invited account member doesn't match the information provided to Swan during account onboarding. The mismatch must be solved before continuing.<br/><br/>Refer to the [section on user binding errors](#binding-error) for more information. |
-| `Suspended` | Account membership is suspended and not available for use.<br/><br/>Account memberships can be suspended for various reasons, including a request from you or the account holder, or a Swan action in the case of suspicious activity.<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
+| `Enabled` | All user information matches, the account member has been awarded the correct [identification level](../../users/identifications/index.mdx#levels-processes), and the account member can use their account membership and corresponding permissions. |
+| `BindingUserError` | The personal information you submitted about the invited account member doesn't match the information they provide during the [signup process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on binding user errors for more information. |
+| `Suspended` | Account membership is suspended and not available for use.<br/><br/>Account memberships can be suspended for various reasons, including a request from you or the account's legal representative, or a Swan action in the case of suspicious activity.<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
 | `Disabled` | Account membership is disabled, is no longer available for use, and can't be restored. |
 
 ### Binding user errors {#binding-errors}
 
-When the personal information submitted by the invited account member doesn't match the information provided to Swan when signing up for an account, the account membership has the status `BindingUserError`.
+The information you submitted about the invited account member doesn't match the information they provide when [signing up for an account](../../users/index.mdx#signup), the account membership has the status `BindingUserError`.
+The status also changes to `BindingUserError` if the user hasn't completed [identification](../../users/identifications/index.mdx).
 
 At least one of the following booleans must be true for an account membership to have a binding error:
 
@@ -126,7 +131,7 @@ At least one of the following booleans must be true for an account membership to
 - `lastNameMatchError` → If `true`, mismatch with last or family name
 - `birthDateMatchError` → If `true`, mismatch with birth date
 - `mobilePhoneMatchError` → If `true`, mismatch with mobile phone number
-- `idVerifiedMatchError` → If `true`, mismatch with identification information
+- `idVerifiedMatchError` → If `true`, membership doesn't have the right level of identification
 
 Account members whose membership status is `BindingUserError` can still access basic account and card information, but they can't perform any [sensitive operations](../../users/consent/index.mdx#sensitive), such as making a transfer or viewing their card numbers.
 
@@ -136,16 +141,16 @@ If fraud is suspected, suspend the membership instead.
 ## Removing identification {#remove-identification}
 
 Verifying your account members' identity is a required step in most circumstances.
-However, with a detailed agreement with Swan, you might be allowed to bypass identification for certain membership permissions.
+However, with a **detailed agreement with Swan**, you might be allowed to bypass identification for certain membership permissions.
 
-- To bypass identification, the account member **can't have** the following permissions:
-    - `canManageAccountMembership`
-    - `canInitiatePayments`
-    - `canManageBeneficiaries`
-- Whether the account member has `canViewAccount` and `CanManageCards` permissions doesn't impact removing identification.
+Even with identification removed, only memberships with certain permissions can bypass identification.
 
-Only after making an agreement with Swan, you can bypass identification with your API calls by setting the `idVerified` parameter to `false`.
+| ✓ Can bypass identification | ☒ Can't bypass identification |
+| :---: | :---: |
+| `canViewAccount`<br />`canManageCards` | `canManageAccountMembership`<br />`canInitiatePayments`<br />`canManageBeneficiaries` |
 
+Note that memberships created before identification is removed still need to verify their identity.
+Adding this configuration **isn't retroactive**. 
 Contact your Technical Account Manager to ask about removing identification.
 
 ## Closed accounts and memberships {#closed}

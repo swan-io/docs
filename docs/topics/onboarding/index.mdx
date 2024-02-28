@@ -7,10 +7,11 @@ title: Account onboarding
 Account onboarding is, at its core, the **process to create [account holders](./account-holders/index.mdx)**.
 
 One end result of onboarding is **also creating the first account** for the new account holder.
-You can create as many accounts for each account holder as required.
+Account holders complete an new onboarding to open another account.
 
 :::info Cross reference
-During onboarding, users also [complete an account holder verification](./account-holders/index.mdx#verification-process) process, [consent to open the account](../users/consent/index.mdx), and [authenticate](https://docs.swan.io/guide/create-a-new-account#first-authentication-and-callback) (log in) for the first time.
+During onboarding, users also [complete an account holder verification](./account-holders/index.mdx#verification-process) process and [authenticate](../../developers/using-api/authentication/index.mdx) (log in) for the first time.
+The might also [sign up for Swan](../users/index.mdx#signup) if they haven't already.
 :::
 
 ## Types of onboarding {#types}
@@ -32,7 +33,7 @@ If you'd like to customize the onboarding experience for your users (while respe
 
 Completing the onboarding process serves several purposes.
 
-1. **Account holder** is created with the status `Enabled`.
+1. **Account holder** is created.
 1. Account holder's **account** is created.
 1. The person who performed the onboarding process becomes the legal representative of the account. They're also the account's first member with [full permissions](https://docs.swan.io/concept/account-membership#rights-management).
 1. Your relationship with the account holder is stored in the `partnershipStatusInfofield` of the `account` object.
@@ -42,8 +43,12 @@ Completing the onboarding process serves several purposes.
 Consider a few details about Swan onboarding links.
 
 1. You can **generate unique links** using the **API**, or use **public links** from your **Dashboard**. Learn how to generate onboarding links in the guides for [individuals](./individual/guide-create.mdx) and [companies](./company/guide-create.mdx).
-1. Unique **onboarding links are single-use**. If you get an HTTP 500 Internal Server Error when submitting the onboarding form, it's because the link has already been used. You need to generate a new link.
+1. Unique **onboarding links are single-use**. If you get an HTTP 500 Internal Server Error when submitting the onboarding form, it's because an onboarding was already finalized using that link. You need to generate a new link.
 1. The true purpose of the `state` parameter is to prevent Cross-Site Request Forgery (CSRF) and related attacks. Consider using it to your advantage. It includes your user's onboarding ID by default, so you can save this onboarding ID when generating the link. 
+
+import PublicOnboardingLinks from './_public-onboarding-links.mdx';
+
+<PublicOnboardingLinks />
 
 ## Onboarding statuses {#statuses}
 
@@ -70,12 +75,14 @@ flowchart LR
 ## Country requirements {#country-reqs}
 
 Onboarding is a **highly localized experience**.
-Everything from **what to include in your API request** to how to ask **users to verify their identity** to whether Swan **requires certain ID numbers or documents** depends on the account country.
+Everything from **what to include in your API request** to how to ask **users to verify their identity** to whether Swan **requires certain ID numbers or documents** depends on the [account country](../accounts/index.mdx#language).
 
-Account onboarding country requirements are described in the [**individual**](individual/index.mdx#country-reqs) and [**company**](company/index.mdx#country-reqs) onboarding sections.
+Account onboarding country requirements are described in the [individual](individual/index.mdx#country-reqs) and [company](company/index.mdx#country-reqs) onboarding sections.
 Please follow the requirements for your target countries closely.
 
-## Sequence diagram: API onboarding flow {#diagram}
+## API sequence diagram {#diagram}
+
+Review this sequence diagram that depicts the onboarding flow with the API.
 
 ```mermaid
 sequenceDiagram
@@ -90,7 +97,7 @@ participant U as User
     end
     P ->> S: Creates onboarding ID
     S -->> P: Returns onboarding ID
-    P ->> U: Sends onboarding link (OAuth2)
+    P ->> U: Sends authentication link (OAuth 2.0)
     U ->> S: Logs in
     S -->> P: Redirects user to partner interface
     deactivate U

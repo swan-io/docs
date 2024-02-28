@@ -12,7 +12,7 @@ Using mobile phone numbers to identify users greatly simplifies their experience
 Their passcode is linked to their mobile phone number and is the same for all projects in both the Sandbox and Live environments.
 
 Note that if your users get a **new phone number**, they should change their number with Swan.
-They shouldn't sign up with a new onboarding, which would create a new Swan user.
+They shouldn't sign up with a new link, which would create a new Swan user.
 
 :::info Sandbox users
 When testing your integration, you'll need [Sandbox users](../../developers/tools/sandbox-users.mdx).
@@ -26,32 +26,34 @@ This includes when they log into their Web Banking app, whether it's [Swan's ope
 
 ## Signing up {#signup}
 
-Users sign up for Swan during the [onboarding process](../onboarding/index.mdx).
+Users sign up for Swan the first time their go through an authentication link.
+This typically occurs when they're invited to become an [account member](../accounts/memberships/index.mdx) or during the [onboarding process](../onboarding/index.mdx).
 
 Your user:
 
-1. Opens their [onboarding link](../onboarding/index.mdx#links).
+1. Opens their signup link.
 1. Enters their **mobile number**.
-    - If you include their number when creating their onboarding link, they won't need to enter it again.
-1. Confirms their mobile number, after which they **continue the signup process** on their mobile device. How they confirm this step depends on whether they opened the onboarding link from a computer or their mobile device:
+    - If you include their number when creating their signup link, they won't need to enter it again.
+1. Confirms their mobile number, after which they **continue the signup process** on their mobile device. How they confirm this step depends on whether they opened the signup link from a computer or their mobile device:
     - **Computer**: Swan sends your user a text message with a link to open on their mobile device.
     - **Mobile device**: Swan sends your user a text message with a verification code. 
-1. Enters their **personal information**, including their name and birthdate. This information **much match** the information that appears on their **identity documents**.
-    - If you include this information when creating their onboarding link, they won't need to enter it again.
+1. Enters their **personal information**, including their name and birthdate. This information **must match** the information that appears on their **identity documents**.
+    - If you include this information when creating their signup link, they won't need to enter it again.
 1. Selects a **6-digit passcode**. They need to remember their passcode; Swan can request it anytime the user needs to consent to a sensitive operation.
-1. Completes [**identification**](./identifications/index.mdx), where Swan verifies their identity. This step can be performed later, though it's recommended to complete it as soon as possible.
+1. Completes [**identification**](./identifications/index.mdx), where Swan verifies their identity. This step can be performed later, though it's recommended to complete it as soon as possible. If you're using the API, you're responsible for triggering this step.
 1. Sets up **biometrics**, if desired and available on their mobile device. Biometrics typically include face or fingerprint authentication.
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart TB
-    OOL([Opens onboarding link]) -.-> M([Enters mobile number])
+    SUL([Opens signup link]) -.-> M([Enters mobile number])
     M -.-> C([Confirms mobile number])
     C -.Computer.-> CO[Receives text message with<br />link to open on mobile device]
     C -.Mobile device.-> MD[Receives text message<br />with verification code]
     CO -.-> CO2([Opens link to verify number])
+    CO2 -.-> CO3([Confirms number a second time])
     MD -.-> MD2([Enters code to verify number])
-    CO2 -.-> PI([Enters personal information])
+    CO3 -.-> PI([Enters personal information])
     MD2 -.-> PI
     PI -.-> P([Chooses passcode])
     P -.-> O
@@ -70,7 +72,7 @@ flowchart TB
 After signing up, your user can **start using Swan**.
 
 - If you're using Swan's provided **Web Banking** interface, Swan redirects your user to the interface automatically.
-- If you're using a **custom API integration** or a customization of Swan's **open source frontend**, your user is redirected to the `redirectUrl` you supplied when creating their onboarding link.
+- If you're using a **custom API integration** or a customization of Swan's **open source frontend**, your user is redirected to the `redirectUrl` you supplied when creating their signup link.
 Make sure to declare your `redirectUrl` on your **Dashboard** > **Developers** > **Redirect URIs**; otherwise, the redirection fails.
 
 ## Logging in {#login}

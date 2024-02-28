@@ -34,7 +34,7 @@ Therefore, there aren't guides dedicated to the topic; the following is all you 
 
 Use any bank account in your name to transfer money to your Swan account.
 Your Swan IBAN is your identifier.
-As soon as Swan receives the money, it's credited to your account immediately.
+As soon as the transfer is processed by Swan, it's credited to your account.
 
 You'll see a `SepaCreditTransferIn` transaction on your account history for this transfer with the transaction status `Booked`.
 
@@ -81,9 +81,12 @@ flowchart LR
 | `Suspended` | Swan can suspend a funding source if there's suspicion of fraud. While suspended, the funding source can't be used. |
 | `Canceled` | Account funding source is canceled and no longer available for use. |
 
+import AccountVerificationStatus from './_account-verification-status.mdx';
+
 :::info Account verification status
-The account verification status doesn't impact SEPA Direct Debit B2B account funding.
-The funding source status can be `Enabled` even if the account verification status is `PendingVerification`.
+
+<AccountVerificationStatus />
+
 :::
 
 ## Payment mandates {#mandates}
@@ -92,10 +95,10 @@ import PaymentMandateDefinition from '../../definitions/_payment-mandate.mdx';
 
 > <PaymentMandateDefinition />
 
-Specifically for account funding, the Swan account holder gives Swan written permission to pull money from their non-Swan account.
-For SEPA Direct Debit B2B, the signed payment mandate must be sent to the user's non-Swan banking institution.
+Specifically for account funding, the Swan account holder gives Swan explicit permission to pull money from their non-Swan account.
+For SEPA Direct Debit B2B, depending on the external institution, the signed payment mandate or payment mandate information must be declared to the user's non-Swan banking institution.
 
-In order for a SEPA Direct Debit B2B funding source to move to the status `Enabled`, the payment mandate must also have the status `Enabled`.
+Consenting to the direct debit mandate updates the status to `Enabled` for both the mandate and the funding source.
 
 ### Payment mandate statuses {#mandates-statuses}
 
@@ -128,7 +131,7 @@ flowchart LR
 
 ## Rolling reserve {#rolling-reserve}
 
-When using SEPA Direct Debit to fund your account, Swan reserves a percentage of your total transaction amount for three business days, after which the reserved amount is released to your account.
+When using SEPA Direct Debit to fund your account, Swan reserves 100% of your transaction for three business days, after which the reserved amount is released to your account.
 Reserved funds are typically released around 20:00 Central European [Summer] Time (CET/CEST) on the last day of the rolling reserve period.
 
 import RollingReserveDefinition from '../../definitions/_rolling-reserve.mdx';

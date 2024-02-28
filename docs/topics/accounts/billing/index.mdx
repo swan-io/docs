@@ -54,7 +54,7 @@ Please check your Terms and Conditions for your precise fees.
 | Handling fees for management of an unauthorised overdraft | ☒ No | 14 days after disclosure of the charges on the account |
 | Adding funds to the account by bank card | ✓ Yes | Immediately |
 | Call to Customer Service | ☒ No | n/a |
-| SEPA Direct Debit merchant fees for transactions up to €200 | ✓ Yes | n/a |
+| SEPA Direct Debit merchant fees for transactions up to €200 | ✓ Yes | Immediately |
 | SEPA Direct Debit merchant fees for transactions over €200 | ✓ Yes | Immediately |
 | Returned merchant SEPA Direct Debit transactions | ✓ Yes | Immediately |
 
@@ -62,14 +62,14 @@ Please check your Terms and Conditions for your precise fees.
 
 Swan **shares revenue** from fees with Partners.
 However, the **fees you can charge are strictly regulated**.
-Refer to the [guide to build a compliant billing offer](./guide-compliant-billing.mdx) for to learn what you can and can't charge.
+Refer to the [guide to build a compliant billing offer](./guide-compliant-billing.mdx) to learn what you can and can't charge.
 
 You can customize banking fees and some other types of fees for your project.
 In customizing your fees, you might choose to either (1) absorb some of the fees yourself, or (2) charge your users markup on top of Swan's fees.
 Allowing for markup is Swan's way of sharing fee revenue with you.
 
-Every time you **change** your list of fees, **update** the financial conditions in your Swan Terms and Conditions and send them to all current users.
-Then, **wait two months** before the changes take effect for your current users.
+Every time you **change your list of fees**, Swan automatically updates the financial conditions in your Swan Terms and Conditions and sends them to all current users.
+There is a two-month waiting period before the changes automatically take effect for your current users.
 New users follow the updated Terms and Conditions from the start.
 
 To customize your fees, please contact your account manager.
@@ -78,9 +78,12 @@ To customize your fees, please contact your account manager.
 
 Swan **generates a dedicated invoice** automatically for all **company** account holders, generated at the same time as the [monthly account statement](../index.mdx#statements).
 The invoice lists all banking fees charged during the **monthly billing period**, which begins on the first of each month.
-If **no banking fees were charged** during the billing period, Swan doesn't generate the invoice.
 
-Invoices are generated in the **account language**, and labels for each fee transaction are also in the account language.
+If a **fee is refunded** and the corresponding invoice was already generated, Swan generates a refund note for the refunded amount.
+Access refund notes the same way you access invoices.
+If **no banking fees were charged** during the billing period, Swan doesn't generate an invoice.
+
+Invoices are generated in the [account language](../index.mdx#language), and labels for each fee transaction are also in the account language.
 You or your user can change the account language; doing so impacts new invoices and fees, but won't change existing fee labels or previously generated invoices.
 
 Subscribe to the `AccountInvoice.Generated` [webhook](../../../developers/using-api/webhooks.mdx) to receive a notification each time an invoice is generated.
@@ -105,6 +108,11 @@ You can provide the VAT number several ways:
 - When [creating the onboarding link](../../onboarding/company/guide-create.mdx) for the new company account
 - When [updating a company onboarding](../../onboarding/company/guide-update.mdx)
 - When [updating an account holder](https://explorer.swan.io?query=bXV0YXRpb24gQWRkVmF0TnVtYmVyIHsKICB1cGRhdGVBY2NvdW50SG9sZGVyKAogICAgaW5wdXQ6IHsKICAgICAgYWNjb3VudEhvbGRlcklkOiAiJFlPVVJfQUNDT1VOVF9IT0xERVJfSUQiCiAgICAgIHZhdE51bWJlcjogIiRBQ0NPVU5UX0hPTERFUl9WQVQiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlQWNjb3VudEhvbGRlclN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBhY2NvdW50SG9sZGVyIHsKICAgICAgICB1cGRhdGVkRGF0ZQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlck5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api) using the `updateAccountHolder` mutation
+
+:::note European companies outside of France
+If you provide a valid VAT number for a company registered in a European country other than France, Swan automatically applies the **reverse charge mechanism**.
+With the reverse charge mechanism, **VAT isn't added** and **must be paid by the end user** in accordance with article 283-2 of the French General Tax Code.
+:::
 
 ## Guides {#guides}
 

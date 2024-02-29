@@ -16,13 +16,13 @@ import RequestPaymentMethodSteps from '../partials/_guide-request-steps.mdx';
 
 ## Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVxdWVzdEludGVybmFsRGlyZWN0RGViaXQgewogIHJlcXVlc3RNZXJjaGFudFBheW1lbnRNZXRob2RzKAogICAgaW5wdXQ6IHsKICAgICAgbWVyY2hhbnRQcm9maWxlSWQ6ICIxNWQ1YWMxZC1kYTc1LTRhNDgtOThjZC1iNzZjNDNlMTZmYTMiCiAgICAgIGludGVybmFsRGlyZWN0RGViaXRTdGFuZGFyZDogeyBhY3RpdmF0ZTogdHJ1ZSB9CiAgICAgIGludGVybmFsRGlyZWN0RGViaXRCMkI6IHsgYWN0aXZhdGU6IHRydWUgfQogICAgfQogICkgewogICAgLi4uIG9uIFJlcXVlc3RNZXJjaGFudFBheW1lbnRNZXRob2RzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lcmNoYW50UHJvZmlsZSB7CiAgICAgICAgaWQKICAgICAgICBtZXJjaGFudE5hbWUKICAgICAgICBtZXJjaGFudFBheW1lbnRQcm9kdWN0cyB7CiAgICAgICAgICBwcm9kdWN0SWQKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgLi4uIG9uIEVuYWJsZWRNZXJjaGFudFBheW1lbnRNZXRob2RzU3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgIGVuYWJsZWRBdAogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVxdWVzdEludGVybmFsRGlyZWN0RGViaXQgewogIHJlcXVlc3RNZXJjaGFudFBheW1lbnRNZXRob2RzKAogICAgaW5wdXQ6IHsKICAgICAgbWVyY2hhbnRQcm9maWxlSWQ6ICIkTUVSQ0hBTlRfUFJPRklMRV9JRCIKICAgICAgaW50ZXJuYWxEaXJlY3REZWJpdFN0YW5kYXJkOiB7IGFjdGl2YXRlOiB0cnVlIH0KICAgICAgaW50ZXJuYWxEaXJlY3REZWJpdEIyQjogeyBhY3RpdmF0ZTogdHJ1ZSB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmVxdWVzdE1lcmNoYW50UGF5bWVudE1ldGhvZHNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVyY2hhbnRQcm9maWxlIHsKICAgICAgICBpZAogICAgICAgIG1lcmNoYW50TmFtZQogICAgICAgIG1lcmNoYW50UGF5bWVudE1ldGhvZHMgewogICAgICAgICAgaWQKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAuLi4gb24gRW5hYmxlZE1lcmNoYW50UGF5bWVudE1ldGhvZFN0YXR1c0luZm8gewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
 
 ```graphql {4-6} showLineNumbers
 mutation RequestInternalDirectDebit {
   requestMerchantPaymentMethods(
     input: {
-      merchantProfileId: "15d5ac1d-da75-4a48-98cd-b76c43e16fa3"
+      merchantProfileId: "$MERCHANT_PROFILE_ID"
       internalDirectDebitStandard: { activate: true }
       internalDirectDebitB2B: { activate: true }
     }
@@ -32,63 +32,40 @@ mutation RequestInternalDirectDebit {
       merchantProfile {
         id
         merchantName
-        merchantPaymentProducts {
-          productId
+        merchantPaymentMethods {
+          id
           statusInfo {
-            status
-            ... on EnabledMerchantPaymentMethodsStatusInfo {
+            ... on EnabledMerchantPaymentMethodStatusInfo {
               __typename
-              enabledAt
-              status
             }
           }
         }
       }
     }
-    ... on ForbiddenRejection {
-      __typename
-      message
-    }
-    ... on NotFoundRejection {
-      id
-      message
-    }
-    ... on InternalErrorRejection {
-      __typename
-      message
-    }
   }
 }
-
 ```
 
 ## Payload {#payload}
 
-The payload confirms the type and the status `PendingReview`.
-Also included in the payload is the merchant profile status, `Enabled`.
+The payload confirms the payment method status `Enabled`.
 
-```json {8-12,14,16,20} showLineNumbers
+```json showLineNumbers
 {
   "data": {
     "requestMerchantPaymentMethods": {
       "__typename": "RequestMerchantPaymentMethodsSuccessPayload",
       "merchantProfile": {
+        "id": "$MERCHANT_PROFILE_ID",
+        "merchantName": "MyBrand Paper Goods",
         "merchantPaymentMethods": [
-                    {
-            "type": "InternalDirectDebitStandard",
-            "updatedAt": "2023-06-12T15:25:08.766Z",
-            "version": 1,
-            "id": "e8e13312-be45-4a76-bfd6-c3e5c6e6fe13",
-            "productId": "iddb2b_dfe125ac-da8c-4d52-bb4c-c44c3cc0e8fe",
+          {
+            "id": "$MERCHANT_PAYMENT_METHOD_ID",
             "statusInfo": {
-              "status": "PendingReview"
-            },
-            "rollingReserve": null
-          },
-        ],
-        "statusInfo": {
-          "status": "Enabled"
-        }
+              "__typename": "EnabledMerchantPaymentMethodStatusInfo"
+            }
+          }
+        ]
       }
     }
   }

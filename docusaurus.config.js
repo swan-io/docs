@@ -1,4 +1,5 @@
 const prism = require("prism-react-renderer");
+const redirects = require("./redirects");
 
 const url = "https://beta.docs.swan.io";
 
@@ -111,5 +112,13 @@ module.exports = {
       },
     ],
   ],
-  plugins: ["docusaurus-plugin-matomo"],
+  plugins: [
+    "docusaurus-plugin-matomo",
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects,
+      },
+    ],
+  ],
 };

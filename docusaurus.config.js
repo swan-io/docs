@@ -69,7 +69,7 @@ module.exports = {
         },
         {
           position: "right",
-          href: "changelog",
+          docId: "changelog",
           label: "Changelog",
         },
       ],

@@ -24,7 +24,6 @@ module.exports = {
       type: "category",
       label: "Account onboarding",
       collapsible: false,
-      link: { type: "doc", id: "topics/onboarding/index" },
       collapsed: false,
       items: [
         {
@@ -304,7 +303,6 @@ module.exports = {
       type: "category",
       label: "Payments",
       collapsible: false,
-      link: { type: "doc", id: "topics/payments/index" },
       collapsed: false,
       items: [
         {
@@ -400,7 +398,6 @@ module.exports = {
       type: "category",
       label: "Users",
       collapsible: false,
-      link: { type: "doc", id: "topics/users/index" },
       collapsed: false,
       items: [
         {

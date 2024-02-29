@@ -1,7 +1,7 @@
 const prism = require("prism-react-renderer");
 const redirects = require("./redirects");
 
-const url = "https://beta.docs.swan.io";
+const url = "https://docs.swan.io";
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {

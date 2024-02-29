@@ -69,8 +69,9 @@ module.exports = {
           label: "API Explorer",
         },
         {
+          type: "doc",
           position: "right",
-          href: "https://docs.swan.io/help/changelog",
+          docId: "changelog",
           label: "Changelog",
         },
       ],

@@ -68,6 +68,7 @@ module.exports = {
           label: "API Explorer",
         },
         {
+          type: "doc",
           position: "right",
           docId: "changelog",
           label: "Changelog",

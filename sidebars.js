@@ -7,17 +7,18 @@ module.exports = {
       collapsed: false,
       items: [
         "index",
+        {
+          type: "category",
+          label: "Get started with Swan",
+          collapsed: true,
+          items: [
+            "topics/get-started/step-by-step",
+            "topics/get-started/choose-integration",
+            "topics/get-started/quickstart",
+  
+          ],
+        },
         "glossary",
-      {
-        type: "category",
-        label: "Get started with Swan",
-        collapsed: true,
-        items: [
-          "topics/get-started/step-by-step",
-          "topics/get-started/choose-integration",
-
-        ],
-      },
     ],
     },
     {

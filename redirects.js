@@ -1,6 +1,5 @@
 // redirects from original doc pathnames
 module.exports = [
-  { from: "/", to: "/" },
   { from: "/api/api-explorer", to: "/developers/tools/api-explorer" },
   { from: "/api/authentication", to: "/developers/using-api/authentication/" },
   { from: "/api/consent", to: "/topics/users/consent/" },
@@ -361,11 +360,11 @@ module.exports = [
   },
   {
     from: "/help/faq/kyc-and-verification-process/how-can-i-entice-my-user-to-verify-their-identity",
-    to: "/topics/users/verification/#encourage",
+    to: "/topics/users/identifications/#encourage",
   },
   {
     from: "/help/faq/kyc-and-verification-process/how-can-i-track-my-customers-verification-process",
-    to: "/topics/users/verification/#tracking",
+    to: "/topics/users/identifications/#tracking",
   },
   {
     from: "/help/faq/kyc-and-verification-process/which-types-of-businesses-does-swan-restrict",
@@ -373,11 +372,11 @@ module.exports = [
   },
   {
     from: "/help/faq/kyc-and-verification-process/why-do-my-users-need-to-go-through-kyc",
-    to: "/topics/users/verification/",
+    to: "/topics/users/identifications/",
   },
   {
     from: "/help/faq/onboarding/is-the-kyc-process-over-after-identity-document-verification-and-liveness-detection",
-    to: "/topics/users/verification/#overview",
+    to: "/topics/users/identifications/#overview",
   },
   {
     from: "/help/faq/sepa-transactions/what-are-the-countries-reachable-on-the-sepa-network",

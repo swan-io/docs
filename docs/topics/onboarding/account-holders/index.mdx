@@ -66,7 +66,7 @@ flowchart LR
     NS -.-> W[WaitingForInformation]
     W -.-> P[Pending]
     P --> V[Verified]
-    P --> RF[Refused]
+    P -.-> RF[Refused]
     subgraph F[Final status]
         V
         RF
@@ -77,9 +77,9 @@ flowchart LR
 
 | Verification status | Explanation |
 |---|---|
-| `NotStarted` | Verification process hasn't started yet |
-| `WaitingForInformation` | Swan is waiting for information from the account holder, such as a document or for the account holder to complete identity verification |
-| `Pending` | Swan has begun their review |
+| `NotStarted` | Verification process hasn't started yet. The account holder's legal representative needs to complete [identification](../../users/identifications/index.mdx) before starting account holder verification. |
+| `WaitingForInformation` | Swan is waiting for information from the account holder, such as a [supporting document](../documents/index.mdx) or other information. |
+| `Pending` | Swan is reviewing the account holder's information before activating or refusing the account. |
 | `Verified` | Swan verified the account holder and the process is complete |
 | `Refused` | Swan won't onboard this account holder |
 

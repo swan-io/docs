@@ -1,0 +1,30 @@
+---
+title: 5 September 2022
+type: release
+---
+
+<h4>New features</h4>
+
+🌐 We changed the web banking navigation to improve your end-customer's UX. This is the first step of our web banking redesign. Thanks so much for all your feedback!
+
+🔎 We added an [API Reference](https://api-reference.swan.io/) to help you during integration. Use it alongside the Doc and the [Explorer](https://explorer.swan.io/).
+
+<h4>Improvements</h4>
+
+🌬️ We added some shortcuts to our GraphQL Schema. Now you can get the legal representative account membership directly from the account using `account.legalRepresentativeMembership` and the account created by the onboarding using `onboarding.account` (only for onboardings created after 2022-02-01)
+
+<h4>Breaking changes</h4>
+
+🔗 The new web banking navigation comes with new URL formats. If you use deep links, you'll have to update them accordingly.
+
+🔐 For security reasons, `PUT method` is no longer supported when uploading a supporting document.
+
+🏅 For performance reasons, we added a rate-limiting to 60 requests per minute for [introspections](https://graphql.org/learn/introspection/) queries.
+
+💰 For Partners using Account Funding, the mutation `addExternalAccountBalance` is now deprecated. We just created a new one: `addOrUpdateExternalAccountBalance`. Both have the following behavior, with no breaking impacts: if you already added a balance for a specific date and then you add another balance for the same date, the existing balance will be updated with the characteristics you set, so you'll always have only one balance for the day.
+
+<h4>Upcoming breaking changes</h4>
+
+👥 By the end of September, we will update the hierarchy of Membership rights: A member will not be able to give permissions they don't themselves have, to other members. We will keep you posted on the new rejection that will occur in case this happens.
+
+📅 By the end of October, the deprecated field `executionDate` used as an input of the `intitiateCreditTransfer` mutation will be permanently removed and replaced by `requestedExecutionAt`.

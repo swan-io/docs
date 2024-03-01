@@ -1,0 +1,31 @@
+---
+title: 27 April 2023
+type: release
+---
+
+<h4>Improvements</h4>
+
+⚡ Instant SEPA Credit Transfer fallback can be tested using the Testing API.
+Initiate an outgoing Instant SEPA Credit Transfer, then reject it using `simulateOutgoingSepaCreditTransferRejection` mutation.
+Use `reasonCode`: `BeneficiaryBankNotReachable`.
+
+🫢 Upcoming outgoing Instant SEPA Credit Transfer can be canceled using the `cancelTransaction` mutation.
+
+✍️ The `externalReference` field in `initiateCreditTransfers` is now working for outgoing Instant SEPA Credit Transfer.
+
+🆔 We added the `accountId` field to `Invoice`. Use it to find the account associated to an `AccountInvoice.Generated` webhook event.
+
+<h4>Bug fix</h4>
+
+📄 Fee amount are displayed in the `.csv` account statement
+
+<h4>Upcoming breaking changes</h4>
+
+👮‍♀️ To avoid undesired behaviors with our API, we are changing the Tax Identification Number (TIN) accepted format in all the `taxIdentificationNumber` inputs from 1-11 characters to 7-11 characters in **4 weeks**.
+
+💥 `isInstant` field for `initiateCreditTransfer` is depreciated and will be removed in 6 months.
+Please use `mode` field instead to initiate an Instant SEPA Credit Transfer.
+
+DOCS:
+
+💶 Learn how to [build a compliant billing offer](/topics/accounts/billing/guide-compliant-billing).

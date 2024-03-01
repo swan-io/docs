@@ -68,12 +68,7 @@ module.exports = {
           href: "https://explorer.swan.io/",
           label: "API Explorer",
         },
-        {
-          type: "doc",
-          position: "right",
-          docId: "changelog",
-          label: "Changelog",
-        },
+        { to: "changelog", label: "Changelog", position: "right" },
       ],
     },
     // footer: {
@@ -94,6 +89,30 @@ module.exports = {
   },
   markdown: {
     mermaid: true,
+    parseFrontMatter: async (params) => {
+      const result = await params.defaultParseFrontMatter(params);
+      if (
+        result != null &&
+        result.frontMatter != null &&
+        result.frontMatter.type === "release"
+      ) {
+        return {
+          ...result,
+          frontMatter: {
+            ...result.frontMatter,
+            slug: String(result.frontMatter.title)
+              .normalize("NFKD") // split accented characters into their base characters and diacritical marks
+              .replace(/[\u0300-\u036f]/g, "") // remove all the accents, which happen to be all in the \u03xx UNICODE block.
+              .trim() // trim leading or trailing whitespace
+              .toLowerCase() // convert to lowercase
+              .replace(/[^a-z0-9 -]/g, "") // remove non-alphanumeric characters
+              .replace(/\s+/g, "-") // replace spaces with hyphens
+              .replace(/-+/g, "-"), // remove consecutive hyphens
+          },
+        };
+      }
+      return result;
+    },
   },
   themes: ["@docusaurus/theme-mermaid"],
   scripts: [],
@@ -119,6 +138,29 @@ module.exports = {
       "@docusaurus/plugin-client-redirects",
       {
         redirects,
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-blog",
+      {
+        blogTitle: "Changelog",
+        postsPerPage: 10,
+        blogSidebarTitle: "All releases",
+        blogSidebarCount: "ALL",
+        id: "changelog",
+        routeBasePath: "changelog",
+        path: "./changelog",
+        feedOptions: {
+          type: "all",
+          copyright: `Copyright © ${new Date().getFullYear()} Swan.`,
+          createFeedItems: async (params) => {
+            const { blogPosts, defaultCreateFeedItems, ...rest } = params;
+            return defaultCreateFeedItems({
+              blogPosts: blogPosts.filter((item, index) => index < 10),
+              ...rest,
+            });
+          },
+        },
       },
     ],
   ],

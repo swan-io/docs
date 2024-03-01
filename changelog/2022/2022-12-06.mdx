@@ -1,0 +1,37 @@
+---
+title: 6 December 2022
+type: release
+---
+
+<h4>New features</h4>
+
+💸 [Initiate SEPA Instant Credit Transfers](/topics/payments/credit-transfers/sepa#instant) (`SepaInstantCreditTransferOut`) transactions using the existing `initiateCreditTransfers` API mutation with the `isInstant` input flag.
+Please note that to guarantee instantaneity, we automatically reject instructions that hit our risk scoring engine (with the `RegulatoryReason` rejection reason code).
+In this case, we recommend you suggest your users to issue a new, non-instant SEPA Credit Transfer transaction (`SepaCreditTransferOut`).
+
+🤖 Use [server-to-server consent](/topics/users/consent#s2s) to avoid any human interaction with the new `grantConsentWithServerSignature` mutation!
+To start playing with this highly secure yet easy feature, head to your **Sandbox** > **Developers** > **Server Consent**.
+If you are interested in using this feature in Live, please reach out to your TAM, check the documentation and start consenting on the go!
+
+⚡ During onboarding, once we have verified the legal representative of the account holder is not a politically exposed person or on a sanctions list, we will [distribute the IBAN](/topics/accounts/ibans#main) via API and Web Banking.
+Most times, this should occur within 10min after ID Verification is completed.
+
+<h4>Improvements</h4>
+
+💳 Display the [numbers of a physical card](/topics/cards/physical/guide-view-info) using the new `viewPhysicalCardNumbers` mutation.
+This is especially useful if you only issue physical cards.
+
+🔐 When using server-to-server consent to [add single-use virtual cards](/topics/cards/virtual/guide-add), the `AddSingleUseVirtualCardSuccessForProjectOwnerPayload` will now return a card in `ConsentPending` status.
+The card will be enabled after the consent is validated.
+We would still recommend that you verify the card status before using it.
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ In early January we will start using a lot of changes that have been added to the Graph in order to improve the product in the following month of the release. Please make sure you take it into account before we use them to avoid breaking changes on your side:
+
+- New types of Transaction `FeeTransaction` and `InternalDirectDebitTransaction`
+- A new enum at Transaction level: `paymentProduct = Fees` and `transactionType = FeesOut`, `FeesIn`
+- A new payment mandate type `InternalDirectDebitPaymentMandate`
+- A new received payment mandate type `InternalReceivedDirectDebitMandate`
+- New rejection reason codes on `SepaInstantCreditTransferOut` and `SepaInstantCreditTransferIn`
+- A new enum at Onboarding level: `companyType = SelfEmployed`

@@ -1,0 +1,33 @@
+---
+title: 12 December 2023
+type: release
+---
+
+<h4>New features</h4>
+
+🇫🇮 Our end-user interfaces are now available in Finnish.
+
+<h4>Improvements</h4>
+
+🤳🏾 To improve the user experience for some payment control use cases, the card spending limits are no longer displayed on the consent screen for the mutations `addCardsWithGroupDelivery`, `addCards`, and `updateCard` (exception: single-use virtual cards).
+
+⚡ Instant transfers are activated by default when initiating SEPA Credit Transfers with Swan's Web Banking interface.
+They fallback to regular transfers when instant isn't available.
+
+🚓 To fight efficiently against money laundering, we implemented a new card ATM withdrawal spending limit.
+These limits are enforced at the account holder level and can only be modified by Swan.
+Review the limits
+
+💼 We added the object `relatedCapitalDepositCase` to the shareholder query in order to provide details about the capital deposit case for any shareholder.
+
+🪝 We added a new webhook, `CapitalDepositDocument.Created`, for when a new a document for a case or a shareholder is created.
+List of webhooks
+
+‼️ Reminder: the date for `addSepaDirectDebitPaymentMandate` must match the format `YYYY-MM-DD`. Otherwise, we'll return a `ValidationRejection`.
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ On February 5th, we're doing a database migration of our webhooks.
+Only logs from January 1st on will be migrated, meaning all data from 2023 and before will be lost.
+From February 5th on, webhook history will only be kept for 100 days.
+This change won't impact the subscriptions.

@@ -1,0 +1,233 @@
+---
+title: Changelog
+---
+
+# Changelog
+
+import CurrentChangelog from './_current.mdx';
+
+<CurrentChangelog />
+
+## October - December 2021 {#2021-q4}
+
+### 16 December
+
+<h4>New features</h4>
+
+🤳 Users can now [consent using biometry](../topics/users/consent/index.mdx#sca-user). To try it out for yourself, just clear your browser data. During your next consent, we'll ask you to register your FaceId, TouchId, or Fingerprint. Passcode will only be requested if a user has changed their mobile device.
+
+📲 Some of you wish to send notifications via your own app, to offer a great UX just like the best neobanks. This is now possible. Just [define your preferred consent notification channel](../topics/users/consent/index.mdx#notifications), SMS or App, by using the new `updateUserConsentSettings` mutation.
+
+✅ Thanks to the new `updateOnboarding` and `finalizeOnboarding` mutations you are not obligated to use our #nocode interfaces. You can [onboard customers directly from your product](../topics/onboarding/index.mdx), if you prefer.
+
+<h4>Improvements</h4>
+
+🔍 We added new account filters : `canManageAccountMembership`, `canManageBeneficiaries`, `canInitiatePayments` and new `accountMemberships` filters: `status`, `canInitiatePayments`, `canManageAccountMembership`, `canManageBeneficiaries`.
+
+📜 The list of transactions associated to a received direct debit mandate can now be retrieved using the API.
+
+🏃 The dashboard lets you sort webhook event logs using 2 new filters: `eventId` and `resourceId`. View each webhook's KPIs for the last 7 days: hits, counter, and error rate. We also added 2 new events: `Onboarding.created` and `Onboarding.updated`.
+
+🚮 Transactions where `paymentProduct` is `SEPACreditTransfer` and status is `Upcoming` can now be canceled using the `cancelTransaction` mutation.
+
+<h4>Bug fixes</h4>
+
+💳 When requesting physical cards, the Company Name and the Name/Last Name are now truncated to 38 characters. This is a mail delivery requirement.
+
+🌍 The card language (used for 3DS, ATM screens and delivery envelopes) is dynamically assigned. Available languages: DE, FR, IT, NL, EN, ES. When a language is not available, the default language is EN.
+
+<h4>Breaking changes</h4>
+
+🔢 [Pagination](../developers/using-api/pagination.mdx) on the `accountHolders`, `accountMemberships`, and `accounts` queries has been fixed. It might break if you implement the filter on the front-end. These queries now only return the requested number of items, rather than all items at once.
+
+### 07 December
+
+<h4>New features</h4>
+
+🍏 Swan's Apple Pay offer is expanded across 19 EU countries: 🇦🇹 Austria, 🇧🇪 Belgium, 🇨🇾 Cyprus, 🇪🇪 Estonia, 🇫🇮 Finland, 🇫🇷 France, 🇩🇪 Germany, 🇬🇷 Greece, 🇮🇪 Ireland, 🇮🇹 Italy, 🇱🇻 Latvia, 🇱🇹 Lithuania, 🇱🇺 Luxembourg, 🇲🇹 Malta, 🇳🇱 Netherlands, 🇵🇹 Portugal, 🇸🇰 Slovakia, 🇸🇮 Slovenia, and 🇪🇸 Spain.
+
+### 18 November
+
+<h4>New features</h4>
+
+👥 [Add up to 200 account memberships](../topics/accounts/memberships/guide-add-multiple.mdx) using just one consent with the `addAccountMemberships` mutation.
+
+💳 [Add up to 200 cards](../topics/cards/virtual/guide-add.mdx#add-multiple), and print their physical version using just one consent with the `addCards` mutation. Since card creation is executed asynchronously, we created a new card status: `Processing`. We deprecated the `status` filter on the `cards` query and created `statuses` so you can filter when there are multiple ones.
+
+✅ The new [`ibanValidation` query](../topics/accounts/ibans/guide-validate.mdx) helps you verify the format of an external IBAN, get all available bank info (name, BIC code, etc.) and account data available for this IBAN, as well as the reachability of this IBAN across all SEPA schemes.
+
+📃 [Sepa Direct Debit Core Mandates](../topics/payments/direct-debit/index.mdx#mandates) are now visible in the API under the account.`receivedDirectDebitMandates` query and can be suspended with the  `suspendReceivedDirectDebitMandate` mutation or resumed with the  `resumeReceivedDirectDebitMandate` mutation.
+
+🤳🏾 During SCA, avoid asking your customer to enter their phone number, first name, last name, and birth date on the Swan user form. Query parameters during the [oauth 2 process](../developers/using-api/authentication/guide-get-token-user.mdx#code-receive) let you do this.
+
+<h4>Improvements</h4>
+
+🪝 Some webhook events used to be fired a few milliseconds too early, and now are fired right on time.
+
+🔄 Just in case a webhook event is incorrectly integrated on your side, we've added a retry button to the dashboard.
+
+📬 Simulate physical card delivery from the dashboard.
+
+🇪🇺 Our compliance team did a lot of work to allow you to onboard individuals and now companies [across all of Europe](../partnership/overvew/country-coverage.mdx). 
+
+### 02 November
+
+<h4>New features</h4>
+
+🤖 Swan's Google Pay offer is expanded across 15 EU countries: 🇦🇹 Austria, 🇧🇪 Belgium, 🇪🇪 Estonia, 🇫🇮 Finland, 🇫🇷 France, 🇩🇪 Germany, 🇬🇷 Greece, 🇮🇪 Ireland, 🇮🇹 Italy, 🇱🇻 Latvia, 🇱🇹 Lithuania, 🇳🇱 Netherlands, 🇵🇹 Portugal, 🇸🇰 Slovakia, 🇸🇮 Slovenia, and 🇪🇸 Spain.
+
+### 21 October
+
+<h4>New features</h4>
+
+🤳🏾 Embedded Web SCA is out! After 2 years of good and loyal service, it's "bye-bye" to Swan app! Having to use Swan app was a major issue for many of you...so we look forward to receiving your feedback on this improvement! 
+
+💳 Supsend and Resume Card directly from the web banking
+
+📬 Get the shipping information of a physical card from the web banking
+
+<h4>Improvements</h4>
+
+💳 Display card numbers during the `addCard` or `addSingleUseVirtualCard` consent by using the new `viewCardNumbers` property. This way, you save the time of one consent and can use the card immediately 
+
+### 13 October
+
+<h4>New features</h4>
+
+📝 `generateAccountStatement` mutation allows you to generate account statements on demand.
+
+💳 `suspendPhysicalCard` and `resumePhysicalCard` mutations are now available.
+
+👩🏽‍🚀 All new users receive a first sandbox user; they don't need to have a dashboard member in order to use the sandbox.
+
+<h4>Improvements</h4>
+
+💳 New options during card authorization simulation (card type, authorization type, 3 wrong PINs ...)
+
+💰 The transaction query can now fetch its related account . If you're using webhooks for transactions, this is very helpful.
+
+🔢 Add pagination and filtering on the  cards query.
+
+⚠️ Limit GQL queries if they are too complex.
+
+♻️ Standing orders are now fully available in the web banking.
+
+📛 The card holder name is displayed in the web banking's transaction details.
+
+🌐 Edit an account's language in the web banking.
+
+🤳🏻 SMS after failed id verification includes more detailed reasons.
+
+🇪🇸 All interfaces including the web banking and onboarding process are now also available in Spanish.
+
+<h4>Bug fixes</h4>
+
+🆔 ID verification of documents from Kosovo.
+
+## July - September 2021 {#2021-q3}
+
+### 16 September
+
+<h4>New features</h4>
+
+💳 Add a `category` to: the card authorization event simulator, the payment control, the card transaction API
+
+⛽ Add an `authorizationType` to: the card authorization event simulator, the payment control, the card transaction API. Values include `Classic`,`PreAuthorization`, and `DataRequest`
+
+📛 Add a `name` field to the card in the API
+
+📮 Set `estimatedDeliveryDate`, `trackingNumber`, `shippingProvider` when you order new physical cards
+
+🌐 Change the account language using `updateAccount` mutation
+
+🤳🏽 Start an identity verification process via the web banking
+
+♻️ Schedule Standing Orders via the web banking
+
+<h4>Improvements</h4>
+
+🆔 Expose the query param `resourceId` in the consent callbacks Url
+
+👥 Allow a membership with `canManageMembership` rights to cancel a physical card
+
+🚦 Company account holders verification status remains `NotStarted` as long as the legal representative is not idverified
+
+🕑 mutation `scheduleStandingOrder` : accept datetime format for `firstExecutionDate`
+
+🌐 Account Statements and SMS are now all translated
+
+<h4>Bug fixes</h4>
+
+🩺 Resolve a non-coherent value in `isPinReady` when a physical card was printed before 5 PM Paris time
+
+### 19 August
+
+<h4>New features</h4>
+
+🪝 [Webhooks](../developers/using-api/webhooks.mdx) are now available. This allows you to process all events in real-time.
+
+♻️ [Standing Orders](../topics/payments/credit-transfers/sepa/index.mdx#standing-orders) are ready to be used after a few weeks of beta testing
+
+🔒 A new Developer role for dashboard members. We encourage you to update members accordingly.
+
+🚨 [Payment control](../developers/using-api/payment-control.mdx) settings are now available in the dashboard.
+
+🚫 Permanently cancel a card via the web banking
+
+🆔 Query transaction by Id in the Graph
+
+<h4>Improvements</h4>
+
+❤️ API Explorer has shareable links and the prettify function was improved
+
+🔍 We added autocompletion for Ultimate Beneficial owners to the onboarding for French companies
+
+⏩ When an `Upcoming` transaction is executed, this same transaction is updated to `Pending` [transaction status](../topics/payments/index.mdx#transactions-statuses) rather than being deleted.
+
+### 17 August
+
+<h4>New features</h4>
+
+🍏 Apple Pay is live, you can add your card from the Swan app or directly from your Wallet app!
+
+### 04 August
+
+<h4>New features</h4>
+
+📛 Update the account `name` from the Web banking
+
+💳 [Cancel a card](../topics/cards/virtual/guide-cancel.mdx) to immediately and permanently cease usage of a card, its physical card and its digital cards and will no longer be billed for it by calling the `cancelCard` mutation
+
+<h4>Improvements</h4>
+
+🆔 We added the `paymentId` in the [payment control](../developers/using-api/payment-control.mdx) payload during the card authorization
+
+### 21 July
+
+<h4>New features</h4>
+
+🇮🇹 Our end-user interfaces are now available in Italian
+
+<h4>Improvements</h4>
+
+✉️ A second address line is available for ordering a physical card
+
+📮 The number of characters allowed for addresses for physical card deliveries has been limited
+
+🧐 Check IBAN consistency when using the `InitiateCreditTransfers` mutation
+
+### 08 July
+
+<h4>New features</h4>
+
+💳 [Issue Single Use Virtual Cards](../topics/cards/virtual/guide-add.mdx#add-suv) with the new `addSingleUseVirtualCard` mutation.
+
+♻️ Schedule, cancel, and fetch [Standing Orders](../topics/payments/credit-transfers/sepa/index.mdx#standing-orders) from the API. Execution is not yet up and running, but it's coming soon.
+
+📛 Change an account name from the onboarding mutation or at any time from the  `updateAccount` mutation.
+
+🚫 Permanently block a physical card via the web banking or with the `cancelPhysicalCard` mutation.
+
+<h4>Improvements</h4>
+
+⁉️ Membership binding is no longer case sensitive nor accent sensitive (Rémi and remi are seen as a match now)

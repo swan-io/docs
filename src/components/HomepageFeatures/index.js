@@ -1,5 +1,6 @@
 import * as React from "react";
 import styles from "./styles.module.css";
+import Link from "@docusaurus/Link";
 
 void React;
 
@@ -87,8 +88,8 @@ const FeatureList = [
 
 function Feature({ svg, url, title, description, index }) {
   return (
-    <a
-      href={url}
+    <Link
+      to={url}
       className={`${styles.featureBlock}`}
       style={{ animationDelay: `${200 + index * 100}ms` }}
     >
@@ -110,7 +111,7 @@ function Feature({ svg, url, title, description, index }) {
           opacity={0.4}
         />
       </svg>
-    </a>
+    </Link>
   );
 }
 

@@ -1,0 +1,371 @@
+---
+title: Changelog
+---
+
+# Changelog
+
+import CurrentChangelog from './_current.mdx';
+
+<CurrentChangelog />
+
+## October - December 2022 {#2022-q4}
+
+### 06 December
+
+<h4>New features</h4>
+
+💸 [Initiate SEPA Instant Credit Transfers](../topics/payments/credit-transfers/sepa/index.mdx#instant) (`SepaInstantCreditTransferOut`) transactions using the existing `initiateCreditTransfers` API mutation with the `isInstant` input flag.
+Please note that to guarantee instantaneity, we automatically reject instructions that hit our risk scoring engine (with the `RegulatoryReason` rejection reason code).
+In this case, we recommend you suggest your users to issue a new, non-instant SEPA Credit Transfer transaction (`SepaCreditTransferOut`).
+
+🤖 Use [server-to-server consent](../topics/users/consent/index.mdx#s2s) to avoid any human interaction with the new `grantConsentWithServerSignature` mutation!
+To start playing with this highly secure yet easy feature, head to your **Sandbox** > **Developers** > **Server Consent**.
+If you are interested in using this feature in Live, please reach out to your TAM, check the documentation and start consenting on the go!
+
+⚡ During onboarding, once we have verified the legal representative of the account holder is not a politically exposed person or on a sanctions list, we will [distribute the IBAN](../topics/accounts/ibans/index.mdx#main) via API and Web Banking.
+Most times, this should occur within 10min after ID Verification is completed.
+
+<h4>Improvements</h4>
+
+💳 Display the [numbers of a physical card](../topics/cards/physical/guide-view-info.mdx) using the new `viewPhysicalCardNumbers` mutation.
+This is especially useful if you only issue physical cards.
+
+🔐 When using server-to-server consent to [add single-use virtual cards](../topics/cards/virtual/guide-add.mdx), the `AddSingleUseVirtualCardSuccessForProjectOwnerPayload` will now return a card in `ConsentPending` status.
+The card will be enabled after the consent is validated.
+We would still recommend that you verify the card status before using it.
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ In early January we will start using a lot of changes that have been added to the Graph in order to improve the product in the following month of the release. Please make sure you take it into account before we use them to avoid breaking changes on your side:
+
+- New types of Transaction `FeeTransaction` and `InternalDirectDebitTransaction`
+- A new enum at Transaction level: `paymentProduct = Fees` and `transactionType = FeesOut`, `FeesIn`
+- A new payment mandate type `InternalDirectDebitPaymentMandate`
+- A new received payment mandate type `InternalReceivedDirectDebitMandate`
+- New rejection reason codes on `SepaInstantCreditTransferOut` and `SepaInstantCreditTransferIn`
+- A new enum at Onboarding level: `companyType = SelfEmployed`
+
+### 04 November
+
+<h4>New features</h4>
+
+💰 Add an Account detail tab in the web banking menu (level 1) lets you access the main IBAN, manage virtual IBANs, and update account settings.
+
+👩🏼‍💻 The web banking has a new profile page that allows users to manage their languages, reminds them to verify their identity, and provides access to FAQ and support.
+
+<h4>Improvements</h4>
+
+⛔ UBO doesn't mean anything to French "syndicat de copropriété" and "associations" so we removed them from the nocode onboarding.
+
+⚖️ A "legal representative" tile was added to the dashboard for company account holders.
+
+🔗 The authentication SMS was changed from swan.io to authmsg.co, for better whitelabeling.
+
+🔐 Most of the time, we won't display the Captcha anymore — the one displayed when the user enters their phone number. This doesn't take away from the level of security.
+
+🌬️ The Refund API mutation can now be used on `SepaInstantCreditTransferIn` transactions
+
+<h4>Breaking changes</h4>
+
+📅 The deprecated field `executionDate` used as an input for the `initiateCreditTransfers` mutation was permanently removed and replaced by `requestedExecutionAt`.
+
+🈲 For regulatory reasons, we will no longer accept special characters in the `SepaBeneficiary` `name` input fields for the `initiateCreditTransfers` mutation. Chinese and Cyrillic characters will no longer be allowed.
+
+### 04 October
+
+<h4>New features</h4>
+
+⚡ We can now receive [Instant SEPA Credit Transfers](../topics/payments/credit-transfers/sepa/index.mdx#instant)! These will be shown as `SepaInstantCreditTransferIn` in the `TransactionTypeEnum`.
+
+💳 Manage [multiple card products](../topics/cards/index.mdx#card-product) from the dashboard, with different designs and spending limits.
+
+<h4>Improvements</h4>
+
+💳 Order cards from the web banking with all our API capabilities: card design, format (Virtual, Physical or Single Use), spending settings, one or multiple members, grouped or individual delivery.
+
+📅 The Rolling Reserve for B2B `SepaDirectDebitIn` transactions in an Account Funding context has been decreased from 4 to 3 inter-bank business days + the booking date/time for SDD-In transactions was changed from 6PM CET  to 8PM CET.
+
+🚥 [Funding Sources are no longer suspended](../topics/accounts/funding/index.mdx#statuses) when a rejection is received for `SepaDirectDebitIn` within the B2B scheme created for Account Funding. When a rejection is received for `InsufficientFunds`, core scheme Funding Sources won't be suspended either. This can be simulated via the testing API and by adding a `reasonCode` in the `simulateIncomingSepaDirectDebitReject` and `simulateIncomingSepaDirectDebitReturn` API mutations.
+
+🗓️ We've removed the [14 calendar day limitation](../topics/accounts/funding/index.mdx) on the `requestedExecutionAt` for `initiateFundingRequest`. When the `requestedExecutionAt` input is used, `SEPADirectDebitIn` transactions created with `Upcoming` status can now be canceled up to 1 day before the `executionDate` and 1 hour before Swan cut-off.
+
+<h4>Bug fix</h4>
+
+💥 A very small proportion of users experienced errors when using their 6-digit passcode during consent. This has been fixed.
+
+<h4>Breaking changes</h4>
+
+👥 The hierarchy of Membership rights has been updated: A member cannot give permissions to others, that they don't themselves have. We will keep you posted on the new rejection that will occur in case this happens.
+
+<h4>Upcoming breaking changes</h4>
+
+📅 By the end of October, the deprecated field `executionDateused` as an input for the `intitiateCreditTransfer` mutation will be permanently removed and replaced by `requestedExecutionAt`.
+
+## July - September 2022 {#2022-q3}
+
+### 05 September
+
+<h4>New features</h4>
+
+🌐 We changed the web banking navigation to improve your end-customer's UX. This is the first step of our web banking redesign. Thanks so much for all your feedback!
+
+🔎 We added an [API Reference](https://api-reference.swan.io/) to help you during integration. Use it alongside the Doc and the [Explorer](https://explorer.swan.io/).
+
+<h4>Improvements</h4>
+
+🌬️ We added some shortcuts to our GraphQL Schema. Now you can get the legal representative account membership directly from the account using `account.legalRepresentativeMembership` and the account created by the onboarding using `onboarding.account` (only for onboardings created after 2022-02-01)
+
+<h4>Breaking changes</h4>
+
+🔗 The new web banking navigation comes with new URL formats. If you use deep links, you'll have to update them accordingly.
+
+🔐 For security reasons, `PUT method` is no longer supported when uploading a supporting document.
+
+🏅 For performance reasons, we added a rate-limiting to 60 requests per minute for [introspections](https://graphql.org/learn/introspection/) queries.
+
+💰 For Partners using Account Funding, the mutation `addExternalAccountBalance` is now deprecated. We just created a new one: `addOrUpdateExternalAccountBalance`. Both have the following behavior, with no breaking impacts: if you already added a balance for a specific date and then you add another balance for the same date, the existing balance will be updated with the characteristics you set, so you'll always have only one balance for the day.
+
+<h4>Upcoming breaking changes</h4>
+
+👥 By the end of September, we will update the hierarchy of Membership rights: A member will not be able to give permissions they don't themselves have, to other members. We will keep you posted on the new rejection that will occur in case this happens.
+
+📅 By the end of October, the deprecated field `executionDate` used as an input of the `intitiateCreditTransfer` mutation will be permanently removed and replaced by `requestedExecutionAt`.
+
+### 12 July
+
+<h4>Improvements</h4>
+
+🚔 We added a security captcha when there is some doubt concerning the phone number entered, in order to increase the level of security. This should impact only 0.5% of users.
+
+💳 To avoid strong authentication for the end customer each time the [card number is revealed](../topics/cards/virtual/guide-view-info.mdx), we now allow calling the same `consentUrl` for 5 minutes after consenting. For this, we advise you to store the `consentId` on your side and to run a consent query each time before reusing the  `consentUrl` to check that the consent status is `Accepted` and the `updatedAt` is less than 5min.
+
+### 06 July
+
+<h4>New features</h4>
+
+📈 Account funding beta testers, you can now push your end customers' balances in order to calculate a funding limit.
+
+<h4>Improvements</h4>
+
+🤳 Review and optimize the user experience of our Strong Customer Authentication flows and encourage biometric authentication each time the passcode is used.
+
+📃 Add a supporting document section in the dashboard to consult the list of uploaded documents required for KYC/KYB and upload new ones.
+
+📈 2 new countries are available for company onboarding: Cyprus  and Bulgaria 
+
+🔍 We added more search filters and sorting in the account list and in the account membership list.
+
+🪝 A new webhook `account.closing` is triggered when closing an account
+
+✅ The `sepaBeneficiary.name` input of the `initiateCreditTransfer` API mutation now needs to have a minimum of 2 characters.
+
+♻️ A new simulation (`simulateReleaseReservedBalance`) lets you release the reserved balance for a transaction. As a reminder, the reserve balance depends on the rolling reserve
+
+⛔ When the `blockSDD` field is set to true at the account level, SDD-Out transactions presented on any virtual IBAN attached to it will be rejected.
+
+🛑 Onboarding API data validation: new rejection type raised in case of incorrect data format/type
+
+<h4>Bug fix</h4>
+
+⌛ We fixed some performance issues with the card and the account membership list
+
+<h4>Breaking changes</h4>
+
+📃 The Supporting Document status has been renamed from `ReviewPending` to `PendingReview`.
+
+💥 `accountHolder.fundingLimitand` and `accountHolder.instantFundingLimit` were deprecated since the previous release and have been totally removed.
+
+<h4>Upcoming breaking changes</h4>
+
+📃 We changed the upload method from PUT to POST. PUT still works but is now deprecated and will be removed by end of August.
+
+🎙️ Next release, we will implement a rate-limiting to 60 req/minutes for introspections queries.
+
+## April - June 2022 {#2022-q2}
+
+### 07 June
+
+<h4>New features</h4>
+
+📈 Instantly load your customers' accounts with SEPA Direct Debit. This is one of our biggest features of the year! Contact us if you're interested in joining the beta testers group.
+
+🤳🏿 Accept up to 100 consents with just one single Strong Customer Authentication.
+
+📄 When finalizing your customers' onboarding, you can now use the API to consult the list of minimum required supporting document purposes. Using this feature will reduce a lot of back-and-forths. In 90% of account openings, we require documents for just one single purpose. However, if an individual presents a higher risk than expected, we ask for additional documents.
+
+<h4>Improvements</h4>
+
+✅ Clearly see where you are in the activation process, right from the dashboard header. Just click “Activate.”
+
+📃 If you're opening accounts for companies, you can now upload supporting documents using the nocode onboarding interface.
+
+👤 For a better UX, we decided to remove the last page of user registration (Sign in).
+
+🔍 You can now search a first or last name in the account membership list.
+
+🪝 A new webhook `onboarding.updated` is triggered when onboarding is finalized.
+
+🔄 Funding sources are listed in the dashboard.
+
+✖️ A funding source with `Pending` or `Enabled` status can be `Canceled` by any account member with `Can Manage Account Membership` user rights using the `cancelFundingSource` mutation.
+
+👮🏻 The Account Verification status of a SDD B2B funding source is automatically switched to `verified` when the Rolling Reserve amount is released from the reserved balance (if no R-transaction has been received)
+
+💳 A new reason code has been added for refused card transactions: `MerchantShouldResubmitAuthorization`
+
+💸 Card `spending` was not being released when the authorization amount was released.
+
+<h4>Bug fix</h4>
+
+💳 Some card options were recently desynchronized at our card processor. We've fixed this.
+
+<h4>Breaking changes</h4>
+
+💥 Account funding is in beta, so there are sometimes breaking changes: `accountHolder.fundingLimit` and `accountHolder.instantFundingLimit` is deprecated and moved to a new resource `accountHolder.fundingLimitSettings` respectively in `accountHolder.fundingLimitSettings.fundingLimit` and `accountHolder.fundingLimitSettings.instantFundingLimit`.
+
+<h4>Upcoming breaking changes</h4>
+
+📃 Next release, in early July, we will rename the Supporting Document status `ReviewPending` to `PendingReview`.
+
+### 05 May
+
+<h4>New features</h4>
+
+📈 Seamlessly [load your customers' accounts](../topics/accounts/funding/index.mdx), with SEPA Direct Debit. Contact us if you want to join the beta testers group.
+
+💳 [Skip identity verification](../topics/users/identifications/index.mdx) for some corporate card holders.
+
+🔐 Users can [reset their passcode](../topics/users/index.mdx#login) via facial recognition in less that 3 minutes.
+
+<h4>Improvements</h4>
+
+🔍 The dashboard data list now includes search, count, filters, and more. We'll add more each cycle, so you can enhance your customer support experience. Let us know if you have any feedback or special wishes.
+
+📬 Simulate the reception of a physical card using the Testing API. The event simulator will soon feature this, as well.
+
+### 11 April
+
+<h4>New features</h4>
+
+🎨 Full redesign of our dashboard to improve the Developer Experience.
+
+<h4>Improvements</h4>
+
+❌ Your customer service folks can easily cancel upcoming credit transfers, or cancel and suspend cards, thanks to some new buttons.
+
+🗒️ Account statements are listed in the dashboard, or you can generate them yourself.
+
+📆 In the onboarding API, we added creation date and last updated date, and improved some error messages.
+
+<h4>Bug fix</h4>
+
+🆔 The `cardId` is now correctly sent within the redirection URL of the `activatePhysicalCard` mutation.
+
+<h4>Breaking changes</h4>
+
+🔢 We activated pagination on onboarding.
+
+## January - March 2022 {#2022-q1}
+
+### 15 March
+
+<h4>New features</h4>
+
+📈 Display your customers' data on the dashboard. This is a great first round; the next release will feature even more data with added filters and a search field.
+
+💳 Cardholders can now [activate a card](../topics/cards/physical/guide-activate.mdx) after receiving it, thanks to the new `activatePhysicalCard` mutation. They just have to input the identifier printed on the card and give their consent.
+
+📃 [Upload supporting documents](../topics/onboarding/documents/guide-upload.mdx) using the `generateSupportingDocumentUploadUrl` mutation during the onboarding. This way you don't have to ask users a second time by email.
+
+<h4>Improvements</h4>
+
+🛒 To facilitate the interpretation of the `merchantCategoryCode`, you can now get the description of each code in the `merchantCategoryDescription` field for every `transaction` of `CardTransactiontype`.
+
+<h4>Bug fix</h4>
+
+💵 The amounts displayed in `thecard.spending.amount.value` field are now more consistent. Values previously returned as `0` will now be returned as `0.00`
+
+<h4>Breaking changes</h4>
+
+👩🏻‍💻 To update the verification status of an individual account holder, you have two options:
+
+- From the dashboard using the event simulator for Update Account Holder (instead of the sandbox users page).
+- From the Testing API with the `updateAccountHolder` mutation (instead of `updateSandboxUser`)
+
+📉 We've decided to reduce the number of cards we can issue using `addCards` mutation up to 250 while we fix a performance issue.
+
+<h4>Upcoming breaking changes</h4>
+
+💳 Please note that after the next release (estimated for April 7th), the physical card `identifier` will return `null` if its status is `ToActivate`.
+
+### 17 February
+
+<h4>New features</h4>
+
+🦺 A new [Testing API](../developers/tools/testing-api.mdx) exposes the event simulators and Sandbox user management. Developers can now call them programmatically and perform end-to-end tests without having to connect to the Dashboard. Big improvement to our developer experience! [Try it now](https://explorer.swan.io/?tab=test-api)!
+
+### 03 February
+
+<h4>New features</h4>
+
+🇫🇷 Offer [Capital Deposit](../topics/capital-deposits/index.mdx) to your French customers. Enable the registration of new companies directly from your product, by providing an account and proof that the share capital has been wired by shareholders.
+
+📦 Ship a group of cards altogether to the same address using the `addCardsWithGroupDelivery` mutation. It's more cost-effective, and better for the planet!
+
+<h4>Improvements</h4>
+
+🆔 Simulate Sandbox user's identification status from the dashboard
+
+📅 Transactions are better sorted in our web banking thanks to a new transaction.`executionDate` field. For `Upcoming` transactions, it reflects the requested execution date. For all other transactions it reflects the creation date.
+
+💳 The maximum number of cards you can create using the `addCards` mutation has been increased from 200 to 500
+
+🪝 New webhooks are available for creating and updating Received Direct Debit Mandates
+
+📝 SEPA Direct Debit-Out B2B Mandates Amendments can now be registered with Swan using the [`UpdateReceivedSepaDirectDebitB2bMandate` mutation](../topics/payments/direct-debit/guide-update-mandate.mdx).
+
+<h4>Bug fix</h4>
+
+📠 We fixed some bugs for the users of old browsers (IndexedDB issues)
+
+<h4>Breaking changes</h4>
+
+🏦 New `PaymentProduct` and `TransactionType` enum values have been added in order to provide you with a greater level of detail and an improved experience. These new enum values that were previously listed as `COMING SOON` are now populated. The enum values marked `COMING SOON` will be populated during the next release. Some other enum values (listed as `SOON TO BE DEPRECATED`) will be deprecated in the next Swan release, therefore please make sure you take these changes into account.
+
+🙅🏼‍♂️ We will start sending the following `RejectedReasonCodes` for card transactions that were created during the last release: `CardNotActivated`, `InvalidPin`, `InvalidPinAttemptsExceeded`
+
+🙅🏾‍♀️ Many new Rejections related to the card and already added during the last release are now populated. They should provide you with a greater level of detail and an improved experience.
+
+### 06 January
+
+<h4>New features</h4>
+
+↪️ We fully support all kinds of [Received Sepa Direct Debit](../topics/payments/direct-debit/index.mdx): Core and B2B.
+
+🔚 You can now [close an account](topics/accounts/index.mdx#closure) by API using the `closeAccount` mutation.
+
+<h4>Improvements</h4>
+
+♻️ It's now possible to release a card authorization using the Event Simulator.
+
+🔍 You can now filter cards by `statuses` for a given Account Membership using the `accountMembership.cards` query.
+
+📃 Default pagination has been increased to 50 items per page in the payments query in order to align with other queries.
+
+📝 For each card transaction on the Account Statement, the description field now shows the card holder name and the last four digits of the card.
+
+✉️ Webhooks offer 2 new onboarding events: Onboarding.Created and Onboarding.Updated
+
+🔄 Exponential backoff when retrying failed webhook events, with up to a maximum of 7 retries.
+
+<h4>Bug fix</h4>
+
+✅ The list of accepted characters in the `reference` field of the `initiateCreditTransfer` mutation has been updated to match current SEPA guidelines.
+
+💳 The image returned in the `cardUrl` (card query) is now updated when the Account Member name is updated
+
+💥 When issuing cards, Cardholder names and delivery addresses can include special characters and accents like "Amélie" or "Hauptstraße".
+
+<h4>Breaking changes</h4>
+
+🆔 It's been 3 months now (that's 3 releases ago), that partners integrating by API must make sure their UX [entices users to prove their identity](../topics/users/identifications/index.mdx#encourage). To give you time to develop this user flow, we've been texting all users about identity verification as soon as they are created. Starting today, we no longer send new users this sms.

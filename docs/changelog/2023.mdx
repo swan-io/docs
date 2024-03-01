@@ -1,0 +1,668 @@
+---
+title: Changelog 2023
+---
+
+# Changelog 2023
+
+import CurrentChangelog from './_current.mdx';
+
+<CurrentChangelog />
+
+## October - December 2023 {#2023-q4}
+
+### 12 December
+
+<h4>New features</h4>
+
+🇫🇮 Our end-user interfaces are now available in Finnish.
+
+<h4>Improvements</h4>
+
+🤳🏾 To improve the user experience for some payment control use cases, the card spending limits are no longer displayed on the consent screen for the mutations `addCardsWithGroupDelivery`, `addCards`, and `updateCard` (exception: single-use virtual cards).
+
+⚡ Instant transfers are activated by default when initiating SEPA Credit Transfers with Swan's Web Banking interface.
+They fallback to regular transfers when instant isn't available.
+
+
+🚓 To fight efficiently against money laundering, we implemented a new card ATM withdrawal spending limit.
+These limits are enforced at the account holder level and can only be modified by Swan.
+Review the limits
+
+💼 We added the object `relatedCapitalDepositCase` to the shareholder query in order to provide details about the capital deposit case for any shareholder.
+
+🪝 We added a new webhook, `CapitalDepositDocument.Created`, for when a new a document for a case or a shareholder is created.
+List of webhooks
+
+‼️ Reminder: the date for `addSepaDirectDebitPaymentMandate` must match the format `YYYY-MM-DD`. Otherwise, we'll return a `ValidationRejection`.
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ On February 5th, we're doing a database migration of our webhooks.
+Only logs from January 1st on will be migrated, meaning all data from 2023 and before will be lost.
+From February 5th on, webhook history will only be kept for 100 days.
+This change won't impact the subscriptions.
+
+### 30 November
+
+<h4>New features</h4>
+
+👤 Access identity verification details for you, either with the API or on your **Dashboard** > **Data** > **Users**.
+See their identification history, the identification levels they've validated, and why an identification attempt might have been rejected.
+Because of this new feature, we're deprecating `user.identificationStatus`.
+
+
+🆔 Swan offers a document-sharing feature, providing access to identity verification document metadata as well as the documents themselves.
+Please submit a ticket through your Dashboard to learn more about this feature.
+
+
+<h4>Improvements</h4>
+
+🆔 Depending on your project's configuration, the notification informing account holders that their account is open will now also be triggered in Sandbox.
+
+
+🪝 Receive webhooks when a capital deposit document is updated.
+Using the new `capitalDepositDocument` query, retrieve its new status and, when rejected, the `reasonCode` with reason for the rejection.
+List of webhooks
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ In **4 weeks**, we're adding a new value to the `SupportingDocumentPurpose` enum: `UltimateBeneficialOwnerProofOfAddress`.
+
+### 21 November
+
+<h4>New features</h4>
+
+💸 Customize banking fees for your end users.
+
+
+<h4>Improvements</h4>
+
+🏦 Access a PDF with your bank details (RIB in France) through the API, Dashboard, or Web Banking.
+This PDF contains all the information required to transfer funds to a Swan account.
+
+
+⚡ To accelerate the capital deposit process, we now send the funds to the notary with a SEPA Instant Credit Transfer.
+
+<h4>Breaking changes</h4>
+
+💥 The deprecated field `isInstant` for `initiateCreditTransfers` was removed.
+Please use `mode` instead to initiate SEPA Instant Credit Transfers.
+By using `mode=InstantWithFallback`, your SEPA Instant Credit Transfers will ["fallback" to regular SEPA Credit Transfers](../topics/payments/credit-transfers/sepa/index.mdx#instant-fallback) if instant isn't available.
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ In **4 weeks**, we're adding new values to the `SupportingDocumentPurpose` enum: `LegalRepresentativeProofOfIdentity`, `UltimateBeneficialOwnerProofOfIdentity`, `NIFAccreditationCard`, `PresidentDecisionOfAppointment`, `AdministratorDecisionOfAppointment`, and `FinancialStatements`.
+We're also deprecating `ProofOfIdentity`.
+
+⚠️ In **4 weeks**, we'll remove the deprecated `users.search` filter.
+Please use `users.filters.search` instead, which operates the same but requires at least 3 characters to search.
+
+### 26 October
+
+<h4>Improvements</h4>
+ 
+🇩🇪 Get ready for better conversion rates when onboarding German individual accounts.
+When verifying their identity, users can submit their identity document and their qualified electronic signature (QES) at the same time.
+Previously, users had to wait until the document was approved before they could sign.
+
+⚙️ Our API Explorer got a total makeover! In addition to a better user experience, it now includes a history of your requests, a custom favorite list, and manages multiple tabs.
+
+
+### 20 October
+
+<h4>New features</h4>
+
+💳 Account members can request their own cards with the new account membership permission `canManageCards`.
+
+
+<h4>Improvements</h4>
+ 
+🪝 Two new Capital Deposit webhooks are available to track shareholder creation and updates.
+List of webhooks
+
+🔍 The `account.invoices` query now features type to differentiate between invoice and `refundNote`.
+
+💰 Simulate banking fees that are charged manually with the `simulateManualBankingFee` mutation.
+
+### 12 October
+
+<h4>Improvements</h4>
+
+⚡ Use the new `mode` field in the `scheduleStandingOrder` mutation to send standing orders as SEPA Instant Credit Transfers.
+You can fallback to a regular SEPA Credit Transfer if the instant transfer is rejected.
+
+
+✏️ You can name your Internal Direct Debit mandates with the `addInternalDirectDebitPaymentMandate` mutation name field.
+See an example
+
+📬 The field `merchantPostalCode` has been added to the `card` query.
+
+🧪 The `simulateOutgoingCardAuthorizationRelease` testing API mutation received three new values: `Expired`, `MerchantReleased`, and `ManuallyReleased`.
+If no value is selected, `Expired` is assigned by default.
+
+📄 You can now query supporting document collections by ID.
+
+
+<h4>Upcoming breaking changes</h4>
+
+🚨 Reminder: The `isInstant` field for `initiateCreditTransfers` will be removed in **4 weeks**.
+Please use `mode` instead to initiate a SEPA Instant Credit Transfer.
+By using `mode=InstantWithFallback`, your SEPA Instant Credit Transfers will "fallback" to a regular SEPA Credit Transfer if instant isn't available.
+
+### 03 October
+
+<h4>New features</h4>
+
+📊 Looking for information about your product's performance?
+Check out the new Insights tab on your Dashboard, where you'll find data dashboards providing insights into transactions, onboardings, and more.
+
+## July - September 2023 {#2023-q3}
+
+### 21 September
+
+<h4>New features</h4>
+
+🇳🇱 Dutch IBANs starting with NL are live!
+You can test Dutch IBANs with the API or on your **Dashboard** > **Settings** > **Onboarding**.
+
+💡 For each country, Swan must comply with different requirements depending on local laws.
+Learn more about requirements for [individual](../topics/onboarding/individual/#country-reqs) and [company](../topics/onboarding/company/#country-reqs) accounts in the Netherlands.
+
+<h4>Improvements</h4>
+
+ℹ️ We added a `reason` to the `ReleasedTransactionStatusInfo` query.
+You can now see why a card authorization was released.
+Possible values: `Captured`, `Expired`, `AdviceReceived`, `MerchantReleased`, `ManuallyReleased`, and `Other`.
+
+📅 You can now schedule an Internal Direct Debit transaction.
+In the `initiateMerchantPaymentCollection` mutation, use the `requestedExecutionAt` field.
+
+❌ The `cancelTransaction` mutation now supports canceling incoming Internal Direct Debit transactions with the status `Upcoming`.
+
+<h4>Breaking changes</h4>
+
+💥 There are two key changes to the `addInternalDirectDebitPaymentMandate` mutation: (1) We removed the `scheme` and `merchantProfileId` fields.
+Use `paymentMethodId` instead. (2) The `InternalDirectDebitPaymentMandateId` is no longer returned in the success payload.
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ The `isInstant` field for `initiateCreditTransfers` is deprecated and will be removed in **7 weeks**.
+Please use `mode` instead to initiate a SEPA Instant Credit Transfer.
+By using `mode=InstantWithFallback`, your SEPA Instant Credit Transfers will "fallback" to a regular SEPA Credit Transfer if instant isn't available.
+
+🔍 In the `users` query, search moved to the filters category and requires at least 3 characters.
+The old search will be deprecated in **4 weeks**.
+
+### 08 September
+
+<h4>Improvements</h4>
+ 
+🔄 When providing consent, users can now request a new text message if the original text message wasn't received.
+
+📃 We added the `account` object in `accountStatement`.
+Use it to link an account to its generated account statements.
+
+🔍 The `transactions` query can now be filtered by `transactionId`.
+
+<h4>Breaking changes</h4>
+
+⚠️ In **4 weeks**, we're adding the new value `GeneralAssemblyMinutes` to the `SupportingDocumentPurpose` enum.
+
+### 24 August
+
+<h4>Improvements</h4>
+
+💳 We've added new fields to Payment Control messages:
+
+- `terminalId`: The payment terminal that was used to initiate the transaction.
+- `mechantPostalCode`: The postal code of the merchant that initiated the transaction (this field will start being populated in October 2023, note that not all merchants communicate this information).
+- `digitalCardWalletProvider`: The digital token used for the transaction (when applicable), possible values are: `ApplePay`, `GooglePay`, `Merchant`.
+
+🧪 The `simulateIncomingInternalDirectDebitReturn` mutation allows to simulate a return on an Internal Direct Debit transaction.
+
+### 11 August
+
+<h4>New features</h4>
+
+🤩 We redesigned the Data tab on the Dashboard to be more customer centric.
+View a list of unique users connected to your project with a 360 view of their accounts and cards.
+These improvements should help your operations and customer support teams.
+
+<h4>Improvements</h4>
+
+💸 We redesigned the Web Banking transfer page following your feedback.
+It's ready to welcome the upcoming International Credit Transfer feature.
+
+🪶 We added two new fields at the transaction level: `reservedAmount` and `reservedAmountReleasedAt`.
+Keep an eye on these fields to improve the user experience with account funding and accepting payments, and soon in Web Banking and Dashboard.
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ The `scheme` and `merchantProfileId` inputs are deprecated and will be removed from the `addInternalDirectDebitPaymentMandate` API mutation in **6 weeks**.
+These inputs were redundant with the `paymentMethodId` input.
+
+⚠️ In the `addInternalDirectDebitPaymentMandate` mutation's `AddInternalDirectDebitPaymentMandateSuccessPayload`, the `InternalDirectDebitPaymentMandateId` field will no longer be returned starting **12 weeks** from now.
+Please use the `id` available in the `paymentMandate` object instead.
+
+### 28 July
+
+<h4>New features</h4>
+ 
+🫰🏽 As part of our Accept Payments feature, merchants can add a logo to their merchant profile using the `addMerchantProfile` mutation.
+An existing merchant profile can be updated using the `requestMerchantProfileUpdate` mutation.
+
+
+<h4>Improvements</h4>
+
+🍂 When a SEPA Credit Transfer is initiated using `mode=InstantWithFallback` and the transfer is rejected by the beneficiary bank, a fallback will always be triggered except when the recipient account is unknown, closed, or the account holder is deceased.
+
+
+⛔ As part of our Accept Payments feature, we deleted a few API mutations and fields that were previously flagged as deprecated.
+Please note that the deprecated mutations and fields are no longer accessible or supported in any capacity following this release.
+Learn more about [Accepting Payments](../topics/merchants/index.mdx)
+
+- `MerchantPaymentProduct` becomes `MerchantPaymentMethod`.
+- `requestMerchantPaymentProducts` becomes `requestMerchantPaymentMethods`.
+- `requestMerchantPaymentProductsInput` becomes `requestMerchantPaymentMethodsInput`.
+- `InternalDirectDebit` is now divided into two different mutations: `InternalDirectDebitStandard` & `InternalDirectDebitB2B`. As a result, `InternalDirectDebitStandardPaymentMethodInput` & `InternalDirectDebitB2BPaymentMethodInput` are new input names to request such payment methods.
+- `CheckMerchantPaymentProduct` becomes `CheckMerchantPaymentMethod`.
+- `CheckPaymentProductInput` becomes `CheckPaymentMethodInput`.
+
+🧾 `Limited` accounts can no longer initiate credit transfers.
+
+🙅🏻‍♀️ We added a new enum value to `accountHolder.verificationStatus`: `Refused`.
+
+<h4>Upcoming breaking changes</h4>
+
+🌍 As part of our future International Credit Transfers offer, new values will be added to the `TransactionType` enum: `InternationalCreditTransferIn`, `InternationalCreditTransferOut`, `InternationalCreditTransferInReturn`, and `InternationalCreditTransferOutReturn`.
+
+🌍 As part of our future International Credit Transfers offer, a new value will be added to the `PaymentProduct` enum: `InternationalCreditTransfer`.
+
+### 19 July
+
+<h4>New features</h4>
+ 
+🤳🏻 To improve text message deliverability, receive text messages from AUTHLINK instead of AUTHMSG when consenting to sensitive operations.
+
+<h4>Improvements</h4>
+
+📱 Consent or log in with a QR code if there's an issue receiving the text message.
+
+😃 Run `consents` and `user` queries with a project access token. 
+
+🔄 On your **Dashboard** > **Data** tab, check out the Transactions page to view all transactions for your project.
+
+⚠️ We are starting to use the new enum values for `FeesType` that were added to the API three weeks ago.
+
+
+### 06 July
+
+<h4>New features</h4>
+
+🇪🇸 Instant SEPA Credit Transfers for Spanish account are live.
+Learn more about requirements for [individual](../topics/onboarding/individual/#country-reqs) and [company](../topics/onboarding/company/#country-reqs) Spanish accounts.
+
+🦢 Swan's design system, [Swan Lake](https://zeroheight.com/6708370bc/p/56dc72-lake), is public!
+A natural complement to Swan's open source frontend, Lake gives you a head start with a collection of building blocks for an accessible banking UX/UI.
+
+<h4>Improvements</h4>
+
+🛒 Manage your merchant profiles from the **Dashboard** > **Data** > **Accounts** page.
+
+📃 Generate a PDF version of SEPA Direct Debit payment mandates.
+Merchant customers might need to send this PDF to their banks.
+
+
+📄 Generate custom account statements with your designated 3-month date range directly from the **Web Banking** > **History** page.
+
+📈 To increase the identity verification conversion rate, when the identification fails, we now include a re-engagement link in the text message sent to the user.
+
+👀 We added an unmasked IBAN field for both the debtor and creditor when querying `SEPACreditTransferTransaction` and `SEPADirectDebitTransaction`.
+You can choose how much information to expose when using these queries.
+
+
+😃 Call the `transaction` query with a user access token; a project access token is no longer required.
+
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ In three weeks, we'll start using new enum values for `FeesType` that have been added to the API.
+To avoid breaking changes on your side, please take these into account.
+
+## April - June 2023 {#2023-q2}
+
+### 26 June
+
+<h4>New features</h4>
+
+↪ When using the Accept Payments feature, merchants can get paid by SEPA Direct Debit with both B2B and Core methods.
+The feature is only in Sandbox right now; please let us know if you're interested in beta testing!
+
+
+🔍 There is a new `transactions` query to make searching transactions easier.
+
+<h4>Improvements</h4>
+
+📑 During the KYC process, you can upload supporting documents Swan requires from your end customers, and request a review.
+Contact us to activate this feature and receive fewer reminder emails from Swan.
+
+
+✅ With Internal Direct Debit B2B, use the `addReceivedInternalDirectDebitB2bMandate` mutation to receive the debtor's consent when declaring a payment mandate.
+
+
+📣 Sometimes, the KYC process is delayed because of website outages for European business registries.
+Subscribe to the [Swan status page](https://status.swan.io/) to learn about these delays.
+There is a new section called *Onboarding - European Business Registries* where we will post a live incident about who is affected and the overall level of impact.
+
+### 22 June
+
+<h4>New features</h4>
+
+🪪 Swan takes another step forward to increase the conversion rate to onboard individual French accounts.
+PVID (Prestataire Verification d'Identité à Distance) is the latest French identity verification process that provides a fast, secure way to onboard end-customers, with a better user experience.
+Thanks to PVID, the first transfer or electronic signature is no longer required for EU users opening accounts with French IBANs.
+
+
+<h4>Improvements</h4>
+
+🇪🇺 Every word in every language for Web Banking, Onboarding, text messages, and more (almost 7000 words in 6 languages), was reviewed by our new localization team.
+We hope your experience in the supported language of your choice improves significantly, and please continue sharing your language-specific feedback with us.
+
+📈 We improved webhook performance and resiliency thanks to a full refactoring.
+
+<h4>Breaking changes</h4>
+
+📱 We'll no longer send a text message to users when their identity is successfully verified.
+Why?
+With the `User` webhooks, you can track their progress and notify them however you choose.
+
+### 13 June
+
+<h4>New features</h4>
+
+🇪🇸 [IBANs starting with `ES`](../topics/accounts/ibans/index.mdx#local) are live!
+SEPA Instant Credit Transfers for Spanish IBANs are still in the making and will be live in **2 weeks**.
+You can test both Spanish IBANs and SEPA Instant Credit Transfers with Spanish IBANs with the API or on your **Dashboard** > **Settings** > **Onboarding**.
+
+For each country, Swan must comply with different requirements depending on local law.
+Learn more about requirements for [individual](../topics/onboarding/individual/#country-reqs) and [company](../topics/onboarding/company/#country-reqs) Spanish accounts.
+
+### 01 June
+
+<h4>Improvements</h4>
+
+💲 When a transaction is processed in a currency other than euros €, this currency with the converted amount is now displayed on your Dashboard.
+
+🔎 On the Dashboard Accounts page, we added a "fees" option to the payment product filter.
+
+⚡ When an instant transfer is requested but can't be processed for any reason, we automatically execute a regular transfer instead.
+In the transaction history, users will see the method "transfer" instead of "instant transfer", and there will be an alert in the transaction details.
+This is only for Swan Web Banking.
+
+⏲️ The Time-To-Live (TTL, auto-disconnection) from both our Dashboard and Web Banking platforms have been reduced.
+
+- Dashboard: reduced to 72 hours; the session will refresh every time an API call is sent.
+- Web Banking: reduced to 5 minutes; the session token will refresh as long as the Web Banking page stays open.
+
+📱 We improved mobile navigation for Web Banking for a smoother user experience.
+
+### 24 May
+
+<h4>New features</h4>
+
+👩🏽‍💻 Subscribe to our new `User` webhooks to receive real-time updates on any changes related to your users.
+You can track the identity verification ([identifications](../topics/users/identifications/index.mdx)) process and more.
+You can also get the list of users who have connected to your project with the new API users query.
+
+🤖 [Impersonate a user with a project access token](../developers/using-api/authentication/guide-impersonate.mdx) to unlock certain use cases.
+
+💼  We're ready to onboard our first Partners to [collect French checks](../topics/merchants/checks/index.mdx).
+Please contact us if you're interested in beta testing!
+
+<h4>Improvements</h4>
+
+🔍 A new filter `period` was added to the account statements collection. Use it to filter account statements, whether you create them when you need them or you generate them automatically.
+
+🇪🇺 On your PDF account statements, amounts are now displayed in the local format based on the account language.
+We'll continue to improve the localized experience.
+
+👑 The project owner's legal representative can now see their card numbers with the API. Also, in Sandbox, promote any account holder in the project to project owner with the testing API mutation promoteAccountHolderToProjectOwner.
+
+<h4>Bug fix</h4>
+
+🇫🇷 From May 12th to May 15th, Bouygues Telecom blocked text message delivery to French phone numbers (+33), messages that included a link to authenticate.
+As a quick fix, we will temporarily send https://link.swan.io instead of https://authmsg.co.
+
+💳 In the `Card.Updated` webhook, `eventDate` changed to `updatedAt` (previously `createdAt`).
+
+<h4>Breaking changes</h4>
+
+⏲️ To improve our webhook performance, we added a timeout of 15 seconds to endpoint requests. When there is no response after 15 seconds, the webhook fails and will automatically retry.
+
+💥 In the `addCards` mutation, the input field `additionalEmbossedLine` is now **`additionalPrintedLine`** for consistency and user clarity.
+
+<h4>Upcoming breaking changes</h4>
+
+📱 In **4 weeks**, Swan will stop sending a text message to users when their identity is successfully verified.
+Why?
+With the new `User` webhook, you can track their progress and notify them however you choose!
+
+### 15 May
+
+<h4>New features</h4>
+
+🎉 Customize your Web Banking app and onboarding process starting from [Swan's open source Banking Frontend](https://swan-io.github.io/swan-partner-frontend/).
+Consider this a reference implementation: you can learn from it, then copy and modify it to fit your needs!
+
+### 27 April
+
+<h4>Improvements</h4>
+
+⚡ Instant SEPA Credit Transfer fallback can be tested using the Testing API.
+Initiate an outgoing Instant SEPA Credit Transfer, then reject it using `simulateOutgoingSepaCreditTransferRejection` mutation.
+Use `reasonCode`: `BeneficiaryBankNotReachable`.
+
+🫢 Upcoming outgoing Instant SEPA Credit Transfer can be canceled using the `cancelTransaction` mutation.
+
+✍️ The `externalReference` field in `initiateCreditTransfers` is now working for outgoing Instant SEPA Credit Transfer.
+
+🆔 We added the `accountId` field to `Invoice`. Use it to find the account associated to an `AccountInvoice.Generated` webhook event.
+
+<h4>Bug fix</h4>
+
+📄 Fee amount are displayed in the `.csv` account statement
+
+<h4>Upcoming breaking changes</h4>
+
+👮‍♀️ To avoid undesired behaviors with our API, we are changing the Tax Identification Number (TIN) accepted format in all the `taxIdentificationNumber` inputs from 1-11 characters to 7-11 characters in **4 weeks**.
+
+💥 `isInstant` field for `initiateCreditTransfer` is depreciated and will be removed in 6 months.
+Please use `mode` field instead to initiate an Instant SEPA Credit Transfer.
+
+DOCS:
+
+💶 Learn how to [build a compliant billing offer](../topics/accounts/billing/guide-compliant-billing.mdx).
+
+### 19 April
+
+<h4>New features</h4>
+
+↪️ Direct debit a Swan account within the same project.
+It's our first step for our new feature, [Accept Payments](../topics/merchants/idd/index.mdx).
+Please contact us if you're interested in beta testing!
+
+<h4>Improvements</h4>
+
+💳 You can print one line of custom text, such as a company name, on your physical cards.
+To do so, you'll need to design a custom card with your Technical Account Manager and include this additional line.
+Contact us if you're interested in [designing a custom card](../topics/cards/design/guide-custom.mdx), or [adapting an existing design](../topics/cards/physical/guide-print.mdx#print-additional-line).
+
+<h4>Breaking changes</h4>
+
+💥 To avoid undesired behaviors with our API, we changed the accepted date format for two fields in the Onboarding API:
+
+- `IndividualUltimateBeneficialOwnerInput.birthDate` must be a date `YYYY-MM-DD`
+- `IndividualUltimateBeneficialOwner.birthDate` format change from `dateTime` to `date`
+
+## January - March 2023 {#2023-q1}
+
+### 29 March
+
+<h4>New features</h4>
+
+⚡ We implemented a [fallback option](../topics/payments/credit-transfers/sepa/index.mdx#instant-fallback) for Instant SEPA Credit Transfers.
+When an instant transfer is unavailable, whether for technical reasons or due to a manual risk assessment, the instant transfer will run as a standard transfer instead.
+Your customer won't need to reinitiate a transfer or consent a second time.
+
+- **How?** We added a new input mode to the `initiateCreditTransfer` mutation, as well as the new filter `includeRejectedWithFallback` to the transactions query.
+- **Tip**: We recommend you choose `false` by default so your customers won't see the rejected instant transfer on their transaction history.
+
+<h4>Improvements</h4>
+
+📃 To reduce back and forth with our KYC team, we're asking some partners to collect additional supporting documents during onboarding for some use cases:
+
+- Lithuanian companies: Company Registration, UBO Declaration
+- Netherlands, Austria, Luxembourg companies: UBO Declaration
+- German self-employed: Self-employed Registration
+
+🇩🇪 For German account onboarding (`accountCountry: DEU`), three fields are now API-optional:
+
+- UBO birth date: `individualUltimateBeneficialOwners.birthDate`
+- UBO birth city: `individualUltimateBeneficialOwners.birthCity`
+- UBO birth postal code: `individualUltimateBeneficialOwners.birthCityPostalCode`
+
+📼 We added a new field `originTransaction` to the API at the `transaction` level.
+It contains its parent `transaction` (for example, the card debit for a card debit reversal).
+
+🧪 We added Instant SEPA Credit Transfers and their associated recalls to the [Event Simulator](../developers/tools/event-simulator.mdx) on your Dashboard.
+
+💳 You can now approve authorizations with a partial amount.
+To do so, indicate the `partialAuthorizationAmountValue` within your [payment control](../developers/using-api/payment-control.mdx) response.
+Note that not all authorizations can be authorized partially; to identify eligible authorizations, look for the `allowsPartialAuthorization:true` on the payment control notification we send you.
+
+<h4>Bug fix</h4>
+
+⚒️ We fixed some latency issues on our OAuth 2.0 server.
+Let us know if you still have trouble getting your access tokens.
+
+<h4>Breaking changes</h4>
+
+💥 We added a new value `SwornStatement` in `SupportingDocumentPurposeEnum`.
+To avoid breaking changes on your side, please take these into account.
+We'll request this supporting document during onboarding for Spanish companies.
+
+### 21 March
+
+<h4>New features</h4>
+
+🎨 The onboarding and transfer pages have a fresh, new design.
+And guess what?
+We'll be ready to share our code and design system with you in the coming weeks.
+
+📈 We added Capital Deposits to the **Dashboard** > **Data** section, which was the first step to removing the current Dashboard.
+Next, you'll be able to upload documents and simulate everything with the [Event Simulator](../developers/tools/event-simulator.mdx).
+
+### 28 February
+
+<h4>New features</h4>
+
+🇩🇪 [IBANs starting with `DE`](../topics/accounts/ibans/index.mdx#local) are live after 3 successful months in beta.
+You can use them via the API or no-code, across all use cases including B2B and B2C!
+To test them, use the new German onboarding link.
+You'll find it in your Dashboard, on the Settings/Onboarding tab.
+The German onboarding flow is a little different, in order to comply with German law.
+Learn more about requirements for [individual](../topics/onboarding/individual/#country-reqs) and [company](../topics/onboarding/company/#country-reqs) German accounts.
+
+🪪 Verify the identity of individual account holders using a [Qualified Electronic Signature](../topics/users/identifications/index.mdx#levels-processes).
+This new identification level is mandatory for  individual German IBANs but can also be used for individual French IBANs in order to avoid the first transfer to finalize their identification process.
+
+<h4>Improvements</h4>
+
+⚡ Our reachability on Instant SEPA Credit Transfers has been extended to TIPS in addition to EBA-RT1.
+We're now connected to most banks for initiating and receiving these transactions.
+
+<h4>Breaking changes</h4>
+
+💥 We will begin using some changes we already warned you about, and have added them to the Graph.
+To avoid breaking changes on your side, please take these into account:
+
+- New transaction types: `SepaInstantCreditTransferInRecall` and `SepaInstantCreditTransferOutRecall`.
+- New rejection reason codes for `SepaInstantCreditTransferOut` transactions: `CreditorBankTechnicalErrorOccurred` and `CreditorBankTimeout`.
+
+### 20 February
+
+<h4>New features</h4>
+
+✅ We added a new account activation tab to the Web Banking.
+This makes it easy for our no-code customers to finalize the account holder verification process.
+Just follow the steps.
+
+✉️ Non-verified users can now use reset passcode by email.
+
+
+💰 On March 1st 2023, we will start charging banking fees directly on your customers' Swan accounts.
+This is the first phase of our [billing project](../topics/accounts/billing/index.mdx).
+Ultimately, this will enable you to choose which fees you want to charge your customers through Swan, and lead to additional revenue.
+
+<h4>Improvements</h4>
+
+📃 You can now use the `accountStatement` query to [return an account statement](../topics/accounts/index.mdx#statements) from its `id`.
+
+<h4>Breaking changes</h4>
+
+💥 As mentioned in past release notes, the new rejection reasons for `CardOut` transactions are as follows: `RetryWithChipAndPin`, `PinRequiredForFurtherTransaction`, `InvalidSecurityNumber`, and `InvalidExpirationDate`.
+These have been added to the Graph.
+Please take them into account to avoid breaking changes on your side.
+
+### 18 January
+
+<h4>New features</h4>
+
+🎨 The Web Banking has a fresh new design for transaction history, members, and card tabs.
+And guess what?
+We're getting ready to share our code and design system with you.
+
+🔐 Secure all webhooks by adding a secret in the HTTP Request.
+
+🔁 Automatically trigger the [funding of a Swan account](../topics/accounts/funding/guide-initiate-request.mdx) based on pre-defined events without user consent.
+Restricted to account funding SEPA Direct Debit B2B with rolling reserve.
+
+<h4>Improvements</h4>
+
+🇫🇷 Automatically fetch UBOs for French registered companies with the `updateOnboardCompanyAccountHolder` mutation.
+This was already available in the no-code interface and now it's in the API.
+
+💸 [Indicate a `spendingLimit`](../topics/cards/index.mdx#settings) when using the `addCard` mutation.
+To avoid breaking changes, the `spendingLimit` is an optional input for the `addCard` mutation.
+
+🤳🏾 Create a card and add it to Apple Pay or Google Pay simultaneously using the [multiple consent feature](../topics/users/consent/guide-create-multiconsent.mdx).
+
+<h4>Bug fix</h4>
+
+💰 We have fixed some bugs on Capital Deposit:
+
+- Account Holders linked to multiple Capital Deposits don't have status errors anymore.
+- Shareholder status is now properly updated when the funds are deposited.
+- We fixed an error that was preventing some Capital Deposits from moving to completion.
+
+<h4>Breaking changes</h4>
+
+💥 We will begin using some changes we already warned you about, and have added them to the Graph.
+To avoid breaking changes on your side, please take these into account:
+
+- New types of Transaction `FeeTransaction` and `InternalDirectDebitTransaction`
+- A new enum at Transaction level: `paymentProduct = Fees` and `transactionType = FeesOut`, `FeesIn`
+- A new payment mandate type `InternalDirectDebitPaymentMandate`
+- A new received payment mandate type `InternalReceivedDirectDebitMandate`
+- A new rejection reason code on `SepaInstantCreditTransferOut` and `SepaInstantCreditTransferIn`
+- A new enum at Onboarding level: `companyType = SelfEmployed`
+
+<h4>Upcoming breaking changes</h4>
+
+⚠️ In February we will start using a lot of changes that have been added to the Graph.
+To avoid breaking changes on your side, please take these into account:
+
+- New rejection reasons for `CardOut` transactions. The new values are: `RetryWithChipAndPin`, `PinRequiredForFurtherTransaction`, `InvalidSecurityNumber`, `InvalidExpirationDate`.
+- New rejection reason codes for `SepaInstantCreditTransferOut` transactions. The new values are: `CreditorBankTechnicalErrorOccurred` and `CreditorBankTimeout`.
+- New transaction types `SepaInstantCreditTransferInRecall` and `SepaInstantCreditTransferOutRecall`.
+- Add `Refused` in `accountHolder.verificationStatus` enum

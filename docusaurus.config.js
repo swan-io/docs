@@ -150,6 +150,7 @@ module.exports = {
         id: "changelog",
         routeBasePath: "changelog",
         path: "./changelog",
+        exclude: ["coming-up.mdx"],
         feedOptions: {
           type: "all",
           copyright: `Copyright © ${new Date().getFullYear()} Swan.`,

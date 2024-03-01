@@ -15,11 +15,10 @@ module.exports = {
             "topics/get-started/step-by-step",
             "topics/get-started/choose-integration",
             "topics/get-started/quickstart",
-  
           ],
         },
         "glossary",
-    ],
+      ],
     },
     {
       type: "category",
@@ -112,7 +111,8 @@ module.exports = {
             "topics/accounts/memberships/guide-suspend-resume",
             "topics/accounts/memberships/guide-disable",
           ],
-        },{
+        },
+        {
           type: "category",
           label: "Account funding",
           link: { type: "doc", id: "topics/accounts/funding/index" },
@@ -338,7 +338,10 @@ module.exports = {
             {
               type: "category",
               label: "SEPA Credit Transfers",
-              link: { type: "doc", id: "topics/payments/credit-transfers/sepa/index" },
+              link: {
+                type: "doc",
+                id: "topics/payments/credit-transfers/sepa/index",
+              },
               collapsed: true,
               items: [
                 "topics/payments/credit-transfers/sepa/guide-initiate-ct",
@@ -352,7 +355,10 @@ module.exports = {
             {
               type: "category",
               label: "International Credit Transfers",
-              link: { type: "doc", id: "topics/payments/credit-transfers/international/index" },
+              link: {
+                type: "doc",
+                id: "topics/payments/credit-transfers/international/index",
+              },
               collapsed: true,
               items: [
                 "topics/payments/credit-transfers/international/guide-quote",
@@ -473,9 +479,7 @@ module.exports = {
           label: "Partnership with Swan",
           link: { type: "doc", id: "partnership/index" },
           collapsed: true,
-          items: [
-            "partnership/overview/guide-orias",
-          ],
+          items: ["partnership/overview/guide-orias"],
         },
         "partnership/overview/protections",
         "partnership/overview/rules-regulations",
@@ -544,6 +548,9 @@ module.exports = {
           type: "link",
           label: "API Reference",
           href: "https://api-reference.swan.io/",
+          customProps: {
+            target: "_self",
+          },
         },
       ],
     },
@@ -578,7 +585,10 @@ module.exports = {
         {
           type: "category",
           label: "Authentication",
-          link: { type: "doc", id: "developers/using-api/authentication/index" },
+          link: {
+            type: "doc",
+            id: "developers/using-api/authentication/index",
+          },
           collapsed: true,
           items: [
             "developers/using-api/authentication/guide-get-token-user",

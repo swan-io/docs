@@ -1,0 +1,36 @@
+---
+title: 6 January 2022
+type: release
+---
+
+#### New features
+
+↪️ We fully support all kinds of [Received Sepa Direct Debit](/topics/payments/direct-debit): Core and B2B.
+
+🔚 You can now [close an account](/topics/accounts#closure) by API using the `closeAccount` mutation.
+
+#### Improvements
+
+♻️ It's now possible to release a card authorization using the Event Simulator.
+
+🔍 You can now filter cards by `statuses` for a given Account Membership using the `accountMembership.cards` query.
+
+📃 Default pagination has been increased to 50 items per page in the payments query in order to align with other queries.
+
+📝 For each card transaction on the Account Statement, the description field now shows the card holder name and the last four digits of the card.
+
+✉️ Webhooks offer 2 new onboarding events: Onboarding.Created and Onboarding.Updated
+
+🔄 Exponential backoff when retrying failed webhook events, with up to a maximum of 7 retries.
+
+#### Bug fix
+
+✅ The list of accepted characters in the `reference` field of the `initiateCreditTransfer` mutation has been updated to match current SEPA guidelines.
+
+💳 The image returned in the `cardUrl` (card query) is now updated when the Account Member name is updated
+
+💥 When issuing cards, Cardholder names and delivery addresses can include special characters and accents like "Amélie" or "Hauptstraße".
+
+#### Breaking changes
+
+🆔 It's been 3 months now (that's 3 releases ago), that partners integrating by API must make sure their UX [entices users to prove their identity](/topics/users/identifications#encourage). To give you time to develop this user flow, we've been texting all users about identity verification as soon as they are created. Starting today, we no longer send new users this sms.

@@ -1,0 +1,47 @@
+---
+title: 29 March 2023
+type: release
+---
+
+#### New features
+
+⚡ We implemented a [fallback option](/topics/payments/credit-transfers/sepa#instant-fallback) for Instant SEPA Credit Transfers.
+When an instant transfer is unavailable, whether for technical reasons or due to a manual risk assessment, the instant transfer will run as a standard transfer instead.
+Your customer won't need to reinitiate a transfer or consent a second time.
+
+- **How?** We added a new input mode to the `initiateCreditTransfer` mutation, as well as the new filter `includeRejectedWithFallback` to the transactions query.
+- **Tip**: We recommend you choose `false` by default so your customers won't see the rejected instant transfer on their transaction history.
+
+#### Improvements
+
+📃 To reduce back and forth with our KYC team, we're asking some partners to collect additional supporting documents during onboarding for some use cases:
+
+- Lithuanian companies: Company Registration, UBO Declaration
+- Netherlands, Austria, Luxembourg companies: UBO Declaration
+- German self-employed: Self-employed Registration
+
+🇩🇪 For German account onboarding (`accountCountry: DEU`), three fields are now API-optional:
+
+- UBO birth date: `individualUltimateBeneficialOwners.birthDate`
+- UBO birth city: `individualUltimateBeneficialOwners.birthCity`
+- UBO birth postal code: `individualUltimateBeneficialOwners.birthCityPostalCode`
+
+📼 We added a new field `originTransaction` to the API at the `transaction` level.
+It contains its parent `transaction` (for example, the card debit for a card debit reversal).
+
+🧪 We added Instant SEPA Credit Transfers and their associated recalls to the [Event Simulator](/developers/tools/event-simulator) on your Dashboard.
+
+💳 You can now approve authorizations with a partial amount.
+To do so, indicate the `partialAuthorizationAmountValue` within your [payment control](/developers/using-api/payment-control) response.
+Note that not all authorizations can be authorized partially; to identify eligible authorizations, look for the `allowsPartialAuthorization:true` on the payment control notification we send you.
+
+#### Bug fix
+
+⚒️ We fixed some latency issues on our OAuth 2.0 server.
+Let us know if you still have trouble getting your access tokens.
+
+#### Breaking changes
+
+💥 We added a new value `SwornStatement` in `SupportingDocumentPurposeEnum`.
+To avoid breaking changes on your side, please take these into account.
+We'll request this supporting document during onboarding for Spanish companies.

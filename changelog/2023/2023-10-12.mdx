@@ -1,0 +1,25 @@
+---
+title: 12 October 2023
+type: release
+---
+
+#### Improvements
+
+⚡ Use the new `mode` field in the `scheduleStandingOrder` mutation to send standing orders as SEPA Instant Credit Transfers.
+You can fallback to a regular SEPA Credit Transfer if the instant transfer is rejected.
+
+✏️ You can name your Internal Direct Debit mandates with the `addInternalDirectDebitPaymentMandate` mutation name field.
+See an example
+
+📬 The field `merchantPostalCode` has been added to the `card` query.
+
+🧪 The `simulateOutgoingCardAuthorizationRelease` testing API mutation received three new values: `Expired`, `MerchantReleased`, and `ManuallyReleased`.
+If no value is selected, `Expired` is assigned by default.
+
+📄 You can now query supporting document collections by ID.
+
+#### Upcoming breaking changes
+
+🚨 Reminder: The `isInstant` field for `initiateCreditTransfers` will be removed in **4 weeks**.
+Please use `mode` instead to initiate a SEPA Instant Credit Transfer.
+By using `mode=InstantWithFallback`, your SEPA Instant Credit Transfers will "fallback" to a regular SEPA Credit Transfer if instant isn't available.

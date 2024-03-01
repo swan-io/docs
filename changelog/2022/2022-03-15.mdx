@@ -1,0 +1,33 @@
+---
+title: 15 March 2022
+type: release
+---
+
+#### New features
+
+📈 Display your customers' data on the dashboard. This is a great first round; the next release will feature even more data with added filters and a search field.
+
+💳 Cardholders can now [activate a card](/topics/cards/physical/guide-activate) after receiving it, thanks to the new `activatePhysicalCard` mutation. They just have to input the identifier printed on the card and give their consent.
+
+📃 [Upload supporting documents](/topics/onboarding/documents/guide-upload) using the `generateSupportingDocumentUploadUrl` mutation during the onboarding. This way you don't have to ask users a second time by email.
+
+#### Improvements
+
+🛒 To facilitate the interpretation of the `merchantCategoryCode`, you can now get the description of each code in the `merchantCategoryDescription` field for every `transaction` of `CardTransactiontype`.
+
+#### Bug fix
+
+💵 The amounts displayed in `thecard.spending.amount.value` field are now more consistent. Values previously returned as `0` will now be returned as `0.00`
+
+#### Breaking changes
+
+👩🏻‍💻 To update the verification status of an individual account holder, you have two options:
+
+- From the dashboard using the event simulator for Update Account Holder (instead of the sandbox users page).
+- From the Testing API with the `updateAccountHolder` mutation (instead of `updateSandboxUser`)
+
+📉 We've decided to reduce the number of cards we can issue using `addCards` mutation up to 250 while we fix a performance issue.
+
+#### Upcoming breaking changes
+
+💳 Please note that after the next release (estimated for April 7th), the physical card `identifier` will return `null` if its status is `ToActivate`.

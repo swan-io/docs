@@ -1,0 +1,35 @@
+---
+title: 28 July 2023
+type: release
+---
+
+#### New features
+
+🫰🏽 As part of our Accept Payments feature, merchants can add a logo to their merchant
+profile using the `addMerchantProfile` mutation. An existing merchant profile can
+be updated using the `requestMerchantProfileUpdate` mutation.
+
+#### Improvements
+
+🍂 When a SEPA Credit Transfer is initiated using `mode=InstantWithFallback` and the transfer is rejected by the beneficiary bank, a fallback will always be triggered except when the recipient account is unknown, closed, or the account holder is deceased.
+
+⛔ As part of our Accept Payments feature, we deleted a few API mutations and fields that were previously flagged as deprecated.
+Please note that the deprecated mutations and fields are no longer accessible or supported in any capacity following this release.
+Learn more about [Accepting Payments](/topics/merchants)
+
+- `MerchantPaymentProduct` becomes `MerchantPaymentMethod`.
+- `requestMerchantPaymentProducts` becomes `requestMerchantPaymentMethods`.
+- `requestMerchantPaymentProductsInput` becomes `requestMerchantPaymentMethodsInput`.
+- `InternalDirectDebit` is now divided into two different mutations: `InternalDirectDebitStandard` & `InternalDirectDebitB2B`. As a result, `InternalDirectDebitStandardPaymentMethodInput` & `InternalDirectDebitB2BPaymentMethodInput` are new input names to request such payment methods.
+- `CheckMerchantPaymentProduct` becomes `CheckMerchantPaymentMethod`.
+- `CheckPaymentProductInput` becomes `CheckPaymentMethodInput`.
+
+🧾 `Limited` accounts can no longer initiate credit transfers.
+
+🙅🏻‍♀️ We added a new enum value to `accountHolder.verificationStatus`: `Refused`.
+
+#### Upcoming breaking changes
+
+🌍 As part of our future International Credit Transfers offer, new values will be added to the `TransactionType` enum: `InternationalCreditTransferIn`, `InternationalCreditTransferOut`, `InternationalCreditTransferInReturn`, and `InternationalCreditTransferOutReturn`.
+
+🌍 As part of our future International Credit Transfers offer, a new value will be added to the `PaymentProduct` enum: `InternationalCreditTransfer`.

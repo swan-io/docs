@@ -1,0 +1,55 @@
+---
+title: 18 January 2023
+type: release
+---
+
+#### New features
+
+🎨 The Web Banking has a fresh new design for transaction history, members, and card tabs.
+And guess what?
+We're getting ready to share our code and design system with you.
+
+🔐 Secure all webhooks by adding a secret in the HTTP Request.
+
+🔁 Automatically trigger the [funding of a Swan account](/topics/accounts/funding/guide-initiate-request) based on pre-defined events without user consent.
+Restricted to account funding SEPA Direct Debit B2B with rolling reserve.
+
+#### Improvements
+
+🇫🇷 Automatically fetch UBOs for French registered companies with the `updateOnboardCompanyAccountHolder` mutation.
+This was already available in the no-code interface and now it's in the API.
+
+💸 [Indicate a `spendingLimit`](/topics/cards#settings) when using the `addCard` mutation.
+To avoid breaking changes, the `spendingLimit` is an optional input for the `addCard` mutation.
+
+🤳🏾 Create a card and add it to Apple Pay or Google Pay simultaneously using the [multiple consent feature](/topics/users/consent/guide-create-multiconsent).
+
+#### Bug fix
+
+💰 We have fixed some bugs on Capital Deposit:
+
+- Account Holders linked to multiple Capital Deposits don't have status errors anymore.
+- Shareholder status is now properly updated when the funds are deposited.
+- We fixed an error that was preventing some Capital Deposits from moving to completion.
+
+#### Breaking changes
+
+💥 We will begin using some changes we already warned you about, and have added them to the Graph.
+To avoid breaking changes on your side, please take these into account:
+
+- New types of Transaction `FeeTransaction` and `InternalDirectDebitTransaction`
+- A new enum at Transaction level: `paymentProduct = Fees` and `transactionType = FeesOut`, `FeesIn`
+- A new payment mandate type `InternalDirectDebitPaymentMandate`
+- A new received payment mandate type `InternalReceivedDirectDebitMandate`
+- A new rejection reason code on `SepaInstantCreditTransferOut` and `SepaInstantCreditTransferIn`
+- A new enum at Onboarding level: `companyType = SelfEmployed`
+
+#### Upcoming breaking changes
+
+⚠️ In February we will start using a lot of changes that have been added to the Graph.
+To avoid breaking changes on your side, please take these into account:
+
+- New rejection reasons for `CardOut` transactions. The new values are: `RetryWithChipAndPin`, `PinRequiredForFurtherTransaction`, `InvalidSecurityNumber`, `InvalidExpirationDate`.
+- New rejection reason codes for `SepaInstantCreditTransferOut` transactions. The new values are: `CreditorBankTechnicalErrorOccurred` and `CreditorBankTimeout`.
+- New transaction types `SepaInstantCreditTransferInRecall` and `SepaInstantCreditTransferOutRecall`.
+- Add `Refused` in `accountHolder.verificationStatus` enum

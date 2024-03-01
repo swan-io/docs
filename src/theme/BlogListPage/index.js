@@ -32,9 +32,11 @@ function BlogListPageContent(props) {
   const { metadata, items, sidebar } = props;
   return (
     <BlogLayout sidebar={sidebar}>
-      <MDXContent>
-        <ComingUp />
-      </MDXContent>
+      {metadata.page === 1 ? (
+        <MDXContent>
+          <ComingUp />
+        </MDXContent>
+      ) : null}
       <BlogPostItems items={items} />
       <BlogListPaginator metadata={metadata} />
     </BlogLayout>

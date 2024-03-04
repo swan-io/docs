@@ -1,0 +1,80 @@
+---
+title: Verify a beneficiary
+---
+
+# Verify a beneficiary
+
+Verify a beneficiary with the API.
+[Verifying beneficiaries](./index.mdx#beneficiary-verification) reduces the risk of errors and potential fraud.
+
+## Guide {#guide}
+
+1. Call the `beneficiaryVerification` query.
+1. Add your beneficiary's `name` and `iban`, as well as the `debtorAccountId` (lines 4-6).
+1. Add all the information you'd like to review in the payload.
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.master.oina.ws?query=cXVlcnkgVmVyaWZ5QmVuZWZpY2lhcnkgewogIGJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uKAogICAgaW5wdXQ6IHsKICAgICAgaWJhbjogIiRCRU5FRklDSUFSWV9JQkFOIgogICAgICBuYW1lOiAiTmFtZSBvZiBhY2NvdW50IgogICAgICBkZWJ0b3JBY2NvdW50SWQ6ICIkU1dBTl9ERUJUT1JfQUNDT1VOVF9JRCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICBhY2NvdW50SG9sZGVyVHlwZQogICAgICBhY2NvdW50U3RhdHVzCiAgICB9CiAgICAuLi4gb24gQmVuZWZpY2lhcnlUeXBvIHsKICAgICAgX190eXBlbmFtZQogICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICBhY2NvdW50U3RhdHVzCiAgICAgIGFjY291bnRIb2xkZXJUeXBlCiAgICB9CiAgICAuLi4gb24gSW52YWxpZEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQmVuZWZpY2lhcnlNaXNtYXRjaCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbmFtZVN1Z2dlc3Rpb24KICAgICAgYWNjb3VudEhvbGRlclJlc2lkZW5jeUNpdHkKICAgICAgYWNjb3VudEhvbGRlclR5cGUKICAgICAgYWNjb3VudFN0YXR1cwogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4-6,9,14,20,24} showLineNumbers
+query VerifyBeneficiary {
+  beneficiaryVerification(
+    input: {
+      iban: "$BENEFICIARY_IBAN"
+      name: "Name of account"
+      debtorAccountId: "$SWAN_DEBTOR_ACCOUNT_ID"
+    }
+  ) {
+    ... on BeneficiaryMatch {
+      __typename
+      accountHolderType
+      accountStatus
+    }
+    ... on BeneficiaryTypo {
+      __typename
+      nameSuggestion
+      accountStatus
+      accountHolderType
+    }
+    ... on InvalidBeneficiaryVerification {
+      __typename
+      message
+    }
+    ... on BeneficiaryMismatch {
+      __typename
+      nameSuggestion
+      accountHolderResidencyCity
+      accountHolderType
+      accountStatus
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows a beneficiary verification that **didn't** pass because the account wasn't found.
+
+```json {4} showLineNumbers
+{
+  "errors": [
+    {
+      "message": "Account was not found.",
+      "path": [
+        "beneficiaryVerification"
+      ],
+      "extensions": {
+        "code": "Account_NotFound",
+        "meta": {
+          "id": "$BENEFICIARY_VERIFICATION_ID"
+        },
+        "stacktrace": "Error: Account was not found.\n    at /home/node/app/src/domain/iban/use-cases/beneficiary-verification/beneficiary-verification.use-case.js:107:266\n    at /home/node/app/node_modules/fp-ts/lib/FromEither.js:36:97\n    at pipe (/home/node/app/node_modules/fp-ts/lib/function.js:301:23)\n    at /home/node/app/src/domain/iban/use-cases/beneficiary-verification/beneficiary-verification.use-case.js:107:214\n    at /home/node/app/node_modules/fp-ts/lib/EitherT.js:83:97\n    at /home/node/app/node_modules/fp-ts/lib/Task.js:133:41\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async toPromise (/home/node/app/node_modules/@swan-io/utils/lib/fp/index.js:26:12)\n    at async descriptor.value (/home/node/app/node_modules/@swan-io/metrics/metrics/decorators/default.js:12:28)"
+      }
+    }
+  ],
+  "data": {
+    "beneficiaryVerification": null
+  }
+}
+```

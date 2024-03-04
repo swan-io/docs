@@ -347,6 +347,7 @@ module.exports = {
                 "topics/payments/credit-transfers/sepa/guide-initiate-ct",
                 "topics/payments/credit-transfers/sepa/guide-cancel-ct",
                 "topics/payments/credit-transfers/sepa/guide-refund-ct",
+                "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",
                 "topics/payments/credit-transfers/sepa/guide-cancel-so",
                 "topics/payments/credit-transfers/sepa/sandbox",

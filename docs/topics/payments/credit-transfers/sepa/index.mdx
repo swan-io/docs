@@ -42,14 +42,17 @@ Due to the manual review, flagged SEPA Credit Transfers take longer to execute.
 ### Verifying beneficiaries {#beneficiary-verification}
 
 **IBAN verification** allows debtors to verify that credit transfers are sent to the right beneficiary *before* initiating the transfer, thus reducing errors and potential fraud.
-Swan supports IBAN verification for both incoming and outgoing SEPA Credit Transfers.
+When performing IBAN verification, Swan confirms that the **beneficiary's name matches** the name registered for the IBAN provided.
 
-| Transfer direction | Explanation |
-| --- | --- |
-| Incoming | When performing IBAN verification, Swan confirms that the beneficiary's name matches the name registered for the provided IBAN.<br /><br />Swan allows IBAN verification for all transfers between accounts with Dutch IBANs, meaning **both** IBANs involved begin with `NL`. Refer to [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to see the other IBANs for which Swan plans to integrate IBAN verification.  |
-| Outgoing | Any debtor using a non-Swan account to initiate a transfer to a Swan account has access to that Swan account's name and IBAN. Therefore, external debtors can confirm that the beneficiary details are correct before sending the transfer. |
+:::note Dutch IBANs only
+Swan allows IBAN verification for all transfers between accounts with **Dutch IBANs**, meaning both IBANs involved begin with `NL`.
+Refer to [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to see the other IBANs for which Swan plans to integrate IBAN verification. 
+:::
 
-Additionally, Swan **validates the format** of all beneficiary IBANs.
+Additionally, any debtor using a non-Swan account to initiate a transfer to a Swan account has access to that Swan account's name and IBAN.
+Therefore, external debtors can confirm that the beneficiary details are correct before sending the transfer.
+
+Swan also **validates the format** of all beneficiary IBANs.
 You can [check the format of your IBANs](../../../accounts/ibans/guide-validate.mdx) with the API before using them to send a transfer.
 
 ### Transfer limitations {#limitations}

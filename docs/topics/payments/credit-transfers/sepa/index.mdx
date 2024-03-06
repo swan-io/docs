@@ -41,13 +41,27 @@ Due to the manual review, flagged SEPA Credit Transfers take longer to execute.
 
 ### Verifying beneficiaries {#beneficiary-verification}
 
-**IBAN verification** is a service that allows Swan to verify that credit transfers are sent to the right beneficiary *before* initiating the transfer, thus reducing errors and potential fraud.
-When performing IBAN verification, Swan confirms that the beneficiary's name matches the name registered for the IBAN provided.
+**IBAN verification** allows debtors to verify that credit transfers are sent to the right beneficiary *before* initiating the transfer, thus reducing errors and potential fraud.
 
-Swan allows IBAN verification for all transfers between accounts with Dutch IBANs, meaning both IBANs involved begin with `NL`.
-Refer to [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to see the other IBANs for which Swan plans to integrate IBAN verification. 
+:::info Dutch IBANs only
+Swan allows IBAN verification for all transfers between accounts with **Dutch IBANs**, meaning **both** IBANs involved begin with `NL`.
+Refer to [Swan's roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to review other IBANs for which integrating IBAN verification is planned. 
+:::
 
-Additionally, Swan **validates the format** of all beneficiary IBANs.
+When performing IBAN verification, Swan confirms that the **beneficiary's name** matches the name **registered for the provided IBAN**.
+Swan notifies the debtor initiating the transfer with one of three results:
+
+- ✓ The information **matches**.
+- ☒ The information doesn't match at all, referred to as an **information mismatch**.
+- ☒ The information doesn't match, but it might be a **partial match** or **typo** (for example, `Alex` instead of `Alexa`).
+
+In the case of a total or partial mismatch, the debtor can update the beneficiary information accordingly before initiating their transfer.
+For a partial mismatch, the Swan API returns the field `nameSuggestion` with a suggestion to fix the mismatch or typo, but only if the external financial institution provides it as well.
+
+Additionally, Swan allows external financial institutions to verify that a Swan account **name** and **IBAN** match the information entered by the debtor when initiating the transfer.
+If there's an information mismatch or partial match, the financial institution can notify the debtor, who can then confirm their beneficiary details before sending the transfer.
+
+Swan also **validates the format** of all beneficiary IBANs.
 You can [check the format of your IBANs](../../../accounts/ibans/guide-validate.mdx) with the API before using them to send a transfer.
 
 ### Transfer limitations {#limitations}

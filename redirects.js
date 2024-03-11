@@ -402,16 +402,4 @@ module.exports = [
     from: "/help/faq/sepa-transactions/why-is-my-sepa-credit-transfer-still-pending",
     to: "/topics/payments/credit-transfers/#statuses",
   },
-  {
-  from: "/topics/merchants/#profiles-statuses",
-  to: "/topics/merchants/#statuses",
-  },
-  {
-    from: "/topics/merchants/#profiles-risk",
-    to: "/topics/merchants/#risk",
-  },
-  {
-    from: "/topics/merchants/#methods-risk",
-    to: "/topics/merchants/#risk",
-  },
 ];

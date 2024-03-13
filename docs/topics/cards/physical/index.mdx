@@ -44,7 +44,7 @@ If a card holder shares their PIN, Swan can't take responsibility for fraud asso
 
 ### Incorrect PIN attempts {#pin-incorrect-attempts}
 
-If the card holder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical can be made online or in person.
+If the card holder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical card can be made online or in person.
 
 Note that a physical card blocked for three incorrect PIN attempts will have the reason `IncorrectPinCodeAttemptsExceeded` (on the `PhysicalCardSuspendedStatusInfo`).
 You'll have to wait 24 hours before being able to [unblock the physical card](./guide-block-unblock.mdx).
@@ -141,14 +141,14 @@ flowchart LR
 
 | Physical card status | Explanation |
 |---|---|
-| `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation |
-| `ConsentPending` | Request to print a physical card was received and is waiting for the card holder's consent<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the card holder consents, the status moves to `Processing`</li><li>If you used the `printPhysicalCard` mutation and the card holder consents, the status moves to `Activated`</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`</li></ul> |
-| `Processing` | Consent has been received and the card is in the process being printed and delivered<br/><br/>**Next steps**:<ul><li>If you cancel the card with the API *before* the card is printed, the status moves to `Canceling`</li><li>If the card is printed and delivered successfully, the status moves to `ToActivate`</li></ul> |
-| `ToActivate` | Card holder received the physical card, but needs to activate it by performing a first transaction and entering the PIN; you can also activate the card with the `activatePhysicalCard` mutation<br/><br/>**Next steps**:<ul><li>If the card holder performs the transaction successfully, or you activate the card with the API, the status moves to `ToActivate`</li><li>If the card holder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`</li></ul> |
-| `Activated` | Physical card is available for use<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Activated` until the renewal period</li><li>`Activated` cards can also be `Suspended` and `Canceled` (example: if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`)</li></ul> |
-| `Suspended` | Physical card is suspended and not available for use<br/><br/>*Cards can be suspended for various reasons, including a request from you or the card holder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API</li><li>Cancel the card with the API</li></ul> |
-| `Canceling` | Card is in the process of being canceled<br/><br/>**Next steps**: Card is `Canceled`; after a card is assigned the `Canceling` status, the process can't be reversed |
-| `Canceled` | Card is canceled, no longer available for use, and can't be reactivated |
+| `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation. |
+| `ConsentPending` | Request to print a physical card was received and is waiting for the card holder's consent.<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the card holder consents, the status moves to `Processing`.</li><li>If you used the `printPhysicalCard` mutation and the card holder consents, the status moves to `Activated`.</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`.</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`.</li></ul> |
+| `Processing` | Consent has been received and the card is in the process being printed and delivered.<br/><br/>**Next steps**:<ul><li>If you cancel the card with the API *before* the card is printed, the status moves to `Canceling`.</li><li>If the card is printed and delivered successfully, the status moves to `ToActivate`.</li></ul> |
+| `ToActivate` | Card holder received the physical card, but needs to activate it by performing a first transaction and entering the PIN. You can also activate the card with the `activatePhysicalCard` mutation.<br/><br/>**Next steps**:<ul><li>If the card holder performs the transaction successfully, or you activate the card with the API, the status moves to `ToActivate`.</li><li>If the card holder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`.</li></ul> |
+| `Activated` | Physical card is available for use.<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Activated` until the renewal period.</li><li>`Activated` cards can also be `Suspended` and `Canceled` (example: if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`).</li></ul> |
+| `Suspended`<br /><br />Also referred to as *Blocked* | Physical card is suspended and not available for use. Card holders can still view card information and use digital cards (not virtual cards) when a physical card is `Suspended`.<br/><br/>*Cards can be suspended for various reasons, including a request from you or the card holder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API.</li><li>Cancel the card with the API.</li></ul> |
+| `Canceling` | Card is in the process of being canceled.<br/><br/>**Next steps**: Card is `Canceled`. After a card is assigned the `Canceling` status, the process can't be reversed. |
+| `Canceled` | Card is canceled, no longer available for use, and can't be reactivated. |
 
 ## Guides {#guides}
 

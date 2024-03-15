@@ -19,14 +19,12 @@ To get started, contact your dedicated Technical Account Manager, or send an ema
 
 ### Managing risk {#risk}
 
-Accepting payments may introduce risk.
+Accepting payments from customers comes with risk, and Swan prioritizes a **risk-based approach**.
 
-Swan prioritizes a **risk-based approach**, which applies to you and your merchants.
-All requests for merchant profiles and merchant payment methods are reviewed by Swan.
-Swan also reviews updates to all profiles.
+That's why Swan reviews all requests for merchant profiles, profile updates, and payment methods.
 You might be contacted for more information before Swan accepts or rejects the request.
 
-To manage potential risk, Swan can change the status of a profile or a payment method if suspicious activity is detected, either temporarily or permanently.
+To manage potential risk, if suspicious activity is detected, Swan can change the status of a profile or a payment method to `Suspended` or `Rejected`.
 Swan can also reinstate a profile or payment method by changing the status to `Enabled`.
 Finally, if Swan assigns the status `Rejected` to a profile or payment method, the decision is final and can't be reversed.
 
@@ -59,24 +57,10 @@ flowchart LR
 | Profile status | Explanation |
 |---|---|
 | `PendingReview` | Profile or payment method request was submitted and is pending a review by Swan.<br/><br/>**Next steps**:<ul><li>If the profile or payment method request doesn't meet requirements or is deemed risky by Swan, the status moves directly to `Rejected`.</li><li>Otherwise, the status moves to `Enabled`.</li></ul> |
-| `Enabled` | Merchant profile or merchant payment method is active.<br /><br />Use `Enabled` merchant profiles to request payment methods and accept payments with activated payment methods. Use `Enabled` payment methods to accept payments. |
+| `Enabled` | Merchant profile or merchant payment method is active.<br /><br />Use `Enabled` merchant profiles to request payment methods and accept payments with activated payment methods. Use `Enabled` payment methods to accept payments.<br /><br />Updates to profiles and payment methods can only occur when they have the status `Enabled`. |
 | `Suspended` | Status assigned by Swan when the merchant's use of their profile or payment method needs to be reviewed. The status can't return to `Enabled` without a review. |
 | `Rejected` | Final status assigned by Swan when Swan decides the risk of this profile or the risk of this payment method for the associated merchant is too high, or for some other risk-related reason. |
 | `Disabled` | Final status, set by you using the `requestMerchantPaymentMethods` mutation. |
-
-### Rolling reserve {#rolling-reserve}
-
-import RollingReserve from './partials/_rolling-reserve.mdx';
-
-<RollingReserve />
-
-| Payment method | Rolling reserve | Default amount |
-| --- | --- | --- |
-| Internal Direct Debit - Standard | ✓ **Yes** | Determined by a merchant profile risk assessment |
-| Internal Direct Debit - B2B | ☒ No | n/a |
-| SEPA Direct Debit - Core | ✓ **Yes** | 15% over 15 business days |
-| SEPA Direct Debit - B2B | ✓ **Yes** | 100% over 3 business days |
-| French checks | ✓ **Yes** | 100% over 10 interbank business days |
 
 ## Merchant profiles {#profiles}
 
@@ -116,13 +100,24 @@ Your merchants can use the following payment methods to accept payments with Swa
 - [SEPA Direct Debit](./sdd/index.mdx) (B2B and Core)
 - [French checks](./checks/index.mdx) (API only; debtor's bank must be located in France)
 
+### Rolling reserve {#rolling-reserve}
+
+import RollingReserve from './partials/_rolling-reserve.mdx';
+
+<RollingReserve />
+
+| Payment method | Rolling reserve | Default amount |
+| --- | --- | --- |
+| Internal Direct Debit - Standard | ✓ **Yes** | Determined by a merchant profile risk assessment |
+| Internal Direct Debit - B2B | ☒ No | n/a |
+| SEPA Direct Debit - Core | ✓ **Yes** | 15% over 15 business days |
+| SEPA Direct Debit - B2B | ✓ **Yes** | 100% over 3 business days |
+| French checks | ✓ **Yes** | 100% over 10 interbank business days |
+
 ### Versions and statuses {#methods-versions-statuses}
 
-Swan creates a new version of your payment method **every time a change is requested**.
+Swan creates a new version of your payment method **every time an update is approved**.
 Only one version of a payment method can have the status `Enabled`.
-
-Similarly, only one version of a payment method can have the status `PendingReview`.
-However, the statuses `Suspended`, `Disabled`, and `Rejected` can be assigned to unlimited versions of each payment method.
 
 Swan manages the statuses for `Enabled` or `PendingReview` payment methods automatically.
 Therefore, you don't need to change the status before calling the API.

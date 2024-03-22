@@ -97,17 +97,6 @@ Your merchants can use the following payment methods to accept payments with Swa
 - [SEPA Direct Debit](./sdd/index.mdx) (B2B and Core)
 - [French checks](./checks/index.mdx) (API only; debtor's bank must be located in France)
 
-### Versions and statuses {#methods-versions-statuses}
-
-Swan creates a new version of your payment method **every time a change is requested**.
-Only one version of a payment method can have the status `Enabled`.
-
-Similarly, only one version of a payment method can have the status `PendingReview`.
-However, the statuses `Disabled`, `Canceled`, and `Rejected` can be assigned to unlimited versions of each payment method.
-
-Swan manages the statuses for `Enabled` or `PendingReview` payment methods automatically.
-Therefore, you don't need to change the status before calling the API.
-
 ### Risk and payment methods {#methods-risk}
 
 All payment methods are reviewed by Swan.
@@ -128,15 +117,12 @@ flowchart LR
     E <-.-> S[Suspended]
     S -.-> R
     E -.-> D[Disabled]
-    E -.-> C[Canceled]
-    PR -.-> C
     subgraph U[Can use method]
         E
     end
     subgraph F[Final status]
         D
         R
-        C
     end
     style MPMR fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
@@ -150,7 +136,6 @@ flowchart LR
 | `Suspended` | Status assigned by Swan when the use of the payment method for the associated merchant needs to be reviewed. The status can't return to `Enabled` without a review. |
 | `Rejected` | Final status assigned by Swan when Swan decides the risk of this payment method for the associated merchant is too high, or for some other risk-related reason. |
 | `Disabled` | Final status, set by the `requestMerchantPaymentMethods` mutation. |
-| `Canceled` | Automated status assigned by Swan if the merchant submits an additional request for a payment method for which their original request is `PendingReview`. |
 
 ## Rolling reserve {#rolling-reserve}
 

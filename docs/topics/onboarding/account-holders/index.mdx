@@ -59,9 +59,11 @@ After Swan **validates the review**, the account holder is verified and their ac
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
     VR((Verification<br/>requested)) -.-> NS[NotStarted]
-    NS -.-> W[WaitingForInformation]
-    W -.-> P[Pending]
-    P --> V[Verified]
+    NS -.-> P[Pending]
+    P <-.-> W[WaitingForInformation]
+    P -...-> V[Verified]
+    W -.-> V[Verified]
+    W -.-> RF[Refused]
     P -.-> RF[Refused]
     subgraph F[Final status]
         V
@@ -74,8 +76,8 @@ flowchart LR
 | Verification status | Explanation |
 |---|---|
 | `NotStarted` | Verification process hasn't started yet. The account holder's legal representative needs to complete [identification](../../users/identifications/index.mdx) before starting account holder verification. |
-| `WaitingForInformation` | Swan is waiting for information from the account holder, such as a [supporting document](../documents/index.mdx) or other information. |
 | `Pending` | Swan is reviewing the account holder's information before activating or refusing the account. |
+| `WaitingForInformation` | Swan is waiting for information from the account holder, such as a [supporting document](../documents/index.mdx) or other information. |
 | `Verified` | Swan verified the account holder and the process is complete |
 | `Refused` | Swan won't onboard this account holder |
 

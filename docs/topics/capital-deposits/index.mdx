@@ -42,23 +42,36 @@ flowchart LR
     WR -.-> WS[WaitingForShare<br/>DepositCertificate<br/><em>Notary</em>]
     WS -.-> WRE[WaitingFor<br/>RegisterExtract]
     WRE -.-> WNT[WaitingFor<br/>NotaryTransfer<br/><em>Notary</em>]
-    WNT --> C[Completed]
+    WNT -.-> CA[Canceled]
+    WRE -.-> CA
+    WS -.-> CA
+    WR -.-> CA
+    WR -.-> R[Refused]
+    WNT -.-> CO[Completed]
+    subgraph V[Valid]
+        CO
+    end
     subgraph F[Final status]
-        C
+        R
+        CA
+        V
     end
     style DC fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
     style WS stroke-width:2px, stroke-dasharray: 5 5
     style WNT stroke-width:2px, stroke-dasharray: 5 5
+    style V fill:#dfedf2,stroke:#4d8296,stroke-width:3px
 ```
 
-| Status                              | Explanation                                                                                                                                                                                                          |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `WaitingForRequirements`            | Default status after the `CapitalDepositCase` is created, providing there were no technical issues<br/><br/>**You** complete the company onboarding process and upload required documents to pass to the next status |
-| `WaitingForShareDepositCertificate` | **_Notary_** _reviews the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_                                                                                              |
-| `WaitingForRegisterExtract`         | **You** upload your register extract for notary review                                                                                                                                                               |
-| `WaitingForNotaryTransfer`          | **_Notary_** _reviews the register extract_                                                                                                                                                                          |
-| `Completed`                         | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete                                                                                                      |
+| Status| Explanation |
+| --- | --- |
+| `WaitingForRequirements` | Default status after the `CapitalDepositCase` is created, providing there were no technical issues.<br/><br/>You complete the company onboarding process and upload required documents to pass to the next status. |
+| `WaitingForShareDepositCertificate` | **_Notary reviews_** _the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_. |
+| `WaitingForRegisterExtract` | You upload your register extract for notary review. |
+| `WaitingForNotaryTransfer` | **_Notary reviews_** _the register extract_. |
+| `Refused` | Swan can refuse a `CapitalDepositCase` if requirements aren't sufficient.  |
+| `Canceled` | You can cancel a `CapitalDepositCase` any time before completion. |
+| `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
 
 ## Required documents {#documents}
 

@@ -24,7 +24,7 @@ The capital deposit process consists of a few main actions:
 
 Learn more about the stakeholders and their interactions to complete a capital deposit on this page before continuing to the [guide for 🇫🇷 France](./france/guide.mdx).
 
-## Capital deposit case {#api-case}
+## Capital deposit case {#case}
 
 The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case) API object compiles all information for a capital deposit case, including:
 
@@ -33,7 +33,7 @@ The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit
 1. Shareholder information
 1. Capital deposit documents
 
-### Case statuses {#api-case-statuses}
+### Case statuses {#case-statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -70,7 +70,7 @@ flowchart LR
 | `WaitingForRegisterExtract` | You upload your register extract for notary review. |
 | `WaitingForNotaryTransfer` | **_Notary reviews_** _the register extract_. |
 | `Refused` | Swan can refuse a `CapitalDepositCase` if requirements aren't sufficient.  |
-| `Canceled` | You can request to cancel a `CapitalDepositCase` any time before completion by sending an email to support@swan.io. When a case is canceled, the shareholder's account is closed automatically. |
+| `Canceled` | You can request to cancel a `CapitalDepositCase` any time before completion by sending an email to support@swan.io. When a case is canceled, the shareholder is also canceled. |
 | `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
 
 ## Required documents {#documents}
@@ -169,11 +169,11 @@ All documents are **mandatory** unless marked _if requested_.
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    DC((Document<br/>created)) -.-> P[Pending]
-    P -.-> U[Uploaded]
-    U -.-> RF[Refused]
-    RF -.-> U
-    U --> V[Validated]
+    DC((Document<br/>created)) -..-> P[Pending]
+    P -..-> U[Uploaded]
+    U -..-> RF[Refused]
+    RF -..-> U
+    U -..-> V[Validated]
     subgraph F[Final status]
         V
     end
@@ -183,10 +183,10 @@ flowchart LR
 
 | Status | Explanation |
 | --- | --- |
-| `Pending`   | Place for the document is created, but the document isn't uploaded yet |
-| `Uploaded`  | Document successfully uploaded; you can change and re-upload the document as long it retains the status `Uploaded`<br/><br/>**Next step**: Swan reviews the document and either validates or refuses it |
-| `Validated` | Swan validated the document |
-| `Refused`   | Document doesn't meet requirements<br/><br/>**Next step**: Upload a new document, then the status returns to `Uploaded` |
+| `Pending`   | Place for the document is created, but the document isn't uploaded yet. |
+| `Uploaded`  | Document successfully uploaded; you can change and re-upload the document as long it retains the status `Uploaded`<br/><br/>**Next step**: Swan reviews the document and either validates or refuses it. |
+| `Validated` | Swan validated the document. |
+| `Refused`   | Document doesn't meet requirements.<br/><br/>**Next step**: Upload a new document, then the status returns to `Uploaded`. |
 
 ## Shareholders {#shareholders}
 
@@ -227,20 +227,30 @@ flowchart LR
     P -.-> WV[WaitingFor<br/>Verification]
     WV -.-> WT[WaitingFor<br/>Transfer]
     WT -.-> CT[Capital<br/>Transferred]
-    CT --> CN[CapitalFunds<br/>WiredToNotary]
-    style SC fill:#D4D3D5,stroke:#514F59
-    subgraph F[Final status]
+    CT -.-> CN[CapitalFunds<br/>WiredToNotary]
+    P -.-> CA[Canceled]
+    WV -.-> CA
+    WT -.-> CA
+    subgraph COM[Complete]
         CN
     end
+    subgraph F[Final status]
+        CA
+        COM
+    end
+    style SC fill:#D4D3D5,stroke:#514F59
+    style COM fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style F fill:#fffdf4,stroke:#cca922
 ```
 
 | Status | Explanation |
 | --- | --- |
-| `PendingOnboarding` | Default status after the shareholder is created; shareholder must **complete their onboarding** and their **account must be created** to continue |
-| `WaitingForVerification` | Possible status if the account holder verification isn't complete at the moment the shareholder's account is created<br/><br/>_Status bypassed if the [account holder status](../onboarding/account-holders/index.mdx#verification-process) is already `Verified`_ |
-| `WaitingForTransfer` | Waiting for the shareholder to deposit the full share capital in their Swan account created during onboarding, which **must** be transferred from an account belonging to the shareholder                                                                                          |
-| `CapitalTransferred` | Waiting for the rest of the capital deposit case to be ready and the funds to be transferred to the notary |
-| `CapitalFundsWiredToNotary` | Still waiting for the rest of the capital deposit case to be ready, but now the funds are with the notary |
+| `PendingOnboarding` | Default status after the shareholder is created; shareholder must **complete their onboarding** and their **account must be created** to continue. |
+| `WaitingForVerification` | Possible status if the account holder verification isn't complete at the moment the shareholder's account is created.<br/><br/>_Status bypassed if the [account holder status](../onboarding/account-holders/index.mdx#verification-process) is already `Verified`_. |
+| `WaitingForTransfer` | Waiting for the shareholder to deposit the full share capital in their Swan account created during onboarding, which **must** be transferred from an account belonging to the shareholder. |
+| `CapitalTransferred` | Waiting for the rest of the capital deposit case to be ready and the funds to be transferred to the notary. |
+| `CapitalFundsWiredToNotary` | Still waiting for the rest of the capital deposit case to be ready, but now the funds are with the notary. |
+| `Canceled` | When a `CapitalDepositCase` is `Canceled`, the shareholder is also `Canceled`.<br/><br/>If an account was already created for the shareholder, the account is closed automatically. |
 
 ## Sequence diagram {#diagram}
 

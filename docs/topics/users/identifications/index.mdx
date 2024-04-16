@@ -101,7 +101,46 @@ Refer to the guides in this section for full sample queries and payloads of the 
 
 You can also use the Event Simulator (**Dashboard** > **Developers** > **Event Simulator** > **Sandbox identifications**) to test various combinations of statuses, identification processes, and rejection reason codes.
 
-## Rejection reason codes {#tracking-reason-codes}
+### Identification statuses {#statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    IS((Identification<br/>requested)) -.-> NS[NotStarted]
+    IS -.-> NSU[NotSupported]
+    NS -.-> S[Started]
+    S -.-> P[Pending]
+    NS -.-> E[Expired]
+    NS -.-> C[Canceled]
+    P -.-> I[Invalid]
+    P -.-> V[Valid]
+    subgraph VI[Valid identification]
+        V
+    end
+    subgraph F[Final status]
+        I
+        C
+        E
+        NSU
+        VI
+    end
+    style IS fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style VI fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+```
+
+| Identification status | Explanation |
+|---|---|
+| `NotSupported` | When you perform an identification that doesn't include a certain level, that level will be marked as "not supported".<br /><br />For example, in an Expert identification, the PVID status will be `NotSupported`. |
+| `NotStarted` | Identification created but user hasn't started it yet. |
+| `Started` | When you begin an identification with our provider but don't finish it. |
+| `Pending` | When you've completed an identification with our provider and we're waiting for their response. |
+| `Valid` | When you've finished the identification and the provider has confirmed it was successful. |
+| `Invalid` | When you've completed the identification and the provider has indicated it was not successful. |
+| `Canceled` | When you start an identification with our provider but then explicitly request to cancel it, or our system cancels it for other reasons. |
+| `Expired` | When you begin an identification flow but don't complete it within the time range (15 minutes for PVID, 24 hours for QES and Expert).  |
+
+### Rejection reason codes {#tracking-reason-codes}
 
 Learn why your user's **identification** was rejected.
 You can also refer users to the Swan's end-user [Support Center](https://support.swan.io/hc/en-150/articles/16421416513693-Identity-verification-rejection-reasons-and-solutions).

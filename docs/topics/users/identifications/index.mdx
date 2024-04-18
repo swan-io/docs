@@ -101,7 +101,53 @@ Refer to the guides in this section for full sample queries and payloads of the 
 
 You can also use the Event Simulator (**Dashboard** > **Developers** > **Event Simulator** > **Sandbox identifications**) to test various combinations of statuses, identification processes, and rejection reason codes.
 
-## Rejection reason codes {#tracking-reason-codes}
+### Identification statuses {#statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    IS((Identification<br/>requested)) -.-> NS[NotStarted]
+    NS -.-> S[Started]
+    NS -.-> E[Expired]
+    NS -.-> C[Canceled]
+    S -.-> P[Pending]
+    NS -.-> P
+    S -.-> E
+    S -.-> C
+    P -.-> I[Invalid]
+    P -...-> V[Valid]
+    P -.-> C
+    NSU[NotSupported]
+    subgraph SU[Successful]
+        V
+    end
+    subgraph F[Final status]
+        I
+        SU
+        C
+        E
+    end
+    subgraph SS[Special status]
+        NSU
+    end
+    style IS fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style SU fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style SS fill:#f6ddcc,stroke:#c12236
+```
+
+| Identification status | Explanation |
+|---|---|
+| `NotStarted` | The identification request was created but the user hasn't begun yet. |
+| `Started` | The user began the identification process, but they haven't completed it. Their identification is still in progress. |
+| `Pending` | The user completed their portion of the identification process, and Swan identification service providers are reviewing it. |
+| `Valid` | The user's identification was successful, determined by the service provider. |
+| `Invalid` | The user's identification wasn't successful, determined by the service provider. |
+| `Canceled` | An identification request is canceled by your user or Swan. Identifications can be canceled from any non-final status. You can't cancel an identification on your user's behalf. |
+| `Expired` | After a user starts an identification, they have a limited amount of time to complete it. If time expires, the identification status changes to `Expired`.<br /><br /><ul><li>Expert: 24 hours</li><li>QES: 24 hours</li><li>PVID: 15 minutes</li></ul> |
+| `NotSupported` | In the API, all levels (`Expert`, `QES`, and `PVID`) are displayed. For each identification, any level that doesn't meet your requirements is marked `NotSupported`.<br /><br />*For example, in an `Expert` identification, the `PVID` status is `NotSupported`.* |
+
+### Rejection reason codes {#tracking-reason-codes}
 
 Learn why your user's **identification** was rejected.
 You can also refer users to the Swan's end-user [Support Center](https://support.swan.io/hc/en-150/articles/16421416513693-Identity-verification-rejection-reasons-and-solutions).

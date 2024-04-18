@@ -118,12 +118,79 @@ Both purpose and type can be exposed in the onboarding success payload.
 * `ProofOfIncome`
 * `Other`
 
-## Webhooks {#webhooks}
+## Collecting documents with the API {#collect-api}
 
-There are two webhooks associated with supporting documents:
+Collecting supporting documents impacts multiple elements of the onboarding process.
+Consider these steps, including the statuses of both account holder verification and the supporting document collection.
 
-- `SupportingDocumentCollection.Created`
-- `SupportingDocumentCollection.Updated`
+<table>
+  <tr>
+    <th>Step</th>
+    <th>Event</th>
+    <th>Account holder<br />verification status</th>
+    <th>Supporting document<br />collection status</th>
+  </tr>
+  <tr>
+    <td><center>1</center></td>
+    <td>[Onboarding](../../onboarding/index.mdx) finalized</td>
+    <td><center>`NotStarted`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>2</center></td>
+    <td>Legal representative completes [identification](../../users/identifications/index.mdx)</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>3</center></td>
+    <td>Swan requests supporting documents</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td colspan="3">*Consider subscribing to the `supportingDocumentCollection.updated` [webhook](../../../developers/using-api/webhooks.mdx) to get notified that a request was sent to collect documents.*</td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>4</center></td>
+    <td>Partner uploads new documents</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td colspan="3">*If needed, [get a list of required supporting documents](./guide-get-list.mdx). Then, [upload missing documents](./guide-upload.mdx).*</td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>5</center></td>
+    <td>Partner requests a collection review</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td colspan="3">*Partners (you) need to request a supporting document collection review after all supporting documents are uploaded. [Request a review](./guide-request-collection-review.mdx) with the API or from your Dashboard.*</td>
+  </tr>
+  <tr>
+    <td><center>6</center></td>
+    <td>Swan reviews supporting documents</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>7a</center></td>
+    <td>Supporting documents **accepted**</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>7b</center></td>
+    <td>Supporting documents **rejected**</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td colspan="3">*[Get the list of required supporting documents](./guide-get-list.mdx) and review the rejection reason. Then, return to step 4.*</td>
+  </tr>
+</table>
 
 ## Guides {#guides}
 

@@ -228,14 +228,14 @@ flowchart LR
     WV -.-> WT[WaitingFor<br/>Transfer]
     WT -.-> CT[Capital<br/>Transferred]
     CT -.-> CN[CapitalFunds<br/>WiredToNotary]
-    P -.-> CA[Canceled]
-    WV -.-> CA
-    WT -.-> CA
+    P -.-> CDC[CapitalDepositCanceled]
+    WV -.-> CDC
+    WT -.-> CDC
     subgraph COM[Complete]
         CN
     end
     subgraph F[Final status]
-        CA
+        CDC
         COM
     end
     style SC fill:#D4D3D5,stroke:#514F59
@@ -250,7 +250,7 @@ flowchart LR
 | `WaitingForTransfer` | Waiting for the shareholder to deposit the full share capital in their Swan account created during onboarding, which **must** be transferred from an account belonging to the shareholder. |
 | `CapitalTransferred` | Waiting for the rest of the capital deposit case to be ready and the funds to be transferred to the notary. |
 | `CapitalFundsWiredToNotary` | Still waiting for the rest of the capital deposit case to be ready, but now the funds are with the notary. |
-| `Canceled` | When a `CapitalDepositCase` is `Canceled`, the shareholder is also `Canceled`.<br/><br/>If an account was already created for the shareholder, the account is closed automatically. |
+| `CapitalDepositCanceled` | When a [`CapitalDepositCase` is `Canceled`](#case-statuses), the shareholder status changes to `CapitalDepositCanceled`.<br/><br/>If an account was already created for the shareholder, the account is also closed automatically. |
 
 ## Sequence diagram {#diagram}
 

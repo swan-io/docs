@@ -107,38 +107,45 @@ You can also use the Event Simulator (**Dashboard** > **Developers** > **Event S
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
     IS((Identification<br/>requested)) -.-> NS[NotStarted]
-    IS -.-> NSU[NotSupported]
     NS -.-> S[Started]
-    S -.-> P[Pending]
     NS -.-> E[Expired]
     NS -.-> C[Canceled]
+    S -.-> P[Pending]
+    S -.-> E
+    S -.-> C
     P -.-> I[Invalid]
-    P -.-> V[Valid]
-    subgraph VI[Valid identification]
+    P -...-> V[Valid]
+    P -.-> C
+    NSU[NotSupported]
+    subgraph SU[Successful]
         V
     end
     subgraph F[Final status]
         I
+        SU
         C
         E
+    end
+    subgraph SS[Special status]
         NSU
-        VI
     end
     style IS fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
-    style VI fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style SU fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style SS fill:#f6ddcc,stroke:#c12236
 ```
 
 | Identification status | Explanation |
 |---|---|
-| `NotSupported` | When you perform an identification that doesn't include a certain level, that level will be marked as "not supported".<br /><br />For example, in an Expert identification, the PVID status will be `NotSupported`. |
 | `NotStarted` | Identification created but user hasn't started it yet. |
 | `Started` | When you begin an identification with our provider but don't finish it. |
 | `Pending` | When you've completed an identification with our provider and we're waiting for their response. |
 | `Valid` | When you've finished the identification and the provider has confirmed it was successful. |
 | `Invalid` | When you've completed the identification and the provider has indicated it was not successful. |
 | `Canceled` | When you start an identification with our provider but then explicitly request to cancel it, or our system cancels it for other reasons. |
-| `Expired` | When you begin an identification flow but don't complete it within the time range (15 minutes for PVID, 24 hours for QES and Expert).  |
+| `Expired` | When you begin an identification flow but don't complete it within the time range (15 minutes for PVID, 24 hours for QES and Expert). |
+| `NotSupported` | When you perform an identification that doesn't include a certain level, that level will be marked as "not supported".<br /><br />For example, in an Expert identification, the PVID status will be `NotSupported`. |
+| `NotSupported` | In the API, all levels (`Expert`, `QES`, and `PVID`) are all displayed. For each identification, any level that doesn't meet your requirements is marked `NotSupported`.<br /><br />*For example, in an `Expert` identification, the `PVID` status is `NotSupported`.* |
 
 ### Rejection reason codes {#tracking-reason-codes}
 

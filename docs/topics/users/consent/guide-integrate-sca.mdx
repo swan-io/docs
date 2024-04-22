@@ -30,8 +30,20 @@ Use the documentation for your system's recommended API to set up your in-app br
 
 | System | Recommended API |
 | --- | --- |
+| Any | [React Native Browser](https://github.com/swan-io/react-native-browser) by Swan open source<br /><br /><ul><li>[Android implementation example](https://github.com/swan-io/react-native-browser/blob/main/android/src/main/java/io/swan/rnbrowser/RNSwanBrowserModuleImpl.java)</li><li>[iOS implementation example](https://github.com/swan-io/react-native-browser/blob/main/ios/RNSwanBrowser.mm)</li></ul> |
 | iOS | [SF Safari View Controller API](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller) |
 | System | [Chrome Custom Tabs API](https://developer.android.com/jetpack/androidx/releases/browser) |
+
+:::info Using Swan's React Native Browser module
+If you choose Swan's React Native Browser module, it also takes care of listening to the event.<br />
+Make sure to remove the following line of code from your app in steps 3.1, 3.5, and 4.3.
+
+```js
+const listener = Linking.addListener("url", ({ url }) => {
+
+ });
+```
+:::
 
 There are also several wrappers available for these APIs:
 
@@ -41,6 +53,11 @@ There are also several wrappers available for these APIs:
 - [Ionic Cordova](https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-inappbrowser/)
 
 ## Step 2: Set up your deep link listener {#deep-link-listener}
+
+:::warning Skip if using React Native Browser module
+Swan's React Native Browser module takes care of listening to the event.<br />
+If you chose Swan's module in step 1, you can skip step 2.
+:::
 
 Use the documentation for your system's recommended tutorial to set up the deep link listener for your app.
 

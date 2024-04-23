@@ -23,12 +23,12 @@ You can review accepted document formats in the [document center](../../../partn
 
 There are two primary options to collect required supporting documents:
 
-1. Use the API.
+1. **Use the API**.
     1. No emails are exchanged.
     1. You'll know every time a document is needed with webhook notifications.
     1. You communicate with your end users to gather the required documents.
     1. Choose the API or the Dashboard for most actions, including uploading documents.
-1. Swan communicates directly with you or your end users.
+1. **Swan communicates directly** with you or your end users.
     1. You or your end user receives an email.
     1. You or your end user uploads the document through Web Banking.
     1. You'll be able to see the document after the upload.
@@ -37,6 +37,80 @@ There are two primary options to collect required supporting documents:
 :::tip Recommendation
 Swan recommends **using the API** to manage documents and collections.
 :::
+
+### Collecting documents with the API {#collect-api}
+
+Collecting supporting documents impacts multiple elements of the onboarding process.
+Consider these steps, including the statuses of both [account holder verification](../account-holders/index.mdx#verification-process-statuses) and the [supporting document collection](#collection-statuses).
+
+<table>
+  <tr>
+    <th>Step</th>
+    <th>Event</th>
+    <th>Account holder<br />verification status</th>
+    <th>Supporting document<br />collection status</th>
+  </tr>
+  <tr>
+    <td><center>1</center></td>
+    <td>[Onboarding](../../onboarding/index.mdx) finalized</td>
+    <td><center>`NotStarted`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>2</center></td>
+    <td>Legal representative completes [identification](../../users/identifications/index.mdx)</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>3</center></td>
+    <td>Swan requests supporting documents</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td colspan="3">→ *Subscribe to the `supportingDocumentCollection.updated` [webhook](../../../developers/using-api/webhooks.mdx). You'll be notified when a request is sent to collect documents.*</td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>4</center></td>
+    <td>Partner uploads new documents</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td colspan="3">→ *If needed, [get a list of required documents](./guide-get-list.mdx). Then, [upload missing documents](./guide-upload.mdx).*</td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>5</center></td>
+    <td>Partner requests a collection review</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td colspan="3">→ *Partners (you) need to request a supporting document collection review after all supporting documents are uploaded. [Request a review](./guide-request-collection-review.mdx) with the API or from your Dashboard.*</td>
+  </tr>
+  <tr>
+    <td><center>6</center></td>
+    <td>Swan reviews supporting documents</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>7a</center></td>
+    <td>Swan **approves** the account holder</td>
+    <td><center>`Verified`</center></td>
+    <td><center>`Approved`</center></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>7b</center></td>
+    <td>Swan **needs more documents** to verify the account holder</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td colspan="3">→ *[Get the list of required documents](./guide-get-list.mdx) and review the rejection reason. Then, return to step 4.*</td>
+  </tr>
+</table>
 
 ## Collection statuses {#collection-statuses}
 
@@ -117,13 +191,6 @@ Both purpose and type can be exposed in the onboarding success payload.
 * `ProofOfAddress`
 * `ProofOfIncome`
 * `Other`
-
-## Webhooks {#webhooks}
-
-There are two webhooks associated with supporting documents:
-
-- `SupportingDocumentCollection.Created`
-- `SupportingDocumentCollection.Updated`
 
 ## Guides {#guides}
 

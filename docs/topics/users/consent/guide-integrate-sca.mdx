@@ -4,76 +4,100 @@ title: Integrate Strong Customer Authentication (SCA)
 
 # Integrate Strong Customer Authentication (SCA)
 
-If you prefer to embed Swan into your own mobile app, you'll want to integrate Strong Customer Authentication (SCA) using in-app browsers.
-Your users will have the security of Swan's SCA directly from your app.
+If you want to embed Swan into your own mobile app, you'll need to integrate Strong Customer Authentication (SCA) using in-app browsers.
+This way, your users will have the security of Swan's SCA directly from your app.
+
+:::danger In-app browser required
+For security reasons, all links **must open** in in-app browsers.<br />
+Therefore, **never use WebViews** to open URLs (`consentUrl` or `oAuthUrl`).
+:::
 
 ## Overview {#overview}
 
-To integrate SCA, you'll need:
+To integrate Swan's Strong Customer Authentication (SCA), you'll need:
 
-1. In-app browser package.
-1. Custom URL scheme with a deep link listener package.
-1. Backend server (this guide uses https://awesome-backend.com).
+1. An in-app browser package.
+1. A custom URL scheme with a deep link listener package.
+1. A backend server (this guide uses `https://awesome-api.com`).
 
-Check out [Swan's GitHub repository](https://github.com/swan-io/swan-partner-mobile) for an **integration demo**.
-
-:::caution Fullscreen required
-For security reasons, all links must open to be fullscreen.
-
-Therefore, **don't use webviews or iFrames** to display URLs (`consentUrl` or `oAuthUrl`).
-Step 1 describes a method that complies with the fullscreen requirement. 
-:::
+Check out [Swan's demo app GitHub repository](https://github.com/swan-io/swan-partner-mobile) for an integration example.
 
 ## Step 1: Set up your in-app browser {#browser}
 
 Use the documentation for your system's recommended API to set up your in-app browser.
 
-| System | Recommended API |
-| --- | --- |
-| iOS | [SF Safari View Controller API](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller) |
-| System | [Chrome Custom Tabs API](https://developer.android.com/jetpack/androidx/releases/browser) |
+| System | API | Reference |
+| --- | --- | --- |
+| Android | [Custom Tabs API](https://developer.android.com/jetpack/androidx/releases/browser) | [Swan implementation](https://github.com/swan-io/react-native-browser/blob/main/android/src/main/java/io/swan/rnbrowser/RNSwanBrowserModuleImpl.java) |
+| iOS | [SFSafariViewController API](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller) | [Swan implementation](https://github.com/swan-io/react-native-browser/blob/main/ios/RNSwanBrowser.mm) |
 
 There are also several wrappers available for these APIs:
 
-- [React Native](https://www.npmjs.com/package/react-native-inappbrowser-reborn)
-- [Flutter](https://pub.dev/packages/flutter_inappwebview)
-- [Capacitor](https://capacitorjs.com/docs/apis/browser)
-- [Ionic Cordova](https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-inappbrowser/)
+- Swan's official package: [@swan-io/react-native-browser](https://github.com/swan-io/react-native-browser)
+- [@capacitor/browser](https://capacitorjs.com/docs/apis/browser)
+- [flutter_inappwebview ChromeSafariBrowser](https://inappwebview.dev/docs/in-app-browsers/chrome-safari-browser)
+
+:::warning Follow the references
+When using frameworks other than React Native, ensure that your package is configured in a way that follows Swan's implementation references.
+:::
 
 ## Step 2: Set up your deep link listener {#deep-link-listener}
 
 Use the documentation for your system's recommended tutorial to set up the deep link listener for your app.
 
-| System | Recommended API |
+| System | Recommended guide |
 | --- | --- |
-| iOS | [Define custom URL scheme](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) |
-| System | [Create deep links](https://developer.android.com/training/app-links/deep-linking) |
+| Android | [Create deep links to app content](https://developer.android.com/training/app-links/deep-linking)                                      |
+| iOS     | [Defining a custom URL scheme for your app](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) |
 
-There are also several libraries available to listen for deep link visits:
+There are also several guides available to listen for deep link configuration:
 
 - [React Native](https://reactnative.dev/docs/linking)
 - [Flutter](https://docs.flutter.dev/development/ui/navigation/deep-linking)
 - [Capacitor](https://capacitorjs.com/docs/apis/app#addlistenerappurlopen-)
-- [Ionic Cordova](https://github.com/ionic-team/ionic-plugin-deeplinks)
 
 ## Step 3: Configure the sign-in process {#configure-signin}
 
 This five-step process describes an ideal path for your users to sign in.
 
+:::info Using Swan's react-native-browser package
+Swan's `react-native-browser` takes care of listening to the deep link event.
+Please **ignore the `listener` declarations** in steps 3.1, 3.5, and 4.3.
+
+Instead, use the following **`onClose` option** instead:
+
+```js
+import { openBrowser } from "@swan-io/react-native-browser";
+
+const onAction = () => {
+  // not needed with @swan-io/react-native-browser
+  // const listener = Linking.addListener("url", ({ url }) => {});
+
+  openBrowser("https://awesome-api.com/endpoint", {
+    onClose: (url) => {
+      // fired on browser closed
+      // url will be defined if the browser has been closed via deeplink
+    },
+  });
+};
+```
+
+:::
+
 ### 3.1 Sign-in button {#configure-signin-button}
 
-First, the user clicks a sign-in button in your app
+First, the user clicks a sign-in button in your app.
 Clicking this button opens an in-app browser and starts listening for deep links.
 
 ```js showLineNumbers
 const onSignInWithSwanButtonPress = () => {
   const listener = Linking.addListener("url", ({ url }) => {
-    // Called when deep link is visited
+    // called when deep link is visited
   });
 
-  InAppBrowser.open("https://awesome-backend.com/auth")
-    // Executed when the browser is closed
-    .then(() => listener.remove());
+  InAppBrowser.open("https://awesome-api.com/auth", {
+    onClose: () => listener.remove(), // executed when the browser is closed
+  });
 };
 ```
 
@@ -86,7 +110,7 @@ app.get("/auth", async (req, reply) => {
   const params = querystring.encode({
     client_id: "$YOUR_CLIENT_ID",
     response_type: "code",
-    redirect_uri: "https://awesome-backend.com/auth/callback", // must be registered in our dashboard
+    redirect_uri: "https://awesome-api.com/auth/callback", // must be registered in our dashboard
     scope: ["openid", "offline"].join(" "),
     state: generateUserState(req),
   });
@@ -97,7 +121,7 @@ app.get("/auth", async (req, reply) => {
 
 ### 3.3 User logs in {#configure-signin-login}
 
-The user logs in and is redirected to https://awesome-backend.com/auth/callback.
+The user logs in and is redirected to https://awesome-api.com/auth/callback.
 
 ### 3.4 Server responds {#configure-signin-server}
 
@@ -119,13 +143,15 @@ app.get("/auth/callback", async (req, reply) => {
     client_secret: "$YOUR_CLIENT_SECRET",
     grant_type: "authorization_code",
     code: req.query.code,
-    redirect_uri: "https://awesome-backend.com/auth/callback",
+    redirect_uri: "https://awesome-api.com/auth/callback",
   });
 
   const sessionId = randomUUID();
   await storeTokenInKeyValueStore(sessionId, token);
 
-  return reply.redirect(`com.awesome.app://browser/close?sessionId=${sessionId}`);
+  return reply.redirect(
+    `com.awesome.app://browser/close?sessionId=${sessionId}`
+  );
 });
 ```
 
@@ -136,6 +162,8 @@ Finally, the listener closes the in-app browser and stores the identifier.
 ```js showLineNumbers
 const onSignInWithSwanButtonPress = () => {
   const listener = Linking.addListener("url", ({ url }) => {
+    // called when deep link is visited
+
     if (url.startsWith("com.awesome.app://browser/close")) {
       InAppBrowser.close();
 
@@ -147,10 +175,10 @@ const onSignInWithSwanButtonPress = () => {
     }
   });
 
-  InAppBrowser.open("https://yourmobilebackend.com/swan/auth")
-    // Executed when the browser is closed
-    .then(() => listener.remove());
-}
+  InAppBrowser.open("https://awesome-api.com/auth", {
+    onClose: () => listener.remove(), // executed when the browser is closed
+  });
+};
 ```
 
 ## Step 4: Configure the consent process {#configure-consent}
@@ -160,8 +188,8 @@ This example uses the action of creating a card.
 
 It's important that, when clicked, **consent links respect one of the following behaviors**:
 
-1. The link opens a pop-up that redirects the user to another page. Upon redirect, the pop-up closes automatically.
-1. The link opens within the same page, then redirects the user to the rest of the flow.
+- Option 1: The link opens a pop-up that redirects the user to another page. Upon redirect, the pop-up closes automatically.
+- Option 2: The link opens within the same page, then redirects the user to the rest of the flow.
 
 ### 4.1 Create card button {#configure-consent-button}
 
@@ -172,10 +200,10 @@ Your server API receives the call with the following `sessionId` header.
 const onAddCardButtonPress = async () => {
   const sessionId = await AsyncStorage.getItem("sessionId");
 
-  await client.post("https://awesome-backend.com/add-card", {
+  await client.post("https://awesome-api.com/add-card", {
     headers: { sessionId },
   });
-}
+};
 ```
 
 ### 4.2 Consent URL {#configure-consent-url}
@@ -190,14 +218,14 @@ app.get("/add-card", async (req, reply) => {
     {
       input: {
         // …
-        consentRedirectUrl: "https://awesome-backend.com/add-card/callback",
+        consentRedirectUrl: "https://awesome-api.com/add-card/callback",
       },
     },
     {
       headers: {
         Authorization: `Bearer $TOKEN`,
       },
-    },
+    }
   );
 
   return reply.json({ consentUrl });
@@ -212,30 +240,30 @@ The app opens an in-app browser and starts listening for deep links.
 const onAddCardButtonPress = async () => {
   const sessionId = await AsyncStorage.getItem("sessionId");
 
-  const { consentUrl } = await client.post("https://awesome-backend.com/add-card", {
+  const { consentUrl } = await client.post("https://awesome-api.com/add-card", {
     headers: { sessionId },
   });
 
   const listener = Linking.addListener("url", ({ url }) => {
-    // Called when deep link is visited
+    // called when deep link is visited
   });
 
-  InAppBrowser.open(consentUrl)
-    // Executed when the browser is closed
-    .then(() => listener.remove());
+  InAppBrowser.open(consentUrl, {
+    onClose: () => listener.remove(), // executed when the browser is closed
+  });
 };
 ```
 
 ### 4.4 User consents {#configure-consent-user}
 
-The user consents and is redirected to https://awesome-backend.com/add-card/callback.
+The user consents and is redirected to https://awesome-api.com/add-card/callback.
 
 During redirection, Swan adds these query parameters to the URL.
 
 - `consentId`
 - `env`: Sandbox or Live environment
 - `status`: Accepted, CustomerRefused, OperationCommitting, CredentialRefused, Created, Started, Expired, Failed, or Canceled
-    - *Including the status doesn't replace the need to query Swan's API to confirm the consent.*
+  - _Including the status doesn't replace the need to query Swan's API to confirm the consent._
 - `resourceId` (if the consent only impacts one resource)
 
 ### 4.5 Additional operations {#configure-consent-additional-ops}
@@ -244,7 +272,7 @@ Your server performs any necessary additional operations, then redirects the use
 
 ```js showLineNumbers
 app.get("/add-card/callback", async (req, reply) => {
-  // Perform additional operations…
+  // perform additional operations…
   return reply.redirect("com.awesome.app://browser/close");
 });
 ```
@@ -257,18 +285,20 @@ Finally, the listener closes the in-app browser.
 const onAddCardButtonPress = async () => {
   const sessionId = await AsyncStorage.getItem("sessionId");
 
-  const { consentUrl } = await client.post("https://awesome-backend.com/add-card", {
+  const { consentUrl } = await client.post("https://awesome-api.com/add-card", {
     headers: { sessionId },
   });
 
   const listener = Linking.addListener("url", ({ url }) => {
+    // called when deep link is visited
+
     if (url.startsWith("com.awesome.app://browser/close")) {
       InAppBrowser.close();
     }
   });
 
-  InAppBrowser.open("https://yourmobilebackend.com/swan/auth")
-    // Executed when the browser is closed
-    .then(() => listener.remove());
+  InAppBrowser.open(consentUrl, {
+    onClose: () => listener.remove(), // executed when the browser is closed
+  });
 };
 ```

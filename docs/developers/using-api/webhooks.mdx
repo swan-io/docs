@@ -15,7 +15,7 @@ Consider the [basic API flow](../index.mdx#overview) for reference.
 However, **not all events are under your control**; some events are triggered by external parties.
 When external events occur, resources are updated in Swan, but you aren't notified by default.
 
-If you **configure webhooks for these external events**, Swan initiates a request on your endpoint and you receive a webhook notification.
+If you **subscribe to webhooks for these external events**, Swan initiates a request on your endpoint and you receive webhook notifications.
 
 ```mermaid
 sequenceDiagram
@@ -37,6 +37,13 @@ Webhooks operate with a near-real-time efficiency, typically delivering response
 
 It's worth clarifying that webhooks don't actively *respond* but autonomously send information to your system, potentially introducing delays of up to 10 minutes after the actual action occurs.
 
+### Automatic retry {#overview-retry}
+
+If we encounter an error during a webhook request, we'll retry every **30 seconds** up to **7 times**.
+
+If all retries fail, you can retry it manually by selecting **Retry** from your **Dashboard** > **Developers** > **Webhooks**.
+You can also trigger the webhook manually at any time.
+
 ### Security {#overview-security}
 
 Webhooks aren't the most secure communication method, and banking data can be sensitive.
@@ -52,13 +59,6 @@ If you have security restrictions in your infrastructure, you might need to add 
 - 52.51.125.72
 - 54.194.47.212
 :::
-
-### Automatic retry {#overview-retry}
-
-If we encounter an error during a webhook request, we'll retry every **30 seconds** up to **7 times**.
-
-If all retries fail, you can retry it manually by selecting **Retry** from your **Dashboard** > **Developers** > **Webhooks**.
-You can also trigger the webhook manually at any time.
 
 ## Event handling {#event-handling}
 
@@ -77,6 +77,17 @@ Due to `at-least once` delivery, a webhook endpoint might receive the same event
 Therefore, Swan strongly suggests **making your event processing idempotent**, essentially making sure your response to webhook notifications can be repeated multiple times without producing different outcomes.
 
 For example, you might log the events you've processed, and then not process events that are already logged.
+
+### Manage webhooks with the API {#event-handling-api}
+
+You can manage your webhooks with the API.
+
+1. **Add** a new webhook subscription: [`addWebhookSubscription`](https://api-reference.swan.io/mutations/add-webhook-subscription/).
+1. **Update** a webhook subscription: [`updateWebhookSubscription`](https://api-reference.swan.io/mutations/update-webhook-subscription/).
+1. **Remove** a webhook subscription: [`removeWebhookSubscription`](https://api-reference.swan.io/mutations/remove-webhook-subscription/).
+1. **Trigger a retry** of a failed webhook: [`replayWebhookEvent`](https://api-reference.swan.io/mutations/replay-webhook-event/).
+1. Get a **list all subscriptions**: [`webhookSubscriptions`](https://api-reference.swan.io/queries/webhook-subscriptions/).
+1. Get a **log of all events**: [`webhookEventLogs`](https://api-reference.swan.io/queries/webhook-event-logs/).
 
 ### Event order {#event-handling-order}
 

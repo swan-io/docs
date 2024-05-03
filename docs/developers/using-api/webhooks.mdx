@@ -16,6 +16,7 @@ However, **not all events are under your control**; some events are triggered by
 When external events occur, resources are updated in Swan, but you aren't notified by default.
 
 If you **subscribe to webhooks for these external events**, Swan initiates a request on your endpoint and you receive webhook notifications.
+Requests to your endpoint **must be answered** with a 200 OK HTTP response.
 
 ```mermaid
 sequenceDiagram
@@ -70,6 +71,27 @@ Swan webhooks are designed following the `at-least once` delivery method.
 Taking transactions as an example, the `at-least once` delivery means that for the same `eventId`, you might receive more than one notification.
 
 Swan chose `at-least once` delivery deliberately over the `at-most once` delivery; it's better you receive the information multiple times instead of not at all, which can occur with `at-most once` in case of technical error.
+
+### Information included in notifications {#event-handling-info}
+
+Webhook notifications contain the following information in a `POST` request:
+
+```
+{
+  "eventType": "Transaction.Booked",
+  "eventId": "$YOUR_EVENT_ID",
+  "eventDate": "2021-08-18T09:35:46.673Z",
+  "projectId": "$YOUR_PROJECT_ID",
+  "resourceId": "$YOUR_RESOURCE_ID"
+}
+```
+
+Note that `eventType` is the action performed on which resource type, `eventId` is a unique ID for this event, and  `resourceId` is a unique ID for the resource.
+
+:::caution Limited information
+For security reasons, webhook notifications **include limited information**.
+You can always **query the API** for more information about these events.
+:::
 
 ### Idempotent process {#event-handling-idempotent}
 

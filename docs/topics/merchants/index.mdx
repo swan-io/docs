@@ -54,11 +54,11 @@ flowchart LR
 
 | Profile status | Explanation |
 |---|---|
-| `PendingReview` | Profile was submitted and is pending a review by Swan. |
-| `Enabled` | Profile is active and can be used to request payment methods and accept payments with activated payment methods. |
-| `Suspended` | Status assigned by Swan when the merchant's use of the accept payments feature needs to be reviewed. |
-| `Rejected` | Final status assigned by Swan when Swan decides the risk of this profile is too high, or for some other risk-related reason. |
-| `Canceled` | Automated status assigned by Swan. |
+| `PendingReview` | Profile or payment method request was submitted and is pending a review by Swan.<br /><br />**Next steps**: <ul><li>If the profile or payment method request doesn't meet requirements or is deemed risky by Swan, the status moves directly to `Rejected`.</li><li>Otherwise, the status moves to `Enabled`.</li></ul> |
+| `Enabled` | Profile or payment method is active.<br /><br /><ul><li>Use `Enabled` merchant profiles to request payment methods and accept payments with activated payment methods.</li><li>Use `Enabled` payment methods to accept payments.</li><li>Updates to profiles and payment methods can only occur when they have the status `Enabled`.</li></ul> |
+| `Suspended` | Status **assigned by Swan** when the merchant's use of their profile or payment method needs to be reviewed. The status can't return to `Enabled` without a review. |
+| `Rejected` | Final status **assigned by Swan** when Swan decides the risk of this profile or the risk of this payment method for the associated merchant is too high, or for some other risk-related reason. |
+| `Disabled` | Final status **set by you** using the `requestMerchantPaymentMethods` mutation. |
 
 ## Merchant profiles {#profiles}
 

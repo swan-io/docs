@@ -1,0 +1,81 @@
+---
+title: Deactivate a user
+---
+
+# Deactivate a user
+
+You can **call the API** to deactivate a user.
+
+:::tip Prerequisites
+import DeactivateRequirements from './_deactivate-reqs.mdx';
+
+<DeactivateRequirements />
+
+Finally, you need a **project access token** to call the mutation.
+:::
+
+## Guide {#guide}
+
+1. Call the `deactivateUser` mutation.
+1. Add the user ID for the user you need to deactivate.
+1. Add success payload (line 3) and **all** rejections (lines 6, 11, 16).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRGVhY3RpdmF0ZVVzZXIgewogIGRlYWN0aXZhdGVVc2VyKGlucHV0OiB7IHVzZXJJZDogIiRVU0VSX0lEIiB9KSB7CiAgICAuLi4gb24gRGVhY3RpdmF0ZVVzZXJTdWNjZXNzIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIFVzZXJDYW5ub3RCZURlYWN0aXZhdGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIHVzZXJJZAogICAgfQogICAgLi4uIG9uIFVzZXJBbHJlYWR5RGVhY3RpdmF0ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgdXNlcklkCiAgICB9CiAgICAuLi4gb24gVXNlck5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2,3,6,11,16} showLineNumbers
+mutation DeactivateUser {
+  deactivateUser(input: { userId: "$USER_ID" }) {
+    ... on DeactivateUserSuccess {
+      __typename
+    }
+    ... on UserCannotBeDeactivatedRejection {
+      __typename
+      message
+      userId
+    }
+    ... on UserAlreadyDeactivatedRejection {
+      __typename
+      message
+      userId
+    }
+    ... on UserNotFoundRejection {
+      id
+      message
+    }
+  }
+}
+
+```
+
+## Success payload {#payload-success}
+
+The following payload shows a successful deactivation.
+
+```json {4} showLineNumbers
+{
+  "data": {
+    "deactivateUser": {
+      "__typename": "DeactivateUserSuccess"
+    }
+  }
+}
+```
+
+## Rejection payload {#payload-rejection}
+
+The following payload shows an unsuccessful deactivation.
+This user couldn't be deactivated because they're a legal representative.
+
+```json {4,5} showLineNumbers
+{
+  "data": {
+    "deactivateUser": {
+      "__typename": "UserCannotBeDeactivatedRejection",
+      "message": "User with id '$USER_ID' can't be deactivated (reason=The user is a legal representative)",
+      "userId": "$USER_ID"
+    }
+  }
+}
+```

@@ -1,6 +1,7 @@
 ---
 title: Get a user access token
 ---
+import UseImmediately from './_use-uat-immediately.mdx';
 
 # Get a user access token
 
@@ -9,6 +10,8 @@ Learn how to get [user access tokens](./index.mdx#tokens-user), including gettin
 :::tip Prerequisites
 You have a Swan project and you have access to your Dashboard.
 :::
+
+<UseImmediately overview="After getting a user access token in step 4" />
 
 ## Step 1: Get your credentials and add a redirect URI {#get-credentials-add-uri}
 
@@ -68,12 +71,9 @@ https://oauth.swan.io/oauth2/auth?response_type=code&client_id=$YOUR_CLIENT_ID&r
 
 | Parameter | Description |
 | --- | --- |
-| `phoneNumber` |  Avoids asking the customer to enter their phone number. |
-| `firstName` |  Avoids asking the customer to enter their first name during user registration. |
-| `lastName` |  Avoids asking the customer to enter their last name during user registration. |
-| `birthDate` |  Avoids asking the customer to enter their birth date during user registration (format: YYYY-MM-DD). |
-| `identificationLevel` |  Associated with the required [identification](../../../topics/users/identifications/index.mdx). |
-| `onboardingId` |  Avoids asking the customer to enter their own address and email if they did it during onboarding. Only relevant for the [QES process](../../../topics/users/identifications/index.mdx#levels-processes). |
+| `phoneNumber`<br />`firstName`<br />`lastName`<br />`birthDate`<br />`birthCity`<br />`birthCountry`<br />`nationality`<br />`language` |  Avoids asking the customer to enter this information during user registration.<br /><br />Required formats: <ul><li>`birthDate`: YYYY-MM-DD *(year-month-day)*</li><li>`birthCountry` and `nationality`: ISO 3166-1 alpha-3 *(France = `FRA`)*</li><li>`language`: ISO 639-1 (alpha 2) *(Spanish = `es`)*</li></ul> |
+| `identificationLevel` |  Indicate your preferred [identification level](../../../topics/users/identifications/index.mdx#levels-processes).<br /><br />Swan **recommends choosing `auto`**, which allows Swan to direct your users the most appropriate identification flow for their situation. |
+| `onboardingId` |  Avoids asking the customer to enter their own residence address and email if they provide that information during onboarding. |
 
 ### 2.2 Receive approval from user {#code-approve}
 
@@ -130,6 +130,8 @@ curl -v -X POST <https://oauth.swan.io/oauth2/token> \\
 ## Step 4: Get your access token {#get-token}
 
 Assuming the information provided was correct, you'll receive a response with a user access token.
+
+<UseImmediately overview="After getting the token" />
 
 The example response explains that you're receiving a [bearer token](./index.mdx#bearer-auth), which is a cryptic string, and that the token provides user-level access for one hour.
 The token scope lets you know you can use the token for OpenID Connect purposes.

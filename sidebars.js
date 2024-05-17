@@ -417,6 +417,7 @@ module.exports = {
             "topics/users/overview/guide-get-list",
             "topics/users/overview/guide-get-info-multiple",
             "topics/users/overview/guide-get-info-one",
+            "topics/users/overview/guide-deactivate",
           ],
         },
         {

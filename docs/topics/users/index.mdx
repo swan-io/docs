@@ -8,21 +8,25 @@ A **Swan user** is an actual person identified within Swan by their mobile phone
 Swan users are managed **globally**, not project-by-project.
 Therefore, users can **log into multiple projects** with the **same phone number**.
 
+## Authentication {#authentication}
+
+When a user wants to access their data or make transactions through your service with Swan's API, they must be [authenticated](../../developers/using-api/authentication/index.mdx).
+This includes when they log into their Web Banking app, whether it's [Swan's open source](https://swan-io.github.io/swan-partner-frontend/getting-started/) version or your own custom integration.
+
+## Phone numbers {#phone-numbers}
+
 Using mobile phone numbers to identify users greatly simplifies their experience: users only need to know their mobile number to log into Swan, and occasionally their [chosen 6-digit passcode](#signup).
 Their passcode is linked to their mobile phone number and is the same for all projects in both the Sandbox and Live environments.
 
 Note that if your users get a **new phone number**, they should change their number with Swan.
-They shouldn't sign up with a new link, which would create a new Swan user.
+They **shouldn't sign up again** with a new link, which would create a new Swan user.
+
+If a user's mobile phone number previously belonged to someone else, and the number's former owner had a Swan account, **that user must be deactivated** before the new user can sign up with the phone number.
 
 :::info Sandbox users
 When testing your integration, you'll need [Sandbox users](../../developers/tools/sandbox-users.mdx).
 Sandbox users make it possible to simulate the different situations you may encounter with your real users in your Live environment, as long as they're logging in with the **same phone number**.
 :::
-
-## Authentication {#authentication}
-
-When a user wants to access their data or make transactions through your service with Swan's API, they must be [authenticated](../../developers/using-api/authentication/index.mdx).
-This includes when they log into their Web Banking app, whether it's [Swan's open source](https://swan-io.github.io/swan-partner-frontend/getting-started/) version or your own custom integration.
 
 ## Signing up {#signup}
 
@@ -111,8 +115,36 @@ Before trying to reconfigure biometrics, they need to update the software on the
   </div>
 </details>
 
+## User deactivation {#deactivate}
+
+In certain circumstances, you might want to deactivate a user.
+When a user is deactivated successfully, the **[phone number](#phone-numbers) associated with their Swan user object can be used for a new user**.
+
+All of the following conditions must be met:
+
+import DeactivateRequirements from './overview/_deactivate-reqs.mdx';
+
+<DeactivateRequirements />
+
+If all conditions are met, the user can be deactivated.
+When a user is deactivated, all user access tokens and their associated refresh tokens associated with the deactivated user are revoked can no longer be used.
+
+If conditions aren't met, there are three possible rejection reasons:
+
+1. `UserCannotBeDeactivatedRejection`: the explained conditions aren't met.
+1. `UserAlreadyDeactivatedRejection`: the user associated with this user ID was already deactivated.
+1. `UserNotFoundRejection`: the user associated with this user ID wasn't found in the system.
+
+Learn how to [deactivate a user with the API](./overview/guide-deactivate.mdx).
+You can also send a request to Swan Support through your Dashboard or with an email to support@swan.io.
+
+:::note Webhook
+To get a notification when a user is deactivated, subscribe to the `User.Deactivated` [webhook](../../developers/using-api/webhooks.mdx).
+:::
+
 ## Guides {#guides}
 
 - [Get a list of users](./overview/guide-get-list.mdx)
 - [Get information about multiple users](./overview/guide-get-info-multiple.mdx)
 - [Get information about a single user](./overview/guide-get-info-one.mdx)
+- [Deactivate a user](./overview/guide-deactivate.mdx)

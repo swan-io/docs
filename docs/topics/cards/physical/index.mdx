@@ -12,7 +12,26 @@ You can order a physical card for each virtual card.
 Swan physical cards are typical plastic cards that can be used for swipe, chip and PIN, contactless, and online transactions.
 Your [design](../design/index.mdx) will be printed on all physical cards.
 
-## Card numbers {#number}
+## Card information {#info}
+
+Understand how Swan determines the name to print on a physical card.
+Learn how a PIN is chosen, assigned, and viewed.
+Understand what happens if a card holder repeatedly enters their PIN incorrectly.
+
+### Card name {#name}
+
+The name printed on Swan cards corresponds to a card holder's legal name, as recorded for their Swan account.
+
+The length of the printed name (first name + last name) can't exceed **20 characters**.
+If your card holder's name is longer than 20 characters, the initial of their first name is used instead of their full first name.
+If the first initial + last name combination still exceeds 20 characters, their first name plus last initial is used instead.
+
+:::note Abbreviation example
+- The name `Emilia Prommenschenkel` would be abbreviated to `E. Prommenschenkel`.
+- The name `Mikah Ottovordemgentschenfelde` would be abbreviated to `Mikah O.`.
+:::
+
+### Card number {#number}
 
 Each physical card has a unique card number, different even from the virtual card added before the physical card was printed.
 
@@ -26,10 +45,15 @@ import VirtualPhysicalCardNumbers from '../partials/_card-numbers.mdx';
 <VirtualPhysicalCardNumbers />
 :::
 
-### PIN {#pin}
+### Card PIN {#pin}
 
 Physical cards have a **four-digit PIN**, or personal identification number.
-PINs are assigned when the card is printed and **can't be changed**.
+A card's PIN is chosen or assigned when the card is printed.
+After a PIN is chosen or assigned, it **can't be changed**.
+
+To allow your card holders to **choose their PIN**, set the `choosePin` paramater to `true` when [printing physical cards](./guide-print.mdx).
+You can set this paramater with the `printPhysicalCard` and `addCards` mutations.
+If you don't add the `choosePin` paramater, or you set it to `false`, Swan assigns a PIN randomly.
 
 The PIN for each physical card is available to the card holder on Swan's Web Banking interface.
 PINs aren't available on your Dashboard because only the card holder should have easy access to the PIN for their card.
@@ -42,7 +66,7 @@ Note that if three incorrect attempts are made to enter the PIN, the card is aut
 If a card holder shares their PIN, Swan can't take responsibility for fraud associated with that card.
 :::
 
-### Incorrect PIN attempts {#pin-incorrect-attempts}
+#### Incorrect PIN attempts {#pin-incorrect-attempts}
 
 If the card holder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical card can be made online or in person.
 
@@ -139,6 +163,11 @@ flowchart LR
     style IR fill:#f6ddcc,stroke:#c12236
 ```
 
+:::info renewal statuses
+The statuses `ToRenew` and `Renewed` don't appear in the status diagram intentionally.
+Please refer to the [section on renewing cards](#renew) for more details about these statuses.
+:::
+
 | Physical card status | Explanation |
 |---|---|
 | `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation. |
@@ -149,6 +178,46 @@ flowchart LR
 | `Suspended`<br /><br />Also referred to as *Blocked* | Physical card is suspended and not available for use. Card holders can still view card information and use digital cards (not virtual cards) when a physical card is `Suspended`.<br/><br/>*Cards can be suspended for various reasons, including a request from you or the card holder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API.</li><li>Cancel the card with the API.</li></ul> |
 | `Canceling` | Card is in the process of being canceled.<br/><br/>**Next steps**: Card is `Canceled`. After a card is assigned the `Canceling` status, the process can't be reversed. |
 | `Canceled` | Card is canceled, no longer available for use, and can't be reactivated. |
+| `ToRenew` | Card needs to be renewed. |
+| `Renewed` | Card is renewed. The status returns to `Activated` after the first transaction is made with the new card. |
+
+## Renewing physical cards {#renew}
+
+Physical cards are renewed automatically before the expiry date, which, by default, is three years after adding the card.
+
+About six weeks before the expiry date, the status of the physical card changes to `ToRenew` with the delivery details available in the `PhysicalCardRenewedStatus` object.
+The estimated date of delivery can be found in the `estimatedDeliveryDate` field.
+You'll find the carrier and tracking number in the fields `shippingProvider` and `trackingNumber` as soon as they're available.
+
+When a physical card is renewed, the card numbers change but the four-digit PIN remains the same for a continuous user experience.
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    PCNR((Physical card<br/>needs renewal)) -.starts with.- A[Activated]
+    PCNR -.starts with.- TA
+    A -.-> TR[ToRenew]
+    TR -.-> R[Renewed]
+    R -.-> A
+    TA[ToActivate] -.-> TR
+    TR -...-> CL[Canceling]
+    subgraph U[Can use card]
+        A
+    end
+    subgraph RS[Renewal statuses]
+        TR
+        R
+    end
+    subgraph IR[Irreversible]
+        CL
+    end
+    style PCNR fill:#D4D3D5,stroke:#514F59
+    style RS fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style IR fill:#f6ddcc,stroke:#c12236
+    style TR stroke-width:2px
+    style R stroke-width:2px
+```
 
 ## Guides {#guides}
 
@@ -164,5 +233,4 @@ flowchart LR
 - [Block & unblock physical cards](./guide-block-unblock.mdx)
     - Temporarily block a physical card
     - Unblock a physical card
-- [Renew physical cards](./guide-renew.mdx)
 - [Cancel physical cards](./guide-cancel.mdx)

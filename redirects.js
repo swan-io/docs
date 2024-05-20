@@ -402,4 +402,8 @@ module.exports = [
     from: "/help/faq/sepa-transactions/why-is-my-sepa-credit-transfer-still-pending",
     to: "/topics/payments/credit-transfers/#statuses",
   },
+  {
+    from: "/topics/cards/physical/guide-renew",
+    to: "/topics/cards/physical/#renew",
+  },
 ];

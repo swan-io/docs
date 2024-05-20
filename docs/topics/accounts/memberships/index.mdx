@@ -59,13 +59,29 @@ If they try to grant the `canManageCards` permission anyway, the API returns a `
 
 ### Managing cards {#permissions-cards}
 
-Whether your account members can manage cards and for whom depends on both `canManageAccountMembership` and `canManageCards` permissions.
+Whether your **account members can manage cards** and **for whom** depends on both `canManageAccountMembership` and `canManageCards` permissions.
 
-| `canManage`... | `AccountMembership` = true | `AccountMembership` = false |
-| --- | --- | --- |
-| `Cards` = **true** | ✓ View, add, and update cards for self<br />✓ View, add, and update cards for others∗ | ✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others |
-| `Cards` = **false** | ✓ View my own cards<br />☒ Can't add or update cards for self<br />☒ Can't view, add, or update cards for others | ✓ View my own cards<br />☒ Can't add or update cards for self<br />☒ Can't view, add, or update cards for others |
-| `Cards` = **not provided** | ✓ View, add, and update cards for self<br />✓ View, add, and update cards for others | ✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others |
+<table>
+  <tr>
+    <th>`canManage`...</th>
+    <th>`AccountMembership` = true</th>
+    <th>`AccountMembership` = false</th>
+  </tr>
+  <tr>
+    <td>`Cards` = true</td>
+    <td>✓ View, add, and update cards for self<br />✓ View, add, and update cards for others∗</td>
+    <td>✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others</td>
+  </tr>
+  <tr>
+    <td>`Cards` = false</td>
+    <td colspan="2">✓ View their own cards<br />☒ Can't add virtual cards for self<br />✓ If they have an existing virtual card, they can print a physical card for self<br />☒ Can't update any cards for self<br />☒ Can't view, add, or update cards for others</td>
+  </tr>
+  <tr>
+    <td>`Cards` = not provided</td>
+    <td>✓ View, add, and update cards for self<br />✓ View, add, and update cards for others</td>
+    <td>✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others</td>
+  </tr>
+</table>
 
 ∗ *others* → other account members
 

@@ -1,0 +1,57 @@
+---
+title: Close an account by legal representative request
+---
+
+# Close an account by legal representative request {#legal-rep}
+
+If the account holder's [legal representative](../../../glossary.mdx#legal-representative) requests an account closure, the process **starts with the API**.
+
+## Guide {#guide}
+
+1. Call the `closeAccount` mutation with the legal representative's [user access token](../../../developers/using-api/authentication/index.mdx#tokens-user).
+1. The API returns a `consentUrl`.
+1. Send the `consentUrl` to your user so they can complete [Strong Customer Authentication](../../users/consent/index.mdx#sca).
+1. As soon as the user consents, the account status changes to `Closing`.
+
+:::note Account statuses
+Refer to the [account statuses](../index.mdx#statuses) section for an overview of what happens while an account is `Closing`.
+:::
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gY2xvc2VBY2NvdW50IHsKICBjbG9zZUFjY291bnQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICByZWFzb246IHsgdHlwZTogQ2xvc2luZ1JlcXVlc3RlZCB9CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBDbG9zZUFjY291bnRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEJhZEFjY291bnRTdGF0dXNSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql title="Mutation" {4-6,12} showLineNumbers
+mutation closeAccount {
+  closeAccount(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      reason: { type: ClosingRequested }
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on CloseAccountSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+```graphql title="Payload" {6} showLineNumbers
+{
+  "data": {
+    "closeAccount": {
+      "__typename": "CloseAccountSuccessPayload",
+      "consent": {
+        "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+      }
+    }
+  }
+}
+```

@@ -94,7 +94,6 @@ module.exports = {
           link: { type: "doc", id: "topics/accounts/index" },
           collapsed: true,
           items: [
-            "topics/accounts/overview/guide-close",
             "topics/accounts/overview/guide-generate-statement",
             "topics/accounts/overview/guide-get-bank-details",
           ],
@@ -124,6 +123,17 @@ module.exports = {
             "topics/accounts/funding/guide-cancel-request",
             "topics/accounts/funding/guide-get-info",
             "topics/accounts/funding/sandbox",
+          ],
+        },
+        {
+          type: "category",
+          label: "Closing accounts",
+          link: { type: "doc", id: "topics/accounts/closure/index" },
+          collapsed: true,
+          items: [
+            "topics/accounts/closure/guide-close-api",
+            "topics/accounts/closure/guide-close-limited",
+            "topics/accounts/closure/guide-close-unlimited",
           ],
         },
         {

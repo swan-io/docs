@@ -406,4 +406,8 @@ module.exports = [
     from: "/topics/cards/physical/guide-renew",
     to: "/topics/cards/physical/#renew",
   },
+  {
+    from: "/topics/accounts/overview/guide-close",
+    to: "/topics/accounts/closure",
+  },
 ];

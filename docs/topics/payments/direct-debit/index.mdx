@@ -187,15 +187,24 @@ Qualified account members are those with the `CanInitiatePayments` membership pe
 If your request to reject the transaction is accepted, the status changes from `Upcoming` to `Rejected`.
 `Rejected` transactions don't impact the account balance.
 
-### Refunded {#refunded}
+### Refunded (Returned) {#refunded}
 
-Check if a SEPA Direct Debit transaction is eligible for a refund.
+**Core SEPA Direct Debit transactions** are refundable under two specific scenarios:
 
-If you need to request a refund for a `Booked` SEPA Direct Debit Core transaction, a qualified account member can contact Swan directly.
-Qualified account members are those with the `CanInitiatePayments` membership permission.
-Confirm you're within the [time window allowed](#specifications).
+:::note execution
+Execution means the [transaction status](#statuses) changed to `Booked`.
+:::
+
+1. Transactions are eligible for refunds for up to **8 calendar weeks** after execution, no questions asked.
+[Request these refunds](./guide-return.mdx) with the API `returnTransaction` mutation.
+1. Transactions are eligible for refunds up to **13 months** after execution if there wasn't a valid mandate or if the payment wasn't authorized.
+Request a refund by sending an email to support@swan.io with all of the supporting details.
 
 If the refund is approved, a new `SepaDirectDebitOutReturn` transaction is created with the status `Booked`.
+
+:::caution B2B not eligible
+B2B SEPA Direct Debit transactions aren't eligible for refunds.
+:::
 
 ### Reversed {#reversed}
 

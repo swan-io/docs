@@ -388,6 +388,7 @@ module.exports = {
           link: { type: "doc", id: "topics/payments/direct-debit/index" },
           collapsed: true,
           items: [
+            "topics/payments/direct-debit/guide-return",
             "topics/payments/direct-debit/guide-add-mandate",
             "topics/payments/direct-debit/guide-update-mandate",
             "topics/payments/direct-debit/guide-suspend-mandate",

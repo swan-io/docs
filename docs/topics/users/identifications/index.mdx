@@ -116,17 +116,13 @@ You can also use the Event Simulator (**Dashboard** > **Developers** > **Event S
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    IS((Identification<br/>requested)) -.-> NS[NotStarted]
-    NS -.-> S[Started]
-    NS -.-> E[Expired]
-    NS -.-> C[Canceled]
+    IS((Identification<br/>requested)) -.-> S[Started]
     S -.-> P[Pending]
-    NS -.-> P
-    S -.-> E
+    S -.-> E[Expired]
     S -.-> C
     P -.-> I[Invalid]
     P -...-> V[Valid]
-    P -.-> C
+    P -.-> C[Canceled]
     NSU[NotSupported]
     subgraph SU[Successful]
         V
@@ -148,14 +144,18 @@ flowchart LR
 
 | Identification status | Explanation |
 |---|---|
-| `NotStarted` | The identification request was created but the user hasn't begun yet. |
-| `Started` | The user began the identification process, but they haven't completed it. Their identification is still in progress. |
+| `Started` | The identification request was created. The user might have begun the identification process, but they haven't completed it. Their identification is still in progress. |
 | `Pending` | The user completed their portion of the identification process, and Swan identification service providers are reviewing it. |
 | `Valid` | The user's identification was successful, determined by the service provider. |
 | `Invalid` | The user's identification wasn't successful, determined by the service provider. |
 | `Canceled` | An identification request is canceled by your user or Swan. Identifications can be canceled from any non-final status. You can't cancel an identification on your user's behalf. |
 | `Expired` | After a user starts an identification, they have a limited amount of time to complete it. If time expires, the identification status changes to `Expired`.<br /><br /><ul><li>Expert: 24 hours</li><li>QES: 24 hours</li><li>PVID: 15 minutes</li></ul> |
 | `NotSupported` | In the API, all levels (`Expert`, `QES`, and `PVID`) are displayed. For each identification, any level that doesn't meet your requirements is marked `NotSupported`.<br /><br />*For example, in an `Expert` identification, the `PVID` status is `NotSupported`.* |
+
+:::danger `NotStarted` deprecation
+The identification status `NotStarted` is being deprecated.
+If you're currently using it, switch to `Started` instead.
+:::
 
 ### Rejection reason codes {#tracking-reason-codes}
 

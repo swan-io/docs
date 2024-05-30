@@ -63,7 +63,7 @@ With the results, you receive the **name of the bank that issued the check** alo
 
 <table>
   <tr>
-    <th colspan="2">Code or CPT</th>
+    <th colspan="2">FNCI info</th>
     <th>Explanation</th>
   </tr>
   <tr>
@@ -88,10 +88,14 @@ With the results, you receive the **name of the bank that issued the check** alo
     <td>**CPT3**</td>
     <td>Number of FNCI verifications in recent days for checks issued by the same account holder, typically over a different or extended time period as compared to CPT2.</td>
   </tr>
+  <tr>
+    <td colspan="2">Holder establishment</td>
+    <td>The name of the bank that issued the check.</td>
+  </tr>
 </table>
 
-:::caution Confirm bank name
-If the issuing bank is different from the bank listed in the FNCI result, it may indicate fraud, even if the color code is green.
+:::caution Confirm holder establishment
+If the bank name is different from the holder establishment provided in the FNCI result, it may indicate fraud, even if the color code is green.
 :::
 
 ## R-transactions {#r-transactions}
@@ -136,8 +140,8 @@ Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `check
 
 ### Canceled {#canceled}
 
-Creditors can cancel a received check with the `Upcoming` status.
-In this case, the check status switches automatically to `Canceled`.
+Creditors can cancel a received check with the `Upcoming` status *unless* the check processing center already received the check.
+In this case of a canceled check, the status switches automatically to `Canceled`.
 This transaction won't impact the account's available balance.
 
 ## Guides {#guides}

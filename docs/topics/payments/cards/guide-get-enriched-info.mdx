@@ -1,0 +1,102 @@
+---
+title: Get enriched information about card transactions
+---
+
+# Get enriched information about card transactions
+
+You can **call the API** to get enriched information about card transactions.
+
+Enriched transaction information is also available on your **Dashboard** > **Data** > **Transactions**, as well as Swan's Web Banking interface if you're using it.
+
+:::tip Prerequisites
+You need a **project access token** to call the query.
+:::
+
+## Guide {#guide}
+
+1. Call the `card` query.
+1. Add the card ID.
+1. Add `transactions`.
+1. Add all information you'd like to review about each card transaction.
+1. Add [pagination](../../../developers/using-api/pagination.mdx#arguments) if you're expecting a long list.
+
+## Query {#query}
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgTGlzdENhcmRUcmFuc2FjdGlvbnMgewogIGNhcmQoY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIpIHsKICAgIHRyYW5zYWN0aW9ucyB7CiAgICAgIGVkZ2VzIHsKICAgICAgICBub2RlIHsKICAgICAgICAgIC4uLiBvbiBDYXJkVHJhbnNhY3Rpb24gewogICAgICAgICAgICBpZAogICAgICAgICAgICBjYXRlZ29yeQogICAgICAgICAgICBsYWJlbAogICAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgICB0eXBlCiAgICAgICAgICAgIGFtb3VudCB7CiAgICAgICAgICAgICAgY3VycmVuY3kKICAgICAgICAgICAgICB2YWx1ZQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgICBwYXltZW50SWQKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {2,6} showLineNumbers
+query ListCardTransactions {
+  card(cardId: "$YOUR_CARD_ID") {
+    transactions {
+      edges {
+        node {
+          ... on CardTransaction {
+            id
+            category
+            label
+            statusInfo {
+              status
+            }
+            type
+            amount {
+              currency
+              value
+            }
+          }
+          paymentId
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+Review these two card transactions for an eCommerce purchase: the authorization and the final payment.
+Each transaction has its own transaction ID (lines 8, 24) but share the same payment ID (lines 19,35)
+
+```json {8,19,24,35} showLineNumbers
+{
+  "data": {
+    "card": {
+      "transactions": {
+        "edges": [
+          {
+            "node": {
+              "id": "decao_14fd19a4320c78b9aa7716940530604f",
+              "category": "eCommerce",
+              "label": "Book purchase",
+              "statusInfo": {
+                "status": "Booked"
+              },
+              "type": "CardOutDebit",
+              "amount": {
+                "currency": "EUR",
+                "value": "15.00"
+              },
+              "paymentId": "cro_50680a1bfb6590742056a3d257c54b76"
+            }
+          },
+          {
+            "node": {
+              "id": "aucao_455c6e1d97ed66fcff868e09c87dd313",
+              "category": "eCommerce",
+              "label": "Book purchase",
+              "statusInfo": {
+                "status": "Released"
+              },
+              "type": "CardOutAuthorization",
+              "amount": {
+                "currency": "EUR",
+                "value": "0.00"
+              },
+              "paymentId": "cro_50680a1bfb6590742056a3d257c54b76"
+            }
+          },
+        ]
+      }
+    }
+  }
+}
+```

@@ -335,6 +335,7 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/payments/cards/guide-get-list",
+            "topics/payments/cards/guide-get-enriched-info",
             "topics/payments/cards/sandbox",
           ],
         },

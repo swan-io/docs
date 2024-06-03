@@ -351,7 +351,50 @@ participant CM as Card holder's mobile device
     CH->> M: Redirected to merchant
 ```
 
+## Enriched transaction information {#enriched}
+
+When reviewing their transaction history, card holders can see enriched—more detailed—information about the merchant and the transaction.
+You can also view the information on your Dashboard and retrieve it with the API.
+
+Providing enriched transaction information improves the user experience for you and your users by reducing chargebacks and decreasing the need for customer support.
+
+Swan enriches all card transactions with additional merchant data, including:
+
+1. Merchant brand name (`brand_name`)
+1. Merchant logo (`brand_logo`)
+1. Merchant category (`category`)
+1. Merchant subcategory (`subcategory`)
+1. Subscription indicator (`is subscription` boolean)
+1. Merchant contact details (`contact_email`, `contact_phone`, and `contact_website`)
+1. Carbon footprint (measured in micrograms) (`emission_in_ug`)
+
+On your Dashboard, go to **Data** > **Transactions** > **Details** to view enriched transaction information.
+If you use Swan's Web Banking interface, enriched transaction information is available for your users automatically in their History list.
+
+:::info
+Enriched transaction information is currently only available for card payments.
+:::
+
+### Displaying enriched info {#enriched-display}
+
+In the API and on your Dashboard, `enrichedTransactionInfo` doesn't override the existing merchant information received during the classic transaction flow.
+If you use Swan's Web Banking interface, however, the enriched information overrides the merchant name.
+
+Consider the following Dashboard content for a card transaction:
+
+![Example of enriched card transaction information on the Dashboard](../../../images/topics/payments/cards/card-enriched-dashboard.png)
+
+:::caution Back-filling transaction info
+We must plan to back-fill all our transactions since the 1st day of Swan (5M+ transactions), warn Triple, and do it little by little etc. Important for partners to be able to display data fields for a user.
+
+:::
+
+### Webhooks & enriched info {#enriched-webhooks}
+
+How `Transaction.Pending` & `Transaction.Enriched` work.
+
 ## Guides {#guides}
 
 - [Get a list of card transactions](./guide-get-list.mdx)
+- [Get enriched information about card transactions](./guide-get-enriched-info.mdx)
 - [Sandbox](./sandbox.mdx)

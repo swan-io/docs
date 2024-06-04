@@ -1,0 +1,155 @@
+---
+title: Cards for merchants
+---
+
+# Cards for merchants
+
+:::caution beta
+Accepting card payments is in private beta.
+:::
+
+## Overview {#about}
+
+Cards are the most common way for customers worldwide to pay.
+Swan supports most major card issuers, including Visa, Mastercard, and *Cartes Bancaires* (CB) in France.
+AmericanExpress isn't supported.
+
+Merchants can use payment links to accept payments from card holders anywhere.
+Collect rent, share invoices, and accept customer payments through a Swan merchant account.
+
+:::info Merchants only
+This section **only applies to merchants** accepting card payments.
+Visit the [cards payments section](../../payments/cards/index.mdx) for information about payments made with cards *from* a Swan account.
+:::
+
+## Payment links {#links}
+
+import PaymentLinkDescription from '../partials/_payment-link-description.mdx';
+
+<PaymentLinkDescription />
+
+Learn how to create payment links to [accept card payments](./guide-create-link.mdx).
+
+## Merchant card payments {#payments}
+
+Merchant card payments include **one or more transactions**.
+For example, one payment might include a capture transaction and a refund transaction, for a total of two transactions.
+
+These transactions are **grouped together** in the **merchant payment object**.
+Swan recommends using the merchant payment object in your integration to help merchants match orders, invoices, and sales to the correct object.
+This provides better traceability and can help reconcile issues more efficiently.
+
+### Card transaction types {#payments-transaction-types}
+
+There are **four transaction types** for merchant card payments.
+
+Authorizations aren't included in a transaction type.
+Instead, they're represented at the payment level, visible through the payment object status `Authorized` and payment object balance `totalAuthorized`.
+
+| Transaction type | Explanation | Impacted account balance |
+|---|---|:---:|
+| `CardInCredit` | Captured payment that impacts the merchant's `Booked` balance. | `Upcoming`<br />`Booked` |
+| `CardInCreditReversal` | Refunded payment that first impacts the merchant's `Pending` balance, then their `Booked` balance. | `Pending`<br />`Booked` |
+| `CardInCreditChargeback` | Disputed payment that immediately impacts the merchant's `Booked` balance. | `Booked` |
+| `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, impacting the merchant's `Booked` balance. | `Booked` |
+
+:::info Balances
+The impacted balances are Swan's standard [account balances](../../accounts/index.mdx#balances), which aren't related to the payment object balances explained later on this page.
+:::
+
+### Payment object statuses {#payments-statuses}
+
+The merchant payment object has **distinct statuses** to follow a payment's lifecycle.
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    MPI((Merchant card<br/>payment initiated)) -.-> I[Initiated]
+    I -.-> A[Authorized]
+    A -.-> CP[Captured]
+    I -.-> RJ[Rejected]
+    CP -.-> RF[Refunded]
+    CP -.-> D[Disputed]
+    I -.-> CN[Canceled]
+    A -.-> CN
+    subgraph FR[Funds received]
+        CP
+    end
+    subgraph F[Final status]
+        RJ
+        CN
+        RF
+        D
+    end
+    style MPI fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style FR fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Card payment object status | Explanation |
+|---|---|
+| `Initiated` | Customer submitted their card details through the payment link, but the payment hasn't been authorized yet. |
+| `Authorized` | Authorization for the payment was received, but the funds aren't captured yet. The funds are guaranteed for the merchant. |
+| `Captured` | Authorized payments for which the funds have moved out of the customer's account. This can be a final status if the customer doesn't dispute the payment or request a refund. |
+| `Rejected` | Authorization denied by the issuer or by Swan. |
+| `Canceled` | Card payment was canceled, authorization voided, and the funds can't be captured. |
+| `Refunded` | Payments reversed by the merchant for some or all of the amount. |
+| `Disputed` | Customer disputed the payment with their bank for some or all of the amount. |
+
+### Payment object balances {#payments-balances}
+
+The merchant payment object has **distinct balances** to follow a payment's lifecycle.
+
+| Card payment object balance | Explanation |
+|---|---|
+| `totalAuthorized` | The total authorized amount for this merchant payment. |
+| `availableToCancel` | The authorized amount that can be released. Refer to this balance to verify whether the payment can be canceled. Cancellations must occur before the amount is captured. |
+| `totalCanceled` | The total amount canceled for this merchant payment. |
+| `availableToCapture` | The amount available for merchants to capture *if* the capture isn't automatic. |
+| `totalCaptured` | The amount captured by the merchant. When the capture for card payments is automatic, `totalCaptured` is always equal to `totalAuthorized`. |
+| `availableToRefund` | The amount the merchant can refund. Use this balance to know if a payment is eligible for a refund. |
+| `totalRefunded` | The total amount refunded for this merchant payment. |
+| `totalDisputed` | The total amount of this merchant payment disputed by the customer. |
+
+## Rolling reserve {#rolling-reserve}
+
+import RollingReserve from '../partials/_rolling-reserve.mdx';
+
+<RollingReserve />
+
+| Payment method | Rolling reserve | Default amount |
+| --- | --- | --- |
+| Cards | ✓ **Yes** | 10% over 20 business days |
+
+## Settlement date and booked time {#settlement}
+
+Merchant card transactions are booked the **business day after the transaction is captured** at **18:00** Coordinated Universal Time (UTC).
+
+For example, transactions captured on Tuesday between 00:00 (midnight) and 23:59 UTC are booked on Wednesday, assuming both Tuesday and Wednesday are business days.
+
+import DayTimeStandard from '../../partials/_day-time.mdx';
+
+<DayTimeStandard />
+
+## R-transactions {#r-transactions}
+
+### Rejected {#rejected}
+
+Card payments can be rejected (declined) for a long list of reasons, including:
+
+- Failed [3-D Secure (3DS) authentication](../../payments/cards/index.mdx#3ds)
+- Insufficient funds
+- Bank refusal (often without further information)
+
+### Chargebacks & disputes {#disputes}
+
+Card holders might create chargebacks, which opens a dispute.
+Merchants can view the dispute automatically; the payment object status, the transaction status, and the merchant's balance all change to reflect the dispute.
+
+To respond to disputes, ask your merchant to [submit a request](https://supportform.swan.io/) to the Swan Support team.
+
+## Guides {#guides}
+
+- [**Step-by-step**: Accept payments with cards](./guide-cards.mdx)
+- [Request French checks payment method](./guide-request.mdx)
+- [Initiate a French check transaction](./guide-create-link.mdx)

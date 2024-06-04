@@ -2,6 +2,8 @@
 title: Merchants overview
 ---
 
+import TransactionsDefinition from '../definitions/_transactions.mdx';
+
 # Merchants
 
 import MerchantsDefinition from '../definitions/_merchants.mdx';
@@ -28,7 +30,7 @@ To manage potential risk, if suspicious activity is detected, Swan can **change 
 Swan can also reinstate a profile or payment method by changing the status to `Enabled`.
 Finally, if Swan assigns the status `Rejected` to a profile or payment method, the decision is final and can't be reversed.
 
-### Statuses {#statuses}
+### Profile & payment method statuses {#statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -71,6 +73,7 @@ The merchant profile contains the following information:
 - Link to the merchant's website
 - Projected volumes
 - Logo (optional), displayed online and on mandate PDFs
+- Accent color
 
 You can request a profile update with the API mutation `requestMerchantProfileUpdate`, and merchants can request an update through your web banking interface.
 You can request an update to the merchant's name, website, product type, expected monthly payment volume, expected average basket, and logo.
@@ -82,20 +85,21 @@ The merchant profile is created with the status `PendingReview`, and the profile
 
 ## Payment methods {#methods}
 
-Your merchants can accept payments from their clients using any of several **merchant payment methods**.
+Your merchants can accept payments from their customers using any of several **merchant payment methods**.
 
 Merchant payment methods are connected to a merchant profile, and a single merchant profile can have multiple payment methods.
 To accept payments with Swan, there must be an `Enabled` merchant profile and at least one `Enabled` merchant payment method.
 
-To learn how to request payment methods, refer to the request payment method guides for [SEPA Direct Debit](./sdd/guide-request.mdx), [Internal Direct Debit](./idd/guide-request.mdx), and [French checks](./checks/guide-request.mdx).
-You could also request multiple methods in one API call.
+To learn how to request payment methods, refer to the request payment method guides for [**cards**](./cards/guide-request.mdx), [**SEPA Direct Debit**](./sdd/guide-request.mdx), [**Internal Direct Debit**](./idd/guide-request.mdx), and [**French checks**](./checks/guide-request.mdx).
+You can request multiple methods in one API call.
 
 ### Available payment methods {#methods-options}
 
 Your merchants can request the following payment methods to accept payments with Swan:
 
-- [Internal Direct Debit](./idd/index.mdx) (B2B and Standard)
+- [Cards](./cards/index.mdx)
 - [SEPA Direct Debit](./sdd/index.mdx) (B2B and Core)
+- [Internal Direct Debit](./idd/index.mdx) (B2B and Standard)
 - [French checks](./checks/index.mdx) (API only; debtor's bank must be located in France)
 
 ### Rolling reserve {#rolling-reserve}
@@ -106,13 +110,14 @@ import RollingReserve from './partials/_rolling-reserve.mdx';
 
 | Payment method | Rolling reserve | Default amount |
 | --- | --- | --- |
+| Cards | ✓ **Yes** | 10% over 20 business days |
+| SEPA Direct Debit - Core | ✓ **Yes** | Determined by a merchant profile risk assessment |
+| SEPA Direct Debit - B2B | ✓ **Yes** | 100% over 3 business days |
 | Internal Direct Debit - Standard | ✓ **Yes** | Determined by a merchant profile risk assessment |
 | Internal Direct Debit - B2B | ☒ No | n/a |
-| SEPA Direct Debit - Core | ✓ **Yes** | 15% over 15 business days |
-| SEPA Direct Debit - B2B | ✓ **Yes** | 100% over 3 business days |
 | French checks | ✓ **Yes** | 100% over 10 interbank business days |
 
-### Versions and statuses {#methods-versions-statuses}
+### Versions {#methods-versions-statuses}
 
 Swan creates a **new version** of your payment method **every time an update is approved**.
 Only one version of a payment method can have the status `Enabled`.
@@ -122,7 +127,15 @@ Therefore, you don't need to change the status before calling the API.
 
 ## Guides {#guides}
 
-- [Add a merchant profile](./profiles/guide-add.mdx)
-- [Update a merchant profile](./profiles/guide-update.mdx)
-- [Get information about a merchant profile](./profiles/guide-get-info.mdx)
-- [Sandbox](./sandbox.mdx)
+- Merchant profiles:
+    - [Add a merchant profile](./profiles/guide-add.mdx)
+    - [Update a merchant profile](./profiles/guide-update.mdx)
+    - [Get information about a merchant profile](./profiles/guide-get-info.mdx)
+    - [Sandbox](./sandbox.mdx)
+- Request payment methods:
+    - [Cards](./cards/guide-request.mdx)
+    - [SEPA Direct Debit](./sdd/guide-request.mdx)
+    - [Internal Direct Debit](./idd/guide-request.mdx)
+    - [French checks](./checks/guide-request.mdx)
+- Create payment links:
+    - [Cards](./cards/guide-create-link.mdx)

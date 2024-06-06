@@ -4,14 +4,14 @@ title: Sandbox
 
 # Sandbox: French checks
 
-When testing your integration, you might need to simulate certain events with the [**Partner Testing API**](https://explorer.swan.io/?tab=test-api).
+When testing your integration, you might need to simulate certain events with the [Partner Testing API](https://explorer.swan.io/?tab=test-api).
 
-## Simulate booking a check {#simulate-book}
+## [Simulate booking a check](https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVDaGVja0Jvb2tpbmcgewogIHNpbXVsYXRlSW5jb21pbmdDaGVja0Jvb2tpbmcoCiAgICBpbnB1dDogeyB0cmFuc2FjdGlvbklkOiAiJFlPVVJfVFJBTlNBQ1RJT05fSUQiIH0KICApIHsKICAgIC4uLiBvbiBTaW11bGF0ZUluY29taW5nQ2hlY2tCb29raW5nU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHRyYW5zYWN0aW9uSWQKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBUcmFuc2FjdGlvbk5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIHRyYW5zYWN0aW9uSWQKICAgIH0KICB9Cn0K&tab=test-api) {#simulate-book}
 
 ```graphql {2} showLineNumbers
 mutation SimulateCheckBooking {
   simulateIncomingCheckBooking(
-    input: { transactionId: "bocki_9f411c9ce14919235efa8edb850dea02" }
+    input: { transactionId: "$YOUR_TRANSACTION_ID" }
   ) {
     ... on SimulateIncomingCheckBookingSuccessPayload {
       __typename
@@ -30,9 +30,9 @@ mutation SimulateCheckBooking {
 }
 ```
 
-## Simulate releasing rolling reserve {#simulate-release-rr}
+## [Simulate releasing rolling reserve](https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVSZWxlYXNlUm9sbGluZ1Jlc2VydmUgewogIHNpbXVsYXRlUmVsZWFzZVJlc2VydmVkQmFsYW5jZSgKICAgIGlucHV0OiB7IHRyYW5zYWN0aW9uSWQ6ICIkWU9VUl9UUkFOU0FDVElPTl9JRCIgfQogICkgewogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFRyYW5zYWN0aW9uTm90Rm91bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogICAgLi4uIG9uIFJlbGVhc2VSZXNlcnZlZEJhbGFuY2VTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogIH0KfQo%3D&tab=test-api) {#simulate-release-rr}
 
-```graphql {3} showLineNumbers
+```graphql {2} showLineNumbers
 mutation SimulateReleaseRollingReserve {
   simulateReleaseReservedBalance(
     input: { transactionId: "$YOUR_TRANSACTION_ID" }
@@ -54,18 +54,21 @@ mutation SimulateReleaseRollingReserve {
 }
 ```
 
-## Simulate rejecting a `checkIn` transaction {#simulate-reject}
+## [Simulate rejecting a `checkIn` transaction](https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVJbmNvbWluZ0NoZWNrUmVqZWN0IHsKICBzaW11bGF0ZUluY29taW5nQ2hlY2tSZWplY3Rpb24oCiAgICBpbnB1dDogewogICAgICB0cmFuc2FjdGlvbklkOiAiJFlPVVJfVFJBTlNBQ1RJT05fSUQiCiAgICAgIHJlYXNvbkNvZGU6IEJlbmVmaWNpYXJ5TWlzc2luZ09ySW5jb3JyZWN0CiAgICB9CiAgKSB7CiAgICAuLi4gb24gU2ltdWxhdGVJbmNvbWluZ0NoZWNrUmVqZWN0aW9uU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHRyYW5zYWN0aW9uSWQKICAgIH0KICAgIC4uLiBvbiBTaW11bGF0ZUluY29taW5nQ2hlY2tSZWplY3Rpb25FcnJvclBheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlYXNvbgogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFRyYW5zYWN0aW9uTm90Rm91bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogIH0KfQo%3D&tab=test-api) {#simulate-reject}
 
 ```graphql {2} showLineNumbers
 mutation SimulateIncomingCheckReject {
-  simulateIncomingCheckReject(
-    input: { transactionId: "$YOUR_TRANSACTION_ID", reasonCode: AccountClosed }
+  simulateIncomingCheckRejection(
+    input: {
+      transactionId: "$YOUR_TRANSACTION_ID"
+      reasonCode: BeneficiaryMissingOrIncorrect
+    }
   ) {
-    ... on SimulateIncomingCheckRejectSuccessPayload {
+    ... on SimulateIncomingCheckRejectionSuccessPayload {
       __typename
       transactionId
     }
-    ... on SimulateIncomingCheckRejectErrorPayload {
+    ... on SimulateIncomingCheckRejectionErrorPayload {
       __typename
       reason
     }
@@ -80,9 +83,10 @@ mutation SimulateIncomingCheckReject {
     }
   }
 }
+
 ```
 
-## Simulate a `checkInReturn` transaction {#simulate-return}
+## [Simulate a `checkInReturn` transaction](https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVDaGVja0luUmV0dXJuIHsKICBzaW11bGF0ZUluY29taW5nQ2hlY2tSZXR1cm4oCiAgICBpbnB1dDogeyB0cmFuc2FjdGlvbklkOiAiJFlPVVJfVFJBTlNBQ1RJT05fSUQiIH0KICApIHsKICAgIC4uLiBvbiBTaW11bGF0ZUluY29taW5nQ2hlY2tSZXR1cm5TdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFRyYW5zYWN0aW9uTm90Rm91bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogIH0KfQo%3D&tab=test-api) {#simulate-return}
 
 ```graphql {2} showLineNumbers
 mutation SimulateCheckInReturn {
@@ -101,6 +105,36 @@ mutation SimulateCheckInReturn {
       __typename
       message
       transactionId
+    }
+  }
+}
+```
+
+## [Simulate generating a test check](https://explorer.swan.io?query=bXV0YXRpb24gUG9zaXRpdmVDaGVjayB7CiAgZ2VuZXJhdGVUZXN0Q2hlY2soaW5wdXQ6IHsgZm5jaVJlc3VsdDogSXJyZWd1bGFyT3JhbmdlIH0pIHsKICAgIC4uLiBvbiBHZW5lcmF0ZUNoZWNrU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNtYzcKICAgICAgcmxtY0tleQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=test-api) {#simulate-generate}
+
+```graphql {2} showLineNumbers
+mutation GenerateCheck {
+  generateTestCheck(input: { fnciResult: IrregularOrange }) {
+    ... on GenerateCheckSuccessPayload {
+      __typename
+      cmc7
+      rlmcKey
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+```json showLineNumbers
+{
+  "data": {
+    "generateTestCheck": {
+      "__typename": "GenerateCheckSuccessPayload",
+      "cmc7": "7750249291141200908359685227068",
+      "rlmcKey": "46"
     }
   }
 }

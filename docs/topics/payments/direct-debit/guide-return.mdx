@@ -15,12 +15,12 @@ Request a refund for a SEPA Direct Debit transaction with the API.
 
 1. Call the `returnTransaction` mutation.
 1. Add the `transactionId` and `consentRedirectUrl`.
-1. Add the `ReturnTransactionSuccessPayload`, including the `consentUrl`.
+1. Add the `ReturnTransactionSuccessPayload`, including the `consentUrl` and `id`.
 1. Add rejections (not shown).
 
 ## Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVmdW5kVHJhbnNhY3Rpb24gewogIHJldHVyblRyYW5zYWN0aW9uKAogICAgaW5wdXQ6IHsKICAgICAgdHJhbnNhY3Rpb25JZDogIiRZT1VSX1RSQU5TQUNUSU9OX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmV0dXJuVHJhbnNhY3Rpb25TdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gUmV0dXJuVHJhbnNhY3Rpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBSZXR1cm5UcmFuc2FjdGlvbk5vdEZvdW5kIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVmdW5kVHJhbnNhY3Rpb24gewogIHJldHVyblRyYW5zYWN0aW9uKAogICAgaW5wdXQ6IHsKICAgICAgdHJhbnNhY3Rpb25JZDogIiRZT1VSX1RSQU5TQUNUSU9OX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmV0dXJuVHJhbnNhY3Rpb25TdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICAgIGlkCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBSZXR1cm5UcmFuc2FjdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFJldHVyblRyYW5zYWN0aW9uTm90Rm91bmQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
 
 ```graphql {2,4-5,8,14,18} showLineNumbers
 mutation RefundTransaction {
@@ -34,6 +34,7 @@ mutation RefundTransaction {
       __typename
       consent {
         consentUrl
+        id
       }
     }
     ... on ReturnTransactionRejection {
@@ -50,6 +51,16 @@ mutation RefundTransaction {
 
 
 
-```json {7,10} showLineNumbers
-
+```json {6-7} showLineNumbers
+{
+  "data": {
+    "returnTransaction": {
+      "__typename": "ReturnTransactionSuccessPayload",
+      "consent": {
+        "consentUrl": "$YOUR_CONSENT_URL",
+        "id": "$YOUR_CONSENT_ID"
+      }
+    }
+  }
+}
 ```

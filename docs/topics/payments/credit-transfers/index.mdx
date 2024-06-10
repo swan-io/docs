@@ -61,6 +61,28 @@ Refer to explanations of types of account balances in the [accounts section](../
 [Statuses for Standing Orders](./sepa/index.mdx#statuses-standing-orders) differ from other credit transfers.
 :::
 
+## Beneficiaries {#beneficiaries}
+
+Add **trusted beneficiaries** to accounts to facilitate credit transfers.
+Adding trusted beneficiaries also reduces the risk of sending a transfer to an unintended beneficiary.
+Beneficiaries *not added* as trusted are **unsaved** beneficiaries.
+
+You can **add trusted beneficiaries with the API**, either with a dedicated mutation or when initiating a credit transfer.
+If you're using Swan's Web Banking interface, eligible account members can add trusted beneficiaries from the app.
+
+An account member with the `canManageBeneficiaries` permission must consent to adding a trusted beneficiary with [Strong Customer Authentication (SCA)](../../users/consent/index.mdx#sca).
+
+### Membership permissions {#beneficiaries-permissions}
+
+How users interact with both trusted and unsaved beneficiaries depends on their [account membership permissions](./memberships/index.mdx#permissions).
+
+| Permission | Beneficiary interaction |
+| --- | --- |
+| `canManageBeneficiaries` | Add trusted beneficiaries. |
+| `canInitiatePayments`<br />*with* `canManageBeneficiaries` | Initiate credit transfers to trusted and unsaved beneficiaries. |
+| `canInitiatePayments`<br />*without* `canManageBeneficiaries` | Initiate transfers to trusted beneficiaries only. |
+| `canViewAccount` | View the list of trusted beneficiaries. |
+
 ## Label and reference {#label-reference}
 
 Add custom labels and references numbers to your SEPA and International Credit Transfers with the API, or, if you're using it, Swan's Web Banking interface.
@@ -93,3 +115,8 @@ Whether your label and reference entries are visible on other financial institut
 - With the API, you can also add an external reference.
 - Share additional information about a transaction only visible to you.
 - Called `externalReference` in the API `transaction` object.
+
+## Guides {#guides}
+
+- [Add a SEPA trusted beneficiary](./sepa/guide-beneficiary-add.mdx)
+- [Add an international trusted beneficiary](./international/guide-beneficiary-add.mdx)

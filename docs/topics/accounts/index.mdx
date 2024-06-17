@@ -96,24 +96,42 @@ import TransactionStatuses from '../partials/_transaction-statuses.mdx';
 
 ### Account statements {#statements}
 
-Each month, Swan **generates account statements** automatically for **all Swan accounts**.
+Each month, Swan **generates account statements** automatically for **all Swan accounts** and use the Central European [Summer] Time (CET/CEST) timezone.
 Statements include all `Booked` transactions from the previous month.
-Access account statements with the API, from your Dashboard, or, if you're using it, Swan's Web Banking interface.
+
+Access account statements with the API by calling the `account` query and adding the `statement` object.
+They're also available from your Dashboard and, if you're using it, Swan's Web Banking interface.
 
 Account statements are available in `.pdf` or `.csv` format by default.
 Statements with more than 10,000 transactions are generated as `.csv` files, even if you request `.pdf`.
 
-Account statements are accessible by calling the `account` query and adding the `statement` object.
+All account statements have a `period` attribute.
+
+- If `period` = `Monthly`, Swan generated the statement.
+- If `period` = `Custom`, the statement was generated following your request.
+
+You can generate statements for a period of up to **three months**.
+If you generate two statements with identical parameters (language, hour, second, and timezone), Swan only generates one statement.
+For the second statement, Swan provides the link to the first statement generated.
+If the language parameter changed, however, a new statement is generated in that language.
 
 #### Custom statements {#statements-custom}
 
 You can also access the raw data and **generate custom statements**.
-For example, you might need a format Swan doesn't provide, or you might want customize the style. 
 
-As a regulated financial institution, account statements fall under compliance rules, and you might need to **get your custom statements approved**. Please work with your dedicated Technical Account Manager before releasing a custom statements.
+For example, you might:
+
+- Need a provide a format Swan doesn't support.
+- Want to customize the style.
+- Prefer to use a different timezone than Central European [Summer] Time (CET/CEST).
 
 Note that even if you use custom statements, Swan generates statements each month.
 If audited, Swan's account statement is the official version.
+
+:::caution Custom statement approval
+As a regulated financial institution, account statements fall under compliance rules.
+You might need to **get your custom statements approved**. Please work with your dedicated Technical Account Manager before releasing a custom account statement.
+:::
 
 ### Bank details {#bank-details}
 

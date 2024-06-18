@@ -5,6 +5,7 @@ title: Get enriched information about card transactions
 # Get enriched information about card transactions
 
 You can **call the API** to get [enriched information about card transactions](./index.mdx#enriched).
+
 Enriched information is also available on your Dashboard by going to **Data** > **Transactions** > **Details**.
 
 :::tip Prerequisites
@@ -15,47 +16,39 @@ You need a **project access token** to call the query.
 
 1. Call the `transaction` query.
 1. Add the transaction ID.
-1. Add `CardTransaction`, then `enrichedTransactionInfo`.
+1. Add `CardTransaction` (line 3), then `enrichedTransactionInfo` (line 5).
 1. Choose all the enriched information you'd like to review about the card transaction.
 
 ## Query {#query}
 
-🔎 [Open the query in API Explorer]
+🔎 [Open the query in API Explorer](https://explorer.preprod.swan.io?query=cXVlcnkgRW5yaWNoZWRUcmFuc2FjdGlvbkluZm8gewogIHRyYW5zYWN0aW9uKGlkOiAiJFRSQU5TQUNUSU9OX0lEIikgewogICAgLi4uIG9uIENhcmRUcmFuc2FjdGlvbiB7CiAgICAgIGlkCiAgICAgIGVucmljaGVkVHJhbnNhY3Rpb25JbmZvIHsKICAgICAgICBhZGRyZXNzCiAgICAgICAgY2FyYm9uRm9vdHByaW50CiAgICAgICAgY2F0ZWdvcnkKICAgICAgICBjaXR5CiAgICAgICAgY29udGFjdEVtYWlsCiAgICAgICAgY29udGFjdFBob25lCiAgICAgICAgY29udGFjdFdlYnNpdGUKICAgICAgICBjb3VudHJ5CiAgICAgICAgZW5yaWNoZWRNZXJjaGFudE5hbWUKICAgICAgICBpc1N1YnNjcmlwdGlvbgogICAgICAgIGxhdGl0dWRlCiAgICAgICAgbG9nb1VybAogICAgICAgIGxvbmdpdHVkZQogICAgICAgIHBvc3RhbENvZGUKICAgICAgICBzdWJjYXRlZ29yeQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
-<mark>GET QUERY FROM PREPROD WHEN AVAILABLE</mark>
-
-```graphql {2,3,12} showLineNumbers
-query MyQuery {
+```graphql {2,3,5} showLineNumbers
+query EnrichedTransactionInfo {
   transaction(id: "$TRANSACTION_ID") {
     ... on CardTransaction {
       id
-      merchantCategoryCode
-      merchantCategoryDescription
-      merchantCity
-      merchantCountry
-      merchantId
-      merchantPostalCode
-      merchantName
       enrichedTransactionInfo {
-        enrichedMerchantName
-        logoUrl
-        category
-        subcategory
-        country
-        city
         address
-        longitude
-        latitude
-        postalcode
-        isSubscription
         carbonFootprint
+        category
+        city
         contactEmail
         contactPhone
         contactWebsite
+        country
+        enrichedMerchantName
+        isSubscription
+        latitude
+        logoUrl
+        longitude
+        postalCode
+        subcategory
       }
     }
   }
 }
+
 ```
 
 ## Payload {#payload}
@@ -64,6 +57,29 @@ query MyQuery {
 When new values aren't mapped yet, they're marked `Other`.
 :::
 
-```json {2} showLineNumbers
-
+```json showLineNumbers
+{
+  "data": {
+    "transaction": {
+      "id": "$TRANSACTION_ID",
+      "enrichedTransactionInfo": {
+        "address": null,
+        "carbonFootprint": null,
+        "category": null,
+        "city": null,
+        "contactEmail": null,
+        "contactPhone": null,
+        "contactWebsite": null,
+        "country": null,
+        "enrichedMerchantName": null,
+        "isSubscription": null,
+        "latitude": null,
+        "logoUrl": null,
+        "longitude": null,
+        "postalCode": null,
+        "subcategory": null
+      }
+    }
+  }
+}
 ```

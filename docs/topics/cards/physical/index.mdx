@@ -4,7 +4,7 @@ title: Physical cards
 
 # Physical cards
 
-import PhysicalCardsDefinition from '../../definitions/_cards-physical.mdx';
+import PhysicalCardsDefinition from "../../definitions/_cards-physical.mdx";
 
 > <PhysicalCardsDefinition />
 
@@ -27,9 +27,10 @@ If your card holder's name is longer than 20 characters, the initial of their fi
 If the first initial + last name combination still exceeds 20 characters, their first name plus last initial is used instead.
 
 :::note Abbreviation example
+
 - The name `Emilia Prommenschenkel` would be abbreviated to `E. Prommenschenkel`.
 - The name `Mikah Ottovordemgentschenfelde` would be abbreviated to `Mikah O.`.
-:::
+  :::
 
 ### Card number {#number}
 
@@ -39,9 +40,10 @@ Swan makes the physical card's number, CVC, expiry date, and the PIN available i
 The **card number**, **CVC**, and **PIN** are considered sensitive data and must be **masked by default**.
 The card holder must complete a **consent request** before the numbers can be unmasked.
 
-import VirtualPhysicalCardNumbers from '../partials/_card-numbers.mdx';
+import VirtualPhysicalCardNumbers from "../partials/_card-numbers.mdx";
 
 :::info Virtual and physical card numbers
+
 <VirtualPhysicalCardNumbers />
 :::
 
@@ -100,16 +102,16 @@ The hub has several intended destinations:
 - France
 - Northern Europe
 - French overseas departments and territories (DROM-COM):
-    - French Southern Territories (ATF), Saint Barthélemy (BLM), Faroe Islands (FRO), Guadeloupe (GLP), French Guiana (GUF), Saint Martin (Dutch part) (MAF), Martinique (MTQ), Mayotte (MYT), New Caledonia (NCL), French Polynesia (PYF), Réunion (REU), Saint Pierre and Miquelon (SPM), and Wallis and Futuna (WLF)
+  - French Southern Territories (ATF), Saint Barthélemy (BLM), Faroe Islands (FRO), Guadeloupe (GLP), French Guiana (GUF), Saint Martin (Dutch part) (MAF), Martinique (MTQ), Mayotte (MYT), New Caledonia (NCL), French Polynesia (PYF), Réunion (REU), Saint Pierre and Miquelon (SPM), and Wallis and Futuna (WLF)
 
 You have the option of **group** or **non-group delivery**.
 
-| Delivery type | Destination | Shipping provider |
-| --- | --- | --- |
-| Group delivery | All locations | DHL |
-| Tracked non-group delivery | France and DROM-COM | La Poste |
-| Tracked non-group delivery | Northern Europe and unlisted locations | DHL |
-| Untracked non-group delivery | Northern Europe and unlisted locations | La Poste |
+| Delivery type                | Destination                            | Shipping provider |
+| ---------------------------- | -------------------------------------- | ----------------- |
+| Group delivery               | All locations                          | DHL               |
+| Tracked non-group delivery   | France and DROM-COM                    | La Poste          |
+| Tracked non-group delivery   | Northern Europe and unlisted locations | DHL               |
+| Untracked non-group delivery | Northern Europe and unlisted locations | La Poste          |
 
 ### 🇪🇸 Spain hub {#hubs-spain}
 
@@ -121,12 +123,12 @@ The hub has two intended destinations:
 
 You have the option of **group** or **non-group delivery**.
 
-| Delivery type | Destination | Shipping provider |
-| --- | --- | --- |
-| Group delivery | Spain and Portugal | Nacex ∗ |
-| Tracked non-group delivery | Spain and Portugal | Correos |
+| Delivery type              | Destination        | Shipping provider |
+| -------------------------- | ------------------ | ----------------- |
+| Group delivery             | Spain and Portugal | Nacex ∗           |
+| Tracked non-group delivery | Spain and Portugal | Correos           |
 
-∗ *If you choose the Spain hub but ship using group delivery outside of Spain or Portugal, the shipping provider is DHL.*
+∗ _If you choose the Spain hub but ship using group delivery outside of Spain or Portugal, the shipping provider is DHL._
 
 ## Physical card statuses {#statuses}
 
@@ -168,18 +170,18 @@ The statuses `ToRenew` and `Renewed` don't appear in the status diagram intentio
 Please refer to the [section on renewing cards](#renew) for more details about these statuses.
 :::
 
-| Physical card status | Explanation |
-|---|---|
-| `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation. |
-| `ConsentPending` | Request to print a physical card was received and is waiting for the card holder's consent.<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the card holder consents, the status moves to `Processing`.</li><li>If you used the `printPhysicalCard` mutation and the card holder consents, the status moves to `Activated`.</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`.</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`.</li></ul> |
-| `Processing` | The card is in the process of being created with Swan's card issuing provider.<br/><br/>**Next steps**:<ul><li>After the card is created successfully in the card issuing provider's system, the status moves to `ToActivate`.</li><li>If you cancel the card with the API *before* the card issuing provider creates the card, the status moves to `Canceling`.</li></ul> |
-| `ToActivate` | The card is being printed by Swan's card issuing provider, then delivered to the card holder.<br/><br/>After the card holder receives the physical card, they need to activate it by performing a first transaction and entering the PIN. You can also activate the card with the `activatePhysicalCard` mutation.<br/><br/>**Next steps**:<ul><li>If the card holder performs the transaction successfully, or you activate the card with the API, the status moves to `ToActivate`.</li><li>If the card holder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`.</li></ul> |
-| `Activated` | Physical card is available for use.<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Activated` until the renewal period.</li><li>`Activated` cards can also be `Suspended` and `Canceled` (example: if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`).</li></ul> |
-| `Suspended`<br /><br />Also referred to as *Blocked* | Physical card is suspended and not available for use. Card holders can still view card information and use digital cards (not virtual cards) when a physical card is `Suspended`.<br/><br/>*Cards can be suspended for various reasons, including a request from you or the card holder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API.</li><li>Cancel the card with the API.</li></ul> |
-| `Canceling` | Card is in the process of being canceled.<br/><br/>**Next steps**: Card is `Canceled`. After a card is assigned the `Canceling` status, the process can't be reversed. |
-| `Canceled` | Card is canceled, no longer available for use, and can't be reactivated. |
-| `ToRenew` | Card needs to be renewed. |
-| `Renewed` | Card is renewed. The status returns to `Activated` after the first transaction is made with the new card. |
+| Physical card status                                 | Explanation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Initiated`                                          | Printing a physical was launched with either the `printPhysicalCard` or `addCards` _with physical card_ mutation.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `ConsentPending`                                     | Request to print a physical card was received and is waiting for the card holder's consent.<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the card holder consents, the status moves to `Processing`.</li><li>If you used the `printPhysicalCard` mutation and the card holder consents, the status moves to `Activated`.</li><li>If you cancel the card with the API _before_ consent, the status moves to `Canceling`.</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`.</li></ul>                                                              |
+| `Processing`                                         | The card is in the process of being created with Swan's card issuing provider.<br/><br/>**Next steps**:<ul><li>After the card is created successfully in the card issuing provider's system, the status moves to `ToActivate`.</li><li>If you cancel the card with the API _before_ the card issuing provider creates the card, the status moves to `Canceling`.</li></ul>                                                                                                                                                                                                                                         |
+| `ToActivate`                                         | The card is being printed by Swan's card issuing provider, then delivered to the card holder.<br/><br/>After the card holder receives the physical card, they need to activate it by performing a first transaction and entering the PIN. You can also activate the card with the `activatePhysicalCard` mutation.<br/><br/>**Next steps**:<ul><li>If the card holder performs the transaction successfully, or you activate the card with the API, the status moves to `ToActivate`.</li><li>If the card holder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`.</li></ul> |
+| `Activated`                                          | Physical card is available for use.<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Activated` until the renewal period.</li><li>`Activated` cards can also be `Suspended` and `Canceled` (example: if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`).</li></ul>                                                                                                                                                                                                                                                                                          |
+| `Suspended`<br /><br />Also referred to as _Blocked_ | Physical card is suspended and not available for use. Card holders can still view card information and use digital cards (not virtual cards) when a physical card is `Suspended`.<br/><br/>_Cards can be suspended for various reasons, including a request from you or the card holder, or a Swan action in the case of suspicious activity._<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API.</li><li>Cancel the card with the API.</li></ul>                                                                                                                                    |
+| `Canceling`                                          | Card is in the process of being canceled.<br/><br/>**Next steps**: Card is `Canceled`. After a card is assigned the `Canceling` status, the process can't be reversed.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `Canceled`                                           | Card is canceled, no longer available for use, and can't be reactivated.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `ToRenew`                                            | Card needs to be renewed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `Renewed`                                            | Card is renewed. The status returns to `Activated` after the first transaction is made with the new card.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 ## Renewing physical cards {#renew}
 
@@ -222,15 +224,15 @@ flowchart LR
 ## Guides {#guides}
 
 - [Print physical cards](./guide-print.mdx)
-    - Print a physical card
-    - Print multiple physical cards
-    - Print a custom physical card
-    - Print multiple physical cards with group delivery
+  - Print a physical card
+  - Print multiple physical cards
+  - Print a custom physical card
+  - Print multiple physical cards with group delivery
 - [Activate physical cards](./guide-activate.mdx)
 - [View sensitive information](./guide-view-info.mdx)
-    - View physical card number
-    - View PIN
+  - View physical card number
+  - View PIN
 - [Block & unblock physical cards](./guide-block-unblock.mdx)
-    - Temporarily block a physical card
-    - Unblock a physical card
+  - Temporarily block a physical card
+  - Unblock a physical card
 - [Cancel physical cards](./guide-cancel.mdx)

@@ -62,12 +62,15 @@ type Mutation {
   cancelConsent(input: CancelConsentInput!): CancelConsentPayload!
 }
 
-union CancelConsentPayload = CancelConsentSuccessPayload | ConsentNotFoundRejection
+union CancelConsentPayload =
+  | CancelConsentSuccessPayload
+  | ConsentNotFoundRejection
 
 type CancelConsentSuccessPayload {
   consent: Consent!
 }
 ```
+
 A canceled consent returns the `CancelConsentPayload`.
 However, if the consent couldn't be found, the API returns the `ConsentNotFoundRejection`.
 

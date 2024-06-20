@@ -4,13 +4,13 @@ title: Individual account onboarding
 
 # Individual account onboarding
 
-import IndividualOnboardingDefinition from '../../definitions/_onboarding-individual.mdx';
+import IndividualOnboardingDefinition from "../../definitions/_onboarding-individual.mdx";
 
 > <IndividualOnboardingDefinition />
 
 ## Process overview {#overview}
 
-import OnboardingOverview from '../partials/_overview.mdx';
+import OnboardingOverview from "../partials/_overview.mdx";
 
 <OnboardingOverview accountType="an individual" />
 
@@ -21,8 +21,8 @@ Through the individual onboarding form, Swan collects the following information:
 1. User's **email address**.
 1. User's **country of residence** and **residence address**.
 1. Basic details about the **user's employment** and **financial situation**. This information allows Swan to perform two essential tasks:
-    * During onboarding, Swan completes an identity analysis (Know Your Customer, or KYC).
-    * For the lifetime of the account, Swan monitors for fraud.
+   - During onboarding, Swan completes an identity analysis (Know Your Customer, or KYC).
+   - For the lifetime of the account, Swan monitors for fraud.
 1. User [**signs up**](../../users/index.mdx#signup) for Swan.
 
 ## Identification recommendations {#identification-recommendations}
@@ -31,41 +31,41 @@ Swan must verify the identity of every user.
 Swan supports multiple [identification processes](../../users/identifications/index.mdx#levels-processes).
 For individual onboarding, the following levels are recommended based on the account country.
 
-| Account country | Recommended level<br/>for individuals | Other supported levels |
-|---|---|---|
-| 🇫🇷 France | ✓ **PVID** | Expert + first transfer<br/>QES |
-| 🇩🇪 Germany | ✓ **QES + first transfer** | *none* |
-| 🇳🇱 Netherlands | ✓ **Expert** | QES<br/>PVID |
-| 🇪🇸 Spain | ✓ **Expert** | QES<br/>PVID |
+| Account country | Recommended level<br/>for individuals | Other supported levels          |
+| --------------- | ------------------------------------- | ------------------------------- |
+| 🇫🇷 France       | ✓ **PVID**                            | Expert + first transfer<br/>QES |
+| 🇩🇪 Germany      | ✓ **QES + first transfer**            | _none_                          |
+| 🇳🇱 Netherlands  | ✓ **Expert**                          | QES<br/>PVID                    |
+| 🇪🇸 Spain        | ✓ **Expert**                          | QES<br/>PVID                    |
 
 ## Country requirements for individual accounts {#country-reqs}
 
-import CountryReqs from '../partials/_country-reqs.mdx';
+import CountryReqs from "../partials/_country-reqs.mdx";
 
 <CountryReqs thisAccountType="individual" thatAccountType="company" />
 
 For individual accounts, use the `onboardIndividualAccountHolder` mutation to collect the following information according to your desired account country.
 If the cell is empty, the field is optional.
 
-| API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|---|---|---|---|
-|`accountCountry`| ✓ Required (**FRA**) | ✓ Required (**DEU**) | ✓ Required (**NLD**) | ✓ Required (**ESP**) |
-|`accountName`|  |  |  |  |
-|`email`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`employmentStatus`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`language`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`monthlyIncome`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`redirectUrl`|  |  |  |  |
-|`residencyAddress.addressLine1`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.addressLine2`|  |  |  |
-|`residencyAddress.city`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.country`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.postalCode`| ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.state`|  |  |  |  |
-|`taxIdentificationNumber`|  | ∗ 90 days |  |  |
+| API field                       | 🇫🇷<br/>France        | 🇩🇪<br/>Germany       | 🇳🇱<br/>Netherlands   | 🇪🇸<br/>Spain         |
+| ------------------------------- | -------------------- | -------------------- | -------------------- | -------------------- |
+| `accountCountry`                | ✓ Required (**FRA**) | ✓ Required (**DEU**) | ✓ Required (**NLD**) | ✓ Required (**ESP**) |
+| `accountName`                   |                      |                      |                      |                      |
+| `email`                         | ✓ Required           | ✓ Required           | ✓ Required           | ✓ Required           |
+| `employmentStatus`              | ✓ Required           | ✓ Required           | ✓ Required           | ✓ Required           |
+| `language`                      | ✓ Required           | ✓ Required           | ✓ Required           | ✓ Required           |
+| `monthlyIncome`                 | ✓ Required           | ✓ Required           | ✓ Required           | ✓ Required           |
+| `redirectUrl`                   |                      |                      |                      |                      |
+| `residencyAddress.addressLine1` | ✓ Required           | ✓ Required           | ✓ Required           | ✓ Required           |
+| `residencyAddress.addressLine2` |                      |                      |                      |
+| `residencyAddress.city`         | ✓ Required           | ✓ Required           | ✓ Required           | ✓ Required           |
+| `residencyAddress.country`      | ✓ Required           | ✓ Required           | ✓ Required           | ✓ Required           |
+| `residencyAddress.postalCode`   | ✓ Required           | ✓ Required           | ✓ Required           | ✓ Required           |
+| `residencyAddress.state`        |                      |                      |                      |                      |
+| `taxIdentificationNumber`       |                      | ∗ 90 days            |                      |                      |
 
-∗ *If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
-Otherwise, the account will be suspended.*
+∗ _If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
+Otherwise, the account will be suspended._
 
 ## User flow diagrams {#diagrams}
 
@@ -83,7 +83,9 @@ Otherwise, the account will be suspended.*
 </details>
 
 <details>
-  <summary>End-user perspective of providing individual onboarding documents</summary>
+  <summary>
+    End-user perspective of providing individual onboarding documents
+  </summary>
   <div>
     <iframe
       src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F7K15ufXZK7Zgan770kkTmq%2FUser-flow-diagrams%3Ftype%3Ddesign%26node-id%3D1%253A1933%26mode%3Ddesign%26t%3DVw8fufZTNCMDmRR5-1"
@@ -97,5 +99,5 @@ Otherwise, the account will be suspended.*
 
 Use the following guides to start and complete the individual onboarding process.
 
-* [Create an individual onboarding link](./guide-create.mdx)
-* [Update an individual onboarding](./guide-update.mdx)
+- [Create an individual onboarding link](./guide-create.mdx)
+- [Update an individual onboarding](./guide-update.mdx)

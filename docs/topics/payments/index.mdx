@@ -4,8 +4,8 @@ title: Payments overview
 
 # Payments overview
 
-import PaymentsDefinition from '../definitions/_payments.mdx';
-import TransactionsDefinition from '../definitions/_transactions.mdx';
+import PaymentsDefinition from "../definitions/_payments.mdx";
+import TransactionsDefinition from "../definitions/_transactions.mdx";
 
 Swan uses of a combination of **payments** and **transactions** to accomplish all financial operations.
 
@@ -20,10 +20,10 @@ A payment is:
 
 Swan executes several types of payments:
 
-* [Credit transfers](./credit-transfers/index.mdx)
-* [Direct debit](./direct-debit/index.mdx)
-* [Card payments](./cards/index.mdx)
-* [French check payments](../merchants/checks/index.mdx) *(merchant offer only)*
+- [Credit transfers](./credit-transfers/index.mdx)
+- [Direct debit](./direct-debit/index.mdx)
+- [Card payments](./cards/index.mdx)
+- [French check payments](../merchants/checks/index.mdx) _(merchant offer only)_
 
 ### Payment ID {#payments-id}
 
@@ -48,11 +48,11 @@ flowchart LR
     style F fill:#fffdf4,stroke:#cca922
 ```
 
-| Status | Explanation |
-|---|---|
+| Status           | Explanation                                                                                                                                                                                                                          |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `ConsentPending` | Status only occurs when consent is required for the payment<br/><br/>**Next step**: Transaction flow blocked while waiting for consent; when consent is received, transaction flow resumes and payment status changes to `Initiated` |
-| `Initiated` | Payment successfully requested; enters the [transaction flow](#transactions-statuses) |
-| `Rejected` | Payment rejected, either directly after payment initiation or from the `Initiated` status |
+| `Initiated`      | Payment successfully requested; enters the [transaction flow](#transactions-statuses)                                                                                                                                                |
+| `Rejected`       | Payment rejected, either directly after payment initiation or from the `Initiated` status                                                                                                                                            |
 
 ### Push and pull payments {#payments-push-pull}
 
@@ -79,16 +79,16 @@ Additionally, since pull payments are initiated by the creditor and not the debt
 
 > <TransactionsDefinition />
 
-A single payment is a group  of **one** or **several transactions**.
+A single payment is a group of **one** or **several transactions**.
 All transactions go through a **scoring service** to determine if the transaction is compliant and if the [account's `Available` balance](../accounts/index.mdx#balances) is sufficient to cover the transaction.
 
 Transactions are created asynchronously after a payment is initiated.
 In the API, you'll work **primarily with transactions** when seeking information about payments.
 
-For example, two *transactions* are required if you try to send a single SEPA Credit Transfer (SCT) *payment* to an IBAN that doesn't exist.
+For example, two _transactions_ are required if you try to send a single SEPA Credit Transfer (SCT) _payment_ to an IBAN that doesn't exist.
 
-* Transaction #1: Funds sent with an outgoing SCT to the SEPA network.
-* Transaction #2: Funds returned with a separate transaction from the target bank.
+- Transaction #1: Funds sent with an outgoing SCT to the SEPA network.
+- Transaction #2: Funds returned with a separate transaction from the target bank.
 
 ### Transaction ID {#transactions-id}
 
@@ -106,7 +106,7 @@ Transactions directly impact [account balances](../accounts/index.mdx#balances).
 Refer to the schemas for [credit transfers](./credit-transfers/index.mdx#statuses), [direct debits](./direct-debit/index.mdx#statuses), and [cards](./cards/index.mdx#statuses) for more information about statuses for that payment method.
 Not all statuses are used for all transaction types.
 
-import TransactionStatuses from '../partials/_transaction-statuses.mdx';
+import TransactionStatuses from "../partials/_transaction-statuses.mdx";
 
 <TransactionStatuses />
 
@@ -141,8 +141,8 @@ Swan uses the SEPA Credit Transfer, SEPA Instant Credit Transfer, SEPA Direct De
 
 SEPA countries and territories include both European Union (EU) and non-EU members.
 
-* **EU members**: Austria, Belgium, Bulgaria, Cyprus, Croatia, Czech Republic, Denmark, Estonia, Finland (including the Aland Islands), France (including French Guiana, Guadeloupe, Martinique, Mayotte, Saint Barthelemy, French Saint Martin, Reunion, and Saint Pierre and Miquelon), Germany, Greece, Hungary, Republic of Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland, Portugal (including Madeira and Azores), Romania, Slovenia, Slovakia, Spain (including Ceuta, Melilla, and the Canary Islands), and Sweden.
-* **Non-EU members**: Andorra, Iceland, Liechtenstein, Monaco, Norway, San Marino, Switzerland, United Kingdom (including Gibraltar), and Vatican City State/Holy See.
+- **EU members**: Austria, Belgium, Bulgaria, Cyprus, Croatia, Czech Republic, Denmark, Estonia, Finland (including the Aland Islands), France (including French Guiana, Guadeloupe, Martinique, Mayotte, Saint Barthelemy, French Saint Martin, Reunion, and Saint Pierre and Miquelon), Germany, Greece, Hungary, Republic of Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland, Portugal (including Madeira and Azores), Romania, Slovenia, Slovakia, Spain (including Ceuta, Melilla, and the Canary Islands), and Sweden.
+- **Non-EU members**: Andorra, Iceland, Liechtenstein, Monaco, Norway, San Marino, Switzerland, United Kingdom (including Gibraltar), and Vatican City State/Holy See.
 
 :::note SEPA official list
 SEPA's scope with all of these countries and territories depends on licensing and local regulations.
@@ -151,7 +151,7 @@ Refer to the [EPC's official list](https://www.europeanpaymentscouncil.eu/docume
 
 ### SEPA availability {#sepa-availability}
 
-SEPA follows the Governing Council of the European Central Bank's *Trans-European Automated Real-time Gross settlement Express Transfer* (TARGET) system.
+SEPA follows the Governing Council of the European Central Bank's _Trans-European Automated Real-time Gross settlement Express Transfer_ (TARGET) system.
 TARGET closing days were [established in the year 2000](https://www.ecb.europa.eu/press/pr/date/2000/html/pr001214_4.en.html), so this system is long-standing and predictable.
 
 The SEPA network is unavailable on TARGET closing days:
@@ -171,8 +171,8 @@ Refer to the European Central Bank's [operational status page](https://www.ecb.e
 
 ## Guides {#guides}
 
-* [Get payment information](./overview/guide-get-payment-info.mdx)
-* [Get a payment ID](./overview/guide-get-payment-id.mdx)
-* [Get transaction information](./overview/guide-get-transaction-info.mdx)
-* [Get a transaction ID](./overview/guide-get-transaction-id.mdx)
-* [Get a list of transactions](./overview/guide-get-transaction-list.mdx)
+- [Get payment information](./overview/guide-get-payment-info.mdx)
+- [Get a payment ID](./overview/guide-get-payment-id.mdx)
+- [Get transaction information](./overview/guide-get-transaction-info.mdx)
+- [Get a transaction ID](./overview/guide-get-transaction-id.mdx)
+- [Get a list of transactions](./overview/guide-get-transaction-list.mdx)

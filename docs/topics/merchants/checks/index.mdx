@@ -25,9 +25,9 @@ When declaring checks with the API, there are five mandatory API fields:
 1. `amount`: monetary amount of the check (can't exceed 10 000€).
 1. `currency`: `EUR` (only euros are supported).
 1. `CMC7` (Caractères Magnétiques Codés à 7 bâtonnets): 31-digit code composed of 3 series of numbers.
-    - Series 1: check number; 7 digits
-    - Series 2: interbank codes; 12 digits
-    - Series 3: account number; 12 digits
+   - Series 1: check number; 7 digits
+   - Series 2: interbank codes; 12 digits
+   - Series 3: account number; 12 digits
 1. `rlmcKey` (Recomposition de la Ligne Magnétique du Chèque): 2-digit code surrounded by chevrons `< >` or parentheses `( )` calculated based on the CMC7.
 1. `merchantProfileId`: your developers should enter the merchant's profile ID number.
 
@@ -35,13 +35,13 @@ On the **back of the check**, the merchant must write their Swan account number 
 
 ## Rolling reserve {#rolling-reserve}
 
-import RollingReserve from '../partials/_rolling-reserve.mdx';
+import RollingReserve from "../partials/_rolling-reserve.mdx";
 
 <RollingReserve />
 
-| Payment method | Rolling reserve | Default amount |
-| --- | --- | --- |
-| French checks | ✓ **Yes** | 100% over 10 business days |
+| Payment method | Rolling reserve | Default amount             |
+| -------------- | --------------- | -------------------------- |
+| French checks  | ✓ **Yes**       | 100% over 10 business days |
 
 ## Settlement date and booked time {#settlement}
 
@@ -49,12 +49,12 @@ Checks are booked 2-3 business days after they arrive at the check processing ce
 
 ## FNCI & verifying checks {#fnci}
 
-The FNCI stands for *Le fichier national des chèques irréguliers*, meaning the National Irregular Check Register.
-It's a database of stolen and opposed checks made available to remitters by the *Banque de France*, helping you and your users **reduce the risk** of cashing fraudulent checks.
+The FNCI stands for _Le fichier national des chèques irréguliers_, meaning the National Irregular Check Register.
+It's a database of stolen and opposed checks made available to remitters by the _Banque de France_, helping you and your users **reduce the risk** of cashing fraudulent checks.
 
-When your merchants accept check payments with Swan, Swan **verifies the check's regularity** with the *Banque de France*.
+When your merchants accept check payments with Swan, Swan **verifies the check's regularity** with the _Banque de France_.
 You **receive the result** of a check's verification **with the API**, and your merchants see the result if you're using Swan's Web Banking interface.
-If you're not using Web Banking, consider **integrating the FNCI result** in your product. 
+If you're not using Web Banking, consider **integrating the FNCI result** in your product.
 
 ### FNCI results {#fnci-results}
 
@@ -72,21 +72,44 @@ With the results, you receive the **name of the bank that issued the check** alo
     <td>Positive, meaning the check isn't fraudulent.</td>
   </tr>
   <tr>
-    <td>**Orange**<br />**White**<br />**Red**</td>
-    <td>Irregular, meaning there's something wrong with the check. For example, the account might be closed, the account holder might not be allowed to write checks, or the check might have been reported as lost or stolen.<br /><br />⛔ Swan **doesn't accept** checks with the color code orange, white, or red.</td>
+    <td>
+      **Orange**
+      <br />
+      **White**
+      <br />
+      **Red**
+    </td>
+    <td>
+      Irregular, meaning there's something wrong with the check. For example,
+      the account might be closed, the account holder might not be allowed to
+      write checks, or the check might have been reported as lost or stolen.
+      <br />
+      <br />⛔ Swan **doesn't accept** checks with the color code orange, white,
+      or red.
+    </td>
   </tr>
   <tr>
     <td rowspan="3">Check Payment Control (CPT)</td>
     <td>**CPT1**</td>
-    <td>Number of FNCI verifications performed on the current day for checks issued by the account holder.</td>
+    <td>
+      Number of FNCI verifications performed on the current day for checks
+      issued by the account holder.
+    </td>
   </tr>
   <tr>
     <td>**CPT2**</td>
-    <td>Number of FNCI verifications conducted in the past few days for checks issued by the same account holder.</td>
+    <td>
+      Number of FNCI verifications conducted in the past few days for checks
+      issued by the same account holder.
+    </td>
   </tr>
   <tr>
     <td>**CPT3**</td>
-    <td>Number of FNCI verifications in recent days for checks issued by the same account holder, typically over a different or extended time period as compared to CPT2.</td>
+    <td>
+      Number of FNCI verifications in recent days for checks issued by the same
+      account holder, typically over a different or extended time period as
+      compared to CPT2.
+    </td>
   </tr>
   <tr>
     <td colspan="2">Holder establishment</td>
@@ -112,18 +135,18 @@ Additionally, all checks not sent to Swan's check provider within 30 days of bei
 
 A check transaction can be rejected for the following reasons:
 
-| Rejection reason | Explanation |
-| --- | --- |
-| `AmountMismatch` | Amount on the check and amount declared through the API don't match |
-| `BeneficiaryMissingOrIncorrect` | Merchant's name is missing or incorrect |
-| `CheckReceivedLate` | Check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check |
-| `DateMissing` | There's no date on the check |
-| `DateInvalid` | Date on the check is in the future or isn't valid |
-| `DebtorNameMissing` | Debtor's name (merchant's customer) must appear on the check |
-| `EndorsementMissing` | Merchant didn't sign the back of the check or provide their Swan account number |
-| `InvalidOrMissingAmount` | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters) |
-| `SignatureMissing` | Signature is missing, or there was a problem with the signature |
-| `SuspiciousCheck` | Suspicion of fraud |
+| Rejection reason                | Explanation                                                                                                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AmountMismatch`                | Amount on the check and amount declared through the API don't match                                                                               |
+| `BeneficiaryMissingOrIncorrect` | Merchant's name is missing or incorrect                                                                                                           |
+| `CheckReceivedLate`             | Check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check |
+| `DateMissing`                   | There's no date on the check                                                                                                                      |
+| `DateInvalid`                   | Date on the check is in the future or isn't valid                                                                                                 |
+| `DebtorNameMissing`             | Debtor's name (merchant's customer) must appear on the check                                                                                      |
+| `EndorsementMissing`            | Merchant didn't sign the back of the check or provide their Swan account number                                                                   |
+| `InvalidOrMissingAmount`        | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters)   |
+| `SignatureMissing`              | Signature is missing, or there was a problem with the signature                                                                                   |
+| `SuspiciousCheck`               | Suspicion of fraud                                                                                                                                |
 
 ### Returned {#returned}
 
@@ -140,7 +163,7 @@ Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `check
 
 ### Canceled {#canceled}
 
-Creditors can cancel a received check with the `Upcoming` status *unless* the check processing center already received the check.
+Creditors can cancel a received check with the `Upcoming` status _unless_ the check processing center already received the check.
 In this case of a canceled check, the status switches automatically to `Canceled`.
 This transaction won't impact the account's available balance.
 

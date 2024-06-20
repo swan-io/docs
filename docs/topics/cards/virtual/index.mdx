@@ -4,7 +4,7 @@ title: Virtual cards
 
 # Virtual cards
 
-import VirtualCardsDefinition from '../../definitions/_cards-virtual.mdx';
+import VirtualCardsDefinition from "../../definitions/_cards-virtual.mdx";
 
 > <VirtualCardsDefinition />
 
@@ -24,9 +24,10 @@ Swan makes the virtual card's number, CVC, and expiry date available in Web Bank
 The **card number** and **CVC** are considered sensitive data and must be **masked by default**.
 The card holder must complete a **consent request** before the numbers can be unmasked.
 
-import VirtualPhysicalCardNumbers from '../partials/_card-numbers.mdx';
+import VirtualPhysicalCardNumbers from "../partials/_card-numbers.mdx";
 
 :::info Virtual & physical card numbers
+
 <VirtualPhysicalCardNumbers />
 :::
 
@@ -52,7 +53,7 @@ For one-off cards, the `AccountHolderSpendingLimit.period` is `Always`.
 
 ### Recurring {#suv-recurring}
 
-You can think of recurring SUV cards as single *merchant* virtual cards.
+You can think of recurring SUV cards as single _merchant_ virtual cards.
 The `AccountHolderSpendingLimit.period` is **not** `Always`.
 
 When the card holder uses a recurring SUV card for the first time, Swan restricts the card to the merchant ID that triggered the authorization.
@@ -62,7 +63,7 @@ However, if the card holder tries to use the card elsewhere, the transaction wil
 
 ## Virtual card statuses {#statuses}
 
-*These statuses also represent the status of the Swan card contract.*
+_These statuses also represent the status of the Swan card contract._
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -89,20 +90,20 @@ flowchart LR
     style U fill:#dfedf2,stroke:#4d8296,stroke-width:3px
 ```
 
-| Virtual card status | Explanation |
-|---|---|
-| `ConsentPending` | Virtual card was added and is waiting for the card holder's consent<br/><br/>**Next steps**:<ul><li>If consent is refused or fails, the status moves directly to `Canceled`</li><li>Otherwise, the status moves to `Processing`</li></ul> |
-| `Processing` | Consent has been received and the card is being prepared<br/><br/>Status used uniquely when adding multiple virtual cards (`addCards` mutation) |
-| `Enabled` | Virtual card is available for use |
-| `Canceling` | Card is in the process of being canceled<br/><br/>After a card is assigned the `Canceling` status, the process can't be reversed |
-| `Canceled` | Card is canceled, no longer available for use, and can't be reactivated |
+| Virtual card status | Explanation                                                                                                                                                                                                                               |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ConsentPending`    | Virtual card was added and is waiting for the card holder's consent<br/><br/>**Next steps**:<ul><li>If consent is refused or fails, the status moves directly to `Canceled`</li><li>Otherwise, the status moves to `Processing`</li></ul> |
+| `Processing`        | Consent has been received and the card is being prepared<br/><br/>Status used uniquely when adding multiple virtual cards (`addCards` mutation)                                                                                           |
+| `Enabled`           | Virtual card is available for use                                                                                                                                                                                                         |
+| `Canceling`         | Card is in the process of being canceled<br/><br/>After a card is assigned the `Canceling` status, the process can't be reversed                                                                                                          |
+| `Canceled`          | Card is canceled, no longer available for use, and can't be reactivated                                                                                                                                                                   |
 
 ## Guides {#guides}
 
 - [Add virtual cards](./guide-add.mdx)
-    - Add a virtual card
-    - Add multiple virtual cards
-    - Add a single-use virtual card
+  - Add a virtual card
+  - Add multiple virtual cards
+  - Add a single-use virtual card
 - [View sensitive information](./guide-view-info.mdx)
-    - View virtual card numbers
+  - View virtual card numbers
 - [Cancel (deactivate) virtual cards](./guide-cancel.mdx)

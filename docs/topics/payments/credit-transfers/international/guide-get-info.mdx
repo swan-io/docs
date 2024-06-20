@@ -4,7 +4,7 @@ title: Get information about a transfer
 
 # Get information about an International Credit Transfer
 
-When Swan receives an incoming International Credit Transfer, Swan books it immediately and creates a `InternationalCreditTransferTransaction` type (step 8 in the [standard flow](./index.mdx#incoming-flow) for incoming transfers). 
+When Swan receives an incoming International Credit Transfer, Swan books it immediately and creates a `InternationalCreditTransferTransaction` type (step 8 in the [standard flow](./index.mdx#incoming-flow) for incoming transfers).
 
 ## Guide {#guide}
 
@@ -20,12 +20,13 @@ When Swan receives an incoming International Credit Transfer, Swan books it imme
 query IncomingInternationalCreditTransfer {
   transaction(id: "$INCOMING_TRANSACTION_ID") {
     ... on InternationalCreditTransferTransaction {
-      amount { #amount credited to the Swan user's account
+      amount {
+        #amount credited to the Swan user's account
         currency
         value
       }
       counterparty #name of the counterparty
-      currencyExchange { 
+      currencyExchange {
         exchangeRate
       }
       debtor {
@@ -37,11 +38,13 @@ query IncomingInternationalCreditTransfer {
         name
         route
       }
-      instructedAmount { #amount the debtor sent in their original currency when initiating the transfer
+      instructedAmount {
+        #amount the debtor sent in their original currency when initiating the transfer
         currency
         value
       }
-      intermediaryBankFees { #list of all fees charged by intermediary banks (doesn't include Swan)
+      intermediaryBankFees {
+        #list of all fees charged by intermediary banks (doesn't include Swan)
         currency
         value
       }
@@ -82,24 +85,24 @@ Review the information provided in the payload about the incoming International 
         "name": "My debtor",
         "route": "SwiftCode",
         "instructedAmount": {
-            "currency": "GBP",
-            "value": "1000.00"
-            },
-            "intermediaryBankFees": [
-                {
-                    "value": "50.00",
-                    "currency": "GBP"
-                },
-                {
-                    "value": "100.00",
-                    "currency": "EUR"
-                },
-				{
-                    "value": "50.00",
-                    "currency": "EUR"
-                    }
-                ],
-            "side": "credit"
+          "currency": "GBP",
+          "value": "1000.00"
+        },
+        "intermediaryBankFees": [
+          {
+            "value": "50.00",
+            "currency": "GBP"
+          },
+          {
+            "value": "100.00",
+            "currency": "EUR"
+          },
+          {
+            "value": "50.00",
+            "currency": "EUR"
+          }
+        ],
+        "side": "credit"
       }
     }
   }

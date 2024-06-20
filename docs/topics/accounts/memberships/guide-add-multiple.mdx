@@ -7,7 +7,7 @@ title: Add multiple memberships
 Add multiple account memberships with the API.
 You can add up to **200 memberships** in a single API call.
 
-import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
+import PrerequisiteAddMembers from "./partials/_add-member-prereq.mdx";
 
 <PrerequisiteAddMembers />
 
@@ -17,8 +17,8 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 1. Add the account ID to which you're adding a invited account member (line 4) and your `consentRedirectUrl` (line 5).
 1. Add one invited account member block for each invitee (lines 7-20).
 1. In each `restrictedTo` object, add information about the invited account members.
-    - If you're only granting `canViewAccount` permissions, or you're [not granting any permissions](./index.mdx#permissions-none), the invited account member's `birthDate` isn't required.
-    - Include a `+` in front of the phone number.
+   - If you're only granting `canViewAccount` permissions, or you're [not granting any permissions](./index.mdx#permissions-none), the invited account member's `birthDate` isn't required.
+   - Include a `+` in front of the phone number.
 1. Choose `true` for the permissions you'd like to grant to the invited account member.
 1. Add the success payload, including any information you'd like to review (line 51).
 1. Add the consent URL to the success payload (line 59): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
@@ -100,7 +100,6 @@ mutation AddMultipleMembers {
     }
   }
 }
-
 ```
 
 ## Step 2: Get consent to add member {#get-consent}
@@ -108,8 +107,8 @@ mutation AddMultipleMembers {
 The account holder, legal representative of the account, or account member with `canManageAccountMembership` permissions consents to adding all of the invited account members with a single consent process.
 
 1. Get the `consentUrl`, included in the payload (lines 11).
-    - All consent URLs are the same when adding members in bulk.
-    - Remember, the payload only provides the `consentUrl` if you added it in step 1.7.
+   - All consent URLs are the same when adding members in bulk.
+   - Remember, the payload only provides the `consentUrl` if you added it in step 1.7.
 1. Send the `consentUrl` to the account holder, the account's legal representative, or the account member with `canManageAccountMembership` permissions.
 1. As soon as consent is provided, they're redirected to your `consentRedirectUrl` defined in the initial API call, which fetches an OAuth 2.0 authorization code and a user access token.
 1. **Store** the invited account member's new `accountMembershipId`. You'll need it to bind the membership.
@@ -158,6 +157,6 @@ The account holder, legal representative of the account, or account member with 
 
 ## Step 3: Bind the invited account member {#bind-member}
 
-import AddMemberBind from './partials/_add-member-bind.mdx';
+import AddMemberBind from "./partials/_add-member-bind.mdx";
 
 <AddMemberBind />

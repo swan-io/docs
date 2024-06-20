@@ -24,7 +24,7 @@ All IBANs associated with this account have the prefix `FR`.
 
 Swan offers the following account countries:
 
-import AccountCountryList from '../partials/_account-countries.mdx';
+import AccountCountryList from "../partials/_account-countries.mdx";
 
 <AccountCountryList />
 
@@ -56,12 +56,12 @@ The only exception is the automatic [billing of banking fees](./billing/index.md
 
 There are four different account balances.
 
-| Balance | Includes | Equal to |
-| :---: | --- | --- |
-| `Booked` | Transactions that are already debited or credited | Sum of all `Booked` transactions |
-| `Pending` | Transactions that were authorized but haven't been debited or credited yet | Sum of all `Pending` transactions |
-| `Reserved` | Transactions that require [rolling reserve](../../glossary.mdx#rolling-reserve) according to the policy for that payment method<br /><br />`Reserved` amount is included in the `Booked` balance | Sum of all `Booked` transactions for which the funds are still in rolling reserve |
-| `Available` | Balance that is actually available to be used | `Booked` - (`Pending` + `Reserved`) |
+|   Balance   | Includes                                                                                                                                                                                         | Equal to                                                                          |
+| :---------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+|  `Booked`   | Transactions that are already debited or credited                                                                                                                                                | Sum of all `Booked` transactions                                                  |
+|  `Pending`  | Transactions that were authorized but haven't been debited or credited yet                                                                                                                       | Sum of all `Pending` transactions                                                 |
+| `Reserved`  | Transactions that require [rolling reserve](../../glossary.mdx#rolling-reserve) according to the policy for that payment method<br /><br />`Reserved` amount is included in the `Booked` balance | Sum of all `Booked` transactions for which the funds are still in rolling reserve |
+| `Available` | Balance that is actually available to be used                                                                                                                                                    | `Booked` - (`Pending` + `Reserved`)                                               |
 
 <h3 id="example-insufficient-funds">Example: Insufficient funds</h3>
 
@@ -88,7 +88,7 @@ There are six possible statuses for Swan transactions.
 Each payment method uses a **different combination** of these statuses with specific flows.
 Refer to the schemas for [credit transfers](../payments/credit-transfers/index.mdx#statuses), [direct debits](../payments/direct-debit/index.mdx#statuses), and [cards](../payments/cards/index.mdx#statuses) for more information about statuses for that payment method.
 
-import TransactionStatuses from '../partials/_transaction-statuses.mdx';
+import TransactionStatuses from "../partials/_transaction-statuses.mdx";
 
 <TransactionStatuses />
 
@@ -108,7 +108,7 @@ Account statements are accessible by calling the `account` query and adding the 
 #### Custom statements {#statements-custom}
 
 You can also access the raw data and **generate custom statements**.
-For example, you might need a format Swan doesn't provide, or you might want customize the style. 
+For example, you might need a format Swan doesn't provide, or you might want customize the style.
 
 As a regulated financial institution, account statements fall under compliance rules, and you might need to **get your custom statements approved**. Please work with your dedicated Technical Account Manager before releasing a custom statements.
 
@@ -118,7 +118,7 @@ If audited, Swan's account statement is the official version.
 ### Bank details {#bank-details}
 
 You can get a PDF containing your bank details using the API.
-In French, this document is called a **RIB**, or a *relevé d'identité bancaire*.
+In French, this document is called a **RIB**, or a _relevé d'identité bancaire_.
 
 For all accounts created after 16 November 2023, the PDF is generated automatically after the account's main IBAN is assigned, meaning the account must have the payment level `Unlimited` and the account type `Payment Services`.
 Note that the automatic generation might take a few minutes.
@@ -133,7 +133,7 @@ Bank detail PDFs include:
 1. Bank code.
 1. Your company's information.
 1. Disclaimer: "In partnership with Swan".
-    - The disclaimer is required because [Swan assumes responsibility](../../partnership/index.mdx#license) for all sensitive banking operations. It's similar to the [statement printed on physical cards](../cards/design/index.mdx#standard) indicating that cards are issued by Swan.
+   - The disclaimer is required because [Swan assumes responsibility](../../partnership/index.mdx#license) for all sensitive banking operations. It's similar to the [statement printed on physical cards](../cards/design/index.mdx#standard) indicating that cards are issued by Swan.
 1. Title of the document.
 1. BIC/SWIFT code.
 1. Account holder's information.
@@ -165,12 +165,12 @@ flowchart LR
     style U fill:#dfedf2,stroke:#4d8296,stroke-width:3px
 ```
 
-| Status | Explanation |
-| --- | --- |
-| `Opened` | Account is open and can be used |
-| `Suspended` | Swan can suspend an account if there's suspicion of fraud. While suspended, the account can't be used. |
-| `Closing` | While an account is closing, the following events occur:<br/><br/><ol><li>All cards are canceled.</li><li>Incoming SEPA Credit Transfers are automatically returned.</li><li>All standing orders are canceled.</li><li>All SEPA Direct Debit mandates are canceled.</li><li>No new members can be added to the account.</li></ol>The account status remains `Closing` until:<br/><br/><ul><li>The `Booked` balance is zero.∗</li><li>The last incoming SEPA Credit Transfer happened more than 30 days ago.</li><li>The last outgoing SEPA Credit Transfer happened more than 5 days ago.</li></ul> |
-| `Closed` | For all `Closed` accounts, access and account statements remain available for one year through the API or with Swan's Web Banking interface. |
+| Status      | Explanation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Opened`    | Account is open and can be used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `Suspended` | Swan can suspend an account if there's suspicion of fraud. While suspended, the account can't be used.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `Closing`   | While an account is closing, the following events occur:<br/><br/><ol><li>All cards are canceled.</li><li>Incoming SEPA Credit Transfers are automatically returned.</li><li>All standing orders are canceled.</li><li>All SEPA Direct Debit mandates are canceled.</li><li>No new members can be added to the account.</li></ol>The account status remains `Closing` until:<br/><br/><ul><li>The `Booked` balance is zero.∗</li><li>The last incoming SEPA Credit Transfer happened more than 30 days ago.</li><li>The last outgoing SEPA Credit Transfer happened more than 5 days ago.</li></ul> |
+| `Closed`    | For all `Closed` accounts, access and account statements remain available for one year through the API or with Swan's Web Banking interface.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 
 :::caution Remaining funds in Closing account ∗
 As long as the `Booked` balance doesn't equal zero:
@@ -179,7 +179,7 @@ As long as the `Booked` balance doesn't equal zero:
 1. The account holder can still log into their Swan Web Banking interface.
 1. The account holder can send SEPA Credit Transfers.
 
-If funds remain in a `Closing` account **after 10 years**, Swan transfers the funds to France's *Caisse des dépôts et consignations* (Deposits and Consignments Fund).
+If funds remain in a `Closing` account **after 10 years**, Swan transfers the funds to France's _Caisse des dépôts et consignations_ (Deposits and Consignments Fund).
 :::
 
 ## Guides {#guides}

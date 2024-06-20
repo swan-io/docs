@@ -20,21 +20,21 @@ Refer to the [card payments section](../../topics/payments/cards/index.mdx) for 
 1. Merchant charges a Swan Mastercard.
 1. Mastercard asks Swan to accept or reject the transaction.
 1. Swan:
-    - Lets the you know about the transaction so you can accept or reject it.
-        - Certain types of transactions aren't sent to you for approval, such as forced debits and delay charges. 
-    - Checks that:
-        - The **card and associated account exist**,
-        - The card hasn't reached its **spending limit**,
-        - There are **sufficient funds** to cover the transaction, and
-        - There's no **suspicion of fraud**.
+   - Lets the you know about the transaction so you can accept or reject it.
+     - Certain types of transactions aren't sent to you for approval, such as forced debits and delay charges.
+   - Checks that:
+     - The **card and associated account exist**,
+     - The card hasn't reached its **spending limit**,
+     - There are **sufficient funds** to cover the transaction, and
+     - There's no **suspicion of fraud**.
 1. You let Swan know if you accept or reject the transaction.
 1. Swan sends the decision to Mastercard.
-    - Both you and Swan say yes: Transaction accepted
-    - Both you and Swan say no: Transaction rejected
-    - Either you *or* Swan says no: Transaction rejected
+   - Both you and Swan say yes: Transaction accepted
+   - Both you and Swan say no: Transaction rejected
+   - Either you _or_ Swan says no: Transaction rejected
 1. Based on the response from you and Swan, Mastercard allows the transaction or rejects it at the merchant's point of sale.
 
-:::caution Mastercard rejections 
+:::caution Mastercard rejections
 Though rare, it's possible that Mastercard rejects a transaction even if you and Swan both accept it.
 :::
 
@@ -73,29 +73,29 @@ Note that times are written in [epoch millis](https://www.unixtimestamp.com/).
 
 ```json title="Swan payment control request" showLineNumbers
 {
-    "timeoutAt": 1646214666661, //fallback time to default response
-    "transactionId": "$TRANSACTION_ID",
-    "paymentId": "$PAYMENT_ID",
-    "accountId": "$ACCOUNT_ID",
-    "cardId": "$CARD_ID",
-    "digitalCardWalletProvider": "ApplePay", //digital token used for transaction; ApplePay, GooglePay, Merchant
-    "dateTime": 1646214656661, //time payment occured
-    "expirationDateTime": 1647114656661, //time authorization will be released if preauthorized amount is not used
-    "originalAmountValue": 10.00,
-    "originalAmountCurrency": "EUR",
-    "amountValue": 10.00,
-    "amountCurrency": "EUR",
-    "merchantId": "SWAN",
-    "terminalId": "156428",
-    "merchantCategoryCode": "0000",
-    "merchantName": "SWAN",
-    "merchantCity": "PARIS",
-    "merchantPostalCode": "75010", //optional information
-    "merchantCountry": "FRA",
-    "readMode": "Chip", //Chip, ContactlessChip, ContactlessStripe, Manual, ManualChip, ManualStripe, Other, PreSavedData, Stripe
-    "transactionCategory": "InStore", //InStore, eCommerce, eCommerceWith3DS, Withdrawal, Other
-    "authorizationType": "Classic", //Classic, PreAuthorization, DataRequest
-    "allowsPartialAuthorization": true //if amount can be modified
+  "timeoutAt": 1646214666661, //fallback time to default response
+  "transactionId": "$TRANSACTION_ID",
+  "paymentId": "$PAYMENT_ID",
+  "accountId": "$ACCOUNT_ID",
+  "cardId": "$CARD_ID",
+  "digitalCardWalletProvider": "ApplePay", //digital token used for transaction; ApplePay, GooglePay, Merchant
+  "dateTime": 1646214656661, //time payment occured
+  "expirationDateTime": 1647114656661, //time authorization will be released if preauthorized amount is not used
+  "originalAmountValue": 10.0,
+  "originalAmountCurrency": "EUR",
+  "amountValue": 10.0,
+  "amountCurrency": "EUR",
+  "merchantId": "SWAN",
+  "terminalId": "156428",
+  "merchantCategoryCode": "0000",
+  "merchantName": "SWAN",
+  "merchantCity": "PARIS",
+  "merchantPostalCode": "75010", //optional information
+  "merchantCountry": "FRA",
+  "readMode": "Chip", //Chip, ContactlessChip, ContactlessStripe, Manual, ManualChip, ManualStripe, Other, PreSavedData, Stripe
+  "transactionCategory": "InStore", //InStore, eCommerce, eCommerceWith3DS, Withdrawal, Other
+  "authorizationType": "Classic", //Classic, PreAuthorization, DataRequest
+  "allowsPartialAuthorization": true //if amount can be modified
 }
 ```
 
@@ -113,8 +113,8 @@ Provide the authorization amount in your response, which is sent to the merchant
 In case of timeout, or if your endpoint wasn't reachable, Swan applies your default response, which you chose when configuring payment control.
 
 ```json title="Partner response" {7} showLineNumbers
-{ 
-    "accepted": true,
-    "partialAuthorizationAmountValue": 10
+{
+  "accepted": true,
+  "partialAuthorizationAmountValue": 10
 }
 ```

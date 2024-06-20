@@ -11,13 +11,13 @@ Swan plays the role of the merchant bank, the clearing and settlement mechanism,
 
 If the merchant and debtor aren't using Swan accounts within the same Swan project, use [SEPA Direct Debit for merchants](../sdd/index.mdx) instead.
 
-import DirectDebitCrossLinks from '../partials/_direct-debit-other.mdx';
+import DirectDebitCrossLinks from "../partials/_direct-debit-other.mdx";
 
 <DirectDebitCrossLinks />
 
 ## Advantages of using direct debit {#advantages}
 
-import DirectDebitAdvantages from '../partials/_direct-debit-advantages.mdx';
+import DirectDebitAdvantages from "../partials/_direct-debit-advantages.mdx";
 
 <DirectDebitAdvantages />
 
@@ -26,20 +26,25 @@ import DirectDebitAdvantages from '../partials/_direct-debit-advantages.mdx';
 Swan offers two Internal Direct Debit schemes: `Standard` and `B2B`.
 You can choose to use one or both schemes according to your use case.
 
-import DirectDebitTable from '../../partials/_direct-debit-scheme-table.mdx';
+import DirectDebitTable from "../../partials/_direct-debit-scheme-table.mdx";
 
-<DirectDebitTable directDebitScheme="Standard" creditorType="Creditor" psp="Swan" incomingOutgoing="Not possible" />
+<DirectDebitTable
+  directDebitScheme="Standard"
+  creditorType="Creditor"
+  psp="Swan"
+  incomingOutgoing="Not possible"
+/>
 
 ## Rolling reserve {#rolling-reserve}
 
-import RollingReserve from '../partials/_rolling-reserve.mdx';
+import RollingReserve from "../partials/_rolling-reserve.mdx";
 
 <RollingReserve />
 
-| Payment method | Rolling reserve | Default amount |
-| --- | --- | --- |
-| Internal Direct Debit - Standard | ✓ **Yes** | Determined by a merchant profile risk assessment |
-| Internal Direct Debit - B2B | ☒ No | n/a |
+| Payment method                   | Rolling reserve | Default amount                                   |
+| -------------------------------- | --------------- | ------------------------------------------------ |
+| Internal Direct Debit - Standard | ✓ **Yes**       | Determined by a merchant profile risk assessment |
+| Internal Direct Debit - B2B      | ☒ No            | n/a                                              |
 
 ## Payment mandates {#mandates}
 
@@ -58,13 +63,13 @@ When the mandate is ready, [declare it to Swan](./guide-declare.mdx) through the
 Internal Direct Debit payment mandates must include the following information.
 Otherwise, the mandate is considered invalid.
 
-| Information | Description |
-| --- | --- |
-| Mandate title | Choose one of the following options:<ul><li>Standard Internal Direct Debit Mandate</li><li>B2B Internal Direct Debit Mandate</li></ul> |
-| Mandate reference | Unique identifier for the mandate, visible on the debtor's bank statement |
-| Payment type | Choose one of the following options:<ul><li>Recurrent</li><li>One-off</li></ul> |
-| Merchant (beneficiary) information | <ul><li>Merchant name</li><li>Merchant account holder address</li></ul> |
-| Debtor information | Choose one of the following options:<ul><li>Debtor's account number</li><li>Debtor's IBAN</li></ul><br/>If the debtor doesn't have a Swan account upon creation of the mandate, include their identification information instead:<ul><li>Individual: given name, family date, and date of birth</li><li>Legal: name and SIREN</li></ul> |
+| Information                        | Description                                                                                                                                                                                                                                                                                                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mandate title                      | Choose one of the following options:<ul><li>Standard Internal Direct Debit Mandate</li><li>B2B Internal Direct Debit Mandate</li></ul>                                                                                                                                                                                                  |
+| Mandate reference                  | Unique identifier for the mandate, visible on the debtor's bank statement                                                                                                                                                                                                                                                               |
+| Payment type                       | Choose one of the following options:<ul><li>Recurrent</li><li>One-off</li></ul>                                                                                                                                                                                                                                                         |
+| Merchant (beneficiary) information | <ul><li>Merchant name</li><li>Merchant account holder address</li></ul>                                                                                                                                                                                                                                                                 |
+| Debtor information                 | Choose one of the following options:<ul><li>Debtor's account number</li><li>Debtor's IBAN</li></ul><br/>If the debtor doesn't have a Swan account upon creation of the mandate, include their identification information instead:<ul><li>Individual: given name, family date, and date of birth</li><li>Legal: name and SIREN</li></ul> |
 
 ### Sample content {#mandates-content}
 
@@ -110,8 +115,8 @@ Signing the payment mandate with a **qualified electronic signature** must meet 
 
 1. The person who signed the mandate is **clearly identified**, often based on information included in your commercial contract with the debtor. They might also identify themselves by logging in to your platform.
 1. **Strong customer authentication** is complete. It must include two factors:
-    1. Personal identification number (PIN) or a password, and
-    1. One-time password (OTP) sent by a text message to the person's mobile phone.
+   1. Personal identification number (PIN) or a password, and
+   1. One-time password (OTP) sent by a text message to the person's mobile phone.
 1. Complete **authorization** through the electronic signature.
 
 #### Terms and conditions checkbox {#mandates-signature-checkbox}
@@ -124,10 +129,10 @@ Your client is already clearly identified by being logged in to your platform.
 A **received direct debit mandate** is created after the debtor's account receives the `InternalDirectDebitOut` transaction.
 The process is different for B2B and Standard, and one-off mandates are also possible.
 
-| Received mandate type | Description |
-| --- | --- |
-| B2B | <ol><li>Mandate created with the status `ConsentInitiationPending`.</li><li>Before the debtor can consent, you must [declare the payment mandate](./guide-declare.mdx).</li><li>Debtor must consent, but only the first time the mandate is used.</li></ol> |
-| Standard | <ol><li>Mandate created after a first payment is accepted.</li><li>You must enable the mandate by using the debtor's user access token with `CanInitiatePayments` permissions to call the `enableReceivedDirectDebitMandate` mutation.</li><li>Exception: if a mandate with the same `merchantIdentifier`, `reference`, and `accountId` already exists, a new mandate is not created.</li></ol> |
+| Received mandate type | Description                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B2B                   | <ol><li>Mandate created with the status `ConsentInitiationPending`.</li><li>Before the debtor can consent, you must [declare the payment mandate](./guide-declare.mdx).</li><li>Debtor must consent, but only the first time the mandate is used.</li></ol>                                                                                                                                     |
+| Standard              | <ol><li>Mandate created after a first payment is accepted.</li><li>You must enable the mandate by using the debtor's user access token with `CanInitiatePayments` permissions to call the `enableReceivedDirectDebitMandate` mutation.</li><li>Exception: if a mandate with the same `merchantIdentifier`, `reference`, and `accountId` already exists, a new mandate is not created.</li></ol> |
 
 ### One-off mandates {#mandates-oneoff}
 
@@ -141,7 +146,7 @@ Internal Direct Debit transactions are **booked at 18:00 Central European [Summe
 
 For both B2B and Standard, the settlement date is one day after (D+1) initiating the debit if transactions are sent before **12 noon**.
 
-import DayTimeStandard from '../../partials/_day-time.mdx';
+import DayTimeStandard from "../../partials/_day-time.mdx";
 
 <DayTimeStandard />
 

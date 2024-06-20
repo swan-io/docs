@@ -4,7 +4,7 @@ title: Webhooks
 
 # Webhooks
 
-import WebhooksDefinition from '../../topics/definitions/_webhooks.mdx';
+import WebhooksDefinition from "../../topics/definitions/_webhooks.mdx";
 
 <WebhooksDefinition />
 
@@ -25,7 +25,7 @@ participant S as Swan
 participant E as External event
     E -->> S: Updates an API resource
     S ->> P: Sends request to your configured endpoints
-    par        
+    par
         P ->> S: Returns 200 OK HTTP
         P ->> S: Calls query for resource
     end
@@ -36,7 +36,7 @@ participant E as External event
 
 Webhooks operate with a near-real-time efficiency, typically delivering responses **within seconds** of the event.
 
-It's worth clarifying that webhooks don't actively *respond* but autonomously send information to your system, potentially introducing delays of up to 10 minutes after the actual action occurs.
+It's worth clarifying that webhooks don't actively _respond_ but autonomously send information to your system, potentially introducing delays of up to 10 minutes after the actual action occurs.
 
 ### Automatic retry {#overview-retry}
 
@@ -59,7 +59,7 @@ If you have security restrictions in your infrastructure, you might need to add 
 - 52.210.172.90
 - 52.51.125.72
 - 54.194.47.212
-:::
+  :::
 
 ## Event handling {#event-handling}
 
@@ -86,7 +86,7 @@ Webhook notifications contain the following information in a `POST` request:
 }
 ```
 
-Note that `eventType` is the action performed on which resource type, `eventId` is a unique ID for this event, and  `resourceId` is a unique ID for the resource.
+Note that `eventType` is the action performed on which resource type, `eventId` is a unique ID for this event, and `resourceId` is a unique ID for the resource.
 
 :::caution Limited information
 For security reasons, webhook notifications **include limited information**.
@@ -109,11 +109,11 @@ You can manage your webhooks with the API.
 1. **Remove** a webhook subscription: [`removeWebhookSubscription`](https://api-reference.swan.io/mutations/remove-webhook-subscription/).
 1. **Trigger a retry** of a failed webhook: [`replayWebhookEvent`](https://api-reference.swan.io/mutations/replay-webhook-event/).
 1. Subscriptions:
-    1. Get a **single subscription**: [`webhookSubscription`](https://api-reference.swan.io/queries/webhook-subscription/).
-    1. Get a **list of all subscriptions**: [`webhookSubscriptions`](https://api-reference.swan.io/queries/webhook-subscriptions/).
+   1. Get a **single subscription**: [`webhookSubscription`](https://api-reference.swan.io/queries/webhook-subscription/).
+   1. Get a **list of all subscriptions**: [`webhookSubscriptions`](https://api-reference.swan.io/queries/webhook-subscriptions/).
 1. Event logs:
-    1. Get **one event log**: [`webhookEventLog`](https://api-reference.swan.io/queries/webhook-event-log/).
-    1. Get a **log of all events**: [`webhookEventLogs`](https://api-reference.swan.io/queries/webhook-event-logs/).
+   1. Get **one event log**: [`webhookEventLog`](https://api-reference.swan.io/queries/webhook-event-log/).
+   1. Get a **log of all events**: [`webhookEventLogs`](https://api-reference.swan.io/queries/webhook-event-logs/).
 
 ### Event order {#event-handling-order}
 
@@ -150,113 +150,113 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### [Account holders](../../topics/onboarding/account-holders/index.mdx) {#events-account-holders}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `AccountHolder.Created` | Onboarding was finalized |
+| `eventType`             | Explanation                                |
+| ----------------------- | ------------------------------------------ |
+| `AccountHolder.Created` | Onboarding was finalized                   |
 | `AccountHolder.Updated` | Swan updated a banking verification status |
 
 ### [Account onboarding](../../topics/onboarding/index.mdx) {#events-onboarding}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `Onboarding.Created` | New onboarding was created either through the API or the no-code interface |
-| `Onboarding.Updated` | Onboarding was either finalized, or changed because new data was added to it |
-| `SupportingDocumentCollection.Created` | A new supporting document collection was created either |
-| `SupportingDocumentCollection.Updated` | A supporting document collection was either finalized or updated |
+| `eventType`                            | Explanation                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------- |
+| `Onboarding.Created`                   | New onboarding was created either through the API or the no-code interface   |
+| `Onboarding.Updated`                   | Onboarding was either finalized, or changed because new data was added to it |
+| `SupportingDocumentCollection.Created` | A new supporting document collection was created either                      |
+| `SupportingDocumentCollection.Updated` | A supporting document collection was either finalized or updated             |
 
 ### [Account memberships](../../topics/accounts/memberships/index.mdx) {#events-account-memberships}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `AccountMembership.Bound` | User was bound with the account membership |
-| `AccountMembership.Created` | New account membership was created |
-| `AccountMembership.Disabled` | Account membership was disabled |
-| `AccountMembership.Resumed` | Suspended account membership was resumed  |
-| `AccountMembership.Suspended` | Account membership was suspended  |
-| `AccountMembership.Updated` | Account membership was updated by an action |
+| `eventType`                   | Explanation                                 |
+| ----------------------------- | ------------------------------------------- |
+| `AccountMembership.Bound`     | User was bound with the account membership  |
+| `AccountMembership.Created`   | New account membership was created          |
+| `AccountMembership.Disabled`  | Account membership was disabled             |
+| `AccountMembership.Resumed`   | Suspended account membership was resumed    |
+| `AccountMembership.Suspended` | Account membership was suspended            |
+| `AccountMembership.Updated`   | Account membership was updated by an action |
 
 ### [Accounts](../../topics/accounts/index.mdx) {#events-accounts}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `Account.Created` | Onboarding was finalized |
+| `eventType`       | Explanation                   |
+| ----------------- | ----------------------------- |
+| `Account.Created` | Onboarding was finalized      |
 | `Account.Updated` | Account attribute was changed |
-| `Account.Closing` | Account is closing |
-| `Account.Closed` | Account was closed |
+| `Account.Closing` | Account is closing            |
+| `Account.Closed`  | Account was closed            |
 
 ### [Billing](../../topics/accounts/billing/index.mdx) {#events-billing}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `AccountInvoice.Generated` | New invoice was generated and available for download |
-| `AccountInvoice.Updated` | Invoice or refund note was updated |
+| `eventType`                  | Explanation                                                |
+| ---------------------------- | ---------------------------------------------------------- |
+| `AccountInvoice.Generated`   | New invoice was generated and available for download       |
+| `AccountInvoice.Updated`     | Invoice or refund note was updated                         |
 | `AccountStatement.Generated` | Account statement was generated and available for download |
 
 ### [Capital deposits](../../topics/capital-deposits/index.mdx) {#events-capital-deposits}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `CapitalDepositCaseEvent.Created` | Capital deposit case was created |
-| `CapitalDepositCaseEvent.Updated` | Capital deposit case was updated |
-| `CapitalDepositDocument.Created` | Document for a capital deposit case or a shareholder was created |
-| `CapitalDepositDocument.Updated` | Document for a capital deposit case or a shareholder was updated |
-| `Shareholder.Created` | Shareholder was created |
-| `Shareholder.Updated` | Shareholder was updated |
+| `eventType`                       | Explanation                                                      |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `CapitalDepositCaseEvent.Created` | Capital deposit case was created                                 |
+| `CapitalDepositCaseEvent.Updated` | Capital deposit case was updated                                 |
+| `CapitalDepositDocument.Created`  | Document for a capital deposit case or a shareholder was created |
+| `CapitalDepositDocument.Updated`  | Document for a capital deposit case or a shareholder was updated |
+| `Shareholder.Created`             | Shareholder was created                                          |
+| `Shareholder.Updated`             | Shareholder was updated                                          |
 
 ### [Cards](../../topics/cards/index.mdx) {#events-cards}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `Card.Created` | New virtual card was created |
+| `eventType`    | Explanation                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------------- |
+| `Card.Created` | New virtual card was created                                                                            |
 | `Card.Updated` | Physical card was printed, spending limit was updated, and more (doesn't not include PIN notifications) |
 
 ### [Consent](../../topics/users/consent/index.mdx) {#events-consent}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `Consent.Canceled` | Consent was canceled by the Partner |
-| `Consent.Created` | Consent was created for a sensitive operation |
-| `Consent.Expired` | Consent expired without being refused or granted |
-| `Consent.Granted` | User accepted a sensitive operation  |
-| `Consent.Refused` | User refused a sensitive operation  |
-| `Consent.Started` | ConsentURL was opened |
+| `eventType`        | Explanation                                      |
+| ------------------ | ------------------------------------------------ |
+| `Consent.Canceled` | Consent was canceled by the Partner              |
+| `Consent.Created`  | Consent was created for a sensitive operation    |
+| `Consent.Expired`  | Consent expired without being refused or granted |
+| `Consent.Granted`  | User accepted a sensitive operation              |
+| `Consent.Refused`  | User refused a sensitive operation               |
+| `Consent.Started`  | ConsentURL was opened                            |
 
 ### [Funding](../../topics/accounts/funding/index.mdx) {#events-funding}
 
-| `eventType` | Explanation |
-| --- | --- |
+| `eventType`                                 | Explanation                                       |
+| ------------------------------------------- | ------------------------------------------------- |
 | `FundingLimitSettingsChangeRequest.Created` | Funding limit settings change request was created |
 | `FundingLimitSettingsChangeRequest.Updated` | Funding limit settings change request was updated |
-| `FundingSource.Created` | Funding source was created |
-| `FundingSource.Updated` | Funding source was updated |
+| `FundingSource.Created`                     | Funding source was created                        |
+| `FundingSource.Updated`                     | Funding source was updated                        |
 
 ### [Merchants](../../topics/merchants/index.mdx) {#events-merchants}
 
-| `eventType` | Explanation |
-| --- | --- |
+| `eventType`               | Explanation                  |
+| ------------------------- | ---------------------------- |
 | `MerchantProfile.Created` | Merchant profile was created |
 | `MerchantProfile.Updated` | Merchant profile was updated |
 
 ### [Payments and transactions](../../topics/payments/index.mdx) {#events-payments-transactions}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `ReceivedDirectDebitMandate.Created` | Received direct debit mandate was created either through the API or automatically by Swan |
-| `ReceivedDirectDebitMandate.Updated` | Received direct debit mandate was updated |
-| `StandingOrder.Canceled` | Standing order was canceled |
-| `StandingOrder.Scheduled` | Standing order was scheduled |
-| `Transaction.Booked` | Transaction was completed and will appear on the account statement |
-| `Transaction.Canceled` | Upcoming direct debit was canceled |
-| `Transaction.Deleted` | Scheduled direct debit was deleted  |
-| `Transaction.Pending` | Outgoing SEPA Credit Transfer was processed and is waiting for the next SEPA batch, a card authorization was accepted, and more |
-| `Transaction.Rejected` | Transaction was rejected for compliance reasons |
-| `Transaction.Released` | Transaction was released |
-| `Transaction.Upcoming` | Transaction was booked for a future date |
+| `eventType`                          | Explanation                                                                                                                     |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `ReceivedDirectDebitMandate.Created` | Received direct debit mandate was created either through the API or automatically by Swan                                       |
+| `ReceivedDirectDebitMandate.Updated` | Received direct debit mandate was updated                                                                                       |
+| `StandingOrder.Canceled`             | Standing order was canceled                                                                                                     |
+| `StandingOrder.Scheduled`            | Standing order was scheduled                                                                                                    |
+| `Transaction.Booked`                 | Transaction was completed and will appear on the account statement                                                              |
+| `Transaction.Canceled`               | Upcoming direct debit was canceled                                                                                              |
+| `Transaction.Deleted`                | Scheduled direct debit was deleted                                                                                              |
+| `Transaction.Pending`                | Outgoing SEPA Credit Transfer was processed and is waiting for the next SEPA batch, a card authorization was accepted, and more |
+| `Transaction.Rejected`               | Transaction was rejected for compliance reasons                                                                                 |
+| `Transaction.Released`               | Transaction was released                                                                                                        |
+| `Transaction.Upcoming`               | Transaction was booked for a future date                                                                                        |
 
 ### [Users](../../topics/users/index.mdx) {#events-users}
 
-| `eventType` | Explanation |
-| --- | --- |
-| `User.Joined` | User joins your project |
-| `User.Updated` | User's information was updated, such as their phone number |
-| `User.Deactivated` | User was deactivated<br /><br />*The phone number associated with the deactivated user's Swan account can now be used to sign up a different user.* |
+| `eventType`        | Explanation                                                                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `User.Joined`      | User joins your project                                                                                                                             |
+| `User.Updated`     | User's information was updated, such as their phone number                                                                                          |
+| `User.Deactivated` | User was deactivated<br /><br />_The phone number associated with the deactivated user's Swan account can now be used to sign up a different user._ |

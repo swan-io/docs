@@ -11,15 +11,16 @@ title: Implement server-to-server (S2S) consent
 Use your browser's cryptography API to generate your key pair according to the [required algorithm](./index.mdx#s2s-cryptography).
 
 ```js title="Request" showLineNumbers
-await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-256" }, true, ["sign", "verify"])
+await crypto.subtle
+  .generateKey({ name: "ECDSA", namedCurve: "P-256" }, true, ["sign", "verify"])
   .then(async ({ publicKey, privateKey }) => ({
     publicKey: await crypto.subtle.exportKey("jwk", publicKey),
     privateKey: await crypto.subtle.exportKey("jwk", privateKey),
   }))
-  .then(keys => ({
+  .then((keys) => ({
     publicKey: JSON.stringify(keys.publicKey),
     privateKey: JSON.stringify(keys.privateKey),
-}));
+  }));
 ```
 
 The request generates a response similar to the following sample.
@@ -89,8 +90,8 @@ Next, sign the `challenge` using the following script, the provided library, and
 
 ```js showLineNumbers
 await signAndExportJwtToken("$YOUR_PRIVATE_KEY_JWK", {
-   header: { alg: "ES256", typ: "JWT" },
-   payload: { challenge: "$YOUR_CONSENT_CHALLENGE" },
+  header: { alg: "ES256", typ: "JWT" },
+  payload: { challenge: "$YOUR_CONSENT_CHALLENGE" },
 });
 ```
 
@@ -111,7 +112,7 @@ function toBase64url(message, toStringify) {
 function getMessage(composer) {
   return `${toBase64url(composer.header, true)}.${toBase64url(
     composer.payload,
-    true
+    true,
   )}`;
 }
 function toBuffer(message) {
@@ -127,7 +128,7 @@ async function signAndExportJwtToken(jwtPrivateKey, composer) {
       namedCurve: jsonPrivateKey.crv,
     },
     false,
-    ["sign"]
+    ["sign"],
   );
 
   // ---
@@ -138,7 +139,7 @@ async function signAndExportJwtToken(jwtPrivateKey, composer) {
       hash: privateKey.algorithm.namedCurve.replace(/P/gi, "SHA"),
     },
     privateKey,
-    toBuffer(message)
+    toBuffer(message),
   );
 
   // ---
@@ -198,7 +199,7 @@ mutation GrantS2s {
 
 You can replace or revoke an installed public key at any time.
 
-import ReplacePublicKey from './_s2s-replace-key.mdx';
+import ReplacePublicKey from "./_s2s-replace-key.mdx";
 
 <ReplacePublicKey />
 

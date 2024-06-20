@@ -4,7 +4,7 @@ title: Account memberships
 
 # Account memberships
 
-import AccountMembershipDefinition from '../../definitions/_account-membership.mdx';
+import AccountMembershipDefinition from "../../definitions/_account-membership.mdx";
 
 > <AccountMembershipDefinition />
 
@@ -41,13 +41,13 @@ These rights are referred to as **permissions** in the Swan API and Web Banking 
 Swan doesn't offer role-base access control (RBAC).
 Instead, you choose exactly what each account member can see and do on a member-by-member basis.
 
-| Permission | Account member can... |
-| --- | --- |
-| `canViewAccount` | View the account and information about the account, including main and virtual IBANs, beneficiaries, payment mandates, list of transactions and transaction details, and more |
-| `canManageBeneficiaries` | Add or remove beneficiaries |
-| `canInitiatePayments` | Initiate (send) transfers to beneficiaries |
-| `canManageAccountMembership` | Add, modify, or remove account memberships |
-| `canManageCards` | View, add, and update their own cards and cards for account memberships they manage |
+| Permission                   | Account member can...                                                                                                                                                         |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `canViewAccount`             | View the account and information about the account, including main and virtual IBANs, beneficiaries, payment mandates, list of transactions and transaction details, and more |
+| `canManageBeneficiaries`     | Add or remove beneficiaries                                                                                                                                                   |
+| `canInitiatePayments`        | Initiate (send) transfers to beneficiaries                                                                                                                                    |
+| `canManageAccountMembership` | Add, modify, or remove account memberships                                                                                                                                    |
+| `canManageCards`             | View, add, and update their own cards and cards for account memberships they manage                                                                                           |
 
 ### Granting permissions {#permissions-grant}
 
@@ -69,21 +69,40 @@ Whether your **account members can manage cards** and **for whom** depends on bo
   </tr>
   <tr>
     <td>`Cards` = true</td>
-    <td>✓ View, add, and update cards for self<br />✓ View, add, and update cards for others∗</td>
-    <td>✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others</td>
+    <td>
+      ✓ View, add, and update cards for self
+      <br />✓ View, add, and update cards for others∗
+    </td>
+    <td>
+      ✓ View, add, and update cards for self
+      <br />☒ Can't view, add, or update cards for others
+    </td>
   </tr>
   <tr>
     <td>`Cards` = false</td>
-    <td colspan="2">✓ View their own cards<br />☒ Can't add virtual cards for self<br />✓ If they have an existing virtual card, they can print a physical card for self<br />☒ Can't update any cards for self<br />☒ Can't view, add, or update cards for others</td>
+    <td colspan="2">
+      ✓ View their own cards
+      <br />☒ Can't add virtual cards for self
+      <br />✓ If they have an existing virtual card, they can print a physical
+      card for self
+      <br />☒ Can't update any cards for self
+      <br />☒ Can't view, add, or update cards for others
+    </td>
   </tr>
   <tr>
     <td>`Cards` = not provided</td>
-    <td>✓ View, add, and update cards for self<br />✓ View, add, and update cards for others</td>
-    <td>✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others</td>
+    <td>
+      ✓ View, add, and update cards for self
+      <br />✓ View, add, and update cards for others
+    </td>
+    <td>
+      ✓ View, add, and update cards for self
+      <br />☒ Can't view, add, or update cards for others
+    </td>
   </tr>
 </table>
 
-∗ *others* → other account members
+∗ _others_ → other account members
 
 ### No permissions {#permissions-none}
 
@@ -127,14 +146,14 @@ flowchart LR
     style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
 ```
 
-| Account membership status | Explanation |
-|---|---|
-| `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the invited account member consents, the status moves to `InvitationSent`</li><li>If the invited account member doesn't consent, the status moves to `Disabled`</li></ul> |
-| `InvitationSent` | An invitation was sent to the invited account member.<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
-| `Enabled` | All user information matches, the account member has been awarded the correct [identification level](../../users/identifications/index.mdx#levels-processes), and the account member can use their account membership and corresponding permissions. |
-| `BindingUserError` | The personal information you submitted about the invited account member doesn't match the information they provide during the [signup process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on binding user errors for more information. |
-| `Suspended` | Account membership is suspended and not available for use.<br/><br/>Account memberships can be suspended for various reasons, including a request from you or the account's legal representative, or a Swan action in the case of suspicious activity.<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
-| `Disabled` | Account membership is disabled, is no longer available for use, and can't be restored. |
+| Account membership status | Explanation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ConsentPending`          | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the invited account member consents, the status moves to `InvitationSent`</li><li>If the invited account member doesn't consent, the status moves to `Disabled`</li></ul>      |
+| `InvitationSent`          | An invitation was sent to the invited account member.<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
+| `Enabled`                 | All user information matches, the account member has been awarded the correct [identification level](../../users/identifications/index.mdx#levels-processes), and the account member can use their account membership and corresponding permissions.                                                                                                                                                                                                                                                                                                                                        |
+| `BindingUserError`        | The personal information you submitted about the invited account member doesn't match the information they provide during the [signup process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on binding user errors for more information.                                                                                                                                                                                                                                                                                     |
+| `Suspended`               | Account membership is suspended and not available for use.<br/><br/>Account memberships can be suspended for various reasons, including a request from you or the account's legal representative, or a Swan action in the case of suspicious activity.<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul>                                                                                                                                                                           |
+| `Disabled`                | Account membership is disabled, is no longer available for use, and can't be restored.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
 ### Binding user errors {#binding-errors}
 
@@ -161,12 +180,12 @@ However, with a **detailed agreement with Swan**, you might be allowed to bypass
 
 Even with identification removed, only memberships with certain permissions can bypass identification.
 
-| ✓ Can bypass identification | ☒ Can't bypass identification |
-| :---: | :---: |
+|      ✓ Can bypass identification       |                             ☒ Can't bypass identification                             |
+| :------------------------------------: | :-----------------------------------------------------------------------------------: |
 | `canViewAccount`<br />`canManageCards` | `canManageAccountMembership`<br />`canInitiatePayments`<br />`canManageBeneficiaries` |
 
 Note that memberships created before identification is removed still need to verify their identity.
-Adding this configuration **isn't retroactive**. 
+Adding this configuration **isn't retroactive**.
 Contact your Technical Account Manager to ask about removing identification.
 
 ## Closed accounts and memberships {#closed}
@@ -183,7 +202,7 @@ Account memberships have a `version` attribute.
 When a new membership is added, the `version` is `0`, then increases by a factor of 1 with each change.
 Changes includes including suspending, resuming, and updating the membership.
 
-## Sequence diagram  {#diagrams-add}
+## Sequence diagram {#diagrams-add}
 
 > **Adding account memberships**
 
@@ -208,6 +227,7 @@ participant S as Swan
     P ->> S: Calls `bindAccountMembership` mutation with<br />`accountMembershipId` using invitee's user access token
     S ->> P: Confirms account membership success,<br />meaning invitee is bound to account
 ```
+
 ∗ The **requester** can be the account holder, the account's legal representative, or an account member with the `canManageAccountMembership` permission.
 The requester provides consent (diagram line 4).
 

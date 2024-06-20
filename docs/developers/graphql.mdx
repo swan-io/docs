@@ -56,8 +56,9 @@ Consider this [query example from onboarding](../topics/onboarding/overview/guid
 You can also explore all of Swan's queries in [API Explorer](https://explorer.swan.io/).
 
 ```graphql title="Query" showLineNumbers
-query { 
-  user(id: "$SWAN_USER_ID") { #query name
+query {
+  #query name
+  user(id: "$SWAN_USER_ID") {
     mobilePhoneNumber #field
   }
 }
@@ -78,16 +79,16 @@ Swan often has two query options per object, such as `user` and `users`.
 
 - `user` requires an `id` and returns data about a single user.
 - `users` doesn't require an `id` and returns data about all of your users.
-:::
+  :::
 
 ### Mutations {#graphql-mutations}
 
 There are entry points to a GraphQL API to make requests, which both take inputs.
 
-| Request type | Purpose | `REST` comparison |
-|---|---|---|
-| Mutations | Make a change | `PUT` or `POST` |
-| Queries | Fetch data from the remote API | `GET` |
+| Request type | Purpose                        | `REST` comparison |
+| ------------ | ------------------------------ | ----------------- |
+| Mutations    | Make a change                  | `PUT` or `POST`   |
+| Queries      | Fetch data from the remote API | `GET`             |
 
 Each request starts with the keyword `query` or `mutation`, then specifies the field or fields you want to get back in the response.
 
@@ -106,7 +107,8 @@ mutation ChangeLanguage {
   updateAccount( #mutation name
     input: { accountId: "$YOUR_ACCOUNT_ID", language: en } #input information
   ) {
-    ... on UpdateAccountSuccessPayload { #validation
+    #validation
+    ... on UpdateAccountSuccessPayload {
       __typename
       account {
         language #returns account language in payload
@@ -114,7 +116,6 @@ mutation ChangeLanguage {
     }
   }
 }
-
 ```
 
 ```json title="Payload" {4,6} showLineNumbers

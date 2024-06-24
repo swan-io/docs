@@ -1,0 +1,116 @@
+---
+title: Add a trusted SEPA beneficiary
+---
+
+# Add a trusted SEPA beneficiary
+
+Add a trusted beneficiary for SEPA Credit Transfers with the API.
+
+## Add a trusted beneficiary {#guide-add}
+
+1. Call the `addSepaTrustedBeneficiary` mutation.
+1. Add your `accountId` (line 4). The trusted beneficiary is linked to this account.
+1. Add your SEPA beneficiary's name and IBAN (lines 5-6).
+1. Add the `AddTrustedSepaBeneficiarySuccessPayload` success payload. Consider adding the `trustedBeneficiary` > `id` to the payload (lines 12-13).
+1. Add rejections (not shown).
+
+### Mutation {#mutation-add}
+
+🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gQWRkQmVuZWZpY2lhcnkgewogIGFkZFRydXN0ZWRTZXBhQmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkQUNDT1VOVF9JRCIKICAgICAgaWJhbjogIiRUUlVTVEVEX0JFTkVGSUNJQVJZX0lCQU4iCiAgICAgIG5hbWU6ICIkVFJVU1RFRF9CRU5FRklDSUFSWV9OQU1FIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkUkVESVJFQ1RfVVJMIgogICAgfQogICkgewogICAgLi4uIG9uIEFkZFRydXN0ZWRTZXBhQmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdHJ1c3RlZEJlbmVmaWNpYXJ5IHsKICAgICAgICBpZAogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {2,4,5-6,12-13} showLineNumbers
+mutation AddBeneficiary {
+  addTrustedSepaBeneficiary(
+    input: {
+      accountId: "$ACCOUNT_ID"
+      iban: "$TRUSTED_BENEFICIARY_IBAN"
+      name: "$TRUSTED_BENEFICIARY_NAME"
+      consentRedirectUrl: "$REDIRECT_URL"
+    }
+  ) {
+    ... on AddTrustedSepaBeneficiarySuccessPayload {
+      __typename
+      trustedBeneficiary {
+        id
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-add}
+
+Notice your new trusted beneficiary's ID is returned in the success payload (line 6).
+
+```json {6} showLineNumbers
+{
+  "data": {
+    "addTrustedSepaBeneficiary": {
+      "__typename": "AddTrustedSepaBeneficiarySuccessPayload",
+      "trustedBeneficiary": {
+        "id": "$TRUSTED_BENEFICIARY_ID"
+      }
+    }
+  }
+}
+```
+
+## Save a beneficiary when initiating a transfer {#guide-save}
+
+1. Call the `initiateCreditTransfers` mutation.
+1. Add the `amount` and `consentRedirectUrl`.
+1. Add your `accountId`. The trusted beneficiary is linked to this account.
+1. Add your SEPA beneficiary's name and IBAN (lines 7-8).
+1. Choose `true` for the boolean `save` (line 10).
+1. Add the success payload.
+1. Add rejections (not shown).
+
+### Mutation {#mutation-save}
+
+🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gU2F2ZUJlbmVmaWNpYXJ5IHsKICBpbml0aWF0ZUNyZWRpdFRyYW5zZmVycygKICAgIGlucHV0OiB7CiAgICAgIGNyZWRpdFRyYW5zZmVyczogewogICAgICAgIGFtb3VudDogeyB2YWx1ZTogIjIwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgICBpYmFuOiAiJFRSVVNURURfQkVORUZJQ0lBUllfSUJBTiIKICAgICAgICAgIG5hbWU6ICIkVFJVU1RFRF9CRU5FRklDSUFSWV9OQU1FIgogICAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgICBzYXZlOiB0cnVlCiAgICAgICAgfQogICAgICB9CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRSRURJUkVDVF9VUkwiCiAgICAgIGFjY291bnRJZDogIiRBQ0NPVU5UX0lEIgogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIGlkCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2,6-8,10,14} showLineNumbers
+mutation SaveBeneficiary {
+  initiateCreditTransfers(
+    input: {
+      creditTransfers: {
+        amount: { value: "200", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "$TRUSTED_BENEFICIARY_IBAN"
+          name: "$TRUSTED_BENEFICIARY_NAME"
+          isMyOwnIban: false
+          save: true
+        }
+      }
+      consentRedirectUrl: "$REDIRECT_URL"
+      accountId: "$ACCOUNT_ID"
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      __typename
+      payment {
+        id
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-save}
+
+The payload is a typical initiation payload.
+There's no additional information available about the new trusted beneficiary.
+
+
+```json showLineNumbers
+{
+  "data": {
+    "initiateCreditTransfers": {
+      "__typename": "InitiateCreditTransfersSuccessPayload",
+      "payment": {
+        "id": "$PAYMENT_ID"
+      }
+    }
+  }
+}
+```

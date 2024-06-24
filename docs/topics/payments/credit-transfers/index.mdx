@@ -65,23 +65,47 @@ Refer to explanations of types of account balances in the [accounts section](../
 
 Add **trusted beneficiaries** to accounts to facilitate credit transfers.
 Adding trusted beneficiaries also reduces the risk of sending a transfer to an unintended beneficiary.
-Beneficiaries *not added* as trusted are **unsaved** beneficiaries.
 
 You can **add trusted beneficiaries with the API**, either with a dedicated mutation or when initiating a credit transfer.
 If you're using Swan's Web Banking interface, eligible account members can add trusted beneficiaries from the app.
+Beneficiaries who **aren't added** as trusted are referred to as **unsaved** beneficiaries.
 
-An account member with the `canManageBeneficiaries` permission must consent to adding a trusted beneficiary with [Strong Customer Authentication (SCA)](../../users/consent/index.mdx#sca).
+### Beneficiaries & membership permissions {#beneficiaries-permissions}
 
-### Membership permissions {#beneficiaries-permissions}
-
-How users interact with both trusted and unsaved beneficiaries depends on their [account membership permissions](./memberships/index.mdx#permissions).
+How account members can interact with beneficiaries depends on their [account membership permissions](../../accounts/memberships/index.mdx#permissions).
 
 | Permission | Beneficiary interaction |
 | --- | --- |
-| `canManageBeneficiaries` | Add trusted beneficiaries. |
-| `canInitiatePayments`<br />*with* `canManageBeneficiaries` | Initiate credit transfers to trusted and unsaved beneficiaries. |
-| `canInitiatePayments`<br />*without* `canManageBeneficiaries` | Initiate transfers to trusted beneficiaries only. |
 | `canViewAccount` | View the list of trusted beneficiaries. |
+| `canManageBeneficiaries` | Add trusted beneficiaries. |
+| `canInitiatePayments`<br />*with* `canManageBeneficiaries` | Initiate credit transfers to trusted **and** unsaved beneficiaries. |
+| `canInitiatePayments`<br />*without* `canManageBeneficiaries` | Initiate credit transfers to trusted beneficiaries **only**. |
+
+### Trusted beneficiary statuses {#beneficiaries-statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    TBA((Trusted<br />beneficiary added)) -.-> CP[ConsentPending]
+    CP -.-> E[Enabled]
+    E -.-> CD[Canceled]
+    CP -.-> CD
+    subgraph A[Added]
+        E
+    end
+    subgraph F[Final status]
+        CD
+    end
+    style TBA fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style A fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+```
+
+| Trusted beneficiary status | Explanation |
+|---|---|
+| `ConsentPending` | An eligible account member added a trusted beneficiary, either directly (with the dedicated mutation or through Web Banking) or when initiating a transfer.<br /><br />To finish adding the trusted beneficiary, an account member with the `canManageBeneficiaries` permission must consent with [Strong Customer Authentication (SCA)](../../users/consent/index.mdx#sca). |
+| `Enabled` | Consent was received to add the trusted beneficiary. Eligible account members can now initiate transfers to this trusted beneficiary.  |
+| `Canceled` | Consent wasn't received to add the trusted beneficiary, or the trusted beneficiary was removed from the list by an eligible account member. |
 
 ## Label and reference {#label-reference}
 
@@ -118,5 +142,5 @@ Whether your label and reference entries are visible on other financial institut
 
 ## Guides {#guides}
 
-- [Add a SEPA trusted beneficiary](./sepa/guide-beneficiary-add.mdx)
-- [Add an international trusted beneficiary](./international/guide-beneficiary-add.mdx)
+- [Add a trusted SEPA beneficiary](./sepa/guide-add-beneficiary.mdx)
+- [Add a trusted international beneficiary](./international/guide-add-beneficiary.mdx)

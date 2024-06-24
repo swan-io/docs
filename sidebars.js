@@ -268,6 +268,19 @@ module.exports = {
           items: [
             {
               type: "category",
+              label: "Cards",
+              link: { type: "doc", id: "topics/merchants/cards/index" },
+              collapsed: true,
+              items: [
+                "topics/merchants/cards/guide-cards",
+                "topics/merchants/cards/guide-request",
+                "topics/merchants/cards/guide-create-link",
+                "topics/merchants/cards/guide-refund",
+                "topics/merchants/cards/sandbox",
+              ],
+            },
+            {
+              type: "category",
               label: "SEPA Direct Debit",
               link: { type: "doc", id: "topics/merchants/sdd/index" },
               collapsed: true,

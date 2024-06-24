@@ -1,0 +1,86 @@
+---
+title: Get enriched information about card transactions
+---
+
+# Get enriched information about card transactions
+
+import InDevelopment from '../../partials/_in-dev.mdx';
+
+<InDevelopment feature="Providing enriched transaction information" />
+
+You can **call the API** to get [enriched information about card transactions](./index.mdx#enriched).
+
+Enriched information is also available on your Dashboard by going to **Data** > **Transactions** > **Details**.
+
+:::tip Prerequisites
+You need a **project access token** to call the query.
+:::
+
+## Guide {#guide}
+
+1. Call the `transaction` query.
+1. Add the transaction ID.
+1. Add `CardTransaction` (line 3), then `enrichedTransactionInfo` (line 5).
+1. Choose all the enriched information you'd like to review about the card transaction.
+
+## Query {#query}
+
+```graphql {2,3,5} showLineNumbers
+query EnrichedTransactionInfo {
+  transaction(id: "$TRANSACTION_ID") {
+    ... on CardTransaction {
+      id
+      enrichedTransactionInfo {
+        address
+        carbonFootprint
+        category
+        city
+        contactEmail
+        contactPhone
+        contactWebsite
+        country
+        enrichedMerchantName
+        isSubscription
+        latitude
+        logoUrl
+        longitude
+        postalCode
+        subcategory
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+:::note Other
+When new values aren't mapped yet, the API responds `Other`.
+:::
+
+```json showLineNumbers
+{
+  "data": {
+    "transaction": {
+      "id": "$TRANSACTION_ID",
+      "enrichedTransactionInfo": {
+        "address": "1 rue de Paris",
+        "carbonFootprint": "2.2",
+        "category": "Restaurants",
+        "city": "Paris",
+        "contactEmail": "hello@mybrand.com",
+        "contactPhone": "+35500550055",
+        "contactWebsite": "www.mybrand.com",
+        "country": "FRA",
+        "enrichedMerchantName": "MyBrand",
+        "isSubscription": "false",
+        "latitude": "48.870010",
+        "logoUrl": "https://data.swan.io/enriched-merchant-data/logos/$FILE_NAME",
+        "longitude": "2.373500",
+        "postalCode": "75000",
+        "subcategory": "Bars and Restaurants"
+      }
+    }
+  }
+}
+```

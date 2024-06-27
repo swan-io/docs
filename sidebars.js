@@ -467,6 +467,11 @@ module.exports = {
         },
         {
           type: "link",
+          label: "Trust Center",
+          href: "https://trust.swan.io/",
+        },
+        {
+          type: "link",
           label: "Support Center",
           href: "https://support.swan.io/hc/en-150",
         },
@@ -527,6 +532,11 @@ module.exports = {
           type: "link",
           label: "Status page",
           href: "https://status.swan.io/",
+        },
+        {
+          type: "link",
+          label: "Trust Center",
+          href: "https://trust.swan.io/",
         },
         {
           type: "link",
@@ -637,6 +647,11 @@ module.exports = {
           type: "link",
           label: "Status page",
           href: "https://status.swan.io/",
+        },
+        {
+          type: "link",
+          label: "Trust Center",
+          href: "https://trust.swan.io/",
         },
         {
           type: "link",

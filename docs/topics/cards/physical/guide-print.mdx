@@ -4,34 +4,34 @@ title: Print physical cards
 
 # Print physical cards
 
-Learn how to print, activate, and suspend cards, plus cancel and renew them.
-You can also view sensitive information, like the card numbers or PIN.
+Learn how to print physical cards with the API.
 
-:::tip Prerequisites
-You need to add virtual cards before printing physical cards.
+:::info Web Banking & Physical cards
+If you use Swan's Web Banking interface, your users can [**order their own cards**](https://support.swan.io/hc/en-150/articles/17791219525149-Order-your-physical-card) if they have the correct [**account membership permissions**](../../accounts/memberships/index.mdx#permissions-cards).
+They can also review their card's [**spending limit**](https://support.swan.io/hc/en-150/articles/18989382227357-Spending-limits).
+Swan's Support Center provides more information about [**physical cards**](https://support.swan.io/hc/en-150/articles/18133963401501-Physical-cards) help your users.
 :::
 
 ## Print a physical card {#print-one}
 
-Permitted users can order their own cards using Swan's Web Banking interface.
+:::tip Prerequisites
+1. Confirm the account member has the [**correct account membership permissions**](../../accounts/memberships/index.mdx#permissions-cards) to manage cards and, if needed, account memberships.
+1. [Add a virtual card](../virtual/guide-add.mdx) **before** printing a physical card with the `printPhysicalCard` mutation.
+:::
 
-When they order a card, print it for them by calling the `printPhysicalCard` mutation which returns a consent.
-To allow your card holders to **choose their PIN**, set the `choosePin` paramater to `true` (line 12).
-When you do this, make sure you are authenticated with a user access token belonging to a member with the `canManageCards` permission.
-Then a `consentUrl` is returned which invites the user to start Strong Customer Authentication with Swan.
+1. Call the `printPhysicalCard` mutation.
+1. Add the virtual card's `cardId` for which you're printing a physical card (line 4).
+1. Add the delivery address for the physical card, and the redirect URL.
+1. Allow the card holder to **choose their own PIN** by setting the `choosePin` paramater to `true` (line 12)
+1. Add the success payload, including any information you'd like to review (line 15).
+1. Add the consent URL to the success payload (line 22): `physicalCard` > `statusInfo` > `PhysicalCardConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
 
-Delivery details are available in the `PhysicalCardToActivateStatus` object, with the estimated date of delivery in the `estimatedDeliveryDatefield`.
-The carrier and tracking number are available in the `shippingProvider` and `trackingNumber`.
-The card's status will be `ToActivate` until the card is activated.
+### Mutation {#print-one-mutation}
 
-Your users will receive their cards as quickly as possible.
-Refer to Swan's [card delivery times](./index.mdx#hubs) for more information.
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUHJpbnRDYXJkIHsKICBwcmludFBoeXNpY2FsQ2FyZCgKICAgIGlucHV0OiB7CiAgICAgIGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiCiAgICAgIGFkZHJlc3M6IHsKICAgICAgICBhZGRyZXNzTGluZTE6ICIxMCBSdWUgZGUgbGEgUGFpeCIKICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgcG9zdGFsQ29kZTogIjc1MDAwIgogICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgIH0KICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBjaG9vc2VQaW46IHRydWUKICAgIH0KICApIHsKICAgIC4uLiBvbiBQcmludFBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBoeXNpY2FsQ2FyZENvbnNlbnRQZW5kaW5nU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RBbGxvd2VkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWxyZWFkeVZhbGlkUGh5c2ljYWxDYXJkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQmFkQWNjb3VudFN0YXR1c1JlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBCYWRSZXF1ZXN0UmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FyZE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcmRQcm9kdWN0Tm90QXBwbGljYWJsZVRvUGh5c2ljYWxDYXJkc1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcmRQcm9kdWN0RGlzYWJsZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBNaXNzaW5nTWFuZGF0b3J5RmllbGRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
 
-### Mutation
-
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUHJpbnRDYXJkIHsKICBwcmludFBoeXNpY2FsQ2FyZCgKICAgIGlucHV0OiB7CiAgICAgIGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiCiAgICAgIGFkZHJlc3M6IHsKICAgICAgICBhZGRyZXNzTGluZTE6ICIxMCBSdWUgZGUgbGEgUGFpeCIKICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgcG9zdGFsQ29kZTogIjc1MDAwIgogICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgIH0KICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBjaG9vc2VQaW46IHRydWUKICAgIH0KICApIHsKICAgIC4uLiBvbiBQcmludFBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBoeXNpY2FsQ2FyZENvbnNlbnRQZW5kaW5nU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RBbGxvd2VkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWxyZWFkeVZhbGlkUGh5c2ljYWxDYXJkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQmFkQWNjb3VudFN0YXR1c1JlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBCYWRSZXF1ZXN0UmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FyZE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcmRQcm9kdWN0Tm90QXBwbGljYWJsZVRvUGh5c2ljYWxDYXJkc1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcmRQcm9kdWN0RGlzYWJsZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBNaXNzaW5nTWFuZGF0b3J5RmllbGRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
-
-```graphql {4,12} showLineNumbers
+```graphql {2,4,12,15,22} showLineNumbers
 mutation PrintCard {
   printPhysicalCard(
     input: {
@@ -61,10 +61,13 @@ mutation PrintCard {
     }
   }
 }
-
 ```
 
-### Payload
+### Payload {#print-one-payload}
+
+The account member must consent to adding the physical card.
+
+After consent is received, the physical card is created and the card `type` for both the physical and virtual card concerned by this operation changes to `VirtualAndPhysical`.
 
 ```json {9} showLineNumbers
 {
@@ -86,25 +89,281 @@ mutation PrintCard {
 
 ## Print a physical card when adding a virtual card {#print-with-virtual}
 
-Call the `addCards` mutation.
+:::tip Prerequisites
+1. Confirm the account member has the [**correct account membership permissions**](../../accounts/memberships/index.mdx#permissions-cards) to manage cards and, if needed, account memberships.
+:::
 
-- To add the physical card at the same time you add the virtual card, use the `physicalCard` field in the `addCards` mutation and enter a delivery address.
-- To allow your card holders to **choose their PIN**, set the `choosePin` paramater to `true`.
+1. Call the `addCards` mutation.
+1. Add the `accountMembershipId` (line 4).
+1. Choose [card settings](../index.mdx#settings) and set the spending limit (lines 6-12).
+1. Add `physicalCard`, plus the delivery address (line 14). This paramater allows printing the physical card at the same time as adding the virtual card with the same mutation.
+1. Allow the card holder to **choose their own PIN** by setting the `choosePin` paramater to `true` (line 21).
+1. Add the consent redirect URL.
+1. Add the success payload, including any information you'd like to review (line 27).
+1. Add the consent URL to the success payload (line 22): `statusInfo` > `PhysicalCardConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
 
-## Print physical cards with an additional line {#print-additional-line}
+### Mutation {#print-with-virtual-mutation}
 
-Add `physicalCardCustomOptions` > `additionalPrintedLine` to the object that corresponds to your chosen mutation.
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkVmlydHVhbFBoeXNpY2FsIHsKICBhZGRDYXJkcygKICAgIGlucHV0OiB7CiAgICAgIGNhcmRzOiB7CiAgICAgICAgYWNjb3VudE1lbWJlcnNoaXBJZDogIiRBQ0NPVU5UX01FTUJFUlNISVBfSUQiCiAgICAgICAgd2l0aGRyYXdhbDogdHJ1ZQogICAgICAgIGludGVybmF0aW9uYWw6IHRydWUKICAgICAgICBub25NYWluQ3VycmVuY3lUcmFuc2FjdGlvbnM6IHRydWUKICAgICAgICBlQ29tbWVyY2U6IHRydWUKICAgICAgICBzcGVuZGluZ0xpbWl0OiB7CiAgICAgICAgICBwZXJpb2Q6IE1vbnRobHkKICAgICAgICAgIGFtb3VudDogeyB2YWx1ZTogIjUwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgICAgfQogICAgICAgIHBoeXNpY2FsQ2FyZDogewogICAgICAgICAgZGVsaXZlcnlBZGRyZXNzOiB7CiAgICAgICAgICAgIGFkZHJlc3NMaW5lMTogIjEgcnVlIGRlIGxhIFBhaXgiCiAgICAgICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICAgICAgcG9zdGFsQ29kZTogIjc1MDAwIgogICAgICAgICAgICBjb3VudHJ5OiAiRlJBIgogICAgICAgICAgfQogICAgICAgICAgY2hvb3NlUGluOiB0cnVlCiAgICAgICAgfQogICAgICB9CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRSRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkQ2FyZHNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY2FyZHMgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBDYXJkQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdHlwZQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWRkaW5nQ2FyZHNUb0RpZmZlcmVudEFjY291bnRzUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQmFkQWNjb3VudFN0YXR1c1JlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBUb29NYW55SXRlbXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcE5vdEFsbG93ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXJkUHJvZHVjdFN1c3BlbmRlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcmRQcm9kdWN0Tm90QXBwbGljYWJsZVRvUGh5c2ljYWxDYXJkc1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcmRQcm9kdWN0RGlzYWJsZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBFbmFibGVkQ2FyZERlc2lnbk5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTWlzc2luZ01hbmRhdG9yeUZpZWxkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
-| Mutation | Object |
-|---|---|
-| `addCards` | Add `physicalCardCustomOptions` > `additionalPrintedLine` to the `physicalCard` object |
-| `addCardsWithGroupDelivery` | Add `physicalCardCustomOptions` > `additionalPrintedLine` to the `cards` object |
-| `printPhysicalCard` | Add `physicalCardCustomOptions` > `additionalPrintedLine` to the `input` |
+```graphql {2,6-12,14-15,21,24,27,33,36,40} showLineNumbers
+mutation AddVirtualPhysical {
+  addCards(
+    input: {
+      cards: {
+        accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
+        withdrawal: true
+        international: true
+        nonMainCurrencyTransactions: true
+        eCommerce: true
+        spendingLimit: {
+          period: Monthly
+          amount: { value: "500", currency: "EUR" }
+        }
+        physicalCard: {
+          deliveryAddress: {
+            addressLine1: "1 rue de la Paix"
+            city: "Paris"
+            postalCode: "75000"
+            country: "FRA"
+          }
+          choosePin: true
+        }
+      }
+      consentRedirectUrl: "$REDIRECT_URL"
+    }
+  ) {
+    ... on AddCardsSuccessPayload {
+      __typename
+      cards {
+        id
+        statusInfo {
+          status
+          ... on CardConsentPendingStatusInfo {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+        type
+      }
+    }
+  }
+}
+
+```
+
+### Payload {#print-with-virtual-payload}
+
+The account member must consent to adding the virtual and physical cards.
+
+Notice the [API card type](../index.mdx#formats-api) (included in the mutation, line 40) is `VirtualAndPhysical`, which is one benefit of the `addCards` mutation.
+There's only one card ID, which is the ID for both the virtual and physical cards.
+
+```json {9,15} showLineNumbers
+{
+  "data": {
+    "addCards": {
+      "__typename": "AddCardsSuccessPayload",
+      "cards": [
+        {
+          "id": "$CARD_ID",
+          "statusInfo": {
+            "status": "ConsentPending",
+            "__typename": "CardConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+            }
+          },
+          "type": "VirtualAndPhysical"
+        }
+      ]
+    }
+  }
+}
+```
 
 ## Print multiple physical cards with group delivery {#print-group}
 
 To ship a group of cards together to the same address, call the `addCardsWithGroupDelivery` mutation.
-It works just like `addCards` (explained in the [guide to add virtual cards](../virtual/guide-add.mdx#add-multiple)), except all the cards are sent together in one package.
+It works just like `addCards`, except all the cards are sent together in one package.
 
-This method is cost-effective and eco-friendly.
-You can send up to 250 cards in a group delivery.
+This method is **cost-effective** and **eco-friendly**.
+You can send up to **250 cards** in a group delivery.
+
+:::tip Prerequisites
+Confirm the account member printing the cards has the [**correct account membership permissions**](../../accounts/memberships/index.mdx#permissions-cards) to manage cards **and** account memberships.
+:::
+
+1. Call the `addCardsWithGroupDelivery` mutation.
+1. Add the address and contact person for the group delivery (lines 4-11).
+1. Add the consent redirect URL.
+1. Add a `card` block for each card you'd like to print (example: lines 15-27).
+    1. Add the `accountMembershipId` (line 16).
+    1. Choose [card settings](../index.mdx#settings) and set the spending limit (lines 17-21).
+    1. Set the `printPhysicalCard` paramater to `true` (line 25).
+1. Add the success payload, including any information you'd like to review (line 57).
+1. Add the consent URL to the success payload (line 64): `statusInfo` > `PhysicalCardConsentPendingStatusInfo` > `consent` > `consentUrl`. There is one consent required for the whole list of added cards by an eligible account member; consent isn't provided per individual card.
+1. Add rejections (not shown).
+
+### Mutation {#print-group-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUHJpbnRHcm91cCB7CiAgYWRkQ2FyZHNXaXRoR3JvdXBEZWxpdmVyeSgKICAgIGlucHV0OiB7CiAgICAgIGdyb3VwRGVsaXZlcnlBZGRyZXNzOiB7CiAgICAgICAgYWRkcmVzc0xpbmUxOiAiQW4gZGVyIEtpcmNoZSA2IgogICAgICAgIGNpdHk6ICJCZXJsaW4iCiAgICAgICAgcG9zdGFsQ29kZTogIjk1MzU2IgogICAgICAgIGNvdW50cnk6ICJERVUiCiAgICAgICAgZmlyc3ROYW1lOiAiUmFlIgogICAgICAgIGxhc3ROYW1lOiAiU2NobWlkdCIKICAgICAgICBwaG9uZU51bWJlcjogIjQ5IDU1IDEyMzQgNTY3OCIKICAgICAgfQogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkUkVESVJFQ1RfVVJMIgogICAgICBjYXJkczogWwogICAgICAgIHsKICAgICAgICAgIGFjY291bnRNZW1iZXJzaGlwSWQ6ICIkQUNDT1VOVF9NRU1CRVJTSElQX0lEIgogICAgICAgICAgd2l0aGRyYXdhbDogdHJ1ZQogICAgICAgICAgaW50ZXJuYXRpb25hbDogdHJ1ZQogICAgICAgICAgbm9uTWFpbkN1cnJlbmN5VHJhbnNhY3Rpb25zOiB0cnVlCiAgICAgICAgICBlQ29tbWVyY2U6IHRydWUKICAgICAgICAgIHNwZW5kaW5nTGltaXQ6IHsKICAgICAgICAgICAgcGVyaW9kOiBNb250aGx5CiAgICAgICAgICAgIGFtb3VudDogeyB2YWx1ZTogIjUwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgICAgICB9CiAgICAgICAgICBwcmludFBoeXNpY2FsQ2FyZDogdHJ1ZQogICAgICAgICAgbmFtZTogIkNhdGhhcmlqbmUgSmFuc3NlbiIKICAgICAgICB9CiAgICAgICAgewogICAgICAgICAgYWNjb3VudE1lbWJlcnNoaXBJZDogIiRBQ0NPVU5UX01FTUJFUlNISVBfSUQiCiAgICAgICAgICB3aXRoZHJhd2FsOiB0cnVlCiAgICAgICAgICBpbnRlcm5hdGlvbmFsOiB0cnVlCiAgICAgICAgICBub25NYWluQ3VycmVuY3lUcmFuc2FjdGlvbnM6IHRydWUKICAgICAgICAgIGVDb21tZXJjZTogdHJ1ZQogICAgICAgICAgc3BlbmRpbmdMaW1pdDogewogICAgICAgICAgICBwZXJpb2Q6IE1vbnRobHkKICAgICAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMjUwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICAgIH0KICAgICAgICAgIHByaW50UGh5c2ljYWxDYXJkOiB0cnVlCiAgICAgICAgICBuYW1lOiAiQWxiZXJ0byBNb3Jlbm8iCiAgICAgICAgfQogICAgICAgIHsKICAgICAgICAgIGFjY291bnRNZW1iZXJzaGlwSWQ6ICIkQUNDT1VOVF9NRU1CRVJTSElQX0lEIgogICAgICAgICAgd2l0aGRyYXdhbDogdHJ1ZQogICAgICAgICAgaW50ZXJuYXRpb25hbDogdHJ1ZQogICAgICAgICAgbm9uTWFpbkN1cnJlbmN5VHJhbnNhY3Rpb25zOiB0cnVlCiAgICAgICAgICBlQ29tbWVyY2U6IHRydWUKICAgICAgICAgIHNwZW5kaW5nTGltaXQ6IHsKICAgICAgICAgICAgcGVyaW9kOiBNb250aGx5CiAgICAgICAgICAgIGFtb3VudDogeyB2YWx1ZTogIjIwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgICAgICB9CiAgICAgICAgICBwcmludFBoeXNpY2FsQ2FyZDogdHJ1ZQogICAgICAgICAgbmFtZTogIk1pa2EgSGF1Z2VuIgogICAgICAgIH0KICAgICAgXQogICAgfQogICkgewogICAgLi4uIG9uIEFkZENhcmRzV2l0aEdyb3VwRGVsaXZlcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY2FyZHMgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIENhcmRDb25zZW50UGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEFkZGluZ0NhcmRzVG9EaWZmZXJlbnRBY2NvdW50c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEJhZEFjY291bnRTdGF0dXNSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVG9vTWFueUl0ZW1zUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RBbGxvd2VkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FyZFByb2R1Y3RTdXNwZW5kZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXJkUHJvZHVjdE5vdEFwcGxpY2FibGVUb1BoeXNpY2FsQ2FyZHNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXJkUHJvZHVjdERpc2FibGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRW5hYmxlZENhcmREZXNpZ25Ob3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE1pc3NpbmdNYW5kYXRvcnlGaWVsZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2,4,13,15-27,57,61,64} showLineNumbers
+mutation PrintGroup {
+  addCardsWithGroupDelivery(
+    input: {
+      groupDeliveryAddress: {
+        addressLine1: "An der Kirche 6"
+        city: "Berlin"
+        postalCode: "95356"
+        country: "DEU"
+        firstName: "Rae"
+        lastName: "Schmidt"
+        phoneNumber: "49 55 1234 5678"
+      }
+      consentRedirectUrl: "$REDIRECT_URL"
+      cards: [
+        {
+          accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
+          withdrawal: true
+          international: true
+          nonMainCurrencyTransactions: true
+          eCommerce: true
+          spendingLimit: {
+            period: Monthly
+            amount: { value: "500", currency: "EUR" }
+          }
+          printPhysicalCard: true
+          name: "Catharijne Janssen"
+        }
+        {
+          accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
+          withdrawal: true
+          international: true
+          nonMainCurrencyTransactions: true
+          eCommerce: true
+          spendingLimit: {
+            period: Monthly
+            amount: { value: "250", currency: "EUR" }
+          }
+          printPhysicalCard: true
+          name: "Alberto Moreno"
+        }
+        {
+          accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
+          withdrawal: true
+          international: true
+          nonMainCurrencyTransactions: true
+          eCommerce: true
+          spendingLimit: {
+            period: Monthly
+            amount: { value: "200", currency: "EUR" }
+          }
+          printPhysicalCard: true
+          name: "Mika Haugen"
+        }
+      ]
+    }
+  ) {
+    ... on AddCardsWithGroupDeliverySuccessPayload {
+      __typename
+      cards {
+        statusInfo {
+          ... on CardConsentPendingStatusInfo {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload {#print-group-payload}
+
+The account member must consent to adding the cards.
+After consent is received, the physical cards are created.
+
+```json {10} showLineNumbers
+{
+  "data": {
+    "addCardsWithGroupDelivery": {
+      "__typename": "AddCardsWithGroupDeliverySuccessPayload",
+      "cards": [
+        {
+          "statusInfo": {
+            "__typename": "CardConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "$CONSENT_URL_FOR_ALL_CARDS"
+            }
+          }
+        },
+        {
+          "statusInfo": {
+            "__typename": "CardConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "$CONSENT_URL_FOR_ALL_CARDS"
+            }
+          }
+        },
+        {
+          "statusInfo": {
+            "__typename": "CardConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "$CONSENT_URL_FOR_ALL_CARDS"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+## Add an additional line {#print-additional-line}
+
+You can **add an additional line of text** to your physical cards with all of the mutations outlined on this page.
+For example, you might want to print your company name.
+
+| Mutation | Object |
+|---|---|
+| `addCards` | `physicalCard` > `physicalCardCustomOptions` > `additionalPrintedLine` |
+| `addCardsWithGroupDelivery` | `cards` > `physicalCardCustomOptions` > `additionalPrintedLine` |
+| `printPhysicalCard` | `input` > `physicalCardCustomOptions` > `additionalPrintedLine` |
+
+
+
+## Get delivery information {#delivery}
+
+After consent is received, retrieve delivery information with the API.
+
+1. Call the `card` query.
+1. Add the `cardId`.
+1. To get delivery details, add `physicalCard` > `statusInfo` > `PhysicalCardToActivateStatusInfo`, then all information you'd like to retrieve. Refer to Swan's [card delivery times](./index.mdx#hubs) for more information.
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgRGVsaXZlcnlJbmZvIHsKICBjYXJkKGNhcmRJZDogIiRDQVJEX0lEIikgewogICAgcGh5c2ljYWxDYXJkIHsKICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgLi4uIG9uIFBoeXNpY2FsQ2FyZFRvQWN0aXZhdGVTdGF0dXNJbmZvIHsKICAgICAgICAgIGVzdGltYXRlZERlbGl2ZXJ5RGF0ZQogICAgICAgICAgdHJhY2tpbmdOdW1iZXIKICAgICAgICAgIGlzUElOUmVhZHkKICAgICAgICAgIHNoaXBwaW5nUHJvdmlkZXIKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2,5} showLineNumbers
+query DeliveryInfo {
+  card(cardId: "$CARD_ID") {
+    physicalCard {
+      statusInfo {
+        ... on PhysicalCardToActivateStatusInfo {
+          estimatedDeliveryDate
+          trackingNumber
+          isPINReady
+          shippingProvider
+          status
+        }
+      }
+    }
+  }
+}
+```

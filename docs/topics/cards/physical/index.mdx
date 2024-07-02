@@ -12,13 +12,7 @@ You can order a physical card for each virtual card.
 Swan physical cards are typical plastic cards that can be used for swipe, chip and PIN, contactless, and online transactions.
 Your [design](../design/index.mdx) will be printed on all physical cards.
 
-## Card information {#info}
-
-Understand how Swan determines the name to print on a physical card.
-Learn how a PIN is chosen, assigned, and viewed.
-Understand what happens if a card holder repeatedly enters their PIN incorrectly.
-
-### Card name {#name}
+## Card name {#name}
 
 The name printed on Swan cards corresponds to a card holder's legal name, as recorded for their Swan account.
 
@@ -31,7 +25,7 @@ If the first initial + last name combination still exceeds 20 characters, their 
 - The name `Mikah Ottovordemgentschenfelde` would be abbreviated to `Mikah O.`.
 :::
 
-### Card number {#number}
+## Card number {#number}
 
 Each physical card has a unique card number, different even from the virtual card added before the physical card was printed.
 
@@ -45,15 +39,11 @@ import VirtualPhysicalCardNumbers from '../partials/_card-numbers.mdx';
 <VirtualPhysicalCardNumbers />
 :::
 
-### Card PIN {#pin}
+## PIN (Personal Identification Number) {#pin}
 
-Physical cards have a **four-digit PIN**, or personal identification number.
+Physical cards have a **four-digit PIN**, or *Personal Identification Number*.
 A card's PIN is chosen or assigned when the card is printed.
 After a PIN is chosen or assigned, it **can't be changed**.
-
-To allow your card holders to **choose their PIN**, set the `choosePin` paramater to `true` when [printing physical cards](./guide-print.mdx).
-You can set this paramater with the `printPhysicalCard` and `addCards` mutations.
-If you don't add the `choosePin` paramater, or you set it to `false`, Swan assigns a PIN randomly.
 
 The PIN for each physical card is available to the card holder on Swan's Web Banking interface.
 PINs aren't available on your Dashboard because only the card holder should have easy access to the PIN for their card.
@@ -66,14 +56,25 @@ Note that if three incorrect attempts are made to enter the PIN, the card is aut
 If a card holder shares their PIN, Swan can't take responsibility for fraud associated with that card.
 :::
 
-#### Incorrect PIN attempts {#pin-incorrect-attempts}
+### Choosing a card's PIN {#pin-choose}
+
+To allow your card holders to **choose their PIN**, set the `choosePin` paramater to `true` when [printing physical cards](./guide-print.mdx).
+You can set this paramater with the `printPhysicalCard` and `addCards` mutations.
+
+If you don't add the `choosePin` paramater, or you set it to `false`, Swan assigns a PIN randomly.
+A card's PIN **can't be changed**.
+
+If an account member is **ordering a card for someone else**, it's recommended to use the the `addCard` mutation to [add **only** the virtual card](../virtual/guide-add.mdx#add-one).
+Then, the card holder can request their own physical card and choose their PIN securely.
+
+### Incorrect PIN attempts {#pin-incorrect-attempts}
 
 If the card holder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical card can be made online or in person.
 
 Note that a physical card blocked for three incorrect PIN attempts will have the reason `IncorrectPinCodeAttemptsExceeded` (on the `PhysicalCardSuspendedStatusInfo`).
 You'll have to wait 24 hours before being able to [unblock the physical card](./guide-block-unblock.mdx).
 
-You can continue to use both virtual and digital cards.
+You can continue to use both virtual and digital cards while the physical card is temporarily blocked.
 
 ## Printing and shipping hubs {#hubs}
 

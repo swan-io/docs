@@ -182,12 +182,12 @@ Refer to the [card renewal statuses](#renew-statuses) to understand how they int
 
 ## Renewing physical cards {#renew}
 
-Physical cards are renewed automatically before the expiry date.
-By default, this happens three years after printing the card.
-When a physical card is renewed, the **card numbers**, **CVV**, **identifier**, and **expiry date change**.
+Physical cards are **renewed automatically** before the expiry date.
+By default, cards expire three years after the card is printed, and are renewed for an additional three years.
 
+When a physical card is renewed, the **card numbers**, **CVV**, **identifier**, and **expiry date change**.
 The four-digit **PIN doesn't change** for a continuous user experience.
-If your user prefers to [choose their PIN](#pin-choose), they need to cancel the existing card and order a new one.
+If your user prefers to [choose their PIN](#pin-choose), they need to [cancel the expiring card](./guide-cancel.mdx) and order a new one.
 It's not possible to choose a new PIN during renewal.
 
 Existing subscriptions might be transferred to the new card automatically if the merchant adheres to this service.
@@ -195,8 +195,8 @@ Swan has no control over this process.
 
 ### Card delivery {#renew-delivery}
 
-New physical cards are shipped on the eleventh of the month before the card expires.
-For example, if the card expires on the **last day of March**, the new card ships on **February 11** of the same year.
+New physical cards are shipped between the eleventh and fifteenth of the month before the card expires.
+For example, if the card expires on the **last day of March**, the new card ships between **February 11-15** of the same year.
 
 **Delivery details** are available in the `PhysicalCardRenewedStatus` object.
 The estimated delivery date can be found in the `estimatedDeliveryDate` field.
@@ -204,12 +204,12 @@ You'll find the carrier and tracking number in the fields `shippingProvider` and
 
 ### Verify delivery address {#renew-address}
 
-**10 weeks before** the original card expires, **verify the delivery address** for the new card with your card holder.
+**10 weeks before** the original card expires, **verify the delivery address** with your card holder.
 
 | Interface | Address update method |
 | --- | --- |
 | Swan's Web Banking app | Card holders confirm or update their address in the app at least 8 weeks before renewal. |
-| Custom integration | Send the updated address to Swan **at least 8 weeks before** the card renews.<br /><br /><ol><li>First, provide a way for your card holders to verify their address. For example, this could be from your app, with a notification system, or through your own support team.</li><li>Then, send Swan the updated address with the API by calling the `confirmPhysicalCardRenewal` mutation.</li></ol> |
+| Custom integration | Send the updated address to Swan at least 8 weeks before the card renews.<br /><br /><ol><li>First, provide a way for your card holders to verify their address. For example, this could be from your app, with a notification system, or through your own support team.</li><li>Then, send Swan the updated address with the API by calling the `confirmPhysicalCardRenewal` mutation.</li></ol> |
 
 ### Card renewal statuses {#renew-statuses}
 
@@ -243,13 +243,15 @@ flowchart LR
 
 | Card renewal status | Explanation |
 |---|---|
-| `ToRenew` | Status triggered automatically 10 weeks before the card's expiry date. After this status is triggered by the Swan API, you can't stop the renewal process.<br /><br />If you or the card holder doesn't want to renew a physical card, [cancel the card](./guide-cancel.mdx) **at least 11 weeks** before the expiry date. |
+| `ToRenew` | Status triggered automatically 10 weeks before the card's expiry date. After this status is triggered by the Swan API, you can't stop the renewal process.<br /><br />*If you or the card holder doesn't want to renew a physical card, [cancel the card](./guide-cancel.mdx) **at least 11 weeks** before the expiry date.* |
 | `Renewed` | Status triggered automatically 8 weeks before the card's expiry date. No updates to the delivery address can be made after this status is triggered. |
 
-:::tip Activating new card
-The new card's status changes from `Renewed` to `Activated` after the card holder makes a transaction with the new card.
-Then, the old card's status changes to `Canceled` because only one card can be activated at a time.
-:::
+### Activating the new card {#renew-activate}
+
+After the card holder makes an in-person transaction with the new card using the Chip and PIN payment method, the new card's status changes from `Renewed` to `Activated`.
+
+The old card is then marked `isExpired=true` because only one card can be activated at a time.
+Details about expired physical cards are available in the `card` query (`card` > `physicalCard` > `previousPhysicalCards`).
 
 ## Guides {#guides}
 

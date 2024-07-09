@@ -137,16 +137,16 @@ flowchart LR
     PCA((Physical<br/>card added)) -.-> I[Initiated]
     TA <-.-> S
     I -.-> CP[ConsentPending]
+    CP -.-> TA
     CP -.-> P[Processing]
     P -.-> TA[ToActivate]
-    TA --> A[Activated]
+    TA -.-> A[Activated]
     A <-..-> S[Suspended]
     A -.-> CL
     S -.-> CL[Canceling]
-    CL --> CD[Canceled]
-    CP -.-> TA
+    CL -.-> CD[Canceled]
     CP -.-> CL
-    CP --> CD
+    CP -.-> CD
     P -.-> CL
     TA -.-> CL
     subgraph U[Can use card]
@@ -164,9 +164,9 @@ flowchart LR
     style IR fill:#f6ddcc,stroke:#c12236
 ```
 
-:::info renewal statuses
+:::warning renewal statuses
 The statuses `ToRenew` and `Renewed` don't appear in the status diagram intentionally.
-Please refer to the [section on renewing cards](#renew) for more details about these statuses.
+Refer to the [card renewal statuses](#renew-statuses) to understand how they interact with the main physical card statuses.
 :::
 
 | Physical card status | Explanation |
@@ -179,29 +179,58 @@ Please refer to the [section on renewing cards](#renew) for more details about t
 | `Suspended`<br /><br />Also referred to as *Blocked* | Physical card is suspended and not available for use. Card holders can still view card information and use digital cards (not virtual cards) when a physical card is `Suspended`.<br/><br/>*Cards can be suspended for various reasons, including a request from you or the card holder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API.</li><li>Cancel the card with the API.</li></ul> |
 | `Canceling` | Card is in the process of being canceled.<br/><br/>**Next steps**: Card is `Canceled`. After a card is assigned the `Canceling` status, the process can't be reversed. |
 | `Canceled` | Card is canceled, no longer available for use, and can't be reactivated. |
-| `ToRenew` | Card needs to be renewed. |
-| `Renewed` | Card is renewed. The status returns to `Activated` after the first transaction is made with the new card. |
 
 ## Renewing physical cards {#renew}
 
-Physical cards are renewed automatically before the expiry date, which, by default, is three years after adding the card.
+Physical cards are **renewed automatically** before the expiry date.
+By default, cards expire three years after the card is printed, and are renewed for an additional three years.
 
-About six weeks before the expiry date, the status of the physical card changes to `ToRenew` with the delivery details available in the `PhysicalCardRenewedStatus` object.
-The estimated date of delivery can be found in the `estimatedDeliveryDate` field.
+When a physical card is renewed, the **card numbers**, **CVV**, **identifier**, and **expiry date change**.
+The four-digit **PIN doesn't change** for a continuous user experience.
+If your user prefers to [choose their PIN](#pin-choose), they need to [cancel the expiring card](./guide-cancel.mdx) and order a new one.
+It's not possible to choose a new PIN during renewal.
+
+Existing subscriptions might be transferred to the new card automatically if the merchant adheres to this service.
+Swan has no control over this process.
+
+### Card delivery {#renew-delivery}
+
+New physical cards are shipped between the eleventh and fifteenth of the month before the card expires.
+For example, if the card expires on the **last day of March**, the new card ships between **February 11-15** of the same year.
+
+**Delivery details** are available in the `PhysicalCardRenewedStatus` object.
+The estimated delivery date can be found in the `estimatedDeliveryDate` field.
 You'll find the carrier and tracking number in the fields `shippingProvider` and `trackingNumber` as soon as they're available.
 
-When a physical card is renewed, the card numbers change but the four-digit PIN remains the same for a continuous user experience.
+### Verify delivery address {#renew-address}
+
+**10 weeks before** the original card expires, **verify the delivery address** with your card holder.
+
+:::info No update provided
+If Swan doesn't receive updated address information at least 8 weeks before the card renews, the renewed card is shipped to the same address as the original card.
+:::
+
+| Interface | Address update method |
+| --- | --- |
+| Swan's Web Banking app | Card holders confirm or update their address in the app at least 8 weeks before renewal. |
+| Custom integration | Send the updated address to Swan at least 8 weeks before the card renews.<br /><br /><ol><li>First, provide a way for your card holders to verify their address. For example, this could be from your app, with a notification system, or through your own support team.</li><li>Then, send Swan the updated address with the API by calling the `confirmPhysicalCardRenewal` mutation.</li></ol> |
+
+### Card renewal statuses {#renew-statuses}
+
+Two statuses exist that only apply to physical card renewal: `ToRenew` and `Renewed`.
+
+This diagram illustrates how the two renewal statuses interact with the main [physical card statuses](#statuses).
+Note that renewal statuses are only accessed from the statuses `ToActivate` and `Activated`.
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    PCNR((Physical card<br/>needs renewal)) -.starts with.- A[Activated]
-    PCNR -.starts with.- TA
+    PCNR((Physical card<br/>needs renewal)) -.starts with.-o A[Activated]
+    PCNR -.starts with.-o TA
     A -.-> TR[ToRenew]
     TR -.-> R[Renewed]
     R -.-> A
     TA[ToActivate] -.-> TR
-    TR -...-> CL[Canceling]
     subgraph U[Can use card]
         A
     end
@@ -209,16 +238,25 @@ flowchart LR
         TR
         R
     end
-    subgraph IR[Irreversible]
-        CL
-    end
     style PCNR fill:#D4D3D5,stroke:#514F59
-    style RS fill:#fffdf4,stroke:#cca922
-    style U fill:#dfedf2,stroke:#4d8296,stroke-width:3px
-    style IR fill:#f6ddcc,stroke:#c12236
+    style RS fill:#fef6fa,stroke:#ba3676,stroke-width:2px
+    style U fill:#dfedf2,stroke:#4d8296
     style TR stroke-width:2px
     style R stroke-width:2px
 ```
+
+| Card renewal status | Explanation |
+|---|---|
+| `ToRenew` | Status triggered automatically 10 weeks before the card's expiry date. After this status is triggered by the Swan API, you can't stop the renewal process.<br /><br />*If you or the card holder doesn't want to renew a physical card, [cancel the card](./guide-cancel.mdx) **at least 11 weeks** before the expiry date.* |
+| `Renewed` | Status triggered automatically 8 weeks before the card's expiry date. No updates to the delivery address can be made after this status is triggered. |
+
+### Activating the new card {#renew-activate}
+
+After the card holder makes an in-person transaction with the new card using the Chip and PIN payment method, the new card's status changes from `Renewed` to `Activated`.
+You could also [use the API](./guide-activate.mdx).
+
+The old card is then marked `isExpired=true` because only one card can be activated at a time.
+Details about expired physical cards are available in the `card` query (`card` > `physicalCard` > `previousPhysicalCards`).
 
 ## Guides {#guides}
 

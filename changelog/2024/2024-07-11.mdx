@@ -1,0 +1,34 @@
+---
+title: 11 July 2024
+type: release
+---
+
+### New features
+
+💳 Our first cards are reaching expiration in 2024.
+Therefore, we deployed an [automatic renewal process](/topics/cards/physical/#renew) so virtual and physical cards renew automatically before they expire.
+Your card holders can [update their delivery address](/topics/cards/physical/#renew-address) for the new physical card if needed.
+
+Users can now [choose their PIN](/topics/cards/physical/#pin-choose) when printing a physical card.
+To allow this for your card holders, set the new `choosePin` boolean to `true`.
+Allowing card holders to choose their PIN will reduce friction to use physical card, therefore driving more transactions.
+
+### Improvements
+
+🔎 **In 1 week**, we're generating [Bank Details documents](/topics/accounts/#bank-details) for all accounts created before 16 November 2023, which weren't available automatically when we launched this feature.
+Subscribe to the `Account.Updated` webhook to synchronize your system if necessary.
+
+🌐 Choose and update the [account membership language](/topics/accounts/memberships/#language), used for the invitation email and when ordering and using cards.
+
+- By default, the new `AccountMembership.language` inherits the `Account.language` chosen during onboarding.
+- The available languages are: Dutch `nl`, English `en`, French `fr`, German `de`, Italian `it`, Portuguese `pt`, and Spanish `es`.
+- Finnish `fi` isn't supported for the account membership language yet.
+- If you're subscribed to the `AccountMembership.Updated` webhook, you'll receive a webhook notification when `AccountMembership.language` is live.
+- If you've already used the `updateAccountMembership` mutation to choose the language for an account membership, the language won't change with this update.
+
+### Upcoming breaking changes
+
+⚠️ In **4 weeks**, we'll start using new values for the `SupportingDocumentPurpose` and `SupportingDocumentType` enums.
+
+- **`SupportingDocumentPurpose` enum**: `PersonalIncome`, `PersonalSavings`, `Investment`, `Donation`, `Inheritance`, `RealEstateIncome`, `GamblingPrizeWinnings`, `Trade`, `CompanyTreasury`, and `CompanyObligations`
+- **`SupportingDocumentType` enum**: `WinningsCertificate` and `Invoice`

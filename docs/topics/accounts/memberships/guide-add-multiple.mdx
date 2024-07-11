@@ -14,12 +14,13 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 ## Step 1: Add account memberships {#api-add}
 
 1. Call the `addAccountMemberships` mutation.
-1. Add the account ID to which you're adding a invited account member (line 4) and your `consentRedirectUrl` (line 5).
-1. Add one invited account member block for each invitee (lines 7-20).
-1. In each `restrictedTo` object, add information about the invited account members.
+1. Add the account ID to which you're inviting account members (line 4) and your `consentRedirectUrl` (line 5).
+1. Add one invited account member block for each invitee (lines 7-21).
+1. In each `restrictedTo` object (lines 9-14), add information about the invited account members.
     - If you're only granting `canViewAccount` permissions, or you're [not granting any permissions](./index.mdx#permissions-none), the invited account member's `birthDate` isn't required.
     - Include a `+` in front of the phone number.
 1. Choose `true` for the permissions you'd like to grant to the invited account member.
+1. Choose the [account membership language](./index.mdx#language) (line 20). If no language is chosen, the membership inherits the [account language](../index.mdx#language).
 1. Add the success payload, including any information you'd like to review (line 51).
 1. Add the consent URL to the success payload (line 59): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
@@ -30,28 +31,29 @@ However, it's recommended to choose true or false for this permission anyway.
 If you don't include the `CanManageCards` permission in your API call, it inherits the same value as `canManageAccountMembership`.
 :::
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkTXVsdGlwbGVNZW1iZXJzIHsKICBhZGRBY2NvdW50TWVtYmVyc2hpcHMoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICJodHRwczovL2RvY3Muc3dhbi5pby8iCiAgICAgIG1lbWJlcnNoaXBzOiBbCiAgICAgICAgewogICAgICAgICAgZW1haWw6ICJhbGJlcnRvQG15YnJhbmQuaW8iCiAgICAgICAgICByZXN0cmljdGVkVG86IHsKICAgICAgICAgICAgZmlyc3ROYW1lOiAiQWxiZXJ0byIKICAgICAgICAgICAgbGFzdE5hbWU6ICJSb21lbm8iCiAgICAgICAgICAgIGJpcnRoRGF0ZTogIjE5ODAtMDItMjAiCiAgICAgICAgICAgIHBob25lTnVtYmVyOiAiKzMzNjAwMDAwMDAwIgogICAgICAgICAgfQogICAgICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUJlbmVmaWNpYXJpZXM6IHRydWUKICAgICAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUFjY291bnRNZW1iZXJzaGlwOiB0cnVlCiAgICAgICAgICBjYW5NYW5hZ2VDYXJkczogZmFsc2UKICAgICAgICB9CiAgICAgICAgewogICAgICAgICAgZW1haWw6ICJzb2ZpYUBteWJyYW5kLmlvIgogICAgICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgICAgIGZpcnN0TmFtZTogIlNvZmlhIgogICAgICAgICAgICBsYXN0TmFtZTogIlJhbWlyZXoiCiAgICAgICAgICAgIHBob25lTnVtYmVyOiAiKzMzNjAwMDAwMDAwIgogICAgICAgICAgfQogICAgICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUJlbmVmaWNpYXJpZXM6IGZhbHNlCiAgICAgICAgICBjYW5Jbml0aWF0ZVBheW1lbnRzOiBmYWxzZQogICAgICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IGZhbHNlCiAgICAgICAgICBjYW5NYW5hZ2VDYXJkczogZmFsc2UKICAgICAgICB9CiAgICAgICAgewogICAgICAgICAgZW1haWw6ICJyYWVAbXlicmFuZC5pbyIKICAgICAgICAgIHJlc3RyaWN0ZWRUbzogewogICAgICAgICAgICBmaXJzdE5hbWU6ICJSYWUiCiAgICAgICAgICAgIGxhc3ROYW1lOiAiU2NobWlkdCIKICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk4Ni0wOS0wMiIKICAgICAgICAgICAgcGhvbmVOdW1iZXI6ICIrMzM2MDAwMDAwMDAiCiAgICAgICAgICB9CiAgICAgICAgICBjYW5WaWV3QWNjb3VudDogdHJ1ZQogICAgICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogdHJ1ZQogICAgICAgICAgY2FuSW5pdGlhdGVQYXltZW50czogdHJ1ZQogICAgICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUNhcmRzOiB0cnVlCiAgICAgICAgfQogICAgICBdCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkQWNjb3VudE1lbWJlcnNoaXBzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGFjY291bnRNZW1iZXJzaGlwcyB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcENvbnNlbnRQZW5kaW5nU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkTXVsdGlwbGVNZW1iZXJzIHsKICBhZGRBY2NvdW50TWVtYmVyc2hpcHMoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFJFRElSRUNUX1VSTCIKICAgICAgbWVtYmVyc2hpcHM6IFsKICAgICAgICB7CiAgICAgICAgICBlbWFpbDogImFsYmVydG9AbXlicmFuZC5pbyIKICAgICAgICAgIHJlc3RyaWN0ZWRUbzogewogICAgICAgICAgICBmaXJzdE5hbWU6ICJBbGJlcnRvIgogICAgICAgICAgICBsYXN0TmFtZTogIlJvbWVubyIKICAgICAgICAgICAgcGhvbmVOdW1iZXI6ICIrMzM2MDAwMDAwMDAiCiAgICAgICAgICAgIGJpcnRoRGF0ZTogInl5eXktbW0tZGQiCiAgICAgICAgICB9CiAgICAgICAgICBjYW5WaWV3QWNjb3VudDogdHJ1ZQogICAgICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogZmFsc2UKICAgICAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUFjY291bnRNZW1iZXJzaGlwOiBmYWxzZQogICAgICAgICAgY2FuTWFuYWdlQ2FyZHM6IGZhbHNlCiAgICAgICAgICBsYW5ndWFnZTogZXMKICAgICAgICB9CiAgICAgICAgewogICAgICAgICAgZW1haWw6ICJzb2ZpYUBteWJyYW5kLmlvIgogICAgICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgICAgIGZpcnN0TmFtZTogIlNvZmlhIgogICAgICAgICAgICBsYXN0TmFtZTogIlJhbWlyZXoiCiAgICAgICAgICAgIHBob25lTnVtYmVyOiAiKzMzNjAwMDAwMDAwIgogICAgICAgICAgICBiaXJ0aERhdGU6ICJ5eXl5LW1tLWRkIgogICAgICAgICAgfQogICAgICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUJlbmVmaWNpYXJpZXM6IHRydWUKICAgICAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUFjY291bnRNZW1iZXJzaGlwOiB0cnVlCiAgICAgICAgICBjYW5NYW5hZ2VDYXJkczogZmFsc2UKICAgICAgICAgIGxhbmd1YWdlOiBlcwogICAgICAgIH0KICAgICAgICB7CiAgICAgICAgICBlbWFpbDogInJhZUBteWJyYW5kLmlvIgogICAgICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgICAgIGZpcnN0TmFtZTogIlJhZSIKICAgICAgICAgICAgbGFzdE5hbWU6ICJTY2htaWR0IgogICAgICAgICAgICBwaG9uZU51bWJlcjogIiszMzYwMDAwMDAwMCIKICAgICAgICAgICAgYmlydGhEYXRlOiAieXl5eS1tbS1kZCIKICAgICAgICAgIH0KICAgICAgICAgIGNhblZpZXdBY2NvdW50OiB0cnVlCiAgICAgICAgICBjYW5NYW5hZ2VCZW5lZmljaWFyaWVzOiB0cnVlCiAgICAgICAgICBjYW5Jbml0aWF0ZVBheW1lbnRzOiB0cnVlCiAgICAgICAgICBjYW5NYW5hZ2VBY2NvdW50TWVtYmVyc2hpcDogdHJ1ZQogICAgICAgICAgY2FuTWFuYWdlQ2FyZHM6IHRydWUKICAgICAgICAgIGxhbmd1YWdlOiBkZQogICAgICAgIH0KICAgICAgXQogICAgfQogICkgewogICAgLi4uIG9uIEFkZEFjY291bnRNZW1iZXJzaGlwc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBhY2NvdW50TWVtYmVyc2hpcHMgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBDb25zZW50UGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBCYWRBY2NvdW50U3RhdHVzUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludmFsaWRQaG9uZU51bWJlclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFBlcm1pc3Npb25DYW5ub3RCZUdyYW50ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBUb29NYW55SXRlbXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
 
-```graphql {4,5,7-20,51,59} showLineNumbers
+```graphql {4,5,7-21,55,63} showLineNumbers
 mutation AddMultipleMembers {
   addAccountMemberships(
     input: {
-      accountId: "$YOUR_ACCOUNT_ID"
-      consentRedirectUrl: "https://docs.swan.io/"
+      accountId: "$ACCOUNT_ID"
+      consentRedirectUrl: "$REDIRECT_URL"
       memberships: [
         {
           email: "alberto@mybrand.io"
           restrictedTo: {
             firstName: "Alberto"
             lastName: "Romeno"
-            birthDate: "1980-02-20"
             phoneNumber: "+33600000000"
+            birthDate: "yyyy-mm-dd"
           }
           canViewAccount: true
-          canManageBeneficiaries: true
+          canManageBeneficiaries: false
           canInitiatePayments: true
-          canManageAccountMembership: true
+          canManageAccountMembership: false
           canManageCards: false
+          language: es
         }
         {
           email: "sofia@mybrand.io"
@@ -59,26 +61,29 @@ mutation AddMultipleMembers {
             firstName: "Sofia"
             lastName: "Ramirez"
             phoneNumber: "+33600000000"
+            birthDate: "yyyy-mm-dd"
           }
           canViewAccount: true
-          canManageBeneficiaries: false
-          canInitiatePayments: false
-          canManageAccountMembership: false
+          canManageBeneficiaries: true
+          canInitiatePayments: true
+          canManageAccountMembership: true
           canManageCards: false
+          language: es
         }
         {
           email: "rae@mybrand.io"
           restrictedTo: {
             firstName: "Rae"
             lastName: "Schmidt"
-            birthDate: "1986-09-02"
             phoneNumber: "+33600000000"
+            birthDate: "yyyy-mm-dd"
           }
           canViewAccount: true
           canManageBeneficiaries: true
           canInitiatePayments: true
           canManageAccountMembership: true
           canManageCards: true
+          language: de
         }
       ]
     }

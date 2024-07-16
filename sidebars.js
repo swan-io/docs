@@ -168,7 +168,15 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
-        "topics/capital-deposits/index",
+        {
+          type: "category",
+          label: "Capital deposits",
+          link: { type: "doc", id: "topics/capital-deposits/index" },
+          collapsed: true,
+          items: [
+            "topics/capital-deposits/guide-cancel",
+          ],
+        },
         {
           type: "category",
           label: "🇫🇷 France",

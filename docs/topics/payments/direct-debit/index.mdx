@@ -64,7 +64,7 @@ The specifications of the received payment mandate depend on whether the mandate
 | Direct debit type | Specifications |
 | --- | --- |
 | SEPA Direct Debit **Core** | <ol><li>Core received payment mandates don't need to be provided to Swan (or the creditor's bank).</li><li>Swan isn't required to verify a mandate's validity with the debtor.</li><li>The debtor is entitled to a refund of an authorized debit, no questions asked, according to the timeline listed in the [specifications table](#specifications).</li></ol> |
-| SEPA Direct Debit **B2B** | <ol><li>B2B received payment mandates must be provided by the debtor to Swan.</li><li>Swan **must** validity of the instruction against the mandate or mandate information received from the debtor.</li><li>The debtor isn't entitled to a refund of an authorized debit.</li></ol> |
+| SEPA Direct Debit **B2B** | <ol><li>B2B received payment mandates must be provided by the debtor to Swan.</li><li>Swan **must** verify the validity of the instruction against the mandate or mandate information received from the debtor.</li><li>The debtor isn't entitled to a refund of an authorized debit.</li></ol> |
 | Swan Internal Direct Debit **Standard** | <ol><li>Internal received payment mandates are handled within Swan.</li><li>Swan isn't required to verify a mandate's validity with the debtor.</li><li>The debtor is entitled to a refund of an authorized debit, no questions asked, according to the timeline listed in the [specifications table](#specifications).</li></ol> |
 | Swan Internal Direct Debit **B2B** | <ol><li>Internal received payment mandates are handled within Swan.</li><li>Swan **must** check the validity of the instruction against the mandate or mandate information received from the debtor.</li><li>The debtor isn't entitled to a refund of an authorized debit.</li></ol> |
 
@@ -189,16 +189,16 @@ If your request to reject the transaction is accepted, the status changes from `
 
 ### Refunded (Returned) {#refunded}
 
-**Core SEPA Direct Debit transactions** are refundable under two specific scenarios:
-
-:::note execution
-Execution means the [transaction status](#statuses) changed to `Booked`.
-:::
+**Core** SEPA Direct Debit transactions are refundable under two specific scenarios:
 
 1. Transactions are eligible for refunds for up to **8 calendar weeks** after execution, no questions asked.
 [Request these refunds](./guide-return.mdx) with the API `returnTransaction` mutation.
 1. Transactions are eligible for refunds up to **13 months** after execution if there wasn't a valid mandate or if the payment wasn't authorized.
-Request a refund by sending an email to support@swan.io with all of the supporting details.
+Request a refund by [contacting Swan Support](https://support.swan.io/hc/en-150/requests/new) with all of the transaction details.
+
+:::note execution
+Execution means the [transaction status](#statuses) changed to `Booked`.
+:::
 
 If the refund is approved, a new `SepaDirectDebitOutReturn` transaction is created with the status `Booked`.
 

@@ -20,25 +20,25 @@ Refer to the [France guide](./guide.mdx) for the whole process.
      1. `individualShareholders`
      1. `totalCapitalDepositAmount`
      1. `onboardingCapitalDepositCompany`
-1. **`companyName`**: Enter the name of the future company (line 4).
-1. **`companyShareholders`**: Add required information about company shareholders (starts on line 5).
+1. `companyName`: Enter the name of the future company (line 4).
+1. `companyShareholders`: Add required information about company shareholders (starts on line 5).
    1. Add the `onboardingInfo` object to prefill onboarding information for `individualUltimateBeneficialOwners` (starts on line 8).
    1. You can also prefill information about the company (starts on line 33).
-1. **`individualShareholders`**: Add required information about individual shareholders (starts on line 50).
-1. **`totalCapitalDepositAmount`**: Add the combined capital deposit amount from all company and individual shareholders (line 69).
-1. **`onboardingCapitalDepositCompany`**: Add the company onboarding object to start creating the future company account (starts on line 70).
+1. `individualShareholders`: Add required information about individual shareholders (starts on line 50).
+1. `totalCapitalDepositAmount`: Add the combined capital deposit amount from all company and individual shareholders (line 69).
+1. `onboardingCapitalDepositCompany`: Add the company onboarding object to start creating the future company account (starts on line 70).
    - Note that `individualUltimateBeneficialOwners` and company information should match the information entered in step 3.
 1. Add the `CreateCapitalDepositCaseSuccessPayload` (starts on line 107). Consider adding several pieces of important information, such as:
    1. `companyOnboarding` > `id`.
-   1. `documents` > `type`, `status`, and `id`.
+   1. `documents` > `type`, `statusInfo` > `status`, and `id`.
    1. `shareholders` information, including `onboarding` > `id`.
-1. Add rejections in case the mutation doesn't succeed (starts on line 154).
+1. Add rejections in case the mutation doesn't succeed (start on line 161).
 
 ## Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gY3JlYXRlQ2FzZSB7CiAgY3JlYXRlQ2FwaXRhbERlcG9zaXRDYXNlKAogICAgaW5wdXQ6IHsKICAgICAgY29tcGFueU5hbWU6ICJNeUJyYW5kIgogICAgICBjb21wYW55U2hhcmVob2xkZXJzOiB7CiAgICAgICAgY2FwaXRhbERlcG9zaXRBbW91bnQ6IHsgdmFsdWU6ICIxMDAwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgICAgbmFtZTogIkNvbXBhbnkgc2hhcmVob2xkZXIiCiAgICAgICAgb25ib2FyZGluZ0luZm86IHsKICAgICAgICAgIGluZGl2aWR1YWxVbHRpbWF0ZUJlbmVmaWNpYWxPd25lcnM6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgIHR5cGU6IExlZ2FsUmVwcmVzZW50YXRpdmUKICAgICAgICAgICAgICBiaXJ0aENpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICBiaXJ0aENpdHlQb3N0YWxDb2RlOiAiNzUwMDAiCiAgICAgICAgICAgICAgYmlydGhDb3VudHJ5Q29kZTogIkZSQSIKICAgICAgICAgICAgICBiaXJ0aERhdGU6ICIwMi8wMi8xOTg4IgogICAgICAgICAgICAgIGRpcmVjdDogZmFsc2UKICAgICAgICAgICAgICBmaXJzdE5hbWU6ICJKdWxlcyIKICAgICAgICAgICAgICBsYXN0TmFtZTogIkZsZXVyeSIKICAgICAgICAgICAgICB0b3RhbENhcGl0YWxQZXJjZW50YWdlOiA1MQogICAgICAgICAgICB9CiAgICAgICAgICAgIHsKICAgICAgICAgICAgICB0eXBlOiBIYXNDYXBpdGFsCiAgICAgICAgICAgICAgYmlydGhDaXR5OiAiUGFyaXMiCiAgICAgICAgICAgICAgYmlydGhDaXR5UG9zdGFsQ29kZTogIjc1MDAwIgogICAgICAgICAgICAgIGJpcnRoQ291bnRyeUNvZGU6ICJGUkEiCiAgICAgICAgICAgICAgYmlydGhEYXRlOiAiMDkvMDEvMTk4OSIKICAgICAgICAgICAgICBkaXJlY3Q6IGZhbHNlCiAgICAgICAgICAgICAgZmlyc3ROYW1lOiAiTWFsaWthIgogICAgICAgICAgICAgIGxhc3ROYW1lOiAiTmdvbWEiCiAgICAgICAgICAgICAgdG90YWxDYXBpdGFsUGVyY2VudGFnZTogMjYKICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgICAgYWNjb3VudE5hbWU6ICJNeUJyYW5kIGNvbXBhbnkgYWNjb3VudCIKICAgICAgICAgIGJ1c2luZXNzQWN0aXZpdHk6IEFydHMKICAgICAgICAgIGJ1c2luZXNzQWN0aXZpdHlEZXNjcmlwdGlvbjogIkRlc2NyaXB0aW9uIHJlcXVpcmVkIgogICAgICAgICAgY29tcGFueVR5cGU6IENvbXBhbnkKICAgICAgICAgIGVtYWlsOiAiYm9uam91ckBteWJyYW5kLmZyIgogICAgICAgICAgaXNSZWdpc3RlcmVkOiBmYWxzZQogICAgICAgICAgbGFuZ3VhZ2U6ICJmciIKICAgICAgICAgIG1vbnRobHlQYXltZW50Vm9sdW1lOiBCZXR3ZWVuNTAwMDBBbmQxMDAwMDAKICAgICAgICAgIG5hbWU6ICJDb21wYW55IHNoYXJlaG9sZGVyIgogICAgICAgICAgcmVzaWRlbmN5QWRkcmVzczogewogICAgICAgICAgICBhZGRyZXNzTGluZTE6ICIxMjMgYXZlbnVlIGRlIFBhcmlzIgogICAgICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgICAgICAgIHBvc3RhbENvZGU6ICI3NTAwMCIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgICAgaW5kaXZpZHVhbFNoYXJlaG9sZGVyczogewogICAgICAgIGZpcnN0TmFtZTogIkhlbnJpIgogICAgICAgIGxhc3ROYW1lOiAiRHVwb250IgogICAgICAgIGJpcnRoRGF0ZTogIjAxLzExLzE5OTIiCiAgICAgICAgbmF0aW9uYWxpdHk6ICJGUkEiCiAgICAgICAgY2FwaXRhbERlcG9zaXRBbW91bnQ6IHsgdmFsdWU6ICI1MDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgIG9uYm9hcmRpbmdJbmZvOiB7CiAgICAgICAgICBlbWFpbDogImhlbnJpLmR1cG9udEBteWJyYW5kLmZyIgogICAgICAgICAgbGFuZ3VhZ2U6ICJmciIKICAgICAgICAgIGVtcGxveW1lbnRTdGF0dXM6IEVtcGxveWVlCiAgICAgICAgICBtb250aGx5SW5jb21lOiBCZXR3ZWVuMTUwMEFuZDMwMDAKICAgICAgICAgIHJlc2lkZW5jeUFkZHJlc3M6IHsKICAgICAgICAgICAgYWRkcmVzc0xpbmUxOiAiMSBydWUgZGUgbGEgUGFpeCIKICAgICAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgICAgICBjb3VudHJ5OiAiRlJBIgogICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDAiCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICAgIHRvdGFsQ2FwaXRhbERlcG9zaXRBbW91bnQ6IHsgdmFsdWU6ICIxMDUwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIG9uYm9hcmRpbmdDYXBpdGFsRGVwb3NpdENvbXBhbnk6IHsKICAgICAgICBpbmRpdmlkdWFsVWx0aW1hdGVCZW5lZmljaWFsT3duZXJzOiBbCiAgICAgICAgICB7CiAgICAgICAgICAgIHR5cGU6IExlZ2FsUmVwcmVzZW50YXRpdmUKICAgICAgICAgICAgYmlydGhDaXR5OiAiUGFyaXMiCiAgICAgICAgICAgIGJpcnRoQ2l0eVBvc3RhbENvZGU6ICI3NTAwMCIKICAgICAgICAgICAgYmlydGhDb3VudHJ5Q29kZTogIkZSQSIKICAgICAgICAgICAgYmlydGhEYXRlOiAiMDIvMDIvMTk4OCIKICAgICAgICAgICAgZGlyZWN0OiBmYWxzZQogICAgICAgICAgICBmaXJzdE5hbWU6ICJKdWxlcyIKICAgICAgICAgICAgbGFzdE5hbWU6ICJGbGV1cnkiCiAgICAgICAgICAgIHRvdGFsQ2FwaXRhbFBlcmNlbnRhZ2U6IDUxCiAgICAgICAgICB9CiAgICAgICAgICB7CiAgICAgICAgICAgIHR5cGU6IEhhc0NhcGl0YWwKICAgICAgICAgICAgYmlydGhDaXR5OiAiUGFyaXMiCiAgICAgICAgICAgIGJpcnRoQ2l0eVBvc3RhbENvZGU6ICI3NTAwMCIKICAgICAgICAgICAgYmlydGhDb3VudHJ5Q29kZTogIkZSQSIKICAgICAgICAgICAgYmlydGhEYXRlOiAiMDkvMDEvMTk4OSIKICAgICAgICAgICAgZGlyZWN0OiBmYWxzZQogICAgICAgICAgICBmaXJzdE5hbWU6ICJNYWxpa2EiCiAgICAgICAgICAgIGxhc3ROYW1lOiAiTmdvbWEiCiAgICAgICAgICAgIHRvdGFsQ2FwaXRhbFBlcmNlbnRhZ2U6IDI2CiAgICAgICAgICB9CiAgICAgICAgXQogICAgICAgIGFjY291bnROYW1lOiAiTXlCcmFuZCBjb21wYW55IGFjY291bnQiCiAgICAgICAgYWNjb3VudENvdW50cnk6IEZSQQogICAgICAgIGJ1c2luZXNzQWN0aXZpdHk6IEFydHMKICAgICAgICBidXNpbmVzc0FjdGl2aXR5RGVzY3JpcHRpb246ICJEZXNjcmlwdGlvbiByZXF1aXJlZCIKICAgICAgICBjb21wYW55VHlwZTogQ29tcGFueQogICAgICAgIGVtYWlsOiAiYm9uam91ckBteWJyYW5kLmZyIgogICAgICAgIGlzUmVnaXN0ZXJlZDogZmFsc2UKICAgICAgICBsYW5ndWFnZTogImZyIgogICAgICAgIG1vbnRobHlQYXltZW50Vm9sdW1lOiBCZXR3ZWVuMTAwMDBBbmQ1MDAwMAogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gQ3JlYXRlQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBjYXBpdGFsRGVwb3NpdENhc2UgewogICAgICAgIGNvbXBhbnlOYW1lCiAgICAgICAgaWQKICAgICAgICBjb21wYW55T25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgICBpbmZvIHsKICAgICAgICAgICAgdHlwZQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBkb2N1bWVudHMgewogICAgICAgICAgdHlwZQogICAgICAgICAgc3RhdHVzCiAgICAgICAgICBpZAogICAgICAgIH0KICAgICAgICBzaGFyZWhvbGRlcnMgewogICAgICAgICAgaW5mbyB7CiAgICAgICAgICAgIC4uLiBvbiBJbmRpdmlkdWFsU2hhcmVob2xkZXIgewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBmaXJzdE5hbWUKICAgICAgICAgICAgICBsYXN0TmFtZQogICAgICAgICAgICB9CiAgICAgICAgICAgIC4uLiBvbiBDb21wYW55U2hhcmVob2xkZXIgewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBuYW1lCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICAgIHN0YXR1cwogICAgICAgICAgaWQKICAgICAgICAgIG9uYm9hcmRpbmcgewogICAgICAgICAgICBpZAogICAgICAgICAgfQogICAgICAgICAgZG9jdW1lbnRzIHsKICAgICAgICAgICAgdHlwZQogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgaWQKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgc3RhdHVzCiAgICAgICAgdG90YWxDYXBpdGFsRGVwb3NpdEFtb3VudCB7CiAgICAgICAgICBjdXJyZW5jeQogICAgICAgICAgdmFsdWUKICAgICAgICB9CiAgICAgICAgdXBkYXRlZEF0CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBCYWRSZXF1ZXN0UmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gY3JlYXRlQ2FzZSB7CiAgY3JlYXRlQ2FwaXRhbERlcG9zaXRDYXNlKAogICAgaW5wdXQ6IHsKICAgICAgY29tcGFueU5hbWU6ICJNeUJyYW5kIgogICAgICBjb21wYW55U2hhcmVob2xkZXJzOiB7CiAgICAgICAgY2FwaXRhbERlcG9zaXRBbW91bnQ6IHsgdmFsdWU6ICIxMDAwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgICAgbmFtZTogIkNvbXBhbnkgc2hhcmVob2xkZXIiCiAgICAgICAgb25ib2FyZGluZ0luZm86IHsKICAgICAgICAgIGluZGl2aWR1YWxVbHRpbWF0ZUJlbmVmaWNpYWxPd25lcnM6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgIHR5cGU6IExlZ2FsUmVwcmVzZW50YXRpdmUKICAgICAgICAgICAgICBiaXJ0aENpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICBiaXJ0aENpdHlQb3N0YWxDb2RlOiAiNzUwMDAiCiAgICAgICAgICAgICAgYmlydGhDb3VudHJ5Q29kZTogIkZSQSIKICAgICAgICAgICAgICBiaXJ0aERhdGU6ICIxOTg4LTAyLTI1IgogICAgICAgICAgICAgIGRpcmVjdDogZmFsc2UKICAgICAgICAgICAgICBmaXJzdE5hbWU6ICJKdWxlcyIKICAgICAgICAgICAgICBsYXN0TmFtZTogIkZsZXVyeSIKICAgICAgICAgICAgICB0b3RhbENhcGl0YWxQZXJjZW50YWdlOiA1MQogICAgICAgICAgICB9CiAgICAgICAgICAgIHsKICAgICAgICAgICAgICB0eXBlOiBIYXNDYXBpdGFsCiAgICAgICAgICAgICAgYmlydGhDaXR5OiAiUGFyaXMiCiAgICAgICAgICAgICAgYmlydGhDaXR5UG9zdGFsQ29kZTogIjc1MDAwIgogICAgICAgICAgICAgIGJpcnRoQ291bnRyeUNvZGU6ICJGUkEiCiAgICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk4OC0wMi0yNSIKICAgICAgICAgICAgICBkaXJlY3Q6IGZhbHNlCiAgICAgICAgICAgICAgZmlyc3ROYW1lOiAiTWFsaWthIgogICAgICAgICAgICAgIGxhc3ROYW1lOiAiTmdvbWEiCiAgICAgICAgICAgICAgdG90YWxDYXBpdGFsUGVyY2VudGFnZTogMjYKICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgICAgYWNjb3VudE5hbWU6ICJNeUJyYW5kIGNvbXBhbnkgYWNjb3VudCIKICAgICAgICAgIGJ1c2luZXNzQWN0aXZpdHk6IEFydHMKICAgICAgICAgIGJ1c2luZXNzQWN0aXZpdHlEZXNjcmlwdGlvbjogIkRlc2NyaXB0aW9uIHJlcXVpcmVkIgogICAgICAgICAgY29tcGFueVR5cGU6IENvbXBhbnkKICAgICAgICAgIGVtYWlsOiAiYm9uam91ckBteWJyYW5kLmZyIgogICAgICAgICAgaXNSZWdpc3RlcmVkOiBmYWxzZQogICAgICAgICAgbGFuZ3VhZ2U6ICJmciIKICAgICAgICAgIG1vbnRobHlQYXltZW50Vm9sdW1lOiBCZXR3ZWVuNTAwMDBBbmQxMDAwMDAKICAgICAgICAgIG5hbWU6ICJDb21wYW55IHNoYXJlaG9sZGVyIgogICAgICAgICAgcmVzaWRlbmN5QWRkcmVzczogewogICAgICAgICAgICBhZGRyZXNzTGluZTE6ICIxMjMgYXZlbnVlIGRlIFBhcmlzIgogICAgICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgICAgICAgIHBvc3RhbENvZGU6ICI3NTAwMCIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgICAgaW5kaXZpZHVhbFNoYXJlaG9sZGVyczogewogICAgICAgIGZpcnN0TmFtZTogIkhlbnJpIgogICAgICAgIGxhc3ROYW1lOiAiRHVwb250IgogICAgICAgIGJpcnRoRGF0ZTogIjE5ODgtMDItMjUiCiAgICAgICAgbmF0aW9uYWxpdHk6ICJGUkEiCiAgICAgICAgY2FwaXRhbERlcG9zaXRBbW91bnQ6IHsgdmFsdWU6ICI1MDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgIG9uYm9hcmRpbmdJbmZvOiB7CiAgICAgICAgICBlbWFpbDogImhlbnJpLmR1cG9udEBteWJyYW5kLmZyIgogICAgICAgICAgbGFuZ3VhZ2U6ICJmciIKICAgICAgICAgIGVtcGxveW1lbnRTdGF0dXM6IEVtcGxveWVlCiAgICAgICAgICBtb250aGx5SW5jb21lOiBCZXR3ZWVuMTUwMEFuZDMwMDAKICAgICAgICAgIHJlc2lkZW5jeUFkZHJlc3M6IHsKICAgICAgICAgICAgYWRkcmVzc0xpbmUxOiAiMSBydWUgZGUgbGEgUGFpeCIKICAgICAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgICAgICBjb3VudHJ5OiAiRlJBIgogICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDAiCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICAgIHRvdGFsQ2FwaXRhbERlcG9zaXRBbW91bnQ6IHsgdmFsdWU6ICIxMDUwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIG9uYm9hcmRpbmdDYXBpdGFsRGVwb3NpdENvbXBhbnk6IHsKICAgICAgICBpbmRpdmlkdWFsVWx0aW1hdGVCZW5lZmljaWFsT3duZXJzOiBbCiAgICAgICAgICB7CiAgICAgICAgICAgIHR5cGU6IExlZ2FsUmVwcmVzZW50YXRpdmUKICAgICAgICAgICAgYmlydGhDaXR5OiAiUGFyaXMiCiAgICAgICAgICAgIGJpcnRoQ2l0eVBvc3RhbENvZGU6ICI3NTAwMCIKICAgICAgICAgICAgYmlydGhDb3VudHJ5Q29kZTogIkZSQSIKICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk4OC0wMi0yNSIKICAgICAgICAgICAgZGlyZWN0OiBmYWxzZQogICAgICAgICAgICBmaXJzdE5hbWU6ICJKdWxlcyIKICAgICAgICAgICAgbGFzdE5hbWU6ICJGbGV1cnkiCiAgICAgICAgICAgIHRvdGFsQ2FwaXRhbFBlcmNlbnRhZ2U6IDUxCiAgICAgICAgICB9CiAgICAgICAgICB7CiAgICAgICAgICAgIHR5cGU6IEhhc0NhcGl0YWwKICAgICAgICAgICAgYmlydGhDaXR5OiAiUGFyaXMiCiAgICAgICAgICAgIGJpcnRoQ2l0eVBvc3RhbENvZGU6ICI3NTAwMCIKICAgICAgICAgICAgYmlydGhDb3VudHJ5Q29kZTogIkZSQSIKICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk4OC0wMi0yNSIKICAgICAgICAgICAgZGlyZWN0OiBmYWxzZQogICAgICAgICAgICBmaXJzdE5hbWU6ICJNYWxpa2EiCiAgICAgICAgICAgIGxhc3ROYW1lOiAiTmdvbWEiCiAgICAgICAgICAgIHRvdGFsQ2FwaXRhbFBlcmNlbnRhZ2U6IDI2CiAgICAgICAgICB9CiAgICAgICAgXQogICAgICAgIGFjY291bnROYW1lOiAiTXlCcmFuZCBjb21wYW55IGFjY291bnQiCiAgICAgICAgYWNjb3VudENvdW50cnk6IEZSQQogICAgICAgIGJ1c2luZXNzQWN0aXZpdHk6IEFydHMKICAgICAgICBidXNpbmVzc0FjdGl2aXR5RGVzY3JpcHRpb246ICJEZXNjcmlwdGlvbiByZXF1aXJlZCIKICAgICAgICBjb21wYW55VHlwZTogQ29tcGFueQogICAgICAgIGVtYWlsOiAiYm9uam91ckBteWJyYW5kLmZyIgogICAgICAgIGlzUmVnaXN0ZXJlZDogZmFsc2UKICAgICAgICBsYW5ndWFnZTogImZyIgogICAgICAgIG1vbnRobHlQYXltZW50Vm9sdW1lOiBCZXR3ZWVuMTAwMDBBbmQ1MDAwMAogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gQ3JlYXRlQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBjYXBpdGFsRGVwb3NpdENhc2UgewogICAgICAgIGNvbXBhbnlOYW1lCiAgICAgICAgaWQKICAgICAgICBjb21wYW55T25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgICBpbmZvIHsKICAgICAgICAgICAgdHlwZQogICAgICAgICAgfQogICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBkb2N1bWVudHMgewogICAgICAgICAgdHlwZQogICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBzaGFyZWhvbGRlcnMgewogICAgICAgICAgaW5mbyB7CiAgICAgICAgICAgIC4uLiBvbiBJbmRpdmlkdWFsU2hhcmVob2xkZXIgewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBmaXJzdE5hbWUKICAgICAgICAgICAgICBsYXN0TmFtZQogICAgICAgICAgICB9CiAgICAgICAgICAgIC4uLiBvbiBDb21wYW55U2hhcmVob2xkZXIgewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBuYW1lCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICAgIGlkCiAgICAgICAgICBvbmJvYXJkaW5nIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICAgIGRvY3VtZW50cyB7CiAgICAgICAgICAgIHR5cGUKICAgICAgICAgICAgaWQKICAgICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdG90YWxDYXBpdGFsRGVwb3NpdEFtb3VudCB7CiAgICAgICAgICBjdXJyZW5jeQogICAgICAgICAgdmFsdWUKICAgICAgICB9CiAgICAgICAgdXBkYXRlZEF0CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBCYWRSZXF1ZXN0UmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
 
-```graphql {4-5,8,33,50,69,70,107,154} showLineNumbers
+```graphql {4-5,8,33,50,69,70,107,161} showLineNumbers
 mutation createCase {
   createCapitalDepositCase(
     input: {
@@ -53,7 +53,7 @@ mutation createCase {
               birthCity: "Paris"
               birthCityPostalCode: "75000"
               birthCountryCode: "FRA"
-              birthDate: "02/02/1988"
+              birthDate: "1988-02-25"
               direct: false
               firstName: "Jules"
               lastName: "Fleury"
@@ -64,7 +64,7 @@ mutation createCase {
               birthCity: "Paris"
               birthCityPostalCode: "75000"
               birthCountryCode: "FRA"
-              birthDate: "09/01/1989"
+              birthDate: "1988-02-25"
               direct: false
               firstName: "Malika"
               lastName: "Ngoma"
@@ -91,7 +91,7 @@ mutation createCase {
       individualShareholders: {
         firstName: "Henri"
         lastName: "Dupont"
-        birthDate: "01/11/1992"
+        birthDate: "1988-02-25"
         nationality: "FRA"
         capitalDepositAmount: { value: "500", currency: "EUR" }
         onboardingInfo: {
@@ -115,7 +115,7 @@ mutation createCase {
             birthCity: "Paris"
             birthCityPostalCode: "75000"
             birthCountryCode: "FRA"
-            birthDate: "02/02/1988"
+            birthDate: "1988-02-25"
             direct: false
             firstName: "Jules"
             lastName: "Fleury"
@@ -126,7 +126,7 @@ mutation createCase {
             birthCity: "Paris"
             birthCityPostalCode: "75000"
             birthCountryCode: "FRA"
-            birthDate: "09/01/1989"
+            birthDate: "1988-02-25"
             direct: false
             firstName: "Malika"
             lastName: "Ngoma"
@@ -155,11 +155,15 @@ mutation createCase {
           info {
             type
           }
+          statusInfo {
+            status
+          }
         }
         documents {
           type
-          status
-          id
+          statusInfo {
+            status
+          }
         }
         shareholders {
           info {
@@ -173,18 +177,21 @@ mutation createCase {
               name
             }
           }
-          status
           id
           onboarding {
             id
+            statusInfo {
+              status
+            }
           }
           documents {
             type
-            status
             id
+            statusInfo {
+              status
+            }
           }
         }
-        status
         totalCapitalDepositAmount {
           currency
           value
@@ -204,6 +211,15 @@ mutation createCase {
       __typename
       message
     }
+    ... on ValidationRejection {
+      __typename
+      message
+      fields {
+        code
+        message
+        path
+      }
+    }
   }
 }
 ```
@@ -215,57 +231,47 @@ Note several pieces of key information:
 
 1. Your capital deposit case `id` (line 6).
 1. Your company onboarding `id` (line 8).
-1. Information about required documents, including the `type`, `status`, and `id` (starts on line 14).
-1. Information about all shareholders (starts on line 41), including:
-   - Onboarding `id` (example line 51)
-   - Document `id` (example line 57)
-1. Status of the entire capital deposit case (line 100).
+1. Information about required documents (starts on line 14).
+1. Information about shareholders (starts on line 31), including:
+   - Onboarding `id` (individual: line 38, company: line 60)
+   - Document `id` (individual: line 45, company: line 65)
+1. Status of the entire capital deposit case (line 82).
 
 :::info Queries
-This information will help you complete your capital deposit.
+This information can help you complete your capital deposit.
 
 If needed, use the **`capitalDepositCase` query** to get information about an individual case, or the **`capitalDepositCases` query** for information about all ongoing capital deposit cases.
 :::
 
-```graphql {6,8,14,41,51,57,100} showLineNumbers
+```graphql {6,8,14,31,38,45,60,65,82} showLineNumbers
 {
   "data": {
     "createCapitalDepositCase": {
       "capitalDepositCase": {
         "companyName": "MyBrand",
-        "id": "4ca1be36-1760-4966-8303-6f1fcaa3fc6c",
+        "id": "$CAPITAL_DEPOSIT_CASE_ID",
         "companyOnboarding": {
-          "id": "e29fcd1b-8a94-48d5-93fb-fb58ed667a60",
-          "createdAt": "2023-11-02T10:15:42.093Z",
+          "id": "$COMPANY_ONBOARDING_ID",
+          "createdAt": "2024-07-18T14:12:40.633Z",
           "info": {
             "type": "Company"
           }
         },
         "documents": [
           {
-            "type": "ArticlesOfIncorporation",
-            "status": "Pending",
-            "id": "9390583f-f63d-43eb-b1ad-95aa786a76f4"
+            "type": "ArticlesOfIncorporation"
           },
           {
-            "type": "CompanyLeaseAgreement",
-            "status": "Pending",
-            "id": "97c71862-48d2-4f77-b3f7-3f1461cb8bb2"
+            "type": "CompanyLeaseAgreement"
           },
           {
-            "type": "PowerOfAttorney",
-            "status": "Pending",
-            "id": "d75b910b-21c2-45d6-ade6-2fc9af00a0a2"
+            "type": "PowerOfAttorney"
           },
           {
-            "type": "CapitalShareDepositCertificate",
-            "status": "Pending",
-            "id": "3e7c08dd-7d3e-484a-ab93-416bd5337fde"
+            "type": "CapitalShareDepositCertificate"
           },
           {
-            "type": "RegisterExtract",
-            "status": "Pending",
-            "id": "f8be85b9-23b6-4722-a179-c23bf3c28842"
+            "type": "RegisterExtract"
           }
         ],
         "shareholders": [
@@ -275,21 +281,18 @@ If needed, use the **`capitalDepositCase` query** to get information about an in
               "firstName": "Henri",
               "lastName": "Dupont"
             },
-            "status": "PendingOnboarding",
-            "id": "ba874dca-0c09-482b-beba-ceea3e3fa39d",
+            "id": "$INDIVIDUAL_SHAREHOLDER_ID",
             "onboarding": {
-              "id": "0a5349ba-709d-4e6e-84eb-be19eca2cd0b"
+              "id": "$INDIVIDUAL_SHAREHOLDER_ONBOARDING_ID"
             },
             "documents": [
               {
                 "type": "ProofOfIndividualAddress",
-                "status": "Pending",
-                "id": "4e2581ae-5a31-4499-8f20-fd5ecd5c75f0"
+                "id": "$INDIVIDUAL_SHAREHOLDER_DOCUMENT_ID"
               },
               {
                 "type": "ProofOfIdentity",
-                "status": "Pending",
-                "id": "7ceb8a22-8912-4486-9797-f253f9e0ff28"
+                "id": "$INDIVIDUAL_SHAREHOLDER_DOCUMENT_ID"
               }
             ]
           },
@@ -298,31 +301,26 @@ If needed, use the **`capitalDepositCase` query** to get information about an in
               "__typename": "CompanyShareholder",
               "name": "Company shareholder"
             },
-            "status": "PendingOnboarding",
-            "id": "ca588da0-bc7a-481d-857f-c3f537a16cf4",
+            "id": "$COMPANY_SHAREHOLDER_ID",
             "onboarding": {
-              "id": "3737eed1-ba78-484c-8126-3ccb1042730f"
+              "id": "$COMPANY_SHAREHOLDER_ONBOARDING_ID"
             },
             "documents": [
               {
                 "type": "RegisterExtract",
-                "status": "Pending",
-                "id": "91517975-65dc-4f00-ac0b-9fe601d38ede"
+                "id": "$COMPANY_SHAREHOLDER_DOCUMENT_ID"
               },
               {
                 "type": "ArticlesOfIncorporation",
-                "status": "Pending",
-                "id": "4617c161-b33b-42fc-ac77-4f40d12da7ff"
+                "id": "$COMPANY_SHAREHOLDER_DOCUMENT_ID"
               },
               {
                 "type": "CorporateIncomeTaxReturn",
-                "status": "Pending",
-                "id": "06bfa933-ac8c-4e00-8b3e-492a620807b1"
+                "id": "$COMPANY_SHAREHOLDER_DOCUMENT_ID"
               },
               {
                 "type": "ProofOfIdentity",
-                "status": "Pending",
-                "id": "50b665be-5ff7-43ac-a8a0-451759f5b261"
+                "id": "$COMPANY_SHAREHOLDER_DOCUMENT_ID"
               }
             ]
           }
@@ -332,7 +330,7 @@ If needed, use the **`capitalDepositCase` query** to get information about an in
           "currency": "EUR",
           "value": "10500"
         },
-        "updatedAt": "2023-11-02T10:15:42.159Z"
+        "updatedAt": "2024-07-18T14:12:40.672Z"
       }
     }
   }

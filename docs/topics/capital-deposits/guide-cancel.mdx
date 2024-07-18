@@ -1,10 +1,10 @@
 ---
-title: Cancel a capital deposit
+title: Cancel a capital deposit case
 ---
 
-# Cancel a capital deposit
+# Cancel a capital deposit case
 
-Use the API to cancel a capital deposit.
+Use the API to cancel a capital deposit case.
 
 import CancelCase from './partials/_cancel-case.mdx';
 
@@ -15,12 +15,25 @@ import CancelCase from './partials/_cancel-case.mdx';
 ## Guide {#steps}
 
 1. Call the `cancelCapitalDepositCase` mutation.
+1. Add the capital deposit case ID.
+1. Add the success payload and any information you'd like to receive.
+1. Add rejections (not shown).
 
 ## Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer]
+🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gQ2FuY2VsQ2FzZSB7CiAgY2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlKGlucHV0OiB7IGlkOiAiJENBUElUQUxfREVQT1NJVF9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNhcGl0YWxEZXBvc2l0Q2FzZSB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FwaXRhbERlcG9zaXRDYXNlQ2FuTm90QmVGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5Ob3RCZUNhbmNlbGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
 
-```graphql {4} showLineNumbers
+```graphql {2,3} showLineNumbers
+mutation CancelCase {
+  cancelCapitalDepositCase(input: { id: "$CAPITAL_DEPOSIT_CASE_ID" }) {
+    ... on CancelCapitalDepositCaseSuccessPayload {
+      __typename
+      capitalDepositCase {
+        status
+      }
+    }
+  }
+}
 
 ```
 
@@ -28,6 +41,15 @@ import CancelCase from './partials/_cancel-case.mdx';
 
 
 
-```graphql {6,8,14,41,51,57,100} showLineNumbers
-
+```graphql {6} showLineNumbers
+{
+  "data": {
+    "cancelCapitalDepositCase": {
+      "__typename": "CancelCapitalDepositCaseSuccessPayload",
+      "capitalDepositCase": {
+        "status": "Canceled"
+      }
+    }
+  }
+}
 ```

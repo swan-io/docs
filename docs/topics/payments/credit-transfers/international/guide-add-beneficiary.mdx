@@ -1,0 +1,176 @@
+---
+title: Add a trusted international beneficiary
+---
+
+# Add a trusted international beneficiary
+
+Add a trusted beneficiary with the API for International Credit Transfers.
+
+## Add a trusted beneficiary {#guide-add}
+
+:::tip Prerequisites
+Get the list of required key/value pairs for your [**beneficiary**](./guide-beneficiary.mdx).
+They're based on the target currency and the beneficiary's country of residence.
+:::
+
+1. Call the `addTrustedInternationalBeneficiary` mutation.
+1. Add the Swan `accountId` (line 4). The trusted beneficiary is linked to this account.
+1. Add your trusted beneficiary's name (line 6).
+1. Add the `route` (line 7).
+1. Add all beneficiary key/value pairs you retrieved for the prerequisite (lines 10-18).
+1. Add the `AddTrustedInternationalBeneficiarySuccessPayload` success payload. Consider adding the `trustedBeneficiary` > `id` to the payload (lines 24-25).
+1. Add rejections (not shown).
+
+### Mutation {#mutation-add}
+
+🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gQWRkQmVuZWZpY2lhcnkgewogIGFkZFRydXN0ZWRJbnRlcm5hdGlvbmFsQmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkQUNDT1VOVF9JRCIKICAgICAgY3VycmVuY3k6ICJVU0QiCiAgICAgIG5hbWU6ICIkVFJVU1RFRF9CRU5FRklDSUFSWV9OQU1FIgogICAgICByb3V0ZTogRmVkd2lyZUxvY2FsCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRSRURJUkVDVF9VUkwiCiAgICAgIGRldGFpbHM6IFsKICAgICAgICB7IGtleTogImxlZ2FsVHlwZSIsIHZhbHVlOiAiUFJJVkFURSIgfQogICAgICAgIHsga2V5OiAiYWJhcnRuIiwgdmFsdWU6ICIkRkVEV0lSRV9ST1VUSU5HX05VTUJFUiIgfQogICAgICAgIHsga2V5OiAiYWNjb3VudE51bWJlciIsIHZhbHVlOiAiJEFDQ09VTlRfTlVNQkVSIiB9CiAgICAgICAgeyBrZXk6ICJhY2NvdW50VHlwZSIsIHZhbHVlOiAiQ0hFQ0tJTkciIH0KICAgICAgICB7IGtleTogImFkZHJlc3MuY291bnRyeSIsIHZhbHVlOiAiVVMiIH0KICAgICAgICB7IGtleTogImFkZHJlc3MuY2l0eSIsIHZhbHVlOiAiVXRpY2EiIH0KICAgICAgICB7IGtleTogImFkZHJlc3MuZmlyc3RMaW5lIiwgdmFsdWU6ICIxIENhbm9nYSBCbHZkIiB9CiAgICAgICAgeyBrZXk6ICJhZGRyZXNzLnN0YXRlIiwgdmFsdWU6ICJOWSIgfQogICAgICAgIHsga2V5OiAiYWRkcmVzcy5wb3N0Q29kZSIsIHZhbHVlOiAiMTM1MDUiIH0KICAgICAgXQogICAgfQogICkgewogICAgLi4uIG9uIEFkZFRydXN0ZWRJbnRlcm5hdGlvbmFsQmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdHJ1c3RlZEJlbmVmaWNpYXJ5IHsKICAgICAgICBpZAogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {2,4,6-7,10-18,24-25} showLineNumbers
+mutation AddBeneficiary {
+  addTrustedInternationalBeneficiary(
+    input: {
+      accountId: "$ACCOUNT_ID"
+      currency: "USD"
+      name: "$TRUSTED_BENEFICIARY_NAME"
+      route: FedwireLocal
+      consentRedirectUrl: "$REDIRECT_URL"
+      details: [
+        { key: "legalType", value: "PRIVATE" }
+        { key: "abartn", value: "$FEDWIRE_ROUTING_NUMBER" }
+        { key: "accountNumber", value: "$ACCOUNT_NUMBER" }
+        { key: "accountType", value: "CHECKING" }
+        { key: "address.country", value: "US" }
+        { key: "address.city", value: "Utica" }
+        { key: "address.firstLine", value: "1 Canoga Blvd" }
+        { key: "address.state", value: "NY" }
+        { key: "address.postCode", value: "13505" }
+      ]
+    }
+  ) {
+    ... on AddTrustedInternationalBeneficiarySuccessPayload {
+      __typename
+      trustedBeneficiary {
+        id
+      }
+    }
+  }
+}
+
+```
+
+### Payload {#payload-add}
+
+Notice your new trusted beneficiary's ID is returned in the success payload (line 6).
+
+```json {6} showLineNumbers
+{
+  "data": {
+    "addTrustedInternationalBeneficiary": {
+      "__typename": "AddTrustedInternationalBeneficiarySuccessPayload",
+      "trustedBeneficiary": {
+        "id": "$TRUSTED_BENEFICIARY_ID"
+      }
+    }
+  }
+}
+```
+
+## Save a beneficiary when initiating a transfer {#guide-save}
+
+:::tip Prerequisites
+1. Optionally, [**get a quote**](./guide-quote.mdx).
+    - This query provides a quote for the exchange rate and fees.
+    - The quote isn't guaranteed.
+1. Next, get the list of required key/value pairs for your [**beneficiary**](./guide-beneficiary.mdx).
+    - They're based on the target currency and the beneficiary's country of residence.
+1. Then, get the list of required key/value pairs for your [**transaction**](./guide-transaction-details.mdx).
+    - They're based on the transfer's destination.
+:::
+
+1. Call the `initiateInternationalCreditTransfer` mutation.
+1. Add the Swan `accountId` (line 4). The trusted beneficiary is linked to this account.
+1. Add all **beneficiary** and **transaction details** key/value pairs you retrieved for the prerequisites (lines 5-17, 22-24).
+1. Add the `route` (line 19).
+1. Choose `true` for the boolean `save` (line 20).
+1. Add the `InitiateInternationalCreditTransferResponseSuccessPayload` success payload with the consent URL (line 41).
+1. Add rejections (not shown).
+
+### Mutation {#mutation-save}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2F2ZUJlbmVmaWNpYXJ5IHsKICBpbml0aWF0ZUludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlcigKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRBQ0NPVU5UX0lEIgogICAgICBpbnRlcm5hdGlvbmFsQmVuZWZpY2lhcnk6IHsKICAgICAgICBuYW1lOiAiRW1pbGlhIEJydW5uZXIiCiAgICAgICAgY3VycmVuY3k6ICJVU0QiCiAgICAgICAgZGV0YWlsczogWwogICAgICAgICAgeyBrZXk6ICJsZWdhbFR5cGUiLCB2YWx1ZTogIlBSSVZBVEUiIH0KICAgICAgICAgIHsga2V5OiAiYWJhcnRuIiwgdmFsdWU6ICIkRkVEV0lSRV9ST1VUSU5HX05VTUJFUiIgfQogICAgICAgICAgeyBrZXk6ICJhY2NvdW50TnVtYmVyIiwgdmFsdWU6ICIkQUNDT1VOVF9OVU1CRVIiIH0KICAgICAgICAgIHsga2V5OiAiYWNjb3VudFR5cGUiLCB2YWx1ZTogIkNIRUNLSU5HIiB9CiAgICAgICAgICB7IGtleTogImFkZHJlc3MuY291bnRyeSIsIHZhbHVlOiAiVVMiIH0KICAgICAgICAgIHsga2V5OiAiYWRkcmVzcy5jaXR5IiwgdmFsdWU6ICJVdGljYSIgfQogICAgICAgICAgeyBrZXk6ICJhZGRyZXNzLmZpcnN0TGluZSIsIHZhbHVlOiAiMSBDYW5vZ2EgQmx2ZCIgfQogICAgICAgICAgeyBrZXk6ICJhZGRyZXNzLnN0YXRlIiwgdmFsdWU6ICJOWSIgfQogICAgICAgICAgeyBrZXk6ICJhZGRyZXNzLnBvc3RDb2RlIiwgdmFsdWU6ICIxMzUwNSIgfQogICAgICAgIF0KICAgICAgICByb3V0ZTogRmVkd2lyZUxvY2FsCiAgICAgICAgc2F2ZTogdHJ1ZQogICAgICB9CiAgICAgIGludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlckRldGFpbHM6IHsKICAgICAgICBrZXk6ICJyZWZlcmVuY2UiCiAgICAgICAgdmFsdWU6ICJZb3VyIHJlZmVyZW5jZSBtZXNzYWdlIgogICAgICB9CiAgICAgIHRhcmdldEFtb3VudDogeyB2YWx1ZTogIjUwMCIsIGN1cnJlbmN5OiAiVVNEIiB9CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRSRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVJbnRlcm5hdGlvbmFsQ3JlZGl0VHJhbnNmZXJSZXNwb25zZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2,4,20} showLineNumbers
+mutation SaveBeneficiary {
+  initiateInternationalCreditTransfer(
+    input: {
+      accountId: "$ACCOUNT_ID"
+      internationalBeneficiary: {
+        name: "$TRUSTED_BENEFICIARY_NAME"
+        currency: "USD"
+        details: [
+          { key: "legalType", value: "PRIVATE" }
+          { key: "abartn", value: "$FEDWIRE_ROUTING_NUMBER" }
+          { key: "accountNumber", value: "$ACCOUNT_NUMBER" }
+          { key: "accountType", value: "CHECKING" }
+          { key: "address.country", value: "US" }
+          { key: "address.city", value: "Utica" }
+          { key: "address.firstLine", value: "1 Canoga Blvd" }
+          { key: "address.state", value: "NY" }
+          { key: "address.postCode", value: "13505" }
+        ]
+        route: FedwireLocal
+        save: true
+      }
+      internationalCreditTransferDetails: {
+        key: "reference"
+        value: "Your reference message"
+      }
+      targetAmount: { value: "500", currency: "USD" }
+      consentRedirectUrl: "$REDIRECT_URL"
+    }
+  ) {
+    ... on InitiateInternationalCreditTransferResponseSuccessPayload {
+      __typename
+      payment {
+        createdAt
+        id
+        statusInfo {
+          status
+          ... on PaymentConsentPending {
+            __typename
+            status
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-save}
+
+The payload is a typical initiation payload.
+There's no additional information available about the new trusted beneficiary.
+
+```json showLineNumbers
+{
+  "data": {
+    "initiateInternationalCreditTransfer": {
+      "__typename": "InitiateInternationalCreditTransferResponseSuccessPayload",
+      "payment": {
+        "id": "$PAYMENT_ID",
+        "statusInfo": {
+          "status": "ConsentPending",
+          "__typename": "PaymentConsentPending",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+          }
+        }
+      }
+    }
+  }
+}
+```

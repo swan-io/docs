@@ -410,4 +410,16 @@ module.exports = [
     from: "/topics/accounts/overview/guide-close",
     to: "/topics/accounts/closure",
   },
+  {
+    from: "/topics/merchants/sdd/",
+    to: "/topics/merchants/online/sdd",
+  },
+  {
+    from: "/topics/merchants/idd/",
+    to: "/topics/merchants/online/idd",
+  },
+  {
+    from: "/topics/merchants/checks/",
+    to: "/topics/merchants/online/checks",
+  },
 ];

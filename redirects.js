@@ -159,15 +159,15 @@ module.exports = [
   { from: "/concept/iban/local-ibans", to: "/topics/accounts/ibans/#local" },
   {
     from: "/concept/merchants-accepting-payments/french-checks-for-merchants",
-    to: "/topics/merchants/checks/",
+    to: "/topics/merchants/online/checks/",
   },
   {
     from: "/concept/merchants-accepting-payments/internal-direct-debit-for-merchants",
-    to: "/topics/merchants/idd/",
+    to: "/topics/merchants/online/idd/",
   },
   {
     from: "/concept/merchants-accepting-payments/sepa-direct-debit-for-merchants",
-    to: "/topics/merchants/sdd/",
+    to: "/topics/merchants/online/sdd/",
   },
   { from: "/concept/payment/card-payment", to: "/topics/payments/cards/" },
   {
@@ -192,15 +192,15 @@ module.exports = [
   },
   {
     from: "/guide/accept-payments-merchants/accept-payments-with-french-checks",
-    to: "/topics/merchants/checks/guide-checks",
+    to: "/topics/merchants/online/checks/guide-checks",
   },
   {
     from: "/guide/accept-payments-merchants/accept-payments-with-internal-direct-debit",
-    to: "/topics/merchants/idd/guide-idd",
+    to: "/topics/merchants/online/idd/guide-idd",
   },
   {
     from: "/guide/accept-payments-merchants/accept-payments-with-sepa-direct-debit",
-    to: "/topics/merchants/sdd/guide-sdd",
+    to: "/topics/merchants/online/sdd/guide-sdd",
   },
   {
     from: "/guide/fund-an-account/sdd-b2b",
@@ -409,5 +409,17 @@ module.exports = [
   {
     from: "/topics/accounts/overview/guide-close",
     to: "/topics/accounts/closure",
+  },
+  {
+    from: "/topics/merchants/sdd",
+    to: "/topics/merchants/online/sdd/",
+  },
+  {
+    from: "/topics/merchants/idd",
+    to: "/topics/merchants/online/idd/",
+  },
+  {
+    from: "/topics/merchants/checks",
+    to: "/topics/merchants/online/checks/",
   },
 ];

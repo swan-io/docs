@@ -412,14 +412,14 @@ module.exports = [
   },
   {
     from: "/topics/merchants/sdd",
-    to: "/topics/merchants/online/sdd",
+    to: "/topics/merchants/online/sdd/",
   },
   {
     from: "/topics/merchants/idd",
-    to: "/topics/merchants/online/idd",
+    to: "/topics/merchants/online/idd/",
   },
   {
     from: "/topics/merchants/checks",
-    to: "/topics/merchants/online/checks",
+    to: "/topics/merchants/online/checks/",
   },
 ];

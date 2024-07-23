@@ -411,15 +411,15 @@ module.exports = [
     to: "/topics/accounts/closure",
   },
   {
-    from: "/topics/merchants/sdd/",
+    from: "/topics/merchants/sdd",
     to: "/topics/merchants/online/sdd",
   },
   {
-    from: "/topics/merchants/idd/",
+    from: "/topics/merchants/idd",
     to: "/topics/merchants/online/idd",
   },
   {
-    from: "/topics/merchants/checks/",
+    from: "/topics/merchants/checks",
     to: "/topics/merchants/online/checks",
   },
 ];

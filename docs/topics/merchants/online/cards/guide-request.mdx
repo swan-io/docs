@@ -1,0 +1,75 @@
+---
+title: Request card payment method
+---
+
+# Request card payment method
+
+import RequestPaymentMethodIntro from '../../partials/_guide-request-intro.mdx';
+
+<RequestPaymentMethodIntro paymentMethod="cards" />
+
+## Guide {#guide}
+
+import RequestPaymentMethodSteps from '../../partials/_guide-request-steps.mdx';
+
+<RequestPaymentMethodSteps paymentMethod="card" />
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVxdWVzdENhcmRzIHsKICByZXF1ZXN0TWVyY2hhbnRQYXltZW50TWV0aG9kcygKICAgIGlucHV0OiB7CiAgICAgIG1lcmNoYW50UHJvZmlsZUlkOiAiMTVkNWFjMWQtZGE3NS00YTQ4LTk4Y2QtYjc2YzQzZTE2ZmEzIgogICAgICBjYXJkOiB7IGFjdGl2YXRlOiB0cnVlIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBSZXF1ZXN0TWVyY2hhbnRQYXltZW50TWV0aG9kc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXJjaGFudFByb2ZpbGUgewogICAgICAgIG1lcmNoYW50UGF5bWVudE1ldGhvZHMgewogICAgICAgICAgbWV0aG9kSWQKICAgICAgICAgIC4uLiBvbiBDYXJkTWVyY2hhbnRQYXltZW50TWV0aG9kIHsKICAgICAgICAgICAgbWV0aG9kSWQKICAgICAgICAgICAgcm9sbGluZ1Jlc2VydmUgewogICAgICAgICAgICAgIHBlcmNlbnRhZ2UKICAgICAgICAgICAgICByb2xsaW5nRGF5cwogICAgICAgICAgICB9CiAgICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnZhbGlkUGF5bWVudE1ldGhvZFJlcXVlc3RSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgcGF5bWVudE1ldGhvZHMgewogICAgICAgIGNvZGUKICAgICAgICBpZAogICAgICAgIG1lc3NhZ2UKICAgICAgICB0eXBlCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {4-5,13} showLineNumbers
+mutation RequestCards {
+  requestMerchantPaymentMethods(
+    input: {
+      merchantProfileId: "$MERCHANT_PROFILE_ID"
+      card: { activate: true }
+    }
+  ) {
+    ... on RequestMerchantPaymentMethodsSuccessPayload {
+      __typename
+      merchantProfile {
+        merchantPaymentMethods {
+          methodId
+          ... on CardMerchantPaymentMethod {
+            methodId
+            rollingReserve {
+              percentage
+              rollingDays
+            }
+            statusInfo {
+              status
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+The payload confirms that the payment method `Card` was requested successfully with the status `PendingReview`.
+
+```json {11} showLineNumbers
+{
+  "data": {
+    "requestMerchantPaymentMethods": {
+      "__typename": "RequestMerchantPaymentMethodsSuccessPayload",
+      "merchantProfile": {
+        "merchantPaymentMethods": [
+          {
+            "methodId": "$PAYMENT_METHOD_ID",
+            "type": "Card",
+            "statusInfo": {
+              "status": "PendingReview"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```

@@ -1,0 +1,64 @@
+---
+title: Create a payment link
+---
+
+# Create a payment link
+
+import InDevelopement from '../../../partials/_in-dev.mdx';
+
+<InDevelopement />
+
+Create a [payment link](./index.mdx#links) to accept card payments with the API.
+
+import PaymentLinkDescription from '../../partials/_payment-link-description.mdx';
+
+:::note About payment links
+<PaymentLinkDescription />
+:::
+
+:::tip Prerequisites
+- Merchant profile status: `Enabled`
+- Card payment method status: `Enabled`
+:::
+
+## Guide {#guide}
+
+1. Call the `createMerchantPaymentLink` mutation.
+1. Add the `merchantProfileId`.
+1. Payment method (line 6):
+    - If you only want to allow card payments, add the card `paymentMethodId`.
+    - If you'd like to allow all eligible enabled payment methods, don't provide a value for `paymentMethodId`.
+1. Add the `amount`, including both the `value` and `currency`.
+1. Include a `label` and `reference` if you'd like.
+1. Add the success payload. Include the final `url` in the payload if you'd like (line).
+1. Add rejections (not shown).
+
+:::caution SEPA Direct debit
+If the merchant has both Core and Standard SEPA Direct Debit enabled and you don't provide a value for `paymentMethodId` in #3, Core is used by default.
+:::
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUGF5bWVudExpbmsgewogIGNyZWF0ZU1lcmNoYW50UGF5bWVudExpbmsoCiAgICBpbnB1dDogewogICAgICBtZXJjaGFudFByb2ZpbGVJZDogIiRNRVJDSEFOVF9QUk9GSUxFX0lEIgogICAgICBhbW91bnQ6IHsgdmFsdWU6ICI1MCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIHBheW1lbnRNZXRob2RJZHM6ICIiCiAgICAgIGxhYmVsOiAiIgogICAgICByZWZlcmVuY2U6ICIiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQ3JlYXRlTWVyY2hhbnRQYXltZW50TGlua1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXJjaGFudFBheW1lbnRMaW5rIHsKICAgICAgICB1cmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIE1lcmNoYW50UHJvZmlsZVdyb25nU3RhdHVzUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBjdXJyZW50U3RhdHVzCiAgICAgIGV4cGVjdGVkU3RhdHVzCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBNZXJjaGFudFBheW1lbnRNZXRob2ROb3RBY3RpdmVSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgcGF5bWVudE1ldGhvZElkcwogICAgfQogICAgLi4uIG9uIFBheW1lbnRNZXRob2ROb3RDb21wYXRpYmxlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2,4-6,11} showLineNumbers
+mutation PaymentLink {
+  createMerchantPaymentLink(
+    input: {
+      merchantProfileId: "$MERCHANT_PROFILE_ID"
+      amount: { value: "50", currency: "EUR" }
+      paymentMethodIds: ""
+      label: ""
+      reference: ""
+    }
+  ) {
+    ... on CreateMerchantPaymentLinkSuccessPayload {
+      __typename
+      merchantPaymentLink {
+        url
+      }
+    }
+  }
+}
+
+```

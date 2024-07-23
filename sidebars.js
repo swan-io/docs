@@ -272,8 +272,20 @@ module.exports = {
         {
           type: "category",
           label: "Accepting online payments",
+          link: { type: "doc", id: "topics/merchants/online/index" },
           collapsed: true,
           items: [
+            {
+              type: "category",
+              label: "Cards",
+              link: { type: "doc", id: "topics/merchants/online/cards/index" },
+              collapsed: true,
+              items: [
+                "topics/merchants/online/cards/guide-cards",
+                "topics/merchants/online/cards/guide-request",
+                "topics/merchants/online/cards/guide-create-link",
+              ],
+            },
             {
               type: "category",
               label: "SEPA Direct Debit",

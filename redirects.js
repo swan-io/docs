@@ -423,7 +423,7 @@ module.exports = [
     to: "/topics/merchants/online/checks/",
   },
   {
-    from: "/partnership/document-center/index",
+    from: "/partnership/document-center",
     to: "/partnership/document-center/company-registration/",
   },
 ];

@@ -78,7 +78,7 @@ module.exports = [
   },
   {
     from: "/regulatory/required-kyb-documents-for-company-accounts",
-    to: "/partnership/document-center/",
+    to: "/partnership/document-center/company-registration/",
   },
   { from: "/regulatory/status-options", to: "/partnership/#legal-status" },
   {

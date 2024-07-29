@@ -424,6 +424,6 @@ module.exports = [
   },
   {
     from: "/partnership/document-center/index",
-    to: "/partnership/document-center/company-registration/index/",
+    to: "/partnership/document-center/company-registration/",
   },
 ];

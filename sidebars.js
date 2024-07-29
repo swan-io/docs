@@ -532,10 +532,10 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
-        "partnership/document-center/index",
         {
           type: "category",
-          label: "Company registration",
+          label: "Proof of company registration",
+          link: { type: "doc", id: "partnership/document-center/company-registration/index" },
           collapsed: true,
           items: [
             "partnership/document-center/company-registration/france",

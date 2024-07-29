@@ -422,4 +422,8 @@ module.exports = [
     from: "/topics/merchants/checks",
     to: "/topics/merchants/online/checks/",
   },
+  {
+    from: "/partnership/document-center/index",
+    to: "/partnership/document-center/company-registration/index/",
+  },
 ];

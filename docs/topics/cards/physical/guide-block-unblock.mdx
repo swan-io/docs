@@ -5,9 +5,9 @@ title: Block & unblock physical cards
 # Block & unblock physical cards
 
 :::caution Blocked for incorrect PIN attempts
-If a card was blocked without request, it might be because the card holder made too many [incorrect attempts to enter their PIN](./index.mdx#pin-incorrect-attempts).
+If a card was blocked without request, it might be because the cardholder made too many [incorrect attempts to enter their PIN](./index.mdx#pin-incorrect-attempts).
 
-In this case, you need to wait 24 hours before you can unlock the card, and the card holder must enter the PIN at an ATM.
+In this case, you need to wait 24 hours before you can unblock the card, and the cardholder must enter their PIN at an ATM.
 :::
 
 ## Temporarily block a physical card {#block}
@@ -16,9 +16,24 @@ You can temporarily suspend a physical card with the `suspendPhysicalCard` mutat
 
 ## Unblock a physical card {#unblock}
 
-Unblock a physical card by calling the `resumePhysicalCard` mutation which returns a consent.
-When you do this, make sure you are authenticated with a user access token using the name of the card's account member.
-Then a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan.
+To unblock a physical card with the `resumePhysicalCard` mutation, you must:
 
-- If you chose to block the card, the card can be used immediately after you unblock it.
-- If the card was blocked because the PIN was entered incorrectly three times, the card holder must enter their PIN at an ATM before the card can be used again.
+- Be signed in.
+- Use a user access token in the name of the card's account member.
+
+A `consentUrl` is returned inviting the user to start the Strong Customer Authentication with Swan.
+
+If **you chose to block the card**, the card can be used immediately after you unblock it.
+
+## Unblock after 3 incorrect PIN attempts {#unblock-pin}
+
+If a card was blocked because the PIN was entered incorrectly 3 times, the **cardholder** must wait 24 hours, then enter their PIN at an ATM before the card can be used again.
+
+- The cardholder needs to enter the **original PIN** ([a card's PIN never changes](./index.mdx#pin)).
+- You can [view their PIN with the API](./guide-view-info.mdx#view-pin).
+- If you use Swan's Web Banking interface, the [cardholder can view their PIN](https://support.swan.io/hc/en-150/articles/16423151195677-View-card-numbers-and-PIN#h_01HND9G193R7CQV275TSGZ59RC) themselves.
+
+:::tip Support Center
+You can share Swan's Support Center article written for end users with your cardholders:<br />
+→ [Unblocking your card after three incorrect PIN attempts](https://support.swan.io/hc/en-150/articles/16351372133789-Unblocking-your-card-after-three-incorrect-PIN-attempts)
+:::

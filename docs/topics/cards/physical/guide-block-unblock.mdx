@@ -5,20 +5,39 @@ title: Block & unblock physical cards
 # Block & unblock physical cards
 
 :::caution Blocked for incorrect PIN attempts
-If a card was blocked without request, it might be because the card holder made too many [incorrect attempts to enter their PIN](./index.mdx#pin-incorrect-attempts).
-
-In this case, you need to wait 24 hours before you can unlock the card, and the card holder must enter the PIN at an ATM.
+If a card was blocked without request, it might be because the cardholder made too many [incorrect attempts to enter their PIN](./index.mdx#pin-incorrect-attempts).
 :::
 
 ## Temporarily block a physical card {#block}
 
-You can temporarily suspend a physical card with the `suspendPhysicalCard` mutation.
+You can temporarily suspend a physical card with the [`suspendPhysicalCard` mutation](https://explorer.swan.io?query=bXV0YXRpb24gQmxvY2tQaHlzaWNhbENhcmQgewogIHN1c3BlbmRQaHlzaWNhbENhcmQoaW5wdXQ6IHsgY2FyZElkOiAiIiB9KSB7CiAgICAuLi4gb24gU3VzcGVuZFBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgfQogIH0KfQo%3D&tab=api).
 
 ## Unblock a physical card {#unblock}
 
-Unblock a physical card by calling the `resumePhysicalCard` mutation which returns a consent.
-When you do this, make sure you are authenticated with a user access token using the name of the card's account member.
-Then a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan.
+To unblock a physical card with the [`resumePhysicalCard` mutation](https://explorer.swan.io?query=bXV0YXRpb24gVW5ibG9ja1BoeXNpY2FsQ2FyZCB7CiAgcmVzdW1lUGh5c2ljYWxDYXJkKGlucHV0OiB7IGNhcmRJZDogIiIsIGNvbnNlbnRSZWRpcmVjdFVybDogIiIgfSkgewogICAgLi4uIG9uIFJlc3VtZVBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api), you must:
 
-- If you chose to block the card, the card can be used immediately after you unblock it.
-- If the card was blocked because the PIN was entered incorrectly three times, the card holder must enter their PIN at an ATM before the card can be used again.
+- Be signed in.
+- Use a user access token in the name of the card's account member.
+
+A `consentUrl` is returned inviting the user to start the Strong Customer Authentication with Swan.
+
+If you **chose to block the card**, the card can be used immediately after you unblock it.
+
+## Unblock after 3 incorrect PIN attempts {#unblock-pin}
+
+If a card was blocked because the PIN was entered incorrectly 3 times, the **cardholder** must complete the process to resume the card, with one potential interaction from your side depending on your integration.
+
+1. **Wait 24 hours** from the last incorrect PIN attempt.
+1. You or the cardholder call the `resumePhysicalCard` mutation to start the unblocking process:
+    1. **Cardholder**: In Swan's Web Banking interface, clicking **Unblock** calls this mutation. Refer to Swan's [Support Center](https://support.swan.io/hc/en-150/articles/16351372133789-Unblocking-your-card-after-three-incorrect-PIN-attempts) for more information. If you don't use Swan's Web Banking, consider designing your integration with a similar action.
+    1. **You**: If your integration doesn't allow the cardholder to do so, you need to [call the mutation](https://explorer.swan.io?query=bXV0YXRpb24gVW5ibG9ja1BoeXNpY2FsQ2FyZCB7CiAgcmVzdW1lUGh5c2ljYWxDYXJkKGlucHV0OiB7IGNhcmRJZDogIiIsIGNvbnNlbnRSZWRpcmVjdFVybDogIiIgfSkgewogICAgLi4uIG9uIFJlc3VtZVBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api).
+    :::caution Wait 24 hours
+    If the `resumePhysicalCard` mutation is called before 24 hours pass, it returns an error.
+    :::
+3. The cardholder **consents** to the operation.
+1. The cardholder enters their **original PIN** at an ATM ([reminder: a card's PIN never changes](./index.mdx#pin)).
+
+:::info View PIN
+- You can display the cardholder's PIN [with the API](./guide-view-info.mdx#view-pin).
+- If you use Swan's Web Banking interface, the [cardholder can view their PIN](https://support.swan.io/hc/en-150/articles/16423151195677-View-card-numbers-and-PIN#h_01HND9G193R7CQV275TSGZ59RC) themselves.
+:::

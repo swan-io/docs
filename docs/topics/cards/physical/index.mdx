@@ -14,10 +14,10 @@ Your [design](../design/index.mdx) will be printed on all physical cards.
 
 ## Name printed on card {#name}
 
-The name printed on Swan cards corresponds to a card holder's legal name, as recorded for their Swan account.
+The name printed on Swan cards corresponds to a cardholder's legal name, as recorded for their Swan account.
 
 The length of the printed name (first name + last name) can't exceed **20 characters**.
-If your card holder's name is longer than 20 characters, the initial of their first name is used instead of their full first name.
+If your cardholder's name is longer than 20 characters, the initial of their first name is used instead of their full first name.
 If the first initial + last name combination still exceeds 20 characters, their first name plus last initial is used instead.
 
 :::note Abbreviation example
@@ -27,13 +27,13 @@ If the first initial + last name combination still exceeds 20 characters, their 
 
 ### Additional line {#name-additional-line}
 
-You can **print an additional line** of text underneath the card holder name.
+You can **print an additional line** of text underneath the cardholder name.
 For example, you might want to include the company name on your cards.
 To [print an additional line](./guide-print.mdx#print-additional-line), add the `physicalCardCustomOptions` > `additionalPrintedLine` field to any mutation used to print cards.
 
 ### Number plates {#name-number-plate}
 
-You can use number plates instead of card holder names if it's logical for your use case.
+You can use number plates instead of cardholder names if it's logical for your use case.
 For example, when cards stay with a vehicle and are used exclusively to purchase fuel, number plates make sense.
 
 Please discuss this option with your Technical Account Manager.
@@ -46,7 +46,7 @@ Each physical card has a unique card number, different even from the virtual car
 
 Swan makes the physical card's number, CVC, expiry date, and the PIN available in Web Banking.
 The **card number**, **CVC**, and **PIN** are considered sensitive data and must be **masked by default**.
-The card holder must complete a **consent request** before the numbers can be unmasked.
+The cardholder must complete a **consent request** before the numbers can be unmasked.
 
 import VirtualPhysicalCardNumbers from '../partials/_card-numbers.mdx';
 
@@ -60,31 +60,31 @@ Physical cards have a **four-digit PIN**, or *Personal Identification Number*.
 A card's PIN is chosen or assigned when the card is printed.
 After a PIN is chosen or assigned, it **can't be changed**.
 
-The PIN for each physical card is available to the card holder on Swan's Web Banking interface.
-PINs aren't available on your Dashboard because only the card holder should have easy access to the PIN for their card.
+The PIN for each physical card is available to the cardholder on Swan's Web Banking interface.
+PINs aren't available on your Dashboard because only the cardholder should have easy access to the PIN for their card.
 
-If a card holder **forgets their PIN**, they can view it on your interface.
-If needed, you can use the `ViewPhysicalCardPin` mutation to view the numbers yourself, which requires a user access token associated with the card holder.
+If a cardholder **forgets their PIN**, they can view it on your interface.
+If needed, you can use the `ViewPhysicalCardPin` mutation to view the numbers yourself, which requires a user access token associated with the cardholder.
 Note that if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`.
 
 :::caution
-If a card holder shares their PIN, Swan can't take responsibility for fraud associated with that card.
+If a cardholder shares their PIN, Swan can't take responsibility for fraud associated with that card.
 :::
 
 ### Choosing a card's PIN {#pin-choose}
 
-To allow your card holders to **choose their PIN**, set the `choosePin` paramater to `true` when [printing physical cards](./guide-print.mdx).
+To allow your cardholders to **choose their PIN**, set the `choosePin` paramater to `true` when [printing physical cards](./guide-print.mdx).
 You can set this paramater with the `printPhysicalCard` and `addCards` mutations.
 
 If you don't add the `choosePin` paramater, or you set it to `false`, Swan assigns a PIN randomly.
 A card's PIN **can't be changed**.
 
 If an account member is **ordering a card for someone else**, it's recommended to use the `addCard` mutation to [add **only** the virtual card](../virtual/guide-add.mdx#add-one).
-Then, the card holder can request their own physical card and choose their PIN securely.
+Then, the cardholder can request their own physical card and choose their PIN securely.
 
 ### Incorrect PIN attempts {#pin-incorrect-attempts}
 
-If the card holder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical card can be made online or in person.
+If the cardholder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical card can be made online or in person.
 
 Note that a physical card blocked for three incorrect PIN attempts will have the reason `IncorrectPinCodeAttemptsExceeded` (on the `PhysicalCardSuspendedStatusInfo`).
 You'll have to wait 24 hours before being able to [unblock the physical card](./guide-block-unblock.mdx).
@@ -93,7 +93,7 @@ You can continue to use both virtual and digital cards while the physical card i
 
 ## Printing and shipping hubs {#hubs}
 
-Delivery time for physical cards depends on the type of card material you select and your card holders' location.
+Delivery time for physical cards depends on the type of card material you select and your cardholders' location.
 It typically takes **2-5 business days** for cards to be delivered.
 Please note that the delivery times listed here are estimates and aren't contractual.
 
@@ -106,7 +106,7 @@ The printing hub is defined in the [card product ID](../index.mdx#card-product).
 If you'd like to ship cards out of both hubs, you need two card products: one with France as the hub, and the other with Spain.
 :::
 
-If your card holder reports not receiving their physical card, please refer them to the [Swan Support Center](https://support.swan.io/hc/en-150/articles/5503032519837).
+If your cardholder reports not receiving their physical card, please refer them to the [Swan Support Center](https://support.swan.io/hc/en-150/articles/5503032519837).
 
 ### 🇫🇷 France hub {#hubs-france}
 
@@ -188,11 +188,11 @@ Refer to the [card renewal statuses](#renew-statuses) to understand how they int
 | Physical card status | Explanation |
 |---|---|
 | `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation. |
-| `ConsentPending` | Request to print a physical card was received and is waiting for the card holder's consent.<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the card holder consents, the status moves to `Processing`.</li><li>If you used the `printPhysicalCard` mutation and the card holder consents, the status moves to `Activated`.</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`.</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`.</li></ul> |
+| `ConsentPending` | Request to print a physical card was received and is waiting for the cardholder's consent.<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the cardholder consents, the status moves to `Processing`.</li><li>If you used the `printPhysicalCard` mutation and the cardholder consents, the status moves to `Activated`.</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`.</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`.</li></ul> |
 | `Processing` | The card is in the process of being created with Swan's card issuing provider.<br/><br/>**Next steps**:<ul><li>After the card is created successfully in the card issuing provider's system, the status moves to `ToActivate`.</li><li>If you cancel the card with the API *before* the card issuing provider creates the card, the status moves to `Canceling`.</li></ul> |
-| `ToActivate` | The card is being printed by Swan's card issuing provider, then delivered to the card holder.<br/><br/>After the card holder receives the physical card, they need to activate it by performing a first transaction and entering the PIN. You can also activate the card with the `activatePhysicalCard` mutation.<br/><br/>**Next steps**:<ul><li>If the card holder performs the transaction successfully, or you activate the card with the API, the status moves to `ToActivate`.</li><li>If the card holder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`.</li></ul> |
+| `ToActivate` | The card is being printed by Swan's card issuing provider, then delivered to the cardholder.<br/><br/>After the cardholder receives the physical card, they need to activate it by performing a first transaction and entering the PIN. You can also activate the card with the `activatePhysicalCard` mutation.<br/><br/>**Next steps**:<ul><li>If the cardholder performs the transaction successfully, or you activate the card with the API, the status moves to `ToActivate`.</li><li>If the cardholder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`.</li></ul> |
 | `Activated` | Physical card is available for use.<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Activated` until the renewal period.</li><li>`Activated` cards can also be `Suspended` and `Canceled` (example: if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`).</li></ul> |
-| `Suspended`<br /><br />Also referred to as *Blocked* | Physical card is suspended and not available for use. Card holders can still view card information and use digital cards (not virtual cards) when a physical card is `Suspended`.<br/><br/>*Cards can be suspended for various reasons, including a request from you or the card holder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API.</li><li>Cancel the card with the API.</li></ul> |
+| `Suspended`<br /><br />Also referred to as *Blocked* | Physical card is suspended and not available for use. Cardholders can still view card information and use digital cards (not virtual cards) when a physical card is `Suspended`.<br/><br/>*Cards can be suspended for various reasons, including a request from you or the cardholder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API.</li><li>Cancel the card with the API.</li></ul> |
 | `Canceling` | Card is in the process of being canceled.<br/><br/>**Next steps**: Card is `Canceled`. After a card is assigned the `Canceling` status, the process can't be reversed. |
 | `Canceled` | Card is canceled, no longer available for use, and can't be reactivated. |
 
@@ -220,7 +220,7 @@ You'll find the carrier and tracking number in the fields `shippingProvider` and
 
 ### Verify delivery address {#renew-address}
 
-**10 weeks before** the original card expires, **verify the delivery address** with your card holder.
+**10 weeks before** the original card expires, **verify the delivery address** with your cardholder.
 
 :::info No update provided
 If Swan doesn't receive updated address information at least 8 weeks before the card renews, the renewed card is shipped to the same address as the original card.
@@ -228,8 +228,8 @@ If Swan doesn't receive updated address information at least 8 weeks before the 
 
 | Interface | Address update method |
 | --- | --- |
-| Swan's Web Banking app | Card holders confirm or update their address in the app at least 8 weeks before renewal. |
-| Custom integration | Send the updated address to Swan at least 8 weeks before the card renews.<br /><br /><ol><li>First, provide a way for your card holders to verify their address. For example, this could be from your app, with a notification system, or through your own support team.</li><li>Then, send Swan the updated address with the API by calling the `confirmPhysicalCardRenewal` mutation.</li></ol> |
+| Swan's Web Banking app | Cardholders confirm or update their address in the app at least 8 weeks before renewal. |
+| Custom integration | Send the updated address to Swan at least 8 weeks before the card renews.<br /><br /><ol><li>First, provide a way for your cardholders to verify their address. For example, this could be from your app, with a notification system, or through your own support team.</li><li>Then, send Swan the updated address with the API by calling the `confirmPhysicalCardRenewal` mutation.</li></ol> |
 
 ### Card renewal statuses {#renew-statuses}
 
@@ -263,12 +263,12 @@ flowchart LR
 
 | Card renewal status | Explanation |
 |---|---|
-| `ToRenew` | Status triggered automatically 10 weeks before the card's expiry date. After this status is triggered by the Swan API, you can't stop the renewal process.<br /><br />*If you or the card holder doesn't want to renew a physical card, [cancel the card](./guide-cancel.mdx) **at least 11 weeks** before the expiry date.* |
+| `ToRenew` | Status triggered automatically 10 weeks before the card's expiry date. After this status is triggered by the Swan API, you can't stop the renewal process.<br /><br />*If you or the cardholder doesn't want to renew a physical card, [cancel the card](./guide-cancel.mdx) **at least 11 weeks** before the expiry date.* |
 | `Renewed` | Status triggered automatically 8 weeks before the card's expiry date. No updates to the delivery address can be made after this status is triggered. |
 
 ### Activating the new card {#renew-activate}
 
-After the card holder makes an in-person transaction with the new card using the Chip and PIN payment method, the new card's status changes from `Renewed` to `Activated`.
+After the cardholder makes an in-person transaction with the new card using the Chip and PIN payment method, the new card's status changes from `Renewed` to `Activated`.
 You could also [use the API](./guide-activate.mdx).
 
 The old card is then marked `isExpired=true` because only one card can be activated at a time.

@@ -82,6 +82,18 @@ A card's PIN **can't be changed**.
 If an account member is **ordering a card for someone else**, it's recommended to use the `addCard` mutation to [add **only** the virtual card](../virtual/guide-add.mdx#add-one).
 Then, the cardholder can request their own physical card and choose their PIN securely.
 
+### PIN availability {#pin-ready}
+
+You can view a card's PIN as soon as it's assigned during the printing process.
+
+- If you print a physical card **before 17:00 CET/CEST** (Central European [Summer] Time), the card's PIN is available by the end of the day.
+- If you print a physical card **after 17:00 CET/CEST**, the card's PIN is available by the end of the following day.
+- If you allow your cardholder to **choose their PIN** (`choosePin` is `true`), add an additional 24-hour delay.
+
+import DayTimeStandard from '../../partials/_day-time.mdx';
+
+<DayTimeStandard />
+
 ### Incorrect PIN attempts {#pin-incorrect-attempts}
 
 If the cardholder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical card can be made online or in person.
@@ -206,8 +218,12 @@ The four-digit **PIN doesn't change** for a continuous user experience.
 If your user prefers to [choose their PIN](#pin-choose), they need to [cancel the expiring card](./guide-cancel.mdx) and order a new one.
 It's not possible to choose a new PIN during renewal.
 
-Existing subscriptions might be transferred to the new card automatically if the merchant adheres to this service.
-Swan has no control over this process.
+### Subscriptions {#renew-subscriptions}
+
+After the new card is enabled, Swan uses [Mastercard's Account Billing Updater](https://developer.mastercard.com/product/automatic-billing-updater-abu/) to update the details about the tokenized card.
+If a merchant adheres to Mastercard's Account Billing Updater, they receive the tokenized card's updated details automatically through this service.
+
+Therefore, certain existing subscriptions can be transferred to the new card without any action from the cardholder.
 
 ### Card delivery {#renew-delivery}
 

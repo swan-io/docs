@@ -237,6 +237,7 @@ module.exports = {
             "topics/cards/physical/guide-view-info",
             "topics/cards/physical/guide-block-unblock",
             "topics/cards/physical/guide-cancel",
+            "topics/cards/physical/sandbox",
           ],
         },
         {
@@ -473,6 +474,7 @@ module.exports = {
           items: [
             "topics/users/identifications/guide-get-identifications",
             "topics/users/identifications/guide-get-latest-id",
+            "topics/users/identifications/sandbox",
           ],
         },
       ],

@@ -26,17 +26,6 @@ Each card `transaction` object contains specific payment data in the [`CardTrans
 - Merchant Category Code (**MCC**)
 - Original **amount** and **currency**
 
-### Fraud and card transactions {#fraud}
-
-When a cardholder is a victim of fraud, they must declare it to Swan.
-If, after an internal investigation, the chargeback is admissible, Swan creates a new `InternalCreditTransferIn` credit transaction with the [status `Booked`](#statuses), which impacts the [account's booked balance](../../accounts/index.mdx#balances).
-
-The chargeback transaction is linked to the same payment as the initial card transaction.
-
-import SuspicionOfFraud from '../../partials/_card-fraud-suspicion.mdx';
-
-<SuspicionOfFraud />
-
 ### Card transaction statuses {#statuses}
 
 ```mermaid
@@ -60,7 +49,7 @@ flowchart LR
     style S fill:#dfedf2,stroke:#4d8296,stroke-width:3px
 ```
 
-:::tip Account balances
+:::info Account balances
 There's a **close link** between **transaction statuses** and **account balances**.
 Refer to explanations of types of account balances in the [accounts section](../../accounts/index.mdx#balances).
 :::
@@ -71,6 +60,25 @@ Refer to explanations of types of account balances in the [accounts section](../
 | `Booked` | Completed card payments that are displayed on the official account statement. These card payments have been debited from the account, and they impact the account's `Booked` balance. |
 | `Released` | Card authorizations are released for specific reasons. Most of the time, the funds are captured when the merchant requests the actual debit. Authorizations might also be released by the merchant, and they can expire.<br /><br />When an authorization is released without a debit (clearing), the account's available balance increases by the amount of the authorization. |
 | `Rejected` | Declined or refused card payments. For example, you, Swan, Mastercard rejected authorization for the payment, or the account's `Available` balance isn't sufficient to complete the card payment without resulting in a negative balance. |
+
+## Fraud and card transactions {#fraud}
+
+When a cardholder is a victim of fraud, they must declare it to Swan.
+If, after an internal investigation, the chargeback is admissible, Swan creates a new `InternalCreditTransferIn` credit transaction with the [status `Booked`](#statuses), which impacts the [account's booked balance](../../accounts/index.mdx#balances).
+
+The chargeback transaction is linked to the same payment as the initial card transaction.
+
+import SuspicionOfFraud from '../../partials/_card-fraud-suspicion.mdx';
+
+<SuspicionOfFraud />
+
+## International card transactions {#international}
+
+In order for your cardholders to make international card transactions, configure the [card settings](../../cards/index.mdx#settings) to allow them.
+For a smoother user experience, both `international` and `nonMainCurrencyTransactions` should be activated.
+
+Unless your Terms and Conditions state differently, a **2% fee** applies to international card transactions.
+Note that [Mastercard's exchange rate](https://www.mastercard.com/content/mastercardcom/global/en/personal/get-support/convert-currency.html) applies to card transactions outside of [SEPA](../payments/index.mdx#sepa).
 
 ## Authorization and clearing {#authorization-clearing}
 

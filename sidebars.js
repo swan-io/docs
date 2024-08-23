@@ -474,6 +474,7 @@ module.exports = {
           items: [
             "topics/users/identifications/guide-get-identifications",
             "topics/users/identifications/guide-get-latest-id",
+            "topics/users/identifications/sandbox",
           ],
         },
       ],

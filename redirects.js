@@ -143,7 +143,7 @@ module.exports = [
   { from: "/concept/account-holder/onboarding", to: "/topics/onboarding/" },
   {
     from: "/concept/account-holder/supporting-documents",
-    to: "/topics/onboarding/documents/",
+    to: "/topics/accounts/documents/",
   },
   { from: "/concept/account/balances", to: "/topics/accounts/#balances" },
   { from: "/concept/account/billing", to: "/topics/accounts/billing/" },

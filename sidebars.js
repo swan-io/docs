@@ -33,6 +33,7 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/onboarding/overview/guide-get-info",
+            "topics/onboarding/overview/guide-get-list",
             "topics/onboarding/overview/guide-finalize",
           ],
         },
@@ -54,20 +55,6 @@ module.exports = {
           items: [
             "topics/onboarding/company/guide-create",
             "topics/onboarding/company/guide-update",
-          ],
-        },
-        {
-          type: "category",
-          label: "Supporting documents",
-          link: { type: "doc", id: "topics/onboarding/documents/index" },
-          collapsed: true,
-          items: [
-            "topics/onboarding/documents/guide-get-list",
-            "topics/onboarding/documents/guide-upload",
-            "topics/onboarding/documents/guide-get-info",
-            "topics/onboarding/documents/guide-request-collection-review",
-            "topics/onboarding/documents/guide-delete",
-            "topics/onboarding/documents/sandbox",
           ],
         },
         {
@@ -109,6 +96,19 @@ module.exports = {
             "topics/accounts/memberships/guide-update",
             "topics/accounts/memberships/guide-suspend-resume",
             "topics/accounts/memberships/guide-disable",
+          ],
+        },
+        {
+          type: "category",
+          label: "Supporting documents",
+          link: { type: "doc", id: "topics/accounts/documents/index" },
+          collapsed: true,
+          items: [
+            "topics/accounts/documents/guide-upload",
+            "topics/accounts/documents/guide-get-info",
+            "topics/accounts/documents/guide-request-collection-review",
+            "topics/accounts/documents/guide-delete",
+            "topics/accounts/documents/sandbox",
           ],
         },
         {

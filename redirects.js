@@ -426,4 +426,12 @@ module.exports = [
     from: "/partnership/document-center",
     to: "/partnership/document-center/company-registration/",
   },
+  {
+    from: "/topics/onboarding/documents",
+    to: "/topics/accounts/documents/",
+  },
+  {
+    from: "/topics/onboarding/documents/guide-get-list",
+    to: "/topics/onboarding/overview/guide-get-list",
+  },
 ];

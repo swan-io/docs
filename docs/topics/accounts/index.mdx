@@ -16,26 +16,26 @@ Accounts, along with [account holders](../onboarding/account-holders/index.mdx),
 
 ## Account type and level {#account-type-level}
 
-Swan accounts are defined by their `level` and `type`.
+Swan accounts are defined by their [`PaymentLevel`](https://api-reference.swan.io/enums/payment-level) and [`PaymentAccountType`](https://api-reference.swan.io/enums/payment-account-type/).
 There are two possible values for each.
 
-The account `level` is determined by the [account holder verification status](../onboarding/account-holders/index.mdx#verification-process#statuses).
+The `PaymentLevel` is determined by the [account holder verification status](../onboarding/account-holders/index.mdx#verification-process#statuses).
 
 - `Limited` → Account holder verification status is `NotStarted`, `Pending`, `WaitingForInformation`, or `Refused`.
 - `Unlimited` → Account holder verification status is `Verified`.
 
-The account `type` is determined by the <mark>what?</mark>.
+The `PaymentAccountType` signifies whether the [account's main IBAN](./ibans/index.mdx#main) has been assigned.
 
-- `E-Money` → The account can't be used to manage or move money.
-- `Payment Services` → The account can manage and move money, as permitted by the account `level`. Accounts receive the main IBAN.
+- `EMoney` → The account doesn't have it's main IBAN.
+- `PaymentService` → The account's main IBAN has been assigned.
 
-Swan accounts have different capabilities determined by the combination of `level` and `type` values.
+Swan accounts have different capabilities determined by the combination of these values.
 
-| `level` + `type` | Capabilities |
+| `Level` + `Type` | Capabilities |
 | --- | --- |
-| `Limited` + `E-Money` | <ul><li>The account can be used to:<ul><li>Invite account members.</li><li>Add <mark>virtual?</mark> cards.</li><li><mark>what else?</mark></li></ul></li><li>The account doesn't have its main IBAN.</li><li>Payments **can't** be made from the account.</li></ul> |
-| `Limited` + `Payment Services` | <ul><li>The legal representative finished [identification](../users/identifications/index.mdx).</li><li>Account holder verification isn't complete yet.</li><li>The account has its main IBAN.</li><li>Money can be added to the account.</li><li>Payments **still can't** be made from the account.</li></ul> |
-| `Unlimited` + `Payment Services` | <ul><li>Account holder verification status is `Verified`.</li><li>Payments **can** be made from the account.</li><li>All accounts functions are possible.</li></ul> |
+| `Limited` + `EMoney` | ✓ The account can be used for certain actions, such as inviting account members and adding virtual cards.<br /><br />☒ The account doesn't have its main IBAN.<br />☒ Payments **can't** be made from the account.<br />☒ Account holder verification isn't complete. |
+| `Limited` + `PaymentService` | ✓ The account has its main IBAN.<br />✓ Money can be added to the account.<br /><br />☒ Account holder verification isn't complete.<br />☒ Payments **still can't** be made from the account. |
+| `Unlimited` + `PaymentService` | ✓ Account holder verification status is `Verified`.<br />✓ Payments **can** be made from the account.<br />✓ The account has its main IBAN.<br />✓ All accounts functions are possible. |
 
 ## Account country {#account-country}
 
@@ -187,7 +187,7 @@ You might need to **get your custom statements approved**. Please work with your
 You can get a PDF containing your bank details using the API.
 In French, this document is called a **RIB**, or a *relevé d'identité bancaire*.
 
-The PDF is generated automatically after the account's main IBAN is assigned, meaning the account must have the payment level `Unlimited` and the account type `Payment Services`.
+The PDF is generated automatically after the account's main IBAN is assigned, meaning the account must have the payment level `Unlimited` and the account type `PaymentService`.
 Note that the automatic generation might take a few minutes.
 The document is generated in the [account language](#language).
 

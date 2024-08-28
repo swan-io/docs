@@ -26,10 +26,19 @@ Swan [verifies specific beneficiary IBANs](../../payments/credit-transfers/sepa/
 Additionally, the **format** of your IBANs must be correct when you use them with Swan's API.
 Use the `ibanValidation` query the confirm that your [IBAN follows the expected format](./guide-validate.mdx).
 
-## Local IBANs {#local}
+## Main IBANs {#main}
 
-Local IBANs aren't a different type of IBAN, but rather a **characteristic** of both main and virtual IBANs.
-With local IBANs, you can choose (within regulations) the country prefix for your Swan IBANs.
+Every Swan account has one main IBAN.
+All virtual IBANs are connected to the main IBAN.
+
+When main IBANs are issued, the `PaymentAccountType` changes from `EMoney` to `PaymentService`.
+Note that the account's `PaymentLevel` can be `Limited` when issued the main IBAN.
+Learn more about `PaymentAccountType` and `PaymentLevel` in the [accounts overview section](../index.mdx#account-type-level).
+
+## Local IBAN details {#local}
+
+Local IBANs aren't a different type of IBAN, but rather a **characteristic** of main (and virtual) IBANs.
+With local IBANs, you can choose—within regulations—the country prefix for your Swan IBANs.
 
 The country prefix for local IBANs is determined by the [account country](../index.mdx#account-country).
 Swan must comply with different requirements depending on local laws.
@@ -124,20 +133,6 @@ Each set of characters represents a different account detail.
 | **SWNBESB2** | Swan's Spanish Bank Identifier Code (BIC) |
   </div>
 </details>
-
-## Main IBANs {#main}
-
-Every Swan account has one main IBAN.
-All virtual IBANs are connected to the main IBAN.
-
-Main IBANs are issued when the `PaymentAccountType` changes from `EMoney` to `PaymentService`, which happens after both the [account holder verification](../../onboarding/account-holders/index.mdx#verification-process) and [onboarding](../../onboarding/index.mdx) processes are complete.
-
-Therefore, main IBANs aren't issued until your users **complete onboarding** and **verify their identities**.
-
-The payment account type changes automatically to `PaymentService` when the onboarding status is `Finalized` and the identification status is `Verified`.
-You don't need to do anything on your end to update the account type.
-
-Note that the account's `PaymentLevel` can be `Limited` when issued the main IBAN.
 
 ## Virtual IBANs {#virtual}
 

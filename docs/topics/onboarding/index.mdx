@@ -4,9 +4,11 @@ title: Account onboarding
 
 # Account onboarding
 
+## Overview {#overview}
+
 Account onboarding is, at its core, the **process to create [account holders](./account-holders/index.mdx)**.
 
-One end result of onboarding is **also creating the first account** for the new account holder.
+One end result of onboarding is also creating the first account for the new account holder.
 Account holders complete an new onboarding to open another account.
 
 :::info Cross reference
@@ -14,27 +16,29 @@ During onboarding, users also [complete an account holder verification](./accoun
 The might also [sign up for Swan](../users/index.mdx#signup) if they haven't already.
 :::
 
-## Types of onboarding {#types}
+### Types of onboarding {#types}
 
-There are two types of onboarding, directly linked to the two types of accounts Swan offers.
+There are two types of onboarding, individual and company, directly linked to the two types of accounts Swan offers.
 Each onboarding has a unique `onboardingId`.
-
-* **Individual onboarding** is the process of creating a new individual account holder, and opening a new Swan account for that account holder.
-* **Company onboarding** is the process of creating a new company account holder, and opening a new Swan account for that account holder.
 
 The individual and company onboarding processes are similar.
 However, they're split in the documentation to prevent mixing up small but important details.
+
+| Type | Explanation |
+| --- | --- |
+| [Individual onboarding](./individual/index.mdx) | <ul><li>Create a new **individual** account holder.</li><li>Open a new **individual** Swan account for that account holder.</li></ul> |
+| [Company onboarding](./company/index.mdx) | <ul><li>Create a new **company** account holder.</li><li>Open a new **company** Swan account for that account holder.</li></ul> |
 
 :::tip Swan Banking Frontend
 If you'd like to customize the onboarding experience for your users (while respecting local regulations), check out the open source [Swan Banking Frontend](https://swan-io.github.io/swan-partner-frontend/specs/onboarding/).
 :::
 
-## Purpose of onboarding {#purpose}
+### Purpose of onboarding {#purpose}
 
 Completing the onboarding process serves several purposes.
 
-1. **Account holder** is created.
-1. Account holder's **account** is created.
+1. A new **account holder** is created.
+1. The account holder's **Swan account** is created.
 1. The person who performed the onboarding process becomes the legal representative of the account. They're also the account's first member with [full permissions](../accounts/memberships/index.mdx).
 1. Your relationship with the account holder is stored in the `partnershipStatusInfofield` of the `account` object.
 
@@ -50,7 +54,84 @@ import PublicOnboardingLinks from './_public-onboarding-links.mdx';
 
 <PublicOnboardingLinks />
 
-## Onboarding statuses {#statuses}
+## Requirements {#requirements}
+
+### Country requirements {#country-reqs}
+
+Onboarding is a **highly localized experience**.
+Everything from **what to include in your API request** to how to ask **users to verify their identity** to whether Swan **requires certain ID numbers or documents** depends on the [account country](../accounts/index.mdx#account-country).
+
+Account onboarding country requirements are described in the [individual](individual/index.mdx#country-reqs) and [company](company/index.mdx#country-reqs) onboarding sections.
+Please follow the requirements for your target countries closely.
+
+### Supporting documents {#documents}
+
+Collecting [supporting documents](../accounts/documents/index.mdx) impacts multiple elements of the onboarding process.
+Consider these steps, including the statuses of both [account holder verification](./account-holders/index.mdx#verification-process-statuses) and the [supporting document collection](../accounts/documents/index.mdx#collection-statuses).
+
+<table>
+  <tr>
+    <th>Step</th>
+    <th>Event</th>
+    <th>Account holder<br />verification status</th>
+    <th>Supporting document<br />collection status</th>
+  </tr>
+  <tr>
+    <td><center>1</center></td>
+    <td>Onboarding created</td>
+    <td><center>Not yet created</center></td>
+    <td><center>`WaitingForDocument`</center></td>
+  </tr>
+  <tr>
+    <td><center>2</center></td>
+    <td>Onboarding finalized</td>
+    <td><center>`NotStarted`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>3</center></td>
+    <td>Legal representative completes [identification](../users/identifications/index.mdx)</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>4</center></td>
+    <td>Swan requests [supporting documents](../accounts/documents/index.mdx)<br /><br />💡 *[Subscribe to the webhook](../../developers/using-api/webhooks.mdx) `supportingDocumentCollection.updated`. You'll be notified when a request is sent to collect documents.*</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td><center>5</center></td>
+    <td>Partner uploads new documents<br /><br />💡 *If needed, [get a list of required documents](./overview/guide-get-list.mdx). Then, [upload missing documents](../accounts/documents/guide-upload.mdx).*</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td><center>6</center></td>
+    <td>Partner requests a collection review<br /><br />💡 *Partners (you) need to request a supporting document collection review after all supporting documents are uploaded. [Request a review](../accounts/documents/guide-request-collection-review.mdx) with the API or from your Dashboard.*</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>7</center></td>
+    <td>Swan reviews supporting documents</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>8</center></td>
+    <td>(a) Swan **approves** the account holder</td>
+    <td><center>`Verified`</center></td>
+    <td><center>`Approved`</center></td>
+  </tr>
+  <tr>
+    <td>(b) Swan **needs more documents** to verify the account holder<br /><br />💡 *[Get the list of required documents](./overview/guide-get-list.mdx) and review the rejection reason. Then, return to step 4.*</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+</table>
+
+## Statuses {#statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -71,14 +152,6 @@ flowchart LR
 | `Ongoing (Invalid)` | <ul><li>This is the first status assigned to an onboarding when **using the frontend**.</li><li>If using the **API**, this is the first status if **not all required information** is included with your mutation.</li><li>Status might change to `Invalid` if required information is removed or if some information is incorrect.</li></ul>**Next step**: Submit or update required information to advance to `Ongoing (Valid)` (both you and the end user can submit or update information) |
 | `Ongoing (Valid)` | <ul><li>This is the first status assigned to an onboarding if **using the API** and you **included all required information** with your mutation.</li><li>Status changes to `Valid` when missing required information is submitted or if incorrect information is updated.</li></ul>**Next step**: User completes form, clicks "Finalize," and provides consent to complete the onboarding process |
 | `Finalized` | Onboarding completed |
-
-## Country requirements {#country-reqs}
-
-Onboarding is a **highly localized experience**.
-Everything from **what to include in your API request** to how to ask **users to verify their identity** to whether Swan **requires certain ID numbers or documents** depends on the [account country](../accounts/index.mdx#account-country).
-
-Account onboarding country requirements are described in the [individual](individual/index.mdx#country-reqs) and [company](company/index.mdx#country-reqs) onboarding sections.
-Please follow the requirements for your target countries closely.
 
 ## API sequence diagram {#diagram}
 
@@ -111,5 +184,6 @@ participant U as User
 
 The following guides are common to the individual and company onboarding processes.
 
-* [Get information about an onboarding](overview/guide-get-info.mdx)
-* [Finalize an onboarding](overview/guide-finalize.mdx)
+* [Get information about an onboarding](./overview/guide-get-info.mdx)
+* [Get a list of required onboarding documents](./overview/guide-get-list.mdx)
+* [Finalize an onboarding](./overview/guide-finalize.mdx)

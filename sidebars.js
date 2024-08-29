@@ -34,6 +34,7 @@ module.exports = {
           items: [
             "topics/onboarding/overview/guide-get-info",
             "topics/onboarding/overview/guide-get-list",
+            "topics/onboarding/overview/guide-export",
             "topics/onboarding/overview/guide-finalize",
           ],
         },
@@ -451,6 +452,7 @@ module.exports = {
             "topics/users/overview/guide-get-list",
             "topics/users/overview/guide-get-info-multiple",
             "topics/users/overview/guide-get-info-one",
+            "topics/users/overview/guide-export",
             "topics/users/overview/guide-deactivate",
           ],
         },

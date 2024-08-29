@@ -71,6 +71,27 @@ While Finnish is an available account language, it isn't a supported account mem
 When the account language is Finnish, the account membership language defaults to English.
 :::
 
+## Account type and level {#account-type-level}
+
+Swan accounts are defined by a payment **level** and payment **account type**.
+There are two possible values for each:
+
+- [`PaymentLevel`](https://api-reference.swan.io/enums/payment-level) → `Limited` and `Unlimited`
+- [`PaymentAccountType`](https://api-reference.swan.io/enums/payment-account-type/) → `EMoney` and `PaymentService`
+
+Accounts start with the level `Limited` and the account type `EMoney`.
+The level changes from `Limited` to `Unlimited` when the [account holder verification status](../onboarding/account-holders/index.mdx#verification-process#statuses) changes to `Verified`.
+The account type changes from `EMoney` to `PaymentService` when the [account's main IBAN](./ibans/index.mdx#main) is available to the account holder.
+Accounts with the level `Unlimited` and the account type `PaymentService` are fully functional accounts.
+
+Swan accounts have different capabilities determined by the combination of these values.
+
+| Level + Type | Capabilities |
+| --- | --- |
+| `Limited` + `EMoney` | ✓ The account can be used for certain actions, such as inviting account members and adding virtual cards.<br /><br />☒ Account holder verification isn't complete.<br />☒ The account's main IBAN isn't displayed.<br />☒ Payments can't be made from the account. |
+| `Limited` + `PaymentService` | ✓ The account's main IBAN is displayed.<br />✓ Money can be added to the account.<br /><br />☒ Account holder verification isn't complete.<br />☒ Payments can't be made from the account. |
+| `Unlimited` + `PaymentService` | ✓ Account holder verification status is `Verified`.<br />✓ Payments can be made from the account.<br />✓ The account's main IBAN is displayed.<br />✓ All accounts functions are possible. |
+
 ## Balances {#balances}
 
 Accounts at Swan are designed for credit balances only.
@@ -164,7 +185,7 @@ You might need to **get your custom statements approved**. Please work with your
 You can get a PDF containing your bank details using the API.
 In French, this document is called a **RIB**, or a *relevé d'identité bancaire*.
 
-The PDF is generated automatically after the account's main IBAN is assigned, meaning the account must have the payment level `Unlimited` and the account type `Payment Services`.
+The PDF is generated automatically after the account's main IBAN is assigned, meaning the account must have the payment level `Unlimited` and the account type `PaymentService`.
 Note that the automatic generation might take a few minutes.
 The document is generated in the [account language](#language).
 

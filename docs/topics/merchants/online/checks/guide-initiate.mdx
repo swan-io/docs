@@ -96,14 +96,8 @@ At this stage, the transaction has been initiated and the following events occur
     1. Verifies that the field formats are consistent with the check provider's specifications.
     1. Creates a `checkIn` transaction with the status `Upcoming`. `checkIn` transactions retain the status `Upcoming` until the check amount is credited to the Swan settlement account.
 1. **Merchant**:
-    1. For **one** check:
-        1. Signs the back of the check.
-        1. Writes their Swan account number on the back of the check.
-    1. For **multiple** checks:
-        1. Signs the back of each check.
-        1. Places all checks in one envelope.
-        1. Includes their Swan account number in the envelope.
-    1. Sends the check to Swan's check provider by physical mail within 30 days of the `initiateCheckMerchantPayment` mutation call.
+    1. Writes their Swan account number on the back of each check.
+    1. Sends the check or checks to Swan's check provider by physical mail. They **must be received** within 30 days of the `initiateCheckMerchantPayment` mutation call.
 1. **Swan's check provider**:
     1. [Processes the check](./index.mdx#rolling-reserve), after which the status changes to `Booked`. This can take a few business days.
 

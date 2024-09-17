@@ -102,29 +102,28 @@ If the bank name is different from the holder establishment provided in the FNCI
 
 ### Rejected {#rejected}
 
-Checks can be rejected by Swan's check provider and **returned to the merchant by mail**.
+Checks can be rejected by Swan's check provider and **returned to the merchant by mail**, mailed to the account holder's address.
 They'll receive helpful information about why the check has been rejected, and then they can **fix and resend the rejected checks**.
 
 **Before resending the rejected check**, the merchant should create a new `checkIn` transaction.
 If they send the check without creating the new `checkIn` transaction, the check **remains rejected** and will be returned to the merchant again.
 
-Additionally, all checks not sent to Swan's check provider within 30 days of being declared will be automatically `Rejected`.
+Additionally, all checks not received by Swan's check provider within 30 days of being declared will be automatically `Rejected`.
 
 A check transaction can be rejected for the following reasons:
 
 | Rejection reason | Explanation |
 | --- | --- |
-| `AmountMismatch` | Amount on the check and amount declared through the API don't match |
-| `BeneficiaryMismatch` | Amount beneficiary name the check and the name declared through the API don't match |
-| `BeneficiaryMissingOrIncorrect` | Merchant's name is missing or incorrect |
-| `CheckReceivedLate` | Check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check |
-| `DateMissing` | There's no date on the check |
-| `DateInvalid` | Date on the check is in the future or isn't valid |
-| `DebtorNameMissing` | Debtor's name (merchant's customer) must appear on the check |
-| `EndorsementMissing` | Merchant didn't sign the back of the check or provide their Swan account number |
-| `InvalidOrMissingAmount` | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters) |
-| `SignatureMissing` | Signature is missing, or there was a problem with the signature |
-| `SuspiciousCheck` | Suspicion of fraud |
+| `AmountMismatch` | Amount on the check and amount declared through the API don't match. |
+| `BeneficiaryMismatch` | Amount beneficiary name the check and the name declared through the API don't match. |
+| `BeneficiaryMissingOrIncorrect` | Merchant's name is missing or incorrect. |
+| `CheckNotReceived` | Check wasn't received by Swan's check provider. This reason doesn't appear until 30 days after the check was declared. |
+| `CheckReceivedLate` | Check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check. |
+| `DateMissing` | There's no date on the check. |
+| `DateInvalid` | Date on the check is in the future or isn't valid. |
+| `DebtorNameMissing` | Debtor's name (your merchant's customer) must appear on the check. |
+| `InvalidOrMissingAmount` | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters). |
+| `SignatureMissing` | Debtor's signature is missing, or there was a problem with the signature. |
 
 ### Returned {#returned}
 

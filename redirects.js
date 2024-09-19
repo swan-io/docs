@@ -435,7 +435,7 @@ module.exports = [
     to: "/topics/onboarding/overview/guide-get-list",
   },
   {
-    from: "/topics/onboarding/documents/guide-upload",
-    to: "/topics/onboarding/overview/guide-upload-onboarding",
+    from: "/topics/accounts/documents/guide-upload",
+    to: "/topics/accounts/documents/guide-upload-onboarding",
   },
 ];

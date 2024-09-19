@@ -1,0 +1,147 @@
+---
+title: Upload a transaction document
+---
+
+# Upload a transaction document
+
+Share supporting documents for transactions proactively **with the API**.
+This is only possible when using the API to initiate the transaction.
+
+:::tip Prerequisites
+Before you can upload a document, the [collection status](./index.mdx#collection-statuses) must be `WaitingForDocument`.
+:::
+
+## Step 1: Initiate a transaction {#guide-initiate}
+
+Initiate a transaction with any relevant mutation.
+Don't continue until you've successfully initiated a transaction—you'll need the transaction ID for step 2.
+
+→ [Initiate SEPA Credit Transfers](../../payments/credit-transfers/sepa/guide-initiate-ct.mdx)
+
+→ [Initiate International Credit Transfers](../../payments/credit-transfers/international/guide-initiate.mdx)
+
+## Step 2: Generate upload URL {#guide-generate-url}
+
+1. Call the `generateTransactionSupportingDocumentUploadUrl` mutation.
+1. Enter your `transactionId` and `filename` (lines 4-5).
+1. Choose a `supportingDocumentPurpose` (line 6).
+1. Add the `GenerateTransactionSupportingDocumentUploadUrlSuccessPayload` with required `key/value` pairs and `url` (lines 14-16, 18).
+1. Add other optional messages to the payload, either for validation or in case of rejection (rejection not shown).
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVHJhbnNhY3Rpb25Eb2N1bWVudFVybCB7CiAgZ2VuZXJhdGVUcmFuc2FjdGlvblN1cHBvcnRpbmdEb2N1bWVudFVwbG9hZFVybCgKICAgIGlucHV0OiB7CiAgICAgIHRyYW5zYWN0aW9uSWQ6ICIkVFJBTlNBQ1RJT05fSUQiCiAgICAgIGZpbGVuYW1lOiAiZXhhbXBsZS5wZGYiCiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2U6IFByb29mT2ZPcmlnaW5PZkZ1bmRzCiAgICB9CiAgKSB7CiAgICAuLi4gb24gR2VuZXJhdGVUcmFuc2FjdGlvblN1cHBvcnRpbmdEb2N1bWVudFVwbG9hZFVybFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uSWQKICAgICAgc3VwcG9ydGluZ0RvY3VtZW50SWQKICAgICAgdXBsb2FkIHsKICAgICAgICBmaWVsZHMgewogICAgICAgICAga2V5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KICAgICAgICB1cmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIEFjY291bnROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVHJhbnNhY3Rpb25Ob3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICB0cmFuc2FjdGlvbklkCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {4-6,14-16,18} showLineNumbers
+mutation TransactionDocumentUrl {
+  generateTransactionSupportingDocumentUploadUrl(
+    input: {
+      transactionId: "$TRANSACTION_ID"
+      filename: "example.pdf"
+      supportingDocumentPurpose: ProofOfOriginOfFunds
+    }
+  ) {
+    ... on GenerateTransactionSupportingDocumentUploadUrlSuccessPayload {
+      __typename
+      supportingDocumentCollectionId
+      supportingDocumentId
+      upload {
+        fields {
+          key
+          value
+        }
+        url
+      }
+    }
+  }
+}
+```
+
+## Step 3: Recover generated URL from payload {#guide-recover-url}
+
+Recover the generated `uploadUrl` in the payload, as well as several pairs of keys and values.
+
+:::caution Upload URL expiration
+The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
+:::
+
+```json {10-11,14-15,18-19,22-23,26-27,30-31,34-35,38-39,42} showLineNumbers
+{
+  "data": {
+    "generateTransactionSupportingDocumentUploadUrl": {
+      "__typename": "GenerateTransactionSupportingDocumentUploadUrlSuccessPayload",
+      "supportingDocumentCollectionId": "e9021128-c4dc-4546-b012-f4707217d196",
+      "supportingDocumentId": "cc5a7444-f6cb-4274-9c4e-4027817bc8cb",
+      "upload": {
+        "fields": [
+          {
+            "key": "Key",
+            "value": "INPUT/cc5a7444-f6cb-4274-9c4e-4027817bc8cb"
+          },
+          {
+            "key": "X-Amz-Algorithm",
+            "value": "AWS4-HMAC-SHA256"
+          },
+          {
+            "key": "X-Amz-Credential",
+            "value": "ASIAWHEXXLUXHYAJRMKR/20240909/eu-west-1/s3/aws4_request"
+          },
+          {
+            "key": "X-Amz-Date",
+            "value": "20240909T081927Z"
+          },
+          {
+            "key": "X-Amz-Security-Token",
+            "value": "IQoJb3JpZ2luX2VjEDEaCWV1LXdlc3QtMSJHMEUCIQCTTt/5TYXOTx4VTaIMyzsjDq/TzKJNCJmXeRK1q2CwUAIgaxX1MYr2LS2WrIa/7aoL7IHcZlR9grL5l63Tiwr5KugqkAUIWRADGgw0Mjc2Njc0NDcwODYiDBd9T5g7ar9vhFd9QCrtBJljwbEzyhDacBA6dkVBWemoX9HrTmZVoUWrBA6bAqbqEpbVe6arL1duIFTrDG884BxIWa04lGbZjGt9jaZSPvv0A8e7nGuq3ScwZcNXpww3eoSHkLdckKNL+pwRaG6a/gjEWYW/ZFK9wZwMgLUuX1CnFn+PMyUpC9I8z2cKOKUiOtbZia2KvEDhTAM7l0SYLWErBk1xWh5T/+NyPM5ZpuguYFXX/dQRp/ZVnwvloQzzwpspH6Zk5Lf/FwR4QQGItFkT+UPcb0mRme2ljWjc6RP3L8+Ib66xawMAdjosVsWCirbyR4S9OHsxBWZbBCx1DbU/BgZVRqtii0KQoVCIwWd4rGjkrWbjOUJXqaFSGpa0KnqSCOB7T+UCNCtHM2xKKq/MSw8I3QjCn2GYVrznE78k7SYAV7Zt+o4qmPaxlHO4Ubx1aupn6hFFhr0g1f4gGHQpS63fqes3CS0X97mO1ahz74V3Rav2WUUnED/ehPD3SmMzExXXzMnFwflD/ffD5R/1tBQwRKnrxYgTB9cdo7/QUobZA9OOygjaBGpfgRRbzvBYBy/auVSUnCo3udaf4WEB6vyNDAIvQTtPVVlEoL4ccPUY701+qNoPyNEyBN+IDWkAnmOZT3dBG8w0J5DMLX1nSiPplRVmhWMYyxLEaFrctmnyO9d/1zygvZB5k3Q9ap34x2gv3p07gRUtAMGx8t/PvJ61WHlDtnKG+uVyeoxo6FLz07ZPVmCnQTVzuPPIvld0xR1CtLEW/QTww/aeESaO2HhkyrX89oxpqp0ZDsr+lncjn/Y7il+9HaEb6J577WzLacHNOfxKhZoj2jCP3/q2BjqbAb7j5c2kelRg27vVJJkWLMMEIlPf7Wg8Rly0iLZbyKdn9HEqk+VNWF5WB1vGpJvcA1RrWpTjFkfg+GYdfGHXd59rDUgD4T1/uKI3mbkpDw/pR8Yk9HpQsmiqiRyMDPx3FYNr1XV18SrpBsrKl+glUxql4O2tGcGSgC9066wAY1WiB/DSv9+NkE+IVRGCSJDTDg+ryXZ1Df6ZcM6W"
+          },
+          {
+            "key": "Policy",
+            "value": "eyJleHBpcmF0aW9uIjoiMjAyNC0wOS0xNlQwODoxOToyN1oiLCJjb25kaXRpb25zIjpbWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsMCwyMDk3MTUyMF0sWyJlcSIsIiR4LWFtei1tZXRhLXgtc3dhbi1zdXBwb3J0aW5nLWRvY3VtZW50LWlkIiwiY2M1YTc0NDQtZjZjYi00Mjc0LTljNGUtNDAyNzgxN2JjOGNiIl0seyJLZXkiOiJJTlBVVC9jYzVhNzQ0NC1mNmNiLTQyNzQtOWM0ZS00MDI3ODE3YmM4Y2IifSx7ImJ1Y2tldCI6InN3YW4tc3VwcG9ydGluZy1kb2N1bWVudC1tYXN0ZXItc2FuZGJveCJ9LHsiWC1BbXotQWxnb3JpdGhtIjoiQVdTNC1ITUFDLVNIQTI1NiJ9LHsiWC1BbXotQ3JlZGVudGlhbCI6IkFTSUFXSEVYWExVWEhZQUpSTUtSLzIwMjQwOTA5L2V1LXdlc3QtMS9zMy9hd3M0X3JlcXVlc3QifSx7IlgtQW16LURhdGUiOiIyMDI0MDkwOVQwODE5MjdaIn0seyJYLUFtei1TZWN1cml0eS1Ub2tlbiI6IklRb0piM0pwWjJsdVgyVmpFREVhQ1dWMUxYZGxjM1F0TVNKSE1FVUNJUUNUVHQvNVRZWE9UeDRWVGFJTXl6c2pEcS9UektKTkNKbVhlUksxcTJDd1VBSWdheFgxTVlyMkxTMldySWEvN2FvTDdJSGNabFI5Z3JMNWw2M1Rpd3I1S3VncWtBVUlXUkFER2d3ME1qYzJOamMwTkRjd09EWWlEQmQ5VDVnN2FyOXZoRmQ5UUNydEJKbGp3YkV6eWhEYWNCQTZka1ZCV2Vtb1g5SHJUbVpWb1VXckJBNmJBcWJxRXBiVmU2YXJMMWR1SUZUckRHODg0QnhJV2EwNGxHYlpqR3Q5amFaU1B2djBBOGU3bkd1cTNTY3daY05YcHd3M2VvU0hrTGRja0tOTCtwd1JhRzZhL2dqRVdZVy9aRks5d1p3TWdMVXVYMUNuRm4rUE15VXBDOUk4ejJjS09LVWlPdGJaaWEyS3ZFRGhUQU03bDBTWUxXRXJCazF4V2g1VC8rTnlQTTVacHVndVlGWFgvZFFScC9aVm53dmxvUXp6d3BzcEg2Wms1TGYvRndSNFFRR0l0RmtUK1VQY2IwbVJtZTJsaldqYzZSUDNMOCtJYjY2eGF3TUFkam9zVnNXQ2lyYnlSNFM5T0hzeEJXWmJCQ3gxRGJVL0JnWlZScXRpaTBLUW9WQ0l3V2Q0ckdqa3JXYmpPVUpYcWFGU0dwYTBLbnFTQ09CN1QrVUNOQ3RITTJ4S0txL01TdzhJM1FqQ24yR1lWcnpuRTc4azdTWUFWN1p0K280cW1QYXhsSE80VWJ4MWF1cG42aEZGaHIwZzFmNGdHSFFwUzYzZnFlczNDUzBYOTdtTzFhaHo3NFYzUmF2MldVVW5FRC9laFBEM1NtTXpFeFhYek1uRndmbEQvZmZENVIvMXRCUXdSS25yeFlnVEI5Y2RvNy9RVW9iWkE5T095Z2phQkdwZmdSUmJ6dkJZQnkvYXVWU1VuQ28zdWRhZjRXRUI2dnlOREFJdlFUdFBWVmxFb0w0Y2NQVVk3MDErcU5vUHlORXlCTitJRFdrQW5tT1pUM2RCRzh3MEo1RE1MWDFuU2lQcGxSVm1oV01ZeXhMRWFGcmN0bW55TzlkLzF6eWd2WkI1azNROWFwMzR4Mmd2M3AwN2dSVXRBTUd4OHQvUHZKNjFXSGxEdG5LRyt1Vnllb3hvNkZMejA3WlBWbUNuUVRWenVQUEl2bGQweFIxQ3RMRVcvUVR3dy9hZUVTYU8ySGhreXJYODlveHBxcDBaRHNyK2xuY2puL1k3aWwrOUhhRWI2SjU3N1d6TGFjSE5PZnhLaFpvajJqQ1AzL3EyQmpxYkFiN2o1YzJrZWxSZzI3dlZKSmtXTE1NRUlsUGY3V2c4Umx5MGlMWmJ5S2RuOUhFcWsrVk5XRjVXQjF2R3BKdmNBMVJyV3BUakZrZmcrR1lkZkdIWGQ1OXJEVWdENFQxL3VLSTNtYmtwRHcvcFI4WWs5SHBRc21pcWlSeU1EUHgzRllOcjFYVjE4U3JwQnNyS2wrZ2xVeHFsNE8ydEdjR1NnQzkwNjZ3QVkxV2lCL0RTdjkrTmtFK0lWUkdDU0pEVERnK3J5WFoxRGY2WmNNNlcifV19"
+          },
+          {
+            "key": "X-Amz-Signature",
+            "value": "6b5425e162c9bdd9d8e425a87d96a1f2b745d19f0be8c996cd5fee12461dbe7e"
+          },
+          {
+            "key": "X-Amz-Meta-X-Swan-Supporting-Document-Id",
+            "value": "cc5a7444-f6cb-4274-9c4e-4027817bc8cb"
+          }
+        ],
+        "url": "https://s3.eu-west-1.amazonaws.com/swan-supporting-document-master-sandbox"
+      }
+    }
+  }
+}
+```
+
+## Step 4: Send POST request {#guide-send-post}
+
+Finally, send an HTTP POST request to the `uploadUrl` without a `Content-Type` header.
+You can use this cURL command to try the upload URL.
+Supported formats are `.pdf`, `.png`, and `.jpg`.
+
+```curl showLineNumbers
+curl --location --request POST '$UPLOAD_URL' \
+--form 'Key="INPUT/$ID"' \
+--form 'X-Amz-Algorithm="AWS4-HMAC-SHA256"' \
+--form 'X-Amz-Credential="$CREDENTIAL"' \
+--form 'X-Amz-Date="20220705T135458Z"' \
+--form 'X-Amz-Security-Token="$TOKEN"' \
+--form 'Policy="$POLICY"' \
+--form 'X-Amz-Signature="$SIGNATURE"' \
+--form 'X-Amz-Meta-X-Swan-Supporting-Document-Id="$DOCUMENT_ID"' \
+--form 'file=@"$FILE_PATH"'
+```
+
+*Replace all `$VARIABLES` with the values provided in the payload.*
+
+:::tip Upload successful
+When you upload a document with the HTTP POST cURL command, Amazon sends a *204: No content error*, **but the document was successfully uploaded**.
+:::
+
+## Step 5: Confirm upload (optional) {#guide-confirm}
+
+At this stage, your document is uploaded.
+If you'd like to confirm, you can query the API.
+
+→ [Query the supporting document collection](https://explorer.swan.io?query=cXVlcnkgQ29uZmlybVVwbG9hZCB7CiAgc3VwcG9ydGluZ0RvY3VtZW50Q29sbGVjdGlvbihpZDogIiRDT0xMRUNUSU9OX0lEIikgewogICAgaWQKICAgIHRyYW5zYWN0aW9uIHsKICAgICAgaWQKICAgIH0KICAgIHN1cHBvcnRpbmdEb2N1bWVudHMgewogICAgICBjcmVhdGVkQXQKICAgICAgaWQKICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgICAgc3VwcG9ydGluZ0RvY3VtZW50UHVycG9zZQogICAgICB1cGRhdGVkQXQKICAgIH0KICB9Cn0K&tab=api)
+
+→ [Query the transaction](https://explorer.swan.io?query=cXVlcnkgQ29uZmlybVVwbG9hZCB7CiAgdHJhbnNhY3Rpb24oaWQ6ICIkVFJBTlNBQ1RJT05fSUQiKSB7CiAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICBpZAogICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9ucyB7CiAgICAgICAgZWRnZXMgewogICAgICAgICAgbm9kZSB7CiAgICAgICAgICAgIGlkCiAgICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICAgIHN1cHBvcnRpbmdEb2N1bWVudHMgewogICAgICAgICAgICAgIGlkCiAgICAgICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgc3VwcG9ydGluZ0RvY3VtZW50UHVycG9zZQogICAgICAgICAgICAgIHVwZGF0ZWRBdAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)

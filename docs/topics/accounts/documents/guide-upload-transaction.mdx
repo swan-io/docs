@@ -5,11 +5,7 @@ title: Upload a transaction document
 # Upload a transaction document
 
 Share supporting documents for transactions proactively **with the API**.
-This is only possible when using the API to initiate the transaction.
 
-:::tip Prerequisites
-Before you can upload a document, the [collection status](./index.mdx#collection-statuses) must be `WaitingForDocument`.
-:::
 
 ## Step 1: Initiate a transaction {#guide-initiate}
 
@@ -26,7 +22,7 @@ Don't continue until you've successfully initiated a transaction—you'll need t
 1. Enter your `transactionId` and `filename` (lines 4-5).
 1. Choose a `supportingDocumentPurpose` (line 6).
 1. Add the `GenerateTransactionSupportingDocumentUploadUrlSuccessPayload` with required `key/value` pairs and `url` (lines 14-16, 18).
-1. Add other optional messages to the payload, either for validation or in case of rejection (rejection not shown).
+1. Add other optional messages to the payload, either for validation or in case of rejection (rejections not shown).
 
 🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVHJhbnNhY3Rpb25Eb2N1bWVudFVybCB7CiAgZ2VuZXJhdGVUcmFuc2FjdGlvblN1cHBvcnRpbmdEb2N1bWVudFVwbG9hZFVybCgKICAgIGlucHV0OiB7CiAgICAgIHRyYW5zYWN0aW9uSWQ6ICIkVFJBTlNBQ1RJT05fSUQiCiAgICAgIGZpbGVuYW1lOiAiZXhhbXBsZS5wZGYiCiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2U6IFByb29mT2ZPcmlnaW5PZkZ1bmRzCiAgICB9CiAgKSB7CiAgICAuLi4gb24gR2VuZXJhdGVUcmFuc2FjdGlvblN1cHBvcnRpbmdEb2N1bWVudFVwbG9hZFVybFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uSWQKICAgICAgc3VwcG9ydGluZ0RvY3VtZW50SWQKICAgICAgdXBsb2FkIHsKICAgICAgICBmaWVsZHMgewogICAgICAgICAga2V5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KICAgICAgICB1cmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIEFjY291bnROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVHJhbnNhY3Rpb25Ob3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICB0cmFuc2FjdGlvbklkCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
@@ -57,10 +53,10 @@ mutation TransactionDocumentUrl {
 
 ## Step 3: Recover generated URL from payload {#guide-recover-url}
 
-Recover the generated `uploadUrl` in the payload, as well as several pairs of keys and values.
+Recover the generated `url` in the payload, as well as several pairs of keys and values.
 
 :::caution Upload URL expiration
-The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
+The `url` is **only valid for seven days**, after which you'd need to generate a new `url`.
 :::
 
 ```json {10-11,14-15,18-19,22-23,26-27,30-31,34-35,38-39,42} showLineNumbers
@@ -114,9 +110,8 @@ The `uploadUrl` is **only valid for seven days**, after which you'd need to gene
 
 ## Step 4: Send POST request {#guide-send-post}
 
-Finally, send an HTTP POST request to the `uploadUrl` without a `Content-Type` header.
-You can use this cURL command to try the upload URL.
-Supported formats are `.pdf`, `.png`, and `.jpg`.
+Send an HTTP POST request to the `url` without a `Content-Type` header using the following cURL command.
+Supported file formats are `.pdf`, `.png`, and `.jpg`.
 
 ```curl showLineNumbers
 curl --location --request POST '$UPLOAD_URL' \

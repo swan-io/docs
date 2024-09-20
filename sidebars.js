@@ -105,7 +105,8 @@ module.exports = {
           link: { type: "doc", id: "topics/accounts/documents/index" },
           collapsed: true,
           items: [
-            "topics/accounts/documents/guide-upload",
+            "topics/accounts/documents/guide-upload-onboarding",
+            "topics/accounts/documents/guide-upload-transaction",
             "topics/accounts/documents/guide-get-info",
             "topics/accounts/documents/guide-request-collection-review",
             "topics/accounts/documents/guide-delete",

@@ -1,8 +1,8 @@
 ---
-title: Upload a document
+title: Upload an onboarding document
 ---
 
-# Upload a document
+# Upload an onboarding document
 
 You can upload supporting documents **using the API** or on the **Dashboard**.
 
@@ -49,10 +49,10 @@ mutation GenerateUploadUrl {
 
 ### Step 2: Recover generated URL from payload {#guide-recover-url}
 
-Recover the generated `uploadUrl` in the payload, as well as several pairs of keys and values.
+Recover the generated `url` in the payload, as well as several pairs of keys and values.
 
 :::caution Upload URL expiration
-The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
+The `url` is **only valid for seven days**, after which you'd need to generate a new `url`.
 :::
 
 ```json {8-9,12-13,20-21,24-25,28-29,32-33,36-37,40} showLineNumbers
@@ -104,9 +104,8 @@ The `uploadUrl` is **only valid for seven days**, after which you'd need to gene
 
 ### Step 3: Send POST request {#guide-send-post}
 
-Finally, send an HTTP POST request to the `uploadUrl` without a `Content-Type` header.
-You can use this cURL command to try the upload URL.
-Supported formats are `.pdf`, `.png`, and `.jpg`.
+Send an HTTP POST request to the `url` without a `Content-Type` header using the following cURL command.
+Supported file formats are `.pdf`, `.png`, and `.jpg`.
 
 ```curl showLineNumbers
 curl --location --request POST '$UPLOAD_URL' \
@@ -121,7 +120,7 @@ curl --location --request POST '$UPLOAD_URL' \
 --form 'file=@"$FILE_PATH"'
 ```
 
-*Replace all `$VARIABLES` with your values from step 2.*
+*Replace all `$VARIABLES` with the values provided in the payload.*
 
 :::tip Upload successful
 When you upload a document with the HTTP POST cURL command, Amazon sends a *204: No content error*, **but the document was successfully uploaded**.

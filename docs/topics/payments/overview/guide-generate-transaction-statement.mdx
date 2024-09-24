@@ -1,0 +1,74 @@
+---
+title: Generate a transaction statement
+---
+
+# Generate a transaction statement
+
+You can generate a transaction statement for a `Booked` transaction with the API.
+
+:::tip Prerequisites
+- The account member has the `canViewAccount` [membership permission](../../accounts/memberships/index.mdx#permissions).
+- You have a project access token.
+- The transaction status is `Booked`.
+:::
+
+## Guide {#guide-api}
+
+1. Call the `generateTransactionStatement` mutation.
+1. Add the `transactionId` (line 4).
+1. Choose the language for your transaction statement (line 5).
+1. Add the success payload (line 8) and any information you need, such as the statement ID and status.
+    - In addition to information about the statement, you can add details about the transaction and the account.
+1. Add rejections (not shown).
+
+### Mutation {#api-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gVHJhbnNhY3Rpb25TdGF0ZW1lbnQgewogIGdlbmVyYXRlVHJhbnNhY3Rpb25TdGF0ZW1lbnQoCiAgICBpbnB1dDogeyB0cmFuc2FjdGlvbklkOiAiJFRSQU5TQUNUSU9OX0lEIiwgbGFuZ3VhZ2U6IGVzIH0KICApIHsKICAgIC4uLiBvbiBHZW5lcmF0ZVRyYW5zYWN0aW9uU3RhdGVtZW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHRyYW5zYWN0aW9uU3RhdGVtZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gR2VuZXJhdGlvbk5vdEFsbG93ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBUcmFuc2FjdGlvbk5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIHRyYW5zYWN0aW9uSWQKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {4-5,8} showLineNumbers
+mutation TransactionStatement {
+  generateTransactionStatement(
+    input: {
+      transactionId: "$TRANSACTION_ID"
+      language: es
+    }
+  ) {
+    ... on GenerateTransactionStatementSuccessPayload {
+      __typename
+      transactionStatement {
+        createdAt
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload {#api-payload}
+
+```json {6-7,9} showLineNumbers
+{
+  "data": {
+    "generateTransactionStatement": {
+      "__typename": "GenerateTransactionStatementSuccessPayload",
+      "transactionStatement": {
+        "createdAt": "2024-09-24T16:21:52.540Z",
+        "id": "$TRANSACTION_STATEMENT_ID",
+        "statusInfo": {
+          "status": "Pending"
+        }
+      }
+    }
+  }
+}
+```
+
+## Next steps {#next-steps}
+
+After generating the transaction statement, Swan emails you a download link.
+The link is valid for seven days.
+
+You can also [query the API](https://explorer.preprod.swan.io?query=cXVlcnkgR2V0U3RhdGVtZW50SW5mbyB7CiAgdHJhbnNhY3Rpb25TdGF0ZW1lbnQoaWQ6ICIkVFJBTlNBQ1RJT05fU1RBVEVNRU5UX0lEIikgewogICAgaWQKICAgIGNyZWF0ZWRBdAogICAgdXBkYXRlZEF0CiAgICBzdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICB9CiAgICB0cmFuc2FjdGlvbiB7CiAgICAgIGlkCiAgICB9CiAgfQp9Cg%3D%3D&tab=api) about all generated transaction statements.

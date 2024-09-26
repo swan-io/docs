@@ -1,29 +1,27 @@
 ---
-title: Generate a transaction statement
+title: Generate transaction statement
 ---
 
-# Generate a transaction statement
+# Generate transaction statement
 
-You can generate a statement for a `Booked` transaction with the API.
+You can generate a transaction statement with the API.
 
 :::tip Prerequisites
 - The account member has the `canViewAccount` [membership permission](../../accounts/memberships/index.mdx#permissions).
-- You have a project access token.
-- The transaction status is `Booked`.
+- You have a [project access token](../../../developers/using-api/authentication/guide-get-token-project.mdx).
+- The [transaction status](../index.mdx#transactions-statuses) is `Booked`.
+- Subscribe to the `TransactionStatement.Generated` [webhook](../../../developers/using-api/webhooks.mdx#events-transactions).
 :::
 
-## Guide {#guide-api}
+## Step 1: Request statement {#request}
 
 1. Call the `generateTransactionStatement` mutation.
-1. Add the `transactionId` (line 4).
-1. Choose the language for your transaction statement (line 5).
-1. Add the success payload (line 8) and any information you need, such as the statement ID and status.
-    - In addition to information about the statement, you can add details about the transaction and the account.
+1. Add the `transactionId`.
+1. Choose the language for your transaction statement.
+1. Add the success payload and any information you need, such as the transaction statement ID and status.
 1. Add rejections (not shown).
 
-### Mutation {#api-mutation}
-
-🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gVHJhbnNhY3Rpb25TdGF0ZW1lbnQgewogIGdlbmVyYXRlVHJhbnNhY3Rpb25TdGF0ZW1lbnQoCiAgICBpbnB1dDogeyB0cmFuc2FjdGlvbklkOiAiJFRSQU5TQUNUSU9OX0lEIiwgbGFuZ3VhZ2U6IGVzIH0KICApIHsKICAgIC4uLiBvbiBHZW5lcmF0ZVRyYW5zYWN0aW9uU3RhdGVtZW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHRyYW5zYWN0aW9uU3RhdGVtZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gR2VuZXJhdGlvbk5vdEFsbG93ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBUcmFuc2FjdGlvbk5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIHRyYW5zYWN0aW9uSWQKICAgIH0KICB9Cn0K&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.preprod.swan.io?query=bXV0YXRpb24gVHJhbnNhY3Rpb25TdGF0ZW1lbnQgewogIGdlbmVyYXRlVHJhbnNhY3Rpb25TdGF0ZW1lbnQoCiAgICBpbnB1dDogeyB0cmFuc2FjdGlvbklkOiAiJFRSQU5TQUNUSU9OX0lEIiwgbGFuZ3VhZ2U6IGVzIH0KICApIHsKICAgIC4uLiBvbiBHZW5lcmF0ZVRyYW5zYWN0aW9uU3RhdGVtZW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHRyYW5zYWN0aW9uU3RhdGVtZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgICAuLi4gb24gR2VuZXJhdGVkVHJhbnNhY3Rpb25TdGF0ZW1lbnRTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBleHBpcmVzQXQKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIHVybAogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIFBlbmRpbmdUcmFuc2FjdGlvblN0YXRlbWVudFN0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIEZhaWxlZFRyYW5zYWN0aW9uU3RhdGVtZW50U3RhdHVzSW5mbyB7CiAgICAgICAgICAgIHJlYXNvbgogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICAgIC4uLiBvbiBFeHBpcmVkVHJhbnNhY3Rpb25TdGF0ZW1lbnRTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBleHBpcmVkQXQKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gR2VuZXJhdGlvbk5vdEFsbG93ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBUcmFuc2FjdGlvbk5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIHRyYW5zYWN0aW9uSWQKICAgIH0KICB9Cn0K&tab=api)
 
 ```graphql {4-5,8} showLineNumbers
 mutation TransactionStatement {
@@ -40,6 +38,9 @@ mutation TransactionStatement {
         id
         statusInfo {
           status
+          ... on PendingTransactionStatementStatusInfo {
+            __typename
+            status
         }
       }
     }
@@ -47,18 +48,26 @@ mutation TransactionStatement {
 }
 ```
 
-### Payload {#api-payload}
+## Step 2: Get transaction statement ID {#get-id}
 
-```json {6-7,9} showLineNumbers
+Get the `transactionStatement` > `id` from the success payload (line 7).
+
+:::warning
+At this time, there's no other way to get the `transactionStatement` > `id`.
+Take note of it right away.
+:::
+
+```json {7} showLineNumbers
 {
   "data": {
     "generateTransactionStatement": {
       "__typename": "GenerateTransactionStatementSuccessPayload",
       "transactionStatement": {
-        "createdAt": "2024-09-24T16:21:52.540Z",
+        "createdAt": "2024-09-26T15:31:38.742Z",
         "id": "$TRANSACTION_STATEMENT_ID",
         "statusInfo": {
-          "status": "Pending"
+          "status": "Pending",
+          "__typename": "PendingTransactionStatementStatusInfo"
         }
       }
     }
@@ -66,9 +75,58 @@ mutation TransactionStatement {
 }
 ```
 
-## Next steps {#next-steps}
+## Step 3: Retrieve download URL {#retrieve-url}
 
-After generating the transaction statement, Swan emails you a download link.
-The link is valid for seven days.
+After generating the transaction statement, you receive a `TransactionStatement.Generated` webhook notification letting you know the statement can be downloaded by URL.
+The URL is valid for **seven days**.
 
-You can also [query the API](https://explorer.preprod.swan.io?query=cXVlcnkgR2V0U3RhdGVtZW50SW5mbyB7CiAgdHJhbnNhY3Rpb25TdGF0ZW1lbnQoaWQ6ICIkVFJBTlNBQ1RJT05fU1RBVEVNRU5UX0lEIikgewogICAgaWQKICAgIGNyZWF0ZWRBdAogICAgdXBkYXRlZEF0CiAgICBzdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICB9CiAgICB0cmFuc2FjdGlvbiB7CiAgICAgIGlkCiAgICB9CiAgfQp9Cg%3D%3D&tab=api) about all generated transaction statements.
+1. Call the `transactionStatement` query.
+1. Add the `transactionStatement` > `id`.
+1. Add `statusInfo` for all statuses. The URL to download the statement is provided in `statusInfo` > `GeneratedTransactionStatementStatusInfo` > `url`.
+
+🔎 [Open the query in API Explorer](https://explorer.preprod.swan.io?query=cXVlcnkgR2V0U3RhdGVtZW50VXJsIHsKICB0cmFuc2FjdGlvblN0YXRlbWVudChpZDogIiRUUkFOU0FDVElPTl9TVEFURU1FTlRfSUQiKSB7CiAgICBjcmVhdGVkQXQKICAgIHVwZGF0ZWRBdAogICAgc3RhdHVzSW5mbyB7CiAgICAgIHN0YXR1cwogICAgICAuLi4gb24gR2VuZXJhdGVkVHJhbnNhY3Rpb25TdGF0ZW1lbnRTdGF0dXNJbmZvIHsKICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgZXhwaXJlc0F0CiAgICAgICAgc3RhdHVzCiAgICAgICAgdXJsCiAgICAgIH0KICAgICAgLi4uIG9uIEV4cGlyZWRUcmFuc2FjdGlvblN0YXRlbWVudFN0YXR1c0luZm8gewogICAgICAgIF9fdHlwZW5hbWUKICAgICAgICBleHBpcmVkQXQKICAgICAgICBzdGF0dXMKICAgICAgfQogICAgICAuLi4gb24gRmFpbGVkVHJhbnNhY3Rpb25TdGF0ZW1lbnRTdGF0dXNJbmZvIHsKICAgICAgICByZWFzb24KICAgICAgICBzdGF0dXMKICAgICAgfQogICAgICAuLi4gb24gUGVuZGluZ1RyYW5zYWN0aW9uU3RhdGVtZW50U3RhdHVzSW5mbyB7CiAgICAgICAgX190eXBlbmFtZQogICAgICAgIHN0YXR1cwogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2,7,10} showLineNumbers
+query GetStatementUrl {
+  transactionStatement(id: "$TRANSACTION_STATEMENT_ID") {
+    createdAt
+    updatedAt
+    statusInfo {
+      status
+      ... on GeneratedTransactionStatementStatusInfo {
+        __typename
+        expiresAt
+        status
+        url
+      }
+    }
+  }
+}
+```
+
+## Step 4: Download statement {#download}
+
+1. Copy the `url` from the payload (line 10).
+1. Paste the `url` into your preferred browser.
+1. The document downloads after you press enter.
+
+```json {10} showLineNumbers
+{
+  "data": {
+    "transactionStatement": {
+      "createdAt": "2024-09-26T16:08:55.512Z",
+      "updatedAt": "2024-09-26T16:08:55.512Z",
+      "statusInfo": {
+        "status": "Generated",
+        "__typename": "GeneratedTransactionStatementStatusInfo",
+        "expiresAt": "2024-10-03T16:09:01.286Z",
+        "url": "$YOUR_DOWNLOAD_URL"
+      }
+    }
+  }
+}
+```
+
+:::danger Troubleshooting
+If the [transaction document status](../index.mdx#transactions-statements-statuses) is anything `Failed` or `Expired`, generate your statement again.
+:::

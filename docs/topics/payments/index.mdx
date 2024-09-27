@@ -48,7 +48,7 @@ flowchart LR
     style F fill:#fffdf4,stroke:#cca922
 ```
 
-| Status | Explanation |
+| Payment status | Explanation |
 |---|---|
 | `ConsentPending` | Status only occurs when consent is required for the payment<br/><br/>**Next step**: Transaction flow blocked while waiting for consent; when consent is received, transaction flow resumes and payment status changes to `Initiated` |
 | `Initiated` | Payment successfully requested; enters the [transaction flow](#transactions-statuses) |
@@ -116,6 +116,40 @@ In certain cases, Swan requires supporting documents to justify transactions.
 Swan uses the [supporting documents feature](../accounts/documents/index.mdx) to manage the request and reception of these documents.
 
 You can [upload these documents proactively](../accounts/documents/guide-upload-transaction.mdx) when initiating transactions with the API.
+
+### Transaction statements {#transactions-statements}
+
+import TransactionStatements from '../partials/_transaction-statements.mdx';
+
+<TransactionStatements />
+
+#### Transaction statement statuses {#transactions-statements-statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    SR((Statement<br/>requested)) -.-> P[Pending]
+    P -.-> G[Generated]
+    P -.-> FA[Failed]
+    G -.-> E[Expired]
+    subgraph R[Ready]
+        G
+    end
+    subgraph F[Final status]
+        FA
+        E
+    end
+    style SR fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style R fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+```
+
+| Transaction statement status | Explanation |
+|---|---|
+| `Pending` | Transaction statement is being generated. |
+| `Generated` | Transaction statement was generated successfully, triggering a `TransactionStatement.Generated` webhook notification. |
+| `Failed` | The statement couldn't be generated. You can try again. |
+| `Expired` | Transaction statement was generated successfully. However, it wasn't downloaded within seven days and therefore expired. |
 
 ### Sharing transaction information {#transactions-sharing-info}
 
@@ -185,3 +219,4 @@ Refer to the European Central Bank's [operational status page](https://www.ecb.e
     - [Get transaction information](./overview/guide-get-transaction-info.mdx)
     - [Get a transaction ID](./overview/guide-get-transaction-id.mdx)
     - [Get a list of transactions](./overview/guide-get-transaction-list.mdx)
+    - [Generate and download a transaction statement](./overview/guide-generate-transaction-statement.mdx)

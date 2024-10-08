@@ -13,7 +13,9 @@ You can generate a transaction statement with the API.
 - Subscribe to the `TransactionStatement.Generated` [webhook](../../../developers/using-api/webhooks.mdx#events-transactions).
 :::
 
-## Step 1: Generate statement {#generate}
+## API guide {#guide-api}
+
+### Step 1: Generate statement {#api-generate}
 
 1. Call the `generateTransactionStatement` mutation.
 1. Add the `transactionId`.
@@ -48,7 +50,7 @@ mutation TransactionStatement {
 }
 ```
 
-## Step 2: Get transaction statement ID {#get-id}
+### Step 2: Get transaction statement ID {#api-get-id}
 
 Get the `transactionStatement` > `id` from the success payload (line 7).
 
@@ -75,7 +77,7 @@ Copy it immediately to use in step 3.
 }
 ```
 
-## Step 3: Retrieve download URL {#retrieve-url}
+### Step 3: Retrieve download URL {#api-retrieve-url}
 
 After generating the transaction statement, you receive a `TransactionStatement.Generated` webhook notification letting you know the statement can be downloaded by URL.
 The URL is valid for **seven days**.
@@ -104,7 +106,7 @@ query GetStatementUrl {
 }
 ```
 
-## Step 4: Download statement {#download}
+### Step 4: Download statement {#api-download}
 
 1. Copy the `url` from the payload (line 10).
 1. Paste the `url` into your preferred browser.
@@ -130,3 +132,12 @@ query GetStatementUrl {
 :::danger Troubleshooting
 If the [transaction document status](../index.mdx#transactions-statements-statuses) is `Failed` or `Expired`, return to step 1 to generate your statement again.
 :::
+
+## Dashboard {#guide-dashboard}
+
+1. On your Dashboard, go to **Data** > **Transactions**.
+1. Open the transaction for which you'd like to generate an account statement.
+The transaction status must be `Booked`.
+1. Click **Transaction confirmation**, triggering the generation and download automatically.
+
+![Generate and download a transaction statement from the Dashboard](../../../images/topics/payments/generate-transaction-statement.png)

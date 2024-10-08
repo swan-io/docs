@@ -189,6 +189,7 @@ module.exports = {
             "topics/capital-deposits/france/guide-upload-documents",
           ],
         },
+        "topics/capital-deposits/germany/guide",
       ],
     },
     {

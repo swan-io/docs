@@ -5,7 +5,7 @@ title: Closing accounts
 # Closing accounts
 
 A Swan account might need to be closed for several reasons.
-**You**, your **account holders**, **Swan**, and **third parties** can all request an account be closed.
+**You**, your **account holders** and **account legal representatives**, **Swan**, and **third parties** can all request an account be closed.
 
 :::note Payment for accounts in closing
 You only pay for accounts with the status `Opened`.
@@ -16,14 +16,25 @@ As soon as an account enters the closure process, the status changes to `Closing
 
 The account closure process depends on who closes the account.
 
+### You (Partner) {#closure-partner}
+
 | Requester | Process |
 | :---: | --- |
-| Swan | Refer to [Swan closing accounts](#closure-swan) on this page. |
-| Third party | Refer to [closure requested by a third party](#closure-third-party) on this page for information about account closures when requested by third parties such as a notary or a liquidator. |
-| Account holder<br />*or*<br />Legal representative of the account | <ol><li>The [Swan Support Center](https://support.swan.io/hc/en-150/articles/14642306196765-Account-closure-process) documents the process for account holders and legal representatives of accounts. The account holder or the legal representative must contact Swan Support directly.</li><li>You can [close an account by legal representative request](./guide-close-api.mdx) with the API.</li></ol> |
-| You | Your guides are in this section. Follow the guide relevant to your situation.<br /><br /><ol><li>Use the API to [close an account by legal representative request](./guide-close-api.mdx).</li><li>[Request to close a **limited** account](./guide-close-limited.mdx).</li><li>[Request to close an **unlimited** account](./guide-close-unlimited.mdx).</li></ol><br />*Learn whether an account's payment level `Limited` or `Unlimited` by going to your **Dashboard** > **Data** > **Accounts**, then clicking the account you're trying to close. The payment level is part of the account's general information.* |
+| You (Partner) | Your guides are in this section. Follow the guide relevant to your situation.<br /><br /><ol><li>[Request to close a **limited** account](./guide-close-limited.mdx).</li><li>[Request to close an **unlimited** account](./guide-close-unlimited.mdx).</li></ol>Reason code: `ComplianceReason`<br /><br />*Learn whether an [account's payment level](../index.mdx#account-type-level) is `Limited` or `Unlimited` by going to your **Dashboard** > **Data** > **Accounts**, then clicking the account you're trying to close. The payment level is part of the account's general information.*|
 
-## Swan closing accounts {#closure-swan}
+### Legal representative {#closure-legal-rep}
+
+| Requester | Process |
+| :---: | --- |
+| Account legal representative | <ol><li>You [send a link](./guide-close-link.mdx) to the legal representative to close the account.​</li><li>You [use the API](./guide-close-api.mdx) to close an account at the request of the account's legal representative.</li></ol>Reason code: `PartnerReason` |
+
+### Account holder {#closure-account-holder}
+
+| Requester | Process |
+| :---: | --- |
+| Account legal representative<br />*or*<br />Account holder | The [Swan Support Center](https://support.swan.io/hc/en-150/articles/14642306196765-Account-closure-process) documents the process for account holders and legal representatives. The account holder or the legal representative must contact Swan Support directly.<br /><br />Reason code: `ComplianceReason` |
+
+### Swan {#closure-swan}
 
 Swan reserves the right to close accounts, and might decide to close an account for the following reasons:
 
@@ -37,8 +48,9 @@ More specifically, Swan waits 60 days after notifying the account holder to chan
 This provides the account holder with enough time to open an account at another financial institution before losing access to their Swan account.
 
 Swan **can close accounts immediately** if the closure is due to fraud or a third-party request.
+When Swan closes an account, the reason code is `ComplianceReason`, displayed on your Dashboard.
 
-## Closure requested by a third party {#closure-third-party}
+### Third party {#closure-third-party}
 
 Swan can receive requests from third parties to close accounts.
 For example, **liquidators** can request account closure if the account holder's company is being liquidated.
@@ -53,6 +65,7 @@ Before accepting requests from third parties, Swan performs the following action
     - Negative balance: Swan requests the third party transfer funds so the balance reaches zero.
 
 When the account balance reaches zero, Swan changes the account status to `Closed` immediately for legitimate third-party requests.
+The reason code for this account closure, displayed on your Dashboard, is `ComplianceReason`.
 
 :::info Account statuses
 Refer to the [account statuses](../index.mdx#statuses) section for an overview of what happens while an account is `Closed`.
@@ -60,6 +73,7 @@ Refer to the [account statuses](../index.mdx#statuses) section for an overview o
 
 ## Guides {#guides}
 
-- [Close an account by legal representative request](./guide-close-api.mdx)
+- [Send a link to the legal representative to close the account](./guide-close-link.mdx)
+- [Use the API to close an account by legal representative request](./guide-close-api.mdx)
 - [Close a limited account](./guide-close-limited.mdx)
 - [Close an unlimited account](./guide-close-unlimited.mdx)

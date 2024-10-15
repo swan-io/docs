@@ -133,6 +133,7 @@ module.exports = {
           link: { type: "doc", id: "topics/accounts/closure/index" },
           collapsed: true,
           items: [
+            "topics/accounts/closure/guide-close-link",
             "topics/accounts/closure/guide-close-api",
             "topics/accounts/closure/guide-close-limited",
             "topics/accounts/closure/guide-close-unlimited",

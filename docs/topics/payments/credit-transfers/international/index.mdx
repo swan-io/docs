@@ -28,18 +28,144 @@ Potential areas for increased risk and friction include: instability in the targ
 Therefore, **Swan prioritizes a risk-based approach**, which applies to you and your end users.
 In addition to increased scrutiny in the transaction-review process, both automated and manual, Swan uses dynamic forms in the International Credit Transfer API.
 
-### Swift outgoing allowed countries {#risk-outgoing}
+### Outgoing allowed countries {#risk-outgoing}
 
-When sending International Credit Transfers on the `swift_code` rail, the only allowed currencies are Euros (`EUR`), Great British Pounds (`GBP`), and United States Dollars (`USD`).
-Attempts to send a Swift transfer in any other currency are rejected.
+Your users can send International Credit Transfers on **local rails** in **local currencies**.
 
-Additionally, **not all currencies can be sent to all countries**.
-Refer to the following lists that detail which currency can be sent to which country using the `swift_code` rail.
-If your user is **using Swift** and a country **isn't on the list** for the **desired target currency**, the transfer is rejected.
+They can also send International Credit Transfers on the **SWIFT network** `swift_code` using United States Dollars `USD`, Euros `EUR`, or Great British Pounds `GBP`.
+Any attempt to send a SWIFT transfer in other currencies is rejected.
+
+Refer to the following lists for allowed countries and rails.
 
 <details>
-  <summary>✅ Swift + 🇺🇸 United States Dollars `USD`</summary>
+  <summary>✅ Transfers in local currencies using local rails</summary>
   <div>
+    <p>Users can send International Credit Transfers in the following currencies using the corresponding available rails. For example, the Indonesian Rupiah <code>IDR</code> can only be sent on the <code>indonesian</code> rail. Attempts to send currencies using rails not listed on this table are rejected.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Currency</th>
+          <th>Available rails</th>
+          <th>Fee group</th>
+        </tr>
+      </thead>
+    <tbody>
+        <tr>
+          <td>🇦🇺 <code>AUD</code> Australian Dollar</td>
+          <td><code>australian</code>, <code>australian_bpay</code></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>🇧🇷 <code>BRL</code> Brazilian Real∗</td>
+          <td><code>brazil</code></td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>🇨🇦 <code>CAD</code> Canadian Dollar</td>
+          <td><code>iban</code></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>🇨🇭 <code>CHF</code> Swiss Franc</td>
+          <td><code>iban</code></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>🇨🇱 <code>CLP</code> Chilean Peso</td>
+          <td><code>chile</code></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>🇪🇺 <code>EUR</code> Euro</td>
+          <td><code>swift_code</code></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>🇬🇧 <code>GBP</code> Great British Pound Sterling</td>
+          <td><code>iban</code>, <code>sort_code</code>, <code>swift_code</code></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>🇭🇰 <code>HKD</code> Hong Kong Dollar</td>
+          <td><code>hongkong</code>, <code>hong_kong_fps</code></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>🇮🇩 <code>IDR</code> Indonesian Rupiah</td>
+          <td><code>indonesian</code></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>🇮🇱 <code>ILS</code> Israeli New Shekel</td>
+          <td><code>israeli_local</code></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>🇮🇳 <code>INR</code> Indian Rupee</td>
+          <td><code>indian</code>, <code>indian_upi</code></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>🇯🇵 <code>JPY</code> Japanese Yen</td>
+          <td><code>japanese</code></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>🇰🇷 <code>KRW</code> South Korean Won</td>
+          <td><code>south_korean_paygate</code>, <code>south_korean_paygate_business</code></td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>🇲🇽 <code>MXN</code> Mexican Peso</td>
+          <td><code>mexican</code></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>🇲🇾 <code>MYR</code> Malaysian Ringgit∗</td>
+          <td><code>malaysian</code>, <code>malaysian_duitnow</code></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>🇳🇿 <code>NZD</code> New Zealand Dollar</td>
+          <td><code>newzealand</code></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>🇸🇬 <code>SGD</code> Singapore Dollar</td>
+          <td><code>singapore</code>, <code>singapore_paynow</code></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>🇹🇭 <code>THB</code> Thai Baht</td>
+          <td><code>thailand</code></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>🇺🇸 <code>USD</code> United States Dollar</td>
+          <td><code>fedwire_local</code>, <code>aba</code>, <code>swift_code</code></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>🇺🇾 <code>UYU</code> Uruguayan Peso</td>
+          <td><code>uruguay</code></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>🇻🇳 <code>VND</code> Vietnamese Dong</td>
+          <td><code>vietname_earthport</code></td>
+          <td>2</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>∗ <em>Currencies marked with a single asterisk can't be sent from a Swan company account.</em></p>
+  </div>
+</details>
+
+<details>
+  <summary>✅ <code>swift_code</code> + 🇺🇸 United States Dollars <code>USD</code></summary>
+  <div>
+    <p>Users can send International Credit Transfers in United States Dollars <code>USD</code> using the <code>swift_code</code> rail to the listed countries. Attempts to send United States Dollars <code>USD</code> using <code>swift_code</code> to countries not listed are rejected.</p>
+    <p>United States Dollars <code>USD</code> are in fee group 1.</p>
     <table>
       <tr>
         <th>First letter</th>
@@ -78,8 +204,10 @@ If your user is **using Swift** and a country **isn't on the list** for the **de
 </details>
 
 <details>
-  <summary>✅ Swift + 🇪🇺 Euros `EUR`</summary>
+  <summary>✅ <code>swift_code</code> + 🇪🇺 Euros <code>EUR</code></summary>
   <div>
+    <p>Users can send International Credit Transfers in Euros <code>EUR</code> using the <code>swift_code</code> rail to the listed countries. Attempts to send Euros <code>EUR</code> using <code>swift_code</code> to countries not listed are rejected.</p>
+    <p>Euros <code>EUR</code> are in fee group 1.</p>
     <table>
       <tr>
         <th>First letter</th>
@@ -118,8 +246,10 @@ If your user is **using Swift** and a country **isn't on the list** for the **de
 </details>
 
 <details>
-  <summary>✅ Swift + 🇬🇧 Great British Pounds `GBP`</summary>
+  <summary>✅ <code>swift_code</code> + 🇬🇧 Great British Pounds <code>GBP</code></summary>
   <div>
+    <p>Users can send International Credit Transfers in Great British Pounds <code>GBP</code> using the <code>swift_code</code> rail to the listed countries. Attempts to send Great British Pounds <code>GBP</code> using <code>swift_code</code> to countries not listed are rejected.</p>
+    <p>Great British Pounds <code>GBP</code> are in fee group 1.</p>
     <table>
       <tr>
         <th>First letter</th>
@@ -136,11 +266,6 @@ If your user is **using Swift** and a country **isn't on the list** for the **de
     </table>
   </div>
 </details>
-
-:::tip Local transfers
-Your users can send International Credit Transfers on local rails in local currencies, as detailed in the [currencies and rails](#currencies) table.
-Consider the list of available rails as an allow list for the corresponding currency.
-:::
 
 ### Incoming allowed countries {#risk-incoming}
 
@@ -171,72 +296,14 @@ If a country **isn't on the following list**, incoming transfers are rejected.
   </div>
 </details>
 
-## Currencies and fees
-
-### Currencies and rails {#currencies}
-
-| Currency code | Currency name | Available rails | Fee group |
-| --- | --- | --- | :---: |
-| 🇦🇺 AUD | Australian Dollar | `australian`, `australian_bpay` | 1 |
-| 🇧🇷 BRL∗ | Brazilian Real | `brazil` | 3 |
-| 🇨🇦 CAD | Canadian Dollar | `iban` | 1 |
-| 🇨🇭 CHF | Swiss Franc | `iban` | 1 |
-| 🇨🇱 CLP | Chilean Peso | `chile` | 4 |
-| 🇪🇺 EUR | Euro | `swift_code` | 1 |
-| 🇬🇧 GBP | Pound Sterling | `iban`, `sort_code` | 1 |
-| 🇭🇰 HKD | Hong Kong Dollar | `hongkong`, `hong_kong_fps` | 2 |
-| 🇮🇩 IDR | Indonesian Rupiah | `indonesian` | 2 |
-| 🇮🇱 ILS | Israeli New Shekel | `israeli_local` | 4 |
-| 🇮🇳 INR | Indian Rupee | `indian`, `indian_upi` | 2 |
-| 🇯🇵 JPY | Japanese Yen | `japanese` | 2 |
-| 🇰🇷 KRW | South Korean Won | `south_korean_paygate`, `south_korean_paygate_business` | 3 |
-| 🇲🇽 MXN | Mexican Peso | `mexican` | 2 |
-| 🇲🇾 MYR∗ | Malaysian Ringgit | `malaysian`, `malaysian_duitnow` | 2 |
-| 🇳🇿 NZD | New Zealand Dollar | `newzealand` | 1 |
-| 🇸🇬SGD | Singapore Dollar | `singapore`, `singapore_paynow` | 2 |
-| 🇹🇭 THB | Thai Baht | `thailand` | 2 |
-| 🇺🇸 USD | United States Dollar | `fedwire_local`, `swift_code`, `aba` | 1 |
-| 🇺🇾 UYU | Uruguayan Peso | `uruguay` | 4 |
-| 🇻🇳 VND | Vietnamese Dong | `vietname_earthport` | 2 |
-
-∗ *Currencies marked with a single asterisk can't be sent from a Swan company account.*
-
-### Currency exchange {#fees-exchange}
-
-Transferring money internationally requires **currency exchange**.
-Think of currency exchange as the cost of selling one currency to purchase another.
-
-#### Outgoing {#fees-exchange-out}
-
-Currency exchange is **always charged for outgoing transfers**.
-Swan uses a **mid-market rate**, or the midpoint between the buy and sell prices for the two currencies involved in a transfer, with **no added spread**.
-For outgoing International Credit Transfers, the `exchangeRate` is determined when a transfer is initiated.
-
-After initiating the transfer, the **exchange rate is locked for one business day**, even if the market rate changes.
-During this time, users must provide consent to execute the transfer.
-If the day passes without consent, Swan no longer guarantees the exchange rate.
-Therefore, the transfer will be rejected and the user would need to initiate a new transfer.
-
-Find the exchange rate, as well as fees, in the success payload of the `initiateInternationalCreditTransfer` mutation, as well as when consenting to the transfer.
-
-#### Incoming {#fees-exchange-in}
-
-For incoming transfers, you can view the `exchangeRate` in the `InternationalCreditTransferTransaction` type, created when the [transaction is booked](#incoming-booked).
-
-Other currency exchange information isn't available for incoming transfers.
-
-Typically, incoming transfers arrive in euros.
-If Swan performs the currency exchange, the additional fees in parentheses listed in the [fees table for incoming transfers](#fees) are charged.
-For example, if Swan receives a transfer in United States Dollars, 0.6% of the received amount is charged along with the standard €5 fee.
-
-### Fees {#fees}
+## Fees {#fees}
 
 There are fees for executing international transfers according to the non-euro currency selected.
 
 Each eligible currency is **assigned to a fee group**, numbered 1 through 4.
 Swan determined the groups based on how much it costs to execute a transfer with that currency.
-For example, it costs less to execute a transfer between euros and a currency in Group 1 than with a currency in Group 3.
-The [currencies table](#currencies) includes the fee group for each currency.
+For example, it costs less to execute a transfer between euros and a currency in fee group 1 than with a currency in fee group 3.
+The [lists of allowed countries for outgoing transfers](#risk-outgoing) include each currency's fee group.
 
 The fees listed on this page are always paid by the **Swan user**.
 
@@ -250,17 +317,14 @@ The fees listed on this page are always paid by the **Swan user**.
 ∗ For outgoing transfers, an **additional** 5€ fee is charged when sending **USD**, **GBP**, and **EUR** through SWIFT. For these currencies, the total fee is 10€ + the percentage % indicated in the table.<br />
 ∗∗ For incoming transfers, the additional fee percentage (in parentheses) only applies to transfers not already converted into euros.
 
-:::info Fees can vary
-This section shares Swan's **standard pricing**, which might vary based on your contract.
-:::
-
-#### Fee transactions {#fees-transactions}
-
-Fees are charged in their own transaction.
-
+**Fees are charged in their own transaction**.
 Therefore, each International Credit Transfer **creates two transactions** on your transaction history: one for the transfer and one for fees.
 Fees and transfer transactions are created, booked, and rejected simultaneously.
 Both transactions have the same status.
+
+:::note Fees can vary
+This section shares Swan's **standard pricing**, which might vary based on your contract.
+:::
 
 ## Outgoing transfers {#outgoing}
 
@@ -273,6 +337,22 @@ Choose your rail when declaring your beneficiary.
 | --- | --- | --- |
 | **Local bank transfers** | <ul><li>Pay beneficiaries out of a local bank account</li><li>Example: a transfer to the UK would be paid out of an account based in GBP already in the UK</li></ul> | Faster, less expensive |
 | **SWIFT network** | <ul><li>SWIFT: Society for Worldwide Interbank Financial Telecommunication</li><li>Messaging network used by banks worldwide to send and receive financial information</li><li>Takes a bit longer and might involve intermediary banks</li></ul> | Wider availability |
+
+### Currency exchange {#outgoing-currency-exchange}
+
+Transferring money internationally requires **currency exchange**.
+Think of currency exchange as the cost of selling one currency to purchase another.
+
+Currency exchange is **always charged for outgoing transfers**.
+Swan uses a **mid-market rate**, or the midpoint between the buy and sell prices for the two currencies involved in a transfer, with **no added spread**.
+For outgoing International Credit Transfers, the `exchangeRate` is determined when a transfer is initiated.
+
+After initiating the transfer, the **exchange rate is locked for one business day**, even if the market rate changes.
+During this time, users must provide consent to execute the transfer.
+If the day passes without consent, Swan no longer guarantees the exchange rate.
+Therefore, the transfer will be rejected and the user would need to initiate a new transfer.
+
+Find the exchange rate, as well as fees, in the success payload of the `initiateInternationalCreditTransfer` mutation, as well as when consenting to the transfer.
 
 ### Outgoing transaction statuses {#outgoing-statuses}
 
@@ -427,6 +507,19 @@ You can use the `Transaction.Booked` [webhook](../../../../developers/using-api/
   "retryCount": 0
 }
 ```
+
+### Currency exchange {#incoming-currency-exchange}
+
+Transferring money internationally requires **currency exchange**.
+Think of currency exchange as the cost of selling one currency to purchase another.
+
+For incoming transfers, you can view the `exchangeRate` in the `InternationalCreditTransferTransaction` type, created when the [transaction is booked](#incoming-booked).
+
+Other currency exchange information isn't available for incoming transfers.
+
+Typically, incoming transfers arrive in euros.
+If Swan performs the currency exchange, the additional fees in parentheses listed in the [fees table for incoming transfers](#fees) are charged.
+For example, if Swan receives a transfer in United States Dollars, 0.6% of the received amount is charged along with the standard €5 fee.
 
 ## Guides {#guides}
 

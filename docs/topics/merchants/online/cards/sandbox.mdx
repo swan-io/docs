@@ -93,8 +93,26 @@ mutation SimulateCardBooking {
 }
 ```
 
-## Simulate releasing merchant card payment {#simulate-release}
+## [Simulate releasing merchant card payment](https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVSZWxlYXNlIHsKICBzaW11bGF0ZVJlbGVhc2VSZXNlcnZlZEJhbGFuY2UoaW5wdXQ6IHsgdHJhbnNhY3Rpb25JZDogIiRUUkFOU0FDVElPTl9JRCIgfSkgewogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFRyYW5zYWN0aW9uTm90Rm91bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogICAgLi4uIG9uIFJlbGVhc2VSZXNlcnZlZEJhbGFuY2VTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogIH0KfQo%3D&tab=test-api) {#simulate-release}
 
 ```graphql {3} showLineNumbers
-
+mutation SimulateRelease {
+  simulateReleaseReservedBalance(
+    input: { transactionId: "$TRANSACTION_ID" }
+  ) {
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on TransactionNotFoundRejection {
+      __typename
+      message
+      transactionId
+    }
+    ... on ReleaseReservedBalanceSuccessPayload {
+      __typename
+      transactionId
+    }
+  }
+}
 ```

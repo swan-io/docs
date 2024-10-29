@@ -5,7 +5,8 @@ title: Get account holder verification status
 # Get account holder verification status
 
 Call the  `accountHolder`  query get an account holder's verification status.
-Add `verificationStatusInfo` to provide more details when the status is `WaitingForInformation`.
+Add `verificationStatusInfo` to provide more details about specific statuses.
+This guide provides more details about an account holder verification with the status `WaitingForInformation`.
 
 ## Guide {#guide}
 
@@ -13,8 +14,8 @@ Add `verificationStatusInfo` to provide more details when the status is `Waiting
 1. Call the `accountHolder` query.
 1. Enter the `accountHolderId` retrieved in step 1.
 1. Add the `verificationStatusInfo` object.
-    1. Add the `AccountHolderWaitingForInformationVerificationStatusInfo` union to get information about the `WaitingForInformation` status.
-    1. Add `WaitingForInformationAt`, `status`, and `verificationRequirements` > `id` and `type`.
+1. Add the `AccountHolderWaitingForInformationVerificationStatusInfo` union to get information about the `WaitingForInformation` status for this account holder verification.
+1. Add `verificationRequirements` > `id` and `type`.
 
 :::info Other statuses
 If you want additional information about a status other than `WaitingForInformation`, add those unions as well.
@@ -24,7 +25,7 @@ If you want additional information about a status other than `WaitingForInformat
 
 🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=cXVlcnkgV2FpdGluZ0ZvckluZm9TdGF0dXMgewogIGFjY291bnRIb2xkZXIoaWQ6ICIkQUNDT1VOVF9IT0xERVJfSUQiKSB7CiAgICB2ZXJpZmljYXRpb25TdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyV2FpdGluZ0ZvckluZm9ybWF0aW9uVmVyaWZpY2F0aW9uU3RhdHVzSW5mbyB7CiAgICAgICAgX190eXBlbmFtZQogICAgICAgIFdhaXRpbmdGb3JJbmZvcm1hdGlvbkF0CiAgICAgICAgc3RhdHVzCiAgICAgICAgdmVyaWZpY2F0aW9uUmVxdWlyZW1lbnRzIHsKICAgICAgICAgIGlkCiAgICAgICAgICB0eXBlCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
-```graphql {2-3,5} showLineNumbers
+```graphql {2-3,5,9-11} showLineNumbers
 query WaitingForInfoStatus {
   accountHolder(id: "$ACCOUNT_HOLDER_ID") {
     verificationStatusInfo {

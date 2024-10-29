@@ -4,22 +4,16 @@ title: Update a merchant profile
 
 # Update a merchant profile
 
-You can request an update to a merchant profile with the API, and merchants can also request their own update from your Web Banking interface.
-All updates must be reviewed by Swan.
+You can [request an update to a merchant profile](../index.mdx#profiles-update) with the API mutation `requestMerchantProfileUpdate`.
+If you use Swan's Web Banking interface, merchants can request an update through their app.
+Request an update for the merchant's name, website, product type, expected monthly payment volume, expected average basket, and logo.
 
-:::info Update process
-
-Updating a merchant profile produces the following events:
-
-- The [merchant profile status](../index.mdx#statuses) doesn't change (remains `Enabled`), and the merchant can continue to use their merchant profile with the existing information.
-- The update status is `PendingReview`, and Swan must review the new information to ensure it meets requirements. 
-- After Swan reviews the request, the update status changes to `Enabled` and the updates are pushed live to the merchant profile.
-:::
+All updates are **reviewed by Swan**.
 
 ## Guide {#guide}
 
-1. To request an update with the API, call the `requestMerchantProfileUpdate` mutation. You don't need consent.
-1. Include all the original mandatory information, **changing only the field you wish to update**.
+1. Call the `requestMerchantProfileUpdate` mutation. You don't need consent.
+1. Include all the original mandatory information, **changing only the information you wish to update**.
     - Required fields: `merchantName`, `productType`, `expectedMonthlyPaymentVolume`, `expectedAverageBasket`.
     - `expectedAverageBasket` is the expected average amount per transaction.
 1. Configure the success payload to display the updated information in case you need to verify it.

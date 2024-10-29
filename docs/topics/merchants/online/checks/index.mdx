@@ -12,11 +12,12 @@ Merchants can accept payments using French checks if the debtor's bank is locate
 
 ## About French checks for merchants {#about}
 
-While paper checks are not the most convenient or secure payment method, they are still a valid way to exchange money.
+While paper checks aren't the most convenient or secure payment method, they are still a valid way to exchange money.
 Some users prefer checks, and merchants can accept French checks if they activate this payment method for accepting payments.
 
-There isn't a Swan user interface for accepting checks.
-This feature is only available using the API.
+Checks must be **unique**, with different a CMC7 code and RLMC key for each check.
+If a check is canceled or rejected, however, the same check can be resubmitted.
+Please note that checks aren't sent back to the account holder unless they're rejected.
 
 ## Required API fields {#fields}
 
@@ -28,7 +29,7 @@ When declaring checks with the API, there are five mandatory API fields:
     - Series 1: check number; 7 digits
     - Series 2: interbank codes; 12 digits
     - Series 3: account number; 12 digits
-1. `rlmcKey` (Recomposition de la Ligne Magnétique du Chèque): 2-digit code surrounded by chevrons `< >` or parentheses `( )` calculated based on the CMC7.
+1. `rlmcKey` (Recomposition de la Ligne Magnétique du Chèque): 2-digit code calculated based on the CMC7.
 1. `merchantProfileId`: your developers should enter the merchant's profile ID number.
 
 On the **back of the check**, the merchant must write their Swan account number as well as provide their signature.
@@ -128,6 +129,7 @@ A check transaction can be rejected for the following reasons:
 ### Returned {#returned}
 
 Checks can be returned up to 10 business days after the transaction is `Booked`, and this window can be extended to 90 calendar days based on the reason for return.
+Note that checks aren't mailed back to the merchant.
 
 A check transaction might be returned for the following reasons (this list is not exhaustive):
 

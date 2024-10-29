@@ -289,6 +289,7 @@ module.exports = {
                 "topics/merchants/online/cards/guide-cards",
                 "topics/merchants/online/cards/guide-request",
                 "topics/merchants/online/cards/guide-create-link",
+                "topics/merchants/online/cards/sandbox",
               ],
             },
             {
@@ -301,6 +302,7 @@ module.exports = {
                 "topics/merchants/online/sdd/guide-request",
                 "topics/merchants/online/sdd/guide-declare",
                 "topics/merchants/online/sdd/guide-initiate",
+                "topics/merchants/online/sdd/guide-update",
                 "topics/merchants/online/sdd/sandbox",
               ],
             },

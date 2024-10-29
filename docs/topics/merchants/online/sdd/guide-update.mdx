@@ -1,0 +1,40 @@
+---
+title: Update SEPA Direct Debit payment method
+---
+
+# Update SEPA Direct Debit payment method
+
+Update the SEPA Creditor Identifier (SCI) for the SEPA Direct Debit merchant payment method with the API.
+
+## Guide {#guide}
+
+1. Call the `requestMerchantPaymentMethodsUpdate` mutation.
+1. Enter the `paymentMethodId` for the merchant's SEPA Direct Debit payment method.
+1. Enter the merchant's `sepaCreditorIdentifier`.
+1. Set `useSwanSepaCreditorIdentifier` to `false`.
+1. Add the `RequestMerchantPaymentMethodsUpdateSuccessPayload` success payload.
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlU2NpIHsKICByZXF1ZXN0TWVyY2hhbnRQYXltZW50TWV0aG9kc1VwZGF0ZSgKICAgIGlucHV0OiB7CiAgICAgIHBheW1lbnRNZXRob2RJZDogIiRQQVlNRU5UX01FVEhPRF9JRCIKICAgICAgc2VwYURpcmVjdERlYml0OiB7CiAgICAgICAgc2VwYUNyZWRpdG9ySWRlbnRpZmllcjogIiRORVdfU0NJIgogICAgICAgIHVzZVN3YW5TZXBhQ3JlZGl0b3JJZGVudGlmaWVyOiBmYWxzZQogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmVxdWVzdE1lcmNoYW50UGF5bWVudE1ldGhvZHNVcGRhdGVTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgcGF5bWVudE1ldGhvZElkCiAgICAgIHJlcXVlc3RJZAogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBNZXJjaGFudFBheW1lbnRNZXRob2RTZXBhRGlyZWN0RGViaXRJbnZhbGlkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTWVyY2hhbnRQYXltZW50TWV0aG9kV3JvbmdTdGF0dXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {4,6-7,11} showLineNumbers
+mutation UpdateSci {
+  requestMerchantPaymentMethodsUpdate(
+    input: {
+      paymentMethodId: "$PAYMENT_METHOD_ID"
+      sepaDirectDebit: {
+        sepaCreditorIdentifier: "$NEW_SCI"
+        useSwanSepaCreditorIdentifier: false
+      }
+    }
+  ) {
+    ... on RequestMerchantPaymentMethodsUpdateSuccessPayload {
+      __typename
+      paymentMethodId
+      requestId
+    }
+  }
+}
+```

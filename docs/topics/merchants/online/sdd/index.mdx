@@ -33,19 +33,19 @@ import DirectDebitTable from '../../../partials/_direct-debit-scheme-table.mdx';
 
 ## SEPA Creditor Identifier (SCI) {#sci}
 
-SEPA Creditor Identifiers are unique reference codes that identify each creditor participating in a SEPA Direct Debit scheme.
+SEPA Creditor Identifiers (SCIs) are unique reference codes that identify each creditor participating in a SEPA Direct Debit scheme.
 These identifiers are unique to each merchant and help banks sort transactions by merchant to ensure those transactions are routed correctly.
 
-SCIs include several elements, including:
+SCIs are composed of several elements, including:
 
-1. ISO country code
+1. ISO two-letter country code
 1. Two-digit checksum
 1. Creditor business activity code
 1. National identification feature
 
-For example, `FR12ABC0123456789` is an SCI from France (`FR`) with the check number `12`, and the business activity code `ABC`, ending with the national identification feature that can change country to country (here, `0123456789`).
+For example, `FR12ABC0123456789` is an SCI from France (`FR`) with the check number `12`, and the business activity code `ABC`, ending with the national identification feature that changes country to country (`0123456789`).
 
-### Options for SEPA Creditor Identifiers {#sci-options}
+### SCI options {#sci-options}
 
 Swan provides an SCI, and merchants can also choose to use their own.
 
@@ -56,11 +56,14 @@ Merchants might prefer to **use their own SCI for a more customized user experie
 Users would see the merchant's name instead of Swan on their transaction history, **reducing friction** and the risk of transactions looking suspicious to users.
 The merchant's bank would also see the label Swan in disputes, so having the merchant name appear instead could also **ease bank relations**.
 
+Merchants can **change their SCI** from Swan's to a personal SCI.
+[Update their profile](./guide-update.mdx) by calling the `requestMerchantPaymentMethodsUpdate` mutation.
+
 Regardless of the type of SCI, it's good practice to **include your merchant's name** in the `label` field for all SEPA Direct Debit transactions.
 
 :::note Personal SCI
 If a merchant in France expresses interest in using their own SCI but they don't have one, Swan can help them get their identifier.
-Send an email to support@swan.io to start the process.
+Open a support request with Swan to start the process.
 :::
 
 ## Rolling reserve {#rolling-reserve}
@@ -167,4 +170,5 @@ They can investigate the reason for return and take whatever action is necessary
 - [Request SEPA Direct Debit payment method](./guide-request.mdx)
 - [Declare a payment mandate](./guide-declare.mdx)
 - [Initiate a SEPA Direct Debit transaction](./guide-initiate.mdx)
+- [Update SEPA Direct Debit payment method](./guide-update.mdx)
 - [Sandbox](./sandbox.mdx)

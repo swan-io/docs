@@ -54,7 +54,7 @@ flowchart LR
 
 | Profile status | Explanation |
 |---|---|
-| `PendingReview` | Profile or payment method request was submitted and is pending a review by Swan.<br /><br />**Next steps**: <ul><li>If the profile or payment method request doesn't meet requirements or is deemed risky by Swan, the status moves directly to `Rejected`.</li><li>Otherwise, the status moves to `Enabled`.</li></ul> |
+| `PendingReview` | Profile or payment method request or update was submitted and is pending a review by Swan.<br /><br />**Next steps**: <ul><li>If the request or update doesn't meet requirements or is deemed risky by Swan, the status moves directly to `Rejected`.</li><li>Otherwise, the status moves to `Enabled`.</li></ul> |
 | `Enabled` | Profile or payment method is active.<br /><br /><ul><li>Use `Enabled` merchant profiles to request payment methods and accept payments with activated payment methods.</li><li>Use `Enabled` payment methods to accept payments.</li><li>Updates to profiles and payment methods can only occur when they have the status `Enabled`.</li></ul> |
 | `Suspended` | Status **assigned by Swan** when the merchant's use of their profile or payment method needs to be reviewed. The status can't return to `Enabled` without a review. |
 | `Rejected` | Final status **assigned by Swan** when Swan decides the risk of this profile or the risk of this payment method for the associated merchant is too high, or for some other risk-related reason. |
@@ -73,13 +73,30 @@ The merchant profile contains the following information:
 - Logo (optional), displayed online and on mandate PDFs
 - Accent color
 
-You can request a profile update with the API mutation `requestMerchantProfileUpdate`, and merchants can request an update through your web banking interface.
-You can request an update to the merchant's name, website, product type, expected monthly payment volume, expected average basket, and logo.
-
 A merchant profile is required of all Swan account holders wanting to accept payments from customers.
 If you want to accept payments from customers, you must have at least one merchant profile.
 
-The merchant profile is created with the status `PendingReview`, and the profile is visible right away on your Dashboard.
+The merchant profile is created with the status `PendingReview`, and is visible right away on your Dashboard.
+
+### Updating merchant profiles {#profiles-update}
+
+You can request a profile update with the API mutation `requestMerchantProfileUpdate`.
+If you use Swan's Web Banking interface, merchants can request an update through their app.
+Request an update for the merchant's name, website, product type, expected monthly payment volume, expected average basket, and logo.
+
+Updating a merchant profile produces the following events:
+
+1. The [**merchant profile status**](#statuses) doesn't change, remaining `Enabled`. The merchant continues to use their merchant profile with the existing information.
+1. The **update status** is `PendingReview`. Swan reviews the new information to ensure it meets requirements. 
+1. After Swan reviews and validates the update request, the update status changes to `Enabled` and the update is published to the merchant profile.
+1. If Swan rejects the update request, the merchant profile remains `Enabled`, but with the existing information. The update isn't published.
+
+If you requested an update and your update status is `PendingReview`, but you need to **make another change**, submit a new update request.
+Swan reviews both requests, but only the most recent is made public. 
+
+:::caution Subject to review
+All update requests are reviewed by Swan according to the same [risk guidelines](#risk) as a new merchant profile.
+:::
 
 ## Payment methods {#methods}
 
@@ -105,7 +122,7 @@ import RollingReserve from './partials/_rolling-reserve.mdx';
 
 | Payment method | Rolling reserve | Default amount |
 | --- | --- | --- |
-| Cards | ✓ **Yes** | 10% over 20 business days |
+| Cards | ✓ **Yes** | 100% over 5 business days |
 | SEPA Direct Debit - Core | ✓ **Yes** | Determined by a merchant profile risk assessment |
 | SEPA Direct Debit - B2B | ✓ **Yes** | 100% over 3 business days |
 | Internal Direct Debit - Standard | ✓ **Yes** | Determined by a merchant profile risk assessment |

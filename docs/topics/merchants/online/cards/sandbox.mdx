@@ -1,0 +1,100 @@
+---
+title: Sandbox
+---
+
+# Sandbox: Merchant card payments
+
+When testing your integration, you might need to simulate certain events with the [Partner Testing API](https://explorer.swan.io/?tab=test-api).
+
+:::tip Prerequisites
+- Merchant profile status: `Enabled`
+- Card payment method status: `Enabled`
+
+[Simulate updating the statuses](../../sandbox.mdx) for your merchant profile and card payment method if needed.
+:::
+
+## [Simulate creating a payment link](https://explorer.swan.io?query=bXV0YXRpb24gQ2FyZFBheW1lbnRMaW5rIHsKICBjcmVhdGVNZXJjaGFudFBheW1lbnRMaW5rKAogICAgaW5wdXQ6IHsKICAgICAgbWVyY2hhbnRQcm9maWxlSWQ6ICIkTUVSQ0hBTlRfUFJPRklMRV9JRCIKICAgICAgYW1vdW50OiB7IHZhbHVlOiAiNTAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICBwYXltZW50TWV0aG9kSWRzOiAiJFBBWU1FTlRfTUVUSE9EX0lEIgogICAgICBsYWJlbDogIkxpbmsgZm9yIGNhcmQgcGF5bWVudCBzaW11bGF0aW9uIgogICAgfQogICkgewogICAgLi4uIG9uIENyZWF0ZU1lcmNoYW50UGF5bWVudExpbmtTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVyY2hhbnRQYXltZW50TGluayB7CiAgICAgICAgdXJsCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBNZXJjaGFudFByb2ZpbGVXcm9uZ1N0YXR1c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY3VycmVudFN0YXR1cwogICAgICBleHBlY3RlZFN0YXR1cwogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTWVyY2hhbnRQYXltZW50TWV0aG9kTm90QWN0aXZlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIHBheW1lbnRNZXRob2RJZHMKICAgIH0KICAgIC4uLiBvbiBQYXltZW50TWV0aG9kTm90Q29tcGF0aWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api) {#simulate-link}
+
+Create a payment link in the main API section of the API Explorer, not the Testing API.
+
+```graphql {4-6,13} showLineNumbers
+mutation CardPaymentLink {
+  createMerchantPaymentLink(
+    input: {
+      merchantProfileId: "$MERCHANT_PROFILE_ID"
+      amount: { value: "50", currency: "EUR" }
+      paymentMethodIds: "$CARD_PAYMENT_METHOD_ID"
+      label: "Link for card payment simulation"
+    }
+  ) {
+    ... on CreateMerchantPaymentLinkSuccessPayload {
+      __typename
+      merchantPaymentLink {
+        id
+      }
+    }
+  }
+}
+```
+
+```json {6} showLineNumbers
+{
+  "data": {
+    "createMerchantPaymentLink": {
+      "__typename": "CreateMerchantPaymentLinkSuccessPayload",
+      "merchantPaymentLink": {
+        "id": "$YOUR_MERCHANT_PAYMENT_LINK_ID"
+      }
+    }
+  }
+}
+```
+
+## [Simulate receiving merchant card payment](https://explorer.preprod.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVDYXJkUGF5bWVudFJlY2VwdGlvbiB7CiAgc2ltdWxhdGVJbmNvbWluZ0NhcmRBdXRob3JpemF0aW9uKAogICAgaW5wdXQ6IHsKICAgICAgcGF5bWVudExpbmtJZDogIiRQQVlNRU5UX0xJTktfSUQiCiAgICAgIGF1dGhvcml6YXRpb246IHsgc3RhdHVzOiBBdXRob3JpemVkIH0KICAgICAgdGhyZWVEUzogeyBzdGF0dXM6IFN1Y2Nlc3NmdWwgfQogICAgICBhdXRvQ2FwdHVyZTogdHJ1ZQogICAgICBjYXJkRGV0YWlsczogewogICAgICAgIHNjaGVtZTogVmlzYQogICAgICAgIGNhdGVnb3J5OiBDb21tZXJjaWFsCiAgICAgICAgdHlwZTogQ3JlZGl0CiAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBTaW11bGF0ZUluY29taW5nQ2FyZEF1dGhvcml6YXRpb25TdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY2FyZE1hbmRhdGVJZAogICAgICBwYXltZW50SWQKICAgICAgcGF5bWVudExpbmtJZAogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=test-api) {#simulate-receive}
+
+Enter the `id` from the `createMerchantPaymentLink` success payload.
+
+```graphql {4} showLineNumbers
+mutation SimulateCardPaymentReception {
+  simulateIncomingCardAuthorization(
+    input: {
+      paymentLinkId: "$PAYMENT_LINK_ID"
+      authorization: { status: Authorized }
+      threeDS: { status: Successful }
+      autoCapture: true
+      cardDetails: {
+        scheme: Visa
+        category: Commercial
+        type: Credit
+        country: "FRA"
+      }
+    }
+  ) {
+    ... on InternalErrorRejection {
+      __typename
+    }
+  }
+}
+```
+
+## [Simulate booking merchant card payment](https://explorer.preprod.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVDYXJkQm9va2luZyB7CiAgc2ltdWxhdGVJbmNvbWluZ0NhcmRCb29raW5nKGlucHV0OiB7IHRyYW5zYWN0aW9uSWQ6ICIkVFJBTlNBQ1RJT05fSUQiIH0pIHsKICAgIC4uLiBvbiBTaW11bGF0ZUluY29taW5nQ2FyZEJvb2tpbmdTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFRyYW5zYWN0aW9uTm90Rm91bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgdHJhbnNhY3Rpb25JZAogICAgfQogIH0KfQo%3D&tab=test-api) {#simulate-book}
+
+Get the `transactionId` from simulating the reception of a merchant card payment from your Dashboard.
+
+```graphql {3} showLineNumbers
+mutation SimulateCardBooking {
+  simulateIncomingCardBooking(
+    input: { transactionId: "$TRANSACTION_ID" }
+  ) {
+    ... on SimulateIncomingCardBookingSuccessPayload {
+      __typename     
+    }
+  }
+}
+```
+
+## Simulate releasing merchant card payment {#simulate-release}
+
+```graphql {3} showLineNumbers
+
+```

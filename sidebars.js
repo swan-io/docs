@@ -65,6 +65,7 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/onboarding/account-holders/guide-add-additional-account",
+            "topics/onboarding/account-holders/guide-get-status",
             "topics/onboarding/account-holders/guide-request-first-transfer",
             "topics/onboarding/account-holders/sandbox",
           ],

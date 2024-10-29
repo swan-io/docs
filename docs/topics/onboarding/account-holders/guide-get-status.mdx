@@ -1,0 +1,72 @@
+---
+title: Get account holder verification status
+---
+
+# Get account holder verification status
+
+Call the  `accountHolder`  query get an account holder's verification status.
+Add `verificationStatusInfo` to provide more details when the status is `WaitingForInformation`.
+
+## Guide {#guide}
+
+1. First, [retrieve the required `accountHolderId`](./sandbox.mdx#simulate-status-update-get-id).
+1. Call the `accountHolder` query.
+1. Enter the `accountHolderId` retrieved in step 1.
+1. Add the `verificationStatusInfo` object.
+    1. Add the `AccountHolderWaitingForInformationVerificationStatusInfo` union to get information about the `WaitingForInformation` status.
+    1. Add `WaitingForInformationAt`, `status`, and `verificationRequirements` > `id` and `type`.
+
+:::info Other statuses
+If you want additional information about a status other than `WaitingForInformation`, add those unions as well.
+:::
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=cXVlcnkgV2FpdGluZ0ZvckluZm9TdGF0dXMgewogIGFjY291bnRIb2xkZXIoaWQ6ICIkQUNDT1VOVF9IT0xERVJfSUQiKSB7CiAgICB2ZXJpZmljYXRpb25TdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyV2FpdGluZ0ZvckluZm9ybWF0aW9uVmVyaWZpY2F0aW9uU3RhdHVzSW5mbyB7CiAgICAgICAgX190eXBlbmFtZQogICAgICAgIFdhaXRpbmdGb3JJbmZvcm1hdGlvbkF0CiAgICAgICAgc3RhdHVzCiAgICAgICAgdmVyaWZpY2F0aW9uUmVxdWlyZW1lbnRzIHsKICAgICAgICAgIGlkCiAgICAgICAgICB0eXBlCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2-3,5} showLineNumbers
+query WaitingForInfoStatus {
+  accountHolder(id: "$ACCOUNT_HOLDER_ID") {
+    verificationStatusInfo {
+      status
+      ... on AccountHolderWaitingForInformationVerificationStatusInfo {
+        __typename
+        WaitingForInformationAt
+        status
+        verificationRequirements {
+          id
+          type
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+Note the two verification requirements needed from this account holder (lines 11, 15).
+
+```json {5,11,15} showLineNumbers
+{
+  "data": {
+    "accountHolder": {
+      "verificationStatusInfo": {
+        "status": "WaitingForInformation",
+        "__typename": "AccountHolderWaitingForInformationVerificationStatusInfo",
+        "WaitingForInformationAt": "2024-10-29T13:56:38.972Z",
+        "verificationRequirements": [
+          {
+            "id": "$VERIFICATION_REQUIREMENT_ID_1",
+            "type": "FirstTransferRequired"
+          },
+          {
+            "id": "$VERIFICATION_REQUIREMENT_ID_2",
+            "type": "LegalRepresentativeDetailsRequired"
+          }
+        ]
+      }
+    }
+  }
+}
+```

@@ -142,6 +142,34 @@ You can also send a request to Swan Support through your Dashboard or with an em
 To get a notification when a user is deactivated, subscribe to the `User.Deactivated` [webhook](../../developers/using-api/webhooks.mdx).
 :::
 
+## Statuses {#statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    UC((User created)) -.-> A[Active]
+    A -.-> B[Blocked]
+    B -.-> A
+    A -.-> D[Deactivated]
+    subgraph FS[Final status]
+        D
+    end
+    style UC fill:#D4D3D5,stroke:#514F59
+    style FS fill:#fffdf4,stroke:#cca922
+```
+
+| Status | Explanation |
+|---|---|
+| `Active` | Users are `Active` as soon as they're created. They can access and use Swan. |
+| `Blocked` | Status assigned by Swan for security reasons.<br /><br />`Blocked` users can't access or use Swan services. The phone number remains attached to the user and can't be used for someone else. In certain edge cases, `Blocked` users can return to `Active` after careful review. |
+| `Deactivated` | You can deactivate users [with the API](./overview/guide-deactivate.mdx), and Swan can also assign this status.<br /><br />Deactivated users can't access Swan or use Swan services. Phone numbers attached to `Deactivated` users can be assigned to someone else. |
+
+:::caution Access tokens
+[User access tokens](../../developers/using-api/authentication/index.mdx#tokens-user) associated with `Blocked` or `Deactivated` users are revoked as soon as the status changes from `Active`.
+You can no longer use the API on their behalf.
+You also can't use a [project access token to impersonate](../../developers/using-api/authentication/index.mdx#tokens-project) `Blocked` or `Deactivated` users. 
+:::
+
 ## Guides {#guides}
 
 - [Get a list of users](./overview/guide-get-list.mdx)

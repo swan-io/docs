@@ -48,6 +48,7 @@ The account holder verification process can include the following elements:
 1. **Onboarding**: Process is finalized for either an [**individual**](../individual/index.mdx) or a [**company**](../company/index.mdx), which creates a user, an account holder, an account, and an account membership linking the user to the account.
 1. [**Identification**](../../users/identifications/index.mdx): User that opened the [individual](../individual/index.mdx#identification-recommendations) or [company](../company/index.mdx#identification-recommendations) account completes identification with an ID document and a picture or video.
 1. [**Document collection**](../../accounts/documents/index.mdx): Swan collects required documents.
+1. **Clarification**: Swan might contact the user to clarify details from onboarding, identification, or document collection.
 1. [**First transfer**](#first-transfer): Certain users need to send a first transfer to their new Swan account.
 1. **Review**: Swan reviews all provided elements.
 
@@ -92,9 +93,9 @@ If the account holder verification status is `WaitingForInformation`, the accoun
 | `LegalRepresentative` <br /> `DetailsRequired` | More information is required about the account's legal representative, or about the account member acting as the legal representative with Power of Attorney. |
 | `Organization` <br /> `DetailsRequired` | More information is required about the organization. |
 | `SupportingDocuments` <br /> `Required` | Provide the requested [supporting documents](../../accounts/documents/index.mdx). |
-| `TaxId` <br /> `Required` | Provide the <mark>account holder or organization's</mark> Tax ID. |
+| `TaxId` <br /> `Required` | Provide the Tax ID for both the account holder and the organization. |
 | `UboDetails` <br /> `Required` | More information is required about the organization's ultimate beneficial owner or owners (UBO). |
-| `Other` | Swan <mark>contacts your account holder</mark> about a different requirement. |
+| `Other` | Swan contacts your account holder directly about additional requirements. |
 
 ### First transfer {#first-transfer}
 
@@ -147,16 +148,6 @@ participant S as Swan
     S ->> U: Sends text message inviting the account<br/>holder to complete identification
     U ->> S: Provides identification provider<br/>with required elements
     S ->> S: Verifies identification
-    note right of P: If a first transfer is required
-    alt Partner notifies user about first transfer
-        S ->> P: Sends email notifying about required first transfer
-        P ->> U: Requests first transfer
-        U ->> S: Sends first transfer
-    else Swan requests first transfer from user
-        S ->> U: Sends email requesting first transfer
-        U ->> S: Sends first transfer
-    end
-    S ->> S: Swan reviews first transfer
     note right of P: If supporting documents are required
     alt Partner provides documents
         S ->> P: Sends webhook about missing supporting documents
@@ -168,6 +159,16 @@ participant S as Swan
         U ->> S: Uploads documents to banking interface
     end
     S ->> S: Swan reviews identity<br/>verification and documents
+    note right of P: If a first transfer is required
+    alt Partner notifies user about first transfer
+        S ->> P: Sends email notifying about required first transfer
+        P ->> U: Requests first transfer
+        U ->> S: Sends first transfer
+    else Swan requests first transfer from user
+        S ->> U: Sends email requesting first transfer
+        U ->> S: Sends first transfer
+    end
+    S ->> S: Swan reviews first transfer
 ```
 
 ## Guides {#guides}

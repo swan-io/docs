@@ -10,14 +10,27 @@ import AccountMembershipDefinition from '../../definitions/_account-membership.m
 
 ## Overview {#overview}
 
-The Swan user who performs the account's onboarding is the first account member and becomes the account's legal representative.
-All Swan accounts have at least one account member: the legal representative, and they're considered the admin of the account.
-The admin can then grant other Swan users permission to perform certain actions for the account; each of these users is an account member.
+The Swan user who performs the account's onboarding is the first account member and becomes the **account's legal representative**.
+All Swan accounts have at least one account member: the legal representative.
+The legal representative can grant other Swan users permission to perform certain actions for the account; each of these users is an **account member**.
 
-:::note Consider a real-life example
+:::info Consider a real-life example
 A grandparent wants their grandchild to have access to an account to purchase groceries.
-The grandparent is the legal representative (and account member), and the grandchild, an account member.
+The grandparent is the legal representative (and an account member), and the grandchild is an account member.
 :::
+
+### Inviting members {#invite}
+
+You can invite account members by phone number or by verified email.
+Use the API to add one membership or multiple memberships.
+If you're using Swan's Web Banking interface, your users can [invite members](https://support.swan.io/hc/en-150/articles/17648698750877-Add-a-member-to-your-account) directly from the app.
+
+| Method | Explanation |
+| --- | --- |
+| Phone number | <ul><li>Phone's SIM card serves as the authentication factor.</li><li>Account member can be assigned all [membership permissions](#permissions).</li></ul> |
+| Email | <ul><li>Verified email serves as the authentication factor, and the membership isn't enabled until user verifies their email.</li><li>Account member can only be assigned the `canViewAccount` and `canManageCards` [memberships permissions](#permissions).</li><li>Swan still collects the user's phone number during the [sign-up process](../../users/index.mdx#signup) so they can perform sensitive operations such as initiating payments, ordering cards, and viewing sensitive card information.</li></ul> |
+
+### Company accounts {#company-members}
 
 Account memberships are **especially useful for company accounts**.
 The legal representative grants permissions to other employees.
@@ -26,10 +39,12 @@ The company's accountant can use their membership to access account statements.
 With enough permissions, managers can add cards for their team.
 How you use account memberships and the corresponding permissions is up to you—the possibilities are almost endless to fulfill your use case.
 
+### Unlimited memberships {#unlimited-memberships}
+
 Swan users can have memberships to an **unlimited** number of Swan accounts.
 
 Consider the following example, where Sasha Oliveira has account memberships to accounts for MyBrand and eFounders.
-Sasha can access and manage memberships for both accounts, but only manage cards for one.
+Based on their [membership permissions](#permissions), Sasha can access and manage memberships for both accounts, but only manage cards for one.
 
 ![Visual depiction of multiple account memberships with different permissions](../../../images/topics/accounts/membership-overview.png)
 
@@ -172,22 +187,21 @@ flowchart LR
 | `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the invited account member consents, the status moves to `InvitationSent`</li><li>If the invited account member doesn't consent, the status moves to `Disabled`</li></ul> |
 | `InvitationSent` | An invitation was sent to the invited account member.<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
 | `Enabled` | All user information matches, the account member has been awarded the correct [identification level](../../users/identifications/index.mdx#levels-processes), and the account member can use their account membership and corresponding permissions. |
-| `BindingUserError` | The personal information you submitted about the invited account member doesn't match the information they provide during the [signup process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on binding user errors for more information. |
+| `BindingUserError` | The personal information you submitted about the invited account member doesn't match the information they provide during the [sign-up process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on binding user errors for more information. |
 | `Suspended` | Account membership is suspended and not available for use.<br/><br/>Account memberships can be suspended for various reasons, including a request from you or the account's legal representative, or a Swan action in the case of suspicious activity.<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
 | `Disabled` | Account membership is disabled, is no longer available for use, and can't be restored. |
 
 ### Binding user errors {#binding-errors}
 
-The information you submitted about the invited account member doesn't match the information they provide when [signing up for an account](../../users/index.mdx#signup), the account membership has the status `BindingUserError`.
-The status also changes to `BindingUserError` if the user hasn't completed [identification](../../users/identifications/index.mdx).
+The account membership status can be `BindingUserError` for several reasons, including the following scenarios:
 
-At least one of the following booleans must be true for an account membership to have a binding error:
+- The information you submitted about the invited account member doesn't match the information they provided when [signing up for an account](../../users/index.mdx#signup).
+- The user hasn't completed [identification](../../users/identifications/index.mdx).
+- If you [invited the account member](#invite) by verified email, the email you provided might not match the email they used to [sign up](../../users/identifications/index.mdx), or they might not have verified their email yet.
 
-- `firstNameMatchError` → If `true`, mismatch with first or given name
-- `lastNameMatchError` → If `true`, mismatch with last or family name
-- `birthDateMatchError` → If `true`, mismatch with birth date
-- `mobilePhoneMatchError` → If `true`, mismatch with mobile phone number
-- `idVerifiedMatchError` → If `true`, membership doesn't have the right level of identification
+import UserBindingErrorOptions from './partials/_user-binding-error-list.mdx';
+
+<UserBindingErrorOptions />
 
 Account members whose membership status is `BindingUserError` can still access basic account and card information, but they can't perform any [sensitive operations](../../users/consent/index.mdx#sensitive), such as making a transfer or viewing their card numbers.
 

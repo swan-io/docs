@@ -163,6 +163,33 @@ You have the option of **group** or **non-group delivery**.
 
 ∗ *If you choose the Spain hub but ship using group delivery outside of Spain or Portugal, the shipping provider is DHL.*
 
+## Netherlands Maestro fallback {#maestro}
+
+In the 🇳🇱 Netherlands, some physical card terminals refuse transactions with Mastercard Business cards, but accept Maestro.
+Therefore, Swan offers Mastercard cards with Maestro fallback for qualified physical cards.
+ 
+By default, the Maestro secondary card application is embedded in the physical card's chip as a fallback option when the qualified card is bring printed.
+The application isn't visible to cardholders and doesn't impact other card capabilities.
+
+When a terminal refuses the primary Mastercard application but detects the secondary Maestro application, the terminal automatically retries the transaction with Maestro.
+Transactions processed with Maestro include the masked Maestro card number in the transaction details and receipts.
+
+![Image displaying Maestro flow](../../../images/topics/cards/maestro-fallback.png)
+
+The Maestro card number isn't printed on the physical card.
+Cardholders can't add the secondary Maestro application to digital wallets, meaning the Maestro application can't be tokenized or digitized.
+
+### Maestro qualifications {#maestro-qualifications}
+
+The Maestro secondary card application is **embedded by default** for qualified cards.
+Cards that meet all of the following requirements qualify for Maestro:
+
+1. Available for [company account cards](../../onboarding/company/index.mdx) only.
+1. Issued in the Netherlands ([account country](../../accounts/index.mdx#account-country) is the Netherlands).
+1. Printed from the [France printing hub](#hubs-france).
+1. [Printed](./guide-print.mdx) by calling one of the following API mutations: `printPhysicalCard`, `addCards`, or `addCardsWithGroupDelivery`.
+1. Design is Swan's [standard black card](../design/index.mdx#black), or a [custom design](../design/guide-custom.mdx) with the plastic component Dual SF42. Standard silver cards aren't eligible for this feature.
+
 ## Physical card statuses {#statuses}
 
 ```mermaid

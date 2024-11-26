@@ -1,0 +1,40 @@
+---
+title: 28 November 2024
+type: release
+---
+
+## New features
+
+👥 Invite account members without a phone number for certain membership permissions.
+Instead, [use verified email to invite account members](/topics/accounts/memberships/#invite) who prefer not to use their personal phone number for professional purposes.
+
+🪪 We added a [new identification level for authorization links](/developers/using-api/authentication/guide-get-token-user/#url-parameters-optional), `Auto`. 
+With `Auto`, Swan automatically guides users to the correct identification process for their situation.
+We recommend choosing `Auto` instead of a specific process when constructing your OAuth URLs.
+
+## Improvements
+
+💳 We improved **transaction visibility for cardholders** without the `canViewAccount` membership permission.
+They can now [view their own card transactions](/topics/accounts/memberships/#permissions-cards).
+
+👥 We improved account membership visibility for account members who have the `canManageAccountMembership` membership permission, but not `canViewAccount`.
+They can now [view a list of account members](/topics/accounts/memberships/#permissions).
+
+🌐 Finnish is now a supported [account language](/topics/accounts/#language-list) and [account membership language](/topics/accounts/memberships/#language), with a few exceptions.
+You can update the account language with the `updateAccount` mutation, and the account membership language with the `updateAccountMembership` mutation.
+
+🔎 Starting on **December 2nd**, API search queries will allow for similarity and full-text search.
+They won't be sensitive to case or accents anymore. This update only applies to search, not other filters.
+
+## API updates
+
+### Upcoming breaking changes
+
+🧭 On **January 8th**, we're adding three new values to the [`DocumentReasonCode` Enum](https://api-reference.swan.io/enums/document-reason-code/) to handle more reasons for capital deposit document refusal: `ComplianceReason`, `InvalidDepositBankName`, and `MissingCompanyProviderRegisterExtract`.
+
+🚫 On **January 20th**, we’re removing the following deprecated fields:  `accountMemberships.firstName`,  `accountMemberships.lastName`, `accountMemberships.email`,  `accountHolders.firstName`, `accountHolders.lastName`, `onboardings.email`, `users.firstName`, and `users.lastName`.
+
+🌍 On **January 30th**, `accountCountry` will become a mandatory input for the following mutations: `onboardCompanyAccountHolder`, `onboardIndividualAccountHolder`, and `createCapitalDepositCase`.
+
+🪪 Starting on **January 30th**, the [`idVerified` scope in authorization URL parameters](/developers/using-api/authentication/guide-get-token-user#code-construct-url) won't be supported anymore.
+Instead, use the [`identificationLevel` parameter](/developers/using-api/authentication/guide-get-token-user#url-parameters-optional).

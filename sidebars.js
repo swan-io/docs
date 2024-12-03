@@ -556,6 +556,18 @@ module.exports = {
             "partnership/document-center/company-registration/spain",
           ],
         },
+        "partnership/document-center/proof-address/index",
+        {
+          type: "category",
+          label: "Identity documents",
+          link: { type: "doc", id: "partnership/document-center/identity/index" },
+          collapsed: true,
+          items: [
+            "partnership/document-center/identity/expert",
+            "partnership/document-center/identity/pvid",
+            "partnership/document-center/identity/qes",
+          ],
+        },
       ],
     },
     {

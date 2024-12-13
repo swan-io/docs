@@ -20,14 +20,15 @@ However, the non-Swan account must belong to the Swan account holder.
 1. Choose the `SepaDirectDebitB2b` scheme. Though `Core` is an option in the API, it's not actually available for account funding.
 1. Add your `accountId`, `iban`, `consentRedirectUrl`, and a `name` for your funding source (name is primarily for your reference).
 1. Add the `AddDirectDebitFundingSourceSuccessPayload` success payload.
-1. Add the consent URL to the success payload: `fundingSource` > `DirectDebitFundingSource` > `paymentMandate` > `SEPAPaymentDirectDebitMandate` > `statusInfo` > `PaymentMandateConsentPendingStatusInfo` > `consent` > `consentUrl`
+1. Add the consent URL to the success payload: `fundingSource` > `DirectDebitFundingSource` > `paymentMandate` > `SEPAPaymentDirectDebitMandate` > `statusInfo` > `PaymentMandateConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add the `mandateDocumentUrl` to the payload (line 29).
 1. Add rejections (not shown).
 
 ## Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkU2RkQjJiIHsKICBhZGREaXJlY3REZWJpdEZ1bmRpbmdTb3VyY2UoCiAgICBpbnB1dDogewogICAgICBzY2hlbWU6IFNlcGFEaXJlY3REZWJpdEIyYgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBpYmFuOiAiJFlPVVJfSUJBTiIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBuYW1lOiAiJFlPVVJfRlVORElOR19TT1VSQ0VfTkFNRSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBBZGREaXJlY3REZWJpdEZ1bmRpbmdTb3VyY2VTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZnVuZGluZ1NvdXJjZSB7CiAgICAgICAgLi4uIG9uIERpcmVjdERlYml0RnVuZGluZ1NvdXJjZSB7CiAgICAgICAgICBpZAogICAgICAgICAgbmFtZQogICAgICAgICAgcGF5bWVudE1hbmRhdGUgewogICAgICAgICAgICAuLi4gb24gU0VQQVBheW1lbnREaXJlY3REZWJpdE1hbmRhdGUgewogICAgICAgICAgICAgIGlkCiAgICAgICAgICAgICAgbmFtZQogICAgICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAgICAgLi4uIG9uIFBheW1lbnRNYW5kYXRlQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50VmVyaWZpY2F0aW9uQWxyZWFkeVJlamVjdGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSUJBTk5vdFJlYWNoYWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkU2RkQjJiIHsKICBhZGREaXJlY3REZWJpdEZ1bmRpbmdTb3VyY2UoCiAgICBpbnB1dDogewogICAgICBzY2hlbWU6IFNlcGFEaXJlY3REZWJpdEIyYgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBpYmFuOiAiJFlPVVJfSUJBTiIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBuYW1lOiAiWW91ciBmdW5kaW5nIHNvdXJjZSBuYW1lIgogICAgfQogICkgewogICAgLi4uIG9uIEFkZERpcmVjdERlYml0RnVuZGluZ1NvdXJjZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBmdW5kaW5nU291cmNlIHsKICAgICAgICAuLi4gb24gRGlyZWN0RGViaXRGdW5kaW5nU291cmNlIHsKICAgICAgICAgIGlkCiAgICAgICAgICBuYW1lCiAgICAgICAgICBwYXltZW50TWFuZGF0ZSB7CiAgICAgICAgICAgIC4uLiBvbiBTRVBBUGF5bWVudERpcmVjdERlYml0TWFuZGF0ZSB7CiAgICAgICAgICAgICAgaWQKICAgICAgICAgICAgICBuYW1lCiAgICAgICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgICAuLi4gb24gUGF5bWVudE1hbmRhdGVDb25zZW50UGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBtYW5kYXRlRG9jdW1lbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRWZXJpZmljYXRpb25BbHJlYWR5UmVqZWN0ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJQkFOTm90UmVhY2hhYmxlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
-```graphql {4,11,25} showLineNumbers
+```graphql {4,11,25,29} showLineNumbers
 mutation AddSddB2b {
   addDirectDebitFundingSource(
     input: {
@@ -56,6 +57,7 @@ mutation AddSddB2b {
                   }
                 }
               }
+              mandateDocumentUrl
             }
           }
         }
@@ -89,7 +91,8 @@ Note you also receive a funding source ID (line 6) and a payment mandate ID (lin
             "consent": {
               "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
             }
-          }
+          },
+          "mandateDocumentUrl": ""
         }
       }
     }

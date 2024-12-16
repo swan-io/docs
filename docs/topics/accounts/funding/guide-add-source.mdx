@@ -7,17 +7,18 @@ title: Add a SEPA Direct Debit B2B funding source
 Add a SEPA Direct Debit B2B funding source with the API.
 
 :::tip Prerequisites
-1. The non-Swan account used as the funding source belongs to the Swan account holder.
-1. Call the mutation with a user access token associated with the account holder. The account holder needs to sign the direct debit mandate by consenting to the [sensitive operation](../../users/consent/index.mdx#sensitive) of adding a funding source.
+1. The funding source is a non-Swan account belonging to the Swan account holder.
 1. The user adding the funding source is either an account member with the `canManageAccountMembership` and `canViewAccount` [permissions](../memberships/index.mdx#permissions), or the account holder.
+1. Call the mutation with a [user access token](../../../developers/using-api/authentication/guide-get-token-user.mdx) associated with the account holder. The account holder needs to sign the direct debit mandate by consenting to the [sensitive operation](../../users/consent/index.mdx#sensitive) of adding a funding source.
 :::
 
 ## Step 1: Add the funding source {#add-source}
 
 1. Call the `addDirectDebitFundingSource` mutation.
-1. Choose the `SepaDirectDebitB2b` scheme. Though `Core` is an option in the API, it's not actually available for account funding.
+1. Choose the `SepaDirectDebitB2b` scheme.
+    - Though `Core` is an option in the API, it's not actually available for account funding.
 1. Add your `accountId`, `iban`, `consentRedirectUrl`, and a `name` for your funding source (name is primarily for your reference).
-1. Add the `AddDirectDebitFundingSourceSuccessPayload` success payload.
+1. Add the success payload: `AddDirectDebitFundingSourceSuccessPayload`.
 1. Add the consent URL to the success payload: `fundingSource` > `DirectDebitFundingSource` > `paymentMandate` > `SEPAPaymentDirectDebitMandate` > `statusInfo` > `PaymentMandateConsentPendingStatusInfo` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
 
@@ -64,7 +65,8 @@ mutation AddSddB2b {
 
 ## Step 2: Consent to adding the funding source {#consent}
 
-1. Share the `consentUrl` (line 14) with your Swan account holder so they can consent to adding the funding source.
+1. Send the `consentUrl` (line 14) with your Swan account holder.
+1. Instruct them to consent to adding the funding source.
 
 Note you also receive a funding source ID (line 6) and a payment mandate ID (line 9).
 
@@ -93,13 +95,15 @@ Note you also receive a funding source ID (line 6) and a payment mandate ID (lin
 }
 ```
 
-## Step 3: Get the payment mandate {#get-mandate}
-
 :::tip Funding source and mandate `Enabled`
 After the account holder consents to the adding the funding source, the statuses for both the funding source and the direct debit mandate change to `Enabled`, and funds can be pulled into the Swan account.
+
+However, the account holder still needs to declare their payment mandate.
 :::
 
-Get the `mandateDocumentUrl` in order to download the mandate to declare to the non-Swan account provider.
+## Step 3: Get the payment mandate {#get-mandate}
+
+Get the `mandateDocumentUrl` to download the payment mandate.
 
 1. Call the `fundingSource` query.
 1. Add the funding source ID (provided in the step 2 payload, line 6)
@@ -127,11 +131,11 @@ query GetMandateUrl {
 ```
 
 
-## Step 4: Declare the mandate to the external account {#declare}
+## Step 4: Declare the mandate to the external account provider {#declare}
 
-The account holder **must declare** the mandate to the provider of their non-Swan account.
+The account holder **must declare** the payment mandate to the provider of their non-Swan account.
 
-1. Open the `mandateDocumentUrl` provided in the payload (line 9), which automatically triggers the download of the SEPA Direct Debit payment mandate document (as a PDF file).
+1. Open the `mandateDocumentUrl` provided in the payload (line 9), which automatically triggers the download of the SEPA Direct Debit payment mandate PDF document.
 1. Provide the payment mandate document to the account holder.
 1. Instruct the account holder to declare the payment mandate to the provider of their non-Swan account.
 

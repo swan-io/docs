@@ -269,7 +269,7 @@ module.exports = {
           link: { type: "doc", id: "topics/merchants/index" },
           collapsed: true,
           items: [
-            "topics/merchants/profiles/guide-add",
+            "topics/merchants/profiles/guide-request",
             "topics/merchants/profiles/guide-update",
             "topics/merchants/profiles/guide-get-info",
             "topics/merchants/sandbox",

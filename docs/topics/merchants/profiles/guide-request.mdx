@@ -1,0 +1,99 @@
+---
+title: Request a merchant profile
+---
+
+# Request a merchant profile
+
+Before your merchant can use Swan to accept payments from customers, request a merchant profile with the API.
+
+**All new merchant profiles are reviewed by Swan**.
+Swan might contact you for more information before accepting or rejecting the merchant profile.
+
+:::tip Prerequisites
+- The merchant's account holder type is `Company`.
+- You have a project access token, or, if you're an account member, a user access token with `CanManageAccountMembership` [membership permission](../../accounts/memberships/index.mdx#permissions).
+:::
+
+## Guide {#guide}
+
+1. Call the `requestMerchantProfile` mutation.
+1. Include all mandatory information: `accountId`, `merchantName`, `productType`, `expectedMonthlyPaymentVolume`, and `expectedAverageBasket`.
+1. Add relevant payload and rejection details to your mutation.
+1. (Optional) Use `merchantLogo` to include a logo for your merchant. The image must be converted to a `base64` encoded string.
+1. The new merchant is created with the status `PendingReview`.
+1. Swan [reviews the new merchant profile](../index.mdx#risk) and updates the status.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gTWVyY2hhbnRQcm9maWxlIHsKICByZXF1ZXN0TWVyY2hhbnRQcm9maWxlKAogICAgaW5wdXQ6IHsKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgbWVyY2hhbnROYW1lOiAiTWVyY2hhbnQgQ29tcGFueSBOYW1lIgogICAgICBwcm9kdWN0VHlwZTogR29vZHMKICAgICAgZXhwZWN0ZWRNb250aGx5UGF5bWVudFZvbHVtZTogeyB2YWx1ZTogIjMwMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICBleHBlY3RlZEF2ZXJhZ2VCYXNrZXQ6IHsgdmFsdWU6ICI1MCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmVxdWVzdE1lcmNoYW50UHJvZmlsZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXJjaGFudFByb2ZpbGUgewogICAgICAgIGFjY291bnRJZAogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBFbmFibGVkTWVyY2hhbnRQcm9maWxlU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgZW5hYmxlZEF0CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBwcm9kdWN0VHlwZQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {4-6,8-9,12-13,27} showLineNumbers
+mutation MerchantProfile {
+  requestMerchantProfile(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      merchantName: "Merchant Company Name"
+      productType: Goods
+      expectedMonthlyPaymentVolume: {
+        value: "3000"
+        currency: "EUR"
+      }
+      expectedAverageBasket: {
+        value: "50"
+        currency: "EUR"
+      }
+    }
+  ) {
+    ... on RequestMerchantProfileSuccessPayload {
+      __typename
+      merchantProfile {
+        accountId
+        id
+        statusInfo {
+          status
+          ... on EnabledMerchantProfileStatusInfo {
+            __typename
+            enabledAt
+            status
+          }
+        }
+        productType
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on AccountNotFoundRejection {
+      id
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms your new merchant profile with the status `PendingReview`.
+
+```json {7,9} showLineNumbers
+{
+  "data": {
+    "requestMerchantProfile": {
+      "__typename": "RequestMerchantProfileSuccessPayload",
+      "merchantProfile": {
+        "accountId": "$YOUR_ACCOUNT_ID",
+        "id": "$YOUR_MERCHANT_PROFILE_ID",
+        "statusInfo": {
+          "status": "PendingReview"
+        },
+        "productType": "Goods"
+      }
+    }
+  }
+}
+```

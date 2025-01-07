@@ -1,5 +1,9 @@
 // redirects from original doc pathnames
 module.exports = [
+  {
+    from: "/topics/merchants/profiles/guide-add",
+    to: "/topics/merchants/profiles/guide-request/",
+  },
   { from: "/api/api-explorer", to: "/developers/tools/api-explorer" },
   { from: "/api/authentication", to: "/developers/using-api/authentication/" },
   { from: "/api/consent", to: "/topics/users/consent/" },

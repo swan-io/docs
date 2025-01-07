@@ -1,0 +1,99 @@
+---
+title: Request a merchant profile
+---
+
+# Request a merchant profile
+
+Before your merchant can use Swan to accept payments from customers, request a merchant profile with the API.
+
+:::caution Profile review
+All new merchant profiles are reviewed by Swan.
+Swan might contact you for more information before accepting or rejecting the merchant profile.
+:::
+
+## Guide {#guide}
+
+1. Confirm the merchant account meets the following prerequisites:
+    - Account holder type: `Company`.
+    - You have a project access token, or, if you're an account member, a user access token with `CanManageAccountMembership` [membership permission](../../accounts/memberships/index.mdx#permissions).
+1. Call the `requestMerchantProfile` mutation.
+1. Include all mandatory information: `accountId`, `merchantName`, `productType`, `expectedMonthlyPaymentVolume`, and `expectedAverageBasket`.
+1. Add relevant payload and rejection details to your mutation.
+1. (Optional) Use `merchantLogo` to include a logo for your merchant. The image must be converted to a `base64` encoded string.
+1. The new merchant is created with the status `PendingReview`.
+1. Swan [reviews the new merchant profile](../index.mdx#risk) and updates the status.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gTWVyY2hhbnRQcm9maWxlIHsKICByZXF1ZXN0TWVyY2hhbnRQcm9maWxlKAogICAgaW5wdXQ6IHsKICAgICAgYWNjb3VudElkOiAiNTgyYzZhYWMtYzI2YS00MjAyLThhNjgtMjJhNTcyNjM4MjljIgogICAgICBtZXJjaGFudE5hbWU6ICJNZXJjaGFudCBDb21wYW55IE5hbWUiCiAgICAgIHByb2R1Y3RUeXBlOiBHb29kcwogICAgICBleHBlY3RlZE1vbnRobHlQYXltZW50Vm9sdW1lOiB7IHZhbHVlOiAiMzAwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIGV4cGVjdGVkQXZlcmFnZUJhc2tldDogeyB2YWx1ZTogIjUwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBSZXF1ZXN0TWVyY2hhbnRQcm9maWxlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lcmNoYW50UHJvZmlsZSB7CiAgICAgICAgYWNjb3VudElkCiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIEVuYWJsZWRNZXJjaGFudFByb2ZpbGVTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBlbmFibGVkQXQKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIHByb2R1Y3RUeXBlCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4-6,8-9,12-13,27} showLineNumbers
+mutation MerchantProfile {
+  requestMerchantProfile(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      merchantName: "Merchant Company Name"
+      productType: Goods
+      expectedMonthlyPaymentVolume: {
+        value: "3000"
+        currency: "EUR"
+      }
+      expectedAverageBasket: {
+        value: "50"
+        currency: "EUR"
+      }
+    }
+  ) {
+    ... on RequestMerchantProfileSuccessPayload {
+      __typename
+      merchantProfile {
+        accountId
+        id
+        statusInfo {
+          status
+          ... on EnabledMerchantProfileStatusInfo {
+            __typename
+            enabledAt
+            status
+          }
+        }
+        productType
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on AccountNotFoundRejection {
+      id
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms your new merchant profile with the status `PendingReview`.
+
+```json {7,9} showLineNumbers
+{
+  "data": {
+    "addMerchantProfile": {
+      "__typename": "RequestMerchantProfileSuccessPayload",
+      "merchantProfile": {
+        "accountId": "$YOUR_ACCOUNT_ID",
+        "id": "$YOUR_MERCHANT_PROFILE_ID",
+        "statusInfo": {
+          "status": "PendingReview"
+        },
+        "productType": "Goods"
+      }
+    }
+  }
+}
+```

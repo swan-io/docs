@@ -50,10 +50,26 @@ In short, **test in Sandbox, build in Live**—and remember, you can't move anyt
 Swan imposes rate limits on the endpoints to protect the API.
 
 The default limit for each IP is **2,000 requests every 5 minutes**.
-If you send over 2,000 requests for a single endpoint, you'll receive an HTTP 429 Too Many Requests response.
+If you send over 2,000 requests for a single endpoint, the API returns an `HTTP 429 Too Many Requests` error.
 This limit applies to all endpoints.
 
-If you need to increase the rate limits for your use case, request it through email: integration@swan.io. 
+If you need to increase the rate limits for your use case, request it through email: integration@swan.io.
+
+### Sandbox operation limits {#sandbox-limits}
+
+To keep the Sandbox secure, Swan enforces the following limits per operation:
+
+- **Complexity**: 1,000 fields per operation
+- **Depth**: 15 nested fields per operation
+- **Concurrency**: 5 top-level fields per operation
+
+If your operation exceeds any of these limits, the API returns an `HTTP 400 Bad Request` error.
+Call the API again, making sure the complexity, depth, and concurrency of your operation respect the maximum limits.
+
+:::note Complexity, depth, and concurrency in Live
+Exceeding these limits in your Live environment doesn't result in an error.
+Nonetheless, Swan recommends keeping your Live operations within these limits as well.
+:::
 
 ### Backend communication {#backend}
 

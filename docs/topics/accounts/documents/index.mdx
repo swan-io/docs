@@ -97,9 +97,43 @@ flowchart LR
 | `Waiting for upload` | URL to upload the document has been generated<br/><br/>**Next step**:<br/><ul><li>If the document is uploaded → `Uploaded`</li><li>If the collection switches to a final status before the document is uploaded → `Not uploaded`</li></ul> |
 | `Uploaded` | Document is uploaded; if a review is completed on the uploaded document, the status moves to `Validated`, `Refused`, or `Deleted` depending on Partner actions and Swan decisions |
 | `Validated` | Swan approved the document |
-| `Refused` | Swan refused the document |
+| `Refused` | Swan refused the document (more information in next section) |
 | `Deleted` | Swan or the partner deleted the document |
 | `Not uploaded` | URL was generated but collection was closed before a document was uploaded |
+
+### `Refused` document reason codes {#refused}
+
+When any type of supporting document is `Refused`, the reason is displayed on your Dashboard.
+Navigate to the supporting document area for the relevant onboarding, transaction, or account holder verification.
+You can also [query the API](./guide-get-info.mdx).
+
+| Reason code | Explanation |
+| ---- | ---- |
+| `CompanyNameMismatch` | The company name in the document submitted doesn't match Swan's records. |
+| `DeclaredAmountMismatch` | The declared amount in the document submitted doesn't match Swan's records. |
+| `ExpiredDocument` | Documents must have been issued within the last three months. |
+| `InvalidAddress` | The address in the document submitted doesn't match Swan's records.  |
+| `InvalidDocument` | The document submitted isn't valid or in an accepted format. |
+| `InvalidOrMissingData` | The shareholder's name in the document submitted is invalid, missing, or not clearly visible. |
+| `MissingAccommodationProviderId` | An identity document for the accommodation provider is required. |
+| `MissingAccommodationProviderIdLetter` | The accommodation provider's ID and letter providing proof of accommodation are required. |
+| `MissingAccommodationProviderLetter` | A letter providing proof of accommodation from the provider is required. |
+| `UnacceptableDocument` | The document submitted doesn't match the requested document type. |
+| `ProviderColorIdDocumentRequired` | The document must be submitted in color. |
+| `MissingSignature` | The document submitted must be signed or dated. |
+| `BadDocumentQuality` | The quality of the document submitted is too low. All document content must be clear and legible. |
+| `FullDocumentRequired` | The entire document must be sumbitted, not just a portion of the document. |
+| `MissingProviderProofOfAddress` | The accommodation provider's proof of address is required. |
+| `MissingProviderProof`<br />`OfAddressAndIdDocument` | The accommodation provider's ID and proof of address are required. |
+| `PowerOfAttorneyToSwanRequired` | A signed and dated Power of Attorney must be provided to Swan. |
+| `MissingCompanyDomiciliationStatement` | A document stating the company's registered address is required. This document can be referred to as a *domiciliation statement*. |
+| `HandwrittenOrCertified`<br />`ElectronicSignatureRequired` | The signature must be handwritten or electronically certified. |
+| `MissingDescription` | More information is needed to understand the nature of this transaction. |
+| `InvalidTransaction` | The information in the document submitted doesn't match this specific transaction. |
+| `TransactionNameMismatch` | The issuer or beneficiary name in the document submitted doesn't match the transaction details. |
+| `TransactionDateMismatch` | The date in the document submitted doesn't match the transaction details. |
+| `TransactionAmountMismatch` | The transaction amount in the document submitted doesn't match the transaction details. |
+| `IbanMismatch` | The beneficiary IBAN in the document submitted doesn't match the transaction details. |
 
 ## Document purposes and types {#document-purposes-types}
 

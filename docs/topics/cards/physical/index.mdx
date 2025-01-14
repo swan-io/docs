@@ -111,16 +111,20 @@ You can continue to use both virtual and digital cards while the physical card i
 
 ## Delivery address {#delivery-address}
 
-When [printing physical cards](./guide-print.mdx) with the `printPhysicalCard`, `addCards`, or `addCardsWithGroupDelivery` mutations, the [address fields](https://api-reference.swan.io/inputs/complete-address-input/) are designed in a specific manner.
+When [printing physical cards](./guide-print.mdx) with the `printPhysicalCard`, `addCards`, and `addCardsWithGroupDelivery` mutations, use the [address fields](https://api-reference.swan.io/inputs/complete-address-input/) according to the following guidelines.
 
 | Field | Provided by | Purpose | Example |
 | --- | --- | --- | --- |
-| `companyName` | Swan API | Automatically retrieves the account holder name<br />*(company cards only)* | MyBrand |
+| `companyName` ∗ | Swan API | Automatically retrieves the account holder name<br />(company cards only) | MyBrand |
 | `firstName`, `lastName` ∗ | Swan API | Automatically retrieves the account member's first and last names | Jules Fleury |
-| `addressLine1` | Partner (you) | Delivery address line 1<br />*(**don't** include the company name here)* | 123 avenue de Paris |
-| `addressLine2` | Partner (you) | Optional additional address information | Suite 26 |
+| `addressLine1` | You | Delivery address line 1<br />(**don't** include the company name here) | 13 Avenue de Paris |
+| `addressLine2` | You | Additional address information (optional)<br />(**don't** include the company name here) | Suite 26 |
+| `city` | You | Delivery city | Paris |
+| `postalCode` | You | 5-digit delivery postal code | 75000 |
+| `state` | You | Delivery state (optional) | Ile de France |
+| `country` | You | Country using the alpha-3 code format ([ISO 3166](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)) | FRA |
 
-∗ You can provide a different `firstName` and `lastName` for `addCardsWithGroupDelivery`.
+∗ You can provide different values for `companyName`, `firstName`, and `lastName` when calling the `addCardsWithGroupDelivery` mutation.
 
 ## Printing and shipping hubs {#hubs}
 

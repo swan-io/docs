@@ -1,21 +1,20 @@
 ---
 title: Print physical cards
 ---
+import DeliveryAddressInfo from './_deliver-address-callout.mdx';
 
 # Print physical cards
 
 Learn how to print physical cards with the API.
 
-:::info Web Banking & Physical cards
-If you use Swan's Web Banking interface, your users can [**order their own cards**](https://support.swan.io/hc/en-150/articles/17791219525149-Order-your-physical-card) if they have the correct [**account membership permissions**](../../accounts/memberships/index.mdx#permissions-cards).
-They can also review their card's [**spending limit**](https://support.swan.io/hc/en-150/articles/18989382227357-Spending-limits).
-Swan's Support Center provides more information about [**physical cards**](https://support.swan.io/hc/en-150/articles/18133963401501-Physical-cards) help your users.
-:::
+If you use **Swan's Web Banking interface**, your users can [order their own cards](https://support.swan.io/hc/en-150/articles/17791219525149-Order-your-physical-card) if they have the correct [account membership permissions](../../accounts/memberships/index.mdx#permissions-cards).
+They can also review their card's [spending limit](https://support.swan.io/hc/en-150/articles/18989382227357-Spending-limits).
+Swan's Support Center provides more information about [physical cards](https://support.swan.io/hc/en-150/articles/18133963401501-Physical-cards) help your users.
 
 ## Print a physical card {#print-one}
 
 :::tip Prerequisites
-1. Confirm the account member has the [**correct account membership permissions**](../../accounts/memberships/index.mdx#permissions-cards) to manage cards and, if needed, account memberships.
+1. Confirm the account member has the [correct account membership permissions**](../../accounts/memberships/index.mdx#permissions-cards) to manage cards and, if needed, account memberships.
 1. [Add a virtual card](../virtual/guide-add.mdx) **before** printing a physical card with the `printPhysicalCard` mutation.
 :::
 
@@ -26,6 +25,8 @@ Swan's Support Center provides more information about [**physical cards**](https
 1. Add the success payload, including any information you'd like to review (line 15).
 1. Add the consent URL to the success payload (line 22): `physicalCard` > `statusInfo` > `PhysicalCardConsentPendingStatusInfo` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
+
+<DeliveryAddressInfo />
 
 ### Mutation {#print-one-mutation}
 
@@ -102,6 +103,8 @@ After consent is received, the physical card is created and the card `type` for 
 1. Add the success payload, including any information you'd like to review (line 27).
 1. Add the consent URL to the success payload (line 22): `statusInfo` > `PhysicalCardConsentPendingStatusInfo` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
+
+<DeliveryAddressInfo />
 
 ### Mutation {#print-with-virtual-mutation}
 
@@ -207,6 +210,8 @@ Confirm the account member printing the cards has the [**correct account members
 1. Add the success payload, including any information you'd like to review (line 57).
 1. Add the consent URL to the success payload (line 64): `statusInfo` > `PhysicalCardConsentPendingStatusInfo` > `consent` > `consentUrl`. There is one consent required for the whole list of added cards by an eligible account member; consent isn't provided per individual card.
 1. Add rejections (not shown).
+
+<DeliveryAddressInfo />
 
 ### Mutation {#print-group-mutation}
 

@@ -1,8 +1,8 @@
 openapi: 3.1.0
 
 info:
-  title: Swan Partner Payment Control
-  description: Request and response used by Swan in a Payment Control process.
+  title: Swan Partner payment control
+  description: Request and response used by Swan in the payment control process.
   version: 1.0.0
 
 security:
@@ -15,7 +15,7 @@ paths:
       operationId: postPaymentControl
       summary: Your endpoint for payment control requests.
       requestBody:
-        description: The request Swan will send to your endpoint.
+        description: The request Swan sends to your endpoint.
         required: true
         content:
           application/json:
@@ -84,7 +84,7 @@ paths:
                   transactionTransportType: RealTimeAuthorized
       responses:
         "200":
-          description: The request was successful, and the server has returned the requested resource in the response body.
+          description: The request was successful, and the server returned the requested resource in the response body.
           content:
             application/json:
               schema:
@@ -97,7 +97,7 @@ paths:
                 acceptedPartialResponse:
                   $ref: '#/components/examples/acceptedPartialResponse'
         "201":
-          description: The request was successful, and the server has returned the requested resource in the response body.
+          description: The request was successful, and the server returned the requested resource in the response body.
           content:
             application/json:
               schema:
@@ -110,13 +110,13 @@ paths:
                 acceptedPartialResponse:
                   $ref: '#/components/examples/acceptedPartialResponse'
         "400":
-          description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+          description: The server couldn't understand the request due to invalid syntax. The client should modify the request and try again.
         "401":
           description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
         "403":
           description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
         "500":
-          description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
+          description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the Support team if it persists.
 
 
 components:
@@ -125,12 +125,12 @@ components:
       type: apiKey
       in: header
       name: x-swan
-      description: Header indicating the request is initiated by Swan.
+      description: Header indicating that the request is initiated by Swan.
     xSwanSecret:
       type: apiKey
       in: header
       name: x-swan-secret
-      description: The secret you set on the Swan dashboard.
+      description: The secret you set on your Swan Dashboard.
 
   schemas:
     PaymentControlRequest:
@@ -140,7 +140,7 @@ components:
           type: string
         allowsPartialAuthorization:
           type: boolean
-          description: Does this payment accept a lower amount than the requested one in response?
+          description: Does this payment accept a lower amount than the requested amount in response?
         amountCurrency:
           type: string
           description: EUR (Swan's currency == Account's currency)
@@ -164,7 +164,7 @@ components:
           enum: [ApplePay, GooglePay, Merchant]
         expirationDateTime:
           type: integer
-          description: When the payment will be released on Swan side if not consumed.
+          description: When the payment would be released on the Swan side if not consumed.
           format: epoch-millis
         merchantAcquirerId:
           oneOf:
@@ -212,7 +212,7 @@ components:
           type: string
         timeoutAt:
           type: integer
-          description: Swan will discard the response after this.
+          description: Swan discards the response after this.
           format: epoch-millis
         transactionCategory:
           type: string

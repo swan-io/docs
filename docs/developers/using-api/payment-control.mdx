@@ -9,9 +9,18 @@ Mastercard requires Swan to accept (authorize) or reject all transactions.
 To comply, Swan performs certain tests on all card transactions, and also provides a feature called payment control so you can participate, too.
 Using payment control, you can let Swan know whether you **accept or reject most card transactions** within your project.
 
-:::tip Card payments section
+**Payment control is a time-sensitive operation**.
+If Swan doesn't receive your decision quickly enough, the payment operation times out and the cardholder's transaction is rejected.
+Therefore, test this feature thoroughly using the [tools](../tools/index.mdx) available to you.
+
+:::info Card payments section
 Refer to the [card payments section](../../topics/payments/cards/index.mdx) for more information about card transaction authorization and clearing.
 :::
+
+## Boilerplate file {#boilerplate}
+
+Download Swan's [OpenAPI payment control boilerplate file](../../assets/payment-control-openapi.yaml) to get started with your integration.
+Test it with [Swagger's editor tool](https://editor-next.swagger.io/).
 
 ## Payment control flow {#flow}
 
@@ -38,27 +47,45 @@ Refer to the [card payments section](../../topics/payments/cards/index.mdx) for 
 Though rare, it's possible that Mastercard rejects a transaction even if you and Swan both accept it.
 :::
 
-## Time-sensitive operation {#time-sensitive}
+### Capture types {#flow-capture}
 
-Payment control is a time-sensitive operation.
-If Swan doesn't receive your decision quickly enough, the payment operation times out and the cardholder's transaction is rejected.
+Capture refers to the process of completing a transaction and moving the funds from the customer's account to the merchant's account after authorization.
+Plan for the follow capture types in your payment control configuration.
 
-Therefore, you'll want to test this feature thoroughly using the [tools](../tools/index.mdx) available to you.
-You can also set a default answer in case of timeout.
+| Capture type | Explanation | Example |
+| --- | --- | --- |
+| **Standard capture** | The merchant captures the authorized amount. | A customer authorizes a 70€ purchase, and the merchant captures 70€. |
+| **Over capture** | The merchant attempts to take more funds from the customer than the original authorization amount. **Attempting over capture is fraudulent** and can lead to chargebacks and penalties. | The authorized transaction amount is 100€, but the merchant captures 150€. 50€ is the over capture amount. |
+| **Forced capture** | The merchant forces a transaction without the authorization code from the card issuer. Merchants might attempt forced capture if they don't receive a response from the card issuer. Forced capture is risky but not automatically fraudulent.  | The merchant doesn't receive authorization for a 15€ in-flight purchase, but processes the capture anyway. |
+| **Partial capture** | The merchant only wants to capture a portion of the authorized amount. | A customer purchases 500€ worth of goods online, but some items are on back order. The merchant only captures 300€, the amount for the goods they actually shipped to the customer. |
 
-## Configure payment control {#configure}
+## Idempotent process {#idempotent}
 
-Add and update payment control on your Dashboard.
-Go to **Developers** > **Payment control**. Add your information and click **Save**.
+Payment control authorizations are subject to a retry mechanism.
+If somewhere in the authorization chain, the process takes too much time, **Swan might process the authorization twice**.
+It's guaranteed that the payment control process is idempotent on Swan's side.
 
-The following settings are available for your payment control configuration:
+:::tip idempotent process
+Swan strongly suggests **making your payment control process idempotent** for each transaction.
+:::
 
-1. `endpoint`: Your endpoint (mandatory).
-1. `protocol`: HTTP / JSON protocol.
-1. `defaultResponse`: In case of timeout, choose whether you accept or reject the transaction (true or false). Swan suggests setting the default response to `true` for a better cardholder experience.
-1. `timeoutMs`: Timeout is up to 10 seconds in Sandbox and 1.5 seconds in Live.
-1. `secret`: Your secret is added to a `x-swan-secret` header.
-1. `enabled`: Only enabled payment control endpoints can be used by Swan.
+An idempotent payment control process idempotent ensures that your response to authorizations can be repeated multiple times without producing different outcomes.
+Several calls to your payment control with the same transaction ID should always yield the same result.
+Please note that repeated calls can happen within a few milliseconds.
+
+## Configuring payment control {#configure}
+
+Add and update payment control on your **Dashboard** > **Developers** > **Payment control**.
+The following settings are available for your payment control configuration.
+Enter your information and click **Save**.
+
+- **Enabled**: Only enabled payment control endpoints can be used by Swan.
+- **Endpoint URL**: Enter your endpoint (mandatory), using either `http` or `https`.
+- **Default response**: In case of timeout, choose whether you **accept** or **reject** the transaction by default. Swan suggests choosing accept for a better cardholder experience.
+- **Timeout**: Timeout is up to 10 seconds (10,000 milliseconds) in Sandbox and 1.5 seconds in Live.
+- **Secret**: Generate a secret. Make sure to add it to your `x-swan-secret` header.
+
+![Screenshot of payment control Dashboard](../../images/developers/using-api/payment-control-dashboard.png)
 
 ## Swan's `POST` request {#swan-request}
 
@@ -95,26 +122,42 @@ Note that times are written in [epoch millis](https://www.unixtimestamp.com/).
     "readMode": "Chip", //Chip, ContactlessChip, ContactlessStripe, Manual, ManualChip, ManualStripe, Other, PreSavedData, Stripe
     "transactionCategory": "InStore", //InStore, eCommerce, eCommerceWith3DS, Withdrawal, Other
     "authorizationType": "Classic", //Classic, PreAuthorization, DataRequest
-    "allowsPartialAuthorization": true //if amount can be modified
+    "allowsPartialAuthorization": true, //if amount can be modified
+    "operationCode": "OtcWithdrawal", //AtmWithdrawal, CashBackPayment, Credit, OtcWithdrawal, Payment, Quasicash, VtsOrMdes
+    "merchantAcquirerId": "123ABC",
+    "subMerchantId": "452YEZ"
 }
 ```
 
 :::caution Digital Wallet provider
-Per your and Swan's agreement with Mastercard, you **can't reject** transactions based on digital Wallet provider (line 7).
+Per your and Swan's agreement with Mastercard, you **can't reject** transactions based on digital wallet provider (line 7).
 :::
 
 ## Partner response {#partner-response}
 
 Send your response in the `accepted` field with a Boolean: `true` or `false`.
 
-If the authorization allows a `partialAuthorizationAmountValue`, you can either approve the authorization amount requested or lower the requested amount.
-Provide the authorization amount in your response, which is sent to the merchant.
+To allow partial authorizations, include a `partialAuthorizationAmountValue` in your response.
+You can either approve the requested partial authorization amount or change it.
+Provide the partially authorized amount in your response, which is sent to the merchant.
+`0` isn't a valid response.
+
+If you don't want to allow partial authorizations, don't include the `partialAuthorizationAmountValue` in your response.
+Returning `"accepted": true` is sufficient.
 
 In case of timeout, or if your endpoint wasn't reachable, Swan applies your default response, which you chose when configuring payment control.
 
 ```json title="Partner response" {7} showLineNumbers
 { 
     "accepted": true,
-    "partialAuthorizationAmountValue": 10
+    "partialAuthorizationAmountValue": 10 //optional, remove to deny partial authorizations
 }
 ```
+
+## Best practices {#best-practices}
+
+1. **Respond quickly**. In Live, authorizations time out after **1.5 seconds**.
+1. Make your payment control process **idempotent** for each transaction.
+1. Choose **accept** as your default response in case of timeout.
+1. Consider **capture types** as you configure your payment control.
+1. Never reject transactions based on digital wallet provider.

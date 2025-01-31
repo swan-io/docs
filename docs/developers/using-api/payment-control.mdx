@@ -11,7 +11,7 @@ Using payment control, you can let Swan know whether you **accept or reject most
 
 **Payment control is a time-sensitive operation**.
 If Swan doesn't receive your decision quickly enough, the payment operation times out and the cardholder's transaction is rejected.
-Therefore, test this feature thoroughly using the [tools](../tools/index.mdx) available to you.
+Therefore, test this feature thoroughly [using the tools](../tools/index.mdx) available to you.
 
 :::info Card payments section
 Refer to the [card payments section](../../topics/payments/cards/index.mdx) for more information about card transaction authorization and clearing.
@@ -19,7 +19,7 @@ Refer to the [card payments section](../../topics/payments/cards/index.mdx) for 
 
 ## General recommendations {#recommendations}
 
-1. **Respond quickly**. In Live, authorizations time out after **1.5 seconds**.
+1. **Respond quickly**. In the [Live environment](../index.mdx#environments), authorizations time out after **1.5 seconds**.
 1. Make your payment control process [**idempotent**](#idempotent) for each transaction.
 1. Choose **accept** as your [**default response**](#configure) in case of timeout for a better user experience.
 1. **Consider [capture types](#flow-capture)** as you configure your payment control.
@@ -28,7 +28,8 @@ Refer to the [card payments section](../../topics/payments/cards/index.mdx) for 
 ## Schema file {#schema}
 
 Download Swan's [OpenAPI payment control schema file](../../assets/payment-control-openapi.yaml) to get started with your integration.
-You can test it with [Swagger's editor tool](https://editor-next.swagger.io/).
+
+You can test your updated file with the [Swagger Editor](https://editor-next.swagger.io/).
 
 ## Payment control flow {#flow}
 
@@ -46,9 +47,9 @@ You can test it with [Swagger's editor tool](https://editor-next.swagger.io/).
         - There's no **suspicion of fraud**.
 1. You let Swan know if you accept or reject the transaction.
 1. Swan sends the decision to Mastercard.
-    - Both you and Swan say yes: Transaction accepted
-    - Both you and Swan say no: Transaction rejected
-    - Either you *or* Swan says no: Transaction rejected
+    - Both you and Swan say yes: Transaction accepted ✓
+    - Both you and Swan say no: Transaction rejected ✕
+    - Either you or Swan says no: Transaction rejected ✕
 1. Based on the response from you and Swan, Mastercard allows the transaction or rejects it at the merchant's point of sale.
 
 :::caution Mastercard rejections 
@@ -65,13 +66,13 @@ Therefore, Swan processes the transaction in all capture cases, even if the capt
 
 Though 99% of all captures are standard, you can plan for the various capture types in your payment control configuration.
 
-:::note Example
-For example, consider the **fluctuating nature of currency exchange** in your payment control configuration.
+:::note Example: currency exchange
+Consider the **fluctuating nature of currency exchange** in your payment control configuration.
 
 Rather than assuming a static exchange rate of 1 USD being equivalent to 1 EUR, assume 1 USD to be 1.1 EUR.
-This might result in an account's spending limit being reached quicker, but it can help prevent over capture and therefore a negative balance.
+This might result in an account's spending limit being reached more quickly, but it can help prevent over capture and therefore a negative balance.
 
-Alternatively, you can advise account holders to maintain a buffer of 10% or more in their accounts, especially if they frequently make payments in currencies other than euros.
+Alternatively, you can advise account holders to maintain a buffer of around 10% in their accounts, especially if they make frequent payments in currencies other than euros.
 :::
 
 ## Idempotent process {#idempotent}
@@ -83,13 +84,13 @@ It's guaranteed that the payment control process is idempotent on Swan's side an
 However, it's possible that the first authorization Swan processes is the second one that you process.
 This is rare and typically due to network latency.
 
-An idempotent payment control process idempotent ensures that your response to authorizations can be repeated multiple times without producing different outcomes.
-Several calls to your payment control with the same transaction ID should always yield the same result.
-Please note that repeated calls can happen within a few milliseconds.
-
 :::tip
 Swan strongly suggests **making your payment control process idempotent** for each transaction.
 :::
+
+An idempotent payment control process ensures that your response to authorizations can be repeated multiple times without producing different outcomes.
+Several calls to your payment control with the same transaction ID should always yield the same result.
+Please note that repeated calls can happen within a few milliseconds.
 
 ## Configuring payment control {#configure}
 
@@ -97,13 +98,13 @@ Add and update payment control on your **Dashboard** > **Developers** > **Paymen
 The following settings are available for your payment control configuration.
 Enter your information and click **Save**.
 
-- **Enabled**: Only enabled payment control endpoints can be used by Swan.
+- **Enabled**: Only enabled payment control endpoints can be used and updated.
 - **Endpoint URL**: Enter your endpoint (mandatory), using either `http` or `https`.
-- **Default response**: In case of timeout, choose whether you **accept** or **reject** the transaction by default. Swan suggests choosing accept for a better cardholder experience.
-- **Timeout**: Timeout is up to 10 seconds (10,000 milliseconds) in Sandbox and 1.5 seconds in Live.
+- **Default response**: In case of timeout, choose whether you **accept** or **reject** the transaction by default. Swan suggests choosing **accept** for a better cardholder experience.
+- **Timeout**: Timeout is up to 10 seconds (10000 milliseconds) in Sandbox. In Live, it's 1.5 seconds (1500 milliseconds) and not configurable.
 - **Secret**: Generate a secret. Make sure to add it to your `x-swan-secret` header.
 
-If you use the API, you also need to provide the `protocol=HttpJson`.
+If you use the API, you also need to provide `protocol`, which only has one option: `HttpJson`.
 
 ![Screenshot of payment control Dashboard](../../images/developers/using-api/payment-control-dashboard.png)
 
@@ -111,10 +112,10 @@ If you use the API, you also need to provide the `protocol=HttpJson`.
 
 Swan adds flags to specify that Swan is making the `POST` request:
 
-- `x-swan` HTTP header
-- `x-swan-secret` HTTP header with your secret
+- `x-swan`: HTTP header
+- `x-swan-secret`: HTTP header with your secret
 
-The payload is as follows.
+Consider the following payload.
 All fields are optional as they can change.
 Note that times are written in [epoch millis](https://www.unixtimestamp.com/).
 
@@ -150,7 +151,7 @@ Note that times are written in [epoch millis](https://www.unixtimestamp.com/).
 ```
 
 :::caution Digital Wallet provider
-Per your and Swan's agreement with Mastercard, you **can't reject** transactions based on digital wallet provider (line 7).
+Per your and Swan's agreement with Mastercard, you **can't reject transactions** based on the digital wallet provider (line 7).
 :::
 
 ## Partner response {#partner-response}
@@ -172,6 +173,6 @@ In case of timeout, or if your endpoint wasn't reachable, Swan applies your [def
 
 | Use case | In your response |
 | --- | --- |
-| Accept the authorized amount | Set `accepted` to `true`. You don't need to include `partialAuthorizationAmountValue` in your response. |
-| Decrease the authorized amount | Include the lower the authorized amount in the `partialAuthorizationAmountValue`. The lower authorized amount must be greater than 0 and less than the original authorized amount. |
-| Reject a partial authorization | Set `accepted` to `false`. You don't need to include `partialAuthorizationAmountValue` in your response. |
+| ✓ **Accept** the authorized amount | Set `accepted` to `true`.<br />Don't include `partialAuthorizationAmountValue` in your response. |
+| ↓ **Decrease** the authorized amount | Set `accepted` to `true`.<br />Include the lower the authorized amount in the `partialAuthorizationAmountValue`. The lower authorized amount must be greater than 0 and less than the original authorized amount. |
+| ✕ **Reject** the partial authorization | Set `accepted` to `false`.<br />Don't include `partialAuthorizationAmountValue` in your response. |

@@ -1,0 +1,253 @@
+openapi: 3.1.0
+
+info:
+  title: Swan Partner payment control
+  description: Request and response used by Swan in the payment control process.
+  version: 1.0.0
+
+security:
+  - xSwan: []
+  - xSwanSecret: []
+
+paths:
+  /your-endpoint-here:
+    post:
+      operationId: postPaymentControl
+      summary: Your endpoint for payment control requests.
+      requestBody:
+        description: The request Swan sends to your endpoint.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentControlRequest"
+            examples:
+              minimal:
+                summary: Required fields only
+                value:
+                  accountId: 9c2bfd3e-3fc7-4512-9a42-bfba7daa6ed1
+                  allowsPartialAuthorization: false
+                  amountCurrency: EUR
+                  amountValue: 19.12
+                  authorizationType: Classic
+                  cardId: 9f70ce58-45ce-41f5-8551-6a094e3ed19b
+                  dateTime: 1726330597000
+                  digitalCardWalletProvider: null
+                  expirationDateTime: 1727194597000
+                  merchantAcquirerId: null
+                  merchantCategoryCode: 0000
+                  merchantCity: LONDON
+                  merchantCountry: null
+                  merchantId: "*bc415rsfaq"
+                  merchantName: ""
+                  merchantPostalCode: null
+                  originalAmountCurrency: GBP
+                  originalAmountValue: 16.15
+                  paymentId: cro_57f24c295ad9398ac6e52222e1c3012c
+                  projectId: 9111d66e-af02-41e1-a297-77abd7287d3b
+                  readMode: ContactlessChip
+                  subMerchantId: null
+                  terminalId: ""
+                  timeoutAt: 1726330598500
+                  transactionCategory: InStore
+                  transactionId: aucao_ab34da59989400b95e4d139abda79738
+                  transactionTransportType: null
+              full:
+                summary: All fields
+                value:
+                  accountId: 9c2bfd3e-3fc7-4512-9a42-bfba7daa6ed1
+                  allowsPartialAuthorization: false
+                  amountCurrency: EUR
+                  amountValue: 19.12
+                  authorizationType: Classic
+                  cardId: 9f70ce58-45ce-41f5-8551-6a094e3ed19b
+                  dateTime: 1726330597000
+                  digitalCardWalletProvider: "ApplePay"
+                  expirationDateTime: 1727194597000
+                  merchantAcquirerId: 12
+                  merchantCategoryCode: 0000
+                  merchantCity: LONDON
+                  merchantCountry: GBR
+                  merchantId: "*bc415rsfaq"
+                  merchantName: Swan UK
+                  merchantPostalCode: EC2A 4RQ
+                  originalAmountCurrency: GBP
+                  originalAmountValue: 16.15
+                  paymentId: cro_57f24c295ad9398ac6e52222e1c3012c
+                  projectId: 9111d66e-af02-41e1-a297-77abd7287d3b
+                  readMode: ContactlessChip
+                  subMerchantId: 000311174911884
+                  terminalId: term01
+                  timeoutAt: 1726330598500
+                  transactionCategory: InStore
+                  transactionId: aucao_ab34da59989400b95e4d139abda79738
+                  transactionTransportType: RealTimeAuthorized
+      responses:
+        "200":
+          description: The request was successful, and the server returned the requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentControlResponse"
+              examples:
+                acceptedResponse:
+                  $ref: '#/components/examples/acceptedResponse'
+                rejectedResponse:
+                  $ref: '#/components/examples/rejectedResponse'
+                acceptedPartialResponse:
+                  $ref: '#/components/examples/acceptedPartialResponse'
+        "201":
+          description: The request was successful, and the server returned the requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentControlResponse"
+              examples:
+                acceptedResponse:
+                  $ref: '#/components/examples/acceptedResponse'
+                rejectedResponse:
+                  $ref: '#/components/examples/rejectedResponse'
+                acceptedPartialResponse:
+                  $ref: '#/components/examples/acceptedPartialResponse'
+        "400":
+          description: The server couldn't understand the request due to invalid syntax. The client should modify the request and try again.
+        "401":
+          description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
+        "403":
+          description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
+        "500":
+          description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the Support team if it persists.
+
+
+components:
+  securitySchemes:
+    xSwan:
+      type: apiKey
+      in: header
+      name: x-swan
+      description: Header indicating that the request is initiated by Swan.
+    xSwanSecret:
+      type: apiKey
+      in: header
+      name: x-swan-secret
+      description: The secret you set on your Swan Dashboard.
+
+  schemas:
+    PaymentControlRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+        allowsPartialAuthorization:
+          type: boolean
+          description: Does this payment accept a lower amount than the requested amount in response?
+        amountCurrency:
+          type: string
+          description: EUR (Swan's currency == Account's currency)
+          format: iso-4217
+        amountValue:
+          type: number
+          minimum: 0
+        authorizationType:
+          type: string
+          enum: [Classic, PreAuthorization, DataRequest]
+        cardId:
+          type: string
+        dateTime:
+          type: integer
+          description: Payment date.
+          format: epoch-millis
+        digitalCardWalletProvider:
+          oneOf:
+            - type: "null"
+            - type: string
+          enum: [ApplePay, GooglePay, Merchant]
+        expirationDateTime:
+          type: integer
+          description: When the payment would be released on the Swan side if not consumed.
+          format: epoch-millis
+        merchantAcquirerId:
+          oneOf:
+            - type: "null"
+            - type: string
+        merchantCategoryCode:
+          type: string
+        merchantCity:
+          type: string
+        merchantCountry:
+          oneOf:
+            - type: "null"
+            - type: string
+              format: ISO 3166-1 alpha-3
+        merchantId:
+          type: string
+        merchantName:
+          type: string
+        merchantPostalCode:
+          oneOf:
+            - type: "null"
+            - type: string
+        originalAmountCurrency:
+          type: string
+          description: Merchant's currency.
+          format: iso-4217
+        originalAmountValue:
+          type: number
+          description: Merchant's amount.
+          minimum: 0
+        paymentId:
+          type: string
+        projectId:
+          type: string
+        readMode:
+          oneOf:
+            - type: "null"
+            - type: string
+              enum: [Chip, ContactlessChip, ContactlessStripe, Manual, ManualChip, ManualStripe, Other, PreSavedData, Stripe]
+        subMerchantId:
+          oneOf:
+            - type: "null"
+            - type: string
+        terminalId:
+          type: string
+        timeoutAt:
+          type: integer
+          description: Swan discards the response after this.
+          format: epoch-millis
+        transactionCategory:
+          type: string
+          enum: [eCommerce, eCommerceWith3DS, InStore, Withdrawal, Other]
+        transactionId:
+          type: string
+        transactionTransportType:
+          oneOf:
+            - type: "null"
+            - type: string
+              enum: [AuthorizedAggregatedSplitClearing, DebtRecovery, Prefunded, RealTimeAuthorized, PostAuthorizedAggregated, PostAuthorizedAggregatedMaestro, Other]
+    PaymentControlResponse:
+      type: object
+      properties:
+        accepted:
+          type: boolean
+        partialAuthorizationAmountValue:
+          oneOf:
+            - type: "null"
+            - type: number
+              description: Only if allowsPartialAuthorization=true, the returned amount is lower than the requested and greater than 0.
+      required:
+        - accepted
+        
+  examples:
+    acceptedResponse:
+      summary: Accepted response
+      value:
+        accepted: true
+    rejectedResponse:
+      summary: Rejected response
+      value:
+        accepted: false
+    acceptedPartialResponse:
+      summary: Accepted partial response
+      value:
+        accepted: false
+        partialAuthorizationAmountValue: 10

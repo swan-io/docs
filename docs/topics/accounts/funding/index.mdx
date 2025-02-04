@@ -4,64 +4,44 @@ title: Account funding
 
 # Account funding
 
-## Overview {#overview}
+import AccountFundingDefinition from '../../definitions/_account-funding.mdx';
 
-Account funding is essentially adding money to your Swan account.
-You might use account funding if it's the first time you're sending money to your Swan account, or if you'd like to fund your account on a recurring basis from your account at another financial institution.
-
-If you use `requestedExecutionAt` to schedule your funding requests, you can schedule them up to one year in advance.
-Your scheduled requests must be for at least two business days in the future.
-
+> <AccountFundingDefinition />
 
 ## Funding sources {#sources}
 
-import AccountFundingDefinition from '../../definitions/_account-funding.mdx';
+Account funding is essentially adding money to your Swan account.
+You might use account funding if it's the first time you're sending money to your Swan account, or if you'd like to fund your Swan account on a recurring basis from an account at another financial institution.
 
-<AccountFundingDefinition />
-
-Credit transfers and direct debit are both account funding **sources**.
-
-### Credit transfers {#methods-ct}
-
-You can fund your account with two types of credit transfers: SEPA Credit Transfer or Internal Credit Transfer.
-
-Credit transfers are classified as **push payments**, meaning you send money *to* your Swan account *from* another source.
-Push payments come with no risk because they can't be disputed.
-
-:::info Use a credit transfer
+:::info Credit transfers
 Funding your account with a credit transfer is straightforward with no risk.
-Therefore, there aren't guides dedicated to the topic; the following is all you need to know:
-
-Use any bank account in your name to transfer money to your Swan account.
-Your Swan IBAN is your identifier.
-As soon as the transfer is processed by Swan, it's credited to your account.
-
-You'll see a `SepaCreditTransferIn` transaction on your account history for this transfer with the transaction status `Booked`.
-
-**The remainder of this documentation concerns only direct debit account funding.**
+You can use any type of [credit transfer](../../payments/credit-transfers/index.mdx) supported by Swan.
+When funding an account with a credit transfer, a `SepaCreditTransferIn` transaction with the status `Booked` appears on your transaction history.
 :::
 
-### Direct debit {#methods-dd}
+### SEPA Direct Debit B2B {#methods-dd}
 
-You can fund your account with one pull option: SEPA Direct Debit.
+You can fund your account with one pull option: SEPA Direct Debit B2B (business-to-business).
+SEPA Direct Debit B2B can only be used to fund company accounts, and no refunds are authorized for this funding source.
 
-SEPA Direct Debit B2B (business-to-business) can only be used to fund company accounts.
-No refunds are authorized for the B2B funding method.
+SEPA Direct Debit Core isn't supported for account funding.
 
-Direct debits are classified as **pull payments**, meaning the money was requested, then sent as a response by the debtor.
-Pull payments come with risk because the debtor can dispute the payments.
-Using direct debit to fund your account is more complex, so the majority of the documentation is dedicated to these funding sources.
+<mark>add general process here</mark><br /><br />
 
-## Funding source statuses {#statuses}
+1. step 1
+1. step 2
+1. etc
+
+### Funding source statuses {#funding-source-statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
     AMA((Source<br/>added)) -.-> P[Pending]
-    P ---> E[Enabled]
+    P -.-> E[Enabled]
     P -.-> C[Canceled]
     E -.-> S[Suspended]
-    S --> E
+    S -.-> E
     E -.-> C
     subgraph U[Can use source]
         E
@@ -76,18 +56,49 @@ flowchart LR
 
 | Funding source status | Explanation |
 |:---:|---|
-| `Pending` | Added a funding source with the `addDirectDebitFundingSource` mutation and are waiting for consent. |
-| `Enabled` | Account funding source can be used. |
+| `Pending` | A SEPA Direct Debit B2B funding source was added with the API mutation `addDirectDebitFundingSource`, but consent hasn't been received yet. |
+| `Enabled` | The account funding source is consented to and can be used. |
 | `Suspended` | Swan can suspend a funding source if there's suspicion of fraud. While suspended, the funding source can't be used. |
-| `Canceled` | Account funding source is canceled and no longer available for use. |
+| `Canceled` | The account funding source is canceled and no longer available for use. Swan, account holders, and eligible account members can cancel a funding source. |
 
-import AccountVerificationStatus from './_account-verification-status.mdx';
+## Account verification for funding sources {#account-verification}
 
-:::info Account verification status
+Account verification for funding sources occurs when Swan attempts to verify that an external account used for funding is accessible to the account holder or account member funding the Swan account.
 
-<AccountVerificationStatus />
+<mark>notes</mark><br /><br />
 
-:::
+- SDD B2B: first direct debit made, account access is considered verified
+- Initial status is `PendingVerification`, and even with this status, you can complete a funding request (you can fund your account)
+- **Direct debit example**:
+    - When you add a SEPA Direct Debit B2B funding source, the account verification status is `PendingVerification`.
+    - After adding and consenting to the required payment mandate and sending the first direct debit, the account verification status changes to `Verified` automatically.
+    - If you don't consent to the payment mandate, the account verification status changes to `Rejected` automatically.
+
+### Account verification statuses {#account-verification-statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    SA((Source<br/>added)) -.-> PV[PendingVerification]
+    PV -.-> V[Verified]
+    PV -.-> R[Rejected]
+    subgraph U[Can use source]
+        V
+    end
+    subgraph F[Final status]
+        R
+        U
+    end
+    style SA fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Account verification status | Explanation |
+|:---:|---|
+| `PendingVerification` | The funding source was added and account access is being verified.<br /><br />*Please note that the funding source status can be `Enabled` even if the account verification status is `PendingVerification`.* |
+| `Verified` | Swan verified that the external account used for funding is accessible to the account holder or member funding the Swan account. |
+| `Rejected` | Swan couldn't verify that the external account used for funding is accessible to the account holder or member funding the Swan account. |
 
 ## Payment mandates {#mandates}
 
@@ -106,7 +117,7 @@ Consenting to the direct debit mandate updates the status to `Enabled` for both 
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
     AMA((Mandate<br/>added)) -.-> CP[ConsentPending]
-    CP ---> E[Enabled]
+    CP -.-> E[Enabled]
     CP -.-> C[Canceled]
     E -.->R[Rejected]
     E -.-> C
@@ -147,6 +158,11 @@ import SddBookedTime from '../../partials/_sdd-booked.mdx';
 import DayTimeStandard from '../../partials/_day-time.mdx';
 
 <DayTimeStandard />
+
+### Scheduling account funding {#scheduling}
+
+If you use `requestedExecutionAt` to schedule your funding requests, you can schedule them up to one year in advance.
+Your scheduled requests must be for at least two business days in the future.
 
 ## Guides {#guides}
 

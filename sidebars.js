@@ -124,9 +124,8 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/accounts/funding/guide-add-source",
-            "topics/accounts/funding/guide-cancel-source",
             "topics/accounts/funding/guide-initiate-request",
-            "topics/accounts/funding/guide-cancel-request",
+            "topics/accounts/funding/guide-cancel-source",
             "topics/accounts/funding/guide-get-info",
             "topics/accounts/funding/sandbox",
           ],

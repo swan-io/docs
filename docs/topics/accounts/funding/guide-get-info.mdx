@@ -6,13 +6,13 @@ title: Get information about a funding source and request
 
 You can get information about funding sources and requests with the API.
 
-## Get information about a source {#guide-one}
+## Get information about a funding source {#guide-one}
 
 1. Call the `fundingSource` query.
 1. Add your funding source ID.
 1. Add all the information you'd like to review.
 
-### Query {#query-one}
+<h3 id="query-source">Query</h3>
 
 🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlSW5mbyB7CiAgZnVuZGluZ1NvdXJjZShpZDogIiRZT1VSX0ZVTkRJTkdfU09VUkNFX0lEIikgewogICAgLi4uIG9uIERpcmVjdERlYml0RnVuZGluZ1NvdXJjZSB7CiAgICAgIGlkCiAgICAgIG5hbWUKICAgICAgaWJhbgogICAgICBjcmVhdGVkQXQKICAgICAgcGF5bWVudE1hbmRhdGUgewogICAgICAgIC4uLiBvbiBTRVBBUGF5bWVudERpcmVjdERlYml0TWFuZGF0ZSB7CiAgICAgICAgICBpZAogICAgICAgICAgbmFtZQogICAgICAgICAgdHJhbnNhY3Rpb25zIHsKICAgICAgICAgICAgZWRnZXMgewogICAgICAgICAgICAgIG5vZGUgewogICAgICAgICAgICAgICAgbGFiZWwKICAgICAgICAgICAgICAgIGlkCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
@@ -43,11 +43,11 @@ query GetSourceInfo {
 }
 ```
 
-### Payload {#payload-one}
+<h3 id="payload-source">Payload</h3>
 
 The payload shows that the user used their funding source to perform two transactions.
 
-```json showLineNumbers
+```json {15,21} showLineNumbers
 {
   "data": {
     "fundingSource": {
@@ -80,13 +80,13 @@ The payload shows that the user used their funding source to perform two transac
 }
 ```
 
-## Get a list of sources {#guide-list}
+## Get a list of funding sources {#guide-list}
 
 1. Call the `account` query.
 1. Add your account ID.
 1. Add `fundingSources`, then add the `DirectDebitFundingSource` and `SEPAPaymentDirectDebitMandate` unions.
 
-### Query {#query-list}
+<h3 id="query-list">Query</h3>
 
 🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlTGlzdCB7CiAgYWNjb3VudChhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIikgewogICAgZnVuZGluZ1NvdXJjZXMgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gRGlyZWN0RGViaXRGdW5kaW5nU291cmNlIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgbmFtZQogICAgICAgICAgICBpYmFuCiAgICAgICAgICAgIHBheW1lbnRNYW5kYXRlIHsKICAgICAgICAgICAgICAuLi4gb24gU0VQQVBheW1lbnREaXJlY3REZWJpdE1hbmRhdGUgewogICAgICAgICAgICAgICAgaWQKICAgICAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
 
@@ -115,11 +115,11 @@ query GetSourceList {
 
 ```
 
-### Payload {#payload-list}
+<h3 id="payload-list">Payload</h3>
 
 The payload provides the list of funding sources for your account.
 
-```json {} showLineNumbers
+```json {8,17} showLineNumbers
 {
   "data": {
     "account": {
@@ -147,6 +147,52 @@ The payload provides the list of funding sources for your account.
           }
         ]
       }
+    }
+  }
+}
+```
+
+## Get a funding transaction release date {#guide-release-date}
+
+1. Call the `transaction` query.
+1. Add your transaction ID.
+1. Add the `SEPADirectDebitTransaction` union.
+1. Add `reservedAmountReleasedAt` and any other information that's interesting to you.
+
+<h3 id="query-release-date">Query</h3>
+
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0UmVsZWFzZURhdGUgewogIHRyYW5zYWN0aW9uKGlkOiAiJFRSQU5TQUNUSU9OX0lEIikgewogICAgLi4uIG9uIFNFUEFEaXJlY3REZWJpdFRyYW5zYWN0aW9uIHsKICAgICAgaWQKICAgICAgcmVzZXJ2ZWRBbW91bnQgewogICAgICAgIGN1cnJlbmN5CiAgICAgICAgdmFsdWUKICAgICAgfQogICAgICByZXNlcnZlZEFtb3VudFJlbGVhc2VkQXQKICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {2,3,9} showLineNumbers
+query GetReleaseDate {
+  transaction(id: "$TRANSACTION_ID") {
+    ... on SEPADirectDebitTransaction {
+      id
+      reservedAmount {
+        currency
+        value
+      }
+      reservedAmountReleasedAt
+    }
+  }
+}
+```
+
+<h3 id="payload-release-date">Payload</h3>
+
+The payload returns `reservedAmountReleasedAt`, the day and time the reserved amount of the account funding transaction is scheduled to be released.
+
+```json {10} showLineNumbers
+{
+  "data": {
+    "transaction": {
+      "__typename": "SEPADirectDebitTransaction",
+      "id": "$TRANSACTION_ID",
+      "reservedAmount": {
+        "currency": "EUR",
+        "value": "15.00"
+      },
+      "reservedAmountReleasedAt": "2025-03-11T19:00:00.000Z"
     }
   }
 }

@@ -442,8 +442,4 @@ module.exports = [
     from: "/topics/accounts/documents/guide-upload",
     to: "/topics/accounts/documents/guide-upload-onboarding",
   },
-  {
-    from: "/partnership/overview/protections",
-    to: "/partnership/protections/financial/",
-  },
 ];

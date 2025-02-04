@@ -22,19 +22,16 @@ import OnboardingOverview from '../partials/_overview.mdx';
 
 <OnboardingOverview accountType="a company" />
 
-## Company onboarding form {#onboarding-form}
+## Collecting onboarding information {#collect-info}
 
-The company onboarding form begins by gathering preliminary details about the company.
-Then, Swan collects the following information:
+Company onboarding information can be sumbitted **with the API** or through **Swan's onboarding form**.
 
-1. User's **email address**.
-1. Legal information about the organization, including the **company name**, **registration number** (optional), **VAT number** (optional), and **address**, as well as details about the organization's **activity** and **expected monthly volume**.
-1. Information about the company's **ultimate beneficial owners** (UBO).
-This step only applies if the user selected **company**, **home owner association**, or **other** when submitting their preliminary details.
-1. **Required documents** to verify your organization. You might not see this step in your onboarding process.
-1. User [**signs up**](../../users/index.mdx#signup) for Swan.
+| Method | Details |
+| --- | --- |
+| Onboarding form | The onboarding form collects:<br /><br /><ol><li>User's **email address**.</li><li>Legal information about the organization, including the **company name**, **registration number** (optional), **VAT number** (optional), and **address**, as well as details about the organization's **activity** and **expected monthly volume**.</li><li>Information about the company's **ultimate beneficial owners** (UBO). This step only applies if the user selected **company**, **home owner association**, or **other** when submitting their preliminary details.</li><li>**Required documents** to verify your organization. You might not see this step in your onboarding process.</li><li>User [**signs up**](../../users/index.mdx#signup) for Swan.</li></ol>You can also customize this form to better meet your needs. Review to Swan's [open source documentation](https://swan-io.github.io/swan-partner-frontend/specs/onboarding/company/), then ask your Technical Account Manager for more information. |
+| API | The API collects the same information as the onboarding form. Please review the requirements explained on this page throughly, then follow the guide to [create a company onboarding link](./guide-create.mdx). |
 
-### Expected monthly volume {#onboarding-form-volume}
+### Expected monthly volume {#monthly-volume}
 
 Swan uses the expected monthly volume provided during onboarding to monitor the account.
 It's essential to select the range that corresponds to the company's actual volume, and to notify Swan if that expected monthly volume changes during the account's lifecycle.
@@ -47,18 +44,29 @@ If you design your own form, please offer the following ranges:
 - Between 50 000€ and 100 000€ (`Between50000And100000`)
 - More than 100 000€ (`MoreThan100000`)
 
-### Ultimate beneficial owners {#onboarding-form-ubo}
+### Ultimate beneficial owners {#ubo}
 
-An ultimate beneficial owner (UBO) is an owner of a company holding more than 25% of that company, whether directly or indirectly.
-For UBOs owning 25% or more of the company, set the UBO `type` to `HasCapital` in the API.
-Then, provide the percentage of capital each UBO owns and whether they own the capital directly or indirectly.
+Swan allows two types of ultimate beneficial owners (UBOs):
 
+- Ownership of capital
+- Legal representative
+
+#### Ownership of capital {#ubo-owner}
+
+An *ownership of capital* UBO is an owner of a company holding more than 25% of that company, whether directly or indirectly.
+Providing information for **all** UBOs owning 25% or more of a company is a **legal requirement**.
+
+#### Legal representative {#ubo-legal}
 
 If a company doesn't have any UBOs who hold more than 25% of the company, they still need to provide Swan with at least one UBO.
-Swan considers them the default UBO and therefore the company's legal representative.
-For default UBOs owning less than 25% of the company, set the UBO `type` to `LegalRepresentative` in the API.
+Swan considers this person as the default UBO and therefore the company's legal representative.
 
-### Country-specific information {#onboarding-form-country}
+| UBO type | Explanation | Submitting UBO information |
+| --- | --- | --- |
+| Ownership of capital | Owns 25% or more of the company. | <ul><li>**API**: set `type` to `HasCapital`</li><li>**Onboarding form**: for type of control exercised, choose `Ownership of capital`</li></ul> |
+| Legal representative | Doesn't own 25% or more of the company, but serves as the company's legal representative and owner for Swan. | <ul><li>**API**: set `type` to `LegalRepresentative`</li><li>**Onboarding form**: for type of control exercised, choose `Legal representative`</li></ul> |
+
+### Country-specific information {#country-info}
 
 Requested information can change based on your account country.
 Refer to the [tables later on this page](#country-reqs) for country-specific requirements.

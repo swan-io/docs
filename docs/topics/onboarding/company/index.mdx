@@ -48,23 +48,31 @@ If you design your own form, please offer the following ranges:
 
 Swan allows two types of ultimate beneficial owners (UBOs):
 
-- Ownership of capital
-- Legal representative
+- Ownership of capital UBO
+- Legal representative UBO
 
-#### Ownership of capital {#ubo-owner}
+#### Ownership of capital UBO {#ubo-owner}
 
-An *ownership of capital* UBO is an owner of a company holding more than 25% of that company, whether directly or indirectly.
+An ownership of capital UBO is anyone holding more than 25% of that company's value, whether directly or indirectly.
 Providing information for **all** UBOs owning 25% or more of a company is a **legal requirement**.
 
-#### Legal representative {#ubo-legal}
+**Direct ownership** is the most straightforward form of ownership and means the UBO owns shares or stakes directly in the company.
+They are listed as a shareholder on company records.
+**Indirect ownership** means the UBO owns shares or stakes through other entities, such as trusts or parent companies.
+They may control or have rights to the company without their names being listed directly on company records.
 
-If a company doesn't have any UBOs who hold more than 25% of the company, they still need to provide Swan with at least one UBO.
-Swan considers this person as the default UBO and therefore the company's legal representative.
+With the API, set `type` to `HasCapital`.
+On the onboarding form, choose `Ownership of capital` for type of control exercised.
+Then, regardless of how you're submitting the UBO information, include how much capital they own and whether they own it directly or indirectly.
 
-| UBO type | Explanation | Submitting UBO information |
-| --- | --- | --- |
-| Ownership of capital | Owns 25% or more of the company. | <ul><li>**API**: set `type` to `HasCapital`</li><li>**Onboarding form**: for type of control exercised, choose `Ownership of capital`</li></ul> |
-| Legal representative | Doesn't own 25% or more of the company, but serves as the company's legal representative and owner for Swan. | <ul><li>**API**: set `type` to `LegalRepresentative`</li><li>**Onboarding form**: for type of control exercised, choose `Legal representative`</li></ul> |
+#### Legal representative UBO {#ubo-legal-representative}
+
+A legal representative UBO doesn't hold more than 25% of the company, but they serve as the company's default UBO if a company doesn't have any UBOs who hold more than 25% of the company.
+Providing information for one legal representative UBO is required if the company has zero ownership of capital UBOs.
+
+With the API, set `type` to `LegalRepresentative`.
+On the onboarding form, choose `Legal representative` for type of control exercised.
+No other additional information is required in the UBO section for legal representative UBOs.
 
 ### Country-specific information {#country-info}
 
@@ -138,7 +146,8 @@ Share [Swan's Support Center article](https://support.swan.io/hc/en-150/articles
 
 ### Ultimate beneficial owner (UBO) information {#country-reqs-ubo}
 
-If your company **doesn't have a UBO**, these fields can be left **empty**.
+If your company has a [**legal representative UBO**](#ubo-legal-representative), most of these fields can be left empty.
+However, for `individualUltimateBeneficialOwners.type`, please indicate `LegalRepresentative`.
 
 :::note Abbreviation
 **UBO** stands for a portion of the API field: `individualUltimateBeneficialOwners`.

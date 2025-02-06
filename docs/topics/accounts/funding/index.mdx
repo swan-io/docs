@@ -28,9 +28,13 @@ SEPA Direct Debit Core isn't supported for account funding.
 
 <mark>add general process here</mark><br /><br />
 
-1. step 1
-1. step 2
-1. etc
+There are four steps to fund an account with SEPA Direct Debit B2B.
+[Refer to the guide](./guide-add-source.mdx) for detailed information.
+
+1. Add the SEPA Direct Debit B2B funding source.
+1. Consent to adding the funding source.
+1. Get the payment mandate with the API.
+1. Declare the payment mandate to the external account provider.
 
 ### Funding source statuses {#funding-source-statuses}
 
@@ -59,11 +63,11 @@ flowchart LR
 | `Pending` | A SEPA Direct Debit B2B funding source was added with the API mutation `addDirectDebitFundingSource`, but consent hasn't been received yet. |
 | `Enabled` | The account funding source is consented to and can be used. |
 | `Suspended` | Swan can suspend a funding source if there's suspicion of fraud. While suspended, the funding source can't be used. |
-| `Canceled` | The account funding source is canceled and no longer available for use. Swan, account holders, and eligible account members can cancel a funding source. |
+| `Canceled` | The account funding source is canceled and no longer available for use. Swan account holders and eligible account members can cancel a funding source. |
 
 ## Account verification for funding sources {#account-verification}
 
-Account verification for funding sources occurs when Swan attempts to verify that an external account used for funding is accessible to the account holder or account member funding the Swan account.
+Account verification for funding sources occurs when Swan attempts to verify that an external account used for funding is accessible to the account holder or eligible account members funding the Swan account.
 
 <mark>notes</mark><br /><br />
 
@@ -96,9 +100,9 @@ flowchart LR
 
 | Account verification status | Explanation |
 |:---:|---|
-| `PendingVerification` | The funding source was added and account access is being verified.<br /><br />*Please note that the funding source status can be `Enabled` even if the account verification status is `PendingVerification`.* |
-| `Verified` | Swan verified that the external account used for funding is accessible to the account holder or member funding the Swan account. |
-| `Rejected` | Swan couldn't verify that the external account used for funding is accessible to the account holder or member funding the Swan account. |
+| `PendingVerification` | The funding source was added...confirming whether the account holder or eligible account member has access to the external account or not.<br /><br />*Please note that the funding source status can be `Enabled` even if the account verification status is `PendingVerification`.* |
+| `Verified` | Swan verified that the external account used for funding is accessible to the account holder or eligible account member funding the Swan account. |
+| `Rejected` | Swan couldn't verify that the external account used for funding is accessible to the account holder or eligible account member funding the Swan account. |
 
 ## Payment mandates {#mandates}
 
@@ -106,12 +110,16 @@ import PaymentMandateDefinition from '../../definitions/_payment-mandate.mdx';
 
 > <PaymentMandateDefinition />
 
-Specifically for account funding, the Swan account holder gives Swan explicit permission to pull money from their non-Swan account.
-For SEPA Direct Debit B2B, depending on the external institution, the signed payment mandate or payment mandate information must be declared to the user's non-Swan banking institution.
+For account funding, the Swan account holder or eligible account member gives Swan explicit permission to pull money from their non-Swan account.
+For SEPA Direct Debit B2B the signed payment mandate or payment mandate information must be declared to the user's non-Swan banking institution.
 
 Consenting to the direct debit mandate updates the status to `Enabled` for both the mandate and the funding source.
 
+<mark>signature</mark>
+
 ### Payment mandate statuses {#mandates-statuses}
+
+<mark>Louis is looking into these</mark><br /><br />
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -142,7 +150,9 @@ flowchart LR
 
 ## Rolling reserve {#rolling-reserve}
 
-When using SEPA Direct Debit to fund your account, Swan reserves 100% of your transaction for three business days, after which the reserved amount is released to your account.
+<mark>add info about querying for the release date</mark><br /><br />
+
+When using SEPA Direct Debit B2B to fund your account, Swan reserves 100% of your transaction for three business days, after which the reserved amount is released to your account.
 Reserved funds are typically released around 20:00 Central European [Summer] Time (CET/CEST) on the last day of the rolling reserve period.
 
 import RollingReserveDefinition from '../../definitions/_rolling-reserve.mdx';
@@ -169,5 +179,5 @@ Your scheduled requests must be for at least two business days in the future.
 - [Add a funding source](./guide-add-source.mdx)
 - [Cancel a funding source](./guide-cancel-source.mdx)
 - [Initiate a funding request](./guide-initiate-request.mdx)
-- [Cancel a funding request](./guide-cancel-request.mdx)
 - [Get information about a funding source and request](./guide-get-info.mdx)
+- Sandbox <mark>link</mark>

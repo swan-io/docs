@@ -75,6 +75,19 @@ When the cardholder uses a recurring SUV card for the first time, Swan restricts
 If the card is used with the same merchant, the merchant ID matches and the transaction can go through.
 However, if the cardholder tries to use the card elsewhere, the transaction will be rejected because the merchant IDs don't match.
 
+## Cancellation of virtual cards {#cancel}
+
+Canceling a virtual card is synonymous with canceling the entire card contract.
+Therefore, when you cancel a virtual card, you also cancel all physical and digital cards connected to that card contract.
+If needed, you can cancel [only a physical card](../physical/guide-cancel.mdx) or [only a digital card](../digital/guide-cancel.mdx).
+
+The cancellation process is **irreversible**, immediately and permanently rendering the card unusable.
+All physical and digital cards linked to the virtual card are also canceled immediately.
+When cancellation is complete, you're no longer billed for the card.
+
+You can cancel virtual cards [with the API](./guide-cancel.mdx).
+If you use Swan's Web Banking interface, cardholders can [cancel (permanently block) their cards](https://support.swan.io/hc/en-150/articles/18538920070045-Block-your-card) independently.
+
 ## Virtual card statuses {#statuses}
 
 *These statuses also represent the status of the Swan card contract.*
@@ -106,11 +119,11 @@ flowchart LR
 
 | Virtual card status | Explanation |
 |---|---|
-| `ConsentPending` | Virtual card was added and is waiting for the cardholder's consent<br/><br/>**Next steps**:<ul><li>If consent is refused or fails, the status moves directly to `Canceled`</li><li>Otherwise, the status moves to `Processing`</li></ul> |
-| `Processing` | Consent has been received and the card is being prepared<br/><br/>Status used uniquely when adding multiple virtual cards (`addCards` mutation) |
-| `Enabled` | Virtual card is available for use |
-| `Canceling` | Card is in the process of being canceled<br/><br/>After a card is assigned the `Canceling` status, the process can't be reversed |
-| `Canceled` | Card is canceled, no longer available for use, and can't be reactivated |
+| `ConsentPending` | Virtual card was added and is waiting for the cardholder's consent.<br/><br/>**Next steps**:<ul><li>If consent is refused or fails, the status moves directly to `Canceled`.</li><li>Otherwise, the status moves to `Processing`.</li></ul> |
+| `Processing` | Consent has been received and the card is being prepared. This status only applies when adding multiple virtual cards (`addCards` mutation). |
+| `Enabled` | Virtual card is available for use. |
+| `Canceling` | Card is in the process of being canceled. After a card is assigned the `Canceling` status, the process can't be reversed. |
+| `Canceled` | Card is canceled, no longer available for use, and can't be re-enabled. |
 
 ## Guides {#guides}
 

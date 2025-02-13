@@ -4,12 +4,57 @@ title: Cancel virtual cards
 
 # Cancel virtual cards
 
-To immediately and permanently cancel a virtual card and all physical and digital cards associated with it, call the `cancelCard` mutation.
-You might think about cancellation as **deactivating** the card.
+Cancel virtual cards with the API.
+Consent isn't required to cancel cards.
 
-All types of cards associated to the virtual card will no longer be usable.
-The card's status is `Canceling` during the process, which is irreversible, and the status changes to `Canceled` when the process is complete.
+:::caution cancellation is irreversible
+Canceling a virtual card is an **irreversible action** that immediately and permanently invalidates the card.
+All physical and digital cards associated to the virtual card are also canceled.
 
-After the cancellation is complete, you'll no longer be billed for the card.
+Learn more about [virtual card cancellation](./index.mdx#cancel) on the virtual cards homepage.
+:::
 
-You can also cancel [only a physical card](../physical/guide-cancel.mdx) or [only a digital card](../digital/guide-cancel.mdx).
+## Guide {#guide}
+
+1. Call the `cancelCard` mutation.
+1. Add the virtual `cardId` for the card you're canceling (line 2).
+1. Add the success payload, including any information you'd like to review (line 3).
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsVmlydHVhbENhcmQgewogIGNhbmNlbENhcmQoaW5wdXQ6IHsgY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIgfSkgewogICAgLi4uIG9uIENhbmNlbENhcmRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY2FyZCB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcE5vdEFsbG93ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXJkTm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2-3} showLineNumbers
+mutation CancelVirtualCard {
+  cancelCard(input: { cardId: "$YOUR_CARD_ID" }) {
+    ... on CancelCardSuccessPayload {
+      __typename
+      card {
+        statusInfo {
+          status
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms that the virtual card is `Canceled`.
+
+```json {7} showLineNumbers
+{
+  "data": {
+    "cancelCard": {
+      "__typename": "CancelCardSuccessPayload",
+      "card": {
+        "statusInfo": {
+          "status": "Canceled"
+        }
+      }
+    }
+  }
+}
+```

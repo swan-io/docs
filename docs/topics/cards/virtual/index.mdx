@@ -56,7 +56,7 @@ SUV cards can be either **one-off** or **recurring**.
 ### One-off {#suv-one-off}
 
 One-off SUV cards, in theory, work one time for one transaction.
-It's not that simple, however, because some merchants send multiple authorizations for a single debit.
+It's not that straightforward, however, because some merchants send multiple authorizations for a single debit.
 Pre-authorization is a good example, as the merchant pre-authorizes an amount, and then a separate transaction is created for the actual debit.
 
 Ideally, the card issuer (you or your customer) should cancel one-off SUV cards after the expected debit has been used.
@@ -73,7 +73,21 @@ The `AccountHolderSpendingLimit.period` is **not** `Always`.
 When the cardholder uses a recurring SUV card for the first time, Swan restricts the card to the merchant ID that triggered the authorization.
 
 If the card is used with the same merchant, the merchant ID matches and the transaction can go through.
-However, if the cardholder tries to use the card elsewhere, the transaction will be rejected because the merchant IDs don't match.
+However, if the cardholder tries to use the card elsewhere, the transaction is rejected because the merchant IDs don't match.
+
+## Cancellation of virtual cards {#cancel}
+
+Canceling a virtual card is an **irreversible action** that immediately and permanently invalidates the card.
+Cancellation impacts the entire card contract, which includes the virtual card and any associated physical and digital cards.
+**Consent isn't required** to cancel cards.
+When cancellation is complete, you're no longer billed for the card.
+
+If you don't want to cancel the entire card contract, you can cancel just a [physical](../physical/guide-cancel.mdx) or [digital](../digital/guide-cancel.mdx) card instead.
+
+
+
+You can cancel virtual cards [with the API](./guide-cancel.mdx).
+If you use Swan's Web Banking interface, cardholders can [cancel (permanently block) their cards](https://support.swan.io/hc/en-150/articles/18538920070045-Block-your-card) independently.
 
 ## Virtual card statuses {#statuses}
 
@@ -106,11 +120,11 @@ flowchart LR
 
 | Virtual card status | Explanation |
 |---|---|
-| `ConsentPending` | Virtual card was added and is waiting for the cardholder's consent<br/><br/>**Next steps**:<ul><li>If consent is refused or fails, the status moves directly to `Canceled`</li><li>Otherwise, the status moves to `Processing`</li></ul> |
-| `Processing` | Consent has been received and the card is being prepared<br/><br/>Status used uniquely when adding multiple virtual cards (`addCards` mutation) |
-| `Enabled` | Virtual card is available for use |
-| `Canceling` | Card is in the process of being canceled<br/><br/>After a card is assigned the `Canceling` status, the process can't be reversed |
-| `Canceled` | Card is canceled, no longer available for use, and can't be reactivated |
+| `ConsentPending` | Virtual card was added and is waiting for the cardholder's consent.<br/><br/>**Next steps**:<ul><li>If consent is refused or fails, the status moves directly to `Canceled`.</li><li>Otherwise, the status moves to `Processing`.</li></ul> |
+| `Processing` | Consent has been received and the card is being prepared. This status only applies when adding multiple virtual cards (`addCards` mutation). |
+| `Enabled` | Virtual card is available for use. |
+| `Canceling` | Card is in the process of being canceled. After a card is assigned the `Canceling` status, the process can't be reversed. |
+| `Canceled` | Card is canceled, no longer available for use, and can't be re-enabled. |
 
 ## Guides {#guides}
 
@@ -120,4 +134,4 @@ flowchart LR
     - Add a single-use virtual card
 - [View sensitive information](./guide-view-info.mdx)
     - View virtual card numbers
-- [Cancel (deactivate) virtual cards](./guide-cancel.mdx)
+- [Cancel (permanently block) virtual cards](./guide-cancel.mdx)

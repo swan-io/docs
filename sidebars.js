@@ -304,6 +304,7 @@ module.exports = {
                 "topics/merchants/online/sdd/guide-declare",
                 "topics/merchants/online/sdd/guide-initiate",
                 "topics/merchants/online/sdd/guide-update",
+                "topics/merchants/online/sdd/guide-create-link",
                 "topics/merchants/online/sdd/sandbox",
               ],
             },

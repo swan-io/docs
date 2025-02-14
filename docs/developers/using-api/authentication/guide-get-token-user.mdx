@@ -159,6 +159,7 @@ Use a new authorization code or a new client secret (or both) to try your reques
 ## Step 5: Refresh your access token {#refresh-token}
 
 When your user access token expires, you can use the refresh token provided in the cURL response to extend the usage of your user access token.
+Please note that while they don't expire, **refresh tokens are single-use**.
 
 To refresh your user access token, **send a cURL request** to the same endpoint as step 3 with the following information:
 
@@ -188,9 +189,8 @@ The response is the same as in step 4, but with a **new refresh token**.
 ```
 
 :::danger Troubleshooting
-If your refresh request returns an error, your **refresh token** might be expired, or your **client secret might be invalid**.
+If your refresh request returns an error, your single-use **refresh token** might have been used already, or your **client secret** might be invalid.
 
-First, generate a new secret on your Dashboard and try your request again.
-
-If your request still returns an error, your refresh token isn't working and you'll need to get a new user access token starting from step 2 of this guide.
+1. First, generate a new secret on your Dashboard and try your request again.
+1. If your request still returns an error, your refresh token isn't working. Return to step 2 of this guide to get a new user access token.
 :::

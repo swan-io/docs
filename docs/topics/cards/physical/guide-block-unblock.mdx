@@ -29,12 +29,13 @@ If a card was blocked because the PIN was entered incorrectly 3 times, the **car
 
 1. **Wait 24 hours** from the last incorrect PIN attempt.
 1. You or the cardholder call the `resumePhysicalCard` mutation to start the unblocking process:
-    1. **Cardholder**: In Swan's Web Banking interface, clicking **Unblock** calls this mutation. Refer to Swan's [Support Center](https://support.swan.io/hc/en-150/articles/16351372133789-Unblocking-your-card-after-three-incorrect-PIN-attempts) for more information. If you don't use Swan's Web Banking, consider designing your integration with a similar action.
-    1. **You**: If your integration doesn't allow the cardholder to do so, you need to [call the mutation](https://explorer.swan.io?query=bXV0YXRpb24gVW5ibG9ja1BoeXNpY2FsQ2FyZCB7CiAgcmVzdW1lUGh5c2ljYWxDYXJkKGlucHV0OiB7IGNhcmRJZDogIiIsIGNvbnNlbnRSZWRpcmVjdFVybDogIiIgfSkgewogICAgLi4uIG9uIFJlc3VtZVBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api).
+    - **Cardholder**: In Swan's Web Banking interface, clicking **Unblock** calls this mutation. Refer to Swan's [Support Center](https://support.swan.io/hc/en-150/articles/16351372133789-Unblocking-your-card-after-three-incorrect-PIN-attempts) for more information. If you don't use Swan's Web Banking, consider designing your integration with a similar action.
+    - **You**: If your integration doesn't allow the cardholder to do so, you need to [call the mutation](https://explorer.swan.io?query=bXV0YXRpb24gVW5ibG9ja1BoeXNpY2FsQ2FyZCB7CiAgcmVzdW1lUGh5c2ljYWxDYXJkKGlucHV0OiB7IGNhcmRJZDogIiIsIGNvbnNlbnRSZWRpcmVjdFVybDogIiIgfSkgewogICAgLi4uIG9uIFJlc3VtZVBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api).
     :::caution Wait 24 hours
     If the `resumePhysicalCard` mutation is called before 24 hours pass, it returns an error.
     :::
 3. The cardholder **consents** to the operation.
+    - After receiving consent, the [physical card status](./index.mdx#statuses) returns from `Suspended` to its previous status, `ToActivate`. If the card is in the [renewal process](./index.mdx#renew-statuses), the status returns to `Renewed`.
 1. The cardholder enters their **original PIN** at an ATM ([reminder: a card's PIN never changes](./index.mdx#pin)).
 
 :::info View PIN

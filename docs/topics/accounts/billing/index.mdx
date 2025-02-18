@@ -20,39 +20,23 @@ The invoice lists all banking fees charged during the **monthly billing period**
 ## Swan fees {#fees-swan}
 
 Swan charges different banking and merchant fees.
-When the Swan API detects transactions with associated banking fees, the fees are deducted from the account automatically, except fees related to **payment incidents**.
+When the Swan API detects transactions with associated banking fees, the fees are scheduled automatically, except fees related to **payment incidents**.
 
+There are two dedicated transaction types for fees:
+`FeesOut` indicates a fee *debited from* a Swan account, while `FeesIn` indicates a fee *credited to* a Swan account.
+
+On a fee's expected execution date, Swan checks the [account's `Available` balance](../index.mdx#balances) to see if it's sufficient to cover the fee.
+
+| `Available` balance | Events |
+| --- | --- |
+| ✓ **Sufficient** to cover fee | Swan executes the fee transaction. The status changes to `Booked`. |
+| ☒ **Not sufficient** to cover fee | Swan doesn't execute the fee transaction. Instead, the status changes to `Pending`.<br /><br />Each time funds arrive in the account, Swan checks if the `Available` balance is sufficient to cover the fee. As soon as the `Available` balance is sufficient, Swan executes the fee transaction. |
+
+:::info Payment incident fees
 Fees related to **payment incidents** (for example, direct debit rejections due to an insufficient balance), are deducted 14 days after being communicated.
 The `FeesOut` transaction appears instantly on the transaction history with the status `Upcoming`.
 The transaction is booked automatically 14 days later.
-
-### Deducting fees {#fees-swan-deduct}
-
-On a fee's expected execution date, Swan checks the account's `Available` balance to see if it's sufficient to cover the fee.
-
-| `Available` balance | Actions |
-| --- | --- |
-| Sufficient to cover fee | abc |
-| Not sufficient to cover fee | abc |
-
-
-If it is sufficient, then book the fee
-
-Else update the fee status to pending. It will impact the available balance, i.e. hold the funds. However, it won't impact the booked balance, so the account does not have a negative balance and won't be targeted by the debt collection process
-
-Each time the account is credited, check its available balance and book the fee if the account has enough funds
-
-If the account's `Available` balance isn't enough to cover the banking fees, the fee isn't deducted immediately.
-Instead, 
-
-This is the only situation in which a Swan [account balance](../index.mdx#balances) can be negative.
-
-### Fee transactions {#fees-swan-transactions}
-
-For fee transactions, Swan created a dedicated `Fees` payment product and two transaction types:
-
-- `FeesOut`: A fee is debited from a Swan account
-- `FeesIn`: A fee is credited to a Swan account
+:::
 
 ### Standard fees {#fees-swan-standard}
 

@@ -20,21 +20,23 @@ The invoice lists all banking fees charged during the **monthly billing period**
 ## Swan fees {#fees-swan}
 
 Swan charges different banking and merchant fees.
-When the Swan API detects transactions with associated banking fees, the fees are deducted from the account automatically, except fees related to **payment incidents**.
+When the Swan API detects transactions with associated banking fees, the fees are scheduled automatically, except fees related to **payment incidents**.
 
+There are two dedicated transaction types for fees:
+`FeesOut` indicates a fee *debited from* a Swan account, while `FeesIn` indicates a fee *credited to* a Swan account.
+
+On a fee's expected execution date, Swan checks the [account's `Available` balance](../index.mdx#balances) to see if it's sufficient to cover the fee.
+
+| `Available` balance | Events |
+| --- | --- |
+| ✓ **Sufficient** to cover fee | Swan executes the fee transaction. The status changes to `Booked`. |
+| ☒ **Not sufficient** to cover fee | Swan doesn't execute the fee transaction. Instead, the status changes to `Pending`.<br /><br />Each time funds arrive in the account, Swan checks if the `Available` balance is sufficient to cover the fee. As soon as the `Available` balance is sufficient, Swan executes the fee transaction. |
+
+:::info Payment incident fees
 Fees related to **payment incidents** (for example, direct debit rejections due to an insufficient balance), are deducted 14 days after being communicated.
 The `FeesOut` transaction appears instantly on the transaction history with the status `Upcoming`.
 The transaction is booked automatically 14 days later.
-
-If the account's `Available` balance isn't enough to cover the banking fees, the account balance falls into the negative.
-This is the only situation in which a Swan [account balance](../index.mdx#balances) can be negative.
-
-### Fee transactions {#fees-swan-transactions}
-
-For fee transactions, Swan created a dedicated `Fees` payment product and two transaction types:
-
-- `FeesOut`: A fee is debited from a Swan account
-- `FeesIn`: A fee is credited to a Swan account
+:::
 
 ### Standard fees {#fees-swan-standard}
 

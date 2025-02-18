@@ -26,7 +26,25 @@ Fees related to **payment incidents** (for example, direct debit rejections due 
 The `FeesOut` transaction appears instantly on the transaction history with the status `Upcoming`.
 The transaction is booked automatically 14 days later.
 
-If the account's `Available` balance isn't enough to cover the banking fees, the account balance falls into the negative.
+### Deducting fees {#fees-swan-deduct}
+
+On a fee's expected execution date, Swan checks the account's `Available` balance to see if it's sufficient to cover the fee.
+
+| `Available` balance | Actions |
+| --- | --- |
+| Sufficient to cover fee | abc |
+| Not sufficient to cover fee | abc |
+
+
+If it is sufficient, then book the fee
+
+Else update the fee status to pending. It will impact the available balance, i.e. hold the funds. However, it won't impact the booked balance, so the account does not have a negative balance and won't be targeted by the debt collection process
+
+Each time the account is credited, check its available balance and book the fee if the account has enough funds
+
+If the account's `Available` balance isn't enough to cover the banking fees, the fee isn't deducted immediately.
+Instead, 
+
 This is the only situation in which a Swan [account balance](../index.mdx#balances) can be negative.
 
 ### Fee transactions {#fees-swan-transactions}

@@ -67,6 +67,7 @@ module.exports = {
             "topics/onboarding/account-holders/guide-add-additional-account",
             "topics/onboarding/account-holders/guide-get-status",
             "topics/onboarding/account-holders/guide-request-first-transfer",
+            "topics/onboarding/account-holders/guide-export",
             "topics/onboarding/account-holders/sandbox",
           ],
         },

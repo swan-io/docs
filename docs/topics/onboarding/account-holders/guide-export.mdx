@@ -1,0 +1,65 @@
+---
+title: Export account holder data
+---
+
+# Export account holder data
+
+You can export the account holder data available on the Dashboard, either from your Dashboard or with the API.
+Review the next steps to understand what happens after finalizing your export.
+
+## Dashboard {#dashboard}
+
+1. On your Dashboard, go to **Data** > **Account holders**.
+1. Click the **download icon** to trigger a `.csv` export.
+1. A modal appears. Click **Export data** to finalize the request.
+
+![Screenshot of Swan Dashboard account holders page with a callout download icon to trigger an export](../../../images/topics/onboarding/account-holders-export.png)
+
+## API {#api}
+
+1. Call the `exportAccountHolderData` mutation.
+1. Add your `email`. A link to download the `.csv` export is sent to the email address you provide.
+1. Add the success payload and rejections.
+
+### Mutation {#api-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0QWNjb3VudEhvbGRlcnMgewogIGV4cG9ydEFjY291bnRIb2xkZXJEYXRhKGlucHV0OiB7IGVtYWlsOiAiJFlPVVJfRU1BSUxfQUREUkVTUyIgfSkgewogICAgLi4uIG9uIEV4cG9ydERhdGFTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZXhwb3J0SWQKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtU2ltdWx0YW5lb3VzRXhwb3J0c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE1heGltdW1EYWlseUV4cG9ydHNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2,5} showLineNumbers
+mutation ExportAccountHolders {
+  exportAccountHolderData(input: { email: "$YOUR_EMAIL_ADDRESS" }) {
+    ... on ExportDataSuccessPayload {
+      __typename
+      exportId
+    }
+    ... on MaximumSimultaneousExportsRejection {
+      __typename
+      message
+    }
+    ... on MaximumDailyExportsReachedRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+### Payload {#api-payload}
+
+The payload returns the export ID.
+
+```json {5} showLineNumbers
+{
+  "data": {
+    "exportAccountHolderData": {
+      "__typename": "ExportDataSuccessPayload",
+      "exportId": "$EXPORT_ID"
+    }
+  }
+}
+```
+
+## Next steps {#next}
+
+import ExportNextSteps from '../../partials/_export-next-steps.mdx';
+
+<ExportNextSteps />

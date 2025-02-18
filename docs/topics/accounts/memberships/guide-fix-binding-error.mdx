@@ -1,0 +1,55 @@
+---
+title: Fix a user binding error
+---
+
+# Fix a user binding error
+
+**Fix user binding errors** by updating memberships with the API.
+
+import Prerequisites from './partials/_update-prereqs.mdx';
+
+<Prerequisites />
+
+## Guide {#guide}
+
+1. Call the `updateAccountMembership` mutation.
+1. Add the `accountMembershipId` and your redirect URL.
+1. Add **only** the information that caused the user binding error (lines 7-10, 12). Refer to [causes of a user binding error](#causes) for precise information.
+1. Add the success payload with the `consentUrl`.
+1. Add any rejections you'd like (not shown).
+1. Get the `consentUrl` from the payload and send it to the invited account member. **They must consent** to finalize the update.
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRml4QmluZGluZ0Vycm9yIHsKICB1cGRhdGVBY2NvdW50TWVtYmVyc2hpcCgKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRNZW1iZXJzaGlwSWQ6ICIkQUNDT1VOVF9NRU1CRVJTSElQX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9DT05TRU5UX1JFRElSRUNUX1VSTCIKICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgYmlydGhEYXRlOiAiJENPUlJFQ1RfQklSVEhfREFURSIKICAgICAgICBmaXJzdE5hbWU6ICIkQ09SUkVDVF9GSVJTVF9OQU1FIgogICAgICAgIGxhc3ROYW1lOiAiJENPUlJFQ1RfTEFTVF9OQU1FIgogICAgICAgIHBob25lTnVtYmVyOiAiJENPUlJFQ1RfUEhPTkVfTlVNQkVSIgogICAgICB9CiAgICAgIGVtYWlsOiAiJENPUlJFQ1RfRU1BSUwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlQWNjb3VudE1lbWJlcnNoaXBTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBDYW5ub3RCZVVwZGF0ZWRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnZhbGlkUGhvbmVOdW1iZXJSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQZXJtaXNzaW9uQ2Fubm90QmVHcmFudGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVXNlck5vdEFsbG93ZWRUb01hbmFnZUFjY291bnRNZW1iZXJzaGlwUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {4,7-10,12,18} showLineNumbers
+mutation FixBindingError {
+  updateAccountMembership(
+    input: {
+      accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
+      consentRedirectUrl: "$YOUR_CONSENT_REDIRECT_URL"
+      restrictedTo: {
+        birthDate: "$CORRECT_BIRTH_DATE"
+        firstName: "$CORRECT_FIRST_NAME"
+        lastName: "$CORRECT_LAST_NAME"
+        phoneNumber: "$CORRECT_PHONE_NUMBER"
+      }
+      email: "$CORRECT_EMAIL"
+    }
+  ) {
+    ... on UpdateAccountMembershipSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+  }
+}
+```
+
+## Causes of a user binding error {#causes}
+
+import UserBindingErrorOptions from './partials/_user-binding-error-list.mdx';
+
+<UserBindingErrorOptions />

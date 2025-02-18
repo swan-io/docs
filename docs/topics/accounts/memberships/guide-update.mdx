@@ -5,25 +5,22 @@ title: Update a membership
 # Update a membership
 
 You can update the permissions for an existing account membership, as well as the account member's personal information, with the API.
-You can also update the membership to **fix user binding errors**.
-
 If you use Swan's Web Banking interface, your users can also update account memberships from their Web Banking accounts.
 
-:::tip Prerequisites
-- You have the **`canManageAccountMembership`** permission.
-- The [account membership status](./index.mdx#statuses) **isn't** `ConsentPending` or `Disabled`.
-- You're not updating the legal representative's membership (unless you are the legal representative).
-- If you're granting a permission to another account member, you have that permission already. You can't grant permissions you don't have.
-:::
+import Prerequisites from './partials/_update-prereqs.mdx';
 
-## Update a membership {#guide-update}
+<Prerequisites />
+
+## Guide {#guide}
 
 1. Call the `updateAccountMembership` mutation.
 1. Add the account membership ID and your redirect URL.
 1. Add any information or permissions you'd like to update (lines 5-13).
 1. Add the success payload with the `consentUrl` (line 19).
 1. Add rejections (not shown).
-1. Get the `consentUrl` from the payload and send it to the user updating the account membership. Their consent finalizes the update.
+1. Get the `consentUrl` from the payload and send it to the account member updating the membership. Their consent finalizes the update.
+
+## Mutation {#mutation}
 
 🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlTWVtYmVyc2hpcCB7CiAgdXBkYXRlQWNjb3VudE1lbWJlcnNoaXAoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50TWVtYmVyc2hpcElkOiAiJE1FTUJFUlNISVBfSUQiCiAgICAgIGNhblZpZXdBY2NvdW50OiB0cnVlCiAgICAgIGNhbk1hbmFnZUFjY291bnRNZW1iZXJzaGlwOiB0cnVlCiAgICAgIGNhbk1hbmFnZUJlbmVmaWNpYXJpZXM6IHRydWUKICAgICAgY2FuTWFuYWdlQ2FyZHM6IHRydWUKICAgICAgY2FuSW5pdGlhdGVQYXltZW50czogdHJ1ZQogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkUkVESVJFQ1RfVVJMIgogICAgICBlbWFpbDogIiRNRU1CRVJfRU1BSUwiCiAgICAgIHRheElkZW50aWZpY2F0aW9uTnVtYmVyOiAiJE1FTUJFUl9UQVhfSUQiCiAgICAgIGxhbmd1YWdlOiBlbgogICAgfQogICkgewogICAgLi4uIG9uIFVwZGF0ZUFjY291bnRNZW1iZXJzaGlwU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvbnNlbnQgewogICAgICAgIGNvbnNlbnRVcmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwQ2Fubm90QmVVcGRhdGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwTm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW52YWxpZFBob25lTnVtYmVyUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gUGVybWlzc2lvbkNhbm5vdEJlR3JhbnRlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFVzZXJOb3RBbGxvd2VkVG9NYW5hZ2VBY2NvdW50TWVtYmVyc2hpcFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
 
@@ -53,6 +50,10 @@ mutation UpdateMembership {
 }
 ```
 
+## Payload {#payload}
+
+The eligible account member updating the membership must consent to the operation with the `consentUrl` (line 6).
+
 ```json title="Payload" {6} showLineNumbers
 {
   "data": {
@@ -60,51 +61,6 @@ mutation UpdateMembership {
       "__typename": "UpdateAccountMembershipSuccessPayload",
       "consent": {
          "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
-      }
-    }
-  }
-}
-```
-
-## Fix a user binding error {#guide-fix}
-
-1. Call the `updateAccountMembership` mutation.
-1. Add the `accountMembershipId` and your redirect URL.
-1. Add **only** the information that caused the user binding error (lines 7-10, 12). Refer to the **causes dropdown** for precise information.
-1. Add the success payload with the `consentUrl`.
-1. Add any rejections you'd like (not shown).
-1. Get the `consentUrl` from the payload and send it to the invited account member. **They must consent** to finalize the update.
-
-import UserBindingErrorOptions from './partials/_user-binding-error-list.mdx';
-
-<details>
-  <summary>Causes of a user binding error</summary>
-  <div>
-    <UserBindingErrorOptions />
-  </div>
-</details>
-
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRml4QmluZGluZ0Vycm9yIHsKICB1cGRhdGVBY2NvdW50TWVtYmVyc2hpcCgKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRNZW1iZXJzaGlwSWQ6ICIkQUNDT1VOVF9NRU1CRVJTSElQX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9DT05TRU5UX1JFRElSRUNUX1VSTCIKICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgYmlydGhEYXRlOiAiJENPUlJFQ1RfQklSVEhfREFURSIKICAgICAgICBmaXJzdE5hbWU6ICIkQ09SUkVDVF9GSVJTVF9OQU1FIgogICAgICAgIGxhc3ROYW1lOiAiJENPUlJFQ1RfTEFTVF9OQU1FIgogICAgICAgIHBob25lTnVtYmVyOiAiJENPUlJFQ1RfUEhPTkVfTlVNQkVSIgogICAgICB9CiAgICAgIGVtYWlsOiAiJENPUlJFQ1RfRU1BSUwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlQWNjb3VudE1lbWJlcnNoaXBTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBDYW5ub3RCZVVwZGF0ZWRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnZhbGlkUGhvbmVOdW1iZXJSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQZXJtaXNzaW9uQ2Fubm90QmVHcmFudGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVXNlck5vdEFsbG93ZWRUb01hbmFnZUFjY291bnRNZW1iZXJzaGlwUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
-
-```graphql {4,7-10,12,18} showLineNumbers
-mutation FixBindingError {
-  updateAccountMembership(
-    input: {
-      accountMembershipId: "$ACCOUNT_MEMBERSHIP_ID"
-      consentRedirectUrl: "$YOUR_CONSENT_REDIRECT_URL"
-      restrictedTo: {
-        birthDate: "$CORRECT_BIRTH_DATE"
-        firstName: "$CORRECT_FIRST_NAME"
-        lastName: "$CORRECT_LAST_NAME"
-        phoneNumber: "$CORRECT_PHONE_NUMBER"
-      }
-      email: "$CORRECT_EMAIL"
-    }
-  ) {
-    ... on UpdateAccountMembershipSuccessPayload {
-      __typename
-      consent {
-        consentUrl
       }
     }
   }

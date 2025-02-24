@@ -66,7 +66,7 @@ flowchart LR
 | `Pending` | A SEPA Direct Debit B2B funding source was added with the API mutation `addDirectDebitFundingSource`, but consent hasn't been received yet. |
 | `Enabled` | The account funding source is consented to and can be used. |
 | `Suspended` | Swan can suspend a funding source if there's suspicion of fraud. While suspended, the funding source can't be used. |
-| `Canceled` | The account funding source is canceled and no longer available for use. Swan account holders and eligible account members can cancel a funding source. |
+| `Canceled` | The account funding source is canceled and no longer available for use. Swan account holders and eligible account members can cancel a funding source. The associated payment mandate is also `Canceled`. |
 
 ## Account verification for funding sources {#account-verification}
 
@@ -123,11 +123,15 @@ For SEPA Direct Debit B2B the signed payment mandate or payment mandate informat
 
 Consenting to the direct debit mandate updates the status to `Enabled` for both the mandate and the funding source.
 
-<mark>signature</mark>
+### Signing payment mandates {#mandates-signature}
+
+The Swan account holder or eligible account member consents to the account funding source payment mandate through [Strong Customer Authentication](../../users/consent/index.mdx#sca).
+
+However, Swan doesn't provide a method to collect a signature.
+As a Swan Partner, it's your responsibility to manage payment mandate signatures.
+You must provide the `signatureDate` when [adding a SEPA Direct Debit funding source with the API](./guide-add-source.mdx), and be able to provide proof of signature if requested by the funding source's financial institution.
 
 ### Payment mandate statuses {#mandates-statuses}
-
-<mark>Louis is looking into these</mark><br /><br />
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -135,7 +139,7 @@ flowchart LR
     AMA((Mandate<br/>added)) -.-> CP[ConsentPending]
     CP -.-> E[Enabled]
     CP -.-> C[Canceled]
-    E -.->R[Rejected]
+    CP -.->R[Rejected]
     E -.-> C
     subgraph U[Can use source]
         E
@@ -151,9 +155,9 @@ flowchart LR
 
 | Payment mandate status | Explanation |
 | :---: |---|
-| `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](./guide-add-source.mdx) with the `addDirectDebitFundingSource` mutation.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`.</li><li>If the debtor doesn't consent to the mandate, the status moves to `Canceled`.</li></ul> |
-| `Enabled` | Payment mandate can be used to fund the account.  |
-| `Rejected` | Payment mandate was rejected, possibly because the external account's IBAN and Swan payment mandate list different account holders. |
+| `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](./guide-add-source.mdx) with the `addDirectDebitFundingSource` mutation.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`.</li><li>If the debtor doesn't consent, the status moves to `Rejected`.</li><li>If the debtor doesn't respond to the consent request, the status moves to `Canceled`.</li></ul> |
+| `Enabled` | Payment mandate is active and valid, and the corresponding funding source (if also `Enabled`) can be used to fund the account.  |
+| `Rejected`<br /><mark>still confirming rejected status info</mark> | Payment mandate was rejected, possibly because the external account's IBAN and Swan payment mandate list different account holders. |
 | `Canceled` | Payment mandate is canceled and no longer available for use.<br/><br/>Account funding payment mandates expire 36 months after being created, or earlier if there's a suspicion of fraud. |
 
 ## Rolling reserve {#rolling-reserve}

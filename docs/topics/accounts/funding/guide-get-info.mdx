@@ -6,7 +6,7 @@ title: Get information about a funding source and request
 
 You can get information about funding sources and requests with the API.
 
-## Get information about a source {#guide-one}
+## Get information about a funding source {#guide-one}
 
 1. Call the `fundingSource` query.
 1. Add your funding source ID.
@@ -80,7 +80,7 @@ The payload shows that the user used their funding source to perform two transac
 }
 ```
 
-## Get a list of sources {#guide-list}
+## Get a list of funding sources {#guide-list}
 
 1. Call the `account` query.
 1. Add your account ID.
@@ -156,21 +156,23 @@ The payload provides the list of funding sources for your account.
 
 1. Call the `transaction` query.
 1. Add your transaction ID.
-1. Add `statusInfo` > `UpcomingTransactionStatusInfo` > `executionDate`.
+1. Add the `SEPADirectDebitTransaction` union.
+1. Add `reservedAmountReleasedAt` and any other information that's interesting to you.
 
 <h3 id="query-release-date">Query</h3>
 
-🔎 [Open the query in API Explorer](https://explorer.swan.io/?query=cXVlcnkgR2V0UmVsZWFzZURhdGUgewogIHRyYW5zYWN0aW9uKGlkOiAiJFRSQU5TQUNUSU9OX0lEIikgewogICAgc3RhdHVzSW5mbyB7CiAgICAgIC4uLiBvbiBVcGNvbWluZ1RyYW5zYWN0aW9uU3RhdHVzSW5mbyB7CiAgICAgICAgX190eXBlbmFtZQogICAgICAgIGV4ZWN1dGlvbkRhdGUKICAgICAgICBzdGF0dXMKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgR2V0UmVsZWFzZURhdGUgewogIHRyYW5zYWN0aW9uKGlkOiAiJFRSQU5TQUNUSU9OX0lEIikgewogICAgLi4uIG9uIFNFUEFEaXJlY3REZWJpdFRyYW5zYWN0aW9uIHsKICAgICAgaWQKICAgICAgcmVzZXJ2ZWRBbW91bnQgewogICAgICAgIGN1cnJlbmN5CiAgICAgICAgdmFsdWUKICAgICAgfQogICAgICByZXNlcnZlZEFtb3VudFJlbGVhc2VkQXQKICAgIH0KICB9Cn0K&tab=api)
 
-```graphql {2,6} showLineNumbers
+```graphql {2,3,9} showLineNumbers
 query GetReleaseDate {
   transaction(id: "$TRANSACTION_ID") {
-    statusInfo {
-      ... on UpcomingTransactionStatusInfo {
-        __typename
-        executionDate
-        status
+    ... on SEPADirectDebitTransaction {
+      id
+      reservedAmount {
+        currency
+        value
       }
+      reservedAmountReleasedAt
     }
   }
 }
@@ -178,17 +180,19 @@ query GetReleaseDate {
 
 <h3 id="payload-release-date">Payload</h3>
 
-The payload provides the `executionDate`, which is the release date for the account funding transaction.
+The payload returns `reservedAmountReleasedAt`, the day and time the reserved amount of the account funding transaction is scheduled to be released.
 
-```json {6} showLineNumbers
+```json {10} showLineNumbers
 {
   "data": {
     "transaction": {
-      "statusInfo": {
-        "__typename": "UpcomingTransactionStatusInfo",
-        "executionDate": "2025-02-10T19:00:00.000Z",
-        "status": "Upcoming"
-      }
+      "__typename": "SEPADirectDebitTransaction",
+      "id": "$TRANSACTION_ID",
+      "reservedAmount": {
+        "currency": "EUR",
+        "value": "15.00"
+      },
+      "reservedAmountReleasedAt": "2025-03-11T19:00:00.000Z"
     }
   }
 }

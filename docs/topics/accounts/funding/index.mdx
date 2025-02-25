@@ -8,10 +8,13 @@ import AccountFundingDefinition from '../../definitions/_account-funding.mdx';
 
 > <AccountFundingDefinition />
 
-## Funding sources {#sources}
-
 Account funding is essentially adding money to your Swan account.
 You might use account funding if it's the first time you're sending money to your Swan account, or if you'd like to fund your Swan account on a recurring basis from an account at another financial institution.
+
+## Funding sources {#sources}
+
+Fund a Swan account with SEPA Direct Debit B2B.
+You can also use credit transfers.
 
 :::info Credit transfers
 Funding your account with a credit transfer is straightforward with no risk.
@@ -68,13 +71,65 @@ flowchart LR
 | `Suspended` | Swan can suspend a funding source if there's suspicion of fraud. While suspended, the funding source can't be used. |
 | `Canceled` | The account funding source is canceled and no longer available for use. Swan account holders and eligible account members can cancel a funding source. The associated payment mandate is also `Canceled`. |
 
+*API Reference: [`FundingSourceStatusInfo`](https://api-reference.swan.io/interfaces/funding-source-status-info)*
+
+## Payment mandates {#mandates}
+
+import PaymentMandateDefinition from '../../definitions/_payment-mandate.mdx';
+
+> <PaymentMandateDefinition />
+
+For account funding, the Swan account holder or eligible account member gives Swan explicit permission to pull money from their non-Swan account.
+For SEPA Direct Debit B2B the signed payment mandate or payment mandate information must be declared to the user's non-Swan banking institution.
+
+Consenting to the direct debit mandate updates the status to `Enabled` for both the mandate and the funding source.
+
+### Signing payment mandates {#mandates-signature}
+
+<mark>need more clarity here</mark><br /><br />
+
+The Swan account holder or eligible account member consents to the account funding source payment mandate through [Strong Customer Authentication](../../users/consent/index.mdx#sca).
+
+However, Swan doesn't provide a method to collect a signature.
+As a Swan Partner, it's your responsibility to manage payment mandate signatures.
+<mark>You must provide the `signatureDate` when [adding a SEPA Direct Debit funding source with the API](./guide-add-source.mdx)</mark>, and be able to provide proof of signature if requested by the funding source's financial institution.
+
+### Payment mandate statuses {#mandates-statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    AMA((Mandate<br/>added)) -.-> CP[ConsentPending]
+    CP -.-> E[Enabled]
+    CP -.-> C[Canceled]
+    E -.-> C
+    subgraph U[Can use source]
+        E
+    end
+    subgraph F[Final status]
+        C
+    end
+    style AMA fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Payment mandate status | Explanation |
+| :---: |---|
+| `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](./guide-add-source.mdx) with the `addDirectDebitFundingSource` mutation.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`.</li><li>If the debtor doesn't consent, the status remains `ConsentPending`.</li></ul> |
+| `Enabled` | Payment mandate is active and valid, and the corresponding funding source (if also `Enabled`) can be used to fund the account.<br /><br />*The account holder or eligible account member **must declare** the payment mandate to their debtor institution.*  |
+| `Canceled` | Payment mandate is canceled and no longer available for use. If the funding source is `Canceled`, the payment mandate status also changes to `Canceled`. |
+| `Rejected` | The `Rejected` status isn't used for account funding. |
+
+*API Reference: [`PaymentMandateStatusInfo`](https://api-reference.swan.io/interfaces/payment-mandate-status-info)*
+
 ## Account verification for funding sources {#account-verification}
 
 Swan is required to confirm that an account holder or eligible account member has access to the external account they'd like to use to fund a Swan account.
 Swan refers to this process as account verification for funding sources.
 
 :::note
-Account verification for funding sources **isn't related** to [account holder verification status](../../onboarding/account-holders/index.mdx#verification-process-statuses) or [account status](../index.mdx#statuses).
+Account verification for funding sources **isn't related** to [account holder verification status](../../onboarding/account-holders/index.mdx#verification-process-statuses) used during account onboarding, or the general [account status](../index.mdx#statuses).
 :::
 
 ### Account verification statuses {#account-verification-statuses}
@@ -99,66 +154,54 @@ flowchart LR
 
 | Account verification status | Explanation |
 |:---:|---|
-| `PendingVerification` | The funding source was added, and account verification for the funding source is in progress.<br /><br />*Please note that the funding source status can be `Enabled` even if the account verification status is `PendingVerification`.* |
+| `PendingVerification` | The funding source was added, and account verification for the funding source is in progress.<br /><br />*Please note that the funding source status can be `Enabled` even if the account verification status is `PendingVerification`.* ∗ |
 | `Verified` | Swan verified that the external account used for funding is accessible to the account holder or eligible account member funding the Swan account. This typically means that a first account funding attempt was successful. |
 | `Rejected` | Swan couldn't verify that the external account used for funding is accessible to the account holder or eligible account member funding the Swan account. |
 
-### Direct debit example {#account-verification-example-sdd}
+*API Reference: [`AccountVerificationStatusInfo`](https://api-reference.swan.io/interfaces/account-verification-status-info)*
 
-<mark>notes</mark><br /><br />
+## Interaction between statuses {#status-interaction}
 
-- SDD B2B: first direct debit made, account access is considered verified
-- When you add a SEPA Direct Debit B2B funding source, the account verification status is `PendingVerification`.
-- After adding and consenting to the required payment mandate and sending the first direct debit, the account verification status changes to `Verified` automatically.
-- If you don't consent to the payment mandate, the account verification status changes to `Rejected` automatically.
+Account funding involves three distinct statuses: [funding sources](#funding-source-statuses), [payment mandates](#mandates-statuses), and [account verification](#account-verification-statuses).
 
-## Payment mandates {#mandates}
-
-import PaymentMandateDefinition from '../../definitions/_payment-mandate.mdx';
-
-> <PaymentMandateDefinition />
-
-For account funding, the Swan account holder or eligible account member gives Swan explicit permission to pull money from their non-Swan account.
-For SEPA Direct Debit B2B the signed payment mandate or payment mandate information must be declared to the user's non-Swan banking institution.
-
-Consenting to the direct debit mandate updates the status to `Enabled` for both the mandate and the funding source.
-
-### Signing payment mandates {#mandates-signature}
-
-The Swan account holder or eligible account member consents to the account funding source payment mandate through [Strong Customer Authentication](../../users/consent/index.mdx#sca).
-
-However, Swan doesn't provide a method to collect a signature.
-As a Swan Partner, it's your responsibility to manage payment mandate signatures.
-You must provide the `signatureDate` when [adding a SEPA Direct Debit funding source with the API](./guide-add-source.mdx), and be able to provide proof of signature if requested by the funding source's financial institution.
-
-### Payment mandate statuses {#mandates-statuses}
+Review the following sequence diagram to understand how statuses interact with each other.
+Note one key action for the account holder or eligible account member: they **must declare the payment mandate** to their debtor institution ➎.
 
 ```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    AMA((Mandate<br/>added)) -.-> CP[ConsentPending]
-    CP -.-> E[Enabled]
-    CP -.-> C[Canceled]
-    CP -.->R[Rejected]
-    E -.-> C
-    subgraph U[Can use source]
-        E
+sequenceDiagram
+    autonumber
+    participant S as Swan
+    participant A as Account holder or member
+    participant D as Debtor institution
+    A-->>S: Adds an account funding source
+    Note over S: Funding source status → `Pending`<br />Payment mandate status → `ConsentPending`<br />Account verification status → `PendingVerification`
+    S-->>A: Requests consent to adding the account funding source<br />and the payment mandate
+    alt
+    rect rgb(253, 235, 219)
+    A-->>S: Doesn't consent to payment mandate
+    Note over S: All statuses remain the same
     end
-    subgraph F[Final status]
-        C
-        R
+    else
+    rect rgb(210 246 231)
+    A-->>S: Consents to payment mandate
+    Note over S: Funding source status → `Enabled`<br />Payment mandate status → `Enabled`<br />Account verification status remains `PendingVerification`
     end
-    style AMA fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+    end
+    alt declares mandate to debtor institution
+    rect rgb(210 246 231)
+        A-->>D: Declares payment mandate<br />to debtor institution
+        A-->>S: Initiates account funding request
+        S-->>A: Returns successful transaction message
+        Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status → `Verified`
+    end
+    else doesn't declare mandate to debtor institution
+    rect rgb(253, 235, 219)
+        A-->>S: Initiates account funding request
+        S-->>A: Returns failed transaction message
+        Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status remains `PendingVerification`
+    end
+    end
 ```
-
-| Payment mandate status | Explanation |
-| :---: |---|
-| `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](./guide-add-source.mdx) with the `addDirectDebitFundingSource` mutation.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`.</li><li>If the debtor doesn't consent, the status moves to `Rejected`.</li><li>If the debtor doesn't respond to the consent request, the status moves to `Canceled`.</li></ul> |
-| `Enabled` | Payment mandate is active and valid, and the corresponding funding source (if also `Enabled`) can be used to fund the account.  |
-| `Rejected`<br /><mark>still confirming rejected status info</mark> | Payment mandate was rejected, possibly because the external account's IBAN and Swan payment mandate list different account holders. |
-| `Canceled` | Payment mandate is canceled and no longer available for use.<br/><br/>Account funding payment mandates expire 36 months after being created, or earlier if there's a suspicion of fraud. |
 
 ## Rolling reserve {#rolling-reserve}
 
@@ -180,9 +223,9 @@ import DayTimeStandard from '../../partials/_day-time.mdx';
 
 <DayTimeStandard />
 
-### Scheduling account funding {#scheduling}
+## Scheduling funding requests {#scheduling}
 
-If you use `requestedExecutionAt` to schedule your funding requests, you can schedule them up to one year in advance.
+If you use `requestedExecutionAt` when initiating your funding requests, you can schedule them up to one year in advance.
 Your scheduled requests must be for at least two business days in the future.
 
 ## Guides {#guides}

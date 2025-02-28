@@ -546,7 +546,13 @@ module.exports = {
       collapsed: false,
       items: [
         "partnership/protections/financial",
-        "partnership/protections/fraud",
+        {
+          type: "category",
+          label: "Fraud protection",
+          link: { type: "doc", id: "partnership/protections/fraud/index" },
+          collapsed: true,
+          items: ["partnership/protections/fraud/types"],
+        },
         "partnership/protections/data",
         "partnership/protections/report-vulnerability",
       ],

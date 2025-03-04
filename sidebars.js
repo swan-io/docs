@@ -535,9 +535,26 @@ module.exports = {
           collapsed: true,
           items: ["partnership/overview/guide-orias"],
         },
-        "partnership/overview/protections",
         "partnership/overview/rules-regulations",
         "partnership/overview/country-coverage",
+      ],
+    },
+    {
+      type: "category",
+      label: "Protections",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        "partnership/protections/financial",
+        {
+          type: "category",
+          label: "Fraud protection",
+          link: { type: "doc", id: "partnership/protections/fraud/index" },
+          collapsed: true,
+          items: ["partnership/protections/fraud/types"],
+        },
+        "partnership/protections/data",
+        "partnership/protections/report-vulnerability",
       ],
     },
     {

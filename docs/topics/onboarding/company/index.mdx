@@ -79,15 +79,29 @@ On the onboarding form, choose `Legal representative` for type of control exerci
 No other additional information is required in the UBO section for legal representative UBOs.
 :::
 
-### Country-specific information {#country-info}
+### Retrieving information automatically {#auto-retrieve}
 
-Requested information can change based on your account country.
-Refer to the [tables later on this page](#country-reqs) for country-specific requirements.
+For companies with  🇫🇷 France as their [account country](../../accounts/index.mdx#account-country), Swan retrieves most information automatically after you provide the company's registration number.
+By allowing Swan to retrieve the information, you can avoid asking your users for certain details.
+
+To trigger automatic retrieval, `residencyAddress.country` must be `FRA` and the `registrationNumber` must be provided.
+
+For information about ultimate beneficial owners (UBOs) and legal representatives, one of the following happens:
+
+- If you **provide** UBO and legal representative information, Swan doesn't override it with information from the business registry.
+- If you **don't provide** UBO and legal representative information, Swan creates the objects and adds the information retrieved from the registry.
+
+For all information *not* related to UBOs or legal representatives, how Swan uses the retrieved information depends on whether you're creating or updating an onboarding.
+
+| Event | Retrieved information behavior | Example |
+|---|---|---|
+| **Create** an onboarding | If you provide some information manually, Swan adds the retrieved information for everything except the information you provided.<br /><br />If you only provide mandatory information, Swan fills in the rest. | You: <ul><li>Provide the mandatory `residencyAddress.country` and `registrationNumber`.</li><li>Provide the `vatNumber`, which could be retrieved from the registry.</li></ul>Swan: <ul><li>Keeps the `vatNumber` you provided.</li><li>Fills in all other fields with the retrieved information.</li></ul> |
+| **Update** an onboarding | Swan overrides any information you provided manually when creating the onboarding with information from the registry, unless you provide it again. | You: <ul><li>Specify the `language`.</li><li>Don't provide the `vatNumber` again.</li></ul>Swan: <ul><li>Replaces the `vatNumber` you provided when creating the onboarding with the `vatNumber` retrieved from the registry.</li><li>Saves the `language` information.</li></ul> |
 
 ## Identification recommendations {#identification-recommendations}
 
 Swan must verify the identity of the [legal representative](../../../glossary.mdx#legal-representative) for each company.
-Swan supports multiple [**identification processes**](../../users/identifications/index.mdx#levels-processes), and some require a [**first transfer**](../account-holders/index.mdx#first-transfer).
+Swan supports multiple [identification processes](../../users/identifications/index.mdx#levels-processes), and some require a [first transfer](../account-holders/index.mdx#first-transfer).
 For company onboarding, the following levels are recommended based on the account country.
 
 | Account country | Recommended level for legal representative | Other supported levels |

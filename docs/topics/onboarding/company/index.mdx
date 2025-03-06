@@ -127,12 +127,12 @@ If the cell is empty, the field is optional.
 |`businessActivityDescription`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`companyType`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`email`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`isRegistered`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`isRegistered` ^| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`language`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`monthlyPaymentVolume`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`name` *(company name)* | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`redirectUrl`|  |  |  |  |  |
-|`registrationNumber`<br/>*(if registered)* | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|`registrationNumber` ^ | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`residencyAddress.addressLine1`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`residencyAddress.addressLine2`|  |  |  |  |  |
 |`residencyAddress.city`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
@@ -143,11 +143,15 @@ If the cell is empty, the field is optional.
 |`typeOfRepresentation`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
 |`vatNumber`|  |  |  |  |  |
 
-﹖ *Required if both the `accountCountry` and `residencyAddress.country` are Spain.*
-
-∗ *If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
+> ^ *`isRegistered` must be `true` and the `registrationNumber` provided for **all onboardings** where `companyType` is `Company`.
+This also applies when `companyType` is `SelfEmployed` **and** the account country is `France`.
+Swan overrides `isRegistered` if the provided value is `false` but it should be `true`.*
+>
+> ∗ *If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
 Otherwise, the account is `Suspended`.
 Share [Swan's Support Center article](https://support.swan.io/hc/en-150/articles/21876111550621-German-Tax-identification-number-Tax-ID) if your account holders have concerns.*
+>
+> ﹖ *Required if **both** the `accountCountry` and `residencyAddress.country` are Spain.*
 
 ### UBO information {#country-reqs-ubo}
 

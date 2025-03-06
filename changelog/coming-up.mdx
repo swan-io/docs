@@ -1,17 +1,22 @@
 :::tip Upcoming features
-Allow users to edit their phone number and more!<br />
+New text message notifications, Italian accounts, and more!<br />
 Check out [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to see what's in the works. :rocket:
 :::
 
 <details>
   <summary>⚠️ **Upcoming breaking changes**</summary>
   <div>
-🪪 On **February 28th**, we're removing the following deprecated fields: `accountMemberships.recommendedIdentificationLevel`, `OnboardingInfo.legalRepresentativeRecommendedIdentificationLevel`, and `Onboarding.legalRepresentativeRecommendedIdentificationLevel`.
-This deprecation is linked to the [`Auto` identification level announcement](changelog/28-november-2024/).
-
 ⚠️ Effective from **March 10th**, consent notification API requests to your endpoint time out after 2 seconds instead of 3, in order to comply with 3-D Secure (3DS) requirements.
+
+👥 Starting on **March 20th**, account memberships are only returned in the `accountMembership`, `accountMemberships`, and `account.Memberships` queries if you have the `canManageAccountMembership` permission.
+Previously, we returned your own account membership.
 
 🔗 On **April 1st**, we're removing the [deprecated field `Onboarding.redirectUrl`](https://api-reference.swan.io/objects/onboarding/#onboardingredirecturlstring---) from all onboarding mutations.
 Instead, use the `OAuthRedirectParameters.redirectUrl` field, also in the [onboarding object](https://api-reference.swan.io/objects/onboarding#onboardingoauthredirectparametersoauthredirectparameters-).
+
+✍ Starting on **April 1st**, the [`registrationNumber` field](https://api-reference.swan.io/inputs/onboard-company-account-holder-input/#onboardcompanyaccountholderinputregistrationnumberstring-) becomes mandatory for company onboardings, regardless of country.
+This applies to all [onboardings](https://docs.swan.io/topics/onboarding/company/#country-reqs-company-account-holder) where `companyType` is set to `Company`, and where `companyType` is set to `SelfEmployed` and the account country is `France`.
+Additionally, the `isRegistered` parameter will be set to `true` automatically for these onboardings.
+Please note that this update doesn't impact capital deposits.
   </div>
 </details>

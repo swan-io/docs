@@ -3,16 +3,35 @@ title: 6 March 2025
 type: release
 ---
 
-## New features
+## New feature
 
-
+🔎 [Get bank details](/topics/accounts/overview/guide-get-bank-details/) (RIBs) for virtual IBANs with the account query.
+You can also download them from your Dashboard.
+If you use Swan's Web Banking interface, your users can download them from the **Account** > **Virtual IBANs** tab.
 
 ## Improvements
 
+🪪 We improved the [sign-up process](/topics/users/#signup) for a smoother user experience.
+Now, all users enter their personal information at the beginning.
+We also added a review page for users to confirm that their information is correct, helping avoid rejections due to mismatched data.
+
 👥 To improve the granularity of [account membership permissions](/topics/accounts/memberships/#permissions), only account members with `canManageAccountMembership` can view a list of account members.
 Previously, those with `canViewAccount` could also view the list.
+
+⛴️ We added new fields to [payment control POST requests](/developers/using-api/payment-control/#swan-request) and card transaction queries: `merchantAcquirerId` and `subMerchantId`.
+Start implementing these fields using the [Event Simulator](/developers/tools/event-simulator).
+Please note that the `subMerchantId` field will be returned *null* until it's implemented in the upcoming months.
+
+🛡️ One time every 24 hours, your users are now required to [acknowledge a fraud warning](/partnership/protections/fraud/#protect) before consenting to a transfer.
 
 ## API updates
 
 ### Upcoming breaking changes
 
+👥 Starting on **March 20th**, account memberships are only returned in the `accountMembership`, `accountMemberships`, and `account.Memberships` queries if you have the `canManageAccountMembership` [permission](/topics/accounts/memberships/#permissions).
+Previously, we returned your own account membership.
+
+✍ Starting on **April 1st**, the [`registrationNumber` field](https://api-reference.swan.io/inputs/onboard-company-account-holder-input/#onboardcompanyaccountholderinputregistrationnumberstring-) becomes mandatory for company onboardings, regardless of country.
+This applies to all [onboardings](https://docs.swan.io/topics/onboarding/company/#country-reqs-company-account-holder) where `companyType` is set to `Company`, and where `companyType` is set to `SelfEmployed` and the account country is `France`.
+Additionally, the `isRegistered` parameter will be set to `true` automatically for these onboardings.
+Please note that this update doesn't impact capital deposits.

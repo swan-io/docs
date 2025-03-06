@@ -31,38 +31,58 @@ Sandbox users make it possible to simulate the different situations you may enco
 ## Signing up {#signup}
 
 Users sign up for Swan the first time their go through an authentication link.
-This typically occurs when they're invited to become an [account member](../accounts/memberships/index.mdx) or during the [onboarding process](../onboarding/index.mdx).
+This typically occurs when they're invited to become an [account member](../accounts/memberships/index.mdx) or during the [account onboarding process](../onboarding/index.mdx).
 
 Your user:
 
 1. Opens their sign-up link.
-1. Enters their **mobile number**.
+1. **Enters their phone number**.
     - If you include their number when creating their sign-up link, they won't need to enter it again.
-1. Confirms their mobile number, after which they **continue the sign-up process** on their mobile device. How they confirm this step depends on whether they opened the sign-up link from a computer or their mobile device:
-    - **Computer**: Swan sends your user a text message with a link to open on their mobile device.
-    - **Mobile device**: Swan sends your user a text message with a verification code. 
-1. Enters their **personal information**, including their name and birthdate. This information **must match** the information that appears on their **identity documents**.
+1. **Confirms their phone number**, after which they continue the sign-up process on their mobile device. How they confirm this step depends on whether they opened the sign-up link from a computer or their mobile device:
+    1. **Computer**: Swan sends your user a text message with a link to open on their mobile device.
+    1. **Mobile device**: Swan sends your user a text message with a verification code. 
+1. **Enters their personal information**, including their first name, last name, and birthdate. This information must match the information that appears on their identity documents.
     - If you include this information when creating their sign-up link, they won't need to enter it again.
-1. Selects a **6-digit passcode**. They need to remember their passcode; Swan can request it anytime the user needs to consent to a sensitive operation.
-1. Completes [**identification**](./identifications/index.mdx), where Swan verifies their identity. This step can be performed later, though it's recommended to complete it as soon as possible. If you're using the API, you're responsible for triggering this step.
-1. Sets up **biometrics**, if desired and available on their mobile device. Biometrics typically include face or fingerprint authentication.
+1. **Sets a 6-digit passcode**. Users must remember their passcode. Swan can request it anytime the user needs to consent to a sensitive operation.
+
+:::note Identification
+- If a user **isn't required** to complete identification, they can access Swan after setting their passcode.
+- If a user **is required** to complete identification, they continue with steps 6-10.
+:::
+
+6. Enters their **birth information**, including their birth city, postal code, and country, as well as their nationality.
+    - If you include this information when creating their sign-up link, they won't need to enter it again.
+1. Enters their **residency information**. Users only need to provide information relevant to the [identification process](./identifications/index.mdx#levels-processes) they're required to complete, which is determined by your location, not the user's. The correct information is requested automatically.
+    - `QES` process: residency address, city, country, and postal code.
+    - `PVID` or `Expert` process: residency country only.
+    - If you include this information when creating their sign-up link, they won't need to enter it again.
+1. **Reviews and confirms all provided information**: personal, birth, and residency. Users can modify their information before confirming.
+1. [**Completes identification**](./identifications/index.mdx), where Swan verifies their identity. This step can be performed later, though it's recommended to complete it as soon as possible. When using the API, you must trigger this step.
+1. *(optional)* **Sets up biometrics**, if desired and available on their mobile device. Biometrics typically include face or fingerprint authentication.
+
+### Sign-up diagram {#signup-diagram}
+
+The following diagram illustrates the steps to sign up for Swan.
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart TB
     SUL([Opens sign-up link]) -.-> M([Enters mobile number])
     M -.-> C([Confirms mobile number])
-    C -.Computer.-> CO[Receives text message with<br />link to open on mobile device]
-    C -.Mobile device.-> MD[Receives text message<br />with verification code]
+    C -.Using computer.-> CO[Receives text message with<br />link to open on mobile device]
+    C -.Using mobile device.-> MD[Receives text message<br />with verification code]
     CO -.-> CO2([Opens link to verify number])
     CO2 -.-> CO3([Confirms number a second time])
     MD -.-> MD2([Enters code to verify number])
     CO3 -.-> PI([Enters personal information])
     MD2 -.-> PI
     PI -.-> P([Chooses passcode])
-    P -.-> O
+    P -.Identification required.-> BI([Enters birth information])
+    BI -.-> RI([Enters residency information])
+    RI -.-> CI([Confirms personal, birth,<br />and residency information])
+    CI -.-> O
     O --> S[Can access Swan]
-    P ----> S
+    P --Identification not required--> S
     subgraph O[Optional or performed later]
         direction LR
         IV([Completes identification]) ~~~ B([Configures biometrics])
@@ -73,18 +93,22 @@ flowchart TB
     style O fill:#dfedf2,stroke:#4d8296,stroke-dasharray: 5 5
 ```
 
-After signing up, your user can **start using Swan**.
-
-- If you use Swan's **Web Banking interface**, Swan redirects your user to the interface automatically.
-- If you're using a **custom API integration** or a customization of Swan's **open source frontend**, your user is redirected to the `redirectUrl` you supplied when creating their sign-up link.
-Make sure to declare your `redirectUrl` on your **Dashboard** > **Developers** > **Redirect URIs**; otherwise, the redirection fails.
-
 <details>
   <summary>End-user perspective of signing up for Swan</summary>
   <div>
     <iframe src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F7K15ufXZK7Zgan770kkTmq%2FUser-flow-diagrams%3Ftype%3Ddesign%26node-id%3D1%253A947%26mode%3Ddesign%26t%3DoGQbGo0SuPiYeJMG-1" allowFullScreen style={{width: "100%", height: 400}}></iframe>
   </div>
 </details>
+
+### Accessing accounts {#signup-access}
+
+After signing up, your user can start using Swan.
+How they get to their account depends on your [integration](../get-started/choose-integration.mdx):
+
+| Integration | Access |
+| --- | --- |
+| No-code Web Banking | Swan redirects your user to the interface automatically. |
+| Full API<br />*or*<br />Customized open source frontend | Your user is redirected to the `redirectUrl` you supplied when creating their sign-up link. Make sure to declare your `redirectUrl` on your **Dashboard** > **Developers** > **Redirect URIs**. Otherwise, the redirection fails. |
 
 ## Logging in {#login}
 

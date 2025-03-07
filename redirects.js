@@ -442,4 +442,12 @@ module.exports = [
     from: "/topics/accounts/documents/guide-upload",
     to: "/topics/accounts/documents/guide-upload-onboarding",
   },
+  {
+    from: "/topics/accounts/funding/guide-cancel-request",
+    to: "/topics/accounts/funding/",
+  },
+  {
+    from: "/partnership/overview/protections",
+    to: "/partnership/protections/financial/",
+  },
 ];

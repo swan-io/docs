@@ -86,13 +86,11 @@ Consenting to the direct debit mandate updates the status to `Enabled` for both 
 
 ### Signing payment mandates {#mandates-signature}
 
-<mark>need more clarity here</mark><br /><br />
+The Swan account holder or eligible account member consents to the account funding source payment mandate through [Strong Customer Authentication (SCA)](../../users/consent/index.mdx#sca).
+Swan takes the SCA validation time as the `signatureDate` for the payment mandate—even though the SCA isn't technically a signature.
 
-The Swan account holder or eligible account member consents to the account funding source payment mandate through [Strong Customer Authentication](../../users/consent/index.mdx#sca).
-
-However, Swan doesn't provide a method to collect a signature.
-As a Swan Partner, it's your responsibility to manage payment mandate signatures.
-<mark>You must provide the `signatureDate` when [adding a SEPA Direct Debit funding source with the API](./guide-add-source.mdx)</mark>, and be able to provide proof of signature if requested by the funding source's financial institution.
+Swan doesn't provide a method to collect a real signature.
+As a Swan Partner, it's your responsibility to manage the real payment mandate signature, as you might be required to provide proof of signature if requested by the funding source's financial institution.
 
 ### Payment mandate statuses {#mandates-statuses}
 
@@ -118,7 +116,7 @@ flowchart LR
 | :---: |---|
 | `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](./guide-add-source.mdx) with the `addDirectDebitFundingSource` mutation.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`.</li><li>If the debtor doesn't consent, the status remains `ConsentPending`.</li></ul> |
 | `Enabled` | Payment mandate is active and valid, and the corresponding funding source (if also `Enabled`) can be used to fund the account.<br /><br />*The account holder or eligible account member **must declare** the payment mandate to their debtor institution.*  |
-| `Canceled` | Payment mandate is canceled and no longer available for use. If the funding source is `Canceled`, the payment mandate status also changes to `Canceled`. |
+| `Canceled` | When a funding source is `Canceled`, the associated payment mandate status also changes to `Canceled`. |
 | `Rejected` | The `Rejected` status isn't used for account funding. |
 
 *API Reference: [`PaymentMandateStatusInfo`](https://api-reference.swan.io/interfaces/payment-mandate-status-info)*
@@ -154,7 +152,7 @@ flowchart LR
 
 | Account verification status | Explanation |
 |:---:|---|
-| `PendingVerification` | The funding source was added, and account verification for the funding source is in progress.<br /><br />*Please note that the funding source status can be `Enabled` even if the account verification status is `PendingVerification`.* ∗ |
+| `PendingVerification` | The funding source was added, and account verification for the funding source is in progress.<br /><br />*Please note that the funding source status can be `Enabled` even if the account verification status is `PendingVerification`.* |
 | `Verified` | Swan verified that the external account used for funding is accessible to the account holder or eligible account member funding the Swan account. This typically means that a first account funding attempt was successful. |
 | `Rejected` | Swan couldn't verify that the external account used for funding is accessible to the account holder or eligible account member funding the Swan account. |
 
@@ -173,13 +171,13 @@ sequenceDiagram
     participant S as Swan
     participant A as Account holder or member
     participant D as Debtor institution
-    A-->>S: Adds an account funding source
+    A-->>S: Adds account funding source
     Note over S: Funding source status → `Pending`<br />Payment mandate status → `ConsentPending`<br />Account verification status → `PendingVerification`
-    S-->>A: Requests consent to adding the account funding source<br />and the payment mandate
+    S-->>A: Requests consent to adding the account funding source<br />and to the payment mandate
     alt
     rect rgb(253, 235, 219)
-    A-->>S: Doesn't consent to payment mandate
-    Note over S: All statuses remain the same
+    A--xS: Doesn't consent to payment mandate
+    Note over S: Funding source status remains `Pending`<br />Payment mandate status remains `ConsentPending`<br />Account verification remains `PendingVerification`
     end
     else
     rect rgb(210 246 231)
@@ -187,21 +185,37 @@ sequenceDiagram
     Note over S: Funding source status → `Enabled`<br />Payment mandate status → `Enabled`<br />Account verification status remains `PendingVerification`
     end
     end
-    alt declares mandate to debtor institution
-    rect rgb(210 246 231)
-        A-->>D: Declares payment mandate<br />to debtor institution
-        A-->>S: Initiates account funding request
-        S-->>A: Returns successful transaction message
-        Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status → `Verified`
-    end
-    else doesn't declare mandate to debtor institution
+    A-->>D: Declares payment mandate<br />to debtor institution (mandatory)
+    A-->>S: Initiates account funding request
+    S-->>D: Sends direct debit instruction
+    Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification remains `PendingVerification`
+    alt debtor didn't declare mandate to debtor institution in step ➎
     rect rgb(253, 235, 219)
-        A-->>S: Initiates account funding request
+        D--xS: Doesn't transfer funds to Swan account
         S-->>A: Returns failed transaction message
         Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status remains `PendingVerification`
     end
+    else debtor declared mandate to debtor institution in step ➎
+        rect rgb(210 246 231)
+        D-->>S: Transfers funds to Swan account
+        end
+        S-->>S: Confirms debtor name and IBAN
+        alt debtor name and IBAN match funding source
+            rect rgb(210 246 231)
+            S-->>A: Returns successful transaction message
+            Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status → `Verified`
+        end
+        else debtor name and IBAN don't match funding source
+        rect rgb(253, 235, 219)
+        S-->>A: Returns failed transaction message
+        Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification remains `PendingVerification`
+        end
+        end
     end
 ```
+
+> ∗ When the debtor institution transfers funds to the Swan account, Swan confirms that the debtor name and IBAN match the name and IBAN provided for the funding source.
+> If they don't match, 
 
 ## Rolling reserve {#rolling-reserve}
 

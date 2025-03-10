@@ -45,6 +45,13 @@ If Swan encounters an error during a webhook request, the request is retried eve
 If all retries fail, you can retry it manually by selecting **Retry** from your **Dashboard** > **Developers** > **Webhooks**.
 You can also trigger the webhook manually at any time.
 
+### Token and rate limiting {#token-rate-limits}
+
+[rate limiting](../index.mdx#rate-limits)
+
+- add token to webhook responses
+- single-use token; if used twice, Swan still answers the API call but it counts toward your rate limiting
+
 ### Subscription limits {#subscription-limits}
 
 In order to avoid overconsumption caused by too many subscriptions to the same webhook event, there's a limit on how many subscriptions you can enable per event.
@@ -109,8 +116,8 @@ Webhook notifications contain the following information in a `POST` request:
 Note that `eventType` is the action performed on which resource type, `eventId` is a unique ID for this event, and  `resourceId` is a unique ID for the resource.
 
 :::caution Limited information
-For security reasons, webhook notifications **include limited information**.
-You can always **query the API** for more information about these events.
+For security reasons, webhook notifications include limited information.
+You can always query the API for more information about these events.
 :::
 
 ### Idempotent process {#event-handling-idempotent}

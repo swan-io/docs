@@ -79,15 +79,39 @@ On the onboarding form, choose `Legal representative` for type of control exerci
 No other additional information is required in the UBO section for legal representative UBOs.
 :::
 
-### Country-specific information {#country-info}
+### Retrieving data automatically {#retrieve-data}
 
-Requested information can change based on your account country.
-Refer to the [tables later on this page](#country-reqs) for country-specific requirements.
+For companies located in 🇫🇷 France, Swan retrieves available data automatically from the national business registry after you provide the company's registration number.
+By allowing Swan to retrieve the data, you don't need to ask your users for certain information.
+
+To trigger automatic retrieval, `residencyAddress.country` must be `FRA` and you must provide the `registrationNumber`.
+These fields are the only mandatory data you need to include when creating French company onboardings.
+
+#### Representative data {#retrieve-data-rep}
+
+For data about representatives (UBOs and legal representatives), how Swan applies registry data depends on what you provide:
+
+- If you **provide** data, Swan doesn't override your values with data from the registry.
+- If you **don't provide** data, Swan creates the API objects and fills in the available data from the registry. Note that the registry information isn't always complete.
+
+#### Other data {#retrieve-data-other}
+
+For all other data, review the following table to understand how Swan applies retrieved data.
+
+| Event | Providing data | Example |
+|---|---|---|
+| **Create** an onboarding | Swan fills in as many onboarding fields as possible with data from the registry. Note that the registry information isn't always complete.<br /><br />If you provide data manually when creating the onboarding, Swan doesn't override those values, only filling in the other data. | You: <ul><li>Provide the mandatory `residencyAddress.country` and `registrationNumber`.</li><li>Provide the `vatNumber`, which could be retrieved from the registry.</li></ul>Swan: <ul><li>Keeps the `vatNumber` you provided.</li><li>Fills in all other fields with the retrieved data.</li></ul> |
+| **Update** an onboarding | Swan overrides any data you provided manually when creating the onboarding with data from the registry, unless you provide it again. | You: <ul><li>Specify the `language`.</li><li>Don't provide the `vatNumber` again.</li></ul>Swan: <ul><li>Replaces the `vatNumber` you provided when creating the onboarding with the `vatNumber` retrieved from the registry.</li><li>Saves the `language` data.</li></ul> |
+
+:::caution Overriding data
+When you create and update onboardings, Swan automatically fills in available data from the registry.
+If you need to update an onboarding, and you provided data manually when creating that onboarding, provide the data again if you don't want Swan to override it.
+:::
 
 ## Identification recommendations {#identification-recommendations}
 
 Swan must verify the identity of the [legal representative](../../../glossary.mdx#legal-representative) for each company.
-Swan supports multiple [**identification processes**](../../users/identifications/index.mdx#levels-processes), and some require a [**first transfer**](../account-holders/index.mdx#first-transfer).
+Swan supports multiple [identification processes](../../users/identifications/index.mdx#levels-processes), and some require a [first transfer](../account-holders/index.mdx#first-transfer).
 For company onboarding, the following levels are recommended based on the account country.
 
 | Account country | Recommended level for legal representative | Other supported levels |
@@ -145,7 +169,8 @@ If the cell is empty, the field is optional.
 
 > ^ *`isRegistered` must be `true` and the `registrationNumber` provided for **all onboardings** where `companyType` is `Company`.
 This also applies when `companyType` is `SelfEmployed` **and** the account country is `France`.
-Swan overrides `isRegistered` if the provided value is `false` but it should be `true`.*
+Swan overrides `isRegistered` if the provided value is `false` but it should be `true`.
+Learn more about how [Swan retrieves data](#retrieve-data) for certain company accounts.*
 >
 > ∗ *If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
 Otherwise, the account is `Suspended`.

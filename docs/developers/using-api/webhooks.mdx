@@ -45,6 +45,13 @@ If Swan encounters an error during a webhook request, the request is retried eve
 If all retries fail, you can retry it manually by selecting **Retry** from your **Dashboard** > **Developers** > **Webhooks**.
 You can also trigger the webhook manually at any time.
 
+### Token and rate limiting {#token-rate-limits}
+
+[rate limiting](../index.mdx#rate-limits)
+
+- add token to webhook responses
+- single-use token; if used twice, Swan still answers the API call but it counts toward your rate limiting
+
 ### Subscription limits {#subscription-limits}
 
 In order to avoid overconsumption caused by too many subscriptions to the same webhook event, there's a limit on how many subscriptions you can enable per event.
@@ -109,8 +116,8 @@ Webhook notifications contain the following information in a `POST` request:
 Note that `eventType` is the action performed on which resource type, `eventId` is a unique ID for this event, and  `resourceId` is a unique ID for the resource.
 
 :::caution Limited information
-For security reasons, webhook notifications **include limited information**.
-You can always **query the API** for more information about these events.
+For security reasons, webhook notifications include limited information.
+You can always query the API for more information about these events.
 :::
 
 ### Idempotent process {#event-handling-idempotent}
@@ -166,7 +173,7 @@ flowchart LR
 
 ## List of webhook events {#events}
 
-The first part of the `eventType` will tell you what resources to query in an API call. In the following table, you will find all the event types and examples of their functional triggers.
+The first part of the `eventType` tells you what resources to query in an API call. In the following table, review all the event types and examples of their functional triggers.
 
 ### [Account holders](../../topics/onboarding/account-holders/index.mdx) {#events-account-holders}
 
@@ -232,7 +239,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 | `eventType` | Explanation |
 | --- | --- |
-| `Consent.Canceled` | Consent was canceled by the Partner |
+| `Consent.Canceled` | Consent was canceled by the Partner or end user |
 | `Consent.Created` | Consent was created for a sensitive operation |
 | `Consent.Expired` | Consent expired without being refused or granted |
 | `Consent.Granted` | User accepted a sensitive operation  |
@@ -282,7 +289,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 | `MerchantPayment.Authorized` | Merchant payment was authorized |
 | `MerchantPayment.Captured` | Merchant payment was captured |
 | `MerchantPayment.Created` | Merchant payment was created |
-| `MerchantPayment.Rejected` | Merchant payment was rejected |
+| `MerchantPayment.Rejected` | Merchant payment was rejected (declined, refused) |
 
 
 ### [Payments](../../topics/payments/index.mdx) {#events-payments}
@@ -305,12 +312,12 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 | `eventType` | Explanation |
 | --- | --- |
-| `Transaction.Booked` | Transaction was completed and will appear on the account statement |
+| `Transaction.Booked` | Transaction was completed and appears on the account statement |
 | `Transaction.Canceled` | Upcoming direct debit was canceled |
 | `Transaction.Deleted` | Scheduled direct debit was deleted  |
 | `Transaction.Enriched` | [Enriched transaction information](../../topics/payments/cards/index.mdx#enriched) was received for a card transaction outside of a status update |
 | `Transaction.Pending` | Outgoing SEPA Credit Transfer was processed and is waiting for the next SEPA batch, a card authorization was accepted, and more |
-| `Transaction.Rejected` | Transaction was rejected for compliance reasons |
+| `Transaction.Rejected` | Transaction was rejecteded (declined, refused) |
 | `Transaction.Released` | Transaction was released |
 | `Transaction.Upcoming` | Transaction was booked for a future date |
 | `TransactionStatement.Generated` | [Transaction statement](../../topics/payments/index.mdx#transactions-statements) was generated successfully |

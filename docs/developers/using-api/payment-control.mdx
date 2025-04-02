@@ -21,7 +21,7 @@ Refer to the [card payments section](../../topics/payments/cards/index.mdx) for 
 
 1. **Respond quickly**. In the [Live environment](../index.mdx#environments), authorizations time out after **1.5 seconds**.
 1. Make your payment control process [**idempotent**](#idempotent) for each transaction.
-1. Choose **accept** as your [**default response**](#configure) in case of timeout for a better user experience.
+1. Choose **accept** as your [**default response**](#configure) in case of a timeout for a better user experience.
 1. **Consider [capture types](#flow-capture)** as you configure your payment control.
 1. You **can't reject** transactions based on digital wallet provider, as per your and Swan's agreement with Mastercard. Swan shares the `digitalCardWalletProvider` in the [`POST` request](#swan-request).
 
@@ -100,7 +100,7 @@ Enter your information and click **Save**.
 
 - **Enabled**: Only enabled payment control endpoints can be used and updated.
 - **Endpoint URL**: Enter your endpoint (mandatory), using either `http` or `https`.
-- **Default response**: In case of timeout, choose whether you **accept** or **reject** the transaction by default. Swan suggests choosing **accept** for a better cardholder experience.
+- **Default response**: In case of a timeout, choose whether you **accept** or **reject** the transaction by default. Swan suggests choosing **accept** for a better cardholder experience.
 - **Timeout**: Timeout is up to 10 seconds (10000 milliseconds) in Sandbox. In Live, it's 1.5 seconds (1500 milliseconds) and not configurable.
 - **Secret**: Generate a secret. Make sure to add it to your `x-swan-secret` header.
 
@@ -160,7 +160,7 @@ Send your response in the `accepted` field with a Boolean: `true` or `false`.
 
 If `allowsPartialAuthorization` is `true` in Swan's `POST` request, you can also return `partialAuthorizationAmountValue` in your response.
 
-In case of timeout, or if your endpoint wasn't reachable, Swan applies your [default response](#configure), which you set when configuring payment control.
+In case of a timeout, or if your endpoint wasn't reachable, Swan applies your [default response](#configure), which you set when configuring payment control.
 
 ```json title="Partner response" {7} showLineNumbers
 { 
@@ -174,5 +174,5 @@ In case of timeout, or if your endpoint wasn't reachable, Swan applies your [def
 | Use case | In your response |
 | --- | --- |
 | ✓ **Accept** the authorized amount | Set `accepted` to `true`.<br />Don't include `partialAuthorizationAmountValue` in your response. |
-| ↓ **Decrease** the authorized amount | Set `accepted` to `true`.<br />Include the lower the authorized amount in the `partialAuthorizationAmountValue`. The lower authorized amount must be greater than 0 and less than the original authorized amount. |
+| ↓ **Decrease** the authorized amount | Set `accepted` to `true`.<br />Include the lower authorized amount in the `partialAuthorizationAmountValue`. The lower authorized amount must be greater than 0 and less than the original authorized amount. |
 | ✕ **Reject** the partial authorization | Set `accepted` to `false`.<br />Don't include `partialAuthorizationAmountValue` in your response. |

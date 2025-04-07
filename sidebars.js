@@ -210,6 +210,7 @@ module.exports = {
           items: [
             "topics/cards/overview/guide-issue",
             "topics/cards/overview/guide-update",
+            "topics/cards/overview/guide-export",
           ],
         },
         {

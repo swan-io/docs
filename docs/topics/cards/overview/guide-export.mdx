@@ -23,11 +23,16 @@ Review the next steps to understand what happens after finalizing your export.
 
 ### Mutation {#api-mutation}
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0Q2FyZHMgewogIGV4cG9ydENhcmREYXRhKGlucHV0OiB7IGVtYWlsOiAiJFlPVVJfRU1BSUxfQUREUkVTUyIgfSkgewogICAgLi4uIG9uIEV4cG9ydERhdGFTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZXhwb3J0SWQKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtU2ltdWx0YW5lb3VzRXhwb3J0c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE1heGltdW1EYWlseUV4cG9ydHNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0Q2FyZHMgewogIGV4cG9ydENhcmREYXRhKAogICAgaW5wdXQ6IHsKICAgICAgZW1haWw6ICIkWU9VUl9FTUFJTF9BRERSRVNTIgogICAgICBmaWx0ZXJzOiB7IHR5cGVzOiBWaXJ0dWFsLCBzdGF0dXNlczogRW5hYmxlZCB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gRXhwb3J0RGF0YVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBleHBvcnRJZAogICAgfQogICAgLi4uIG9uIE1heGltdW1TaW11bHRhbmVvdXNFeHBvcnRzUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTWF4aW11bURhaWx5RXhwb3J0c1JlYWNoZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
 
-```graphql {2,5} showLineNumbers
+```graphql {4,5,10} showLineNumbers
 mutation ExportCards {
-  exportAccountHolderData(input: { email: "$YOUR_EMAIL_ADDRESS" }) {
+  exportCardData(
+    input: {
+      email: "$YOUR_EMAIL_ADDRESS"
+      filters: { types: Virtual, statuses: Enabled }
+    }
+  ) {
     ... on ExportDataSuccessPayload {
       __typename
       exportId

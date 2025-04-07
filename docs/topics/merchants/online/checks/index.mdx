@@ -16,7 +16,7 @@ New Caledonia, French Polynesia, and Wallis and Futuna aren't currently supporte
 While paper checks aren't the most convenient or secure payment method, they are still a valid way to exchange money.
 Some users prefer checks, and merchants can accept French checks if they activate this payment method for accepting payments.
 
-Checks must be **unique**, with different a CMC7 code and RLMC key for each check.
+Checks must be **unique**, with a different CMC7 code and RLMC key for each check.
 If a check is canceled or rejected, however, the same check can be resubmitted.
 Please note that checks aren't sent back to the account holder unless they're rejected.
 
@@ -24,7 +24,7 @@ Please note that checks aren't sent back to the account holder unless they're re
 
 When declaring checks with the API, there are five mandatory API fields:
 
-1. `amount`: monetary amount of the check (can't exceed 10 000€).
+1. `amount`: monetary amount of the check (can't exceed 10,000€).
 1. `currency`: `EUR` (only euros are supported).
 1. `CMC7` (Caractères Magnétiques Codés à 7 bâtonnets): 31-digit code composed of 3 series of numbers.
     - Series 1: check number; 7 digits
@@ -56,7 +56,11 @@ It's a database of stolen and opposed checks made available to remitters by the 
 
 When your merchants accept check payments with Swan, Swan **verifies the check's regularity** with the *Banque de France*.
 You **receive the result** of a check's verification **with the API**, and your merchants see the result If you use Swan's Web Banking interface.
-If you're not using Web Banking, consider **integrating the FNCI result** in your product. 
+If you're not using Web Banking, you must **integrate the FNCI result** into your product to meet compliance requirements.
+
+:::tip 
+If you're using the full-API integration or the open-source [Swan Banking Frontend](https://swan-io.github.io/swan-partner-frontend/), consider customizing the FNCI result message to better suit your clients. Keep the detailed information hidden within a dropdown for an improved user experience.
+:::
 
 ### FNCI results {#fnci-results}
 
@@ -117,7 +121,7 @@ A check transaction can be rejected for the following reasons:
 | Rejection reason | Explanation |
 | --- | --- |
 | `AmountMismatch` | Amount on the check and amount declared through the API don't match. |
-| `BeneficiaryMismatch` | Amount beneficiary name the check and the name declared through the API don't match. |
+| `BeneficiaryMismatch` | Beneficiary name on the check and the name declared through the API don't match. |
 | `BeneficiaryMissingOrIncorrect` | Merchant's name is missing or incorrect. |
 | `CheckNotReceived` | Check wasn't received by Swan's check provider. This reason doesn't appear until 30 days after the check was declared. |
 | `CheckReceivedLate` | Check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check. |
@@ -138,12 +142,12 @@ A check transaction might be returned for the following reasons (this list is no
 - Account closed
 - Loss or theft
 
-By the time a check is returned, the merchant's account has already be credited.
+By the time a check is returned, the merchant's account has already been credited.
 Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `checkInReturn` transaction is created automatically.
 
 ### Canceled {#canceled}
 
-Creditors can cancel a received check with the `Upcoming` status *unless* the check processing center already received the check.
+Creditors can cancel a received check with the `Upcoming` status *unless* the check processing center has already received the check.
 In this case of a canceled check, the status switches automatically to `Canceled`.
 This transaction won't impact the account's available balance.
 

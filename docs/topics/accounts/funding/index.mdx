@@ -196,23 +196,10 @@ sequenceDiagram
         rect rgb(210 246 231)
         D-->>S: Transaction is booked
         end
-        S-->>S: Transaction’s reserved balance is released
+        S-->>S: Reserved balance is released
         Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status → `Verified`
-        alt debtor name and IBAN match funding source
-            rect rgb(210 246 231)
-            S-->>A: Returns successful transaction message
-        end
-        else debtor name and IBAN don't match funding source
-        rect rgb(253, 235, 219)
-        S-->>A: Returns failed transaction message
-        Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification remains `PendingVerification`
-        end
-        end
     end
 ```
-
-> ∗ When the debtor institution transfers funds to the Swan account, Swan confirms that the debtor name and IBAN match the name and IBAN provided for the funding source.
-> If they don't match, 
 
 ## Rolling reserve {#rolling-reserve}
 

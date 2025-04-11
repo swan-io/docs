@@ -36,35 +36,35 @@ If the date indicated is a non-business day, the transaction will be executed on
 
 ```graphql {4,5,6} showLineNumbers
 mutation InitiateSdd {
-initiateSepaDirectDebitMerchantPayment(
-input: {
-mandateId: "$YOUR_MANDATE_ID"
-amount: { value: "75", currency: "EUR" }
-label: "Your Merchant's Name"
-requestedExecutionAt: "2024-04-12T16:28:22.867Z"
-}
-) {
-... on InitiateSepaDirectDebitMerchantPaymentSuccessPayload {
-__typename
-paymentId
-}
-... on ForbiddenRejection {
-__typename
-message
-}
-... on NotFoundRejection {
-id
-message
-}
-... on InternalErrorRejection {
-__typename
-message
-}
-... on ValidationRejection {
-__typename
-message
-}
-}
+  initiateSepaDirectDebitMerchantPayment(
+    input: {
+      mandateId: "$YOUR_MANDATE_ID"
+      amount: { value: "75", currency: "EUR" }
+      label: "Your Merchant's Name"
+      requestedExecutionAt: "2024-04-12T16:28:22.867Z"
+    }
+  ) {
+    ... on InitiateSepaDirectDebitMerchantPaymentSuccessPayload {
+      __typename
+      paymentId
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      id
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+  }
 }
 
 ```
@@ -75,12 +75,12 @@ Note the `id` (line 5) for your SEPA Direct Debit payment.
 
 ```json {5} showLineNumbers
 {
-"data": {
-"initiateSepaDirectDebitMerchantPayment": {
-"__typename": "InitiateSepaDirectDebitMerchantPaymentSuccessPayload",
-"paymentId": "$YOUR_PAYMENT_ID"
-}
-}
+  "data": {
+    "initiateSepaDirectDebitMerchantPayment": {
+      "__typename": "InitiateSepaDirectDebitMerchantPaymentSuccessPayload",
+      "paymentId": "$YOUR_PAYMENT_ID"
+    }
+  }
 }
 ```
 

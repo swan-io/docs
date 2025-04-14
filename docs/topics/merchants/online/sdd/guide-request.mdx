@@ -25,7 +25,7 @@ import WebhookNotification from '../../partials/_webhooks.mdx';
 This example uses Swan's [SEPA creditor identifier](./index.mdx#sci).
 If your merchant already has their own SEPA creditor identifier, choose `false` (lines 7, 11).
 
-```graphql {4-7,9-11,20-24,27-31} showLineNumbers
+```graphql {4-7,9-11,20-24,26-28,31-35,37-39} showLineNumbers
 mutation RequestSepaDirectDebit {
   requestMerchantPaymentMethods(
     input: {
@@ -47,6 +47,10 @@ mutation RequestSepaDirectDebit {
           id
           ... on SepaDirectDebitB2BMerchantPaymentMethod {
             methodId
+              paymentAmountLimit {
+              currency
+              value
+            }
             type
             statusInfo {
               status
@@ -54,6 +58,10 @@ mutation RequestSepaDirectDebit {
           }
           ... on SepaDirectDebitCoreMerchantPaymentMethod {
             methodId
+            paymentAmountLimit {
+              currency
+              value
+            }
             type
             statusInfo {
               status
@@ -86,7 +94,7 @@ mutation RequestSepaDirectDebit {
 
 The payload confirms that both `SepaDirectDebitCore` and `SepaDirectDebitB2b` were requested successfully with the status `PendingReview`.
 
-```json {8-9,11,15-16,18} showLineNumbers
+```json {8-10,12,16-18,20} showLineNumbers
 {
   "data": {
     "requestMerchantPaymentMethods": {
@@ -94,14 +102,16 @@ The payload confirms that both `SepaDirectDebitCore` and `SepaDirectDebitB2b` we
       "merchantProfile": {
         "merchantPaymentMethods": [
           {
-            "methodId": "sddcore_15d5ac1d-da75-4a48-98cd-b76c43e16fa3",
+            "methodId": "$PAYMENT_METHOD_ID",
+            "paymentAmountLimit": null,
             "type": "SepaDirectDebitCore",
             "statusInfo": {
               "status": "PendingReview"
             }
           },
           {
-            "methodId": "sddb2b_15d5ac1d-da75-4a48-98cd-b76c43e16fa3",
+            "methodId": "$PAYMENT_METHOD_ID",
+            "paymentAmountLimit": null,
             "type": "SepaDirectDebitB2b",
             "statusInfo": {
               "status": "PendingReview"

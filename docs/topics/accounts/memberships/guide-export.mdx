@@ -1,0 +1,78 @@
+---
+title: Export account membership data
+---
+
+# Export account membership data
+
+You can export the account membership data available on the Dashboard, either from your Dashboard or with the API.
+Review the next steps to understand what happens after finalizing your export.
+
+## Dashboard {#dashboard}
+
+1. On your Dashboard, go to **Data** > **Account memberships**.
+1. Click the **download icon** to trigger a `.csv` export.
+1. If required, add filters to your export (lines 5-11).
+1. A modal appears. Click **Export data** to finalize the request.
+
+![Screenshot of Swan Dashboard account memberships page with a callout download icon to trigger an export](../../../images/topics/accounts/membership-export.png)
+
+## API {#api}
+
+1. Call the `exportAccountMembershipData` mutation.
+1. Add your `email`. A link to download the `.csv` export is sent to the email address you provide.
+1. Add the success payload and rejections.
+
+### Mutation {#api-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0QWNjb3VudE1lbWJlcnNoaXBzIHsKICBleHBvcnRBY2NvdW50TWVtYmVyc2hpcERhdGEoCiAgICBpbnB1dDogewogICAgICBlbWFpbDogIiRZT1VSX0VNQUlMX0FERFJFU1MiCiAgICAgIGZpbHRlcnM6IHsKICAgICAgICBzdGF0dXM6IEVuYWJsZWQKICAgICAgICBjYW5Jbml0aWF0ZVBheW1lbnRzOiB0cnVlCiAgICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IGZhbHNlCiAgICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogZmFsc2UKICAgICAgICBjYW5NYW5hZ2VDYXJkczogdHJ1ZQogICAgICAgIGNhblZpZXdBY2NvdW50OiB0cnVlCiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBFeHBvcnREYXRhU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGV4cG9ydElkCiAgICB9CiAgICAuLi4gb24gTWF4aW11bVNpbXVsdGFuZW91c0V4cG9ydHNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtRGFpbHlFeHBvcnRzUmVhY2hlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {4,5-11,17} showLineNumbers
+mutation ExportAccountMemberships {
+  exportAccountMembershipData(
+    input: {
+      email: "$YOUR_EMAIL_ADDRESS"
+      filters: {
+        status: Enabled
+        canInitiatePayments: true
+        canManageAccountMembership: false
+        canManageBeneficiaries: false
+        canManageCards: true
+        canViewAccount: true
+      }
+    }
+  ) {
+    ... on ExportDataSuccessPayload {
+      __typename
+      exportId
+    }
+    ... on MaximumSimultaneousExportsRejection {
+      __typename
+      message
+    }
+    ... on MaximumDailyExportsReachedRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+### Payload {#api-payload}
+
+The payload returns the export ID.
+
+```json {5} showLineNumbers
+{
+  "data": {
+    "exportAccountMembershipData": {
+      "__typename": "ExportDataSuccessPayload",
+      "exportId": "$EXPORT_ID"
+    }
+  }
+}
+```
+
+## Next steps {#next}
+
+import ExportNextSteps from '../../partials/_export-next-steps.mdx';
+
+<ExportNextSteps />

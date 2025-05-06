@@ -87,6 +87,7 @@ module.exports = {
           items: [
             "topics/accounts/overview/guide-generate-statement",
             "topics/accounts/overview/guide-get-bank-details",
+            "topics/accounts/overview/guide-export",
           ],
         },
         {

@@ -22,7 +22,7 @@ You need a **project access token** to call the query.
 
 ## Query {#query}
 
-🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgTGlzdENhcmRUcmFuc2FjdGlvbnMgewogIGNhcmQoY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIpIHsKICAgIHRyYW5zYWN0aW9ucyB7CiAgICAgIGVkZ2VzIHsKICAgICAgICBub2RlIHsKICAgICAgICAgIC4uLiBvbiBDYXJkVHJhbnNhY3Rpb24gewogICAgICAgICAgICBpZAogICAgICAgICAgICBjYXRlZ29yeQogICAgICAgICAgICBsYWJlbAogICAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgICB0eXBlCiAgICAgICAgICAgIGFtb3VudCB7CiAgICAgICAgICAgICAgY3VycmVuY3kKICAgICAgICAgICAgICB2YWx1ZQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgICBwYXltZW50SWQKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgTGlzdENhcmRUcmFuc2FjdGlvbnMgewogIGNhcmQoY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIpIHsKICAgIHRyYW5zYWN0aW9ucyB7CiAgICAgIGVkZ2VzIHsKICAgICAgICBub2RlIHsKICAgICAgICAgIC4uLiBvbiBDYXJkVHJhbnNhY3Rpb24gewogICAgICAgICAgICBpZAogICAgICAgICAgICBsYWJlbAogICAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgICB0eXBlCiAgICAgICAgICAgIGFtb3VudCB7CiAgICAgICAgICAgICAgY3VycmVuY3kKICAgICAgICAgICAgICB2YWx1ZQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgICBwYXltZW50SWQKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
 
 ```graphql {2,6} showLineNumbers
 query ListCardTransactions {
@@ -32,7 +32,6 @@ query ListCardTransactions {
         node {
           ... on CardTransaction {
             id
-            category
             label
             statusInfo {
               status
@@ -54,9 +53,9 @@ query ListCardTransactions {
 ## Payload {#payload}
 
 Review these two card transactions for an eCommerce purchase: the authorization and the final payment.
-Each transaction has its own transaction ID (lines 8, 24) but share the same payment ID (lines 19,35)
+Each transaction has its own transaction ID (lines 8, 23) but share the same payment ID (lines 18, 33)
 
-```json {8,19,24,35} showLineNumbers
+```json {8,18,23,33} showLineNumbers
 {
   "data": {
     "card": {
@@ -64,8 +63,7 @@ Each transaction has its own transaction ID (lines 8, 24) but share the same pay
         "edges": [
           {
             "node": {
-              "id": "decao_14fd19a4320c78b9aa7716940530604f",
-              "category": "eCommerce",
+              "id": "decao_af21958a1f6b29f191c386b14217d8c5",
               "label": "Book purchase",
               "statusInfo": {
                 "status": "Booked"
@@ -73,15 +71,14 @@ Each transaction has its own transaction ID (lines 8, 24) but share the same pay
               "type": "CardOutDebit",
               "amount": {
                 "currency": "EUR",
-                "value": "15.00"
+                "value": "20.00"
               },
-              "paymentId": "cro_50680a1bfb6590742056a3d257c54b76"
+              "paymentId": "cro_f12d71a2a601affcb69f61bc8669e919"
             }
           },
           {
             "node": {
-              "id": "aucao_455c6e1d97ed66fcff868e09c87dd313",
-              "category": "eCommerce",
+              "id": "aucao_d0c6cc158978d783d53c65bd659454ca",
               "label": "Book purchase",
               "statusInfo": {
                 "status": "Released"
@@ -89,9 +86,9 @@ Each transaction has its own transaction ID (lines 8, 24) but share the same pay
               "type": "CardOutAuthorization",
               "amount": {
                 "currency": "EUR",
-                "value": "0.00"
+                "value": "15.00"
               },
-              "paymentId": "cro_50680a1bfb6590742056a3d257c54b76"
+              "paymentId": "cro_f12d71a2a601affcb69f61bc8669e919"
             }
           },
         ]

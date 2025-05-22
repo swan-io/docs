@@ -1,0 +1,44 @@
+---
+title: 22 May 2025
+type: release
+---
+
+## New features
+
+💳 You can now disable users from updating their card settings in Swan's Web Banking from your **Dashboard** > **Web banking** settings tab. 
+When disabled, users with the `CanUpdateCards` permission can only update card limits through your product, not Web Banking.
+
+## Improvements
+
+🧭 We've made several improvements to your **Dashboard**:
+- The Dashboard search now returns more **accurate results**. 
+Results automatically narrow as you type and add more details.
+This update is available on the Account Holders, Onboarding, Account, Account Memberships, and Capital Deposits pages.
+- **Filters** have a new look across all Dashboard pages to help you find data more efficiently.
+We added **quick filters** for all **verification statuses** on the Account Holders page based on user feedback.
+We **removed the Verifications page** because the new filters provide the same information in a more accessible way.
+
+🔍 We've added [new filters](https://api-reference.swan.io/inputs/transactions-filters-input/) to enhance searching for [transaction information](/topics/payments/overview/guide-get-transaction-info/) by **amount** and **execution date** in the **API**:
+
+- **Amount** filters: we added `isAboveAmount` and `isBelowAmount`. We also updated the `amount` filter to return an exact match.
+These filters are now cumulative and will replace the current `amount` field in the transactions search filter (*see upcoming breaking change*).
+- **Execution date** filters: we added `isAfterExecutionDate` and `isBeforeExecutionDate`.
+
+✍️ The `requestMerchantPaymentMethods` mutation now validates your [SEPA Creditor Identifier (SCI)](/topics/merchants/online/sdd/#sci) when you request [SEPA Direct Debit](/topics/merchants/online/sdd/guide-request/).
+If the SCI is invalid, the mutation will reject it, helping you avoid blocked transactions in the future.
+
+📝 You can now retrieve all transactions initiated by a standing order using the `standingOrder.transactions` [query](https://api-reference.swan.io/objects/standing-order/#standingordertransactionstransactionconnection-).
+
+## API updates
+
+### Upcoming breaking changes
+👥 Starting **June 19th**, the `amount` field will be removed from the transactions `search` filter.
+Please use the amount filters to refine your search.
+
+💸 Starting **June 19th**, the `beneficiaryId` and `isMyOwnIban` input fields will be removed from the `initiateCreditTransfers` mutation.
+The `isMyOwnIban` field will become optional.
+
+🛑 Starting **June 19th**, a new rejection type, `ValidationRejection`, will be used to validate an input in the `initiateCreditTransfers` mutation.
+
+🚫 Starting **June 19th**, calls to `scheduleStandingOrder` with an invalid `reference` will be rejected. 
+See the [API reference](https://api-reference.swan.io/inputs/schedule-standing-order-input#schedulestandingorderinputreferencestring-) for the regex pattern.

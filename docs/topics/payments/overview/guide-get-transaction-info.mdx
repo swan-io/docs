@@ -18,19 +18,25 @@ This sample queries the project's `Booked` transactions.
 
 1. Call the `transactions` query.
 1. Add all the information you'd like to review.
-    - The sample query uses several `transactions` query options, including filtering for only `Booked` transactions and adding the transaction type (line 2).
-    - It also exposes the creditors' full IBANs and BICs for SEPA Credit Transfers (lines 19-23).
-    - Confirm whether a [transaction statement](../index.mdx#transactions-statements) can be generated (line 26).
+    - The sample query uses several `transactions` query options, including filtering for `status`, `amount`, and `isBeforeExecutionDate` (line 3-6).
+    - It also exposes the creditors' full IBANs and BICs for SEPA Credit Transfers (lines 25-29).
+    - Confirm whether a [transaction statement](../index.mdx#transactions-statements) can be generated (line 32).
 1. Add optional messages to the success payload, either for validation or in case of rejection.
     - The sample query adds a more thorough `Booked` payload.
 
 ### Query {#query-multiple}
 
-🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgQm9va2VkVHJhbnNhY3Rpb25zIHsKICB0cmFuc2FjdGlvbnMoZmlsdGVyczogeyBzdGF0dXM6IEJvb2tlZCB9KSB7CiAgICBlZGdlcyB7CiAgICAgIG5vZGUgewogICAgICAgIGFtb3VudCB7CiAgICAgICAgICBjdXJyZW5jeQogICAgICAgICAgdmFsdWUKICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBCb29rZWRUcmFuc2FjdGlvblN0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGJvb2tpbmdEYXRlCiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB2YWx1ZURhdGUKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdHlwZQogICAgICAgIC4uLiBvbiBTRVBBQ3JlZGl0VHJhbnNmZXJUcmFuc2FjdGlvbiB7CiAgICAgICAgICBjcmVkaXRvciB7CiAgICAgICAgICAgIEJJQwogICAgICAgICAgICBJQkFOCiAgICAgICAgICAgIG1hc2tlZElCQU4KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgc3RhdGVtZW50Q2FuQmVHZW5lcmF0ZWQKICAgICAgfQogICAgfQogICAgdG90YWxDb3VudAogIH0KfQo%3D&tab=api)
+🔎 [Open the query in API Explorer](https://explorer.swan.io?query=cXVlcnkgQm9va2VkVHJhbnNhY3Rpb25zIHsKICB0cmFuc2FjdGlvbnMoCiAgICBmaWx0ZXJzOiB7CiAgICAgIHN0YXR1czogQm9va2VkCiAgICAgIGlzQWJvdmVBbW91bnQ6ICIkWU9VUl9BTU9VTlQiCiAgICAgIGlzQWZ0ZXJFeGVjdXRpb25EYXRlOiAiJFlPVVJfRVhFQ1VUSU9OX0RBVEUiCiAgICB9CiAgKSB7CiAgICBlZGdlcyB7CiAgICAgIG5vZGUgewogICAgICAgIGFtb3VudCB7CiAgICAgICAgICBjdXJyZW5jeQogICAgICAgICAgdmFsdWUKICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBCb29rZWRUcmFuc2FjdGlvblN0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGJvb2tpbmdEYXRlCiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB2YWx1ZURhdGUKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdHlwZQogICAgICAgIC4uLiBvbiBTRVBBQ3JlZGl0VHJhbnNmZXJUcmFuc2FjdGlvbiB7CiAgICAgICAgICBjcmVkaXRvciB7CiAgICAgICAgICAgIEJJQwogICAgICAgICAgICBJQkFOCiAgICAgICAgICAgIG1hc2tlZElCQU4KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgc3RhdGVtZW50Q2FuQmVHZW5lcmF0ZWQKICAgICAgfQogICAgfQogICAgdG90YWxDb3VudAogIH0KfQo%3D&tab=api)
 
-```graphql {2,11-15,19-23,26} showLineNumbers
+```graphql {3-6,17-21,25-29,32} showLineNumbers
 query BookedTransactions {
-  transactions(filters: { status: Booked }) {
+  transactions(
+    filters: {
+      status: Booked
+      isAboveAmount: "$YOUR_AMOUNT"
+      isAfterExecutionDate: "$YOUR_EXECUTION_DATE"
+    }
+  ) {
     edges {
       node {
         amount {
@@ -77,19 +83,19 @@ Confirm whether a transaction is eligible for a transaction statement
           "node": {
             "amount": {
               "currency": "EUR",
-              "value": "22.00"
+              "value": "2000.00"
             },
             "statusInfo": {
               "status": "Booked",
               "__typename": "BookedTransactionStatusInfo",
-              "bookingDate": "2024-01-25T18:27:27.987Z",
-              "valueDate": "2024-01-25T18:27:27.987Z"
+              "bookingDate": "2025-01-27T11:36:47.515Z",
+              "valueDate": "2025-01-27T11:36:47.515Z"
             },
-            "type": "SepaInstantCreditTransferIn",
+            "type": "SepaInstantCreditTransferOut",
             "creditor": {
-              "BIC": "SWNBFR22",
-              "IBAN": "FR7699999001001510219788187",
-              "maskedIBAN": "FR7699999001001510******187"
+              "BIC": "SWNBDEBB",
+              "IBAN": "DE15111111119160343762",
+              "maskedIBAN": "DE15111111119******762"
             },
             "statementCanBeGenerated": true
           }
@@ -98,21 +104,21 @@ Confirm whether a transaction is eligible for a transaction statement
           "node": {
             "amount": {
               "currency": "EUR",
-              "value": "15.00"
+              "value": "1000.00"
             },
             "statusInfo": {
               "status": "Booked",
               "__typename": "BookedTransactionStatusInfo",
-              "bookingDate": "2024-01-25T18:25:16.415Z",
-              "valueDate": "2024-01-25T18:25:16.415Z"
+              "bookingDate": "2023-08-10T15:49:50.380Z",
+              "valueDate": "2023-08-10T15:49:50.380Z"
             },
-            "type": "SepaCreditTransferOutReturn",
+            "type": "SepaCreditTransferIn",
             "creditor": {
               "BIC": "SWNBFR22",
-              "IBAN": "FR7699999001001510219788187",
-              "maskedIBAN": "FR7699999001001510******187"
+              "IBAN": "FR7699999001001572415681653",
+              "maskedIBAN": "FR7699999001001572******653"
             },
-            "statementCanBeGenerated": false
+            "statementCanBeGenerated": true
           }
         }
       ],

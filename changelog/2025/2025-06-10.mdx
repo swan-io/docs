@@ -1,0 +1,25 @@
+---
+title: 10 June 2025
+type: release
+---
+
+## Improvements
+
+🧭 Account statement documents now use a new naming convention for better readability and to include the document language: 
+AccountStatement_[ProjectName]_[AccountNumber]_[period]_[documentLanguage]
+
+👫 Account member invitations in `ConsentPending` [status](/topics/accounts/memberships/#statuses) now expire if the inviter doesn't consent before the consent period ends. 
+As a result, the account membership status automatically changes to `Disabled`. 
+This lets you inform the user that they must send a new invitation.
+- When querying `AccountMembershipDisabledStatusInfo`, you'll see the reason `InvitationExpired`.
+- If you're subscribed to the `AccountMembership.Updated` webhook, you'll receive a notification when the membership is `Disabled`.
+
+✍️ You can now use [`checkMerchantPayment`](/topics/merchants/online/checks/guide-initiate) to track the [statuses](/topics/merchants/online/checks/#payments-statuses) and [balances](/topics/merchants/online/checks/#payments-balances) of French check payments. 
+As a result, we're deprecating the `merchantPayment` field on `InitiateCheckMerchantPaymentSuccessPayload`, use `checkMerchantPayment` instead.
+
+## API updates
+
+### Upcoming breaking changes
+⚠️ Starting **July 1st**, the `shippingProvider` field in `PhysicalCardToActivateStatusInfo` and `PhysicalCardRenewedStatusInfo` will be migrated from a `String` to an `ENUM`. Please note that the shipping providers `La Poste` and `CORREOS` will soon be deprecated. 
+
+💶 On **August 1st**, the `merchantPayment` field will be removed from the `InitiateCheckMerchantPaymentSuccessPayload`. We’re also deprecating `merchantPayment` today.

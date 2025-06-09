@@ -18,16 +18,16 @@ Initiate accepting payments with French checks.
 1. Call the `initiateCheckMerchantPayment`, completing all mandatory fields: `amount` `value` and `currency`, `CMC7`, `rmlcKey`, and `merchantProfileId` (lines 2-7).
 1. You can also include an optional **label** and **reference** (not shown), which are displayed in your transaction history and to the debtor.
 1. Add the `InitiateCheckMerchantPaymentSuccessPayload` success payload (line 10).
-1. Add the `fnciInfo` to the success payload (lines ). Refer to the explanatory content to [learn about FNCI and their verification results](./index.mdx#fnci) (lines 12-18).
-1. Add the rejection `CheckRejection`, then add the `fnciInfo` here as well (lines 21, 24-30).
+1. Add the `checkMerchantPayment` to the success payload (line 12)
+1. Add the `fnciInfo` to the success payload (lines 15-21). Refer to the explanatory content to [learn about FNCI and their verification results](./index.mdx#fnci).
+1. Add the rejection `CheckRejection` (line 24), then add the `fnciInfo` (lines 27-33).
 1. Add other rejections (not shown).
-
 
 ### Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVDaGVja1BheW1lbnQgewogIGluaXRpYXRlQ2hlY2tNZXJjaGFudFBheW1lbnQoCiAgICBpbnB1dDogewogICAgICBhbW91bnQ6IHsgdmFsdWU6ICI1MCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIG1lcmNoYW50UHJvZmlsZUlkOiAiJFlPVVJfTUVSQ0hBTlRfUFJPRklMRV9JRCIKICAgICAgY21jNzogIiRZT1VSX0NNQzciCiAgICAgIHJsbWNLZXk6ICIkWU9VUl9STE1DX0tFWSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNoZWNrTWVyY2hhbnRQYXltZW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZuY2lJbmZvIHsKICAgICAgICBjb2xvckNvZGUKICAgICAgICBjcHQxCiAgICAgICAgY3B0MgogICAgICAgIGNwdDMKICAgICAgICBob2xkZXJFc3RhYmxpc2htZW50CiAgICAgICAgcmVzcG9uc2VDb2RlCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBDaGVja1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmbmNpSW5mbyB7CiAgICAgICAgY29sb3JDb2RlCiAgICAgICAgY3B0MQogICAgICAgIGNwdDIKICAgICAgICBjcHQzCiAgICAgICAgaG9sZGVyRXN0YWJsaXNobWVudAogICAgICAgIHJlc3BvbnNlQ29kZQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVDaGVja1BheW1lbnQgewogIGluaXRpYXRlQ2hlY2tNZXJjaGFudFBheW1lbnQoCiAgICBpbnB1dDogewogICAgICBhbW91bnQ6IHsgdmFsdWU6ICI1MCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIG1lcmNoYW50UHJvZmlsZUlkOiAiJFlPVVJfTUVSQ0hBTlRfUFJPRklMRV9JRCIKICAgICAgY21jNzogIiRZT1VSX0NNQzciCiAgICAgIHJsbWNLZXk6ICIkWU9VUl9STE1DX0tFWSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNoZWNrTWVyY2hhbnRQYXltZW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNoZWNrTWVyY2hhbnRQYXltZW50IHsKICAgICAgICBpZAogICAgICB9CiAgICAgIGZuY2lJbmZvIHsKICAgICAgICBjb2xvckNvZGUKICAgICAgICBjcHQxCiAgICAgICAgY3B0MgogICAgICAgIGNwdDMKICAgICAgICBob2xkZXJFc3RhYmxpc2htZW50CiAgICAgICAgcmVzcG9uc2VDb2RlCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBDaGVja1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmbmNpSW5mbyB7CiAgICAgICAgY29sb3JDb2RlCiAgICAgICAgY3B0MQogICAgICAgIGNwdDIKICAgICAgICBjcHQzCiAgICAgICAgaG9sZGVyRXN0YWJsaXNobWVudAogICAgICAgIHJlc3BvbnNlQ29kZQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
 
-```graphql {2-7,10,12-18,21,24-30} showLineNumbers
+```graphql {2-7,10,12,15-21,24,27-33} showLineNumbers
 mutation InitiateCheckPayment {
   initiateCheckMerchantPayment(
     input: {
@@ -39,6 +39,9 @@ mutation InitiateCheckPayment {
   ) {
     ... on InitiateCheckMerchantPaymentSuccessPayload {
       __typename
+      checkMerchantPayment {
+        id
+      }
       fnciInfo {
         colorCode
         cpt1

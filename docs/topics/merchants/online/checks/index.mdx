@@ -35,6 +35,76 @@ When declaring checks with the API, there are five mandatory API fields:
 
 On the **back of the check**, the merchant must write their Swan account number as well as provide their signature.
 
+
+## Merchant check payments {#payments}
+Merchant check payments include one or more transactions.
+For example, one payment might include a check credit transaction and a refund transaction, for a total of two transactions.
+
+These transactions are **grouped together** in the **merchant payment object**. 
+Swan recommends using the merchant payment object in your integration to help merchants match orders, invoices, and sales to the correct object. 
+This provides better traceability and can help reconcile issues more efficiently. 
+It also makes it easier for you to handle the status of payments when there are return transactions after a payment is captured.
+
+### Check transaction types {#payments-transaction-types}
+
+There are **two transaction types** for merchant check payments.
+
+| Transaction type | Explanation | Impacted account balance |
+| :--- | :--- | :--- |
+| `CheckIn`        | Captured payment that first impacts the merchant's `Upcoming` balance, and then their `Booked` balance. | `Upcoming`<br />`Booked`   |
+| `CheckInReturn`  | Disputed payment that immediately impacts the merchant's `Booked` balance.                           | `Booked`                 |
+
+:::info Balances
+The impacted balances are Swan's standard [account balances](../../../accounts/index.mdx#balances), which aren't related to the payment object balances explained later on this page.
+:::
+
+### Payment object statuses {#payments-statuses}
+
+The merchant payment object has **distinct statuses** to follow a payment's lifecycle.
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    MPI((Merchant check<br/>payment initiated)) --> I[Initiated]
+    I -.-> RJ[Rejected]
+    I --> CP[Captured]
+    I -.-> CN[Canceled]
+    CP -.-> D[Disputed]
+
+    subgraph F[Final status]
+        RJ
+        CN
+        D
+    end
+
+    style MPI fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+```
+
+| Check payment object status | Explanation |
+|---|---|
+| `Initiated` | Merchant submitted the check information to Swan, but the check hasn't been processed yet. |
+| `Captured` | Check was accepted and funds were made available in the merchant's account. This can be a final status if the customer doesn't dispute the payment. |
+| `Rejected` | Check was rejected by Swan's check provider. Rejected checks are returned to the merchant by mail, using the account holder's address. |
+| `Canceled` | Check was canceled by the merchant before reaching Swan's check provider. If received, the check is returned to the merchant by mail, using the account holder's address. |
+| `Disputed` | The customer disputed the payment or the bank returned it after capture, for example due to insufficient funds. Disputed checks aren't returned to the merchant. |
+
+### Payment object balances {#payments-balances}
+
+The merchant payment object has **distinct balances** to follow a payment's lifecycle.
+
+| Check payment object balance | Explanation |
+|---|---|
+| `totalAuthorized` | Not used for checks; this balance is always zero. |
+| `availableToCancel` | Use this balance to verify whether the payment can be canceled. Cancellations must occur before Swan's check provider receives the check. |
+| `totalCanceled` | The total amount canceled for this merchant payment. |
+| `availableToCapture` | Not used for checks; this balance is always zero. |
+| `totalCaptured` | The amount captured by the merchant. This corresponds to the full payment amount after the check is successfully processed. |
+| `availableToRefund` | Checks cannot be refunded; this balance is always zero. |
+| `totalRefunded` | Checks cannot be refunded; this balance is always zero. |
+| `totalDisputed` | The total amount of this merchant payment disputed by the customer or returned by their bank. |
+
+
 ## Rolling reserve {#rolling-reserve}
 
 import RollingReserve from '../../partials/_rolling-reserve.mdx';

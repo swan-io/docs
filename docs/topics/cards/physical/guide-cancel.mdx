@@ -4,11 +4,64 @@ title: Cancel physical cards
 
 # Cancel physical cards
 
-If a physical card is lost, stolen, or damaged, or hasn't been delivered, call the `cancelPhysicalCard` mutation and select the reason for canceling the card.
+If a physical card is lost, stolen, damaged, or hasn't been delivered, call the `cancelPhysicalCard` mutation to cancel the card.
 
-Digital and virtual cards will continue to function.
-Refer to guides for [digital](../digital/guide-cancel.mdx) and [virtual](../virtual/guide-cancel.mdx) cards if you need to cancel those as well.
+:::caution cancellation is irreversible
+Canceling a physical card is a permanent action that can't be reversed.
+This guide explains how to cancel a physical card and how it impacts connected digital and virtual cards.
+:::
 
+## Guide {#guide}
+
+1. Call the `cancelPhysicalCard` mutation. 
+1. Add the `cardId` for the physical card you're canceling (line 2) 
+1. Select the reason for cancelling the card. (line 2).
+1. Add the `CancelPhysicalCardSuccessPayload`, including any information you'd like to review (line 3).
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gTXlNdXRhdGlvbiB7CiAgY2FuY2VsUGh5c2ljYWxDYXJkKGlucHV0OiB7IGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiLCByZWFzb246IExvc3QgfSkgewogICAgLi4uIG9uIENhbmNlbFBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBoeXNpY2FsQ2FyZENhbmNlbGVkU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIHJlYXNvbgogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {2-3} showLineNumbers
+mutation MyMutation {
+  cancelPhysicalCard(input: { cardId: "$YOUR_CARD_ID", reason: Lost }) {
+    ... on CancelPhysicalCardSuccessPayload {
+      __typename
+      physicalCard {
+        statusInfo {
+          ... on PhysicalCardCanceledStatusInfo {
+            __typename
+            status
+            reason
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms that the physical card is `Canceled` (line 8) because it was reprted as `Lost` (line 9).
+
+```json {8} showLineNumbers
+{
+  "data": {
+    "cancelPhysicalCard": {
+      "__typename": "CancelPhysicalCardSuccessPayload",
+      "physicalCard": {
+        "statusInfo": {
+          "__typename": "PhysicalCardCanceledStatusInfo",
+          "status": "Canceled",
+          "reason": "Lost"
+        }
+      }
+    }
+  }
+}
+```
 :::caution Lost or stolen cards
 If the physical card was lost or stolen, ask the cardholder the following questions:
 
@@ -17,3 +70,12 @@ If the physical card was lost or stolen, ask the cardholder the following questi
 
 **If both answers are yes, make sure to cancel their digital cards as well.**
 :::
+
+## Digital and virtual cards {#digital-virtual-cards}
+When a physical card is canceled, digital cards linked to the physical card will also be canceled.
+Virtual cards will not be affected.
+
+
+
+
+Refer to guides for [digital](../digital/guide-cancel.mdx) and [virtual](../virtual/guide-cancel.mdx) cards if you need to cancel those as well.

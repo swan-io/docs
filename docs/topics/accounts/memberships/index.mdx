@@ -115,7 +115,7 @@ To invite an account member, you must provide specific account membership fields
 
 **Requirements vary depending on the IBAN country**. Swan automatically sets these requirements based on the member's permissions, `accountCountry`, and `residencyAddress.country`. 
 
-Fields are marked as either **optional**, **conditional**, or **required**.
+Fields are marked as **optional**, **conditional**, or **required**. A checkmark (✓) means the field must be filled in. An asterisk (∗) means the field is optional but may have a default value if left empty. A question mark (?) means the field is required only in certain situations.
 
 | API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇮🇹<br/>Italy |
 |---|---|---|---|---|---|
@@ -140,29 +140,33 @@ Fields are marked as either **optional**, **conditional**, or **required**.
 | `restrictedTo.birthDate` | ? Conditional | ? Conditional | ? Conditional | ? Conditional | ? Conditional |
 | `taxIdentificationNumber` | Optional | ? Conditional | Optional | Optional | ? Conditional |
 
-### Optional field exceptions
-> ∗ `canManageCards`: if no value is sent, it defaults to the value of `canManageAccountMembership`.
-> 
-### Conditional field exceptions
-> ? Residency address fields (`addressLine1`, `city`, `country`, `postalCode`) are **required** regardless of the `residencyAddress.country`, if:
-> - The `accountCountry` is 🇮🇹 Italy.
-> - The `accountCountry` is 🇩🇪 Germany or 🇳🇱 Netherlands, and **one or both** of the following account membership permissions are set to `true`: 
->   - `canViewAccount`
->   - `canInitiatePayments`
->
-> ? `restrictedTo.phoneNumber` is **required** if **any** of the following account membership permissions are set to `true`:
-> 
-> - `canManageBeneficiaries`
-> - `canInitiatePayments`
-> - `canManageAccountMembership`
->
-> ? `taxIdentificationNumber` is **required**:
-> 
-> - If both `accountCountry` **and** `residencyAddress.country` are 🇮🇹 Italy, and the account membership has the `canInitiatePayments` permission set to `true`.
-> - If both `accountCountry` **and** `residencyAddress.country` are 🇩🇪 Germany, and **one or both** of the following account membership permissions are set to `true`:
->   - `canViewAccount`
->   - `canInitiatePayments`
+### Detailed optional and conditional requirements
 
+
+#### Membership permissions
+
+If no value is provided for `canManageCards`, it defaults to the value of `canManageAccountMembership`.
+
+#### Residency address fields
+The `addressLine1`, `city`, `country`, and `postalCode` fields are **required** regardless of `residencyAddress.country`, in the following cases:
+
+- The `accountCountry` is 🇮🇹 Italy.
+- The `accountCountry` is 🇩🇪 Germany or 🇳🇱 Netherlands, and **one or both** of the following account membership permissions are set to `true`: 
+  - `canViewAccount`
+  - `canInitiatePayments`
+
+#### Phone number
+The `restrictedTo.phoneNumber` field is **required** if **any** of the following account membership permissions are set to `true`:
+  - `canManageBeneficiaries`
+  - `canInitiatePayments`
+  - `canManageAccountMembership`
+
+#### Tax identification number
+The `taxIdentificationNumber` field is **required** in the following cases:
+- If both `accountCountry` **and** `residencyAddress.country` are 🇮🇹 Italy, and the account membership has the `canInitiatePayments` permission set to `true`.
+- If both `accountCountry` **and** `residencyAddress.country` are 🇩🇪 Germany, and **one or both** of the following account membership permissions are set to `true`:
+  - ` canViewAccount`
+  - `canInitiatePayments`
 
 ## Membership language {#language}
 

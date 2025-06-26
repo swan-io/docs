@@ -1,0 +1,81 @@
+---
+title: Renew physical cards
+---
+
+# Renew physical cards
+
+If you want the renewed physical card to be shipped to a different address than the original one, you must use the `confirmPhysicalCardRenewal` mutation. This mutation allows you to confirm the renewal and specify a new delivery address. If your cardholder doesn't want to renew, cancel the card before the 8-week mark.
+
+:::caution Delivery address
+You must call this mutation at least 8 weeks before the card expiration date, otherwise the renewed card will be sent to the original address used for the first card.
+:::
+
+:::tip Prerequisites
+1. Confirm that the card is in `ToRenew` status before callign this mutation.
+1. Verify the new delivery physical card address with your cardholder.
+:::
+
+## Guide {#guide}
+
+1. Call the `confirmPhysicalCardRenewal` mutation.
+2. Add the `cardId` for the physical card you're renewing (line 2).
+3. Add the updated delivery `address` for the renewed physical card.
+4. Add the `ConfirmPhysicalCardRenewalSuccessPayload`, including any information you'd like to review.
+5. Add rejections (not shown).
+
+<DeliveryAddressInfo />
+
+## Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gUmVuZXdQaHlzaWNhbENhcmQgewogIGNvbmZpcm1QaHlzaWNhbENhcmRSZW5ld2FsKAogICAgaW5wdXQ6IHsKICAgICAgY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIKICAgICAgYWRkcmVzczogewogICAgICAgIGFkZHJlc3NMaW5lMTogIjEwIFJ1ZSBkZSBsYSBQYWl4IgogICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDAiCiAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIENvbmZpcm1QaHlzaWNhbENhcmRSZW5ld2FsU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBoeXNpY2FsQ2FyZCB7CiAgICAgICAgZXhwaXJ5RGF0ZQogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FyZE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQaHlzaWNhbENhcmRXcm9uZ1N0YXR1c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY3VycmVudFN0YXR1cwogICAgfQogICAgLi4uIG9uIEludmFsaWRTaGlwcGluZ1Byb3ZpZGVyUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {2-3} showLineNumbers
+mutation RenewPhysicalCard {
+  confirmPhysicalCardRenewal(
+    input: {
+      cardId: "$YOUR_CARD_ID"
+      address: { addressLine1: "10 Rue de la Paix", city: "Paris", postalCode: "75000", country: "FRA" }
+    }
+  ) {
+    ... on ConfirmPhysicalCardRenewalSuccessPayload {
+      __typename
+      physicalCard {
+        expiryDate
+        statusInfo {
+          status
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms that the physical card expires on 09/28 (line 8), and the physical card renewal status is `ToRenew` (line 9).
+
+```json {8} showLineNumbers
+{
+  "data": {
+    "confirmPhysicalCardRenewal": {
+      "__typename": "ConfirmPhysicalCardRenewalSuccessPayload",
+      "physicalCard": {
+        "expiryDate": "09/21",
+        "statusInfo": {
+          "status": "ToRenew"
+        }
+      }
+    }
+  }
+}
+```
+
+## Digital and virtual cards {#digital-virtual-cards}
+When a physical card is canceled, digital cards linked to the physical card will also be canceled.
+Virtual cards will not be affected.
+
+:::tip 
+Swan recommends only digitizing virtual cards for a safer experience.
+:::
+
+Refer to the guides for [digital](../digital/guide-cancel.mdx) and [virtual](../virtual/guide-cancel.mdx) cards if you need to cancel those as well.

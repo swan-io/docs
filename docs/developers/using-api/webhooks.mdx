@@ -38,6 +38,12 @@ Webhooks operate with a near-real-time efficiency, typically delivering response
 
 It's worth clarifying that webhooks don't actively *respond* but autonomously send information to your system, potentially introducing delays of up to 10 minutes after the actual action occurs.
 
+### Time to reply {#overview-reply}
+
+Your endpoint must respond with a `200 OK` HTTP status code within **10 seconds**. If it doesn't, the webhook delivery is marked as failed and will be [retried automatically](/developers/using-api/webhooks/#overview-retry).
+
+To stay within this limit, avoid any synchronous activity. Save the event data and respond immediately to maximize your chances of a successful delivery.
+
 ### Automatic retry {#overview-retry}
 
 If Swan encounters an error during a webhook request, the request is retried every **30 seconds** and up to **7 times**.
@@ -68,10 +74,14 @@ For example, if you had 12 subscriptions to a Sandbox event:
 ### Security {#overview-security}
 
 Webhooks aren't the most secure communication method, and banking data can be sensitive.
-Therefore, **Swan never uses webhooks to send sensitive information** that requires authentication to view.
+Therefore, **Swan never uses webhooks to send sensitive information** that requires authentication.
 
-If an event involves sensitive information, the webhook only includes a notification that an event occurred.
-You need to use your Dashboard or the API to actually review the information.
+To help verify that webhook requests actually come from Swan, and not someone who just knows your endpoint URL, you can use [**webhook secrets**](/developers/using-api/payment-control/#configure). Each request includes a shared secret in the `x-swan-secret` header. This secret acts like a password, known only to Swan and your system.
+
+We strongly recommend checking the HTTP header on every webhook request. If you've set a webhook secret and it's missing or incorrect, reject the request to prevent unauthorized or fake webhook attempts.
+
+If an event involves sensitive information, the webhook only notifies you that an event occurred.
+You need to use your Dashboard or the API to review the full details.
 
 :::note Swan's webhook IP addresses
 If you have security restrictions in your infrastructure, you might need to add the following IPs to your allowlist for both Sandbox and Live environments.
@@ -232,7 +242,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 | `eventType` | Explanation |
 | --- | --- |
-| `Consent.Canceled` | Consent was canceled by the Partner |
+| `Consent.Canceled` | Consent was canceled by the Partner or the end user |
 | `Consent.Created` | Consent was created for a sensitive operation |
 | `Consent.Expired` | Consent expired without being refused or granted |
 | `Consent.Granted` | User accepted a sensitive operation  |

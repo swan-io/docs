@@ -306,10 +306,14 @@ It's not possible to choose a new PIN during renewal.
 
 The renewal process for a suspended physical card depends on when the card is **resumed**.
 
-| Card resumed | Renewal outcome |
-|---|---|
-| **More** than 10 weeks before expiry | Swan API automatically triggers the renewal, and the card renews as expected. |
-| **Less** than 10 weeks before expiry | The card won't renew, and will be automatically canceled at expiry. |
+| Scenario | Card status after suspension | Card renewal outcome |
+|---|---|---|
+| Resumed more than 10 weeks before expiry | `ToRenew` → `Renewed` | Renewed |
+| Not resumed more than 10 weeks before expiry | Remains `Suspended` | Not renewed, cancelled at expiry  |
+| Resumed between 10 and 8 weeks before expiry | `ToRenew` → `Renewed` | Renewed |
+| Not resumed between 10 and 8 weeks before expiry | Remains `Suspended` | Not renewed, cancelled at expiry  |
+| Resumed less than 8 weeks before expiry  | Remains in `ToRenew` | Not renewed, cancelled at expiry |
+
 
 
 ### Subscriptions {#renew-subscriptions}

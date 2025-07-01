@@ -109,6 +109,68 @@ For example, if you want to give a user a card associated with the account, but 
 In this case, all membership permission booleans are `false`.
 This type of invitation doesn't require consent from the account holder and skips the status `InvitationSent`.
 
+## Country requirements for account memberships {#permissions-grant}
+
+To invite an account member, you must provide specific account membership fields.
+
+**Requirements vary depending on the IBAN country**. Swan automatically sets these requirements based on the member's permissions, `accountCountry`, and `residencyAddress.country`. 
+
+Fields are marked as **required** (✓), **optional** (∗), or **conditional** (?): <br/>
+- ✓ (Required): must be completed.<br/> 
+- ∗ (Optional): can be left blank; may have a default value.<br/>
+- ? (Conditional): required only in specific situations.
+
+| API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇮🇹<br/>Italy |
+|---|---|---|---|---|---|
+| `accountID` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `canInitiatePayments` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `canManageAccountMembership` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `canManageBeneficiaries` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `canManageCards` | * Optional | * Optional | * Optional | * Optional | * Optional |
+| `canViewAccount` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `consentRedirectUrl` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `email` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `language` | Optional | Optional | Optional | Optional | Optional |
+| `residencyAddress.addressLine1` | Optional | ? Conditional | ? Conditional | Optional | ✓ Required |
+| `residencyAddress.addressLine2` | Optional | Optional | Optional | Optional | Optional |
+| `residencyAddress.city` | Optional | ? Conditional | ? Conditional | Optional | ✓ Required |
+| `residencyAddress.country` | Optional | ? Conditional | ? Conditional | Optional | ✓ Required |
+| `residencyAddress.postalCode` | Optional | ? Conditional | ? Conditional | Optional | ✓ Required |
+| `residencyAddress.state` | Optional | Optional | Optional | Optional | Optional |
+| `restrictedTo.firstName` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `restrictedTo.lastName` | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+| `restrictedTo.phoneNumber` | ? Conditional | ? Conditional | ? Conditional | ? Conditional | ? Conditional |
+| `restrictedTo.birthDate` | ? Conditional | ? Conditional | ? Conditional | ? Conditional | ? Conditional |
+| `taxIdentificationNumber` | Optional | ? Conditional | Optional | Optional | ? Conditional |
+
+### Detailed optional and conditional requirements
+
+
+#### Membership permissions
+
+If no value is provided for `canManageCards`, it defaults to the value of `canManageAccountMembership`.
+
+#### Residency address fields
+The `addressLine1`, `city`, `country`, and `postalCode` fields are **required** regardless of `residencyAddress.country`, in the following cases:
+
+- The `accountCountry` is 🇮🇹 Italy.
+- The `accountCountry` is 🇩🇪 Germany or 🇳🇱 Netherlands, and **one or both** of the following account membership permissions are set to `true`: 
+  - `canViewAccount`
+  - `canInitiatePayments`
+
+#### Phone number
+The `restrictedTo.phoneNumber` field is **required** if **any** of the following account membership permissions are set to `true`:
+  - `canManageBeneficiaries`
+  - `canInitiatePayments`
+  - `canManageAccountMembership`
+
+#### Tax identification number
+The `taxIdentificationNumber` field is **required** in the following cases:
+- If both `accountCountry` **and** `residencyAddress.country` are 🇮🇹 Italy, and the account membership has the `canInitiatePayments` permission set to `true`.
+- If both `accountCountry` **and** `residencyAddress.country` are 🇩🇪 Germany, and **one or both** of the following account membership permissions are set to `true`:
+  - ` canViewAccount`
+  - `canInitiatePayments`
+
 ## Membership language {#language}
 
 You can choose and update the language used for account memberships.
@@ -180,7 +242,7 @@ flowchart LR
 
 | Account membership status | Explanation |
 |---|---|
-| `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the invited account member consents, the status moves to `InvitationSent`</li><li>If the invited account member doesn't consent, the status moves to `Disabled`</li></ul> |
+| `ConsentPending` | An account membership request was sent using the `addAccountMembership` mutation and is waiting for the inviter's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new account membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the invited account member consents, the status moves to `InvitationSent`</li><li>The account membership status moves to `Disabled` if the inviter opens the consent flow but doesn't consent, or if the invitation expires before the invited member consents. </li><li> For `Disabled` memberships because of expired consent, querying `AccountMembershipDisabledStatusInfo` shows the reason as `InvitationExpired`.</li></ul><br/>If you're subscribed to the `AccountMembership.Updated` webhook, you'll receive a notification when a membership is `Disabled`. |
 | `InvitationSent` | An invitation was sent to the invited account member.<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
 | `Enabled` | All user information matches, the account member has been awarded the correct [identification level](../../users/identifications/index.mdx#levels-processes), and the account member can use their account membership and corresponding permissions. |
 | `BindingUserError` | The personal information you submitted about the invited account member doesn't match the information they provide during the [sign-up process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on binding user errors for more information. |

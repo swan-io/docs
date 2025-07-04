@@ -417,6 +417,21 @@ module.exports = {
                 "topics/payments/credit-transfers/international/sandbox",
               ],
             },
+            {
+              type: "category",
+              label: "Verification of Payee",
+              link: {
+                type: "doc",
+                id: "topics/payments/credit-transfers/verification-of-payee/index",
+              },
+              collapsed: true,
+              items: [
+                "topics/payments/credit-transfers/verification-of-payee/guide-vop-credit-transfers",
+                "topics/payments/credit-transfers/verification-of-payee/guide-verify-beneficiary",
+                "topics/payments/credit-transfers/verification-of-payee/guide-manage-settings",
+                "topics/payments/credit-transfers/verification-of-payee/sandbox",
+              ],
+            },
           ],
         },
         {

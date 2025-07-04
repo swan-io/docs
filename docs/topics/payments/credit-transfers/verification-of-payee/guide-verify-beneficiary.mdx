@@ -1,0 +1,298 @@
+---
+title: Verify a beneficiary
+---
+
+# Verify a beneficiary
+
+Verify beneficiary details before initiating credit transfers with the `verifySepaBeneficiary` mutation.
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
+1. You're authenticating with a [user access token](../../../../developers/using-api/authentication/index.mdx#tokens-user).
+:::
+
+## Verify individual beneficiary {#guide-individual}
+
+Verify a natural person beneficiary using their full name and IBAN.
+
+1. Call the `verifySepaBeneficiary` mutation.
+1. Add your `accountId` and the beneficiary details.
+1. For individuals, provide the beneficiary's `name` and `iban`.
+1. Add an `externalReference` to track this verification (optional but recommended).
+1. Add the verification result to the payload.
+
+### Mutation {#mutation-individual}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5SW5kaXZpZHVhbCB7CiAgdmVyaWZ5U2VwYUJlbmVmaWNpYXJ5KAogICAgaW5wdXQ6IHsKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgcGF5ZWVzOiBbCiAgICAgICAgewogICAgICAgICAgaWJhbjogIkZSNzYzMDAwNjAwMDAxMTIzNDU2Nzg5MDE4OSIKICAgICAgICAgIG5hbWU6ICJNYXJpZSBEdWJvaXMiCiAgICAgICAgICBleHRlcm5hbFJlZmVyZW5jZTogImludm9pY2UtMjAyNC0wMDEiCiAgICAgICAgfQogICAgICBdCiAgICB9CiAgKSB7CiAgICAuLi4gb24gVmVyaWZ5U2VwYUJlbmVmaWNpYXJ5U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHZlcmlmaWNhdGlvbnMgewogICAgICAgIGlkCiAgICAgICAgZXh0ZXJuYWxSZWZlcmVuY2UKICAgICAgICBjcmVhdGVkQXQKICAgICAgICB1cGRhdGVkQXQKICAgICAgICB0b2tlbgogICAgICAgIHJlc3VsdCB7CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgdmVyaWZpZWROYW1lOiBuYW1lCiAgICAgICAgICB9CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlDbG9zZU1hdGNoIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBzdWdnZXN0ZWROYW1lOiBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgICBwcm92aWRlZE5hbWU6IG5hbWUKICAgICAgICAgIH0KICAgICAgICAgIC4uLiBvbiBCZW5lZmljaWFyeU1pc21hdGNoIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBwcm92aWRlZE5hbWU6IG5hbWUKICAgICAgICAgIH0KICAgICAgICAgIC4uLiBvbiBCZW5lZmljaWFyeVZlcmlmaWNhdGlvbk5vdFBvc3NpYmxlIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICByZWFzb24KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {4,7-8,29} showLineNumbers
+mutation VerifyIndividual {
+  verifySepaBeneficiary(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      payees: [
+        {
+          iban: "FR7630006000011234567890189"
+          name: "Marie Dubois"
+          externalReference: "invoice-2024-001"
+        }
+      ]
+    }
+  ) {
+    ... on VerifySepaBeneficiarySuccessPayload {
+      __typename
+      verifications {
+        id
+        externalReference
+        createdAt
+        updatedAt
+        token
+        result {
+          ... on BeneficiaryMatch {
+            __typename
+            verifiedName: name
+          }
+          ... on BeneficiaryCloseMatch {
+            __typename
+            suggestedName: nameSuggestion
+            providedName: name
+          }
+          ... on BeneficiaryMismatch {
+            __typename
+            providedName: name
+          }
+          ... on BeneficiaryVerificationNotPossible {
+            __typename
+            reason
+          }
+        }
+      }
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+### Payload {#payload-individual}
+
+The payload provides a verification `token` and the verification result.
+
+For a `BeneficiaryMatch`, the response confirms the name matches bank records:
+
+```json {11,16,19} showLineNumbers
+{
+  "data": {
+    "verifySepaBeneficiary": {
+      "__typename": "VerifySepaBeneficiarySuccessPayload",
+      "verifications": [
+        {
+          "id": "bver_01234567890abcdef",
+          "externalReference": "invoice-2024-001",
+          "createdAt": "2024-01-25T16:16:09.859Z",
+          "updatedAt": "2024-01-25T16:16:10.123Z",
+          "token": "vt_abc123def456...",
+          "result": {
+            "__typename": "BeneficiaryMatch",
+            "verifiedName": "Marie Dubois"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+:::info Save the token
+Always save the verification `token` - you'll need it when calling `initiateCreditTransfers` to use this verification.
+:::
+
+## Verify company beneficiary {#guide-company}
+
+Verify a legal entity beneficiary using their name and a company identifier.
+
+For companies, include company identifiers to improve verification accuracy. Supported identifiers include:
+
+- `legalEntityIdentification` - LEI code
+- `siren` - French SIREN number
+- `siret` - French SIRET number
+- `centralBankIdentification` - National business registry numbers
+
+### Mutation {#mutation-company}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5Q29tcGFueSB7CiAgdmVyaWZ5U2VwYUJlbmVmaWNpYXJ5KAogICAgaW5wdXQ6IHsKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgcGF5ZWVzOiBbCiAgICAgICAgewogICAgICAgICAgaWJhbjogIkRFODkzNzA0MDA0NDA1MzIwMTMwMDAiCiAgICAgICAgICBuYW1lOiAiVGVjaENvcnAgR21iSCIKICAgICAgICAgIHBheWVlSWRlbnRpZmljYXRpb246IHsKICAgICAgICAgICAgbGVnYWxFbnRpdHlJZGVudGlmaWNhdGlvbjogIjU0OTMwMEFCQ0RFRjEyMzQ1Njc4OSIKICAgICAgICAgIH0KICAgICAgICAgIGV4dGVybmFsUmVmZXJlbmNlOiAic3VwcGxpZXItdGVjaGNvcnAiCiAgICAgICAgfQogICAgICBdCiAgICB9CiAgKSB7CiAgICAuLi4gb24gVmVyaWZ5U2VwYUJlbmVmaWNpYXJ5U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHZlcmlmaWNhdGlvbnMgewogICAgICAgIGlkCiAgICAgICAgZXh0ZXJuYWxSZWZlcmVuY2UKICAgICAgICB0b2tlbgogICAgICAgIHJlc3VsdCB7CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgdmVyaWZpZWROYW1lOiBuYW1lCiAgICAgICAgICAgIHZlcmlmaWVkSWRlbnRpZmllcjogcGF5ZWVJZGVudGlmaWNhdGlvbiB7CiAgICAgICAgICAgICAgbGVnYWxFbnRpdHlJZGVudGlmaWNhdGlvbgogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlNaXNtYXRjaCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgcHJvdmlkZWROYW1lOiBuYW1lCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+
+```graphql {7-11} showLineNumbers
+mutation VerifyCompany {
+  verifySepaBeneficiary(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      payees: [
+        {
+          iban: "DE89370400440532013000"
+          name: "TechCorp GmbH"
+          payeeIdentification: {
+            legalEntityIdentification: "549300ABCDEF123456789"
+          }
+          externalReference: "supplier-techcorp"
+        }
+      ]
+    }
+  ) {
+    ... on VerifySepaBeneficiarySuccessPayload {
+      __typename
+      verifications {
+        id
+        externalReference
+        token
+        result {
+          ... on BeneficiaryMatch {
+            __typename
+            verifiedName: name
+            verifiedIdentifier: payeeIdentification {
+              legalEntityIdentification
+            }
+          }
+          ... on BeneficiaryMismatch {
+            __typename
+            providedName: name
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Verify multiple beneficiaries {#guide-multiple}
+
+Verify multiple beneficiaries in a single API call for bulk payment preparation.
+
+### Mutation {#mutation-multiple}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5TXVsdGlwbGUgewogIHZlcmlmeVNlcGFCZW5lZmljaWFyeSgKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRZT1VSX0FDQ09VTlRfSUQiCiAgICAgIHBheWVlczogWwogICAgICAgIHsKICAgICAgICAgIGliYW46ICJGUjc2MzAwMDYwMDAwMTEyMzQ1Njc4OTAxODkiCiAgICAgICAgICBuYW1lOiAiTWFyaWUgRHVib2lzIgogICAgICAgICAgZXh0ZXJuYWxSZWZlcmVuY2U6ICJpbnZvaWNlLTIwMjQtMDAxIgogICAgICAgIH0KICAgICAgICB7CiAgICAgICAgICBpYmFuOiAiREU4OTM3MDQwMDQ0MDUzMjAxMzAwMCIKICAgICAgICAgIG5hbWU6ICJUZWNIQ29ycCBHbWJIIgogICAgICAgICAgcGF5ZWVJZGVudGlmaWNhdGlvbjogewogICAgICAgICAgICBsZWdhbEVudGl0eUlkZW50aWZpY2F0aW9uOiAiNTQ5MzAwQUJDREVGMTIzNDU2Nzg5IgogICAgICAgICAgfQogICAgICAgICAgZXh0ZXJuYWxSZWZlcmVuY2U6ICJzdXBwbGllci10ZWNoY29ycCIKICAgICAgICB9CiAgICAgIF0KICAgIH0KICApIHsKICAgIC4uLiBvbiBWZXJpZnlTZXBhQmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmVyaWZpY2F0aW9ucyB7CiAgICAgICAgaWQKICAgICAgICBleHRlcm5hbFJlZmVyZW5jZQogICAgICAgIHRva2VuCiAgICAgICAgcmVzdWx0IHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api)
+
+```graphql {5-18} showLineNumbers
+mutation VerifyMultiple {
+  verifySepaBeneficiary(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      payees: [
+        {
+          iban: "FR7630006000011234567890189"
+          name: "Marie Dubois"
+          externalReference: "invoice-2024-001"
+        }
+        {
+          iban: "DE89370400440532013000"
+          name: "TechCorp GmbH"
+          payeeIdentification: {
+            legalEntityIdentification: "549300ABCDEF123456789"
+          }
+          externalReference: "supplier-techcorp"
+        }
+      ]
+    }
+  ) {
+    ... on VerifySepaBeneficiarySuccessPayload {
+      __typename
+      verifications {
+        id
+        externalReference
+        token
+        result {
+          __typename
+        }
+      }
+    }
+  }
+}
+```
+
+## Error handling {#error-handling}
+
+### Verification timeout {#error-timeout}
+
+VoP requests must complete within 5 seconds. If verification times out, you'll receive a `BeneficiaryVerificationNotPossible` result:
+
+```json showLineNumbers
+{
+  "result": {
+    "__typename": "BeneficiaryVerificationNotPossible",
+    "reason": "Technical timeout - verification service unavailable"
+  }
+}
+```
+
+**Solution**: Retry the verification or proceed with the transfer (user will see a warning in consent).
+
+## Sandbox testing {#sandbox}
+
+Test VoP scenarios in Sandbox with specific IBANs that simulate different results:
+
+| IBAN | Simulated result |
+| --- | --- |
+| `FR7614508000300060632710243` | Always returns **Match** |
+| `FR7630006000011234567890189` | Returns **Close Match** for slight name variations |
+| `DE89370400440532013000` | Returns **No Match** for incorrect names |
+| `ES9121000418450200051332` | Simulates **Verification Not Possible** |
+
+### Test example {#sandbox-example}
+
+```graphql showLineNumbers
+mutation TestNoMatch {
+  verifySepaBeneficiary(
+    input: {
+      accountId: "$YOUR_SANDBOX_ACCOUNT_ID"
+      payees: [
+        {
+          iban: "DE89370400440532013000"
+          name: "Wrong Name"
+          externalReference: "test-no-match"
+        }
+      ]
+    }
+  ) {
+    ... on VerifySepaBeneficiarySuccessPayload {
+      verifications {
+        result {
+          ... on BeneficiaryMismatch {
+            __typename
+            providedName: name
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Best practices {#best-practices}
+
+### Implementation recommendations
+
+1. **Always pre-verify for bulk payments** - Use `verifySepaBeneficiary` before bulk `initiateCreditTransfers`
+2. **Handle all result types gracefully** - Provide clear user feedback for each VoP result
+3. **Store verification tokens securely** - Tokens are single-use and expire after 24 hours
+4. **Implement retry logic** - Network issues can cause temporary verification failures
+5. **Consider user experience** - Show verification results before users submit payments
+
+### Performance optimization
+
+- **Batch verifications** - Include multiple payees in a single `verifySepaBeneficiary` call
+- **Cache verification results** - Store tokens for repeated use within 24 hours
+- **Async processing** - Handle verification results asynchronously for better UX
+
+### Error recovery strategies
+
+- **Token expiry** - Re-verify beneficiaries if tokens are older than 24 hours
+- **Network timeouts** - Implement exponential backoff for retry attempts
+- **Validation errors** - Provide specific guidance for correcting invalid input data
+
+:::info Related guides
+- [VoP overview](./index.mdx) - Understanding Verification of Payee
+- [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Using verification tokens
+- [Manage VoP settings](./guide-manage-settings.mdx) - Enable/disable VoP for company accounts
+:::

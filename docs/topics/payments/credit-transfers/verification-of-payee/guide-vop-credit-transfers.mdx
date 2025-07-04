@@ -1,0 +1,219 @@
+---
+title: VoP with credit transfers
+---
+
+# VoP with credit transfers
+
+Use Verification of Payee (VoP) with credit transfers by including verification tokens in `initiateCreditTransfers`.
+
+This guide shows how to enhance the standard [credit transfer flow](../sepa/guide-initiate-ct.mdx) with pre-verified beneficiaries.
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
+1. You've pre-verified beneficiaries using [`verifySepaBeneficiary`](./guide-verify-beneficiary.mdx).
+1. You're authenticating with a [user access token](../../../../developers/using-api/authentication/index.mdx#tokens-user).
+:::
+
+## Single transfer with verification token {#single-transfer}
+
+Include a verification token in a single credit transfer for faster processing and enhanced user experience.
+
+1. Call the `initiateCreditTransfers` mutation.
+1. Add the standard credit transfer information.
+1. Include the `beneficiaryVerificationToken` from your pre-verification.
+1. Add the consent URL to the success payload.
+
+### Mutation {#single-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2luZ2xlV2l0aFRva2VuIHsKICBpbml0aWF0ZUNyZWRpdFRyYW5zZmVycygKICAgIGlucHV0OiB7CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJGUjc2MzAwMDYwMDAwMTEyMzQ1Njc4OTAxODkiCiAgICAgICAgICBuYW1lOiAiTWFyaWUgRHVib2lzIgogICAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgICBzYXZlOiBmYWxzZQogICAgICAgIH0KICAgICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuOiAiJFZFUklGSUNBVElPTl9UT0tFTiIKICAgICAgICBtb2RlOiBSZWd1bGFyCiAgICAgICAgcmVmZXJlbmNlOiAiSW52b2ljZSBwYXltZW50IgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgcGF5bWVudCB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBQYXltZW50Q29uc2VudFBlbmRpbmcgewogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBCZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuQWxyZWFkeUNvbnN1bWVkUmVqZWN0aW9uIHsKICAgICAgdG9rZW4KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {12,15} showLineNumbers
+mutation SingleWithToken {
+  initiateCreditTransfers(
+    input: {
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      accountId: "$YOUR_ACCOUNT_ID"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "FR7630006000011234567890189"
+          name: "Marie Dubois"
+          isMyOwnIban: false
+          save: false
+        }
+        beneficiaryVerificationToken: "$VERIFICATION_TOKEN"
+        mode: Regular
+        reference: "Invoice payment"
+      }
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      __typename
+      payment {
+        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+    ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
+      token
+      message
+    }
+  }
+}
+```
+
+## Bulk transfers with verification tokens {#bulk-transfers}
+
+For bulk payments, each transfer must include a verification token (unless the company account has opted out of VoP).
+
+1. Pre-verify all beneficiaries using `verifySepaBeneficiary`.
+1. Call the `initiateCreditTransfers` mutation with multiple transfers.
+1. Include a `beneficiaryVerificationToken` for each transfer.
+
+### Mutation {#bulk-mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQnVsa1dpdGhUb2tlbnMgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBjcmVkaXRUcmFuc2ZlcnM6IFsKICAgICAgICB7CiAgICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIyMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgICAgIGliYW46ICJGUjc2MzAwMDYwMDAwMTEyMzQ1Njc4OTAxODkiCiAgICAgICAgICAgIG5hbWU6ICJNYXJpZSBEdWJvaXMiCiAgICAgICAgICAgIGlzTXlPd25JYmFuOiBmYWxzZQogICAgICAgICAgICBzYXZlOiBmYWxzZQogICAgICAgICAgfQogICAgICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbjogIiRUT0tFTl8xIgogICAgICAgICAgbW9kZTogSW5zdGFudFdpdGhGYWxsYmFjawogICAgICAgICAgcmVmZXJlbmNlOiAiU3VwcGxpZXIgcGF5bWVudCAxIgogICAgICAgIH0KICAgICAgICB7CiAgICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxNTAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgICAgIGliYW46ICJERTg5MzcwNDAwNDQwNTMyMDEzMDAwIgogICAgICAgICAgICBuYW1lOiAiVGVjaENvcnAgR21iSCIKICAgICAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgICB9CiAgICAgICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuOiAiJFRPS0VOXzIiCiAgICAgICAgICBtb2RlOiBSZWd1bGFyCiAgICAgICAgICByZWZlcmVuY2U6ICJTdXBwbGllciBwYXltZW50IDIiCiAgICAgICAgfQogICAgICBdCiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIHBheW1lbnQgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql {6,15,26} showLineNumbers
+mutation BulkWithTokens {
+  initiateCreditTransfers(
+    input: {
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      accountId: "$YOUR_ACCOUNT_ID"
+      creditTransfers: [
+        {
+          amount: { value: "200", currency: "EUR" }
+          sepaBeneficiary: {
+            iban: "FR7630006000011234567890189"
+            name: "Marie Dubois"
+            isMyOwnIban: false
+            save: false
+          }
+          beneficiaryVerificationToken: "$TOKEN_1"
+          mode: InstantWithFallback
+          reference: "Supplier payment 1"
+        }
+        {
+          amount: { value: "150", currency: "EUR" }
+          sepaBeneficiary: {
+            iban: "DE89370400440532013000"
+            name: "TechCorp GmbH"
+            isMyOwnIban: false
+            save: false
+          }
+          beneficiaryVerificationToken: "$TOKEN_2"
+          mode: Regular
+          reference: "Supplier payment 2"
+        }
+      ]
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      payment {
+        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+    ... on ForbiddenRejection {
+      message
+    }
+  }
+}
+```
+
+## Error handling {#error-handling}
+
+### Token already consumed {#error-consumed}
+
+Verification tokens are single-use:
+
+```json showLineNumbers
+{
+  "data": {
+    "initiateCreditTransfers": {
+      "__typename": "BeneficiaryVerificationTokenAlreadyConsumedRejection",
+      "token": "vt_abc123...",
+      "message": "This verification token has already been used"
+    }
+  }
+}
+```
+
+**Solution**: Generate a new verification with `verifySepaBeneficiary`.
+
+### Bulk transfer without tokens {#error-bulk}
+
+Bulk transfers require tokens (unless VoP is disabled):
+
+```json showLineNumbers
+{
+  "data": {
+    "initiateCreditTransfers": {
+      "__typename": "ForbiddenRejection",
+      "message": "Bulk transfers require verification tokens or VoP opt-out"
+    }
+  }
+}
+```
+
+**Solution**: Pre-verify beneficiaries or enable VoP opt-out for company accounts.
+
+## Automatic VoP fallback {#automatic-fallback}
+
+If you don't include verification tokens, Swan automatically runs VoP for single transfers:
+
+```graphql title="Single transfer without token (automatic VoP)" showLineNumbers
+mutation AutomaticVoP {
+  initiateCreditTransfers(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "FR7630006000011234567890189"
+          name: "Marie Dubois"
+          isMyOwnIban: false
+          save: false
+        }
+        mode: Regular
+      }
+    }
+  ) {
+    # ... same payload structure
+  }
+}
+```
+
+Swan runs VoP in the background and displays results in the consent screen.
+
+:::info Performance
+Using verification tokens provides faster processing since VoP has already been completed. For bulk transfers or repeated beneficiaries, pre-verification significantly improves user experience.
+:::
+
+## Best practices {#best-practices}
+
+1. **Pre-verify for bulk transfers** - Always use `verifySepaBeneficiary` before sending multiple transfers
+2. **Handle token expiry** - Verification tokens expire after 24 hours
+3. **Store tokens securely** - Tokens are single-use and should be protected
+4. **Display VoP results** - Show verification outcomes in your interface before payment submission
+5. **Plan for errors** - Implement retry logic for token consumption errors
+
+## Related guides {#related}
+
+- [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Create verification tokens
+- [Manage VoP settings](./guide-manage-settings.mdx) - Company opt-out options
+- [Initiate a credit transfer](../sepa/guide-initiate-ct.mdx) - Standard credit transfer flow
+- [Send multiple credit transfers](../sepa/guide-initiate-ct.mdx#guide-multiple) - Bulk transfer patterns

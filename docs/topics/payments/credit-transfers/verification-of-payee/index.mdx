@@ -1,0 +1,122 @@
+---
+title: Verification of Payee
+---
+
+# Verification of Payee
+
+Verify beneficiary details against their IBAN before sending SEPA Credit Transfers to reduce fraud and misdirected payments.
+
+Starting **October 9, 2025**, Verification of Payee (VoP) becomes mandatory across Europe per the Instant Payments Regulation (IPR).
+
+:::info Automatic integration
+Swan automatically integrates VoP into existing credit transfer flows. Your current `initiateCreditTransfers` calls will include VoP verification with no required changes.
+:::
+
+## Overview {#overview}
+
+When you call `initiateCreditTransfers`, Swan verifies the beneficiary name (and optionally company identifier) against the IBAN at the receiving bank before presenting the consent screen.
+
+VoP works for all SEPA network transfers:
+- **SEPA Credit Transfers** (regular and instant)
+- **Internal Credit Transfers** between Swan accounts
+- **Standing Orders** (verification required only at setup)
+
+## VoP results in consent {#results}
+
+Swan displays VoP results in the consent screen with one of four outcomes:
+
+| Result | Description | User action |
+| --- | --- | --- |
+| **Match** ✅ | Name exactly matches bank records | Proceed with confidence |
+| **Close Match** ⚠️ | Slight discrepancy (shows suggested name) | Review suggestion, proceed or correct |
+| **No Match** ❌ | Name doesn't match bank records | Warning shown, can still proceed |
+| **Verification Not Possible** ⚠️ | Technical issue prevented verification | Warning shown, can still proceed |
+
+When VoP shows Close Match, No Match, or Verification Not Possible, users see a warning but can still authorize the payment.
+
+## Pre-verification for better UX {#pre-verification}
+
+For optimal user experience, especially with bulk payments, verify beneficiaries before initiating transfers:
+
+1. **Call `verifySepaBeneficiary`** to verify beneficiary details
+2. **Include verification tokens** in `initiateCreditTransfers` for faster processing
+3. **Display verification results** in your interface before payment submission
+
+This approach is particularly valuable for:
+- Bulk payment processing
+- Adding trusted beneficiaries
+- Reducing consent screen friction
+
+## Company bulk transfer options {#company-options}
+
+Company accounts have two options for bulk transfers:
+
+### Option 1: Pre-verification (recommended)
+1. Use `verifySepaBeneficiary` to verify all beneficiaries
+2. Include verification tokens in bulk `initiateCreditTransfers`
+3. Single consent for all pre-verified transfers
+
+### Option 2: VoP opt-out
+1. Call `disableVerificationOfPayee` for the account
+2. Bulk transfers skip VoP (warning shown in consent)
+3. Single transfers still include automatic VoP
+
+:::note Individual accounts
+Individual accounts cannot opt out of VoP and must use pre-verification tokens for bulk transfers.
+:::
+
+## Integration with existing flows {#integration}
+
+### No changes required
+Your existing credit transfer implementations work automatically:
+- `initiateCreditTransfers` includes VoP by default
+- `scheduleStandingOrder` verifies beneficiaries at setup
+- Single transfers show VoP results in consent
+
+### Enhanced flows (optional)
+For better user experience:
+- Add `verifySepaBeneficiary` to beneficiary management
+- Include `beneficiaryVerificationToken` in transfer requests
+- Handle VoP results in your interface
+
+### Bulk transfer requirements
+Starting October 9, 2025, bulk transfers require either:
+- Verification tokens for each beneficiary, OR
+- VoP opt-out enabled for company accounts
+
+## Supported verification methods {#methods}
+
+### Name-based verification
+All beneficiaries can be verified using their full name:
+- **Natural persons**: First and last name
+- **Legal entities**: Legal name or commercial name
+
+### Identifier-based verification (companies)
+Legal entities can also use company identifiers for higher accuracy:
+- `legalEntityIdentification` - LEI code
+- `siren` - French SIREN number  
+- `siret` - French SIRET number
+- `centralBankIdentification` - National business registry
+
+## Getting started {#getting-started}
+
+### Immediate compliance (no action needed)
+Swan handles VoP automatically starting October 9, 2025. Your existing transfers will include verification.
+
+### Enhanced implementation (recommended)
+1. **Test VoP scenarios** in Sandbox environment
+2. **Add pre-verification** to your beneficiary workflows
+3. **Handle bulk transfers** with tokens or opt-out
+4. **Display VoP results** before payment submission
+
+## Guides {#guides}
+
+- [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Pre-verify beneficiaries with `verifySepaBeneficiary`
+- [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Use verification tokens in `initiateCreditTransfers`
+- [Manage VoP settings](./guide-manage-settings.mdx) - Company opt-out for bulk transfers
+- [Sandbox testing](./sandbox.mdx) - Test VoP scenarios
+
+### Related documentation
+- [Initiate a credit transfer](../sepa/guide-initiate-ct.mdx) - Main credit transfer functionality
+- [Add a trusted SEPA beneficiary](../sepa/guide-add-beneficiary.mdx) - Beneficiary management
+- [SEPA Credit Transfers overview](../sepa/index.mdx) - Complete SEPA documentation

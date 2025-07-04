@@ -245,6 +245,7 @@ module.exports = {
             "topics/cards/physical/guide-activate",
             "topics/cards/physical/guide-view-info",
             "topics/cards/physical/guide-block-unblock",
+            "topics/cards/physical/guide-renew",
             "topics/cards/physical/guide-cancel",
             "topics/cards/physical/sandbox",
           ],

@@ -197,27 +197,38 @@ A check transaction can be rejected for the following reasons:
 
 | Rejection reason | Explanation |
 | --- | --- |
-| `AmountMismatch` | Amount on the check and amount declared through the API don't match. |
-| `BeneficiaryMismatch` | Beneficiary name on the check and the name declared through the API don't match. |
-| `BeneficiaryMissingOrIncorrect` | Merchant's name is missing or incorrect. |
-| `CheckNotReceived` | Check wasn't received by Swan's check provider. This reason doesn't appear until 30 days after the check was declared. |
-| `CheckReceivedLate` | Check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check. |
+| `AmountMismatch` | The amount on the check and the amount declared through the API don't match. |
+| `BeneficiaryMismatch` | The beneficiary name on the check and the name declared through the API don't match. |
+| `BeneficiaryMissingOrIncorrect` | The merchant's name is missing or incorrect. |
+| `CheckNotReceived` | The check wasn't received by Swan's check provider. This reason doesn't appear until 30 days after the check was declared. |
+| `CheckReceivedLate` | The check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check. |
 | `DateMissing` | There's no date on the check. |
-| `DateInvalid` | Date on the check is in the future or isn't valid. |
-| `DebtorNameMissing` | Debtor's name (your merchant's customer) must appear on the check. |
+| `DateInvalid` | The date on the check is in the future or isn't valid. |
+| `DebtorNameMissing` | The debtor's name (your merchant's customer) must appear on the check. |
 | `InvalidOrMissingAmount` | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters). |
-| `SignatureMissing` | Debtor's signature is missing, or there was a problem with the signature. |
+| `SignatureMissing` | The debtor's signature is missing, or there was a problem with the signature. |
 
 ### Returned {#returned}
 
 Checks can be returned up to 10 business days after the transaction is `Booked`, and this window can be extended to 90 calendar days based on the reason for return.
 Note that checks aren't mailed back to the merchant.
 
-A check transaction might be returned for the following reasons (this list is not exhaustive):
+A check transaction might be returned for the following reasons:
 
-- Insufficient funds
-- Account closed
-- Loss or theft
+| Return reason                     | Explanation                                                                 |
+|---|---|
+| `AccountClosed` | The account is closed. |
+| `CheckBlocked` | The payer has blocked the check payment. |
+| `CheckOutdated` | The check is outdated. |
+| `DebtorDeceased` | The debtor is deceased. |
+| `EndorsementMissingOrInvalid` | The check payment can't be fulfilled because the beneficiary's signature on the check is missing or invalid. |
+| `Fraudulent` | The payment can't be fulfilled because it's a fraudulent check. |
+| `InsufficientFunds` | The payer has insufficient funds to fulfill the check payment. |
+| `LegalOrBankDecision` | The check payment can't be fulfilled because of a legal or banking issue on the payer's end. |
+| `MandatoryReferenceMissingOnCheck` | The check payment can't be fulfilled because a mandatory piece of information is missing on the check. |
+| `SignatureInvalid` | The check payment can't be fulfilled because the payer's signature is invalid. |
+| `SwanTechnicalErrorOccurred` | There was a technical error preventing the treatment of this check. |
+| `TransactionDuplicated` | This transaction can't be fulfilled because it's a duplicate of another transaction. |
 
 By the time a check is returned, the merchant's account has already been credited.
 Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `checkInReturn` transaction is created automatically.

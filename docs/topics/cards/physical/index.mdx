@@ -366,6 +366,29 @@ flowchart LR
 | `ToRenew` | Status triggered automatically 10 weeks before the card's expiry date. After this status is triggered by the Swan API, you can't stop the renewal process.<br /><br />*If you or the cardholder doesn't want to renew a physical card, [cancel the card](./guide-cancel.mdx) **at least 11 weeks** before the expiry date.* |
 | `Renewed` | Status triggered automatically 8 weeks before the card's expiry date. No updates to the delivery address can be made after this status is triggered. |
 
+### Suspended physical cards {#renew-suspended}
+
+The renewal process for a suspended physical card depends on when the card is **resumed**. Two key changes occur at **10 weeks** and **8 weeks** before expiry:
+- At **10 weeks** before expiry, eligible cards move to the `ToRenew` status.
+- Between **10 and 8 weeks** before expiry, there's a 2-week window to [update the shipping address](/topics/cards/physical/guide-renew).
+- At **8 weeks** before expiry, if the card is still in `ToRenew`, it moves to `Renewed`, and the new card is created and shipped.
+
+:::warning Renewal status requirement
+If a physical card isn't in `ToRenew` by the 8-week mark, a new card will not be issued and the existing card will be canceled at expiry.
+:::
+
+| Scenario | Physical card status at 10 weeks | Physical card status at 8 weeks | Physical card status at expiry date |
+|---|---|---|---|
+| Suspended and resumed more than **10 weeks** before expiry | `ToRenew` | `Renewed` | `Renewed` |
+| Suspended and not resumed more than **10 weeks** before expiry | `Suspended` | `Suspended` | `Canceled` |
+| Suspended and resumed between **10 and 8 weeks** before expiry | `ToRenew` | `Renewed` | `Renewed` |
+| Suspended and not resumed between **10 and 8 weeks** before expiry | `ToRenew` | `Suspended` | `Canceled` |
+| Suspended between **10 and 8 weeks** before expiry and resumed less than **8 weeks** before expiry | `ToRenew` | `Suspended` | `Canceled` |
+
+If a card is already in `Renewed` and is then `Suspended`, **both the existing and new card** will be `Suspended`. 
+This doesn't affect the shipping of the new card, it will still be sent. 
+You must resume the new card before it can be `Activated`.
+
 ### Activating the new card {#renew-activate}
 
 After the cardholder makes an in-person transaction with the new card using the Chip and PIN payment method, the new card's status changes from `Renewed` to `Activated`.

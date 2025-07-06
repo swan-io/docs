@@ -1,0 +1,152 @@
+---
+title: Upcoming VoP Features
+---
+
+# Upcoming VoP Features
+
+Swan's VoP implementation will expand with additional capabilities beyond the foundational single credit transfer functionality.
+
+:::info Current availability
+The features on this page are **not yet available**. They are planned for future releases following the initial VoP launch on October 9, 2025.
+:::
+
+## Standing Order Verification {#standing-orders}
+
+**Coming Soon**: VoP integration with standing orders
+
+VoP will be required only when scheduling a standing order, not for subsequent executions:
+
+- ✅ **Setup**: VoP verification required
+- ✅ **First payment**: Uses verification from setup  
+- ✅ **Recurring payments**: No additional VoP needed
+
+### Enhanced scheduleStandingOrder
+
+```graphql
+scheduleStandingOrder(
+  input: {
+    # ... standard standing order fields
+    beneficiaryVerificationToken: "vt_abc123..."  # Coming soon
+  }
+) {
+  # ... response payload
+}
+```
+
+Per the Instant Payments Regulation, this streamlined approach reduces verification overhead for recurring payments while maintaining fraud protection at setup.
+
+## Bulk Payment Optimization {#bulk-payments}
+
+**Coming Soon**: Advanced bulk transfer capabilities
+
+### Pre-verification Workflows
+
+Verify multiple beneficiaries efficiently before initiating bulk payments:
+
+```graphql
+# Future capability
+verifySepaBeneficiary(
+  input: {
+    accountId: "$YOUR_ACCOUNT_ID"
+    payees: [
+      { iban: "...", name: "Supplier 1" },
+      { iban: "...", name: "Supplier 2" },
+      { iban: "...", name: "Supplier 3" }
+      # Up to 50 beneficiaries per call
+    ]
+  }
+)
+```
+
+### Token Management Strategies
+
+Advanced token lifecycle management:
+
+- **Automatic refresh**: Re-verify tokens approaching expiry
+- **Bulk token usage**: Optimize multiple transfers with cached verifications
+- **Performance analytics**: Track verification success rates and timing
+
+## Company Verification {#company-verification}
+
+**Coming Soon**: Legal entity verification workflows
+
+### Enhanced Company Support
+
+```graphql
+# Future capability
+input SepaBeneficiaryVerificationInput {
+  iban: String!
+  name: String!
+  legalIdentifier: String  # Coming soon - for companies
+  externalReference: String
+}
+```
+
+### Advanced Matching
+
+Company-specific verification logic:
+- Legal name vs. trading name matching
+- Registration number verification
+- Multi-language name support
+
+## Enterprise Features {#enterprise}
+
+**Coming Soon**: Advanced capabilities for large-scale implementations
+
+### Company Opt-out Management
+
+Administrative controls for VoP requirements:
+- Account-level VoP policies
+- Bulk transfer exemptions
+- Compliance reporting
+
+### Advanced Analytics
+
+Enhanced monitoring and reporting:
+- Verification success rates by country/bank
+- Performance metrics and optimization insights
+- Fraud prevention effectiveness tracking
+
+### Error Recovery Patterns
+
+Sophisticated error handling:
+- Advanced retry strategies with circuit breakers
+- Fallback verification providers
+- Real-time status monitoring
+
+## Integration Roadmap {#roadmap}
+
+### Phase 1: Foundation (October 2025)
+- ✅ Single credit transfer VoP
+- ✅ Basic pre-verification
+- ✅ Four result types handling
+- ✅ Sandbox testing
+
+### Phase 2: Enhanced (Q4 2025)
+- 🔄 Standing order verification
+- 🔄 Basic bulk payment support
+- 🔄 Token management improvements
+
+### Phase 3: Advanced (Q1 2026)
+- 🔄 Company verification workflows
+- 🔄 Advanced bulk optimization
+- 🔄 Enterprise analytics and controls
+
+### Phase 4: Enterprise (Q2 2026)
+- 🔄 Multi-provider redundancy
+- 🔄 Advanced compliance features
+- 🔄 Custom verification rules
+
+## Getting Notified {#notifications}
+
+Stay updated on VoP feature releases:
+
+1. **Documentation updates**: New guides will be added to the VoP section as features launch
+2. **API changelog**: Monitor [Swan's changelog](../../../changelog.mdx) for API updates
+3. **Developer communications**: Subscribe to Swan's developer newsletter
+
+## Related Documentation {#related}
+
+- [VoP Overview](./index.mdx) - Current VoP capabilities
+- [Implementation guides](./index.mdx#guides) - Getting started with available features
+- [API Reference](./api-reference.mdx) - Complete current API documentation

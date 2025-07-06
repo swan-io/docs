@@ -162,50 +162,6 @@ type BeneficiaryVerificationTokenAlreadyConsumedRejection implements Rejection {
 }
 ```
 
-### Enhanced scheduleStandingOrder {#enhanced-standing-order}
-
-Include verification tokens when scheduling standing orders.
-
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2NoZWR1bGVXaXRoVG9rZW4gewogIHNjaGVkdWxlU3RhbmRpbmdPcmRlcigKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRZT1VSX0FDQ09VTlRfSUQiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgcGVyaW9kOiBNb250aGx5CiAgICAgIGxhYmVsOiAiTW9udGhseSByZW50IHBheW1lbnQiCiAgICAgIGZpcnN0RXhlY3V0aW9uRGF0ZTogIjIwMjUtMDgtMDFUIgogICAgICBsYXN0RXhlY3V0aW9uRGF0ZTogIjIwMjYtMDctMzFUIgogICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICBpYmFuOiAiRlI3NjMwMDA2MDAwMDExMjM0NTY3ODkwMTg5IgogICAgICAgIG5hbWU6ICJQcm9wZXJ0eSBNYW5hZ2VtZW50IFNBUkwiCiAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgfQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuOiAiJFZFUklGSUNBVElPTl9UT0tFTiIKICAgICAgcmVmZXJlbmNlOiAiTW9udGhseSByZW50IC0gQXBhcnRtZW50IDQ1QiIKICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTIwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gU2NoZWR1bGVTdGFuZGluZ09yZGVyU3VjY2Vzc1BheWxvYWQgewogICAgICBzdGFuZGluZ09yZGVyIHsKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8KICAgICAgfQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBCZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuQWxyZWFkeUNvbnN1bWVkUmVqZWN0aW9uIHsKICAgICAgdG9rZW4KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQ==&tab=api)
-
-```graphql {16} showLineNumbers
-mutation ScheduleWithToken {
-  scheduleStandingOrder(
-    input: {
-      accountId: "$YOUR_ACCOUNT_ID"
-      consentRedirectUrl: "$YOUR_REDIRECT_URL"
-      period: Monthly
-      label: "Monthly rent payment"
-      firstExecutionDate: "2025-08-01T"
-      lastExecutionDate: "2026-07-31T"
-      sepaBeneficiary: {
-        iban: "FR7630006000011234567890189"
-        name: "Property Management SARL"
-        isMyOwnIban: false
-        save: false
-      }
-      beneficiaryVerificationToken: "$VERIFICATION_TOKEN"
-      reference: "Monthly rent - Apartment 45B"
-      amount: { value: "1200", currency: "EUR" }
-    }
-  ) {
-    ... on ScheduleStandingOrderSuccessPayload {
-      standingOrder {
-        id
-        statusInfo
-      }
-      consent {
-        consentUrl
-      }
-    }
-    ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
-      token
-      message
-    }
-  }
-}
-```
-
 ## Error Handling & Troubleshooting {#error-handling}
 
 ### Common Rejection Types {#common-rejections}
@@ -259,12 +215,6 @@ Common validation issues and solutions:
 
 ## Sandbox Testing {#sandbox-testing}
 
-### Environment Setup {#sandbox-setup}
-- **Environment**: All VoP features available in Sandbox
-- **Rate Limits**: Same as Live (5-second timeout)
-- **Tokens**: 24-hour expiry applies in Sandbox
-- **Test Data**: Use specific IBANs for predictable results
-
 ### Test IBANs {#test-ibans}
 
 Use these specific IBANs in Sandbox to test different VoP results:
@@ -275,39 +225,6 @@ Use these specific IBANs in Sandbox to test different VoP results:
 | `FR7630006000011234567890189` | **Close Match** ⚠️ | Returns Close Match for slight name variations |
 | `DE89370400440532013000` | **No Match** ❌ | Returns No Match for incorrect names |
 | `ES9121000418450200051332` | **Verification Not Possible** ⚠️ | Simulates technical failures |
-
-### Test Match Result {#test-match}
-
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVGVzdE1hdGNoIHsKICB2ZXJpZnlTZXBhQmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9TQU5EQk9YX0FDQ09VTlRfSUQiCiAgICAgIHBheWVlczogWwogICAgICAgIHsKICAgICAgICAgIGliYW46ICJGUjc2MTQ1MDgwMDAzMDAwNjA2MzI3MTAyNDMiCiAgICAgICAgICBuYW1lOiAiQW55IE5hbWUgSGVyZSIKICAgICAgICAgIGV4dGVybmFsUmVmZXJlbmNlOiAidGVzdC1tYXRjaCIKICAgICAgICB9CiAgICAgIF0KICAgIH0KICApIHsKICAgIC4uLiBvbiBWZXJpZnlTZXBhQmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIHZlcmlmaWNhdGlvbnMgewogICAgICAgIHJlc3VsdCB7CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgdmVyaWZpZWROYW1lOiBuYW1lCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIHRva2VuCiAgICAgIH0KICAgIH0KICB9Cn0=&tab=api)
-
-```graphql showLineNumbers
-mutation TestMatch {
-  verifySepaBeneficiary(
-    input: {
-      accountId: "$YOUR_SANDBOX_ACCOUNT_ID"
-      payees: [
-        {
-          iban: "FR7614508000300060632710243"
-          name: "Any Name Here"
-          externalReference: "test-match"
-        }
-      ]
-    }
-  ) {
-    ... on VerifySepaBeneficiarySuccessPayload {
-      verifications {
-        result {
-          ... on BeneficiaryMatch {
-            __typename
-            verifiedName: name
-          }
-        }
-        token
-      }
-    }
-  }
-}
-```
 
 ## Best Practices {#best-practices}
 
@@ -340,5 +257,4 @@ mutation TestMatch {
 - [VoP Overview](./index.mdx) - Understanding Verification of Payee
 - [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Create verification tokens
 - [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Using verification tokens
-- [VoP with standing orders](./guide-vop-standing-orders.mdx) - Standing order verification
 - [Sandbox testing](./sandbox.mdx) - Complete testing guide

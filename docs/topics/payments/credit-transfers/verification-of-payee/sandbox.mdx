@@ -241,47 +241,6 @@ mutation TestWithToken {
 }
 ```
 
-## Test error scenarios {#test-errors}
-
-### Test expired token {#test-expired-token}
-
-Use an old or invalid token:
-
-```graphql showLineNumbers
-mutation TestExpiredToken {
-  initiateCreditTransfers(
-    input: {
-      accountId: "$YOUR_SANDBOX_ACCOUNT_ID"
-      consentRedirectUrl: "$YOUR_REDIRECT_URL"
-      creditTransfers: {
-        amount: { value: "50", currency: "EUR" }
-        sepaBeneficiary: {
-          iban: "FR7614508000300060632710243"
-          name: "Test User"
-          isMyOwnIban: false
-          save: false
-        }
-        beneficiaryVerificationToken: "expired_or_invalid_token"
-        mode: Regular
-      }
-    }
-  ) {
-    ... on InitiateCreditTransfersSuccessPayload {
-      payment {
-        id
-      }
-    }
-    ... on ValidationRejection {
-      message
-    }
-    ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
-      token
-      message
-    }
-  }
-}
-```
-
 ## Expected payloads {#expected-payloads}
 
 ### Match result payload {#payload-match}
@@ -327,54 +286,12 @@ mutation TestExpiredToken {
 }
 ```
 
-### No Match result payload {#payload-no-match}
-
-```json showLineNumbers
-{
-  "data": {
-    "verifySepaBeneficiary": {
-      "__typename": "VerifySepaBeneficiarySuccessPayload",
-      "verifications": [
-        {
-          "result": {
-            "__typename": "BeneficiaryMismatch",
-            "providedName": "Wrong Name"
-          },
-          "token": "vt_sandbox_no_match_token_789"
-        }
-      ]
-    }
-  }
-}
-```
-
-### Verification Not Possible payload {#payload-not-possible}
-
-```json showLineNumbers
-{
-  "data": {
-    "verifySepaBeneficiary": {
-      "__typename": "VerifySepaBeneficiarySuccessPayload",
-      "verifications": [
-        {
-          "result": {
-            "__typename": "BeneficiaryVerificationNotPossible",
-            "reason": "Technical timeout - verification service unavailable"
-          },
-          "token": "vt_sandbox_not_possible_token_abc"
-        }
-      ]
-    }
-  }
-}
-```
-
 ## Testing workflow {#testing-workflow}
 
 1. **Start with individual verifications** - Test each VoP result type using the specific test IBANs
-1. **Test credit transfer integration** - Use tokens with `initiateCreditTransfers`
-1. **Test automatic VoP** - See how consent screens display VoP results
-1. **Test error scenarios** - Verify proper error handling
+2. **Test credit transfer integration** - Use tokens with `initiateCreditTransfers`
+3. **Test automatic VoP** - See how consent screens display VoP results
+4. **Test error scenarios** - Verify proper error handling
 
 :::tip Testing in Sandbox
 All VoP functionality works in Sandbox exactly as it will in Live, except with simulated results. Use Sandbox to validate your integration before going live on October 9, 2025.
@@ -384,5 +301,4 @@ All VoP functionality works in Sandbox exactly as it will in Live, except with s
 
 - [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Complete verification API guide
 - [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Integration with transfers
-- [VoP with standing orders](./guide-vop-standing-orders.mdx) - Standing order verification
-- [SEPA Credit Transfers sandbox](../sepa/sandbox.mdx) - General credit transfer testing
+- [API Reference](./api-reference.mdx) - Complete GraphQL documentation

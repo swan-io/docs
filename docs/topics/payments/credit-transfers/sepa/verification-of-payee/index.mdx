@@ -4,15 +4,19 @@ title: Verification of Payee
 
 # Verification of Payee
 
-Verify beneficiary details against their IBAN before sending SEPA Credit Transfers to reduce fraud and misdirected payments.
 
+:::warning
 **Starting October 9, 2025**, Verification of Payee (VoP) becomes mandatory across Europe per the Instant Payments Regulation (IPR).
-
-:::info Automatic integration
-Swan automatically integrates VoP into existing credit transfer flows. Your current `initiateCreditTransfers` calls will include VoP verification with no required changes.
 :::
 
-## Business Benefits {#benefits}
+Verify beneficiary details against their IBAN before sending SEPA Credit Transfers to reduce fraud and misdirected payments.
+
+:::tip Automatic integration
+Swan automatically integrates VoP into existing credit transfer flows. 
+Your current [`initiateCreditTransfers`](./guide-initiate-ct#guide-sepa) calls will include VoP verification with no required changes.
+:::
+
+## Benefits {#benefits}
 
 VoP provides immediate value to your users and business:
 
@@ -21,13 +25,13 @@ VoP provides immediate value to your users and business:
 - **Regulatory Compliance**: Meet IPR requirements automatically starting October 9, 2025
 - **Reduced Disputes**: Fewer misdirected payments and customer support issues
 
-## How VoP Works {#how-it-works}
+## How VoP works {#how-it-works}
 
-When you call `initiateCreditTransfers`, Swan verifies the beneficiary name against the IBAN at the receiving bank before presenting the consent screen.
+When you call [`initiateCreditTransfers`](./guide-initiate-ct#guide-sepa), Swan verifies the beneficiary name against the IBAN at the receiving bank before presenting the consent screen.
 
 VoP works for SEPA Credit Transfers (regular and instant) and internal transfers between Swan accounts.
 
-### VoP Results in Consent {#results}
+### VoP results in Consent {#results}
 
 Swan displays VoP results in the consent screen with one of four outcomes:
 
@@ -40,20 +44,20 @@ Swan displays VoP results in the consent screen with one of four outcomes:
 
 When VoP shows Close Match, No Match, or Verification Not Possible, users see a warning but can still authorize the payment.
 
-## Implementation Strategy {#strategy}
+## Implementation strategy {#strategy}
 
-### Essential (MVP Implementation)
-1. **Call `verifySepaBeneficiary`** when users add beneficiaries
-2. **Include tokens** in `initiateCreditTransfers` when available  
+### Essential implementation (early release)
+1. Optionally **call [`verifySepaBeneficiary`](./guide-verify-beneficiary#mutation-individual)** when users add beneficiaries
+2. **Include tokens** in [`initiateCreditTransfers`](./guide-initiate-ct#guide-sepa)) when available  
 3. **Handle all 4 result types** in your UI
 4. **Test with sandbox IBANs** before going live
 
-### Enhanced (Post-October)
-- Pre-verification for bulk payments
+### Enhanced features coming October 9
+- [Pre-verification](./guide-verify-beneficiary) for bulk payments
 - Standing order verification
 - Advanced error recovery patterns
 
-## Regulatory Timeline {#timeline}
+## Regulatory timeline {#timeline}
 
 - **July 2025**: Swan APIs available in Sandbox
 - **August 2025**: Partner integration testing
@@ -61,35 +65,37 @@ When VoP shows Close Match, No Match, or Verification Not Possible, users see a 
 
 Swan handles all regulatory compliance automatically. No action required for basic functionality.
 
-## Getting Started {#getting-started}
+---
+
+## Getting started {#getting-started}
 
 ### Immediate compliance (no action needed)
 Swan handles VoP automatically starting October 9, 2025. Your existing transfers will include verification.
 
 ### Enhanced implementation (recommended)
 1. **Test VoP scenarios** in [Sandbox environment](./sandbox.mdx)
-2. **Add pre-verification** to your beneficiary workflows
+2. **Add [pre-verification](./guide-verify-beneficiary)** to your beneficiary workflows
 3. **Display VoP results** before payment submission
 
-## API Overview {#api-overview}
+## API overview {#api-overview}
 
 ### Core APIs for MVP
 
-**Pre-verification** (recommended):
+**[Pre-verification](./guide-verify-beneficiary)** (recommended):
 ```graphql
 verifySepaBeneficiary(
   input: VerifySepaBeneficiaryInput!
 ): VerifySepaBeneficiaryPayload!
 ```
 
-**Enhanced credit transfers**:
+**Enhanced [credit transfers](./guide-initiate-ct#guide-sepa)**:
 ```graphql
 initiateCreditTransfers(
   input: InitiateCreditTransfersInput!
 ): InitiateCreditTransfersPayload!
 ```
 
-## Implementation Effort {#effort}
+## Implementation effort {#effort}
 
 | Integration Level | Development Time | Features |
 | --- | --- | --- |
@@ -98,8 +104,8 @@ initiateCreditTransfers(
 
 ## Guides {#guides}
 
-- [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Pre-verify beneficiaries with `verifySepaBeneficiary`
-- [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Use verification tokens in `initiateCreditTransfers`
+- [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Pre-verify beneficiaries with [`verifySepaBeneficiary`](./guide-verify-beneficiary#mutation-individual)
+- [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Use verification tokens in [`initiateCreditTransfers`](./guide-initiate-ct#guide-sepa)
 - [Sandbox testing](./sandbox.mdx) - Test VoP scenarios
 - [API Reference](./api-reference.mdx) - Complete GraphQL documentation
 - [Upcoming features](./upcoming-features.mdx) - Advanced VoP capabilities coming soon

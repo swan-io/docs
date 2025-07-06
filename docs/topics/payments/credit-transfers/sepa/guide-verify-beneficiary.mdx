@@ -4,49 +4,61 @@ title: Verify a beneficiary
 
 # Verify a beneficiary
 
-Verify a beneficiary with the API.
-[Verifying beneficiaries](./index.mdx#beneficiary-verification) reduces the risk of errors and potential fraud.
+:::warning Breaking Change
+**Effective October 9, 2025:** The `beneficiaryVerification` query (Dutch IBANs only) is deprecated. Use `verifySepaBeneficiary` mutation instead for all SEPA IBANs.
+:::
+
+Verify beneficiary details before initiating credit transfers with Verification of Payee (VoP). [Verifying beneficiaries](./index.mdx#verification-of-payee) reduces the risk of errors and potential fraud.
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
+1. You're authenticating with a [user access token](../../../../developers/using-api/authentication/index.mdx#tokens-user).
+:::
 
 ## Guide {#guide}
 
-1. Call the `beneficiaryVerification` query.
-1. Add your beneficiary's `name` and `iban`, as well as the `debtorAccountId` (lines 4-6).
-1. Add all the information you'd like to review in the payload.
+1. Call the `verifySepaBeneficiary` mutation.
+1. Add your `accountId` and beneficiary details (lines 4-9).
+1. Save the verification `token` for use in [`initiateCreditTransfers`](./guide-initiate-ct.mdx#enhanced-with-vop).
 
-## Query {#query}
+## Mutation {#mutation}
 
-🔎 [Open the query in API Explorer](https://explorer.master.oina.ws?query=cXVlcnkgVmVyaWZ5QmVuZWZpY2lhcnkgewogIGJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uKAogICAgaW5wdXQ6IHsKICAgICAgaWJhbjogIiRCRU5FRklDSUFSWV9JQkFOIgogICAgICBuYW1lOiAiQmVuZWZpY2lhcnkgbmFtZSIKICAgICAgZGVidG9yQWNjb3VudElkOiAiJFNXQU5fREVCVE9SX0FDQ09VTlRfSUQiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudEhvbGRlclR5cGUKICAgICAgYWNjb3VudFN0YXR1cwogICAgfQogICAgLi4uIG9uIEJlbmVmaWNpYXJ5VHlwbyB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbmFtZVN1Z2dlc3Rpb24KICAgICAgYWNjb3VudFN0YXR1cwogICAgICBhY2NvdW50SG9sZGVyVHlwZQogICAgfQogICAgLi4uIG9uIEludmFsaWRCZW5lZmljaWFyeVZlcmlmaWNhdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEJlbmVmaWNpYXJ5TWlzbWF0Y2ggewogICAgICBfX3R5cGVuYW1lCiAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICAgIGFjY291bnRIb2xkZXJSZXNpZGVuY3lDaXR5CiAgICAgIGFjY291bnRIb2xkZXJUeXBlCiAgICAgIGFjY291bnRTdGF0dXMKICAgIH0KICB9Cn0K&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5QmVuZWZpY2lhcnkgewogIHZlcmlmeVNlcGFCZW5lZmljaWFyeSgKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRZT1VSX0FDQ09VTlRfSUQiCiAgICAgIHBheWVlczogWwogICAgICAgIHsKICAgICAgICAgIGliYW46ICJGUjc2MzAwMDYwMDAwMTEyMzQ1Njc4OTAxODkiCiAgICAgICAgICBuYW1lOiAiTWFyaWUgRHVib2lzIgogICAgICAgICAgZXh0ZXJuYWxSZWZlcmVuY2U6ICJpbnZvaWNlLTIwMjQtMDAxIgogICAgICAgIH0KICAgICAgXQogICAgfQogICkgewogICAgLi4uIG9uIFZlcmlmeVNlcGFCZW5lZmljaWFyeVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgdmVyaWZpY2F0aW9ucyB7CiAgICAgICAgdG9rZW4KICAgICAgICByZXN1bHQgewogICAgICAgICAgLi4uIG9uIEJlbmVmaWNpYXJ5TWF0Y2ggewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICB9CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlDbG9zZU1hdGNoIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIEJlbmVmaWNpYXJ5TWlzbWF0Y2ggewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICB9CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ob3RQb3NzaWJsZSB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgcmVhc29uCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9)
 
-```graphql {4-6,9,14,20,24} showLineNumbers
-query VerifyBeneficiary {
-  beneficiaryVerification(
+```graphql {4,7-8,16,18} showLineNumbers
+mutation VerifyBeneficiary {
+  verifySepaBeneficiary(
     input: {
-      iban: "$BENEFICIARY_IBAN"
-      name: "Beneficiary name"
-      debtorAccountId: "$SWAN_DEBTOR_ACCOUNT_ID"
+      accountId: "$YOUR_ACCOUNT_ID"
+      payees: [
+        {
+          iban: "FR7630006000011234567890189"
+          name: "Marie Dubois"
+          externalReference: "invoice-2024-001"
+        }
+      ]
     }
   ) {
-    ... on BeneficiaryMatch {
-      __typename
-      accountHolderType
-      accountStatus
-    }
-    ... on BeneficiaryTypo {
-      __typename
-      nameSuggestion
-      accountStatus
-      accountHolderType
-    }
-    ... on InvalidBeneficiaryVerification {
-      __typename
-      message
-    }
-    ... on BeneficiaryMismatch {
-      __typename
-      nameSuggestion
-      accountHolderResidencyCity
-      accountHolderType
-      accountStatus
+    ... on VerifySepaBeneficiarySuccessPayload {
+      verifications {
+        token
+        result {
+          ... on BeneficiaryMatch {
+            __typename
+          }
+          ... on BeneficiaryCloseMatch {
+            __typename
+            nameSuggestion
+          }
+          ... on BeneficiaryMismatch {
+            __typename
+          }
+          ... on BeneficiaryVerificationNotPossible {
+            __typename
+            reason
+          }
+        }
+      }
     }
   }
 }
@@ -54,27 +66,31 @@ query VerifyBeneficiary {
 
 ## Payload {#payload}
 
-The payload shows a beneficiary verification that **didn't** pass because the account wasn't found.
+The payload provides a verification `token` and result. Use the token in [`initiateCreditTransfers`](./guide-initiate-ct.mdx#enhanced-with-vop).
 
-```json {4} showLineNumbers
+```json {6,9} showLineNumbers
 {
-  "errors": [
-    {
-      "message": "Account was not found.",
-      "path": [
-        "beneficiaryVerification"
-      ],
-      "extensions": {
-        "code": "Account_NotFound",
-        "meta": {
-          "id": "$BENEFICIARY_VERIFICATION_ID"
-        },
-        "stacktrace": "Error: Account was not found.\n    at /home/node/app/src/domain/iban/use-cases/beneficiary-verification/beneficiary-verification.use-case.js:107:266\n    at /home/node/app/node_modules/fp-ts/lib/FromEither.js:36:97\n    at pipe (/home/node/app/node_modules/fp-ts/lib/function.js:301:23)\n    at /home/node/app/src/domain/iban/use-cases/beneficiary-verification/beneficiary-verification.use-case.js:107:214\n    at /home/node/app/node_modules/fp-ts/lib/EitherT.js:83:97\n    at /home/node/app/node_modules/fp-ts/lib/Task.js:133:41\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async toPromise (/home/node/app/node_modules/@swan-io/utils/lib/fp/index.js:26:12)\n    at async descriptor.value (/home/node/app/node_modules/@swan-io/metrics/metrics/decorators/default.js:12:28)"
-      }
-    }
-  ],
   "data": {
-    "beneficiaryVerification": null
+    "verifySepaBeneficiary": {
+      "__typename": "VerifySepaBeneficiarySuccessPayload",
+      "verifications": [
+        {
+          "token": "vt_abc123def456...",
+          "result": {
+            "__typename": "BeneficiaryMatch"
+          }
+        }
+      ]
+    }
   }
 }
 ```
+
+## VoP results {#results}
+
+Swan returns one of four verification results:
+
+- ✅ **Match**: Name matches exactly
+- ⚠️ **Close Match**: Slight discrepancy with suggested correction  
+- ❌ **No Match**: Name doesn't match
+- ⚠️ **Verification Not Possible**: Technical issue prevented verification

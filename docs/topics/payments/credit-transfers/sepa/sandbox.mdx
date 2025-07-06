@@ -19,6 +19,19 @@ Simulating receiving a SEPA Credit Transfer creates a new payment as well as a `
 
 ![Screenshot of Swan Dashboard Event Simulator to simulate receiving a SEPA Credit Transfer](../../../../images/topics/payments/credit-transfers/sandbox-sct-in.png)
 
+## Test Verification of Payee (VoP) {#test-vop}
+
+Use these specific IBANs in Sandbox to test different VoP results:
+
+| IBAN | Result | 
+| --- | --- | 
+| `FR7614508000300060632710243` | **Match** ✅ |
+| `FR7630006000011234567890189` | **Close Match** ⚠️ |
+| `DE89370400440532013000` | **No Match** ❌ |
+| `ES9121000418450200051332` | **Verification Not Possible** ⚠️ |
+
+Test VoP by calling [`verifySepaBeneficiary`](./guide-verify-beneficiary.mdx) with these IBANs, then use the returned tokens in [`initiateCreditTransfers`](./guide-initiate-ct.mdx#enhanced-with-vop).
+
 :::tip 
 Use the Event Simulator to **test other events** related to SEPA Credit Transfers, such as receiving an incoming transfer recall request, rejecting an outgoing transfer, and more.
 :::

@@ -8,6 +8,8 @@ title: SEPA Credit Transfers
 
 Transfer euros between accounts located in the [Single Euro Payments Area (SEPA)](../../index.mdx#sepa).
 
+Starting October 9, 2025, Swan automatically includes [Verification of Payee (VoP)](#verification-of-payee) in all SEPA Credit Transfers per the EU Instant Payments Regulation.
+
 Swan supports several types of credit transfers.
 Note the acronyms; while the documentation doesn't use them, the acronyms are sometimes present in the API and used in written and verbal communication.
 
@@ -39,27 +41,51 @@ If the automated assessment flags the transfer, it triggers a manual review by S
 If one of your transactions is flagged, Swan might contact you for more information.
 Due to the manual review, flagged SEPA Credit Transfers take longer to execute.
 
-### Verifying beneficiaries {#beneficiary-verification}
+## Verification of Payee (VoP) {#verification-of-payee}
 
-**IBAN verification** allows debtors to verify that credit transfers are sent to the right beneficiary *before* initiating the transfer, thus reducing errors and potential fraud.
+Starting October 9, 2025, Swan automatically includes VoP in all SEPA Credit Transfers per the EU Instant Payments Regulation.
 
-:::info Dutch IBANs only
-Swan allows IBAN verification for all transfers between accounts with **Dutch IBANs**, meaning **both** IBANs involved begin with `NL`.
-Refer to [Swan's roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to review other IBANs for which integrating IBAN verification is planned. 
+VoP verifies beneficiary names against their IBAN before payment execution, reducing:
+- Fraudulent transactions
+- Misdirected payments  
+- Customer disputes
+
+### How VoP works {#vop-works}
+
+1. **Automatic integration**: No changes required to existing [`initiateCreditTransfers`](./guide-initiate-ct.mdx) calls
+2. **Real-time verification**: Swan checks beneficiary details with receiving bank
+3. **Clear results**: Four possible outcomes displayed in consent screen
+4. **Enhanced option**: Pre-verify with [`verifySepaBeneficiary`](./guide-verify-beneficiary.mdx) for better UX
+
+### VoP results {#vop-results}
+
+Swan confirms that the **beneficiary's name** matches the name **registered for the provided IBAN** and returns one of four results:
+
+- ✅ **Match**: Information matches exactly
+- ⚠️ **Close Match**: Slight discrepancy with suggested correction
+- ❌ **No Match**: Information doesn't match 
+- ⚠️ **Verification Not Possible**: Technical issue prevented verification
+
+In cases of mismatch, debtors can update beneficiary information before initiating their transfer.
+
+### Implementation options {#vop-implementation}
+
+| Approach | Development Effort | Benefits |
+|----------|-------------------|----------|
+| **Automatic** | 0 hours | Compliance, basic fraud protection |
+| **Enhanced** | 2-4 hours | Faster UX, proactive error prevention |
+
+**Automatic approach**: VoP works with existing transfer calls starting October 9, 2025.
+
+**Enhanced approach**: Add [`verifySepaBeneficiary`](./guide-verify-beneficiary.mdx) to beneficiary management workflows and include verification tokens in [`initiateCreditTransfers`](./guide-initiate-ct.mdx#enhanced-with-vop).
+
+### Legacy beneficiary verification {#legacy-verification}
+
+:::warning Breaking Change
+**Effective October 9, 2025:** The `beneficiaryVerification` query (Dutch IBANs only) is deprecated. Use [`verifySepaBeneficiary`](./guide-verify-beneficiary.mdx) instead for all SEPA IBANs.
 :::
 
-When performing IBAN verification, Swan confirms that the **beneficiary's name** matches the name **registered for the provided IBAN**.
-Swan notifies the debtor initiating the transfer with one of three results:
-
-- ✓ The information **matches**.
-- ☒ The information doesn't match at all, referred to as an **information mismatch**.
-- ☒ The information doesn't match, but it might be a **partial match** or **typo** (for example, `Alex` instead of `Alexa`).
-
-In the case of a total or partial mismatch, the debtor can update the beneficiary information accordingly before initiating their transfer.
-For a partial mismatch, the Swan API returns the field `nameSuggestion` with a suggestion to fix the mismatch or typo, but only if the external financial institution provides it as well.
-
-Additionally, Swan allows external financial institutions to verify that a Swan account **name** and **IBAN** match the information entered by the debtor when initiating the transfer.
-If there's an information mismatch or partial match, the financial institution can notify the debtor, who can then confirm their beneficiary details before sending the transfer.
+The previous IBAN verification feature was limited to Dutch IBANs only. VoP expands verification coverage to all SEPA IBANs and provides enhanced functionality.
 
 Swan also **validates the format** of all beneficiary IBANs.
 You can [check the format of your IBANs](../../../accounts/ibans/guide-validate.mdx) with the API before using them to send a transfer.
@@ -132,6 +158,10 @@ Standing Orders can be sent as SEPA Credit Transfers or Instant SEPA Credit Tran
 
 As with all credit transfers, setting up a Standing Order is a [sensitive operation](../../../users/consent/index.mdx#sensitive).
 After the initial consent, however, subsequent Standing Orders are sent as scheduled without further consent.
+
+:::info VoP with Standing Orders
+VoP verification is required only when scheduling a Standing Order, not for subsequent executions. Once verified during setup, recurring payments use the same verification.
+:::
 
 Swan offers two types of Standing Orders:
 
@@ -220,7 +250,8 @@ The `Sepa{Instant}CreditTransferOutRecall` transaction is connected to the same 
     - [Initiate a credit transfer](./guide-initiate-ct.mdx)
     - [Cancel a credit transfer](./guide-cancel-ct.mdx)
     - [Refund a credit transfer](./guide-refund-ct.mdx)
-- [Verify a beneficiary](./guide-verify-beneficiary.mdx)
+- Verification of Payee
+    - [Verify a beneficiary](./guide-verify-beneficiary.mdx)
 - Standing Orders
     - [Schedule a Standing Order](./guide-schedule-so.mdx)
     - [Cancel a Standing Order](./guide-cancel-so.mdx)

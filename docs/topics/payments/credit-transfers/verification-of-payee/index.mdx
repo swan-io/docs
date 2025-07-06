@@ -6,99 +6,65 @@ title: Verification of Payee
 
 Verify beneficiary details against their IBAN before sending SEPA Credit Transfers to reduce fraud and misdirected payments.
 
-Starting **October 9, 2025**, Verification of Payee (VoP) becomes mandatory across Europe per the Instant Payments Regulation (IPR).
+**Starting October 9, 2025**, Verification of Payee (VoP) becomes mandatory across Europe per the Instant Payments Regulation (IPR).
 
 :::info Automatic integration
 Swan automatically integrates VoP into existing credit transfer flows. Your current `initiateCreditTransfers` calls will include VoP verification with no required changes.
 :::
 
-## Overview {#overview}
+## Business Benefits {#benefits}
 
-When you call `initiateCreditTransfers`, Swan verifies the beneficiary name (and optionally company identifier) against the IBAN at the receiving bank before presenting the consent screen.
+VoP provides immediate value to your users and business:
+
+- **Fraud Prevention**: Verify recipient details before payment execution
+- **User Trust**: Clear feedback builds confidence in payment accuracy  
+- **Regulatory Compliance**: Meet IPR requirements automatically starting October 9, 2025
+- **Reduced Disputes**: Fewer misdirected payments and customer support issues
+
+## How VoP Works {#how-it-works}
+
+When you call `initiateCreditTransfers`, Swan verifies the beneficiary name against the IBAN at the receiving bank before presenting the consent screen.
 
 VoP works for all SEPA network transfers:
 - **SEPA Credit Transfers** (regular and instant)
 - **Internal Credit Transfers** between Swan accounts
-- **Standing Orders** (verification required only at setup, not for subsequent payments)
+- **Standing Orders** (verification required only at setup)
 
-## VoP results in consent {#results}
+### VoP Results in Consent {#results}
 
 Swan displays VoP results in the consent screen with one of four outcomes:
 
-| Result | Description | User action |
-| --- | --- | --- |
-| **Match** ✅ | Name exactly matches bank records | Proceed with confidence |
-| **Close Match** ⚠️ | Slight discrepancy (shows suggested name) | Review suggestion, proceed or correct |
-| **No Match** ❌ | Name doesn't match bank records | Warning shown, can still proceed |
-| **Verification Not Possible** ⚠️ | Technical issue prevented verification | Warning shown, can still proceed |
+| Result | Description | User Experience | Next Steps |
+| --- | --- | --- | --- |
+| **Match** ✅ | Exact name match | ✅ Proceed normally | Continue to consent |
+| **Close Match** ⚠️ | Slight discrepancy | ⚠️ Show suggested name | User can proceed or correct |
+| **No Match** ❌ | Name doesn't match | ⚠️ Warning displayed | User can proceed with warning |
+| **Verification Not Possible** ⚠️ | Technical failure | ⚠️ Service unavailable | User can proceed or retry |
 
 When VoP shows Close Match, No Match, or Verification Not Possible, users see a warning but can still authorize the payment.
 
-## Pre-verification for better UX {#pre-verification}
+## Implementation Strategy {#strategy}
 
-For optimal user experience, especially with bulk payments, verify beneficiaries before initiating transfers:
+### Essential (MVP Implementation)
+1. **Call `verifySepaBeneficiary`** when users add beneficiaries
+2. **Include tokens** in `initiateCreditTransfers` when available  
+3. **Handle all 4 result types** in your UI
+4. **Test with sandbox IBANs** before going live
 
-1. **Call `verifySepaBeneficiary`** to verify beneficiary details
-2. **Include verification tokens** in `initiateCreditTransfers` for faster processing
-3. **Display verification results** in your interface before payment submission
+### Enhanced (Post-MVP)
+- Pre-verification for bulk payments
+- Company opt-out management  
+- Legal identifier collection
 
-This approach is particularly valuable for:
-- Bulk payment processing
-- Adding trusted beneficiaries
-- Reducing consent screen friction
+## Regulatory Timeline {#timeline}
 
-## Company bulk transfer options {#company-options}
+- **July 2025**: Swan APIs available in Sandbox
+- **August 2025**: Partner integration testing
+- **October 9, 2025**: VoP becomes mandatory (automatic activation)
 
-Company accounts have two options for bulk transfers:
+Swan handles all regulatory compliance automatically. No action required for basic functionality.
 
-### Option 1: Pre-verification (recommended)
-1. Use `verifySepaBeneficiary` to verify all beneficiaries
-2. Include verification tokens in bulk `initiateCreditTransfers`
-3. Single consent for all pre-verified transfers
-
-### Option 2: VoP opt-out
-1. Call `disableVerificationOfPayee` for the account
-2. Bulk transfers skip VoP (warning shown in consent)
-3. Single transfers still include automatic VoP
-
-:::note Individual accounts
-Individual accounts cannot opt out of VoP and must use pre-verification tokens for bulk transfers.
-:::
-
-## Integration with existing flows {#integration}
-
-### No changes required
-Your existing credit transfer implementations work automatically:
-- `initiateCreditTransfers` includes VoP by default
-- `scheduleStandingOrder` verifies beneficiaries at setup only
-- Single transfers show VoP results in consent
-
-### Enhanced flows (optional)
-For better user experience:
-- Add `verifySepaBeneficiary` to beneficiary management
-- Include `beneficiaryVerificationToken` in transfer requests
-- Handle VoP results in your interface
-
-### Bulk transfer requirements
-Starting October 9, 2025, bulk transfers require either:
-- Verification tokens for each beneficiary, OR
-- VoP opt-out enabled for company accounts
-
-## Supported verification methods {#methods}
-
-### Name-based verification
-All beneficiaries can be verified using their full name:
-- **Natural persons**: First and last name
-- **Legal entities**: Legal name or commercial name
-
-### Identifier-based verification (companies)
-Legal entities can also use company identifiers for higher accuracy:
-- `legalEntityIdentification` - LEI code
-- `siren` - French SIREN number  
-- `siret` - French SIRET number
-- `centralBankIdentification` - National business registry
-
-## Getting started {#getting-started}
+## Getting Started {#getting-started}
 
 ### Immediate compliance (no action needed)
 Swan handles VoP automatically starting October 9, 2025. Your existing transfers will include verification.
@@ -106,15 +72,48 @@ Swan handles VoP automatically starting October 9, 2025. Your existing transfers
 ### Enhanced implementation (recommended)
 1. **Test VoP scenarios** in Sandbox environment
 2. **Add pre-verification** to your beneficiary workflows
-3. **Handle bulk transfers** with tokens or opt-out
-4. **Display VoP results** before payment submission
+3. **Display VoP results** before payment submission
+
+## API Overview {#api-overview}
+
+### Core APIs for MVP
+
+**Pre-verification** (recommended):
+```graphql
+verifySepaBeneficiary(
+  input: VerifySepaBeneficiaryInput!
+): VerifySepaBeneficiaryPayload!
+```
+
+**Enhanced credit transfers**:
+```graphql
+initiateCreditTransfers(
+  input: InitiateCreditTransfersInput!
+): InitiateCreditTransfersPayload!
+```
+
+**Standing orders**:
+```graphql
+scheduleStandingOrder(
+  input: ScheduleStandingOrderInput!
+): ScheduleStandingOrderPayload!
+```
+
+## Implementation Effort {#effort}
+
+| Integration Level | Development Time | Features |
+| --- | --- | --- |
+| **Basic** | 0 hours | Automatic VoP in consent (no changes needed) |
+| **Recommended** | 2-5 days | Pre-verification, result display, error handling |
+| **Advanced** | 1-2 weeks | Company identifiers, bulk optimization |
 
 ## Guides {#guides}
 
 - [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Pre-verify beneficiaries with `verifySepaBeneficiary`
 - [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Use verification tokens in `initiateCreditTransfers`
-- [Manage VoP settings](./guide-manage-settings.mdx) - Company opt-out for bulk transfers
+- [VoP with standing orders](./guide-vop-standing-orders.mdx) - Standing order verification
 - [Sandbox testing](./sandbox.mdx) - Test VoP scenarios
+- [API Reference](./api-reference.mdx) - Complete GraphQL documentation
 
 ### Related documentation
 - [Initiate a credit transfer](../sepa/guide-initiate-ct.mdx) - Main credit transfer functionality

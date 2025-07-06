@@ -1,0 +1,342 @@
+---
+title: VoP API Reference
+---
+
+# VoP API Reference
+
+Complete GraphQL API documentation for implementing Verification of Payee with Swan.
+
+## Core APIs {#core-apis}
+
+### verifySepaBeneficiary Mutation {#verify-beneficiary}
+
+Verify beneficiary details before initiating credit transfers.
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5QmVuZWZpY2lhcnkgewogIHZlcmlmeVNlcGFCZW5lZmljaWFyeSgKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRZT1VSX0FDQ09VTlRfSUQiCiAgICAgIHBheWVlczogWwogICAgICAgIHsKICAgICAgICAgIGliYW46ICJGUjc2MzAwMDYwMDAwMTEyMzQ1Njc4OTAxODkiCiAgICAgICAgICBuYW1lOiAiTWFyaWUgRHVib2lzIgogICAgICAgICAgZXh0ZXJuYWxSZWZlcmVuY2U6ICJpbnZvaWNlLTIwMjQtMDAxIgogICAgICAgIH0KICAgICAgXQogICAgfQogICkgewogICAgLi4uIG9uIFZlcmlmeVNlcGFCZW5lZmljaWFyeVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgdmVyaWZpY2F0aW9ucyB7CiAgICAgICAgaWQKICAgICAgICB0b2tlbgogICAgICAgIHJlc3VsdCB7CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgdmVyaWZpZWROYW1lOiBuYW1lCiAgICAgICAgICB9CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlDbG9zZU1hdGNoIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBzdWdnZXN0ZWROYW1lOiBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgICBwcm92aWRlZE5hbWU6IG5hbWUKICAgICAgICAgIH0KICAgICAgICAgIC4uLiBvbiBCZW5lZmljaWFyeU1pc21hdGNoIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBwcm92aWRlZE5hbWU6IG5hbWUKICAgICAgICAgIH0KICAgICAgICAgIC4uLiBvbiBCZW5lZmljaWFyeVZlcmlmaWNhdGlvbk5vdFBvc3NpYmxlIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICByZWFzb24KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0=&tab=api)
+
+```graphql showLineNumbers
+mutation VerifyBeneficiary {
+  verifySepaBeneficiary(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      payees: [
+        {
+          iban: "FR7630006000011234567890189"
+          name: "Marie Dubois"
+          externalReference: "invoice-2024-001"
+        }
+      ]
+    }
+  ) {
+    ... on VerifySepaBeneficiarySuccessPayload {
+      verifications {
+        id
+        token
+        result {
+          ... on BeneficiaryMatch {
+            __typename
+            verifiedName: name
+          }
+          ... on BeneficiaryCloseMatch {
+            __typename
+            suggestedName: nameSuggestion
+            providedName: name
+          }
+          ... on BeneficiaryMismatch {
+            __typename
+            providedName: name
+          }
+          ... on BeneficiaryVerificationNotPossible {
+            __typename
+            reason
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### Input Schema {#verify-input}
+
+```graphql showLineNumbers
+input VerifySepaBeneficiaryInput {
+  accountId: ID!
+  payees: [SepaBeneficiaryVerificationInput!]!
+}
+
+input SepaBeneficiaryVerificationInput {
+  iban: String!
+  name: String!
+  externalReference: String
+}
+```
+
+#### Response Types {#verify-response}
+
+```graphql showLineNumbers
+type BeneficiaryMatch {
+  name: String!
+}
+
+type BeneficiaryCloseMatch {
+  name: String!
+  nameSuggestion: String!
+}
+
+type BeneficiaryMismatch {
+  name: String!
+}
+
+type BeneficiaryVerificationNotPossible {
+  reason: String!
+}
+```
+
+### Enhanced initiateCreditTransfers {#enhanced-initiate}
+
+Include verification tokens for faster processing and enhanced user experience.
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVXaXRoVG9rZW4gewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBjcmVkaXRUcmFuc2ZlcnM6IHsKICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgIHNlcGFCZW5lZmljaWFyeTogewogICAgICAgICAgaWJhbjogIkZSNzYzMDAwNjAwMDAxMTIzNDU2Nzg5MDE4OSIKICAgICAgICAgIG5hbWU6ICJNYXJpZSBEdWJvaXMiCiAgICAgICAgICBpc015T3duSWJhbjogZmFsc2UKICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgfQogICAgICAgIGJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uVG9rZW46ICIkVkVSSUZJQ0FUSU9OX1RPS0VOIgogICAgICAgIG1vZGU6IFJlZ3VsYXIKICAgICAgICByZWZlcmVuY2U6ICJJbnZvaWNlIHBheW1lbnQiCiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgcGF5bWVudCB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBQYXltZW50Q29uc2VudFBlbmRpbmcgewogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBCZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuQWxyZWFkeUNvbnN1bWVkUmVqZWN0aW9uIHsKICAgICAgdG9rZW4KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQ==&tab=api)
+
+```graphql {14} showLineNumbers
+mutation InitiateWithToken {
+  initiateCreditTransfers(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "FR7630006000011234567890189"
+          name: "Marie Dubois"
+          isMyOwnIban: false
+          save: false
+        }
+        beneficiaryVerificationToken: "$VERIFICATION_TOKEN"
+        mode: Regular
+        reference: "Invoice payment"
+      }
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      payment {
+        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+    ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
+      token
+      message
+    }
+  }
+}
+```
+
+#### Enhanced Input Schema {#enhanced-input}
+
+```graphql {4} showLineNumbers
+input CreditTransferInput {
+  amount: MoneyInput!
+  sepaBeneficiary: SepaBeneficiaryInput
+  beneficiaryVerificationToken: String  # New VoP field
+  mode: CreditTransferMode!
+  reference: String
+}
+```
+
+#### New Rejection Type {#new-rejection}
+
+```graphql showLineNumbers
+type BeneficiaryVerificationTokenAlreadyConsumedRejection implements Rejection {
+  token: String!
+  message: String!
+}
+```
+
+### Enhanced scheduleStandingOrder {#enhanced-standing-order}
+
+Include verification tokens when scheduling standing orders.
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2NoZWR1bGVXaXRoVG9rZW4gewogIHNjaGVkdWxlU3RhbmRpbmdPcmRlcigKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRZT1VSX0FDQ09VTlRfSUQiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgcGVyaW9kOiBNb250aGx5CiAgICAgIGxhYmVsOiAiTW9udGhseSByZW50IHBheW1lbnQiCiAgICAgIGZpcnN0RXhlY3V0aW9uRGF0ZTogIjIwMjUtMDgtMDFUIgogICAgICBsYXN0RXhlY3V0aW9uRGF0ZTogIjIwMjYtMDctMzFUIgogICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICBpYmFuOiAiRlI3NjMwMDA2MDAwMDExMjM0NTY3ODkwMTg5IgogICAgICAgIG5hbWU6ICJQcm9wZXJ0eSBNYW5hZ2VtZW50IFNBUkwiCiAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgfQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuOiAiJFZFUklGSUNBVElPTl9UT0tFTiIKICAgICAgcmVmZXJlbmNlOiAiTW9udGhseSByZW50IC0gQXBhcnRtZW50IDQ1QiIKICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTIwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gU2NoZWR1bGVTdGFuZGluZ09yZGVyU3VjY2Vzc1BheWxvYWQgewogICAgICBzdGFuZGluZ09yZGVyIHsKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8KICAgICAgfQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBCZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuQWxyZWFkeUNvbnN1bWVkUmVqZWN0aW9uIHsKICAgICAgdG9rZW4KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQ==&tab=api)
+
+```graphql {16} showLineNumbers
+mutation ScheduleWithToken {
+  scheduleStandingOrder(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      period: Monthly
+      label: "Monthly rent payment"
+      firstExecutionDate: "2025-08-01T"
+      lastExecutionDate: "2026-07-31T"
+      sepaBeneficiary: {
+        iban: "FR7630006000011234567890189"
+        name: "Property Management SARL"
+        isMyOwnIban: false
+        save: false
+      }
+      beneficiaryVerificationToken: "$VERIFICATION_TOKEN"
+      reference: "Monthly rent - Apartment 45B"
+      amount: { value: "1200", currency: "EUR" }
+    }
+  ) {
+    ... on ScheduleStandingOrderSuccessPayload {
+      standingOrder {
+        id
+        statusInfo
+      }
+      consent {
+        consentUrl
+      }
+    }
+    ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
+      token
+      message
+    }
+  }
+}
+```
+
+## Error Handling & Troubleshooting {#error-handling}
+
+### Common Rejection Types {#common-rejections}
+
+#### Token Already Consumed {#token-consumed}
+```json showLineNumbers
+{
+  "data": {
+    "initiateCreditTransfers": {
+      "__typename": "BeneficiaryVerificationTokenAlreadyConsumedRejection",
+      "token": "vt_abc123...",
+      "message": "This verification token has already been used"
+    }
+  }
+}
+```
+
+**Solution**: Generate a new verification with `verifySepaBeneficiary`.
+
+#### Verification Timeout {#verification-timeout}
+```json showLineNumbers
+{
+  "result": {
+    "__typename": "BeneficiaryVerificationNotPossible",
+    "reason": "Technical timeout - verification service unavailable"
+  }
+}
+```
+
+**Solution**: Retry the verification or proceed with the transfer (user sees warning in consent).
+
+### Timeout and Retry Logic {#timeout-retry}
+
+VoP requests must complete within 5 seconds. If verification times out:
+
+**Retry Strategy:**
+1. Wait 1-2 seconds
+2. Retry with exponential backoff
+3. After 3 attempts, proceed with transfer (user sees warning)
+
+### Validation Errors {#validation-errors}
+
+Common validation issues and solutions:
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| Invalid IBAN format | Malformed IBAN | Validate IBAN before verification |
+| Missing required fields | Incomplete input | Ensure `iban` and `name` are provided |
+| Account not found | Wrong `accountId` | Verify account ID and permissions |
+| Insufficient permissions | User lacks `canInitiatePayments` | Check account membership permissions |
+
+## Sandbox Testing {#sandbox-testing}
+
+### Environment Setup {#sandbox-setup}
+- **Environment**: All VoP features available in Sandbox
+- **Rate Limits**: Same as Live (5-second timeout)
+- **Tokens**: 24-hour expiry applies in Sandbox
+- **Test Data**: Use specific IBANs for predictable results
+
+### Test IBANs {#test-ibans}
+
+Use these specific IBANs in Sandbox to test different VoP results:
+
+| IBAN | Result | Description |
+| --- | --- | --- |
+| `FR7614508000300060632710243` | **Match** ✅ | Always returns Match for any name |
+| `FR7630006000011234567890189` | **Close Match** ⚠️ | Returns Close Match for slight name variations |
+| `DE89370400440532013000` | **No Match** ❌ | Returns No Match for incorrect names |
+| `ES9121000418450200051332` | **Verification Not Possible** ⚠️ | Simulates technical failures |
+
+### Test Match Result {#test-match}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVGVzdE1hdGNoIHsKICB2ZXJpZnlTZXBhQmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9TQU5EQk9YX0FDQ09VTlRfSUQiCiAgICAgIHBheWVlczogWwogICAgICAgIHsKICAgICAgICAgIGliYW46ICJGUjc2MTQ1MDgwMDAzMDAwNjA2MzI3MTAyNDMiCiAgICAgICAgICBuYW1lOiAiQW55IE5hbWUgSGVyZSIKICAgICAgICAgIGV4dGVybmFsUmVmZXJlbmNlOiAidGVzdC1tYXRjaCIKICAgICAgICB9CiAgICAgIF0KICAgIH0KICApIHsKICAgIC4uLiBvbiBWZXJpZnlTZXBhQmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIHZlcmlmaWNhdGlvbnMgewogICAgICAgIHJlc3VsdCB7CiAgICAgICAgICAuLi4gb24gQmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgdmVyaWZpZWROYW1lOiBuYW1lCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIHRva2VuCiAgICAgIH0KICAgIH0KICB9Cn0=&tab=api)
+
+```graphql showLineNumbers
+mutation TestMatch {
+  verifySepaBeneficiary(
+    input: {
+      accountId: "$YOUR_SANDBOX_ACCOUNT_ID"
+      payees: [
+        {
+          iban: "FR7614508000300060632710243"
+          name: "Any Name Here"
+          externalReference: "test-match"
+        }
+      ]
+    }
+  ) {
+    ... on VerifySepaBeneficiarySuccessPayload {
+      verifications {
+        result {
+          ... on BeneficiaryMatch {
+            __typename
+            verifiedName: name
+          }
+        }
+        token
+      }
+    }
+  }
+}
+```
+
+## Best Practices {#best-practices}
+
+### Performance Optimization {#performance}
+- **Batch verifications**: Include multiple payees in a single `verifySepaBeneficiary` call
+- **Cache verification results**: Store tokens for repeated use within 24 hours
+- **Use tokens**: Include `beneficiaryVerificationToken` for faster processing
+
+### Error Recovery {#error-recovery}
+- **Token expiry**: Re-verify beneficiaries if tokens are older than 24 hours
+- **Network timeouts**: Implement exponential backoff for retry attempts
+- **Validation errors**: Provide specific guidance for correcting invalid input data
+
+### User Experience {#user-experience}
+- **Display results**: Show verification outcomes before payment submission
+- **Handle warnings**: Provide clear guidance for Close Match and No Match scenarios
+- **Optimize workflows**: Pre-verify beneficiaries for better user experience
+
+## Integration Checklist {#integration-checklist}
+
+### MVP Implementation {#mvp-checklist}
+- [ ] Implement `verifySepaBeneficiary` mutation
+- [ ] Handle all 4 VoP result types in UI
+- [ ] Include `beneficiaryVerificationToken` in credit transfers
+- [ ] Test all scenarios in Sandbox
+- [ ] Handle token expiry and retry logic
+
+## Related Resources {#related}
+
+- [VoP Overview](./index.mdx) - Understanding Verification of Payee
+- [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Create verification tokens
+- [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Using verification tokens
+- [VoP with standing orders](./guide-vop-standing-orders.mdx) - Standing order verification
+- [Sandbox testing](./sandbox.mdx) - Complete testing guide

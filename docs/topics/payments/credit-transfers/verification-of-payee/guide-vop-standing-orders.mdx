@@ -1,0 +1,155 @@
+---
+title: VoP with standing orders
+---
+
+# VoP with standing orders
+
+Verify beneficiary details when scheduling standing orders. VoP is required only at setup—subsequent payments don't need verification.
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
+1. You're authenticating with a [user access token](../../../../developers/using-api/authentication/index.mdx#tokens-user).
+:::
+
+## How VoP works with standing orders {#how-it-works}
+
+Per the Instant Payments Regulation, **VoP is required only when scheduling a standing order**, not for subsequent executions. This means:
+
+- ✅ **Setup**: VoP verification required
+- ✅ **First payment**: Uses verification from setup
+- ✅ **Recurring payments**: No additional VoP needed
+
+## Schedule with verification token {#with-token}
+
+Use a verification token from `verifySepaBeneficiary` for the best user experience.
+
+1. Pre-verify the beneficiary using [`verifySepaBeneficiary`](./guide-verify-beneficiary.mdx).
+1. Call the `scheduleStandingOrder` mutation.
+1. Include the `beneficiaryVerificationToken` from your pre-verification.
+1. Add the consent URL to the success payload.
+
+### Mutation {#mutation-with-token}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2NoZWR1bGVXaXRoVG9rZW4gewogIHNjaGVkdWxlU3RhbmRpbmdPcmRlcigKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRZT1VSX0FDQ09VTlRfSUQiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgcGVyaW9kOiBNb250aGx5CiAgICAgIGxhYmVsOiAiTW9udGhseSByZW50IHBheW1lbnQiCiAgICAgIGZpcnN0RXhlY3V0aW9uRGF0ZTogIjIwMjUtMDgtMDFUIgogICAgICBsYXN0RXhlY3V0aW9uRGF0ZTogIjIwMjYtMDctMzFUIgogICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICBpYmFuOiAiRlI3NjMwMDA2MDAwMDExMjM0NTY3ODkwMTg5IgogICAgICAgIG5hbWU6ICJQcm9wZXJ0eSBNYW5hZ2VtZW50IFNBUkwiCiAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgfQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuOiAiJFZFUklGSUNBVElPTl9UT0tFTiIKICAgICAgcmVmZXJlbmNlOiAiTW9udGhseSByZW50IC0gQXBhcnRtZW50IDQ1QiIKICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTIwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gU2NoZWR1bGVTdGFuZGluZ09yZGVyU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHN0YW5kaW5nT3JkZXIgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbwogICAgICB9CiAgICAgIGNvbnNlbnQgewogICAgICAgIGNvbnNlbnRVcmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uVG9rZW5BbHJlYWR5Q29uc3VtZWRSZWplY3Rpb24gewogICAgICB0b2tlbgogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9&tab=api)
+
+```graphql {11,13} showLineNumbers
+mutation ScheduleWithToken {
+  scheduleStandingOrder(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      period: Monthly
+      label: "Monthly rent payment"
+      firstExecutionDate: "2025-08-01T"
+      lastExecutionDate: "2026-07-31T"
+      sepaBeneficiary: {
+        iban: "FR7630006000011234567890189"
+        name: "Property Management SARL"
+        isMyOwnIban: false
+        save: false
+      }
+      beneficiaryVerificationToken: "$VERIFICATION_TOKEN"
+      reference: "Monthly rent - Apartment 45B"
+      amount: { value: "1200", currency: "EUR" }
+    }
+  ) {
+    ... on ScheduleStandingOrderSuccessPayload {
+      __typename
+      standingOrder {
+        id
+        statusInfo
+      }
+      consent {
+        consentUrl
+      }
+    }
+    ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
+      token
+      message
+    }
+  }
+}
+```
+
+## Schedule without token (automatic VoP) {#without-token}
+
+If you don't include a verification token, Swan automatically runs VoP in the background:
+
+```graphql title="Standing order without token (automatic VoP)" showLineNumbers
+mutation AutomaticStandingOrderVoP {
+  scheduleStandingOrder(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      period: Monthly
+      label: "Monthly rent payment"
+      firstExecutionDate: "2025-08-01T"
+      sepaBeneficiary: {
+        iban: "FR7630006000011234567890189"
+        name: "Property Management SARL"
+        isMyOwnIban: false
+        save: false
+      }
+      reference: "Monthly rent - Apartment 45B"
+      amount: { value: "1200", currency: "EUR" }
+    }
+  ) {
+    # ... same payload structure
+  }
+}
+```
+
+Swan runs VoP in the background and displays results in the consent screen.
+
+## Error handling {#error-handling}
+
+### Token already consumed {#error-consumed}
+
+Verification tokens are single-use:
+
+```json showLineNumbers
+{
+  "data": {
+    "scheduleStandingOrder": {
+      "__typename": "BeneficiaryVerificationTokenAlreadyConsumedRejection",
+      "token": "vt_abc123...",
+      "message": "This verification token has already been used"
+    }
+  }
+}
+```
+
+**Solution**: Generate a new verification with `verifySepaBeneficiary`.
+
+### Verification timeout {#error-timeout}
+
+VoP requests must complete within 5 seconds:
+
+```json showLineNumbers
+{
+  "result": {
+    "__typename": "BeneficiaryVerificationNotPossible",
+    "reason": "Technical timeout - verification service unavailable"
+  }
+}
+```
+
+**Solution**: The standing order can still be scheduled. Users will see a warning in the consent screen.
+
+## Best practices {#best-practices}
+
+1. **Pre-verify for better UX** - Use `verifySepaBeneficiary` before scheduling for faster consent flow
+2. **Handle token expiry** - Verification tokens expire after 24 hours
+3. **Display VoP results** - Show verification outcomes before standing order confirmation
+4. **Plan for errors** - Implement retry logic for verification failures
+
+:::info VoP timing
+VoP is required only when scheduling the standing order. Once set up with successful verification, all recurring payments execute without additional VoP checks.
+:::
+
+## Related guides {#related}
+
+- [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Create verification tokens
+- [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - One-time transfer verification
+- [Sandbox testing](./sandbox.mdx) - Test VoP scenarios
+- [Schedule a standing order](../sepa/guide-schedule-standing-order.mdx) - Complete standing order guide

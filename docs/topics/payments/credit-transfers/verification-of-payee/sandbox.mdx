@@ -6,6 +6,10 @@ title: Sandbox
 
 Test VoP scenarios in Sandbox with specific IBANs that simulate different verification results.
 
+:::warning Breaking Change
+**Effective October 9, 2025:** The `beneficiaryVerification` query (Dutch IBANs only) is deprecated. Use `verifySepaBeneficiary` mutation instead for all SEPA IBANs.
+:::
+
 ## Test IBANs {#test-ibans}
 
 Use these specific IBANs in Sandbox to test different VoP results:
@@ -152,52 +156,6 @@ mutation TestNotPossible {
 }
 ```
 
-## Test bulk verification {#test-bulk}
-
-Test multiple beneficiaries with different results:
-
-```graphql showLineNumbers
-mutation TestBulkVerification {
-  verifySepaBeneficiary(
-    input: {
-      accountId: "$YOUR_SANDBOX_ACCOUNT_ID"
-      payees: [
-        {
-          iban: "FR7614508000300060632710243"
-          name: "Perfect Match"
-          externalReference: "bulk-match"
-        }
-        {
-          iban: "FR7630006000011234567890189"
-          name: "Jon Smith"
-          externalReference: "bulk-close-match"
-        }
-        {
-          iban: "DE89370400440532013000"
-          name: "Wrong Person"
-          externalReference: "bulk-no-match"
-        }
-        {
-          iban: "ES9121000418450200051332"
-          name: "Failed Verification"
-          externalReference: "bulk-not-possible"
-        }
-      ]
-    }
-  ) {
-    ... on VerifySepaBeneficiarySuccessPayload {
-      verifications {
-        externalReference
-        result {
-          __typename
-        }
-        token
-      }
-    }
-  }
-}
-```
-
 ## Test VoP with credit transfers {#test-credit-transfers}
 
 ### Test automatic VoP (without token) {#test-automatic}
@@ -283,86 +241,6 @@ mutation TestWithToken {
 }
 ```
 
-## Test VoP settings {#test-settings}
-
-Test company VoP opt-out functionality (requires Company account):
-
-### Test disabling VoP {#test-disable}
-
-```graphql showLineNumbers
-mutation TestDisableVoP {
-  disableVerificationOfPayee(
-    input: {
-      accountId: "$YOUR_COMPANY_ACCOUNT_ID"
-      consentRedirectUrl: "$YOUR_REDIRECT_URL"
-    }
-  ) {
-    ... on DisableVerificationOfPayeeSuccessPayload {
-      account {
-        id
-        verificationOfPayeeEnabled
-      }
-      consent {
-        consentUrl
-      }
-    }
-    ... on DisableVerificationOfPayeeAccountHolderTypeIndividualRejection {
-      message
-    }
-  }
-}
-```
-
-### Test bulk transfer without VoP {#test-bulk-no-vop}
-
-After disabling VoP, test bulk transfers without tokens:
-
-```graphql showLineNumbers
-mutation TestBulkWithoutVoP {
-  initiateCreditTransfers(
-    input: {
-      accountId: "$YOUR_COMPANY_ACCOUNT_ID"
-      consentRedirectUrl: "$YOUR_REDIRECT_URL"
-      creditTransfers: [
-        {
-          amount: { value: "100", currency: "EUR" }
-          sepaBeneficiary: {
-            iban: "FR7614508000300060632710243"
-            name: "First Beneficiary"
-            isMyOwnIban: false
-            save: false
-          }
-          mode: Regular
-        }
-        {
-          amount: { value: "200", currency: "EUR" }
-          sepaBeneficiary: {
-            iban: "DE89370400440532013000"
-            name: "Second Beneficiary"
-            isMyOwnIban: false
-            save: false
-          }
-          mode: Regular
-        }
-      ]
-    }
-  ) {
-    ... on InitiateCreditTransfersSuccessPayload {
-      payment {
-        id
-        statusInfo {
-          ... on PaymentConsentPending {
-            consent {
-              consentUrl
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
-
 ## Test error scenarios {#test-errors}
 
 ### Test expired token {#test-expired-token}
@@ -398,52 +276,6 @@ mutation TestExpiredToken {
     }
     ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
       token
-      message
-    }
-  }
-}
-```
-
-### Test bulk without tokens or opt-out {#test-bulk-error}
-
-Test the error when bulk transfers lack tokens and VoP is enabled:
-
-```graphql showLineNumbers
-mutation TestBulkError {
-  initiateCreditTransfers(
-    input: {
-      accountId: "$YOUR_SANDBOX_ACCOUNT_ID"
-      consentRedirectUrl: "$YOUR_REDIRECT_URL"
-      creditTransfers: [
-        {
-          amount: { value: "100", currency: "EUR" }
-          sepaBeneficiary: {
-            iban: "FR7614508000300060632710243"
-            name: "First Beneficiary"
-            isMyOwnIban: false
-            save: false
-          }
-          mode: Regular
-        }
-        {
-          amount: { value: "200", currency: "EUR" }
-          sepaBeneficiary: {
-            iban: "DE89370400440532013000"
-            name: "Second Beneficiary"
-            isMyOwnIban: false
-            save: false
-          }
-          mode: Regular
-        }
-      ]
-    }
-  ) {
-    ... on InitiateCreditTransfersSuccessPayload {
-      payment {
-        id
-      }
-    }
-    ... on ForbiddenRejection {
       message
     }
   }
@@ -540,10 +372,8 @@ mutation TestBulkError {
 ## Testing workflow {#testing-workflow}
 
 1. **Start with individual verifications** - Test each VoP result type using the specific test IBANs
-1. **Test bulk verification** - Verify multiple beneficiaries in one call
 1. **Test credit transfer integration** - Use tokens with `initiateCreditTransfers`
 1. **Test automatic VoP** - See how consent screens display VoP results
-1. **Test company settings** - Enable/disable VoP for bulk transfers (Company accounts only)
 1. **Test error scenarios** - Verify proper error handling
 
 :::tip Testing in Sandbox
@@ -554,5 +384,5 @@ All VoP functionality works in Sandbox exactly as it will in Live, except with s
 
 - [Verify a beneficiary](./guide-verify-beneficiary.mdx) - Complete verification API guide
 - [VoP with credit transfers](./guide-vop-credit-transfers.mdx) - Integration with transfers
-- [Manage VoP settings](./guide-manage-settings.mdx) - Company opt-out functionality
+- [VoP with standing orders](./guide-vop-standing-orders.mdx) - Standing order verification
 - [SEPA Credit Transfers sandbox](../sepa/sandbox.mdx) - General credit transfer testing

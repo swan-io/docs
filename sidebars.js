@@ -426,9 +426,10 @@ module.exports = {
               },
               collapsed: true,
               items: [
+                "topics/payments/credit-transfers/verification-of-payee/api-reference",
+                "topics/payments/credit-transfers/verification-of-payee/guide-vop-standing-orders",
                 "topics/payments/credit-transfers/verification-of-payee/guide-vop-credit-transfers",
                 "topics/payments/credit-transfers/verification-of-payee/guide-verify-beneficiary",
-                "topics/payments/credit-transfers/verification-of-payee/guide-manage-settings",
                 "topics/payments/credit-transfers/verification-of-payee/sandbox",
               ],
             },

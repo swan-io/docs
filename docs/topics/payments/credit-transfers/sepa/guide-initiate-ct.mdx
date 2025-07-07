@@ -4,10 +4,12 @@ title: Initiate a credit transfer
 
 # Initiate a credit transfer
 
+:::warning
+Starting October 9, 2025, Swan automatically includes [Verification of Payee (VoP)](./index.mdx#verification-of-payee) in all credit transfers to reduce fraud and misdirected payments.
+:::
+
 Send SEPA Credit Transfers, Instant SEPA Credit Transfers, and Swan Internal Credit Transfers with the API.
 Review sample mutations for all three, as well as a payload.
-
-Starting October 9, 2025, Swan automatically includes [Verification of Payee (VoP)](./index.mdx#verification-of-payee) in all credit transfers to reduce fraud and misdirected payments.
 
 If you use [Swan's Web Banking frontend](https://swan-io.github.io/swan-partner-frontend/specs/banking/transfer), your users can send transfers from their account directly.
 
@@ -26,12 +28,12 @@ Send a SEPA Credit Transfer to a beneficiary within the SEPA network.
 1. For `mode`, choose `Regular` to send a basic SEPA Credit Transfer.
 1. Optionally include `beneficiaryVerificationToken` from [`verifySepaBeneficiary`](./guide-verify-beneficiary.mdx) for enhanced verification (line 14).
 1. Add the `InitiateCreditTransfersSuccessPayload` payload.
-1. Add the consent URL to the success payload (line 29): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add the consent URL to the success payload (line 28): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2VwYURlZmF1bHQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBjcmVkaXRUcmFuc2ZlcnM6IHsKICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgIHNlcGFCZW5lZmljaWFyeTogewogICAgICAgICAgaWJhbjogIklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIKICAgICAgICAgIG5hbWU6ICJGcmFuY2VzY2EgVmVycmlsbGkiCiAgICAgICAgICBpc015T3duSWJhbjogZmFsc2UKICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgfQogICAgICAgIGJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uVG9rZW46ICIkVkVSSUZJQ0FUSU9OX1RPS0VOIgogICAgICAgIG1vZGU6IFJlZ3VsYXIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIGNyZWF0ZWRBdAogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uVG9rZW5BbHJlYWR5Q29uc3VtZWRSZWplY3Rpb24gewogICAgICB0b2tlbgogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gU2VwYURlZmF1bHQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICBjcmVkaXRUcmFuc2ZlcnM6IHsKICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgIHNlcGFCZW5lZmljaWFyeTogewogICAgICAgICAgaWJhbjogIklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIKICAgICAgICAgIG5hbWU6ICJGcmFuY2VzY2EgVmVycmlsbGkiCiAgICAgICAgICBpc015T3duSWJhbjogZmFsc2UKICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgfQogICAgICAgIGJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uVG9rZW46ICIkVkVSSUZJQ0FUSU9OX1RPS0VOIgogICAgICAgIG1vZGU6IFJlZ3VsYXIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIGNyZWF0ZWRBdAogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBCZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuQWxyZWFkeUNvbnN1bWVkUmVqZWN0aW9uIHsKICAgICAgdG9rZW4KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api)
 
-```graphql {5,9-10,14,15,18,24,29} showLineNumbers
+```graphql {5,9-10,14,15,18,24,28} showLineNumbers
 mutation SepaDefault {
   initiateCreditTransfers(
     input: {

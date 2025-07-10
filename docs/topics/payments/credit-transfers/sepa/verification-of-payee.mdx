@@ -6,6 +6,10 @@ title: Verification of Payee
 
 Verify beneficiary information before sending SEPA Credit Transfers to reduce fraud and payment errors.
 
+:::info Mandatory compliance
+Required for all SEPA Credit Transfers by **October 9, 2025** under EU regulation.
+:::
+
 ## Overview {#overview}
 
 **Verification of Payee (VOP)** is a mandatory European payment security service that validates beneficiary names against account holder information before initiating SEPA Credit Transfers. This service reduces payment fraud and errors by confirming that the payee's name matches the account holder registered with the beneficiary's bank.
@@ -25,50 +29,45 @@ VOP verification is available for all SEPA zone countries, providing **24/7 avai
 
 ## How it works {#how-it-works}
 
-The VOP workflow involves three steps:
-
-1. **Verify beneficiary**: Call `verifySepaBeneficiary` with beneficiary details
-2. **Review results**: Handle one of four possible verification outcomes
-3. **Initiate transfer**: Use the verification token when sending the payment
-
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart TD
-    A[Enter beneficiary details] --> B[Call verifySepaBeneficiary]
-    B --> C{Verification result}
-    C -->|Match| D[✓ Exact match]
-    C -->|Close Match| E[⚠ Partial match with suggestion]
-    C -->|No Match| F[✗ No match found]
-    C -->|Not Possible| G[❌ Verification unavailable]
-    D --> H[Initiate transfer with token]
-    E --> I[Review suggestion, then initiate]
-    F --> J[Confirm details, then initiate]
-    G --> K[Proceed without verification]
+    A["📝 Enter Beneficiary Details"] --> B[Call verifySepaBeneficiary]
+    B --> C{Verification Result}
+    C -->|"✅ Match"| D["✅ Exact Match"]
+    C -->|"⚠️ Close Match"| E["⚠️ Partial Match with Suggestion"]
+    C -->|"❌ No Match"| F["❌ No Match Found"]
+    C -->|"❌ Not Possible"| G["❌ Verification Unavailable"]
+    D --> H[Initiate Transfer with Token]
+    E --> I[Review Suggestion]
+    F --> J[Confirm Details]
+    G --> K[Proceed Without Verification]
+    I --> L[Initiate Transfer]
+    J --> M[Initiate Transfer]
+    K --> N[Initiate Transfer]
+    
+    classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:12,ry:12
+    classDef input fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef decision fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:20,ry:20
+    classDef success fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef warning fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef error fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef process fill:#f8f7fc,stroke:#c0b3e1,stroke-width:1px,color:#4e3391,rx:8,ry:8
+    
+    class A input
+    class D success
+    class E warning
+    class F,G error
+    class B,H,I,J,K,L,M,N process
 ```
 
-### Verification results {#verification-results}
-
-VOP returns one of four standardized results:
-
-| Result | Description | Next steps |
-| --- | --- | --- |
-| **Match** | Exact match of beneficiary details | Proceed with confidence |
-| **Close Match** | Partial match with name suggestion | Review suggestion, update if needed |
-| **No Match** | No match found for beneficiary details | Verify details before proceeding |
-| **Not Possible** | Verification service unavailable | Proceed without verification |
-
-### Verification tokens {#tokens}
-
-Successful verification returns a **single-use token** with an expiration timestamp. This token demonstrates VOP compliance when initiating credit transfers and can only be used once.
+1. **Verify beneficiary**: Call `verifySepaBeneficiary` with IBAN and name
+2. **Get result**: Receive Match, Close Match, No Match, or Not Possible
+3. **Use token**: Add verification token to credit transfer
 
 ## Verify a beneficiary {#guide-verify}
 
-Verify beneficiary information before sending a SEPA Credit Transfer.
-
-### Prerequisites {#prerequisites}
-
-- You're authenticating with a [user access token](../../../developers/using-api/authentication/index.mdx#tokens-user)
-- You have beneficiary IBAN and name details to verify
+Call `verifySepaBeneficiary` before initiating transfers.
 
 ### Steps {#verify-steps}
 
@@ -79,118 +78,75 @@ Verify beneficiary information before sending a SEPA Credit Transfer.
 
 ### Mutation {#verify-mutation}
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5U2VwYUJlbmVmaWNpYXJ5IHsKICB2ZXJpZnlTZXBhQmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBpYmFuOiAiRlIwMDAwMDAwMDAwMzAwMDAwMDAwMDU2SDgwIgogICAgICBuYW1lOiAiTk9fTUFUQ0giCiAgICB9CiAgKSB7CiAgICAuLi4gb24gU2VwYUJlbmVmaWNpYXJ5TWF0Y2ggewogICAgICBfX3R5cGVuYW1lCiAgICAgIGV4cGlyZXNBdAogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgfQogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICBfX3R5cGVuYW1lCiAgICAgIGV4cGlyZXNBdAogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgICBuYW1lU3VnZ2VzdGlvbgogICAgfQogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeU5vTWF0Y2ggewogICAgICBfX3R5cGVuYW1lCiAgICAgIGV4cGlyZXNBdAogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgfQogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeVZlcmlmaWNhdGlvbk5vdFBvc3NpYmxlIHsKICAgICAgX190eXBlbmFtZQogICAgICBleHBpcmVzQXQKICAgICAgdmVyaWZpY2F0aW9uVG9rZW4KICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api)
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5U2VwYUJlbmVmaWNpYXJ5IHsKICB2ZXJpZnlTZXBhQmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBpYmFuOiAiRlIwMDAwMDAwMDAwMzAwMDAwMDAwMDU2SDgwIgogICAgICBuYW1lOiAiSm9obiBTbWl0aCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmVyaWZpY2F0aW9uVG9rZW4KICAgICAgZXhwaXJlc0F0CiAgICB9CiAgICAuLi4gb24gU2VwYUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmVyaWZpY2F0aW9uVG9rZW4KICAgICAgZXhwaXJlc0F0CiAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICB9CiAgICAuLi4gb24gU2VwYUJlbmVmaWNpYXJ5Tm9NYXRjaCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmVyaWZpY2F0aW9uVG9rZW4KICAgICAgZXhwaXJlc0F0CiAgICB9CiAgICAuLi4gb24gU2VwYUJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uTm90UG9zc2libGUgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHZlcmlmaWNhdGlvblRva2VuCiAgICAgIGV4cGlyZXNBdAogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api)
 
 ```graphql {3-4,8,13,19,25} showLineNumbers
 mutation VerifySepaBeneficiary {
   verifySepaBeneficiary(
     input: {
       iban: "FR0000000000300000000056H80"
-      name: "NO_MATCH"
+      name: "John Smith"
     }
   ) {
     ... on SepaBeneficiaryMatch {
       __typename
-      expiresAt
       verificationToken
+      expiresAt
     }
     ... on SepaBeneficiaryCloseMatch {
       __typename
-      expiresAt
       verificationToken
+      expiresAt
       nameSuggestion
     }
     ... on SepaBeneficiaryNoMatch {
       __typename
-      expiresAt
       verificationToken
+      expiresAt
     }
     ... on SepaBeneficiaryVerificationNotPossible {
       __typename
-      expiresAt
       verificationToken
+      expiresAt
     }
     ... on ValidationRejection {
       __typename
       message
-      fields {
-        code
-        message
-        path
-      }
-    }
-    ... on ForbiddenRejection {
-      __typename
-      message
-    }
-    ... on InternalErrorRejection {
-      __typename
-      message
     }
   }
 }
 ```
 
-### Example payloads {#verify-payloads}
+## Verification results {#results}
 
-The payload varies based on the verification result:
+| Result | Description | Action |
+| --- | --- | --- |
+| **Match** | Exact match found | Proceed with transfer |
+| **Close Match** | Partial match, suggestion provided | Review `nameSuggestion` |
+| **No Match** | No match found | Confirm details before proceeding |
+| **Not Possible** | Verification unavailable | Proceed without verification |
 
-**Exact match** (line 2):
-```json {2,5} showLineNumbers
-{
-  "data": {
-    "verifySepaBeneficiary": {
-      "__typename": "SepaBeneficiaryMatch",
-      "expiresAt": "2024-07-10T11:52:00.000Z",
-      "verificationToken": "vf_01234567890abcdef"
-    }
-  }
-}
-```
+<!-- 
 
-**Close match with suggestion** (line 2,6):
-```json {2,6} showLineNumbers
-{
-  "data": {
-    "verifySepaBeneficiary": {
-      "__typename": "SepaBeneficiaryCloseMatch",
-      "expiresAt": "2024-07-10T11:52:00.000Z",
-      "nameSuggestion": "John Smith",
-      "verificationToken": "vf_01234567890abcdef"
-    }
-  }
-}
-```
+TO DO: Include tabs widget that shows all matches, their meaning and their UI render 
 
-**No match** (line 2):
-```json {2} showLineNumbers
-{
-  "data": {
-    "verifySepaBeneficiary": {
-      "__typename": "SepaBeneficiaryNoMatch",
-      "expiresAt": "2024-07-10T11:52:00.000Z",
-      "verificationToken": "vf_01234567890abcdef"
-    }
-  }
-}
-```
+VOP returns one of four standardized results:
 
-## Use verification tokens {#guide-tokens}
+| Result | Description | Next steps |
+| --- | --- | --- |
+| **Match** | Exact match of beneficiary details | Proceed with confidence |
+| **Close Match** | Partial match with name suggestion | Review suggestion, update if needed |
+| **No Match** | No match found for beneficiary details | Verify details before proceeding |
+| **Not Possible** | Verification service unavailable | Proceed without verification |
 
-After successful verification, use the verification token when initiating credit transfers to demonstrate VOP compliance.
+-->
 
-### Token properties {#token-properties}
+## Use verification token {#use-token}
 
-- **Single-use**: Each token can only be used once
-- **Time-limited**: Tokens expire after a set timeframe
-- **Compliance**: Demonstrates VOP verification was performed
-
-### Add token to credit transfer {#add-token}
-
-When calling `initiateCreditTransfers`, add the verification token to your beneficiary object:
+Add the `verificationToken` to your credit transfer:
 
 ```graphql {10} showLineNumbers
-mutation InitiateWithVOP {
+mutation InitiateWithVerification {
   initiateCreditTransfers(
     input: {
       accountId: "$YOUR_ACCOUNT_ID"
@@ -223,8 +179,10 @@ mutation InitiateWithVOP {
 }
 ```
 
-:::tip Optional verification
-While VOP is mandatory for regulatory compliance, the verification token is **optional** when initiating transfers. However, using the token demonstrates compliance and may be required for certain payment scenarios.
+:::tip Token properties
+- **Single-use**: Each token works only once
+- **Time-limited**: Check `expiresAt` timestamp
+- **Optional**: Token improves compliance but isn't required for transfers. It may be required for certain upcoming payment scenarios.
 :::
 
 ## Saved beneficiaries {#saved-beneficiaries}
@@ -236,8 +194,8 @@ VOP integrates with Swan's [trusted beneficiary system](./guide-add-beneficiary.
 When using a saved beneficiary for the first time after VOP implementation, perform verification to ensure compliance:
 
 1. Retrieve the saved beneficiary details
-2. Call `verifySepaBeneficiary` with the saved IBAN and name
-3. Use the verification token when initiating the transfer
+2. Call [`verifySepaBeneficiary`](#verify-mutation) with the saved IBAN and name
+3. [Use the verification token](#use-token) when initiating the transfer
 
 ### Save during verification {#save-during-verification}
 
@@ -245,33 +203,21 @@ You can save beneficiaries while performing verification by setting `save: true`
 
 ## Sandbox testing {#sandbox}
 
-Test VOP integration in Swan's Sandbox environment with these mock responses:
+Test with these mock beneficiary names:
 
-| Beneficiary name | Result type | Description |
-| --- | --- | --- |
-| `NO_MATCH` | `SepaBeneficiaryNoMatch` | Simulates no match found |
-| `BIC_NOT_FOUND` | `SepaBeneficiaryVerificationNotPossible` | Simulates verification unavailable |
-| Any other input | `SepaBeneficiaryMatch` | Simulates exact match |
+| Name | Result |
+| --- | --- |
+| `NO_MATCH` | Returns `SepaBeneficiaryNoMatch` |
+| `BIC_NOT_FOUND` | Returns `SepaBeneficiaryVerificationNotPossible` |
+| Any other name | Returns `SepaBeneficiaryMatch` |
 
-### Test different scenarios {#test-scenarios}
+## Migration from legacy verification {#migration}
 
-Use the [Event Simulator](../../../developers/tools/event-simulator.mdx) to test various VOP scenarios:
+If you're using `beneficiaryVerification` for Dutch IBANs, migrate to `verifySepaBeneficiary`:
 
-1. **Exact matches**: Use any beneficiary name except the mock keywords
-2. **No matches**: Use `NO_MATCH` as the beneficiary name
-3. **Unavailable verification**: Use `BIC_NOT_FOUND` as the beneficiary name
-4. **Token expiration**: Wait for token expiration to test handling
-
-## Migration guide {#migration}
-
-Swan currently offers limited beneficiary verification for Dutch IBANs via the `beneficiaryVerification` query. This will be deprecated in favor of the new VOP system.
-
-### Current implementation {#current-implementation}
-
-If you're using the existing `beneficiaryVerification` query for Dutch IBANs:
-
+**Before (deprecated)**:
 ```graphql
-query CurrentVerification {
+query LegacyVerification {
   beneficiaryVerification(
     input: {
       iban: "NL91ABNA0417164300"
@@ -281,18 +227,14 @@ query CurrentVerification {
   ) {
     ... on BeneficiaryMatch {
       accountHolderType
-      accountStatus
     }
   }
 }
 ```
 
-### New VOP implementation {#new-implementation}
-
-Migrate to the new `verifySepaBeneficiary` mutation:
-
+**After (new VOP)**:
 ```graphql
-mutation NewVOPImplementation {
+mutation NewVOPVerification {
   verifySepaBeneficiary(
     input: {
       iban: "NL91ABNA0417164300"
@@ -307,137 +249,36 @@ mutation NewVOPImplementation {
 }
 ```
 
-### Migration steps {#migration-steps}
-
-1. **Update API calls**: Replace `beneficiaryVerification` with `verifySepaBeneficiary`
-2. **Handle new result types**: Implement all four VOP result types
-3. **Token management**: Integrate verification tokens into payment flows
-4. **UI updates**: Update user interfaces to display VOP results appropriately
-5. **Testing**: Thoroughly test all verification scenarios in Sandbox
+**Migration checklist**:
+1. Replace `beneficiaryVerification` with `verifySepaBeneficiary`
+2. Handle all four result types
+3. Integrate verification tokens into payment flows
+4. Update UI to show verification results
+5. Test thoroughly in Sandbox
 
 :::caution Deprecation timeline
-The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9, 2025 compliance deadline to ensure uninterrupted service.
+The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9 compliance deadline to ensure uninterrupted service.
 :::
-
-## Regulatory requirements {#regulatory-requirements}
-
-VOP is mandated by the **European Commission's Instant Payments Regulation (IPR)** published in March 2024. Key requirements include:
-
-### Compliance obligations {#compliance-obligations}
-
-- **Mandatory implementation**: Required for all PSPs offering SEPA Credit Transfers
-- **Deadline**: October 9, 2025
-- **Coverage**: All SEPA zone countries
-- **Availability**: 24/7 service availability required
-
-### EPC scheme adherence {#epc-scheme}
-
-Swan adheres to the **EPC Verification of Payee Scheme Rulebook**, which establishes:
-
-- Standardized verification procedures
-- Technical requirements for all participating institutions
-- Operational obligations for PSPs
-- Directory service participation requirements
-
-### Data protection {#data-protection}
-
-VOP implementation complies with:
-
-- **GDPR**: Appropriate handling of beneficiary information
-- **Audit requirements**: Comprehensive logging for regulatory reporting
-- **Privacy standards**: Limited data retention and secure processing
 
 ## Troubleshooting {#troubleshooting}
 
-### Common issues {#common-issues}
+**Verification fails consistently**
+- Check IBAN belongs to SEPA zone bank
+- Verify beneficiary name format (no special characters)
+- Confirm beneficiary's bank supports VOP
 
-**Verification consistently fails**
-- Verify the beneficiary IBAN belongs to a SEPA zone bank
-- Check that the beneficiary name format matches expected standards
-- Confirm the beneficiary's bank participates in the VOP scheme
+**Token expired**
+- Tokens have limited lifespan
+- Generate new token if expired
+- Don't cache tokens beyond expiration
 
-**Token expired errors**
-- Verification tokens have limited lifespans
-- Generate a new token if the original has expired
-- Implement appropriate caching while respecting expiration times
-
-**Network connectivity issues**
-- VOP relies on external verification services
-- Implement retry mechanisms for transient failures
-- Provide fallback options when verification is unavailable
-
-### Support resources {#support-resources}
-
-1. **API documentation**: Review mutation specifications and examples
-2. **Sandbox testing**: Use mock responses to test integration
-3. **Status monitoring**: Check [Swan's status page](https://status.swan.io) for service availability
-4. **Technical support**: Contact Swan support for implementation assistance
-
-## Best practices {#best-practices}
-
-### Implementation recommendations {#implementation-recommendations}
-
-**Optimize user experience**
-- Perform verification immediately after beneficiary details are entered
-- Display verification results clearly with appropriate visual indicators
-- Provide helpful guidance for each verification outcome
-
-**Handle verification results appropriately**
-- Show name suggestions prominently for close matches
-- Provide clear warnings for no matches while allowing users to proceed
-- Implement confirmation workflows for payments with negative results
-
-**Monitor and maintain**
-- Track verification success rates and response times
-- Implement comprehensive error handling and logging
-- Plan for network issues and service unavailability scenarios
-
-### Security considerations {#security-considerations}
-
-- Store verification tokens securely and respect expiration times
-- Implement appropriate audit logging for compliance requirements
-- Use verification results to enhance fraud detection capabilities
-- Maintain comprehensive documentation for regulatory review
-
-## API reference {#api-reference}
-
-### Mutation: verifySepaBeneficiary {#mutation-reference}
-
-Verify SEPA beneficiary information before initiating credit transfers.
-
-**Input parameters**:
-- `iban` (required): Beneficiary IBAN
-- `name` (required): Beneficiary name
-- `address` (optional): Beneficiary address information
-
-**Response types**:
-- `SepaBeneficiaryMatch`: Exact match found
-- `SepaBeneficiaryCloseMatch`: Partial match with suggestion
-- `SepaBeneficiaryNoMatch`: No match found
-- `SepaBeneficiaryVerificationNotPossible`: Verification unavailable
-
-**Common fields**:
-- `verificationToken`: Single-use token for payment initiation
-- `expiresAt`: Token expiration timestamp
-- `nameSuggestion`: Suggested name for close/no matches (when available)
-
-### Query: beneficiaryVerification (deprecated) {#query-reference}
-
-:::caution Deprecated
-The `beneficiaryVerification` query is deprecated and will be removed. Use `verifySepaBeneficiary` instead.
-:::
-
-Legacy Dutch IBAN verification via SurePay integration.
-
-**Input parameters**:
-- `iban` (required): Dutch IBAN
-- `name` (required): Beneficiary name  
-- `debtorAccountId` (required): Swan account ID
+**Network issues**
+- Implement retry logic for transient failures
+- Handle cases where verification is unavailable
+- Provide fallback user experience
 
 ## Related guides {#related-guides}
 
 - [Initiate a credit transfer](./guide-initiate-ct.mdx)
 - [Add a trusted SEPA beneficiary](./guide-add-beneficiary.mdx)
 - [SEPA Credit Transfers overview](./index.mdx)
-- [Authentication](../../../developers/using-api/authentication/index.mdx)
-- [Event Simulator](../../../developers/tools/event-simulator.mdx)

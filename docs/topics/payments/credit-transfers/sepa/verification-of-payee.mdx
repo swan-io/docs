@@ -126,21 +126,6 @@ mutation VerifySepaBeneficiary {
 | **No Match** | No match found | Confirm details before proceeding |
 | **Not Possible** | Verification unavailable | Proceed without verification |
 
-<!-- 
-
-TO DO: Include tabs widget that shows all matches, their meaning and their UI render 
-
-VOP returns one of four standardized results:
-
-| Result | Description | Next steps |
-| --- | --- | --- |
-| **Match** | Exact match of beneficiary details | Proceed with confidence |
-| **Close Match** | Partial match with name suggestion | Review suggestion, update if needed |
-| **No Match** | No match found for beneficiary details | Verify details before proceeding |
-| **Not Possible** | Verification service unavailable | Proceed without verification |
-
--->
-
 ## Use verification token {#use-token}
 
 Add the `verificationToken` to your credit transfer:
@@ -178,37 +163,104 @@ mutation InitiateWithVerification {
 }
 ```
 
-:::tip Token properties
-- **Single-use**: Each token works only once
-- **Time-limited**: Check `expiresAt` timestamp
-- **Optional**: Token improves compliance but isn't required for transfers. It may be required for certain upcoming payment scenarios.
+:::tip Why verification tokens matter
+- **Regulatory compliance**: Demonstrates VOP verification was performed
+- **Single-use security**: Each token works only once, preventing replay attacks
+- **Time-limited**: Check `expiresAt` timestamp to ensure validity
+- **Future-proofing**: Optional now, but may be required for certain upcoming payment scenarios
 :::
 
 ## Saved beneficiaries {#saved-beneficiaries}
 
-VOP integrates with Swan's [trusted beneficiary system](./guide-add-beneficiary.mdx) to streamline repeat payments.
+VOP integrates seamlessly with Swan's [trusted beneficiary system](./guide-add-beneficiary.mdx) to streamline repeat payments while maintaining compliance.
 
-### Verify saved beneficiaries {#verify-saved}
+### First-time verification for saved beneficiaries {#verify-saved}
 
-When using a saved beneficiary for the first time after VOP implementation, perform verification to ensure compliance:
+**Important**: Even saved beneficiaries require VOP verification for compliance after October 9, 2025.
 
-1. Retrieve the saved beneficiary details
+**Workflow for existing saved beneficiaries:**
+1. Retrieve saved beneficiary details from your system
 2. Call [`verifySepaBeneficiary`](#verify-mutation) with the saved IBAN and name
 3. [Use the verification token](#use-token) when initiating the transfer
+4. Future payments to the same beneficiary will still require verification
+
+**Benefits of this approach:**
+- **Compliance**: Meets mandatory VOP requirements
+- **User experience**: Familiar beneficiary selection with added security
+- **Fraud prevention**: Validates beneficiary details haven't changed
 
 ### Save during verification {#save-during-verification}
 
-You can save beneficiaries while performing verification by setting `save: true` in the credit transfer mutation along with the verification token.
+You can save new beneficiaries while performing verification by setting `save: true` in the credit transfer mutation:
+
+```graphql {11}
+mutation InitiateWithVerificationAndSave {
+  initiateCreditTransfers(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "FR0000000000300000000056H80"
+          name: "John Smith"
+          verificationToken: "vf_01234567890abcdef"
+          save: true
+        }
+      }
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      payment {
+        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+This creates a trusted beneficiary record while demonstrating VOP compliance.
 
 ## Sandbox testing {#sandbox}
 
-Test with these mock beneficiary names:
+Test VOP verification with these mock beneficiary names in Swan's sandbox environment:
 
-| Name | Result |
-| --- | --- |
-| `NO_MATCH` | Returns `SepaBeneficiaryNoMatch` |
-| `BIC_NOT_FOUND` | Returns `SepaBeneficiaryVerificationNotPossible` |
-| Any other name | Returns `SepaBeneficiaryMatch` |
+| Input Name | Result Type | Use Case |
+| --- | --- | --- |
+| `NO_MATCH` | `SepaBeneficiaryNoMatch` | Test no match handling |
+| `BIC_NOT_FOUND` | `SepaBeneficiaryVerificationNotPossible` | Test verification unavailable |
+| `Close Match Test` | `SepaBeneficiaryCloseMatch` | Test partial match with suggestions |
+| Any other name | `SepaBeneficiaryMatch` | Test successful verification |
+
+**Example test workflow:**
+```graphql
+# Test no match scenario
+mutation TestNoMatch {
+  verifySepaBeneficiary(
+    input: {
+      iban: "FR0000000000300000000056H80"
+      name: "NO_MATCH"
+    }
+  ) {
+    ... on SepaBeneficiaryNoMatch {
+      __typename
+      verificationToken
+      expiresAt
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+  }
+}
+```
 
 ## Migration from legacy verification {#migration}
 
@@ -256,7 +308,7 @@ mutation NewVOPVerification {
 5. Test thoroughly in Sandbox
 
 :::caution Deprecation timeline
-The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9, 2025 compliance deadline to ensure uninterrupted service.
+The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9 compliance deadline to ensure uninterrupted service.
 :::
 
 ## Troubleshooting {#troubleshooting}

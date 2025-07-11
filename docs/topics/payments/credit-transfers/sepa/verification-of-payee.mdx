@@ -291,10 +291,10 @@ mutation InitiateWithVerification {
 ```
 
 :::tip Why verification tokens matter
-- **Regulatory compliance**: Demonstrates VOP verification was performed
-- **Single-use security**: Each token works only once, preventing replay attacks
-- **Time-limited**: Check `expiresAt` timestamp to ensure validity
 - **Future-proofing**: Optional now, but may be required for certain upcoming payment scenarios
+- **Regulatory compliance**: Demonstrates VOP verification was performed
+- **Time-limited**: Check `expiresAt` timestamp to ensure validity
+- **Single-use security**: Each token works only once, preventing replay attacks
 :::
 
 ## Saved beneficiaries {#saved-beneficiaries}
@@ -320,7 +320,7 @@ Even saved beneficiaries require VOP verification for compliance after **October
 
 ### Save during verification {#save-during-verification}
 
-You can save new beneficiaries while performing verification by setting `save: true` in the credit transfer mutation:
+You can save new beneficiaries while performing verification by setting `save: true` in the [credit transfer mutation](guide-initiate-ct#guide-sepa):
 
 ```graphql {12} showLineNumbers
 mutation InitiateWithVerificationAndSave {
@@ -410,6 +410,10 @@ mutation TestVerificationUnavailable {
 
 ## Migration from legacy verification {#migration}
 
+:::danger Breaking change
+The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9 compliance deadline to ensure uninterrupted service.
+:::
+
 If you're using `beneficiaryVerification` for Dutch IBANs, migrate to `verifySepaBeneficiary`:
 
 **Before (deprecated)**:
@@ -447,15 +451,11 @@ mutation NewVOPVerification {
 ```
 
 **Migration checklist**:
-1. Replace `beneficiaryVerification` with `verifySepaBeneficiary`
-2. Handle all four result types
-3. Integrate verification tokens into payment flows
+1. Replace `beneficiaryVerification` with [`verifySepaBeneficiary`](#verify-mutation)
+2. Handle all four [result types](#results)
+3. Integrate [verification tokens](#use-token) into payment flows
 4. Update UI to show verification results
 5. Test thoroughly in Sandbox
-
-:::danger Breaking change
-The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9 compliance deadline to ensure uninterrupted service.
-:::
 
 ## Troubleshooting {#troubleshooting}
 
@@ -475,7 +475,7 @@ The `beneficiaryVerification` query will be deprecated. Plan your migration befo
 - Provide fallback user experience
 
 :::tip Best practice
-Perform verification immediately after beneficiary details are entered for optimal user experience.
+Perform verification immediately after beneficiary details are entered for an optimal user experience.
 :::
 
 ## Related guides {#related-guides}

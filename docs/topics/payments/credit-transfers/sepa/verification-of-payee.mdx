@@ -117,7 +117,7 @@ Call `verifySepaBeneficiary` before initiating transfers.
 1. Call the `verifySepaBeneficiary` mutation.
 2. Add the beneficiary's `iban` and `name` (lines 4-5).
 3. Add all verification result types to handle different outcomes.
-4. Add rejections for error handling.
+4. Add [rejections](/developers/using-api/errors-rejections.mdx) for error handling.
 
 ### Mutation {#verify-mutation}
 
@@ -168,8 +168,6 @@ mutation VerifyBeneficiary {
     
     **Action**: Proceed with transfer
     
-    **UI recommendation**: Green checkmark, "Verified" badge
-    
     **Example response**:
     ```json
     {
@@ -179,15 +177,18 @@ mutation VerifyBeneficiary {
     }
     ```
     
-    **Next steps**: Use the `verificationToken` when [initiating your credit transfer](#use-token).
+    <details>
+    <summary>UI view example</summary>
+    
+    ![Payment control match result](../../../../images/topics/payments/credit-transfers/vop/PC_match.png)
+    
+    </details>
   </TabItem>
   
   <TabItem value="close" label="⚠️ Close Match">
     **Result**: Partial match with suggestion
     
     **Action**: Review `nameSuggestion` field
-    
-    **UI recommendation**: Yellow warning, show suggestion to user
     
     **Example response**:
     ```json
@@ -199,15 +200,18 @@ mutation VerifyBeneficiary {
     }
     ```
     
-    **Next steps**: Display the `nameSuggestion` to the user. They can update the name or proceed with the original details.
+    <details>
+    <summary>UI view example</summary>
+    
+    ![Payment control close match result](../../../../images/topics/payments/credit-transfers/vop/PC_close_match.png)
+    
+    </details>
   </TabItem>
   
   <TabItem value="no-match" label="❌ No Match">
     **Result**: No match found
     
     **Action**: Confirm details before proceeding
-    
-    **UI recommendation**: Red warning, confirmation dialog
     
     **Example response**:
     ```json
@@ -218,15 +222,18 @@ mutation VerifyBeneficiary {
     }
     ```
     
-    **Next steps**: Warn the user about the mismatch. Allow them to double-check details or proceed with caution.
+    <details>
+    <summary>UI view example</summary>
+    
+    ![Payment control no match result](../../../../images/topics/payments/credit-transfers/vop/PC_no_match.png)
+    
+    </details>
   </TabItem>
   
   <TabItem value="not-possible" label="❌ Not Possible">
     **Result**: Verification unavailable
     
     **Action**: Proceed without verification
-    
-    **UI recommendation**: Gray info, optional verification note
     
     **Example response**:
     ```json
@@ -237,7 +244,12 @@ mutation VerifyBeneficiary {
     }
     ```
     
-    **Next steps**: Inform the user that verification isn't available for this beneficiary. Payment can still proceed.
+    <details>
+    <summary>UI view example</summary>
+    
+    ![Payment control verification not possible](../../../../images/topics/payments/credit-transfers/vop/PC_no_verif.png)
+    
+    </details>
   </TabItem>
 </Tabs>
 
@@ -245,7 +257,7 @@ mutation VerifyBeneficiary {
 
 Add the `verificationToken` to your credit transfer:
 
-```graphql {10} showLineNumbers
+```graphql {11} showLineNumbers
 mutation InitiateWithVerification {
   initiateCreditTransfers(
     input: {
@@ -310,7 +322,7 @@ Even saved beneficiaries require VOP verification for compliance after **October
 
 You can save new beneficiaries while performing verification by setting `save: true` in the credit transfer mutation:
 
-```graphql {11} showLineNumbers
+```graphql {12} showLineNumbers
 mutation InitiateWithVerificationAndSave {
   initiateCreditTransfers(
     input: {

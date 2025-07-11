@@ -33,7 +33,7 @@ VOP verification is available for all SEPA zone countries, providing **24/7 avai
 ## How it works {#how-it-works}
 
 1. **Verify beneficiary**: Call `verifySepaBeneficiary` with IBAN and name
-2. **Get result**: Receive Match, Close Match, No Match, or Not Possible
+2. **Get result**: Receive Match, Close Match, No Match, or Verification Unavailable
 3. **Use token**: Add verification token to credit transfer
 
 ```mermaid
@@ -314,9 +314,9 @@ Even saved beneficiaries require VOP verification for compliance after **October
 4. Future payments to the same beneficiary will still require verification
 
 **Benefits of this approach:**
+- **Fraud prevention**: Validates beneficiary details haven't changed
 - **Compliance**: Meets mandatory VOP requirements
 - **User experience**: Familiar beneficiary selection with added security
-- **Fraud prevention**: Validates beneficiary details haven't changed
 
 ### Save during verification {#save-during-verification}
 
@@ -459,20 +459,19 @@ mutation NewVOPVerification {
 
 ## Troubleshooting {#troubleshooting}
 
-**Verification fails consistently**
-- Check IBAN belongs to SEPA zone bank
-- Verify beneficiary name format (no special characters)
-- Confirm beneficiary's bank supports VOP
+**Verification returns "Not Possible"**
+- Beneficiary's bank may not support VOP yet
+- Service temporarily unavailable
+- Proceed with transfer if needed
 
 **Token expired**
-- Tokens have limited lifespan
-- Generate new token if expired
-- Don't cache tokens beyond expiration
+- Check `expiresAt` timestamp before using token
+- Generate new verification if expired
+- Each token works only once
 
-**Network issues**
-- Implement retry logic for transient failures
-- Handle cases where verification is unavailable
-- Provide fallback user experience
+**Legacy migration**
+- Migrate from `beneficiaryVerification` query (Dutch IBANs only)
+- Update to `verifySepaBeneficiary` before deprecation
 
 :::tip Best practice
 Perform verification immediately after beneficiary details are entered for an optimal user experience.

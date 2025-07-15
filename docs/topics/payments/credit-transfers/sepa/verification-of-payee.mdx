@@ -153,10 +153,18 @@ flowchart TD
 flowchart TD
     A["📝 Enter Beneficiary Details"] --> B[Call verifySepaBeneficiary]
     B --> C{Verification Result}
-    C -->|"✅ Match"| D["✅ Exact Match<br/>Ready to proceed"]
-    C -->|"⚠️ Close Match"| E["⚠️ Close Match<br/>Check suggested name"]
-    C -->|"❌ No Match"| F["❌ No Match<br/>Verify details before proceeding"]
-    C -->|"❌ Not Possible"| G["❌ Verification Not Possible<br/>Verification service unavailable"]
+    
+    subgraph " "
+        D["✅ Match<br/>Ready to proceed"]
+        E["⚠️ Close Match<br/>Check suggested name"]  
+        F["❌ No Match<br/>Verify details before proceeding"]
+        G["❌ Verification Not Possible<br/>Verification service unavailable"]
+    end
+    
+    C -->|"✅ Exact Match"| D
+    C -->|"⚠️ Close Match"| E
+    C -->|"❌ No Match"| F
+    C -->|"❌ Not Possible"| G
     
     D --> H["Customer Proceeds with Payment"]
     E --> I["Customer Reviews Suggestion"]

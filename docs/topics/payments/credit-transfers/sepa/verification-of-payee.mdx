@@ -21,12 +21,12 @@ VoP is required under the [European Commission's Instant Payments Regulation (IP
 
 ### Key benefits {#benefits}
 
-**For your integration:**
+For your integration:
 - **Reduced disputes**: Prevent misdirected payments and customer support issues
 - **Regulatory compliance**: Meet mandatory EU requirements for SEPA transfers
 - **Enhanced UX**: Build trust through transparent payment verification
 
-**For the end-users:**
+For the end-users:
 - **Fraud protection**: Verify beneficiary details before sending payments
 - **Error prevention**: Catch typos and formatting issues early
 - **Payment confidence**: Know transfers will reach the intended recipient
@@ -55,7 +55,7 @@ Select one of the following verification flows for your implementation:
     <div className="card" style={{height: '100%', backgroundColor: '#fffbf0', border: '1px solid #ffeaa7'}}>
       <div className="card__header">
         <h3>Option 1:</h3>
-        <h2>➡️ Consent flow verification</h2>
+        <h3>➡️ Consent flow verification</h3>
       </div>
       <div className="card__body">
         <p><strong>Verification happens during credit transfer initiation</strong></p>
@@ -71,7 +71,7 @@ Select one of the following verification flows for your implementation:
     <div className="card" style={{height: '100%', backgroundColor: '#f0f9f0', border: '1px solid #d4edda'}}>
       <div className="card__header">
         <h3>Option 2:</h3>
-        <h2>☑️ Pre-validation of details</h2>
+        <h3>☑️ Pre-validation of details</h3>
       </div>
       <div className="card__body">
         <p><strong>Verify beneficiaries before payment initiation</strong></p>
@@ -243,6 +243,11 @@ Verification of Payee doesn't block payments. It provides verification results s
 
 ---
 
+# Coming soon...
+
+<details>
+<summary>View feature roadmap</summary>
+
 ## Verify a beneficiary {#guide-verify}
 
 Call `verifySepaBeneficiary` before initiating transfers.
@@ -250,10 +255,11 @@ Call `verifySepaBeneficiary` before initiating transfers.
 ### Steps {#verify-steps}
 
 1. Call the `verifySepaBeneficiary` mutation.
-2. Add the beneficiary's `iban` and `name` (lines 4-5).
+2. Add the beneficiary's `iban` and `name` <!--(lines 4-5)-->.
 3. Add all verification result types to handle different outcomes.
 4. Add [rejections](/developers/using-api/errors-rejections.mdx) for error handling.
 
+<!--
 ### Mutation {#verify-mutation}
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5QmVuZWZpY2lhcnkgewogIHZlcmlmeVNlcGFCZW5lZmljaWFyeSgKICAgIGlucHV0OiB7IGliYW46ICJGUjAwMDAwMDAwMDAzMDAwMDAwMDAwNTZIODAiLCBuYW1lOiAiSm9obiBTbWl0aCIgfQogICkgewogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlDbG9zZU1hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgICAgbmFtZVN1Z2dlc3Rpb24KICAgIH0KICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlOb01hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ob3RQb3NzaWJsZSB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmVyaWZpY2F0aW9uVG9rZW4KICAgICAgZXhwaXJlc0F0CiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
@@ -294,6 +300,7 @@ mutation VerifyBeneficiary {
   }
 }
 ```
+-->
 
 ## Verification results {#results}
 
@@ -390,7 +397,10 @@ mutation VerifyBeneficiary {
 
 ## Use verification token {#use-token}
 
-Add the `verificationToken` to your credit transfer:
+Add the `verificationToken` to your credit transfer.
+
+<!--
+:
 
 ```graphql {11} showLineNumbers
 mutation InitiateWithVerification {
@@ -424,6 +434,7 @@ mutation InitiateWithVerification {
   }
 }
 ```
+-->
 
 :::tip Why verification tokens matter
 - **Regulatory compliance**: Demonstrates VoP verification was performed
@@ -454,7 +465,10 @@ Even saved beneficiaries require VoP verification for compliance after **October
 
 ### Save during verification {#save-during-verification}
 
-You can save new beneficiaries while performing verification by setting `save: true` in the [credit transfer mutation](guide-initiate-ct#guide-sepa):
+You can save new beneficiaries while performing verification by setting `save: true` in the [credit transfer mutation](guide-initiate-ct#guide-sepa).
+
+<!--
+:
 
 ```graphql {12} showLineNumbers
 mutation InitiateWithVerificationAndSave {
@@ -488,6 +502,7 @@ mutation InitiateWithVerificationAndSave {
   }
 }
 ```
+-->
 
 This creates a trusted beneficiary record while demonstrating VoP compliance.
 
@@ -502,6 +517,7 @@ Test VoP verification with these mock beneficiary names in Swan's sandbox enviro
 | `Close Match Test` | `SepaBeneficiaryCloseMatch` | Test partial match with suggestions |
 | Any other name | `SepaBeneficiaryMatch` | Test successful verification |
 
+<!--
 ### Example test scenarios
 
 ```graphql showLineNumbers
@@ -541,6 +557,7 @@ mutation TestVerificationNotPossible {
   }
 }
 ```
+-->
 
 ## Migration from legacy verification {#migration}
 
@@ -548,7 +565,10 @@ mutation TestVerificationNotPossible {
 The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9 compliance deadline to ensure uninterrupted service.
 :::
 
-If you're using `beneficiaryVerification` for Dutch IBANs, migrate to `verifySepaBeneficiary`:
+If you're using `beneficiaryVerification` for Dutch IBANs, migrate to `verifySepaBeneficiary`.
+
+<!--
+:
 
 **Before (deprecated)**:
 ```graphql title="Legacy verification (deprecated)" showLineNumbers
@@ -616,3 +636,5 @@ Perform verification immediately after beneficiary details are entered for an op
 - [Initiate a credit transfer](./guide-initiate-ct.mdx)
 - [Add a trusted SEPA beneficiary](./guide-add-beneficiary.mdx)
 - [SEPA Credit Transfers overview](./index.mdx)
+-->
+</details>

@@ -15,20 +15,32 @@ Required for all SEPA Credit Transfers by **October 9, 2025** under EU regulatio
 
 ## Overview {#overview}
 
-**Verification of Payee (VOP)** is a mandatory European payment security service that validates beneficiary names against account holder information before initiating SEPA Credit Transfers. This service reduces payment fraud and errors by confirming that the payee's name matches the account holder registered with the beneficiary's bank.
+**Verification of Payee (VoP)** is a mandatory European service that validates beneficiary details against account holder information before initiating SEPA Credit Transfers. This service aims at reducing payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
 
-VOP is required under the [European Commission's Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, with a mandatory implementation deadline of **October 9, 2025** for all Payment Service Providers offering SEPA Credit Transfers.
+VoP is required under the [European Commission's Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, with a mandatory implementation deadline of **October 9, 2025** for all Payment Service Providers in the Eurozone offering SEPA Credit Transfers.
 
 ### Key benefits {#benefits}
 
-- **Fraud reduction**: Verify beneficiary details before sending payments
+**For your integration:**
+- **Reduced disputes**: Prevent misdirected payments and customer support issues
+- **Regulatory compliance**: Meet mandatory EU requirements for SEPA transfers
+- **Enhanced UX**: Build trust through transparent payment verification
+
+**For the end-users:**
+- **Fraud protection**: Verify beneficiary details before sending payments
 - **Error prevention**: Catch typos and formatting issues early
-- **Compliance**: Meet mandatory EU regulatory requirements
-- **Customer confidence**: Build trust through enhanced payment security
+- **Payment confidence**: Know transfers will reach the intended recipient
 
 ### Coverage {#coverage}
 
-VOP verification is available for all SEPA zone countries. The service is **free of charge** for payers as mandated by the regulation.
+Verification of Payee is applicable to all countries included in the SEPA zone. Payment Services Providers have varying implementation timelines based on their location:
+
+| Payment Services Provider Location | VoP Mandatory Date |
+| --- | --- |
+| Eurozone | October 9, 2025 |
+| Non-Eurozone | January 9, 2027 |
+
+The service is **free of charge** for payers as mandated by the regulation.
 
 ## How it works {#how-it-works}
 
@@ -291,19 +303,19 @@ mutation InitiateWithVerification {
 ```
 
 :::tip Why verification tokens matter
-- **Regulatory compliance**: Demonstrates VOP verification was performed
+- **Regulatory compliance**: Demonstrates VoP verification was performed
 - **Time-limited**: Check `expiresAt` timestamp to ensure validity
 - **Single-use security**: Each token works only once, preventing replay attacks
 :::
 
 ## Saved beneficiaries {#saved-beneficiaries}
 
-VOP integrates seamlessly with Swan's [trusted beneficiary system](./guide-add-beneficiary.mdx) to streamline repeat payments while maintaining compliance.
+VoP integrates seamlessly with Swan's [trusted beneficiary system](./guide-add-beneficiary.mdx) to streamline repeat payments while maintaining compliance.
 
 ### First-time verification for saved beneficiaries {#verify-saved}
 
 :::warning Important for existing integrations
-Even saved beneficiaries require VOP verification for compliance after **October 9, 2025**.
+Even saved beneficiaries require VoP verification for compliance after **October 9, 2025**.
 :::
 
 **Workflow for existing saved beneficiaries:**
@@ -314,7 +326,7 @@ Even saved beneficiaries require VOP verification for compliance after **October
 
 **Benefits of this approach:**
 - **Fraud prevention**: Validates beneficiary details haven't changed
-- **Compliance**: Meets mandatory VOP requirements
+- **Compliance**: Meets mandatory VoP requirements
 - **User experience**: Familiar beneficiary selection with added security
 
 ### Save during verification {#save-during-verification}
@@ -354,11 +366,11 @@ mutation InitiateWithVerificationAndSave {
 }
 ```
 
-This creates a trusted beneficiary record while demonstrating VOP compliance.
+This creates a trusted beneficiary record while demonstrating VoP compliance.
 
 ## Sandbox testing {#sandbox}
 
-Test VOP verification with these mock beneficiary names in Swan's sandbox environment:
+Test VoP verification with these mock beneficiary names in Swan's sandbox environment:
 
 | Input Name | Result Type | Use Case |
 | --- | --- | --- |
@@ -432,9 +444,9 @@ query LegacyVerification {
 }
 ```
 
-**After (new VOP)**:
-```graphql title="New VOP verification" showLineNumbers
-mutation NewVOPVerification {
+**After (new VoP)**:
+```graphql title="New VoP verification" showLineNumbers
+mutation NewVoPVerification {
   verifySepaBeneficiary(
     input: {
       iban: "NL91ABNA0417164300"
@@ -459,7 +471,7 @@ mutation NewVOPVerification {
 ## Troubleshooting {#troubleshooting}
 
 **Verification returns "Not Possible"**
-- Beneficiary's bank may not support VOP yet
+- Beneficiary's bank may not support VoP yet
 - Service temporarily unavailable
 - Proceed with transfer if needed
 

@@ -148,34 +148,35 @@ flowchart TD
 4. **Customer proceeds**: Customer can choose to proceed with payment regardless of result
 5. **Use token**: Add verification token to credit transfer
 
+<div className="invisible-subgraph">
+
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart TD
     A["📝 Enter Beneficiary Details"] --> B[Call verifySepaBeneficiary]
     B --> C{Verification Result}
     
-    subgraph " "
-        D["✅ Match<br/>Ready to proceed"]
-        E["⚠️ Close Match<br/>Check suggested name"]  
-        F["❌ No Match<br/>Verify details before proceeding"]
-        G["❌ Verification Not Possible<br/>Verification service unavailable"]
-    end
+    D["Ready to proceed"]
+    E["Check suggested name"]  
+    F["Verify details before proceeding"]
+    G["Verification service unavailable"]
     
-    C -->|"✅ Exact Match"| D
+    C -->|"✅ Match"| D
     C -->|"⚠️ Close Match"| E
     C -->|"❌ No Match"| F
     C -->|"❌ Not Possible"| G
     
-    D --> H["Customer Proceeds with Payment"]
+    D --> H[" "]
     E --> I["Customer Reviews Suggestion"]
     F --> J["Customer Verifies Details"]
-    G --> K["Customer Proceeds Despite No Verification"]
+    G --> K["Customer Proceeds<br>Despite No Verification"]
     
-    I --> H
-    J --> H
-    K --> H
+    H --> L["Customer Proceeds with Payment"]
+    I --> L
+    J --> L
+    K --> L
     
-    H --> L["Initiate Transfer with Token"]
+    L --> M["Initiate Transfer with Token"]
     
     classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:12,ry:12
     classDef input fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:12,ry:12
@@ -194,6 +195,8 @@ flowchart TD
     class B,I,J,K process
     class H,L final
 ```
+
+</div>
 
 :::tip VoP enables informed decisions
 Verification of Payee doesn't block payments. It provides verification results so customers can make informed decisions about proceeding or aborting. All verification results allow payment to continue.

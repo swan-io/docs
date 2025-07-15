@@ -37,15 +37,58 @@ Verification of Payee is applicable to all countries included in the SEPA zone. 
 
 | Payment Services Provider Location | VoP Mandatory Date |
 | --- | --- |
-| Eurozone | October 9, 2025 |
-| Non-Eurozone | January 9, 2027 |
+| 🇪🇺 Eurozone | October 9, 2025 |
+| 🌏 Non-Eurozone | January 9, 2027 |
 
 The service is **free of charge** for payers as mandated by the regulation.
 
 ## How it works {#how-it-works}
 
+VoP offers two integration approaches depending on your UX requirements and development constraints:
+
+### Integration flows {#integration-flows}
+
+Select one of the following verification flows for your implementation:
+
+<div className="row margin-bottom--lg">
+  <div className="col col--6">
+    <div className="card" style={{height: '100%', backgroundColor: '#fffbf0', border: '1px solid #ffeaa7'}}>
+      <div className="card__header">
+        <h3>Option 1:</h3>
+        <h2>➡️ Consent flow verification</h2>
+      </div>
+      <div className="card__body">
+        <p><strong>Verification happens during credit transfer initiation</strong></p>
+        <ul>
+          <li>Minimal to no development effort required</li>
+          <li>Limited UX customization</li>
+          <li>Best for: Quick implementation, basic verification needs</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div className="col col--6">
+    <div className="card" style={{height: '100%', backgroundColor: '#f0f9f0', border: '1px solid #d4edda'}}>
+      <div className="card__header">
+        <h3>Option 2:</h3>
+        <h2>☑️ Pre-validation of details</h2>
+      </div>
+      <div className="card__body">
+        <p><strong>Verify beneficiaries before payment initiation</strong></p>
+        <ul>
+          <li>Full control over verification UX</li>
+          <li>Custom error handling and user guidance</li>
+          <li>Best for: Enhanced user experience, complex payment flows</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+### Basic workflow {#basic-workflow}
+
 1. **Verify beneficiary**: Call `verifySepaBeneficiary` with IBAN and name
-2. **Get result**: Receive Match, Close Match, No Match, or Verification Unavailable
+2. **Get result**: Receive Match, Close Match, No Match, or Not Possible
 3. **Use token**: Add verification token to credit transfer
 
 ```mermaid
@@ -56,7 +99,7 @@ flowchart TD
     C -->|"✅ Match"| D["✅ Exact Match"]
     C -->|"⚠️ Close Match"| E["⚠️ Partial Match with Suggestion"]
     C -->|"❌ No Match"| F["❌ No Match Found"]
-    C -->|"❌ Not Possible"| G["❌ Verification Unavailable"]
+    C -->|"❌ Not Possible"| G["❌ Verification Not Possible"]
     D --> H[Initiate Transfer with Token]
     E --> I[Review Suggestion]
     F --> J[Confirm Details]
@@ -79,6 +122,18 @@ flowchart TD
     class F,G error
     class B,H,I,J,K,L,M,N process
 ```
+
+### Payment type support {#payment-support}
+
+| Payment Type | Synchronous Verification | Pre-validation | Notes |
+| --- | --- | --- | --- |
+| **Single Credit Transfers** | ✅ Supported | ✅ Supported | Full VoP integration |
+| **Bulk Credit Transfers** | ✅ Supported | ✅ Supported | Opt-out available for corporate use |
+| **Standing Orders** | ✅ Supported | ✅ Supported | Verification required for initial setup |
+
+<!--
+| **Internal Accounts** | 🚧 Coming soon | 🚧 Coming soon | Legal requirements being finalized |
+-->
 
 ### Integration milestones {#quick-actions}
 
@@ -243,7 +298,7 @@ mutation VerifyBeneficiary {
   </TabItem>
   
   <TabItem value="not-possible" label="❌ ‎ Verification not possible">
-    **Result**: Verification unavailable
+    **Result**: Verification not possible
     
     **Action**: Proceed without verification
     
@@ -403,7 +458,7 @@ mutation TestNoMatch {
 ```
 
 ```graphql showLineNumbers
-mutation TestVerificationUnavailable {
+mutation TestVerificationNotPossible {
   verifySepaBeneficiary(
     input: {
       iban: "FR0000000000300000000056H80"

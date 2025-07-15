@@ -46,7 +46,9 @@ The service is **free of charge** for payers as mandated by the regulation.
 
 VoP offers two integration approaches depending on your UX requirements and development constraints:
 
-### Integration flows {#integration-flows}
+### Integration {#integration}
+
+#### Integration types {#integration-types}
 
 Select one of the following verification flows for your implementation:
 
@@ -84,6 +86,59 @@ Select one of the following verification flows for your implementation:
     </div>
   </div>
 </div>
+
+#### Integration flows {#integration-flows}
+
+```mermaid
+flowchart TD
+    subgraph Option2 ["🟢 Option 2"]
+        direction TB
+        A2["📝 User enters beneficiary details"] --> B2["VoP Verification"]
+        B2 --> C2["🎨 Custom UX handling"]
+        C2 --> D2["User submits payment"]
+        D2 --> E2["initiateCreditTransfers with token"]
+        E2 --> F2["Consent screen"]
+        F2 --> G2["✅ Payment authorized"]
+        G2 --> H2["💸 Transfer completed"]
+    end
+
+    subgraph Option1 ["🟡 Option 1"]
+        direction TB
+        A1["📝 User enters payment details"] --> B1["User submits payment"]
+        B1 --> C1["initiateCreditTransfers"]
+        C1 --> D1["VoP Verification"]
+        D1 --> E1["Consent screen"]
+        E1 --> F1["✅ Payment authorized"]
+        F1 --> G1["💸 Transfer completed"]
+    end
+    
+    classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:8,ry:8
+    classDef input fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef process fill:#f8f7fc,stroke:#c0b3e1,stroke-width:1px,color:#4e3391,rx:8,ry:8
+    classDef success fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef transfer fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef custom fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:8,ry:8
+    classDef invisible fill:transparent,stroke:transparent,color:transparent
+    classDef subgraph1 fill:#fffbf0,stroke:#ffeaa7,stroke-width:2px,rx:16,ry:16
+    classDef subgraph2 fill:#f0f9f0,stroke:#d4edda,stroke-width:2px,rx:16,ry:16
+    
+    %% Option 1 styling
+    class A1 input
+    class B1,C1,D1,E1 process
+    class F1 success
+    class G1 transfer
+    class H1,I1 invisible
+    
+    %% Option 2 styling
+    class A2 input
+    class B2,D2,E2,F2 process
+    class C2 custom
+    class G2 success
+    class H2 transfer
+    
+    class Option1 subgraph1
+    class Option2 subgraph2
+```
 
 ### Basic workflow {#basic-workflow}
 

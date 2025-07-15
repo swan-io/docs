@@ -48,8 +48,6 @@ VoP offers two integration approaches depending on your UX requirements and deve
 
 ### Integration {#integration}
 
-#### Integration types {#integration-types}
-
 Select one of the following verification flows for your implementation:
 
 <div className="row margin-bottom--lg">
@@ -87,7 +85,7 @@ Select one of the following verification flows for your implementation:
   </div>
 </div>
 
-#### Integration flows {#integration-flows}
+#### Detailed Flows {#integration-flows}
 
 <div style={{textAlign: 'center'}}>
 ```mermaid
@@ -142,28 +140,34 @@ flowchart TD
 ```
 </div>
 
-### Basic workflow {#basic-workflow}
+### Verification workflow {#verification-workflow}
 
 1. **Verify beneficiary**: Call `verifySepaBeneficiary` with IBAN and name
 2. **Get result**: Receive Match, Close Match, No Match, or Not Possible
-3. **Use token**: Add verification token to credit transfer
+3. **Inform customer**: Display appropriate messaging based on verification result
+4. **Customer proceeds**: Customer can choose to proceed with payment regardless of result
+5. **Use token**: Add verification token to credit transfer
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart TD
     A["📝 Enter Beneficiary Details"] --> B[Call verifySepaBeneficiary]
     B --> C{Verification Result}
-    C -->|"✅ Match"| D["✅ Exact Match"]
-    C -->|"⚠️ Close Match"| E["⚠️ Partial Match with Suggestion"]
-    C -->|"❌ No Match"| F["❌ No Match Found"]
-    C -->|"❌ Not Possible"| G["❌ Verification Not Possible"]
-    D --> H[Initiate Transfer with Token]
-    E --> I[Review Suggestion]
-    F --> J[Confirm Details]
-    G --> K[Proceed Without Verification]
-    I --> L[Initiate Transfer]
-    J --> M[Initiate Transfer]
-    K --> N[Initiate Transfer]
+    C -->|"✅ Match"| D["✅ Exact Match<br/>Ready to proceed"]
+    C -->|"⚠️ Close Match"| E["⚠️ Close Match<br/>Check suggested name"]
+    C -->|"❌ No Match"| F["❌ No Match<br/>Verify details before proceeding"]
+    C -->|"❌ Not Possible"| G["❌ Verification Not Possible<br/>Verification service unavailable"]
+    
+    D --> H["Customer Proceeds with Payment"]
+    E --> I["Customer Reviews Suggestion"]
+    F --> J["Customer Verifies Details"]
+    G --> K["Customer Proceeds Despite No Verification"]
+    
+    I --> H
+    J --> H
+    K --> H
+    
+    H --> L["Initiate Transfer with Token"]
     
     classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:12,ry:12
     classDef input fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:12,ry:12
@@ -172,13 +176,20 @@ flowchart TD
     classDef warning fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff,rx:12,ry:12
     classDef error fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff,rx:12,ry:12
     classDef process fill:#f8f7fc,stroke:#c0b3e1,stroke-width:1px,color:#4e3391,rx:8,ry:8
+    classDef final fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
     
     class A input
+    class C decision
     class D success
     class E warning
     class F,G error
-    class B,H,I,J,K,L,M,N process
+    class B,I,J,K process
+    class H,L final
 ```
+
+:::tip VoP enables informed decisions
+Verification of Payee doesn't block payments. It provides verification results so customers can make informed decisions about proceeding or aborting. All verification results allow payment to continue.
+:::
 
 ### Payment type support {#payment-support}
 

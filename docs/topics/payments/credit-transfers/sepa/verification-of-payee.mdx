@@ -7,40 +7,38 @@ import TabItem from '@theme/TabItem';
 
 # Verification of Payee
 
-Verify beneficiary information before sending SEPA Credit Transfers to reduce fraud and payment errors.
+Validate beneficiary details before sending SEPA Credit Transfers to reduce fraud and payment errors.
 
 :::info Mandatory compliance
-Required for all SEPA Credit Transfers by **October 9, 2025** under EU regulation.
+Required for all SEPA Credit Transfers by **October 9, 2025** under the [European Commission's Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, with a mandatory implementation deadline of **October 9, 2025** for all Payment Service Providers (PSPs) in the Eurozone offering SEPA Credit Transfers.
 :::
 
 ## Overview {#overview}
 
-**Verification of Payee (VoP)** is a mandatory European service that validates beneficiary details against account holder information before initiating SEPA Credit Transfers. This service aims at reducing payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
-
-VoP is required under the [European Commission's Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, with a mandatory implementation deadline of **October 9, 2025** for all Payment Service Providers in the Eurozone offering SEPA Credit Transfers.
+**Verification of Payee (VoP)** is a mandatory European service that validates beneficiary details against account holder information before initiating SEPA Credit Transfers. This service aims to reduce payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
 
 ### Key benefits {#benefits}
 
 For your integration:
-- **Reduced disputes**: Prevent misdirected payments and customer support issues
-- **Regulatory compliance**: Meet mandatory EU requirements for SEPA transfers
-- **Enhanced UX**: Build trust through transparent payment verification
+- **Reduced disputes**: Prevent misdirected payments and customer support tickets.
+- **Regulatory compliance**: Meet mandatory EU requirements for SEPA transfers.
+- **Enhanced UX** (User Experience): Build trust through transparent payment verification.
 
 For the end-users:
-- **Fraud protection**: Verify beneficiary details before sending payments
-- **Error prevention**: Catch typos and formatting issues early
-- **Payment confidence**: Know transfers will reach the intended recipient
+- **Fraud protection**: Verify beneficiary details before sending payments.
+- **Error prevention**: Catch typos and formatting issues early.
+- **Payment confidence**: Know transfers will reach the intended recipient.
 
 ### Coverage {#coverage}
 
-Verification of Payee is applicable to all countries included in the SEPA zone. Payment Services Providers have varying implementation timelines based on their location:
+VoP is applicable to all countries included in the SEPA zone. Payment Services Providers have varying implementation timelines based on their location:
 
-| Payment Services Provider Location | VoP Mandatory Date |
+| Payment Services Provider location | VoP mandatory date |
 | --- | --- |
 | 🇪🇺 Eurozone | October 9, 2025 |
 | 🌏 Non-Eurozone | January 9, 2027 |
 
-The service is **free of charge** for payers as mandated by the regulation.
+The service is **free of charge** as mandated by the regulation.
 
 ## How it works {#how-it-works}
 
@@ -85,7 +83,7 @@ Select one of the following verification flows for your implementation:
   </div>
 </div>
 
-#### Detailed Flows {#integration-flows}
+#### Detailed flows {#integration-flows}
 
 <div style={{textAlign: 'center'}}>
 ```mermaid
@@ -143,9 +141,9 @@ flowchart TD
 ### Verification workflow {#verification-workflow}
 
 1. **Verify beneficiary**: Call `verifySepaBeneficiary` with IBAN and name
-2. **Get result**: Receive Match, Close Match, No Match, or Not Possible
-3. **Inform customer**: Display appropriate messaging based on verification result
-4. **Customer proceeds**: Customer can choose to proceed with payment regardless of result
+2. **Get result**: Receive Match, Close match, No match or Verification not possible
+3. **Inform end-user**: Display appropriate messaging based on verification result
+4. **User proceeds**: End-user can choose to proceed with payment regardless of result
 5. **Use token**: Add verification token to credit transfer
 
 <div className="invisible-subgraph">
@@ -341,7 +339,7 @@ mutation VerifyBeneficiary {
   </TabItem>
   
   <TabItem value="close" label="⚠️ ‎ Close match">
-    **Result**: Partial match with suggestion
+    **Result**: Partial match with name suggestion
     
     **Action**: Review `nameSuggestion` field
     
@@ -467,12 +465,12 @@ Even saved beneficiaries require VoP verification for compliance after **October
 
 **Workflow for existing saved beneficiaries:**
 1. Retrieve saved beneficiary details from your system
-2. Call [`verifySepaBeneficiary`](#verify-mutation) with the saved IBAN and name
+2. Call the [`verifySepaBeneficiary`](#verify-mutation) mutation with the saved IBAN and name
 3. [Use the verification token](#use-token) when initiating the transfer
 4. Future payments to the same beneficiary will still require verification
 
 **Benefits of this approach:**
-- **Fraud prevention**: Validates beneficiary details haven't changed
+- **Fraud prevention**: Validates that the beneficiary's details haven't changed
 - **Compliance**: Meets mandatory VoP requirements
 - **User experience**: Familiar beneficiary selection with added security
 
@@ -527,7 +525,7 @@ Test VoP verification with these mock beneficiary names in Swan's sandbox enviro
 | --- | --- | --- |
 | `NO_MATCH` | `SepaBeneficiaryNoMatch` | Test no match handling |
 | `BIC_NOT_FOUND` | `SepaBeneficiaryVerificationNotPossible` | Test verification unavailable |
-| `Close Match Test` | `SepaBeneficiaryCloseMatch` | Test partial match with suggestions |
+| `Close Match Test` | `SepaBeneficiaryCloseMatch` | Test close match with suggestions |
 | Any other name | `SepaBeneficiaryMatch` | Test successful verification |
 
 <!--
@@ -575,7 +573,7 @@ mutation TestVerificationNotPossible {
 ## Migration from legacy verification {#migration}
 
 :::danger Breaking change
-The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9 compliance deadline to ensure uninterrupted service.
+The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9th compliance deadline to ensure uninterrupted service.
 :::
 
 If you're using `beneficiaryVerification` for Dutch IBANs, migrate to `verifySepaBeneficiary`.

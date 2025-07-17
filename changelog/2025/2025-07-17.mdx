@@ -3,12 +3,27 @@ title: 17 July 2025
 type: release
 ---
 
+## New features
+
+🔗 [Send a SEPA Direct Debit B2B mandate registration link](/topics/payments/direct-debit/guide-add-mandate/#link) to users with the `canInitiatePayments` permission. Get the link from your **Dashboard** > **Data** > **Accounts** page.
+
+## Improvements
+
+One-off single use virtual cards now default to expiring **30 days** after creation.
+This applies when `SpendingLimitPeriod` is set to `Always` in the `addSingleUseVirtualCard` and `addSingleUseVirtualCards` mutations. 
+You can change this by setting a custom `cardContractExpiryDate`.
+
+🧭 **Transaction confirmation documents** now follow a new, more readable naming convention that includes the document language. 
+The new format is: `TransactionConfirmation_[transactionId]_[documentLanguage]`.
+
+## Updates
+
+🪪 Starting **August 7th,** we'll [recommend](/topics/users/identifications/#processes-recommendations) `QES` as the identification method for German accounts, replacing the current `Expert` level. If you use `Auto`, no action is needed. This change will apply automatically.
+
 ## API updates
 
 ### Upcoming breaking changes
 
-🔐 Starting **July 10th**, failed consent attempts will trigger the `Consent.Failed` webhook. 
-Previously, failed consents triggered `Consent.Granted`, due to a bug. The new webhook is already available in your Dashboard.
+🛑 Starting **August 18th**, the `initiateCheckMerchantPayment` mutation will return a new rejection: `MerchantPaymentAlreadyExistsRejection`. This occurs when **you try to create a merchant payment**, but the **CMC7 value** is already used by an existing payment that hasn't been `Rejected` or `Canceled`. If the existing payment with the same CMC7 *was* `Rejected` or `Canceled`, your mutation will still succeed.
 
-✉️ Starting **July 21st**, the `shippingProvider` field in `PhysicalCardToActivateStatusInfo` and `PhysicalCardRenewedStatusInfo` will be migrated from a `String` to an `ENUM`. 
-On the same day, the [shipping provider](https://api-reference.swan.io/enums/shipping-provider/) values `La Poste` and `CORREOS` will be removed.
+💳 Starting **August 21st**, refund transactions will be linked to the `paymentId` of their original debit authorization when referenced by merchants. This change affects you only if you expect debit clearing transactions on a debit authorization.

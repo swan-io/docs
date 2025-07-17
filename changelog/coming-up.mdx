@@ -7,13 +7,15 @@ Check out [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap
   <summary>⚠️ **Upcoming breaking changes**</summary>
 
   <div>
-🔐 Starting **July 10th**, failed consent attempts will trigger the `Consent.Failed` webhook. 
-Previously, failed consents triggered `Consent.Granted`, due to a bug. The new webhook is already available in your Dashboard.
 
 ✉️ Starting **July 21st**, the `shippingProvider` field in `PhysicalCardToActivateStatusInfo` and `PhysicalCardRenewedStatusInfo` will be migrated from a `String` to an `ENUM`. 
 On the same day, the [shipping provider](https://api-reference.swan.io/enums/shipping-provider/) values `La Poste` and `CORREOS` will be removed.
 
 💶 On **August 1st**, we're removing the `merchantPayment` field in the `InitiateCheckMerchantPaymentSuccessPayload`, use [`checkMerchantPayment`](/topics/merchants/online/checks/guide-initiate) instead. We're also deprecating `merchantPayment`.
+
+🛑 Starting **August 18th**, the `initiateCheckMerchantPayment` mutation will return a new rejection: `MerchantPaymentAlreadyExistsRejection`. This occurs when **you try to create a merchant payment** and the **CMC7 value** is already used by an existing payment that hasn't been `Rejected` or `Canceled`. If the existing payment with the same CMC7 *was* `Rejected` or `Canceled`, your mutation will still succeed.
+
+💳 Starting **August 21st**, refund transactions will be linked to the `paymentId` of their original debit authorization when referenced by merchants. This change affects you only if you expect debit clearing transactions on a debit authorization.
 
   </div>
 </details>

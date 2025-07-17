@@ -29,3 +29,66 @@ Your merchants can create links to share with their customers by email or text m
 They could also include a QR code on an invoice, scannable by the customer with their mobile device.
 
 → Learn how to [create payment links](./cards/guide-create-link.mdx) to accept card payments.
+
+## Merchant payments {#payments}
+
+Merchant card payments include **one or more transactions**.
+For example, one payment might include a capture transaction and a refund transaction, for a total of two transactions.
+
+These transactions are **grouped together** in the **merchant payment object**.
+Swan recommends using the merchant payment object in your integration to help merchants match orders, invoices, and sales to the correct object.
+This provides better traceability and can help reconcile issues more efficiently.
+
+### Payment object statuses {#payments-statuses}
+
+The merchant payment object has **distinct statuses** to follow a payment's lifecycle.
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    MPI((Merchant<br/>payment initiated)) -.-> I[Initiated]
+    I -.-> A[Authorized]
+    A -.-> CP[Captured]
+    I -.-> RJ[Rejected]
+    CP -.-> RF[Refunded]
+    CP -.-> D[Disputed]
+    I -.-> CN[Canceled]
+    A -.-> CN
+    subgraph FR[Funds received]
+        CP
+    end
+    subgraph F[Final status]
+        RJ
+        CN
+        RF
+        D
+    end
+    style MPI fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style FR fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Payment Object Status | Explanation |
+|---|---|
+| `Initiated` | The payment object has been created, but the payment is not yet authorized or guaranteed. |
+| `Authorized` | *Applies only to card payments.* The payment has been authorized by the customer's bank. The funds are guaranteed but not yet captured. This can be a final status unless the customer disputes the payment or requests a refund. |
+| `Canceled` | The payment was canceled before capture. Funds can no longer be captured. This is a final status. |
+| `Rejected` | The payment was rejected by Swan or another participant in the payment scheme before capture. This is a final status. |
+| `Captured` | The authorized payment has been captured—funds have moved out of the customer's account. This can be a final status unless the customer disputes the payment or requests a refund. |
+| `Refunded` | The payment was reversed by the merchant. Can be partial, depending on the payment method. This is a final status. |
+| `Disputed` | The customer disputed the payment with their bank. Can be partial, depending on the payment method. This is a final status. |
+
+### Payment object balances {#payments-balances}
+
+The merchant payment object has **distinct balances** to follow a payment's lifecycle.
+
+| Card payment object balance | Explanation |
+|---|---|
+| `totalAuthorized` | The total authorized amount for this merchant payment. |
+| `availableToCancel` | The authorized amount that can be released. Refer to this balance to verify whether the payment can be canceled. Cancellations must occur before the amount is captured. |
+| `totalCanceled` | The total amount canceled for this merchant payment. |
+| `availableToCapture` | The amount available for merchants to capture *if* the capture isn't automatic. |
+| `totalCaptured` | The amount captured by the merchant. When the capture for card payments is automatic, `totalCaptured` is always equal to `totalAuthorized`. |
+| `availableToRefund` | The amount the merchant can refund. Use this balance to know if a payment is eligible for a refund. |
+| `totalRefunded` | The total amount refunded for this merchant payment. |
+| `totalDisputed` | The total amount of this merchant payment disputed by the customer. |

@@ -233,7 +233,7 @@ flowchart LR
 | `CustomerRefused` | The user refused to consent to the sensitive operation. |
 | `Expired` | The user opened the consent URL, but didn't consent within the 20-minute validity window. This also applies if the user tries to consent but can't manage to complete a valid consent within the 20 minutes. |
 | `OperationCommitting`<br />*(multi-consent only)* | A multi-consent was executed, and one or more child consents are still in progress.<br /><br />**Next steps:**<ul><li>If consent is provided for all child consents, meaning all child consents have the status `Accepted`, the status of the multi-consent changes to `Accepted`.</li><li>If a single child consent has the status `Failed`, the multi-consent is also assigned the status `Failed`. </li></ul> |
-| `Failed`<br />*(multi-consent only)* | A child consent `Failed`, meaning the multi-consent also `Failed`. All child consents that are already `Accepted` remain valid, but all child consents that haven't been executed yet are `Canceled`. |
+| `Failed` | The user successfully accepted the consent, but a technical error occurred during execution. As a result, the operation didn't complete, and the user must retry.<br /><br />For multi-consents, this status means a child consent `Failed`. Any child consents already `Accepted` remain valid, while unexecuted child consents are `Canceled`. |
 
 ## Consent sequence diagrams {#consent-diagrams}
 

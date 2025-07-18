@@ -53,6 +53,49 @@ VoP verification happens before payment authorization through this standardized 
 3. **Verification response**: The beneficiary's bank responds with verification result
 4. **Result displayed**: VoP result and associated warnings are shown to the end-customer
 
+```mermaid
+sequenceDiagram
+    participant EU as End-user
+    participant P as Partner
+    participant S as Swan
+
+    EU->>P: Enters beneficiary details
+    P->>S: Triggers VoP verification
+    S->>S: Generates VoP result
+    S->>P: Verification results + token
+    P->>EU: Displays VoP greenlight/warnings
+
+    Note over EU: Reviews the results
+
+    EU->>EU: Decides: Proceed or Cancel
+
+    %%{init: {
+        'theme': 'base',
+        'themeVariables': {
+            'primaryColor': '#6240b5',
+            'primaryTextColor': '#271a48',
+            'primaryBorderColor': '#4e3391',
+            'lineColor': '#a18cd3',
+            'secondaryColor': '#f8f7fc',
+            'tertiaryColor': '#ffffff',
+            'background': '#ffffff',
+            'mainBkg': '#ffffff',
+            'secondBkg': '#f8f7fc',
+            'tertiaryBkg': '#6240b5',
+            'activationBorderColor': '#4e3391',
+            'activationBkgColor': '#c0b3e1',
+            'sequenceNumberColor': '#ffffff',
+            'sectionBkgColor': '#f8f7fc',
+            'altSectionBkgColor': '#ffffff',
+            'gridColor': '#e5e7eb',
+            'disabledBkgColor': '#f3f4f6',
+            'disabledTextColor': '#9ca3af',
+            'fontSize': '16px',
+            'fontFamily': '"Inter", "Segoe UI", system-ui, sans-serif'
+        }
+    }}%%
+```
+
 ### Possible VoP results {#vop-results}
 
 The beneficiary's bank can return one of four verification results. **All results must be systematically displayed to the end-customer**. Swan will systematically display the VoP result and warning on the SCA consent screen.
@@ -276,7 +319,7 @@ flowchart TD
     J --> L
     K --> L
     
-    L --> M["Initiate transfer with token"]
+    L --> M["Initiate transfer with beneficiary token"]
     M --> N["User gives consent"]
     N --> O["Payment authorized"]
     

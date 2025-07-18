@@ -46,7 +46,7 @@ The service is **free of charge** for Swan account holders as mandated by the re
 
 ### High-level flow {#high-level-flow}
 
-VoP verification happens before payment authorization through this standardized process:
+VoP validation happens before payment authorization through this standardized process:
 
 1. **VoP required**: All SEPA Credit Transfers must be verified before authorization
 2. **Verification request**: Swan sends VoP request to the beneficiary's bank (Responding PSP)
@@ -60,9 +60,9 @@ sequenceDiagram
     participant S as Swan
 
     EU->>P: Enters beneficiary details
-    P->>S: Triggers VoP verification
+    P->>S: Triggers VoP
     S->>S: Generates VoP result
-    S->>P: Verification results + token
+    S->>P: Verification results
     P->>EU: Displays VoP greenlight/warnings
 
     Note over EU: Reviews the results
@@ -145,7 +145,7 @@ The beneficiary's bank can return one of four verification results. **All result
     <details>
       <summary>**Consent screen**:</summary>
 
-      ![VoP Verification not possible consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_no_verif.png)
+      ![Verification not possible consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_no_verif.png)
     </details>
   </TabItem>
 </Tabs>
@@ -160,14 +160,14 @@ Verification of Payee doesn't block payments. It provides verification results s
 
 VoP applies to Standing Orders with two key differences:
 
-- **Initial verification only**: VoP verification happens only at the initiation stage when creating the Standing Order
+- **Initial verification only**: VoP happens only at the initiation stage when creating the Standing Order
 - **Existing Standing Orders**: Previously authorized Standing Orders do not need to be verified - only new Standing Orders created on or after October 9, 2025 will require VoP
 
 #### Bulk payments for company accounts {#bulk-payments}
 
 Company accounts can opt-out of receiving VoP on their bulk SEPA credit transfers through a dedicated mutation.
 
-## Integration flows with Verification of Payee {#integration-flows}
+## Integration flows for VoP {#integration-flows}
 
 Swan offers two integration approaches depending on your UX requirements and development constraints to ensure partners can offer a compliant integration from Day 1:
 
@@ -274,7 +274,7 @@ flowchart TD
 
 ### Option 1: Synchronous verification {#option-1}
 
-For single credit transfers, partners don't have to do anything - Swan will run the VoP verification at the initiation of the credit transfer and display the VoP result in the consent screen.
+For single credit transfers, partners don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
 
 ⚠️ **Option 1 is not available for Bulk Credit Transfers**. For bulk credit transfers, use Option 2 or if you have company customers, opt-out of VoP via the dedicated mutation.
 
@@ -545,7 +545,7 @@ mutation InitiateWithVerification {
 -->
 
 :::tip Why beneficiary tokens matter
-- **Regulatory compliance**: Demonstrates VoP verification was performed
+- **Regulatory compliance**: Demonstrates VoP was performed
 - **Time-limited**: Check `expiresAt` timestamp to ensure validity
 - **Single-use security**: Each token works only once, preventing replay attacks
 :::
@@ -557,7 +557,7 @@ VoP integrates seamlessly with Swan's [trusted beneficiary system](./guide-add-b
 ### First-time verification for saved beneficiaries {#verify-saved}
 
 :::warning Important for existing integrations
-Even saved beneficiaries require VoP verification for compliance after **October 9, 2025**.
+Even saved beneficiaries require VoP for compliance**.
 :::
 
 **Workflow for existing saved beneficiaries:**
@@ -616,7 +616,7 @@ This creates a trusted beneficiary record while demonstrating VoP compliance.
 
 ## Sandbox testing {#sandbox}
 
-Test VoP verification with these mock beneficiary names in Swan's sandbox environment:
+Test VoP flows with these mock beneficiary names in Swan's sandbox environment:
 
 | Input Name | Result Type | Use Case |
 | --- | --- | --- |
@@ -696,7 +696,7 @@ query LegacyVerification {
 ```
 
 **After (new VoP)**:
-```graphql title="New VoP verification" showLineNumbers
+```graphql title="New VoP" showLineNumbers
 mutation NewVoPVerification {
   verifyBeneficiary(
     input: {

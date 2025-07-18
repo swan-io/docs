@@ -347,77 +347,21 @@ flowchart TD
 
 ---
 
-# Coming soon...
+## Coming soon {#coming-soon}
 
 :::warning In development - subject to changes
-The following features are for illustrative purposes. Final design may slightly differ.
+The following features are for illustrative purposes. Final design may differ.
 :::
 
 <details>
 <summary>View feature roadmap</summary>
 
-## Verify a beneficiary {#guide-verify}
+### Verification results {#verification-results}
 
-Call `verifyBeneficiary` before initiating transfers.
-
-### Steps {#verify-steps}
-
-1. Call the `verifyBeneficiary` mutation.
-2. Add the beneficiary's `iban` and `name` <!--(lines 4-5)-->.
-3. Add all verification result types to handle different outcomes.
-4. Add [rejections](/developers/using-api/errors-rejections.mdx) for error handling.
-
-<!--
-### Mutation {#verify-mutation}
-
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5QmVuZWZpY2lhcnkgewogIHZlcmlmeUJlbmVmaWNpYXJ5KAogICAgaW5wdXQ6IHsgaWJhbjogIkZSMDAwMDAwMDAwMzAwMDAwMDAwMDU2SDgwIiwgbmFtZTogIkpvaG4gU21pdGgiIH0KICA) ewogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICBiZW5lZmljaWFyeVRva2VuCiAgICAgIGV4cGlyZXNBdAogICAgfQogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICBfX3R5cGVuYW1lCiAgICAgIGJlbmVmaWNpYXJ5VG9rZW4KICAgICAgZXhwaXJlc0F0CiAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICB9CiAgICAuLi4gb24gU2VwYUJlbmVmaWNpYXJ5Tm9NYXRjaCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYmVuZWZpY2lhcnlUb2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ob3RQb3NzaWJsZSB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYmVuZWZpY2lhcnlUb2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
-
-```graphql {4-5,8,13,19,24,29} showLineNumbers
-mutation VerifyBeneficiary {
-  verifyBeneficiary(
-    input: {
-      iban: "FR0000000000300000000056H80"
-      name: "John Smith"
-    }
-  ) {
-    ... on SepaBeneficiaryMatch {
-      __typename
-      beneficiaryToken
-      expiresAt
-    }
-    ... on SepaBeneficiaryCloseMatch {
-      __typename
-      beneficiaryToken
-      expiresAt
-      nameSuggestion
-    }
-    ... on SepaBeneficiaryNoMatch {
-      __typename
-      beneficiaryToken
-      expiresAt
-    }
-    ... on SepaBeneficiaryVerificationNotPossible {
-      __typename
-      beneficiaryToken
-      expiresAt
-    }
-    ... on ValidationRejection {
-      __typename
-      message
-    }
-  }
-}
-```
--->
-
-## Verification results {#results}
+Example format for the four verification result types returned by the `verifyBeneficiary` mutation:
 
 <Tabs>
   <TabItem value="match" label="✅ ‎ Match" default>
-    **Result**: Exact match found
-    
-    **Action**: Proceed with transfer
-    
     **Example response**:
     ```json
     {
@@ -426,20 +370,9 @@ mutation VerifyBeneficiary {
       "expiresAt": "2025-07-10T14:30:00Z"
     }
     ```
-    
-    <details>
-    <summary>UI view example</summary>
-    
-    ![Payment control match result](../../../../images/topics/payments/credit-transfers/vop/PC_match.png)
-    
-    </details>
   </TabItem>
   
   <TabItem value="close" label="⚠️ ‎ Close match">
-    **Result**: Close match with name suggestion
-    
-    **Action**: Review `nameSuggestion` field
-    
     **Example response**:
     ```json
     {
@@ -449,20 +382,9 @@ mutation VerifyBeneficiary {
       "nameSuggestion": "John Smith"
     }
     ```
-    
-    <details>
-    <summary>UI view example</summary>
-    
-    ![Payment control close match result](../../../../images/topics/payments/credit-transfers/vop/PC_close_match.png)
-    
-    </details>
   </TabItem>
   
   <TabItem value="no-match" label="❌ ‎ No match">
-    **Result**: No match found
-    
-    **Action**: Confirm details before proceeding
-    
     **Example response**:
     ```json
     {
@@ -471,20 +393,9 @@ mutation VerifyBeneficiary {
       "expiresAt": "2025-07-10T14:30:00Z"
     }
     ```
-    
-    <details>
-    <summary>UI view example</summary>
-    
-    ![Payment control no match result](../../../../images/topics/payments/credit-transfers/vop/PC_no_match.png)
-    
-    </details>
   </TabItem>
   
   <TabItem value="not-possible" label="❌ ‎ Verification not possible">
-    **Result**: Verification not possible
-    
-    **Action**: Proceed without verification
-    
     **Example response**:
     ```json
     {
@@ -493,256 +404,46 @@ mutation VerifyBeneficiary {
       "expiresAt": "2025-07-10T14:30:00Z"
     }
     ```
-    
-    <details>
-    <summary>UI view example</summary>
-    
-    ![Payment control verification not possible](../../../../images/topics/payments/credit-transfers/vop/PC_no_verif.png)
-    
-    </details>
   </TabItem>
 </Tabs>
 
-## Use beneficiary token {#use-token}
+### Use verification token {#use-verification-token}
 
-Add the `beneficiaryToken` to your credit transfer.
+Add the `beneficiaryToken` to your credit transfer to demonstrate VoP compliance:
 
-<!--
-:
-
-```graphql {11} showLineNumbers
-mutation InitiateWithVerification {
-  initiateCreditTransfers(
-    input: {
-      accountId: "$YOUR_ACCOUNT_ID"
-      consentRedirectUrl: "$YOUR_REDIRECT_URL"
-      creditTransfers: {
-        amount: { value: "100", currency: "EUR" }
-        sepaBeneficiary: {
-          iban: "FR0000000000300000000056H80"
-          name: "John Smith"
-          beneficiaryToken: "vf_01234567890abcdef"
-          save: false
-        }
-      }
-    }
-  ) {
-    ... on InitiateCreditTransfersSuccessPayload {
-      payment {
-        id
-        statusInfo {
-          ... on PaymentConsentPending {
-            consent {
-              consentUrl
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
--->
-
-:::tip Why beneficiary tokens matter
+**Key token properties:**
 - **Regulatory compliance**: Demonstrates VoP was performed
 - **Time-limited**: Check `expiresAt` timestamp to ensure validity
 - **Single-use security**: Each token works only once, preventing replay attacks
-:::
 
-## Saved beneficiaries {#saved-beneficiaries}
+### API specifications {#api-specifications}
 
-VoP integrates seamlessly with Swan's [trusted beneficiary system](./guide-add-beneficiary.mdx) to streamline repeat payments while maintaining compliance.
+Complete API documentation for the new VoP mutations and updated endpoints.
 
-### First-time verification for saved beneficiaries {#verify-saved}
+#### verifyBeneficiary mutation {#verify-beneficiary-mutation}
 
-:::warning Important for existing integrations
-Even saved beneficiaries require VoP for compliance**.
-:::
+New mutation for pre-validating beneficiary details before payment initiation.
 
-**Workflow for existing saved beneficiaries:**
-1. Retrieve saved beneficiary details from your system
-2. Call the [`verifyBeneficiary`](#verify-mutation) mutation with the saved IBAN and name
-3. [Use the beneficiary token](#use-token) when initiating the transfer
-4. Future payments to the same beneficiary will still require verification
+#### initiateCreditTransfers mutation updates {#initiate-credit-transfers-updates}
 
-**Benefits of this approach:**
-- **Fraud prevention**: Validates that the beneficiary's details haven't changed
-- **Compliance**: Meets mandatory VoP requirements
-- **User experience**: Familiar beneficiary selection with added security
+Updated mutation to support beneficiary tokens for VoP compliance.
 
-### Save during verification {#save-during-verification}
+### Server-to-Server consent with VoP {#s2s-consent-vop}
 
-You can save new beneficiaries while performing verification by setting `save: true` in the [credit transfer mutation](guide-initiate-ct#guide-sepa).
+Implementation guide for handling VoP verification results in Server-to-Server consent flows.
 
-<!--
-:
+### Bulk credit transfers VoP management {#bulk-vop-management}
 
-```graphql {12} showLineNumbers
-mutation InitiateWithVerificationAndSave {
-  initiateCreditTransfers(
-    input: {
-      accountId: "$YOUR_ACCOUNT_ID"
-      consentRedirectUrl: "$YOUR_REDIRECT_URL"
-      creditTransfers: {
-        amount: { value: "100", currency: "EUR" }
-        sepaBeneficiary: {
-          iban: "FR0000000000300000000056H80"
-          name: "John Smith"
-          beneficiaryToken: "vf_01234567890abcdef"
-          save: true
-        }
-      }
-    }
-  ) {
-    ... on InitiateCreditTransfersSuccessPayload {
-      payment {
-        id
-        statusInfo {
-          ... on PaymentConsentPending {
-            consent {
-              consentUrl
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
--->
+#### Opt-out of VoP {#bulk-opt-out}
 
-This creates a trusted beneficiary record while demonstrating VoP compliance.
+For company accounts that need to disable VoP on bulk SEPA credit transfers.
 
-## Sandbox testing {#sandbox}
+#### Opt-in of VoP {#bulk-opt-in}
 
-Test VoP flows with these mock beneficiary names in Swan's sandbox environment:
+For company accounts that want to enable VoP verification on bulk transfers.
 
-| Input Name | Result Type | Use Case |
-| --- | --- | --- |
-| `NO_MATCH` | `SepaBeneficiaryNoMatch` | Test no match handling |
-| `BIC_NOT_FOUND` | `SepaBeneficiaryVerificationNotPossible` | Test verification unavailable |
-| `Close Match Test` | `SepaBeneficiaryCloseMatch` | Test close match with suggestions |
-| Any other name | `SepaBeneficiaryMatch` | Test successful verification |
+### Trusted beneficiaries & internal accounts {#trusted-beneficiaries-internal}
 
-<!--
-### Example test scenarios
+VoP integration with Swan's trusted beneficiary system and internal account transfers.
 
-```graphql showLineNumbers
-mutation TestNoMatch {
-  verifyBeneficiary(
-    input: {
-      iban: "FR0000000000300000000056H80"
-      name: "NO_MATCH"
-    }
-  ) {
-    ... on SepaBeneficiaryNoMatch {
-      __typename
-      beneficiaryToken
-      expiresAt
-    }
-    ... on ValidationRejection {
-      __typename
-      message
-    }
-  }
-}
-```
-
-```graphql showLineNumbers
-mutation TestVerificationNotPossible {
-  verifyBeneficiary(
-    input: {
-      iban: "FR0000000000300000000056H80"
-      name: "BIC_NOT_FOUND"
-    }
-  ) {
-    ... on SepaBeneficiaryVerificationNotPossible {
-      __typename
-      beneficiaryToken
-      expiresAt
-    }
-  }
-}
-```
--->
-
-## Migration from legacy verification {#migration}
-
-:::danger Breaking change
-The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9th compliance deadline to ensure uninterrupted service.
-:::
-
-If you're using `beneficiaryVerification` for Dutch IBANs, migrate to `verifyBeneficiary`.
-
-<!--
-:
-
-**Before (deprecated)**:
-```graphql title="Legacy verification (deprecated)" showLineNumbers
-query LegacyVerification {
-  beneficiaryVerification(
-    input: {
-      iban: "NL91ABNA0417164300"
-      name: "J. Smith"
-      debtorAccountId: "$YOUR_ACCOUNT_ID"
-    }
-  ) {
-    ... on BeneficiaryMatch {
-      accountHolderType
-    }
-  }
-}
-```
-
-**After (new VoP)**:
-```graphql title="New VoP" showLineNumbers
-mutation NewVoPVerification {
-  verifyBeneficiary(
-    input: {
-      iban: "NL91ABNA0417164300"
-      name: "J. Smith"
-    }
-  ) {
-    ... on SepaBeneficiaryMatch {
-      beneficiaryToken
-      expiresAt
-    }
-  }
-}
-```
-
-**Migration checklist**:
-1. Replace `beneficiaryVerification` with [`verifyBeneficiary`](#verify-mutation)
-2. Handle all four [result types](#results)
-3. Integrate [beneficiary tokens](#use-token) into payment flows
-4. Update UI to show verification results
-5. Test thoroughly in Sandbox
-
-## Troubleshooting {#troubleshooting}
-
-**Verification returns "Not Possible"**
-- Beneficiary's bank may not support VoP yet
-- Service temporarily unavailable
-- Proceed with transfer if needed
-
-**Token expired**
-- Check `expiresAt` timestamp before using token
-- Generate new verification if expired
-- Each token works only once
-
-**Legacy migration**
-- Migrate from `beneficiaryVerification` query (Dutch IBANs only)
-- Update to `verifyBeneficiary` before deprecation
-
-:::tip Best practice
-Perform verification immediately after beneficiary details are entered for an optimal user experience.
-:::
-
-## Related guides {#related-guides}
-
-- [Initiate a credit transfer](./guide-initiate-ct.mdx)
-- [Add a trusted SEPA beneficiary](./guide-add-beneficiary.mdx)
-- [SEPA Credit Transfers overview](./index.mdx)
--->
 </details>

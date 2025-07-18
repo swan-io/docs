@@ -1,0 +1,449 @@
+---
+title: Verification of Payee
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Verification of Payee
+
+Validate beneficiary details before sending SEPA Credit Transfers to reduce fraud and payment errors.
+
+:::info Mandatory compliance
+Required for all SEPA Credit Transfers under the [European Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, with a mandatory implementation deadline of **October 9, 2025** for all Payment Service Providers (PSPs) in the Eurozone offering SEPA Credit Transfers.
+:::
+
+## Overview {#overview}
+
+**Verification of Payee (VoP)** is a new European service that validates beneficiary details against account holder information before initiating SEPA Credit Transfers. This service aims to reduce payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
+
+VoP will be particularly helpful to prevent Authorised Push Payment (APP) scams, where fraudsters impersonate legitimate beneficiaries to misdirect funds.
+
+### Key benefits {#benefits}
+
+For your integration:
+- **Reduced disputes**: Prevent misdirected payments and customer support tickets
+- **Better user experience**: Build trust through transparent payment verification
+- **Operational efficiency**: Fewer payment failures and reversals to handle
+
+For the end-users:
+- **Fraud protection**: Ensure the funds go to the intended recipient
+- **Error prevention**: Catch typos and formatting issues early
+- **Payment confidence**: Know transfers will reach the intended recipient
+
+### Coverage {#coverage}
+
+VoP applies to all countries in the SEPA zone. Payment Service Providers (PSPs) have varying implementation timelines based on their location:
+
+| Payment Services Provider location | VoP mandatory date |
+| --- | --- |
+| 🇪🇺 Eurozone | October 9, 2025 |
+| 🌏 Non-Eurozone | January 9, 2027 |
+
+The service is **free of charge** for Swan account holders as mandated by the regulation.
+
+## How VoP works {#how-vop-works}
+
+### High-level flow {#high-level-flow}
+
+VoP validation happens before payment authorization through this standardized process:
+
+1. **VoP required**: All SEPA Credit Transfers must be verified before authorization
+2. **Verification request**: Swan sends VoP request to the beneficiary's bank (Responding PSP)
+3. **Verification response**: The beneficiary's bank responds with verification result
+4. **Result displayed**: VoP result and associated warnings are shown to the end-customer
+
+```mermaid
+sequenceDiagram
+    participant EU as End-user
+    participant P as Partner
+    participant S as Swan
+
+    EU->>P: Enters beneficiary details
+    P->>S: Triggers VoP
+    S->>S: Generates VoP result
+    S->>P: Verification results
+    P->>EU: Displays VoP greenlight/warnings
+
+    Note over EU: Reviews the results
+
+    EU->>EU: Decides: Proceed or Cancel
+
+    %%{init: {
+        'theme': 'base',
+        'themeVariables': {
+            'primaryColor': '#6240b5',
+            'primaryTextColor': '#271a48',
+            'primaryBorderColor': '#4e3391',
+            'lineColor': '#a18cd3',
+            'secondaryColor': '#f8f7fc',
+            'tertiaryColor': '#ffffff',
+            'background': '#ffffff',
+            'mainBkg': '#ffffff',
+            'secondBkg': '#f8f7fc',
+            'tertiaryBkg': '#6240b5',
+            'activationBorderColor': '#4e3391',
+            'activationBkgColor': '#c0b3e1',
+            'sequenceNumberColor': '#ffffff',
+            'sectionBkgColor': '#f8f7fc',
+            'altSectionBkgColor': '#ffffff',
+            'gridColor': '#e5e7eb',
+            'disabledBkgColor': '#f3f4f6',
+            'disabledTextColor': '#9ca3af',
+            'fontSize': '16px',
+            'fontFamily': '"Inter", "Segoe UI", system-ui, sans-serif'
+        }
+    }}%%
+```
+
+### Possible VoP results {#vop-results}
+
+The beneficiary's bank can return one of four verification results. **All results must be systematically displayed to the end-customer**. Swan will systematically display the VoP result and warning on the SCA consent screen.
+
+<Tabs>
+  <TabItem value="match" label="✅ Match" default>
+    **Result**: Exact match found between provided details and account holder information
+    
+    **Customer action**: Safe to proceed with transfer
+    
+    <details>
+      <summary>**Consent screen**:</summary>
+
+      ![VoP Match consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_match.png)
+    </details>
+  </TabItem>
+  
+  <TabItem value="close" label="⚠️ Close match">
+    **Result**: Close match with suggested correction from beneficiary's bank
+    
+    **Customer action**: Review suggested name correction before proceeding
+    
+    <details>
+      <summary>**Consent screen**:</summary>
+
+      ![VoP Close match consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_close_match.png)
+    </details>
+  </TabItem>
+  
+  <TabItem value="no-match" label="❌ No match">
+    **Result**: No match found between provided details and account holder information
+    
+    **Customer action**: Verify beneficiary details carefully before proceeding
+    
+    <details>
+      <summary>**Consent screen**:</summary>
+
+      ![VoP No match consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_no_match.png)
+    </details>
+  </TabItem>
+  
+  <TabItem value="not-possible" label="❌ Verification not possible">
+    **Result**: Beneficiary's bank cannot perform verification (service unavailable or not supported)
+    
+    **Customer action**: Proceed without verification
+    
+    <details>
+      <summary>**Consent screen**:</summary>
+
+      ![Verification not possible consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_no_verif.png)
+    </details>
+  </TabItem>
+</Tabs>
+
+:::tip VoP enables informed decisions
+Verification of Payee doesn't block payments. It provides verification results so customers can make informed decisions about proceeding or aborting. All verification results allow payment to continue.
+:::
+
+### Specific cases {#specific-cases}
+
+#### Standing Orders {#standing-orders}
+
+VoP applies to Standing Orders with two key differences:
+
+- **Initial verification only**: VoP happens only at the initiation stage when creating the Standing Order
+- **Existing Standing Orders**: Previously authorized Standing Orders do not need to be verified - only new Standing Orders created on or after October 9, 2025 will require VoP
+
+#### Bulk payments for company accounts {#bulk-payments}
+
+Company accounts can opt-out of receiving VoP on their bulk SEPA credit transfers through a dedicated mutation.
+
+## Integration flows for VoP {#integration-flows}
+
+Swan offers two integration approaches depending on your UX requirements and development constraints to ensure partners can offer a compliant integration from Day 1:
+
+<div className="row margin-bottom--lg">
+  <div className="col col--6">
+    <div className="card" style={{height: '100%', backgroundColor: '#fffbf0', border: '1px solid #ffeaa7'}}>
+      <div className="card__header">
+        <h3>Option 1:</h3>
+        <h3>➡️ Synchronous verification</h3>
+      </div>
+      <div className="card__body">
+        <p><strong>Swan handles verification during payment initiation</strong></p>
+        <ul>
+          <li>Zero development effort for single credit transfers</li>
+          <li>Swan displays VoP results in consent screen</li>
+          <li>Best for: Quick compliance, existing integrations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div className="col col--6">
+    <div className="card" style={{height: '100%', backgroundColor: '#f0f9f0', border: '1px solid #d4edda'}}>
+      <div className="card__header">
+        <h3>Option 2:</h3>
+        <h3>☑️ Pre-validation of details</h3>
+      </div>
+      <div className="card__body">
+        <p><strong>Verify beneficiaries before payment initiation</strong></p>
+        <ul>
+          <li>Full control over verification UX</li>
+          <li>Custom error handling and user guidance</li>
+          <li>Best for: Enhanced user experience, complex payment flows</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+### Payment type support {#payment-support}
+
+| Payment Type | Option 1: Synchronous | Option 2: Pre-validation | Notes |
+| --- | --- | --- | --- |
+| **Single Credit Transfers** | ✅ Supported | ✅ Supported | Systematic VoP is required |
+| **Bulk Credit Transfers** | ❌ Not Supported | ✅ Supported | Opt-out available for corporate use |
+| **Standing Orders** | ✅ Supported | ✅ Supported | Verification required for initial setup only |
+
+<!--
+| **Internal Accounts** | 🚧 Coming soon | 🚧 Coming soon | Legal requirements being finalized |
+-->
+
+### Detailed options flows {#detailed-flows}
+
+<div style={{textAlign: 'center'}}>
+```mermaid
+flowchart TD
+    subgraph Option2 ["🟢 Option 2: Pre-validation"]
+        direction TB
+        A2["User enters beneficiary details"] --> B2["Beneficiary verification (VoP)<br/>via verifyBeneficiary mutation"]
+        B2 --> C2["Custom UX handling"]
+        C2 --> D2["User submits payment"]
+        D2 --> E2["initiateCreditTransfers with beneficiaryToken"]
+        E2 --> F2["Consent screen"]
+        F2 --> G2["Payment authorized"]
+        G2 --> H2["Transfer completed"]
+    end
+
+    subgraph Option1 ["🟡 Option 1: Synchronous"]
+        direction TB
+        A1["User enters payment details"] --> B1["User submits payment"]
+        B1 --> C1["initiateCreditTransfers"]
+        C1 --> D1["Beneficiary verification (VoP)<br/>handled by Swan"]
+        D1 --> E1["Consent screen with VoP result"]
+        E1 --> F1["Payment authorized"]
+        F1 --> G1["Transfer completed"]
+    end
+    
+    classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:8,ry:8
+    classDef input fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef process fill:#f8f7fc,stroke:#c0b3e1,stroke-width:1px,color:#4e3391,rx:8,ry:8
+    classDef success fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef transfer fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef custom fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:8,ry:8
+    classDef invisible fill:transparent,stroke:transparent,color:transparent
+    classDef subgraph1 fill:#fffbf0,stroke:#ffeaa7,stroke-width:2px,rx:16,ry:16
+    classDef subgraph2 fill:#f0f9f0,stroke:#d4edda,stroke-width:2px,rx:16,ry:16
+    
+    %% Option 1 styling
+    class A1 input
+    class B1,C1,D1,E1 process
+    class F1 success
+    class G1 transfer
+    
+    %% Option 2 styling
+    class A2 input
+    class B2,D2,E2,F2 process
+    class C2 custom
+    class G2 success
+    class H2 transfer
+    
+    class Option1 subgraph1
+    class Option2 subgraph2
+```
+</div>
+
+### Option 1: Synchronous verification {#option-1}
+
+For single credit transfers, partners don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
+
+⚠️ **Option 1 is not available for Bulk Credit Transfers**. For bulk credit transfers, use Option 2 or if you have company customers, opt-out of VoP via the dedicated mutation.
+
+### Option 2: Pre-validation of details {#option-2}
+
+Call the `verifyBeneficiary` mutation before initiating transfers to get full control over the verification user experience.
+
+#### Verification workflow {#verification-workflow}
+
+1. **Verify beneficiary**: Call `verifyBeneficiary` with IBAN and name
+2. **Get result**: Receive Match, Close match, No match or Verification not possible
+3. **Inform end-user**: Display appropriate messaging based on verification result
+4. **User proceeds**: End-user can choose to proceed with payment regardless of result
+5. **Use token**: Add beneficiary token to credit transfer
+6. **User gives consent**: Complete payment authorization
+
+<div className="invisible-subgraph">
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart TD
+    A["Enter beneficiary details"] --> B[Call verifyBeneficiary]
+    B --> C{Verification result}
+    
+    D["Ready to proceed"]
+    E["Check suggested name"]  
+    F["Verify details before proceeding"]
+    G["Verification service unavailable"]
+    
+    C -->|"Match"| D
+    C -->|"Close match"| E
+    C -->|"No match"| F
+    C -->|"Not possible"| G
+    
+    D --> H[" "]
+    E --> I["Customer reviews suggestion"]
+    F --> J["Customer verifies details"]
+    G --> K["Customer proceeds<br>despite no verification"]
+    
+    H --> L["Customer proceeds with payment"]
+    I --> L
+    J --> L
+    K --> L
+    
+    L --> M["Initiate transfer with beneficiary token"]
+    M --> N["User gives consent"]
+    N --> O["Payment authorized"]
+    
+    classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:12,ry:12
+    classDef input fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef decision fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:20,ry:20
+    classDef success fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef warning fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef error fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef process fill:#f8f7fc,stroke:#c0b3e1,stroke-width:1px,color:#4e3391,rx:8,ry:8
+    classDef final fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef invisible fill:transparent,stroke:transparent,stroke-width:0px,color:transparent
+    
+    class A input
+    class C decision
+    class D success
+    class E warning
+    class F,G error
+    class B,I,J,K process
+    class L,M,N,O final
+    class H invisible
+```
+
+</div>
+
+---
+
+## Coming soon {#coming-soon}
+
+:::warning In development - subject to changes
+The following features are for illustrative purposes. Final design may differ.
+:::
+
+<details>
+<summary>View feature roadmap</summary>
+
+### Verification results {#verification-results}
+
+Example format for the four verification result types returned by the `verifyBeneficiary` mutation:
+
+<Tabs>
+  <TabItem value="match" label="✅ ‎ Match" default>
+    **Example response**:
+    ```json
+    {
+      "__typename": "SepaBeneficiaryMatch",
+      "beneficiaryToken": "vf_01234567890abcdef",
+      "expiresAt": "2025-07-10T14:30:00Z"
+    }
+    ```
+  </TabItem>
+  
+  <TabItem value="close" label="⚠️ ‎ Close match">
+    **Example response**:
+    ```json
+    {
+      "__typename": "SepaBeneficiaryCloseMatch",
+      "beneficiaryToken": "vf_01234567890abcdef",
+      "expiresAt": "2025-07-10T14:30:00Z",
+      "nameSuggestion": "John Smith"
+    }
+    ```
+  </TabItem>
+  
+  <TabItem value="no-match" label="❌ ‎ No match">
+    **Example response**:
+    ```json
+    {
+      "__typename": "SepaBeneficiaryNoMatch",
+      "beneficiaryToken": "vf_01234567890abcdef",
+      "expiresAt": "2025-07-10T14:30:00Z"
+    }
+    ```
+  </TabItem>
+  
+  <TabItem value="not-possible" label="❌ ‎ Verification not possible">
+    **Example response**:
+    ```json
+    {
+      "__typename": "SepaBeneficiaryVerificationNotPossible",
+      "beneficiaryToken": "vf_01234567890abcdef",
+      "expiresAt": "2025-07-10T14:30:00Z"
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+### Use verification token {#use-verification-token}
+
+Add the `beneficiaryToken` to your credit transfer to demonstrate VoP compliance:
+
+**Key token properties:**
+- **Regulatory compliance**: Demonstrates VoP was performed
+- **Time-limited**: Check `expiresAt` timestamp to ensure validity
+- **Single-use security**: Each token works only once, preventing replay attacks
+
+### API specifications {#api-specifications}
+
+Complete API documentation for the new VoP mutations and updated endpoints.
+
+#### verifyBeneficiary mutation {#verify-beneficiary-mutation}
+
+New mutation for pre-validating beneficiary details before payment initiation.
+
+#### initiateCreditTransfers mutation updates {#initiate-credit-transfers-updates}
+
+Updated mutation to support beneficiary tokens for VoP compliance.
+
+### Server-to-Server consent with VoP {#s2s-consent-vop}
+
+Implementation guide for handling VoP verification results in Server-to-Server consent flows.
+
+### Bulk credit transfers VoP management {#bulk-vop-management}
+
+#### Opt-out of VoP {#bulk-opt-out}
+
+For company accounts that need to disable VoP on bulk SEPA credit transfers.
+
+#### Opt-in of VoP {#bulk-opt-in}
+
+For company accounts that want to enable VoP verification on bulk transfers.
+
+### Trusted beneficiaries & internal accounts {#trusted-beneficiaries-internal}
+
+VoP integration with Swan's trusted beneficiary system and internal account transfers.
+
+</details>

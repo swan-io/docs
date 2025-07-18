@@ -42,27 +42,105 @@ VoP applies to all countries in the SEPA zone. Payment Service Providers (PSPs) 
 
 The service is **free of charge** for Swan account holders as mandated by the regulation.
 
-## How it works {#how-it-works}
+## How VoP works {#how-vop-works}
 
-VoP offers two integration approaches depending on your UX requirements and development constraints:
+### High-level flow {#high-level-flow}
 
-### Integration {#integration}
+VoP verification happens before payment authorization through this standardized process:
 
-Select one of the following verification flows for your implementation:
+1. **VoP required**: All SEPA Credit Transfers must be verified before authorization
+2. **Verification request**: Swan sends VoP request to the beneficiary's bank (Responding PSP)
+3. **Verification response**: The beneficiary's bank responds with verification result
+4. **Result displayed**: VoP result and associated warnings are shown to the end-customer
+
+### Possible VoP results {#vop-results}
+
+The beneficiary's bank can return one of four verification results. **All results must be systematically displayed to the end-customer**. Swan will systematically display the VoP result and warning on the SCA consent screen.
+
+<Tabs>
+  <TabItem value="match" label="✅ Match" default>
+    **Result**: Exact match found between provided details and account holder information
+    
+    **Customer action**: Safe to proceed with transfer
+    
+    <details>
+      <summary>**Consent screen**:</summary>
+
+      ![VoP Match consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_match.png)
+    </details>
+  </TabItem>
+  
+  <TabItem value="close" label="⚠️ Close match">
+    **Result**: Close match with suggested correction from beneficiary's bank
+    
+    **Customer action**: Review suggested name correction before proceeding
+    
+    <details>
+      <summary>**Consent screen**:</summary>
+
+      ![VoP Close match consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_close_match.png)
+    </details>
+  </TabItem>
+  
+  <TabItem value="no-match" label="❌ No match">
+    **Result**: No match found between provided details and account holder information
+    
+    **Customer action**: Verify beneficiary details carefully before proceeding
+    
+    <details>
+      <summary>**Consent screen**:</summary>
+
+      ![VoP No match consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_no_match.png)
+    </details>
+  </TabItem>
+  
+  <TabItem value="not-possible" label="❌ Verification not possible">
+    **Result**: Beneficiary's bank cannot perform verification (service unavailable or not supported)
+    
+    **Customer action**: Proceed without verification
+    
+    <details>
+      <summary>**Consent screen**:</summary>
+
+      ![VoP Verification not possible consent screen](../../../../images/topics/payments/credit-transfers/vop/PC_no_verif.png)
+    </details>
+  </TabItem>
+</Tabs>
+
+:::tip VoP enables informed decisions
+Verification of Payee doesn't block payments. It provides verification results so customers can make informed decisions about proceeding or aborting. All verification results allow payment to continue.
+:::
+
+### Specific cases {#specific-cases}
+
+#### Standing Orders {#standing-orders}
+
+VoP applies to Standing Orders with two key differences:
+
+- **Initial verification only**: VoP verification happens only at the initiation stage when creating the Standing Order
+- **Existing Standing Orders**: Previously authorized Standing Orders do not need to be verified - only new Standing Orders created on or after October 9, 2025 will require VoP
+
+#### Bulk payments for company accounts {#bulk-payments}
+
+Company accounts can opt-out of receiving VoP on their bulk SEPA credit transfers through a dedicated mutation.
+
+## Integration flows with Verification of Payee {#integration-flows}
+
+Swan offers two integration approaches depending on your UX requirements and development constraints to ensure partners can offer a compliant integration from Day 1:
 
 <div className="row margin-bottom--lg">
   <div className="col col--6">
     <div className="card" style={{height: '100%', backgroundColor: '#fffbf0', border: '1px solid #ffeaa7'}}>
       <div className="card__header">
         <h3>Option 1:</h3>
-        <h3>➡️ Consent flow verification</h3>
+        <h3>➡️ Synchronous verification</h3>
       </div>
       <div className="card__body">
-        <p><strong>Verification happens during credit transfer initiation</strong></p>
+        <p><strong>Swan handles verification during payment initiation</strong></p>
         <ul>
-          <li>Minimal to no development effort required</li>
-          <li>Limited UX customization</li>
-          <li>Best for: Quick implementation, basic verification needs</li>
+          <li>Zero development effort for single credit transfers</li>
+          <li>Swan displays VoP results in consent screen</li>
+          <li>Best for: Quick compliance, existing integrations</li>
         </ul>
       </div>
     </div>
@@ -85,30 +163,42 @@ Select one of the following verification flows for your implementation:
   </div>
 </div>
 
-#### Detailed flows {#integration-flows}
+### Payment type support {#payment-support}
+
+| Payment Type | Option 1: Synchronous | Option 2: Pre-validation | Notes |
+| --- | --- | --- | --- |
+| **Single Credit Transfers** | ✅ Supported | ✅ Supported | Systematic VoP is required |
+| **Bulk Credit Transfers** | ❌ Not Supported | ✅ Supported | Opt-out available for corporate use |
+| **Standing Orders** | ✅ Supported | ✅ Supported | Verification required for initial setup only |
+
+<!--
+| **Internal Accounts** | 🚧 Coming soon | 🚧 Coming soon | Legal requirements being finalized |
+-->
+
+### Detailed options flows {#detailed-flows}
 
 <div style={{textAlign: 'center'}}>
 ```mermaid
 flowchart TD
-    subgraph Option2 ["🟢 Option 2"]
+    subgraph Option2 ["🟢 Option 2: Pre-validation"]
         direction TB
-        A2["📝 User enters beneficiary details"] --> B2["VoP Verification"]
-        B2 --> C2["🎨 Custom UX handling"]
+        A2["User enters beneficiary details"] --> B2["Beneficiary verification (VoP)<br/>via verifyBeneficiary mutation"]
+        B2 --> C2["Custom UX handling"]
         C2 --> D2["User submits payment"]
-        D2 --> E2["initiateCreditTransfers with token"]
+        D2 --> E2["initiateCreditTransfers with beneficiaryToken"]
         E2 --> F2["Consent screen"]
-        F2 --> G2["✅ Payment authorized"]
-        G2 --> H2["💸 Transfer completed"]
+        F2 --> G2["Payment authorized"]
+        G2 --> H2["Transfer completed"]
     end
 
-    subgraph Option1 ["🟡 Option 1"]
+    subgraph Option1 ["🟡 Option 1: Synchronous"]
         direction TB
-        A1["📝 User enters payment details"] --> B1["User submits payment"]
+        A1["User enters payment details"] --> B1["User submits payment"]
         B1 --> C1["initiateCreditTransfers"]
-        C1 --> D1["VoP Verification"]
-        D1 --> E1["Consent screen"]
-        E1 --> F1["✅ Payment authorized"]
-        F1 --> G1["💸 Transfer completed"]
+        C1 --> D1["Beneficiary verification (VoP)<br/>handled by Swan"]
+        D1 --> E1["Consent screen with VoP result"]
+        E1 --> F1["Payment authorized"]
+        F1 --> G1["Transfer completed"]
     end
     
     classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:8,ry:8
@@ -126,7 +216,6 @@ flowchart TD
     class B1,C1,D1,E1 process
     class F1 success
     class G1 transfer
-    class H1,I1 invisible
     
     %% Option 2 styling
     class A2 input
@@ -140,43 +229,56 @@ flowchart TD
 ```
 </div>
 
-### Verification workflow {#verification-workflow}
+### Option 1: Synchronous verification {#option-1}
 
-1. **Verify beneficiary**: Call `verifySepaBeneficiary` with IBAN and name
+For single credit transfers, partners don't have to do anything - Swan will run the VoP verification at the initiation of the credit transfer and display the VoP result in the consent screen.
+
+⚠️ **Option 1 is not available for Bulk Credit Transfers**. For bulk credit transfers, use Option 2 or if you have company customers, opt-out of VoP via the dedicated mutation.
+
+### Option 2: Pre-validation of details {#option-2}
+
+Call the `verifyBeneficiary` mutation before initiating transfers to get full control over the verification user experience.
+
+#### Verification workflow {#verification-workflow}
+
+1. **Verify beneficiary**: Call `verifyBeneficiary` with IBAN and name
 2. **Get result**: Receive Match, Close match, No match or Verification not possible
 3. **Inform end-user**: Display appropriate messaging based on verification result
 4. **User proceeds**: End-user can choose to proceed with payment regardless of result
-5. **Use token**: Add verification token to credit transfer
+5. **Use token**: Add beneficiary token to credit transfer
+6. **User gives consent**: Complete payment authorization
 
 <div className="invisible-subgraph">
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart TD
-    A["📝 Enter Beneficiary Details"] --> B[Call verifySepaBeneficiary]
-    B --> C{Verification Result}
+    A["Enter beneficiary details"] --> B[Call verifyBeneficiary]
+    B --> C{Verification result}
     
     D["Ready to proceed"]
     E["Check suggested name"]  
     F["Verify details before proceeding"]
     G["Verification service unavailable"]
     
-    C -->|"✅ Match"| D
-    C -->|"⚠️ Close Match"| E
-    C -->|"❌ No Match"| F
-    C -->|"❌ Not Possible"| G
+    C -->|"Match"| D
+    C -->|"Close match"| E
+    C -->|"No match"| F
+    C -->|"Not possible"| G
     
     D --> H[" "]
-    E --> I["Customer Reviews Suggestion"]
-    F --> J["Customer Verifies Details"]
-    G --> K["Customer Proceeds<br>Despite No Verification"]
+    E --> I["Customer reviews suggestion"]
+    F --> J["Customer verifies details"]
+    G --> K["Customer proceeds<br>despite no verification"]
     
-    H --> L["Customer Proceeds with Payment"]
+    H --> L["Customer proceeds with payment"]
     I --> L
     J --> L
     K --> L
     
-    L --> M["Initiate Transfer with Token"]
+    L --> M["Initiate transfer with token"]
+    M --> N["User gives consent"]
+    N --> O["Payment authorized"]
     
     classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:12,ry:12
     classDef input fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:12,ry:12
@@ -194,42 +296,30 @@ flowchart TD
     class E warning
     class F,G error
     class B,I,J,K process
-    class L,M final
+    class L,M,N,O final
     class H invisible
 ```
 
 </div>
 
-:::tip VoP enables informed decisions
-Verification of Payee doesn't block payments. It provides verification results so customers can make informed decisions about proceeding or aborting. All verification results allow payment to continue.
-:::
-
-### Payment type support {#payment-support}
-
-| Payment Type | Synchronous Verification | Pre-validation | Notes |
-| --- | --- | --- | --- |
-| **Single Credit Transfers** | ✅ Supported | ✅ Supported | Full VoP integration |
-| **Bulk Credit Transfers** | ❌ Not Supported | ✅ Supported | Opt-out available for corporate use |
-| **Standing Orders** | ✅ Supported | ✅ Supported | Verification required for initial setup |
-
-<!--
-| **Internal Accounts** | 🚧 Coming soon | 🚧 Coming soon | Legal requirements being finalized |
--->
-
 ---
 
 # Coming soon...
+
+:::warning In development - subject to changes
+The following features are for illustrative purposes. Final design may slightly differ.
+:::
 
 <details>
 <summary>View feature roadmap</summary>
 
 ## Verify a beneficiary {#guide-verify}
 
-Call `verifySepaBeneficiary` before initiating transfers.
+Call `verifyBeneficiary` before initiating transfers.
 
 ### Steps {#verify-steps}
 
-1. Call the `verifySepaBeneficiary` mutation.
+1. Call the `verifyBeneficiary` mutation.
 2. Add the beneficiary's `iban` and `name` <!--(lines 4-5)-->.
 3. Add all verification result types to handle different outcomes.
 4. Add [rejections](/developers/using-api/errors-rejections.mdx) for error handling.
@@ -237,11 +327,11 @@ Call `verifySepaBeneficiary` before initiating transfers.
 <!--
 ### Mutation {#verify-mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5QmVuZWZpY2lhcnkgewogIHZlcmlmeVNlcGFCZW5lZmljaWFyeSgKICAgIGlucHV0OiB7IGliYW46ICJGUjAwMDAwMDAwMDAzMDAwMDAwMDAwNTZIODAiLCBuYW1lOiAiSm9obiBTbWl0aCIgfQogICkgewogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlDbG9zZU1hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgICAgbmFtZVN1Z2dlc3Rpb24KICAgIH0KICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlOb01hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICB2ZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ob3RQb3NzaWJsZSB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmVyaWZpY2F0aW9uVG9rZW4KICAgICAgZXhwaXJlc0F0CiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5QmVuZWZpY2lhcnkgewogIHZlcmlmeUJlbmVmaWNpYXJ5KAogICAgaW5wdXQ6IHsgaWJhbjogIkZSMDAwMDAwMDAwMzAwMDAwMDAwMDU2SDgwIiwgbmFtZTogIkpvaG4gU21pdGgiIH0KICA) ewogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgX190eXBlbmFtZQogICAgICBiZW5lZmljaWFyeVRva2VuCiAgICAgIGV4cGlyZXNBdAogICAgfQogICAgLi4uIG9uIFNlcGFCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICBfX3R5cGVuYW1lCiAgICAgIGJlbmVmaWNpYXJ5VG9rZW4KICAgICAgZXhwaXJlc0F0CiAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICB9CiAgICAuLi4gb24gU2VwYUJlbmVmaWNpYXJ5Tm9NYXRjaCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYmVuZWZpY2lhcnlUb2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBTZXBhQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ob3RQb3NzaWJsZSB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYmVuZWZpY2lhcnlUb2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {4-5,8,13,19,24,29} showLineNumbers
 mutation VerifyBeneficiary {
-  verifySepaBeneficiary(
+  verifyBeneficiary(
     input: {
       iban: "FR0000000000300000000056H80"
       name: "John Smith"
@@ -249,23 +339,23 @@ mutation VerifyBeneficiary {
   ) {
     ... on SepaBeneficiaryMatch {
       __typename
-      verificationToken
+      beneficiaryToken
       expiresAt
     }
     ... on SepaBeneficiaryCloseMatch {
       __typename
-      verificationToken
+      beneficiaryToken
       expiresAt
       nameSuggestion
     }
     ... on SepaBeneficiaryNoMatch {
       __typename
-      verificationToken
+      beneficiaryToken
       expiresAt
     }
     ... on SepaBeneficiaryVerificationNotPossible {
       __typename
-      verificationToken
+      beneficiaryToken
       expiresAt
     }
     ... on ValidationRejection {
@@ -289,7 +379,7 @@ mutation VerifyBeneficiary {
     ```json
     {
       "__typename": "SepaBeneficiaryMatch",
-      "verificationToken": "vf_01234567890abcdef",
+      "beneficiaryToken": "vf_01234567890abcdef",
       "expiresAt": "2025-07-10T14:30:00Z"
     }
     ```
@@ -311,7 +401,7 @@ mutation VerifyBeneficiary {
     ```json
     {
       "__typename": "SepaBeneficiaryCloseMatch",
-      "verificationToken": "vf_01234567890abcdef",
+      "beneficiaryToken": "vf_01234567890abcdef",
       "expiresAt": "2025-07-10T14:30:00Z",
       "nameSuggestion": "John Smith"
     }
@@ -334,7 +424,7 @@ mutation VerifyBeneficiary {
     ```json
     {
       "__typename": "SepaBeneficiaryNoMatch",
-      "verificationToken": "vf_01234567890abcdef",
+      "beneficiaryToken": "vf_01234567890abcdef",
       "expiresAt": "2025-07-10T14:30:00Z"
     }
     ```
@@ -356,7 +446,7 @@ mutation VerifyBeneficiary {
     ```json
     {
       "__typename": "SepaBeneficiaryVerificationNotPossible",
-      "verificationToken": "vf_01234567890abcdef",
+      "beneficiaryToken": "vf_01234567890abcdef",
       "expiresAt": "2025-07-10T14:30:00Z"
     }
     ```
@@ -370,9 +460,9 @@ mutation VerifyBeneficiary {
   </TabItem>
 </Tabs>
 
-## Use verification token {#use-token}
+## Use beneficiary token {#use-token}
 
-Add the `verificationToken` to your credit transfer.
+Add the `beneficiaryToken` to your credit transfer.
 
 <!--
 :
@@ -388,7 +478,7 @@ mutation InitiateWithVerification {
         sepaBeneficiary: {
           iban: "FR0000000000300000000056H80"
           name: "John Smith"
-          verificationToken: "vf_01234567890abcdef"
+          beneficiaryToken: "vf_01234567890abcdef"
           save: false
         }
       }
@@ -411,7 +501,7 @@ mutation InitiateWithVerification {
 ```
 -->
 
-:::tip Why verification tokens matter
+:::tip Why beneficiary tokens matter
 - **Regulatory compliance**: Demonstrates VoP verification was performed
 - **Time-limited**: Check `expiresAt` timestamp to ensure validity
 - **Single-use security**: Each token works only once, preventing replay attacks
@@ -429,8 +519,8 @@ Even saved beneficiaries require VoP verification for compliance after **October
 
 **Workflow for existing saved beneficiaries:**
 1. Retrieve saved beneficiary details from your system
-2. Call the [`verifySepaBeneficiary`](#verify-mutation) mutation with the saved IBAN and name
-3. [Use the verification token](#use-token) when initiating the transfer
+2. Call the [`verifyBeneficiary`](#verify-mutation) mutation with the saved IBAN and name
+3. [Use the beneficiary token](#use-token) when initiating the transfer
 4. Future payments to the same beneficiary will still require verification
 
 **Benefits of this approach:**
@@ -456,7 +546,7 @@ mutation InitiateWithVerificationAndSave {
         sepaBeneficiary: {
           iban: "FR0000000000300000000056H80"
           name: "John Smith"
-          verificationToken: "vf_01234567890abcdef"
+          beneficiaryToken: "vf_01234567890abcdef"
           save: true
         }
       }
@@ -497,7 +587,7 @@ Test VoP verification with these mock beneficiary names in Swan's sandbox enviro
 
 ```graphql showLineNumbers
 mutation TestNoMatch {
-  verifySepaBeneficiary(
+  verifyBeneficiary(
     input: {
       iban: "FR0000000000300000000056H80"
       name: "NO_MATCH"
@@ -505,7 +595,7 @@ mutation TestNoMatch {
   ) {
     ... on SepaBeneficiaryNoMatch {
       __typename
-      verificationToken
+      beneficiaryToken
       expiresAt
     }
     ... on ValidationRejection {
@@ -518,7 +608,7 @@ mutation TestNoMatch {
 
 ```graphql showLineNumbers
 mutation TestVerificationNotPossible {
-  verifySepaBeneficiary(
+  verifyBeneficiary(
     input: {
       iban: "FR0000000000300000000056H80"
       name: "BIC_NOT_FOUND"
@@ -526,7 +616,7 @@ mutation TestVerificationNotPossible {
   ) {
     ... on SepaBeneficiaryVerificationNotPossible {
       __typename
-      verificationToken
+      beneficiaryToken
       expiresAt
     }
   }
@@ -540,7 +630,7 @@ mutation TestVerificationNotPossible {
 The `beneficiaryVerification` query will be deprecated. Plan your migration before the October 9th compliance deadline to ensure uninterrupted service.
 :::
 
-If you're using `beneficiaryVerification` for Dutch IBANs, migrate to `verifySepaBeneficiary`.
+If you're using `beneficiaryVerification` for Dutch IBANs, migrate to `verifyBeneficiary`.
 
 <!--
 :
@@ -565,14 +655,14 @@ query LegacyVerification {
 **After (new VoP)**:
 ```graphql title="New VoP verification" showLineNumbers
 mutation NewVoPVerification {
-  verifySepaBeneficiary(
+  verifyBeneficiary(
     input: {
       iban: "NL91ABNA0417164300"
       name: "J. Smith"
     }
   ) {
     ... on SepaBeneficiaryMatch {
-      verificationToken
+      beneficiaryToken
       expiresAt
     }
   }
@@ -580,9 +670,9 @@ mutation NewVoPVerification {
 ```
 
 **Migration checklist**:
-1. Replace `beneficiaryVerification` with [`verifySepaBeneficiary`](#verify-mutation)
+1. Replace `beneficiaryVerification` with [`verifyBeneficiary`](#verify-mutation)
 2. Handle all four [result types](#results)
-3. Integrate [verification tokens](#use-token) into payment flows
+3. Integrate [beneficiary tokens](#use-token) into payment flows
 4. Update UI to show verification results
 5. Test thoroughly in Sandbox
 
@@ -600,7 +690,7 @@ mutation NewVoPVerification {
 
 **Legacy migration**
 - Migrate from `beneficiaryVerification` query (Dutch IBANs only)
-- Update to `verifySepaBeneficiary` before deprecation
+- Update to `verifyBeneficiary` before deprecation
 
 :::tip Best practice
 Perform verification immediately after beneficiary details are entered for an optimal user experience.

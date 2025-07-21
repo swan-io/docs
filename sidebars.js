@@ -389,10 +389,10 @@ module.exports = {
               },
               collapsed: true,
               items: [
-                "topics/payments/credit-transfers/sepa/verification-of-payee",
                 "topics/payments/credit-transfers/sepa/guide-initiate-ct",
                 "topics/payments/credit-transfers/sepa/guide-cancel-ct",
                 "topics/payments/credit-transfers/sepa/guide-refund-ct",
+                "topics/payments/credit-transfers/sepa/verification-of-payee",
                 "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-add-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",

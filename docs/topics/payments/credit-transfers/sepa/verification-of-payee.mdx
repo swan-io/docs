@@ -209,9 +209,7 @@ Swan provides two integration options based on your user experience (UX) needs a
 
 For single credit transfers, partners don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
 
-:::warning 
-**Option 1 is not available for Bulk Credit Transfers**. For bulk credit transfers, use Option 2 or if you have company end-users, opt-out of VoP using the dedicated mutation.
-:::
+Option 1 is [not available for Bulk Credit Transfers](#payment-support). For bulk credit transfers, use Option 2 or if you have company end-users, opt-out of VoP using the dedicated mutation.
 
 <div style={{textAlign: 'center'}}>
 ```mermaid
@@ -254,7 +252,7 @@ flowchart TD
         B2 --> C2["Custom UX handling"]
         C2 --> D2["User submits payment"]
         D2 --> E2["Call initiateCreditTransfers with beneficiaryToken"]
-        E2 --> F2["Consent screen"]
+        E2 --> F2["Consent screen with VoP result"]
         F2 --> G2["Payment authorized"]
         G2 --> H2["Transfer completed"]
     end
@@ -276,14 +274,18 @@ flowchart TD
 ```
 </div>
 
-#### Verification workflow {#verification-workflow}
+### Verification flow {#verification-flow}
 
-1. **Verify beneficiary**: Call `verifyBeneficiary` with IBAN and name
-2. **Get result**: Receive Match, Close match, No match or Verification not possible
-3. **Inform end-user**: Display appropriate messaging based on verification result
-4. **User proceeds**: End-user can choose to proceed with payment regardless of result
-5. **Use token**: Add beneficiary token to credit transfer
-6. **User gives consent**: Complete payment authorization
+1. **Verify beneficiary**: Call the `verifyBeneficiary` mutation using an IBAN and account holder name.
+2. **Receive the verification result**: Match, Close match, No Match, or Verification not possible. A unique token is also returned, identifying the VoP and result.
+3. **Inform the end-user**: Display appropriate messaging based on the verification result.
+4. **User proceeds**: The end-user can choose to proceed with the payment regardless of the result.
+5. **Use token**: Add the beneficiary token to complete the credit transfer.
+6. **User gives consent**: Complete the payment authorization.
+
+<details>
+
+<summary>Detailed verification flow diagram</summary>
 
 <div className="invisible-subgraph">
 
@@ -332,16 +334,18 @@ flowchart TD
     class D success
     class E warning
     class F,G error
-    class B,I,J,K process
-    class L,M,N,O final
+    class B,I,J,K,M,N process
+    class L,O final
     class H invisible
 ```
 
 </div>
 
+</details>
+
 #### Custom UX examples {#custom-ux-examples}
 
-Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step:
+Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step.
 
 <Tabs>
   <TabItem value="match" label="✅ Match" default>
@@ -428,9 +432,9 @@ Example format for the four verification result types returned by the `verifyBen
 Add the `beneficiaryToken` to your credit transfer to demonstrate VoP compliance:
 
 **Key token properties:**
-- **Regulatory compliance**: Demonstrates VoP was performed
-- **Time-limited**: Check `expiresAt` timestamp to ensure validity
-- **Single-use security**: Each token works only once, preventing replay attacks
+- **Regulatory compliance**: Demonstrates VoP was performed.
+- **Time-limited**: Check `expiresAt` timestamp to ensure validity.
+- **Single-use security**: Each token works only once, preventing replay attacks.
 
 ### API specifications {#api-specifications}
 

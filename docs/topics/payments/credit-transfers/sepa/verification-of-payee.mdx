@@ -173,7 +173,7 @@ Swan offers two integration approaches depending on your UX requirements and dev
     <div className="card" style={{height: '100%', backgroundColor: '#fffbf0', border: '1px solid #ffeaa7'}}>
       <div className="card__header">
         <h3>Option 1:</h3>
-        <h3>➡️ Synchronous verification</h3>
+        <h3>➡️ Default verification</h3>
       </div>
       <div className="card__body">
         <p><strong>Swan handles verification during payment initiation</strong></p>
@@ -189,10 +189,10 @@ Swan offers two integration approaches depending on your UX requirements and dev
     <div className="card" style={{height: '100%', backgroundColor: '#f0f9f0', border: '1px solid #d4edda'}}>
       <div className="card__header">
         <h3>Option 2:</h3>
-        <h3>☑️ Pre-validation of details</h3>
+        <h3>☑️ Custom verification</h3>
       </div>
       <div className="card__body">
-        <p><strong>Verify beneficiaries before payment initiation</strong></p>
+        <p><strong>Pre-validation of details: Verify beneficiaries before payment initiation</strong></p>
         <ul>
           <li>Full control over verification UX</li>
           <li>Custom error handling and user guidance</li>
@@ -205,7 +205,7 @@ Swan offers two integration approaches depending on your UX requirements and dev
 
 ### Payment type support {#payment-support}
 
-| Payment Type | Option 1: Synchronous | Option 2: Pre-validation | Notes |
+| Payment Type | Option 1: Default | Option 2: Pre-validation | Notes |
 | --- | --- | --- | --- |
 | **Single Credit Transfers** | ✅ Supported | ✅ Supported | Systematic VoP is required |
 | **Bulk Credit Transfers** | ❌ Not Supported | ✅ Supported | Opt-out available for corporate use |
@@ -231,7 +231,7 @@ flowchart TD
         G2 --> H2["Transfer completed"]
     end
 
-    subgraph Option1 ["🟡 Option 1: Synchronous"]
+    subgraph Option1 ["🟡 Option 1: Default"]
         direction TB
         A1["User enters payment details"] --> B1["User submits payment"]
         B1 --> C1["initiateCreditTransfers"]
@@ -269,13 +269,15 @@ flowchart TD
 ```
 </div>
 
-### Option 1: Synchronous verification {#option-1}
+### Option 1: Default verification {#option-1}
 
 For single credit transfers, partners don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
 
-⚠️ **Option 1 is not available for Bulk Credit Transfers**. For bulk credit transfers, use Option 2 or if you have company customers, opt-out of VoP via the dedicated mutation.
+:::warning 
+**Option 1 is not available for Bulk Credit Transfers**. For bulk credit transfers, use Option 2 or if you have company customers, opt-out of VoP via the dedicated mutation.
+:::
 
-### Option 2: Pre-validation of details {#option-2}
+### Option 2: Custom verification {#option-2}
 
 Call the `verifyBeneficiary` mutation before initiating transfers to get full control over the verification user experience.
 

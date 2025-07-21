@@ -1,9 +1,6 @@
 ---
-title: Insurance on cards product integration
-description: How to configure and manage card insurance packages at the card product level
+title: Configure card insurance package
 ---
-
-You can assign one of the [three standard insurance packages](https://www.notion.so/Draft-Card-insurance-overview-22ba3427555a8086ae26eb28d91e0d62?pvs=21) at the card product level. Once set, the package is automatically linked to any new card issued from that product.
 
 This guide explains how to configure insurance on card products, issue cards with insurance, and manage the setup through the Dashboard and API.
 
@@ -12,31 +9,40 @@ This guide explains how to configure insurance on card products, issue cards wit
 When creating a card product, link it to a card insurance object by setting the [`defaultInsurancePackage`](https://api-reference.swan.io/objects/card-insurance-configuration/#cardinsuranceconfigurationdefaultinsurancepackagecardinsurancepackage). 
 This package is automatically applied when a card is issued.
 
-You can also define the list of `availableInsurancePackages` for each card product.
+The `availableInsurancePackages` field lists all eligible insurance packages for the card product.
 
-By default, new card products include three packages: **Basic**, **Essential**, and **Premium**.
+By default, new card products include three packages: **Basic**, **Essential**, and **Premium**. For pre-existing card products, contact your Product Integration Manager (PIM) to add the `availableInsurancePackages` and set your `defaultInsurancePackage`.
 
 ## 2. Card product review and validation
 
-Once your configuration is complete, your PIM will review and validate the card product before it can be used.
+After configuring your insurance settings, your PIM will review and validate the card product before it can be used.
 
+:::caution
+To issue cards with insurance, it's mandatory to display the [standard marketing and legal mentions](https://docs.google.com/presentation/d/159nE02OtxcZ_uVQIpX8H7fLVC9VubPAf/edit?slide=id.g33c8ca1d644_0_302#slide=id.g33c8ca1d644_0_302) regarding the insurance coverage package within your app or website. Swan includes this information in the Terms and Conditions.
+:::
 
 ## 3. Card insurance subscription
 
-Swan automatically creates a [card insurance subscription](https://www.notion.so/Insurance-subscription-flow-229a3427555a80fd8351cbde27e41598?pvs=21) when a new card is issued, if the following conditions are met:
+Swan automatically creates a [card insurance subscription](/topics/cards/overview/insurance-on-cards#insurance-subscription) when a new card is issued, if the following conditions are met:
 
-- The cardholder's account membership is `Enabled`  
-- The account holder is `Verified`
+- The cardholder's account membership is `Enabled`.
+- The account holder is `Verified`.
 
 ## 4. Support claims easily
 
-Your Web Banking app must include a link to the insurance provider's claims portal so users can file claims independently.
+Include a link to the insurance provider's claims portal in your Web banking app so users can file claims independently.
 
-The `claimsUrl` is available in the `card` query response and points to the provider’s portal.
+The `claimsUrl` available in the card query leads to the insurance provider's claims portal. 
+Use this query to retrieve the `claimsUrl` for a cardholder to access the claims interface:
+
+<a href="https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgY2FyZChjYXJkSWQ6ICIkWU9VUl9DQVJEX0lEIikgewogICAgaW5zdXJhbmNlU3Vic2NyaXB0aW9uIHsKICAgICAgY2xhaW1zVXJsCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open the claimsUrl query in API explorer</a>
+
 
 ```graphql
-query {
-  card(id: "card_id") {
-    claimsUrl
+query MyQuery {
+  card(cardId: "$YOUR_CARD_ID") {
+    insuranceSubscription {
+      claimsUrl
+    }
   }
 }

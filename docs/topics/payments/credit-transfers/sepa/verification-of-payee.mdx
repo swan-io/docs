@@ -20,7 +20,7 @@ Required for all SEPA Credit Transfers under the [European Instant Payments Regu
 ### Key benefits {#benefits}
 
 For your integration:
-- **Reduced disputes**: Prevent misdirected payments and customer support tickets.
+- **Reduced disputes**: Prevent misdirected payments and end-user support tickets.
 - **Better user experience**: Build trust through transparent payment verification.
 - **Operational efficiency**: Fewer payment failures and reversals to handle.
 
@@ -103,7 +103,7 @@ The beneficiary's bank can return one of four verification results. **All result
   <TabItem value="match" label="✅ Match" default>
     **Result**: Exact match found between provided details and account holder information
     
-    **Customer action**: Safe to proceed with transfer
+    **End-user action**: Safe to proceed with transfer
     
     **Mobile consent screen**:
     <div style={{width: 'fit-content', margin: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden'}}>
@@ -114,7 +114,7 @@ The beneficiary's bank can return one of four verification results. **All result
   <TabItem value="close" label="⚠️ Close match">
     **Result**: Close match with suggested correction from beneficiary's bank
     
-    **Customer action**: Review suggested name correction before proceeding
+    **End-user action**: Review suggested name correction before proceeding
     
     **Mobile consent screen**:
     <div style={{width: 'fit-content', margin: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden'}}>
@@ -125,7 +125,7 @@ The beneficiary's bank can return one of four verification results. **All result
   <TabItem value="no-match" label="❌ No match">
     **Result**: No match found between provided details and account holder information
     
-    **Customer action**: Verify beneficiary details carefully before proceeding
+    **End-user action**: Verify beneficiary details carefully before proceeding
     
     **Mobile consent screen**:
     <div style={{width: 'fit-content', margin: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden'}}>
@@ -136,7 +136,7 @@ The beneficiary's bank can return one of four verification results. **All result
   <TabItem value="not-possible" label="❌ Verification not possible">
     **Result**: IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists.
     
-    **Customer action**: Proceed without verification
+    **End-user action**: Proceed without verification
     
     **Mobile consent screen**:
     <div style={{width: 'fit-content', margin: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden'}}>
@@ -146,19 +146,17 @@ The beneficiary's bank can return one of four verification results. **All result
 </Tabs>
 
 :::tip VoP enables informed decisions
-Verification of Payee doesn't block payments. It provides verification results so customers can make informed decisions about proceeding or aborting. All verification results allow payment to continue.
+Verification of Payee provides verification results so end-users can make informed decisions, but doesn't block payments from proceeding.
 :::
 
-### Specific cases {#specific-cases}
-
-#### Standing Orders {#standing-orders}
+### Standing Orders {#standing-orders}
 
 VoP applies to Standing Orders with two key differences:
 
 - **Initial verification only**: VoP happens at the initiation stage when creating the Standing Order
 - **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP
 
-#### Bulk payments for company accounts {#bulk-payments}
+### Bulk payments {#bulk-payments}
 
 Company accounts can opt-out of receiving VoP on their bulk SEPA credit transfers through a dedicated upcoming mutation.
 
@@ -170,15 +168,14 @@ Swan provides two integration options based on your user experience (UX) needs a
   <div className="col col--6">
     <div className="card" style={{height: '100%', backgroundColor: '#fffbf0', border: '1px solid #ffeaa7'}}>
       <div className="card__header">
-        <h3>Option 1</h3>
-        <h3>➡️ Default verification</h3>
+        <h3>Option 1: Default verification</h3>
       </div>
       <div className="card__body">
         <p><strong>Swan handles verification during payment initiation</strong></p>
         <ul>
-          <li>Zero development effort for single credit transfers</li>
-          <li>Swan displays VoP results in consent screen</li>
-          <li>Best for: Quick compliance, existing integrations</li>
+          <li>No development is required for single SEPA credit transfers..</li>
+          <li>Swan displays VoP results in the consent screen.</li>
+          <li>Best for: Quick compliance, and existing integrations.</li>
         </ul>
       </div>
     </div>
@@ -186,28 +183,27 @@ Swan provides two integration options based on your user experience (UX) needs a
   <div className="col col--6">
     <div className="card" style={{height: '100%', backgroundColor: '#f0f9f0', border: '1px solid #d4edda'}}>
       <div className="card__header">
-        <h3>Option 2:</h3>
-        <h3>☑️ Custom verification</h3>
+        <h3>Option 2: Custom verification</h3>
       </div>
       <div className="card__body">
         <p><strong>Pre-validation of details: Verify beneficiaries before payment initiation</strong></p>
         <ul>
-          <li>Full control over verification UX</li>
-          <li>Custom error handling and user guidance</li>
-          <li>Best for: Enhanced user experience, complex payment flows</li>
+          <li>Complete control over the VoP UX.</li>
+          <li>Custom error handling and user guidance.</li>
+          <li>Best for: An enhanced UX and complex payment flows.</li>
         </ul>
       </div>
     </div>
   </div>
 </div>
 
-### Payment type support {#payment-support}
+### Supported payment types {#payment-support}
 
-| Payment Type | Option 1: Default | Option 2: Custom | Notes |
+| Payment Type | Option 1: Default | Option 2: Custom | VoP requirements |
 | --- | --- | --- | --- |
-| **Single Credit Transfers** | ✅ Supported | ✅ Supported | Systematic VoP is required |
-| **Bulk Credit Transfers** | ❌ Not Supported | ✅ Supported | Opt-out available for corporate use |
-| **Standing Orders** | ✅ Supported | ✅ Supported | Verification required for initial setup only |
+| **Single Credit Transfers** | ✅ Supported | ✅ Supported | Required |
+| **Bulk Credit Transfers** | ❌ Not Supported | ✅ Supported | Opt-out available for company accounts |
+| **Standing Orders** | ✅ Supported | ✅ Supported | Required in the scheduling phase |
 
 <!--
 | **Internal Accounts** | 🚧 Coming soon | 🚧 Coming soon | Legal requirements being finalized |
@@ -272,7 +268,7 @@ flowchart TD
 For single credit transfers, partners don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
 
 :::warning 
-**Option 1 is not available for Bulk Credit Transfers**. For bulk credit transfers, use Option 2 or if you have company customers, opt-out of VoP via the dedicated mutation.
+**Option 1 is not available for Bulk Credit Transfers**. For bulk credit transfers, use Option 2 or if you have company end-users, opt-out of VoP via the dedicated mutation.
 :::
 
 ### Option 2: Custom verification {#option-2}
@@ -307,11 +303,11 @@ flowchart TD
     C -->|"Not possible"| G
     
     D --> H[" "]
-    E --> I["Customer reviews suggestion"]
-    F --> J["Customer verifies details"]
-    G --> K["Customer proceeds<br>despite no verification"]
+    E --> I["End-user reviews suggestion"]
+    F --> J["End-user verifies details"]
+    G --> K["End-user proceeds<br>despite no verification"]
     
-    H --> L["Customer proceeds with payment"]
+    H --> L["End-user proceeds with payment"]
     I --> L
     J --> L
     K --> L

@@ -10,12 +10,12 @@ import TabItem from '@theme/TabItem';
 Verify beneficiary details before sending SEPA Credit Transfers to reduce fraud and payment errors.
 
 :::info Mandatory compliance
-Required for all SEPA Credit Transfers under the [European Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, with a mandatory implementation deadline of **October 9, 2025**, for all Payment Service Providers (PSPs) in the Eurozone offering SEPA Credit Transfers.
+Required for all SEPA Credit Transfers and Instant SEPA Credit Transfers under the [European Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, with a mandatory implementation deadline of **October 9, 2025**, for all Payment Service Providers (PSPs) in the Eurozone offering SEPA Credit Transfers.
 :::
 
 ## Overview {#overview}
 
-**Verification of Payee (VoP)** is a new European service that checks beneficiary details against account holder information before initiating SEPA Credit Transfers. This service aims to reduce payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
+**Verification of Payee (VoP)** is a new European service that checks beneficiary details against account holder information before initiating SEPA Credit Transfers and Instant SEPA Credit Transfers. This service aims to reduce payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
 
 ### Key benefits {#benefits}
 
@@ -35,7 +35,7 @@ VoP applies to all countries in the SEPA region. Payment Service Providers (PSPs
 
 | Payment Services Provider location | VoP mandatory date |
 | --- | --- |
-| 🇪🇺 Eurozone | October 9, 2025 |
+| 🇪🇺 [Eurozone](https://economy-finance.ec.europa.eu/euro/what-euro-area_en) | October 9, 2025 |
 | 🌏 Non-Eurozone | January 9, 2027 |
 
 The service is **free of charge** for Swan account holders as mandated by the regulation.
@@ -46,7 +46,7 @@ The service is **free of charge** for Swan account holders as mandated by the re
 
 VoP happens before sending money to a beneficiary, through this process:
 
-1. **VoP required**: All SEPA Credit Transfers must be verified before authorization.
+1. **VoP required**: All SEPA Credit Transfers and Instant SEPA Credit Transfers must be verified before authorization.
 2. **Verification request**: Swan sends a VoP request to the beneficiary's bank (Responding PSP).
 3. **Verification response**: The beneficiary's bank responds with the verification result.
 4. **Result displayed**: VoP result and associated warnings are shown to the end-user.
@@ -136,7 +136,7 @@ The beneficiary's bank can return one of four verification results. **All result
   <TabItem value="not-possible" label="❌ Verification not possible">
     **Result**: IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists.
     
-    **End-user action**: Proceed without verification
+    **End-user action**: Verify beneficiary details carefully before proceeding
     
     **Mobile consent screen**:
     <div style={{width: 'fit-content', margin: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden'}}>
@@ -171,7 +171,7 @@ Swan provides two integration options based on your user experience (UX) needs a
         <h3>🟡 Option 1: Default verification</h3>
       </div>
       <div className="card__body">
-        <p><strong>Swan automatically verifies beneficiary details when you initiate a credit transfer</strong></p>
+        <p><strong>Swan automatically verifies beneficiary details when the end-user initiates a credit transfer</strong></p>
         <ul>
           <li>No additional development required for single SEPA Credit Transfers.</li>
           <li>Swan displays VoP results and warnings in the consent screen.</li>
@@ -203,11 +203,11 @@ Swan provides two integration options based on your user experience (UX) needs a
 | --- | --- | --- | --- |
 | **Single Credit Transfers** | ✅ Supported | ✅ Supported | Required |
 | **Bulk Credit Transfers** | ❌ Not Supported | ✅ Supported | Opt-out available for company accounts |
-| **Standing Orders** | ✅ Supported | ✅ Supported | Required in the scheduling phase |
+| **Standing Orders** | ✅ Supported | ✅ Supported | Required in the initiation stage |
 
 ## Option 1: Default verification {#option-1}
 
-For single credit transfers, partners don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
+For single credit transfers, you don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
 
 Option 1 is [not available for Bulk Credit Transfers](#payment-support). For bulk credit transfers, use Option 2 or if you have company end-users, opt-out of VoP using the dedicated mutation.
 
@@ -220,7 +220,7 @@ flowchart TD
         B1 --> C1["Call initiateCreditTransfers"]
         C1 --> D1["Beneficiary verification (VoP)<br/>handled by Swan"]
         D1 --> E1["Consent screen with VoP result"]
-        E1 --> F1["Payment authorized"]
+        E1 --> F1["Payment authorized or cancelled"]
         F1 --> G1["Transfer completed"]
     end
     
@@ -278,9 +278,9 @@ flowchart TD
 
 1. **Verify beneficiary**: Call the `verifyBeneficiary` mutation using an IBAN and account holder name.
 2. **Receive the verification result**: Match, Close match, No Match, or Verification not possible. A unique token is also returned, identifying the VoP and result.
-3. **Inform the end-user**: Display appropriate messaging based on the verification result.
+3. **Inform the end-user**: Display appropriate messaging and optional actions based on the verification result.
 4. **User proceeds**: The end-user can choose to proceed with the payment regardless of the result.
-5. **Use token**: Add the beneficiary token to complete the credit transfer.
+5. **Use token**: Add the beneficiary token to the input of the initiateCreditTransfers mutation.
 6. **User gives consent**: Complete the payment authorization.
 
 <details>
@@ -369,101 +369,20 @@ Examples of how to present VoP verification results in your web banking interfac
 
 ## Coming soon {#coming-soon}
 
-:::warning In development - subject to changes
-The following features are for illustrative purposes. Final design may differ.
+:::warning In development
+The following features are under development. Final implementation may differ.
 :::
 
-<details>
-<summary>View feature roadmap</summary>
+### Complete API documentation {#api-documentation}
 
-### Verification results {#verification-results}
+Full specifications for VoP mutations and updated endpoints will be provided, including:
 
-Example format for the four verification result types returned by the `verifyBeneficiary` mutation:
+- **`verifyBeneficiary` mutation**: Pre-validate beneficiary details before payment initiation
+- **Updated `initiateCreditTransfers` mutation**: Support for beneficiary tokens and VoP compliance
+- **Verification result types**: Match, Close match, No match, and Verification not possible responses
 
-<Tabs>
-  <TabItem value="match" label="✅ ‎ Match" default>
-    **Example response**:
-    ```json
-    {
-      "__typename": "SepaBeneficiaryMatch",
-      "beneficiaryToken": "vf_01234567890abcdef",
-      "expiresAt": "2025-07-10T14:30:00Z"
-    }
-    ```
-  </TabItem>
-  
-  <TabItem value="close" label="⚠️ ‎ Close match">
-    **Example response**:
-    ```json
-    {
-      "__typename": "SepaBeneficiaryCloseMatch",
-      "beneficiaryToken": "vf_01234567890abcdef",
-      "expiresAt": "2025-07-10T14:30:00Z",
-      "nameSuggestion": "John Smith"
-    }
-    ```
-  </TabItem>
-  
-  <TabItem value="no-match" label="❌ ‎ No match">
-    **Example response**:
-    ```json
-    {
-      "__typename": "SepaBeneficiaryNoMatch",
-      "beneficiaryToken": "vf_01234567890abcdef",
-      "expiresAt": "2025-07-10T14:30:00Z"
-    }
-    ```
-  </TabItem>
-  
-  <TabItem value="not-possible" label="❌ ‎ Verification not possible">
-    **Example response**:
-    ```json
-    {
-      "__typename": "SepaBeneficiaryVerificationNotPossible",
-      "beneficiaryToken": "vf_01234567890abcdef",
-      "expiresAt": "2025-07-10T14:30:00Z"
-    }
-    ```
-  </TabItem>
-</Tabs>
+### Enhanced integration options {#enhanced-integration}
 
-### Use verification token {#use-verification-token}
-
-Add the `beneficiaryToken` to your credit transfer to demonstrate VoP compliance:
-
-**Key token properties:**
-- **Regulatory compliance**: Demonstrates VoP was performed.
-- **Time-limited**: Check `expiresAt` timestamp to ensure validity.
-- **Single-use security**: Each token works only once, preventing replay attacks.
-
-### API specifications {#api-specifications}
-
-Complete API documentation for the new VoP mutations and updated endpoints.
-
-#### verifyBeneficiary mutation {#verify-beneficiary-mutation}
-
-New mutation for pre-validating beneficiary details before payment initiation.
-
-#### initiateCreditTransfers mutation updates {#initiate-credit-transfers-updates}
-
-Updated mutation to support beneficiary tokens for VoP compliance.
-
-### Server-to-Server consent with VoP {#s2s-consent-vop}
-
-Implementation guide for handling VoP verification results in Server-to-Server consent flows.
-
-### Bulk credit transfers VoP management {#bulk-vop-management}
-
-#### Opt-out of VoP {#bulk-opt-out}
-
-For company accounts that need to disable VoP on bulk SEPA Credit Transfers.
-
-#### Opt-in of VoP {#bulk-opt-in}
-
-For company accounts that want to enable VoP verification on bulk SEPA Credit Transfers.
-
-### Trusted beneficiaries & internal accounts {#trusted-beneficiaries-internal}
-
-VoP integration with Swan's trusted beneficiary system and Internal Credit Transfers.
-
-</details>
+- **Server-to-Server consent with VoP**: Handle verification results in S2S consent flows
+- **Bulk credit transfers management**: Opt-out and opt-in capabilities for company accounts
+- **Trusted beneficiaries integration**: VoP compatibility with Swan's trusted beneficiary system

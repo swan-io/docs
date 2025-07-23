@@ -85,7 +85,7 @@ flowchart LR
 |---|---|
 | `Initiated` | The payment object has been created, but the payment is not yet authorized or guaranteed. |
 | `Authorized` | Applies only to *card payments.* The payment has been authorized by the customer's bank. The funds are guaranteed but not yet captured. |
-| `Canceled` | The payment was canceled before capture. Funds can no longer be captured. This is a final status. |
+| `Canceled` | The payment was canceled. Funds can no longer be captured. This is a final status. |
 | `Rejected` | The payment was rejected by Swan or another participant in the payment scheme before the funds were captured. This is a final status. |
 | `Captured` | The payment is successfully authorized (for *card payments*) or processed (for all *other payment methods*), and the funds are debited from the customer's account. This can be the final status of a successful payment flow, unless the customer disputes the payment or requests a refund. |
 | `Refunded` | The payment was reversed by the merchant either for the full amount or partially depending on the payment method. This is a final status. |
@@ -98,7 +98,7 @@ The merchant payment object has **distinct balances** to follow a payment's life
 | Payment object balance | Explanation |
 |---|---|
 | `totalAuthorized` | The total authorized amount for this merchant payment. |
-| `availableToCancel` | The authorized amount that can be released. Refer to this balance to verify whether the payment can be canceled. Cancellations must occur before the amount is captured. |
+| `availableToCancel` | The authorized amount that can be released. Refer to this balance to verify whether the payment can be canceled. Cancellations must be done before the amount is captured, or earlier in the payment's lifecycle for some payment methods. |
 | `totalCanceled` | The total amount canceled for this merchant payment. |
 | `availableToCapture` | The amount available for merchants to capture *if* the capture isn't automatic. |
 | `totalCaptured` | The amount captured by the merchant. For *card payments* with automatic capture, `totalCaptured` is always equal to `totalAuthorized`. |

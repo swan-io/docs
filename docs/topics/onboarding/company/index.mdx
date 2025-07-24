@@ -28,8 +28,8 @@ Company onboarding information can be submitted **with the API** or through **Sw
 
 | Method | Details |
 | --- | --- |
-| Onboarding form | The onboarding form collects:<br /><br /><ol><li>User's **email address**.</li><li>Legal information about the organization, including the **company name**, **registration number** (optional), **VAT number** (optional), and **address**, as well as details about the organization's **activity** and **expected monthly volume**.</li><li>Information about the company's **ultimate beneficial owners** (UBO). This step only applies if the user selected **company**, **home owner association**, or **other** when submitting their preliminary details.</li><li>**Required documents** to verify your organization. You might not see this step in your onboarding process.</li><li>User [**signs up**](../../users/index.mdx#signup) for Swan.</li></ol>You can also customize this form to better meet your needs. Review to Swan's [open source documentation](https://swan-io.github.io/swan-partner-frontend/specs/onboarding/company/), then ask your Technical Account Manager for more information. |
-| API | The API collects the same information as the onboarding form. Please review the requirements explained on this page throughly, then follow the guide to [create a company onboarding link](./guide-create.mdx). |
+| Onboarding form | The onboarding form collects:<br /><br /><ol><li>User's **email address**.</li><li>Legal information about the organization, including the **company name**, **registration number** (optional), **VAT number** (optional), and **address**, as well as details about the organization's **activity** and **expected monthly volume**.</li><li>Information about the company's **ultimate beneficial owners** (UBO). This step only applies if the user selected **company**, **home owner association**, or **other** when submitting their preliminary details.</li><li>Information about the company's **representatives**. This includes individuals or legal entities authorized to act on behalf of the company.</li><li>**Required documents** to verify your organization. You might not see this step in your onboarding process.</li><li>User [**signs up**](../../users/index.mdx#signup) for Swan.</li></ol>You can also customize this form to better meet your needs. Review to Swan's [open source documentation](https://swan-io.github.io/swan-partner-frontend/specs/onboarding/company/), then ask your Technical Account Manager for more information. |
+| API | The API collects the same information as the onboarding form. Please review the requirements explained on this page thoroughly, then follow the guide to [create a company onboarding link](./guide-create.mdx). |
 
 ### Expected monthly volume {#monthly-volume}
 
@@ -79,6 +79,22 @@ On the onboarding form, choose `Legal representative` for type of control exerci
 No other additional information is required in the UBO section for legal representative UBOs.
 :::
 
+### Representatives {#representatives}
+
+Representatives are individuals or legal entities authorized to act on behalf of the company during the onboarding process and for ongoing account management.
+Swan supports two types of representatives:
+
+- **Individual representatives**: Natural persons authorized to represent the company
+- **Company representatives**: Legal entities authorized to represent the company
+
+Representative data is **optional** and helps Swan automate verification processes and reporting.
+For companies in 🇫🇷 France, Swan automatically prefills representative information from the national business registry when available.
+
+:::tip API usage
+Use the `representatives` field in the `onboardCompanyAccountHolder` and `updateCompanyOnboarding` mutations.
+Set `type` to `Individual` for natural persons or `Company` for legal entities.
+:::
+
 ### Retrieving data automatically {#retrieve-data}
 
 For companies located in 🇫🇷 France, Swan retrieves available data automatically from the national business registry after you provide the company's registration number.
@@ -89,7 +105,7 @@ These fields are the only mandatory data you need to include when creating Frenc
 
 #### Representative data {#retrieve-data-rep}
 
-For data about representatives (UBOs and legal representatives), how Swan applies registry data depends on what you provide:
+For data about representatives (UBOs, legal representatives, and company representatives), how Swan applies registry data depends on what you provide:
 
 - If you **provide** data, Swan doesn't override your values with data from the registry.
 - If you **don't provide** data, Swan creates the API objects and fills in the available data from the registry. Note that the registry information isn't always complete.
@@ -136,7 +152,7 @@ import CountryReqs from '../partials/_country-reqs.mdx';
 
 For company accounts, use the `onboardCompanyAccountHolder` mutation to collect the following information according to your desired account country.
 
-Note that this section is broken up into company and account holder information, information about the UBO, and information about the legal representative.
+Note that this section is broken up into company and account holder information, information about the UBO, information about the legal representative, and information about representatives.
 
 All have required fields.
 If the cell is empty, the field is optional.
@@ -227,6 +243,58 @@ Share [Swan's Support Center article](https://support.swan.io/hc/en-150/articles
 |`lrPersonalAddress.country`| | ✓ Required | ✓ Required | ✓ Required | |
 |`lrPersonalAddress.postalCode`| | ✓ Required | ✓ Required | ✓ Required | |
 |`lrPersonalAddress.state`| | | | | |
+
+### Representative information {#country-reqs-representatives}
+
+Representative information is **optional** for all countries.
+Swan automatically prefills this data for companies in 🇫🇷 France when available from the national business registry.
+
+#### Individual representative information {#country-reqs-individual-representatives}
+
+:::note API usage
+Use `representatives` with `type: Individual` for natural person representatives.
+:::
+
+| API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|---|---|---|---|---|
+|`representatives.type`| ✓ Required<br/>(`Individual`) | ✓ Required<br/>(`Individual`) | ✓ Required<br/>(`Individual`) | ✓ Required<br/>(`Individual`) | ✓ Required<br/>(`Individual`) |
+|`representatives.roles`| | | | | |
+|`representatives.firstNames`| | | | | |
+|`representatives.firstName`| | | | | |
+|`representatives.lastName`| | | | | |
+|`representatives.preferredFirstName`| | | | | |
+|`representatives.gender`| | | | | |
+|`representatives.birthDate`| | | | | |
+|`representatives.birthCity`| | | | | |
+|`representatives.birthCityPostalCode`| | | | | |
+|`representatives.birthCountryCode`| | | | | |
+|`representatives.nationality`| | | | | |
+|`representatives.residencyAddress.addressLine1`| | | | | |
+|`representatives.residencyAddress.addressLine2`| | | | | |
+|`representatives.residencyAddress.city`| | | | | |
+|`representatives.residencyAddress.country`| | | | | |
+|`representatives.residencyAddress.postalCode`| | | | | |
+|`representatives.residencyAddress.state`| | | | | |
+
+#### Company representative information {#country-reqs-company-representatives}
+
+:::note API usage
+Use `representatives` with `type: Company` for legal entity representatives.
+:::
+
+| API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|---|---|---|---|---|
+|`representatives.type`| ✓ Required<br/>(`Company`) | ✓ Required<br/>(`Company`) | ✓ Required<br/>(`Company`) | ✓ Required<br/>(`Company`) | ✓ Required<br/>(`Company`) |
+|`representatives.roles`| | | | | |
+|`representatives.entityName`| | | | | |
+|`representatives.registrationNumber`| | | | | |
+|`representatives.legalForm`| | | | | |
+|`representatives.residencyAddress.addressLine1`| | | | | |
+|`representatives.residencyAddress.addressLine2`| | | | | |
+|`representatives.residencyAddress.city`| | | | | |
+|`representatives.residencyAddress.country`| | | | | |
+|`representatives.residencyAddress.postalCode`| | | | | |
+|`representatives.residencyAddress.state`| | | | | |
 
 ## User flow diagrams {#diagrams}
 

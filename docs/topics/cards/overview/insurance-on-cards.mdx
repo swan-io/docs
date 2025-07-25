@@ -2,6 +2,10 @@
 title: Insurance on cards
 ---
 
+:::caution No coverage for existing cards
+Insurance on cards is currently in private beta.
+:::
+
 ## Overview {#overview}
 
 Swan now offers insurance packages that can be added to payment cards, providing extra protection for cardholders. Partners can choose to create cards with embedded insurance or without it.
@@ -118,7 +122,7 @@ flowchart LR
 | Status | Explanation |
 |---|---|
 | `Pending`| Insurance subscription is waiting for the account membership to be `Enabled`, and the account holder to be `Verified`. |
-| `Processing`| The insurance subscription request is sent to the insurance provider (Owen) for adhesion. |
+| `Processing`| The insurance subscription request is sent to the insurance provider for adhesion. |
 | `Enabled` | The insurance subscription is active and insurance is valid. <br/><br/>If you're subscribed to the `cardInsuranceSubscription.Created` webhook, you'll receive a notification when a subscription is `Enabled`. |
 | `Canceled`| The insurance subscription is `Canceled` when the associated card is canceled. |
 
@@ -133,9 +137,9 @@ The following diagram details a common flow of how the user, partner system (you
 ```mermaid
 sequenceDiagram
     participant User
-    participant Partner System
+    participant Partner system
     participant Swan
-    participant Owen (Insurance Provider)
+    participant Insurance provider
 
     alt User orders card via Web Banking
         User->>Swan: Orders card
@@ -147,8 +151,8 @@ sequenceDiagram
     Swan->>User: Displays consent screen (localized insurance terms)
     User->>Swan: Accepts insurance terms
     Note over Swan: Waits for:<br>Account membership = Enabled<br>Account holder verification = Verified
-    Swan->>Owen (Insurance Provider): Sends POST request to create insurance subscription
-    Owen (Insurance Provider)-->>Swan: Confirms subscription
+    Swan->>Insurance provider: Sends POST request to create insurance subscription
+    Insurance provider-->>Swan: Confirms subscription
     Swan->>Partner System: Sends `cardInsuranceSubscription.Created` webhook
 ```
 ### Steps
@@ -177,7 +181,7 @@ Once subscribed, the insurance is automatically activated. Your user can view th
 
 ## Card insurance claims {#insurance-claims}
 
-When an eligible event occurs, cardholders should submit a claim through the **insurance claims portal**, or by contacting **Filassistance**, depending on the type of claim.
+When an eligible event occurs, cardholders should submit a claim through the **insurance claims portal**, or by contacting our assistance provider, depending on the type of claim.
 
 ### Reporting a card insurance claim {#report-insurance-claims}
 
@@ -203,19 +207,17 @@ If compensation is approved, it's credited directly to the cardholder's Swan acc
 By default, the claims management interface provided by our insurance partner is co-branded with **your logo and accent color**, like your Swan interfaces (Web Banking and consent screens).
 :::
 
-#### Reporting to Filassistance
+#### Reporting to our assistance provider
 
-**Filassistance** handles urgent claims such as:
+Our assistance provider handles urgent claims such as:
 - Medical emergencies  
 - Repatriation  
 - Hospitalisation  
 - Legal assistance
 
-These must be reported **by phone** for immediate support through these **contact numbers**:
-  - From France: **01 70 36 06 59**  
-  - From abroad: **(+33) 1 70 36 06 59**
+These must be reported **by phone** for immediate support.
 
-Filassistance handles the entire claims process. 
+They handle the entire claims process. 
 If compensation is approved, it is credited directly to the cardholder's Swan account.
 
 ### Claim types and reporting process {#insurance-claims-process}
@@ -242,7 +244,7 @@ The following table outlines how to report different claim types:
 | Delayed baggage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Proof of business travel<br />- Travel ticket<br />- Baggage check-in receipt<br />- Receipts for essential purchases |
 | Lost, stolen, or damaged baggage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Proof of business travel<br />- Travel ticket and baggage check-in receipt<br />- Carrier-issued loss certificate<br />- Inventory and receipts of lost items |
 | Trip modification or cancellation | - Initiate cancellation/modification<br />- Within 72 hours<br />- Then submit through the insurance claims portal<br />- Within 15 days | - Certificate of cancellation/modification<br />- Proof of reason (medical certificate, summons, etc.)<br />- Proof of reservation and payment with a Swan card<br />- Proof of retained cancellation fees |
-| Travel assistance and repatriation | - Contact Filassistance by phone<br />- Within 5 days | - Medical certificates<br />- Hospital bills<br />- Tickets or transport proof<br />- Description of the events |
+| Travel assistance and repatriation | - Contact our assistance provider by phone<br />- Within 5 days | - Medical certificates<br />- Hospital bills<br />- Tickets or transport proof<br />- Description of the events |
   </div>
 </details>
 
@@ -260,6 +262,6 @@ The following table outlines how to report different claim types:
   <div>
 | Insurance cover type | How to report | Required documents |
 |---|---|---|
-| E-reputation legal protection | - Contact Filassistance by phone | - Documentation of the dispute<br />- Proof of related expenses |
+| E-reputation legal protection | - Contact our assistance provider by phone | - Documentation of the dispute<br />- Proof of related expenses |
   </div>
 </details>

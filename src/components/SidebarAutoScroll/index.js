@@ -1,20 +1,19 @@
-import { useEffect } from 'react';
-import { useLocation } from '@docusaurus/router';
+import { useEffect } from "react";
 
 export default function SidebarAutoScroll() {
-  const location = useLocation();
-
   useEffect(() => {
-    const activeLink = document.querySelector('.menu__link--active');
-    const sidebarContainer = activeLink?.closest('.theme-doc-sidebar-container');
-    
-    if (activeLink && sidebarContainer) {
-      activeLink.scrollIntoView({ block: 'start' });
-      
-      const centerOffset = sidebarContainer.getBoundingClientRect().height / 2 - 30;
-      sidebarContainer.scrollBy({ top: -centerOffset });
+    const activeLinks = document.querySelectorAll(".menu__link--active");
+    // Take the last in selection, as every ancestor link is also marked as active
+    const deepestActiveLink = activeLinks[activeLinks.length - 1];
+    const menu = deepestActiveLink.closest(".menu");
+
+    if (deepestActiveLink != null && menu != null) {
+      const activeLinkRect = deepestActiveLink.getBoundingClientRect();
+      const menuRect = menu.getBoundingClientRect();
+      menu.scrollTop =
+        activeLinkRect.top - menuRect.height / 2 - activeLinkRect.height / 2;
     }
-  }, [location.pathname]);
+  }, []);
 
   return null;
 }

@@ -9,14 +9,10 @@ export default function SidebarAutoScroll() {
     const sidebarContainer = activeLink?.closest('.theme-doc-sidebar-container');
     
     if (activeLink && sidebarContainer) {
-      // Position item at top, then immediately scroll to center
-      activeLink.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      activeLink.scrollIntoView({ block: 'start' });
       
       const centerOffset = sidebarContainer.getBoundingClientRect().height / 2 - 30;
-      sidebarContainer.scrollBy({ 
-        top: -centerOffset, 
-        behavior: 'smooth' 
-      });
+      sidebarContainer.scrollBy({ top: -centerOffset });
     }
   }, [location.pathname]);
 

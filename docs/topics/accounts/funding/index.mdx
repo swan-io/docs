@@ -231,6 +231,17 @@ import DayTimeStandard from '../../partials/_day-time.mdx';
 If you use `requestedExecutionAt` when initiating your funding requests, you can schedule them up to one year in advance.
 Your scheduled requests must be for at least two business days in the future.
 
+## Canceling transactions {#canceling}
+
+Account holders and eligible account members can cancel SEPA Direct Debit funding transactions using the [`cancelTransaction`](https://api-reference.swan.io/mutations/cancel-transaction/) mutation.
+To understand if a transaction is cancelable, check the `isCancelable` field of the transaction.
+Only the full amount can be canceled.
+
+Transactions can only be canceled before they are sent to the SEPA Gateway, respecting the current cutoff time.
+The cutoff until which the transaction can be canceled is approximately **10:00 Central European [Summer] Time (CET/CEST)**.
+
+After this cutoff time, the transaction cannot be canceled and will proceed to settlement.
+
 ## Guides {#guides}
 
 - [Add a funding source](./guide-add-source.mdx)

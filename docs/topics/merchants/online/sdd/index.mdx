@@ -84,6 +84,19 @@ If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` erro
 
 To [query this limit](./guide-request.mdx), use the `paymentAmountLimit` field at the `merchantPaymentMethod` level in the API.
 
+## Canceling payments {#canceling}
+
+Merchants can cancel SEPA Direct Debit payments using the [`cancelMerchantPayment`](https://api-reference.swan.io/mutations/cancel-merchant-payment/) mutation.
+To understand if a payment is cancelable, check the `availableToCancel` balance of the payment.
+Only the full amount can be canceled.
+
+Payments can only be canceled before transactions are sent to the SEPA Gateway, respecting the current cutoff times:
+
+- **SDD Core**: Payments can be canceled until approximately **11:00 Central European [Summer] Time (CET/CEST)**
+- **SDD B2B**: Payments can be canceled until approximately **10:00 Central European [Summer] Time (CET/CEST)**
+
+After these cutoff times, the payment cannot be canceled and will proceed to settlement.
+
 ## Payment mandates {#mandates}
 
 A payment mandate is a written authorization from a debtor that allows a creditor to initiate a direct debit transaction from their account.

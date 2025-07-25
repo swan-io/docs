@@ -122,6 +122,16 @@ If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` erro
 
 To [query this limit](./guide-request.mdx), use the `paymentAmountLimit` field at the `merchantPaymentMethod` level in the API.
 
+## Canceling payments {#canceling}
+
+Merchants can cancel check payments using the [`cancelMerchantPayment`](https://api-reference.swan.io/mutations/cancel-merchant-payment/) mutation.
+To understand if a payment is cancelable, check the `availableToCancel` balance of the payment.
+Only the full amount can be canceled.
+
+Checks can be canceled up until the point when they're received by the check processing center.
+The exact timing depends on postal services, so cancellation availability varies.
+Once the check processing center receives the check, it cannot be canceled.
+
 ## Settlement date and booked time {#settlement}
 
 Checks are booked 2-3 business days after they arrive at the check processing center.

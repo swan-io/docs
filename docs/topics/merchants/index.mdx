@@ -10,10 +10,13 @@ import MerchantsDefinition from '../definitions/_merchants.mdx';
 
 ## Overview {#overview}
 
+Merchants are users who want to accept payments by card, SEPA Direct Debit, Internal Direct Debit, or French checks, either directly from a payment link or an invoice. 
+This includes contractors, healthcare professionals, artisans, and business owners, among others.
+
 With a merchant profile and at least one active merchant payment method, you can help your merchants accept payments with Swan.
 
 :::info Pending review
-Before accepting payments, you and your merchant need to complete a risk review.
+Before accepting payments, you need to complete a risk review.
 To get started, contact your dedicated Technical Account Manager, or send an email to integration@swan.io.
 :::
 
@@ -26,7 +29,8 @@ You might be contacted for more information before Swan accepts or rejects the r
 
 To manage potential risk, if suspicious activity is detected, Swan can **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
 Swan can also reinstate a profile or payment method by changing the status to `Enabled`.
-Finally, if Swan assigns the status `Rejected` to a profile or payment method, the decision is final and can't be reversed.
+Finally, if Swan assigns the status `Rejected` to a profile or payment method, the decision is final and can't be reversed. 
+The user must create a new request, which Swan will review as a separate submission.
 
 ### Webhooks {#webhooks}
 
@@ -60,26 +64,39 @@ flowchart LR
 | Profile status | Explanation |
 |---|---|
 | `PendingReview` | Profile or payment method request or update was submitted and is pending a review by Swan.<br /><br />**Next steps**: <ul><li>If the request or update doesn't meet requirements or is deemed risky by Swan, the status moves directly to `Rejected`.</li><li>Otherwise, the status moves to `Enabled`.</li></ul> |
-| `Enabled` | Profile or payment method is active.<br /><br /><ul><li>Use `Enabled` merchant profiles to request payment methods and accept payments with activated payment methods.</li><li>Use `Enabled` payment methods to accept payments.</li><li>Updates to profiles and payment methods can only occur when they have the status `Enabled`.</li></ul> |
+| `Enabled` | Profile or payment method is active.<br /><br /><ul><li>Use `PendingReview` merchant profiles to request payment methods and accept payments with activated payment methods.</li><li>Use `Enabled` payment methods to accept payments.</li><li>Updates to profiles and payment methods can only occur when they have the status `Enabled`.</li></ul> |
 | `Suspended` | Status **assigned by Swan** when the merchant's use of their profile or payment method needs to be reviewed. The status can't return to `Enabled` without a review. |
 | `Rejected` | Final status **assigned by Swan** when Swan decides the risk of this profile or the risk of this payment method for the associated merchant is too high, or for some other risk-related reason. |
 | `Disabled` | Final status **set by you** using the `requestMerchantPaymentMethods` mutation. |
 
 ## Merchant profiles {#profiles}
 
-A **merchant profile** is a collection of business, risk, and support information that fulfills two primary requirements: **approve the account holder** as a merchant, and **facilitate accepting payments** with Swan.
+A **merchant profile** is a collection of business, risk, and support information that fulfills two primary requirements: 
 
-The merchant profile contains the following information:
+1. **Approve the account holder** as a merchant.
+1. **Facilitate accepting payments** with Swan. 
 
-- Business details
-- Description of the business activity
-- Link to the merchant's website
-- Projected volumes
-- Logo (optional), displayed online and on mandate PDFs
-- Accent color
+If a Swan account holder wants to accept payments from customers, they must have at least one merchant profile.
 
-A merchant profile is required of all Swan account holders wanting to accept payments from customers.
-If you want to accept payments from customers, you must have at least one merchant profile.
+Your users can create merchant profiles during onboarding, but only if you've requested the feature for them.
+Since merchants are considered high risk, merchant profiles should only be requested for users who qualify and will accept payments.
+Requesting merchant profiles for users that don't qualify may create false expectations about available features.
+
+A merchant profile contains the following information:
+
+1. Business details
+1. Description of the business activity
+1. Link to the merchant's website or social network
+1. Projected volumes
+1. Payment frequency
+1. Logo (optional), in `.png` format and less than 1 MB. It's shown online and on the PDF of the payment mandate.
+1. Accent color
+1. Customer region
+
+:::tip 
+To speed up **merchant profile enablement**, complete as many input fields as possible.  
+Providing your `customerRegion`, `paymentFrequency`, and at least a `socialNetwork` or `merchantWebsite` can reduce turnaround time.
+:::
 
 The merchant profile is created with the status `PendingReview`, and is visible right away on your Dashboard.
 
@@ -94,7 +111,11 @@ Updating a merchant profile produces the following events:
 1. The [**merchant profile status**](#statuses) doesn't change, remaining `Enabled`. The merchant continues to use their merchant profile with the existing information.
 1. The **update status** is `PendingReview`. Swan reviews the new information to ensure it meets requirements. 
 1. After Swan reviews and validates the update request, the update status changes to `Enabled` and the update is published to the merchant profile.
-1. If Swan rejects the update request, the merchant profile remains `Enabled`, but with the existing information. The update isn't published.
+1. If Swan rejects the update request, the merchant profile remains `Enabled` by default, unless Swan decides otherwise. 
+The merchant profile status doesn't change.
+
+When a merchant payment method is requested, Swan may ask for additional information even if the merchant profile is already `Enabled`.
+Swan will contact you or your user directly, based on your communication preferences.
 
 If you requested an update and your update status is `PendingReview`, but you need to **make another change**, submit a new update request.
 Swan reviews both requests, but only the most recent is made public. 

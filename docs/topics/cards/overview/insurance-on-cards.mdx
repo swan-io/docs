@@ -89,7 +89,7 @@ For specific pricing details, refer to your terms and conditions or contact your
 
 ### Insurance subscription statuses {#subscription-statuses}
 
-When a user orders a card with insurance, Swan begins the process of creating an insurance subscription with our insurance provider.
+When a user orders a card with insurance, Swan begins the process of creating an insurance subscription with our insurance partner.
 
 The subscription progresses through these statuses in order: **Pending** → **Processing** → **Enabled**, or **Canceled** (if the associated card is canceled).
 
@@ -122,44 +122,45 @@ flowchart LR
 | Status | Explanation |
 |---|---|
 | `Pending`| Insurance subscription is waiting for the account membership to be `Enabled`, and the account holder to be `Verified`. |
-| `Processing`| The insurance subscription request is sent to the insurance provider for adhesion. |
+| `Processing`| The insurance subscription request is sent to the insurance partner for adhesion. |
 | `Enabled` | The insurance subscription is active and insurance is valid. <br/><br/>If you're subscribed to the `cardInsuranceSubscription.Created` webhook, you'll receive a notification when a subscription is `Enabled`. |
 | `Canceled`| The insurance subscription is `Canceled` when the associated card is canceled. |
 
 ### Insurance subscription flow {#subscription-flow}
 
-When a card product with insurance is ordered, Swan creates an insurance subscription (called an "adhesion" by the insurance provider). Swan automatically applies the insurance package set for the card product.
+When a card product with insurance is ordered, Swan creates an insurance subscription (called an "adhesion" by the insurance partner). Swan automatically applies the insurance package set for the card product.
 
 ### Sequence diagram
 
-The following diagram details a common flow of how the user, partner system (you), Swan and the insurance provider interact when ordering a new card with embedded insurance.
+The following diagram details a common flow of how the user, Your system (you), Swan and the insurance partner interact when ordering a new card with embedded insurance.
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant Partner system
+    participant Your system
     participant Swan
-    participant Insurance provider
+    participant Insurance partner
 
     alt User orders card via Web Banking
         User->>Swan: Orders card
-    else Partner orders card via API
-        Partner System->>Swan: Calls `addCard`, `addCards`, or `addCardsWithGroupDelivery` mutation
+    else You order card via API
+        Your system->>Swan: Calls `addCard`, `addCards`, or `addCardsWithGroupDelivery` mutation
     end
 
-    Swan-->>Partner System: Returns card object with `insurancePackageId`
+    Swan-->>Your system: Returns card object with `insurancePackageId`
     Swan->>User: Displays consent screen (localized insurance terms)
     User->>Swan: Accepts insurance terms
+    Swan->>Your system: Sends `cardInsuranceSubscription.Created` webhook
     Note over Swan: Waits for:<br>Account membership = Enabled<br>Account holder verification = Verified
-    Swan->>Insurance provider: Sends POST request to create insurance subscription
-    Insurance provider-->>Swan: Confirms subscription
-    Swan->>Partner System: Sends `cardInsuranceSubscription.Created` webhook
+    Swan->>Insurance partner: Sends POST request to create insurance subscription
+    Insurance partner-->>Swan: Confirms subscription and activates insurance
+    Swan->>Your system: Sends `cardInsuranceSubscription.Updated` webhook
 ```
 ### Steps
 
 1. A card is ordered by either:
-   - **The user**, through their Web banking interface.
-   - **You (the partner)**, through the API using one of the following mutations:  
+   - **The user**, through their Web Banking interface.
+   - **You**, through the API using one of the following mutations:  
      `addCard` (single card), `addCards` (multiple cards), or `addCardsWithGroupDelivery` (multiple cards with shared delivery).
 
 2. An `insurancePackageId` is attributed to the card.
@@ -167,16 +168,18 @@ sequenceDiagram
 3. **Swan sends a consent request to your user**, and they review and **accept the insurance terms** on the consent screen. 
 This screen is localized based on the account member's language.
 
-4. After consent, **Swan creates the insurance subscription** (called an "adhesion" by our insurance provider).
+4. After consent, **Swan sends a** `cardInsuranceSubscription.Created` **webhook** to your system.
+
+5. Swan creates the **insurance subscription** (called an "adhesion" by our insurance partner).
 
 :::caution
 Insurance subscription creation only happens when the account membership is `Enabled` and the account holder verification status is `Verified`. The creation of a subscription may be **delayed** until these conditions are met.
 :::
 
-5. **Swan sends a** `cardInsuranceSubscription.Created` **webhook** to your system once the insurance provider confirms the subscription.
+5. **Swan sends a** `cardInsuranceSubscription.Updated` **webhook** to your system once the insurance partner confirms the subscription.
 
 :::info Card insurance activation
-Once subscribed, the insurance is automatically activated. Your user can view the insurance notice, and access the URL to the insurance claims portal through their Web banking interface.
+Once subscribed, the insurance is automatically activated. Your user can view the insurance notice, and access the URL to the insurance claims portal through their Web Banking interface.
 :::
 
 ## Card insurance claims {#insurance-claims}
@@ -187,7 +190,7 @@ When an eligible event occurs, cardholders should submit a claim through the **i
 
 #### Reporting through the claims portal
 
-The insurance claims portal is available in the cardholder's Web banking interface. 
+The insurance claims portal is available in the cardholder's Web Banking interface. 
 It's typically used for standard claims such as:
 - Lost documents
 - Travel delays

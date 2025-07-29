@@ -2,6 +2,9 @@
 title: Insurance on cards
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::caution No coverage for existing cards
 Insurance on cards is currently in private beta.
 :::
@@ -30,47 +33,53 @@ The following tables outline the card insurance coverage included with Swan card
 Specific coverage varies by **insurance plan**. To consult the details of a card's insurance coverage, please **request the terms and conditions notice** directly from your Product Integration Manager (PIM).
 :::
 
-<details>
-  <summary>**Identity protection** </summary>
-  <div>
-| Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
-|---|---|---|---|---|---|
-| Loss or theft of identity documents | Reimbursement of costs for renewing identity documents (including duplicate fees, stamp duty, and identity document photos). |  ✅  | ✅ | ✅ | Up to €350 per year and per claim |
-| Bank card fraud | Reimbursement for amounts fraudulently debited before reporting loss or theft. | ✅ | ✅ | ✅ | Up to €3,000 per year |
-| Phishing guarantee | Reimbursement for financial losses due to phishing (above €50). | ✅ | ✅ | ✅ | Up to €1,000 per year |
-  </div>
-</details>
-
-<details>
-  <summary>**Travel insurance** </summary>
-  <div>
-| Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
-|---|---|---|---|---|---|
-| Travel delay (train or flight) | Reimbursement of expenses from train or flight delays of 4+ hours. |  |  | ✅ | Up to €400 per delay |
-| Delayed baggage | Reimbursement of essential purchases due to delayed baggage. |  |  | ✅ | Up to €800 per delay |
-| Lost, stolen, or damaged baggage | Reimbursement for baggage loss, theft, or damage. |  |  | ✅ | Up to €800 per baggage, €250 per valuable item; €70 deductible per claim |
-| Trip modification or cancellation | Reimbursement of non-recoverable trip costs due to valid reasons (illness, accident, summons, strike, theft, visa refusal). |  | ✅ | ✅ | Up to €5,000 per year |
-| Travel assistance and repatriation | Medical expense reimbursement abroad and repatriation services. |  |  | ✅ | €100,000 (medical), €2,500 (ski accident), €1,500 (repatriation of remains) |
-  </div>
-</details>
-
-<details>
-  <summary>**Car rental** </summary>
-  <div>
-| Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
-|---|---|---|---|---|---|
-| Rental vehicle coverage | Coverage for incidents related to rental vehicles. |  | ✅ | ✅ | Up to 2 incidents per year |
-  </div>
-</details>
-
-<details>
-  <summary>**Legal protection** </summary>
-  <div>
-| Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
-|---|---|---|---|---|---|
-| E-reputation legal protection | Legal support for identity theft, cyber-harassment, or damage to online reputation. | ✅ | ✅ | ✅ | Up to €15,000 per dispute |
-  </div>
-</details>
+<Tabs>
+  <TabItem value="identity" label="🛡️ Identity protection" default>
+    **Coverage**: Protection against identity-related fraud and document loss
+    
+    **What's included**:
+    
+    | Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
+    |---|---|---|---|---|---|
+    | Loss or theft of identity documents | Reimbursement of costs for renewing identity documents (including duplicate fees, stamp duty, and identity document photos). |  ✅  | ✅ | ✅ | Up to €350 per year and per claim |
+    | Bank card fraud | Reimbursement for amounts fraudulently debited before reporting loss or theft. | ✅ | ✅ | ✅ | Up to €3,000 per year |
+    | Phishing guarantee | Reimbursement for financial losses due to phishing (above €50). | ✅ | ✅ | ✅ | Up to €1,000 per year |
+  </TabItem>
+  
+  <TabItem value="travel" label="✈️ Travel insurance">
+    **Coverage**: Protection for travel-related incidents and expenses
+    
+    **What's included**:
+    
+    | Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
+    |---|---|---|---|---|---|
+    | Travel delay (train or flight) | Reimbursement of expenses from train or flight delays of 4+ hours. |  |  | ✅ | Up to €400 per delay |
+    | Delayed baggage | Reimbursement of essential purchases due to delayed baggage. |  |  | ✅ | Up to €800 per delay |
+    | Lost, stolen, or damaged baggage | Reimbursement for baggage loss, theft, or damage. |  |  | ✅ | Up to €800 per baggage, €250 per valuable item; €70 deductible per claim |
+    | Trip modification or cancellation | Reimbursement of non-recoverable trip costs due to valid reasons (illness, accident, summons, strike, theft, visa refusal). |  | ✅ | ✅ | Up to €5,000 per year |
+    | Travel assistance and repatriation | Medical expense reimbursement abroad and repatriation services. |  |  | ✅ | €100,000 (medical), €2,500 (ski accident), €1,500 (repatriation of remains) |
+  </TabItem>
+  
+  <TabItem value="car-rental" label="🚗 Car rental">
+    **Coverage**: Protection for rental vehicle incidents
+    
+    **What's included**:
+    
+    | Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
+    |---|---|---|---|---|---|
+    | Rental vehicle coverage | Coverage for incidents related to rental vehicles. |  | ✅ | ✅ | Up to 2 incidents per year |
+  </TabItem>
+  
+  <TabItem value="legal" label="⚖️ Legal protection">
+    **Coverage**: Legal support for digital identity and reputation issues
+    
+    **What's included**:
+    
+    | Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
+    |---|---|---|---|---|---|
+    | E-reputation legal protection | Legal support for identity theft, cyber-harassment, or damage to online reputation. | ✅ | ✅ | ✅ | Up to €15,000 per dispute |
+  </TabItem>
+</Tabs>
 
 ## Card insurance product configuration {#insurance-configuration}
 
@@ -144,17 +153,18 @@ sequenceDiagram
     alt User orders card via Web Banking
         User->>Swan: Orders card
     else You order card via API
-        Your system->>Swan: Calls `addCard`, `addCards`, or `addCardsWithGroupDelivery` mutation
+        Your system->>Swan: Calls card creation API
+        Note over Your system,Swan: addCard, addCards, or addCardsWithGroupDelivery
     end
 
-    Swan-->>Your system: Returns card object with `insurancePackageId`
-    Swan->>User: Displays consent screen (localized insurance terms)
-    User->>Swan: Accepts insurance terms
-    Swan->>Your system: Sends `cardInsuranceSubscription.Created` webhook
-    Note over Swan: Waits for:<br>Account membership = Enabled<br>Account holder verification = Verified
-    Swan->>Insurance partner: Sends POST request to create insurance subscription
-    Insurance partner-->>Swan: Confirms subscription and activates insurance
-    Swan->>Your system: Sends `cardInsuranceSubscription.Updated` webhook
+    Swan-->>Your system: Returns card with insurancePackageId
+    Swan->>User: Shows consent screen
+    User->>Swan: Accepts terms
+    Swan->>Your system: Webhook: subscription.Created
+    Note over Swan: Waits for account enabled & verified
+    Swan->>Insurance partner: Creates subscription
+    Insurance partner-->>Swan: Confirms & activates
+    Swan->>Your system: Webhook: subscription.Updated
 ```
 ### Steps
 
@@ -227,47 +237,53 @@ If compensation is approved, it is credited directly to the cardholder's Swan ac
 
 The following table outlines how to report different claim types:
 
-<details>
-  <summary>**Identity protection**</summary>
-  <div>
-| Insurance cover type | How to report | Required documents |
-|---|---|---|
-| Loss or theft of identity documents | - Report through the insurance claims portal<br />- Within 30 business days | - Police report (loss or theft)<br />- Proof of renewal costs using Swan's card |
-| Bank card fraud | - Report card as lost/stolen to Swan<br />- Within 2 business days<br />- Then submit the incident through the insurance claims portal<br />- Within 30 days | - Police report<br />- Confirmation the card was reported<br />- Proof that Swan denied coverage<br />- Screenshot of disputed transactions |
-| Phishing guarantee | - Notify Swan and report card<br />- Within 2 business days<br />- File police report and submit claim through the insurance claims portal<br />- Within 2 days | - ID card<br />- Proof that Swan denied coverage<br />- Copy of fraudulent messages (email, SMS, etc.) |
-  </div>
-</details>
-
-<details>
-  <summary>**Travel insurance**</summary>
-  <div>
-| Insurance cover type | How to report | Required documents |
-|---|---|---|
-| Travel delay (train or flight) | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Carrier-issued delay certificate<br />- Receipts (meals, hotel, transport)<br />- Proof of business travel<br />- Travel ticket<br />- Declaration of honor and explanation |
-| Delayed baggage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Proof of business travel<br />- Travel ticket<br />- Baggage check-in receipt<br />- Receipts for essential purchases |
-| Lost, stolen, or damaged baggage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Proof of business travel<br />- Travel ticket and baggage check-in receipt<br />- Carrier-issued loss certificate<br />- Inventory and receipts of lost items |
-| Trip modification or cancellation | - Initiate cancellation/modification<br />- Within 72 hours<br />- Then submit through the insurance claims portal<br />- Within 15 days | - Certificate of cancellation/modification<br />- Proof of reason (medical certificate, summons, etc.)<br />- Proof of reservation and payment with a Swan card<br />- Proof of retained cancellation fees |
-| Travel assistance and repatriation | - Contact our assistance provider by phone<br />- Within 5 days | - Medical certificates<br />- Hospital bills<br />- Tickets or transport proof<br />- Description of the events |
-  </div>
-</details>
-
-<details>
-  <summary>**Car rental**</summary>
-  <div>
-| Insurance cover type | How to report | Required documents |
-|---|---|---|
-| Rental vehicle coverage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Rental contract<br />- Signed vehicle condition report<br />- Police report (if stolen) |
-  </div>
-</details>
-
-<details>
-  <summary>**Legal protection**</summary>
-  <div>
-| Insurance cover type | How to report | Required documents |
-|---|---|---|
-| E-reputation legal protection | - Contact our assistance provider by phone | - Documentation of the dispute<br />- Proof of related expenses |
-  </div>
-</details>
+<Tabs>
+  <TabItem value="identity" label="🛡️ Identity protection" default>
+    **Process**: Report incidents and submit required documentation for identity-related claims
+    
+    **Claim procedures**:
+    
+    | Insurance cover type | How to report | Required documents |
+    |---|---|---|
+    | Loss or theft of identity documents | - Report through the insurance claims portal<br />- Within 30 business days | - Police report (loss or theft)<br />- Proof of renewal costs using Swan's card |
+    | Bank card fraud | - Report card as lost/stolen to Swan<br />- Within 2 business days<br />- Then submit the incident through the insurance claims portal<br />- Within 30 days | - Police report<br />- Confirmation the card was reported<br />- Proof that Swan denied coverage<br />- Screenshot of disputed transactions |
+    | Phishing guarantee | - Notify Swan and report card<br />- Within 2 business days<br />- File police report and submit claim through the insurance claims portal<br />- Within 2 days | - ID card<br />- Proof that Swan denied coverage<br />- Copy of fraudulent messages (email, SMS, etc.) |
+  </TabItem>
+  
+  <TabItem value="travel" label="✈️ Travel insurance">
+    **Process**: Submit travel-related claims with appropriate documentation and timing
+    
+    **Claim procedures**:
+    
+    | Insurance cover type | How to report | Required documents |
+    |---|---|---|
+    | Travel delay (train or flight) | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Carrier-issued delay certificate<br />- Receipts (meals, hotel, transport)<br />- Proof of business travel<br />- Travel ticket<br />- Declaration of honor and explanation |
+    | Delayed baggage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Proof of business travel<br />- Travel ticket<br />- Baggage check-in receipt<br />- Receipts for essential purchases |
+    | Lost, stolen, or damaged baggage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Proof of business travel<br />- Travel ticket and baggage check-in receipt<br />- Carrier-issued loss certificate<br />- Inventory and receipts of lost items |
+    | Trip modification or cancellation | - Initiate cancellation/modification<br />- Within 72 hours<br />- Then submit through the insurance claims portal<br />- Within 15 days | - Certificate of cancellation/modification<br />- Proof of reason (medical certificate, summons, etc.)<br />- Proof of reservation and payment with a Swan card<br />- Proof of retained cancellation fees |
+    | Travel assistance and repatriation | - Contact our assistance provider by phone<br />- Within 5 days | - Medical certificates<br />- Hospital bills<br />- Tickets or transport proof<br />- Description of the events |
+  </TabItem>
+  
+  <TabItem value="car-rental" label="🚗 Car rental">
+    **Process**: Report rental vehicle incidents with proper documentation
+    
+    **Claim procedures**:
+    
+    | Insurance cover type | How to report | Required documents |
+    |---|---|---|
+    | Rental vehicle coverage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Rental contract<br />- Signed vehicle condition report<br />- Police report (if stolen) |
+  </TabItem>
+  
+  <TabItem value="legal" label="⚖️ Legal protection">
+    **Process**: Contact assistance provider for legal support and documentation
+    
+    **Claim procedures**:
+    
+    | Insurance cover type | How to report | Required documents |
+    |---|---|---|
+    | E-reputation legal protection | - Contact our assistance provider by phone | - Documentation of the dispute<br />- Proof of related expenses |
+  </TabItem>
+</Tabs>
 
 ## Guides {#guides}
 

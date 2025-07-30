@@ -1,0 +1,30 @@
+---
+title: 30 July 2025
+type: release
+---
+
+## New features
+
+📖 **Learn about the new Verification of Payee regulation**, its impacts on your users, and how you can update your Swan integration to improve your payment experience. Read our [new documentation](https://docs.swan.io/topics/payments/credit-transfers/sepa/verification-of-payee/) to determine how this European regulation impacts your business and how to update your Swan integration.
+
+## Improvements
+
+👥 You can access more balance information on a booked transaction with `BookedTransactionStatusInfo.balanceAfter`. This object includes `amount`, which replaces the existing `bookedBalanceAfter.amount` (see upcoming breaking change) and `sequenceNumber`, a new account-level transaction counter for newly-generated transactions (historical transactions will display `null`).
+
+🔑 You can now add an **idempotency key** when calling `initiateCreditTransfers` to ensure single execution and consistent results, even during retries. This improves the reliability of your integration and prevents duplicate transactions. Learn more about [idempotency](https://docs.swan.io/developers/using-api/idempotency/).
+
+🧭 You can now **customise column width on all pages of the dashboard**, for a better readability of data.
+
+🪝 We've implemented **two new webhooks** to update you on **rolling reserve changes**. `TransactionRollingReserve.Updated` is triggered when the release date is changed, and `TransactionRollingReserve.Released` will indicate that the reserved funds are now available.
+
+## API updates
+
+### Upcoming breaking changes
+
+📄 Starting **August 28th**, we'll start using these new, already available enum variables: `USPersonStatusDeclaration` and `ProofOfBusinessActivity` for [SupportingDocumentPurpose](https://api-reference.swan.io/objects/supporting-document-purpose/), and `W9`, `W8`, and `CertificateOfLossOfNationality` for [SupportingDocumentType](https://api-reference.swan.io/enums/supporting-document-type/).
+
+👥 Starting **December 31st**, the `bookedBalanceAfter` field will be removed from the transaction query. Please use the `balanceAfter.amount` on `BookedTransactionStatusInfo`.
+
+## Coming up
+
+Passcode reset improvements, insurance on cards, and more! Check out **Swan's public roadmap** to see what's in the works. 🚀

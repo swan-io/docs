@@ -214,8 +214,8 @@ module.exports = {
             "topics/cards/overview/guide-export",
             {
               type: "category",
-              label: "Insurance on cards",
-              link: { type: "doc", id: "topics/cards/overview/insurance-on-cards" },
+              label: "Card insurance",
+              link: { type: "doc", id: "topics/cards/overview/card-insurance" },
               collapsed: true,
               items: [
                 "topics/cards/overview/guide-insurance-integration",

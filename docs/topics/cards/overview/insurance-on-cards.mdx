@@ -154,17 +154,17 @@ sequenceDiagram
         User->>Swan: Orders card
     else You order card via API
         Your system->>Swan: Calls card creation API
-        Note over Your system,Swan: addCard, addCards, or addCardsWithGroupDelivery
+        Note over Your system,Swan: `addCard`, `addCards`, or `addCardsWithGroupDelivery`
     end
 
-    Swan-->>Your system: Returns card with insurancePackageId
+    Swan-->>Your system: Returns card with `insurancePackageId`
     Swan->>User: Shows consent screen
     User->>Swan: Accepts terms
-    Swan->>Your system: Webhook: subscription.Created
-    Note over Swan: Waits for account enabled & verified
+    Swan->>Your system: Webhook: `subscription.Created`
+    Note over Swan: Waits for: <br> Account membership = `Enabled` <br />& Account holder = `Verified`
     Swan->>Insurance partner: Creates subscription
     Insurance partner-->>Swan: Confirms & activates
-    Swan->>Your system: Webhook: subscription.Updated
+    Swan->>Your system: Webhook: `subscription.Updated`
 ```
 ### Steps
 

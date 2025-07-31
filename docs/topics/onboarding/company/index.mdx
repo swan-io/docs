@@ -85,13 +85,14 @@ No other additional information is required in the UBO section for legal represe
 ### Representatives {#representatives}
 
 Representatives are individuals or legal entities authorized to act on behalf of the company during the onboarding process and for ongoing account management.
+This is **separate from the legal representative** who serves as the account admin and undergoes identification verification.
+
 Swan supports two types of representatives:
 
-- **Individual representatives**: Natural persons authorized to represent the company
-- **Company representatives**: Legal entities authorized to represent the company
+- **Individual representatives**: natural persons authorized to represent the company.
+- **Company representatives**: legal entities authorized to represent the company.
 
 Representative data is **optional** and helps Swan automate verification processes and reporting.
-For companies in 🇫🇷 France, Swan automatically prefills representative information from the national business registry when available.
 
 :::tip API usage
 Use the `representatives` field in the `onboardCompanyAccountHolder` and `updateCompanyOnboarding` mutations.
@@ -100,7 +101,7 @@ Set `type` to `Individual` for natural persons or `Company` for legal entities.
 
 ### Retrieving data automatically {#retrieve-data}
 
-For companies located in 🇫🇷 France, Swan retrieves available data automatically from the national business registry after you provide the company's registration number.
+For companies located in 🇫🇷 France, Swan retrieves and prefills available data automatically from the national business registry after you provide the company's registration number.
 By allowing Swan to retrieve the data, you don't need to ask your users for certain information.
 
 To trigger automatic retrieval, `residencyAddress.country` must be `FRA` and you must provide the `registrationNumber`.
@@ -110,8 +111,8 @@ These fields are the only mandatory data you need to include when creating Frenc
 
 For data about representatives (UBOs, legal representatives, and company representatives), how Swan applies registry data depends on what you provide:
 
-- If you **provide** data, Swan doesn't override your values with data from the registry.
-- If you **don't provide** data, Swan creates the API objects and fills in the available data from the registry. Note that the registry information isn't always complete.
+- If you **provide** data, Swan doesn't override your values with data from the national business registry.
+- If you **don't provide** data, Swan creates the API objects and fills in the available data from the national business registry. Note that the registry information isn't always complete.
 
 #### Other data {#retrieve-data-other}
 
@@ -119,11 +120,11 @@ For all other data, review the following table to understand how Swan applies re
 
 | Event | Providing data | Example |
 |---|---|---|
-| **Create** an onboarding | Swan fills in as many onboarding fields as possible with data from the registry. Note that the registry information isn't always complete.<br /><br />If you provide data manually when creating the onboarding, Swan doesn't override those values, only filling in the other data. | You: <ul><li>Provide the mandatory `residencyAddress.country` and `registrationNumber`.</li><li>Provide the `vatNumber`, which could be retrieved from the registry.</li></ul>Swan: <ul><li>Keeps the `vatNumber` you provided.</li><li>Fills in all other fields with the retrieved data.</li></ul> |
-| **Update** an onboarding | Swan overrides any data you provided manually when creating the onboarding with data from the registry, unless you provide it again. | You: <ul><li>Specify the `language`.</li><li>Don't provide the `vatNumber` again.</li></ul>Swan: <ul><li>Replaces the `vatNumber` you provided when creating the onboarding with the `vatNumber` retrieved from the registry.</li><li>Saves the `language` data.</li></ul> |
+| **Create** an onboarding | Swan fills in as many onboarding fields as possible with data from the national business registry. Note that the registry information isn't always complete.<br /><br />If you provide data manually when creating the onboarding, Swan doesn't override those values, only filling in the other data. | You: <ul><li>Provide the mandatory `residencyAddress.country` and `registrationNumber`.</li><li>Provide the `vatNumber`, which could be retrieved from the national business registry.</li></ul>Swan: <ul><li>Keeps the `vatNumber` you provided.</li><li>Fills in all other fields with the retrieved data.</li></ul> |
+| **Update** an onboarding | Swan overrides any data you provided manually when creating the onboarding with data from the national business registry, unless you provide it again. | You: <ul><li>Specify the `language`.</li><li>Don't provide the `vatNumber` again.</li></ul>Swan: <ul><li>Replaces the `vatNumber` you provided when creating the onboarding with the `vatNumber` retrieved from the registry.</li><li>Saves the `language` data.</li></ul> |
 
 :::caution Overriding data
-When you create and update onboardings, Swan automatically fills in available data from the registry.
+When you create and update onboardings, Swan automatically fills in available data from the national business registry.
 If you need to update an onboarding, and you provided data manually when creating that onboarding, provide the data again if you don't want Swan to override it.
 :::
 
@@ -155,36 +156,42 @@ import CountryReqs from '../partials/_country-reqs.mdx';
 
 For company accounts, use the `onboardCompanyAccountHolder` mutation to collect the following information according to your desired account country.
 
-Note that this section is broken up into company and account holder information, information about the UBO, information about the legal representative, and information about representatives.
+This section covers four types of information:
+- **Company and account holder information**: Basic company details
+- **UBO information**: Ultimate beneficial owners (25%+ ownership or legal representative UBOs)
+- **Legal representative information**: The individual who manages the account and undergoes identification
+- **Representative information**: Additional individuals or legal entities authorized to act on behalf of the company
 
-All have required fields.
-If the cell is empty, the field is optional.
+Fields are marked as **required** (✅), **optional** (🔶), or **conditional** (❓): 
+- ✅ (Required): must be completed.<br/> 
+- 🔶 (Optional): can be left blank; may have a default value.
+- ❓ (Conditional): required only in specific situations.
 
 ### Company and account holder information {#country-reqs-company-account-holder}
 
 | API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|---|---|---|---|---|
-|`accountCountry`| ✓ Required (**FRA**) | ✓ Required (**DEU**) | ✓ Required (**ITA**) | ✓ Required (**NLD**) | ✓ Required (**ESP**) |
-|`accountName`|  |  |  |  |  |
-|`businessActivity`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`businessActivityDescription`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`companyType`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`email`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`isRegistered` ^| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`language`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`monthlyPaymentVolume`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`name` *(company name)* | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`redirectUrl`|  |  |  |  |  |
-|`registrationNumber` ^ | ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.addressLine1`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.addressLine2`|  |  |  |  |  |
-|`residencyAddress.city`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.country`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.postalCode`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`residencyAddress.state`|  |  |  |  |  |
-|`taxIdentificationNumber`|  | ✓ Required (∗ 90 days) |✓ Required |  | ﹖ Conditional |
-|`typeOfRepresentation`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`vatNumber`|  |  | ✓ Required |  |  |
+|---|:---:|:---:|:---:|:---:|:---:|
+|`accountCountry`| ✅ (**FRA**) | ✅ (**DEU**) | ✅ (**ITA**) | ✅ (**NLD**) | ✅ (**ESP**) |
+|`accountName`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+|`businessActivity`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`businessActivityDescription`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`companyType`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`email`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`isRegistered` ^| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`language`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`monthlyPaymentVolume`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`name` *(company name)* | ✅ | ✅ | ✅ | ✅ | ✅ |
+|`redirectUrl`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+|`registrationNumber` ^ | ✅ | ✅ | ✅ | ✅ | ✅ |
+|`residencyAddress.addressLine1`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`residencyAddress.addressLine2`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+|`residencyAddress.city`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`residencyAddress.country`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`residencyAddress.postalCode`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`residencyAddress.state`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+|`taxIdentificationNumber`| 🔶 | ✅ (∗ 90 days) |✅ | 🔶 | ❓ |
+|`typeOfRepresentation`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`vatNumber`| 🔶 | 🔶 | ✅ | 🔶 | 🔶 |
 
 > ^ *`isRegistered` must be `true` and the `registrationNumber` provided for **all onboardings** where `companyType` is `Company`.
 This also applies when `companyType` is `SelfEmployed` **and** the account country is `France`.
@@ -206,26 +213,30 @@ However, for `individualUltimateBeneficialOwners.type`, please indicate `LegalRe
 **UBO** stands for a portion of the API field: `individualUltimateBeneficialOwners`.
 :::
 
+Fields are marked as **required** (✅) or **optional** (🔶): 
+- ✅ (Required): must be completed.
+- 🔶 (Optional): can be left blank; may have a default value.
+
 | API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|---|---|---|---|---|
-|`UBO.birthCity`| ✓ Required | | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.birthCityPostalCode`| ✓ Required | | ✓ Required | ✓ Required | |
-|`UBO.birthCountryCode`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.birthDate`| ✓ Required |  | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.direct`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.indirect`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.firstName`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.lastName`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.gender`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.residencyAddress.addressLine1`|  | ✓ Required | ✓ Required |  | ✓ Required |
-|`UBO.residencyAddress.addressLine2`| | | | | |
-|`UBO.residencyAddress.city`|  | ✓ Required |  ✓ Required | | ✓ Required |
-|`UBO.residencyAddress.country`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.residencyAddress.postalCode`| | ✓ Required | ✓ Required |  | ✓ Required |
-|`UBO.residencyAddress.state`| | | | | |
-|`UBO.taxIdentificationNumber`| | ✓ Required (∗ 90 days) | ✓ Required | | |
-|`UBO.totalCapitalPercentage`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
-|`UBO.type`| ✓ Required | ✓ Required | ✓ Required | ✓ Required | ✓ Required |
+|---|:---:|:---:|:---:|:---:|:---:|
+|`UBO.birthCity`| ✅ | 🔶 | ✅ | ✅ | ✅ |
+|`UBO.birthCityPostalCode`| ✅ | 🔶 | ✅ | ✅ | 🔶 |
+|`UBO.birthCountryCode`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`UBO.birthDate`| ✅ | 🔶 | ✅ | ✅ | ✅ |
+|`UBO.direct`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`UBO.indirect`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`UBO.firstName`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`UBO.lastName`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`UBO.gender`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`UBO.residencyAddress.addressLine1`| 🔶 | ✅ | ✅ | 🔶 | ✅ |
+|`UBO.residencyAddress.addressLine2`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+|`UBO.residencyAddress.city`| 🔶 | ✅ | ✅ | 🔶 | ✅ |
+|`UBO.residencyAddress.country`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`UBO.residencyAddress.postalCode`| 🔶 | ✅ | ✅ | 🔶 | ✅ |
+|`UBO.residencyAddress.state`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+|`UBO.taxIdentificationNumber`| 🔶 | ✅ (∗ 90 days) | ✅ | 🔶 | 🔶 |
+|`UBO.totalCapitalPercentage`| ✅ | ✅ | ✅ | ✅ | ✅ |
+|`UBO.type`| ✅ | ✅ | ✅ | ✅ | ✅ |
 
 > ∗ *If the `accountCountry` is Germany, the UBO has 90 days to provide their Tax ID Number when opening an account.
 Otherwise, the account is `Suspended`.
@@ -238,14 +249,18 @@ Share [Swan's Support Center article](https://support.swan.io/hc/en-150/articles
 **lr** stands for a portion of the API field: `legalRepresentative`.
 :::
 
+Fields are marked as **required** (✅) or **optional** (🔶): 
+- ✅ (Required): must be completed.
+- 🔶 (Optional): can be left blank; may have a default value.
+
 | API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|---|---|---|---|---|
-|`lrPersonalAddress.addressLine1`| | ✓ Required | ✓ Required | ✓ Required | |
-|`lrPersonalAddress.addressLine2`| | | | | |
-|`lrPersonalAddress.city`| | ✓ Required | ✓ Required | ✓ Required | |
-|`lrPersonalAddress.country`| | ✓ Required | ✓ Required | ✓ Required | |
-|`lrPersonalAddress.postalCode`| | ✓ Required | ✓ Required | ✓ Required | |
-|`lrPersonalAddress.state`| | | | | |
+|---|:---:|:---:|:---:|:---:|:---:|
+|`lrPersonalAddress.addressLine1`| | ✅ | ✅ | ✅ | 🔶 |
+|`lrPersonalAddress.addressLine2`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+|`lrPersonalAddress.city`| 🔶 | ✅ | ✅ | ✅ | 🔶 |
+|`lrPersonalAddress.country`| 🔶 | ✅ | ✅ | ✅ | 🔶 |
+|`lrPersonalAddress.postalCode`| 🔶 | ✅ | ✅ | ✅ | 🔶 |
+|`lrPersonalAddress.state`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
 
 ### Representative information {#country-reqs-representatives}
 
@@ -259,49 +274,53 @@ While these fields are mostly optional now, they'll become mandatory in the futu
 <Tabs>
   <TabItem value="individual" label="👤 Individual representative" default>
     **API usage**: Use `representatives` with `type: Individual` for natural person representatives.
-    
-    **Required fields by country**:
+
+    Fields are marked as **required** (✅) or **optional** (🔶): 
+    - ✅ (Required): must be completed.
+    - 🔶 (Optional): can be left blank; may have a default value.
     
     | API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-    |---|---|---|---|---|---|
-    |`representatives.type`| ✓ Required<br/>(`Individual`) | ✓ Required<br/>(`Individual`) | ✓ Required<br/>(`Individual`) | ✓ Required<br/>(`Individual`) | ✓ Required<br/>(`Individual`) |
-    |`representatives.roles`| | | | | |
-    |`representatives.firstNames`| | | | | |
-    |`representatives.firstName`| | | | | |
-    |`representatives.lastName`| | | | | |
-    |`representatives.preferredFirstName`| | | | | |
-    |`representatives.gender`| | | | | |
-    |`representatives.birthDate`| | | | | |
-    |`representatives.birthCity`| | | | | |
-    |`representatives.birthCityPostalCode`| | | | | |
-    |`representatives.birthCountryCode`| | | | | |
-    |`representatives.nationality`| | | | | |
-    |`representatives.residencyAddress.addressLine1`| | | | | |
-    |`representatives.residencyAddress.addressLine2`| | | | | |
-    |`representatives.residencyAddress.city`| | | | | |
-    |`representatives.residencyAddress.country`| | | | | |
-    |`representatives.residencyAddress.postalCode`| | | | | |
-    |`representatives.residencyAddress.state`| | | | | |
+    |---|:---:|:---:|:---:|:---:|:---:|
+    |`representatives.type`| ✅ <br/>(`Individual`) | ✅ <br/>(`Individual`) | ✅ <br/>(`Individual`) | ✅ <br/>(`Individual`) | ✅ <br/>(`Individual`) |
+    |`representatives.roles`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.firstNames`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.firstName`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.lastName`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.preferredFirstName`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.gender`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.birthDate`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.birthCity`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.birthCityPostalCode`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.birthCountryCode`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.nationality`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.addressLine1`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.addressLine2`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.city`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.country`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.postalCode`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.state`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
   </TabItem>
   
   <TabItem value="company" label="🏢 Company representative">
     **API usage**: Use `representatives` with `type: Company` for legal entity representatives.
-    
-    **Required fields by country**:
-    
+
+    Fields are marked as **required** (✅) or **optional** (🔶): 
+    - ✅ (Required): must be completed.
+    - 🔶 (Optional): can be left blank; may have a default value.
+        
     | API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-    |---|---|---|---|---|---|
-    |`representatives.type`| ✓ Required<br/>(`Company`) | ✓ Required<br/>(`Company`) | ✓ Required<br/>(`Company`) | ✓ Required<br/>(`Company`) | ✓ Required<br/>(`Company`) |
-    |`representatives.roles`| | | | | |
-    |`representatives.entityName`| | | | | |
-    |`representatives.registrationNumber`| | | | | |
-    |`representatives.legalForm`| | | | | |
-    |`representatives.residencyAddress.addressLine1`| | | | | |
-    |`representatives.residencyAddress.addressLine2`| | | | | |
-    |`representatives.residencyAddress.city`| | | | | |
-    |`representatives.residencyAddress.country`| | | | | |
-    |`representatives.residencyAddress.postalCode`| | | | | |
-    |`representatives.residencyAddress.state`| | | | | |
+    |---|:---:|:---:|:---:|:---:|:---:|
+    |`representatives.type`| ✅ <br/>(`Company`) | ✅ <br/>(`Company`) | ✅ <br/>(`Company`) | ✅ <br/>(`Company`) | ✅ <br/>(`Company`) |
+    |`representatives.roles`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.entityName`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.registrationNumber`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.legalForm`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.addressLine1`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.addressLine2`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.city`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.country`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.postalCode`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
+    |`representatives.residencyAddress.state`| 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
   </TabItem>
 </Tabs>
 

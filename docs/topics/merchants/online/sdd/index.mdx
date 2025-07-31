@@ -77,12 +77,27 @@ import RollingReserve from '../../partials/_rolling-reserve.mdx';
 | SEPA Direct Debit - Core | ✓ **Yes** | Determined by a merchant profile risk assessment |
 | SEPA Direct Debit - B2B | ✓ **Yes** | 100% over 3 business days |
 
+You can use the `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/developers/using-api/webhooks/#events-transactions) to be notified when a transaction's rolling reserve is updated and when the funds are released.
+
 ## Payment amount limit {#payment-limit}
 For security and risk management, Swan may apply a **payment amount limit** to a single SEPA Direct Debit (SDD) payment. 
 This limit defines the maximum amount a user can spend in one SDD transaction. 
 If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` error.
 
 To [query this limit](./guide-request.mdx), use the `paymentAmountLimit` field at the `merchantPaymentMethod` level in the API.
+
+## Canceling payments {#canceling}
+
+Merchants can cancel SEPA Direct Debit payments using the [`cancelMerchantPayment`](https://api-reference.swan.io/mutations/cancel-merchant-payment/) mutation.
+To understand if a payment is cancelable, check its `availableToCancel` balance.
+Only the full amount can be canceled.
+
+Payments can only be canceled before transactions are sent to the SEPA payment gateway, respecting the current cutoff times:
+
+- **SDD Core**: Payments can be canceled until approximately **11:00 Central European [Summer] Time (CET/CEST)**
+- **SDD B2B**: Payments can be canceled until approximately **10:00 Central European [Summer] Time (CET/CEST)**
+
+After these cutoff times, the payment can't be canceled and will proceed to settlement.
 
 ## Payment mandates {#mandates}
 
@@ -147,14 +162,24 @@ Returns and refunds are only possible with **Core** and can be requested up to 8
 
 When a SEPA Direct Debit Core transaction is **rejected**, the debtor's account is not debited.
 
-A SEPA Direct Debit Core transaction might be rejected for the following reasons (this list is not exhaustive):
+A SEPA Direct Debit Core transaction might be rejected for the following reasons:
 
-- Incorrect account number
-- Debtor canceled the payment mandate
-- Account is closed
-- Insufficient funds
-- Technical issues
-- Debtor requested refusal of the debit before the date and time of the settlement execution
+| Rejection reason | Explanation |
+|---|---|
+| `BankRefused` | The payment was refused by the debtor's bank. |
+| `DebtorAccountClosed` | The debtor's bank account is closed. |
+| `DebtorAccountConsumer` | The debtor is not a business account, and the transaction is a B2B SDD transaction. |
+| `DebtorAccountUnknown` | The IBAN provided doesn't match an existing account at the debtor's bank. |
+| `DebtorDeceased` | The debtor is deceased. |
+| `InsufficientFunds` | The debtor has insufficient funds to fulfill the transaction. |
+| `MandateInvalid` | The payment mandate is invalid, possibly because it was canceled, incorrectly completed, or the B2B mandate wasn't declared. |
+| `ReasonNotSpecifiedByBank` | The debtor's bank can't disclose the rejection reason due to local data protection laws. |
+| `ReasonNotSpecifiedByDebtor` | The payment was rejected at the debtor's request. |
+| `RegulatoryReason` | The payment was rejected for regulatory reasons not covered by other specific reason codes. |
+| `SwanRefused` | Swan refused the transaction due to risk management or compliance requirements. |
+| `TransactionDuplicated` | The transaction can't be fulfilled because it is a duplicate of another transaction. |
+| `TransactionOnAccountTypeNotAllowed` | The account can't be debited because direct debits aren't allowed for this account type, for regulatory restrictions. |
+| `TransactionTypeNotAllowed` | The direct debit can't be processed because the debtor account is blocked. |
 
 When a SEPA Direct Debit Core transaction is rejected, regardless of the reason, the merchant receives a notification and can attempt a new SEPA Direct Debit at a later date.
 
@@ -162,11 +187,24 @@ When a SEPA Direct Debit Core transaction is rejected, regardless of the reason,
 
 When a SEPA Direct Debit Core transaction is **returned**, the debtor's account is debited the amount, but the payment is reversed and the funds return to the debtor's account.
 
-A SEPA Direct Debit Core transaction might be returned for the following reasons (this list is not exhaustive):
+A SEPA Direct Debit Core transaction might be returned for the following reasons:
 
-- Debtor disputes the payment
-- Insufficient funds
-- Invalid payment mandate (example: the mandate was not declared to the debtor bank)
+| Return reason | Explanation |
+|---|---|
+| `BankRefused` | The payment was refused by the debtor's bank. |
+| `DebtorAccountClosed` | The debtor's bank account is closed. |
+| `DebtorAccountConsumer` | The debtor is not a business account, and the transaction is a B2B SDD transaction. |
+| `DebtorAccountUnknown` | The IBAN provided doesn't match an existing account at the debtor's bank. |
+| `DebtorDeceased` | The debtor is deceased. |
+| `InsufficientFunds` | The debtor has insufficient funds to fulfill the transaction. |
+| `MandateInvalid` | The payment mandate is invalid, possibly because it was canceled, incorrectly completed, or it wasn't declared to the debtor bank. |
+| `ReasonNotSpecifiedByBank` | The debtor's bank can't disclose the return reason due to local data protection laws. |
+| `ReasonNotSpecifiedByDebtor` | The payment was returned at the debtor's request. |
+| `RegulatoryReason` | The payment was returned for regulatory reasons not covered by other specific reason codes. |
+| `SwanRefused` | Swan refused the transaction due to risk management or compliance requirements. |
+| `TransactionDuplicated` | The transaction can't be fulfilled because it's a duplicate of another transaction. |
+| `TransactionOnAccountTypeNotAllowed` | The account can't be debited because direct debits aren't allowed for this account type, for regulatory restrictions. |
+| `TransactionTypeNotAllowed` | The direct debit can't be processed because the debtor account is blocked. |
 
 When a SEPA Direct Debit Core transaction is returned, regardless of the reason, the merchant is notified about the return.
 They can investigate the reason for return and take whatever action is necessary, which might be refunding the payment or disputing the return with the debtor's bank.

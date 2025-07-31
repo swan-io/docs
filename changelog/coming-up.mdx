@@ -1,5 +1,5 @@
 :::tip Upcoming features
-Single-use virtual card improvements, passcode reset improvements, and more!<br />
+Passcode reset improvements, card insurance, and more!<br />
 Check out [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to see what's in the works. :rocket:
 :::
 
@@ -8,14 +8,19 @@ Check out [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap
 
   <div>
 
-✉️ Starting **July 21st**, the `shippingProvider` field in `PhysicalCardToActivateStatusInfo` and `PhysicalCardRenewedStatusInfo` will be migrated from a `String` to an `ENUM`. 
-On the same day, the [shipping provider](https://api-reference.swan.io/enums/shipping-provider/) values `La Poste` and `CORREOS` will be removed.
-
 💶 On **August 1st**, we're removing the `merchantPayment` field in the `InitiateCheckMerchantPaymentSuccessPayload`, use [`checkMerchantPayment`](/topics/merchants/online/checks/guide-initiate) instead. We're also deprecating `merchantPayment`.
+
+🪪 Starting **August 7th,** we'll [recommend](/topics/users/identifications/#processes-recommendations) `QES` as the identification method for German accounts, replacing the current `Expert` level. If you use `Auto`, no action is needed. This change will apply automatically.
 
 🛑 Starting **August 18th**, the `initiateCheckMerchantPayment` mutation will return a new rejection: `MerchantPaymentAlreadyExistsRejection`. This occurs when **you try to create a merchant payment** and the **CMC7 value** is already used by an existing payment that hasn't been `Rejected` or `Canceled`. If the existing payment with the same CMC7 *was* `Rejected` or `Canceled`, your mutation will still succeed.
 
 💳 Starting **August 21st**, refund transactions will be linked to the `paymentId` of their original debit authorization when referenced by merchants. This change affects you only if you expect debit clearing transactions on a debit authorization.
+
+📄 Starting **August 28th**, we'll start using these new, already available enum variables: `USPersonStatusDeclaration` and `ProofOfBusinessActivity` for [SupportingDocumentPurpose](https://api-reference.swan.io/objects/supporting-document-purpose/), and `W9`, `W8`, and `CertificateOfLossOfNationality` for [SupportingDocumentType](https://api-reference.swan.io/enums/supporting-document-type/).
+
+📖 Starting **October 9th**, the new **[Verification of Payee](https://docs.swan.io/topics/payments/credit-transfers/sepa/verification-of-payee/)** regulation takes effect.
+
+👥 Starting **December 31st**, the `bookedBalanceAfter` field will be removed from the transaction query. Please use the `balanceAfter.amount` on `BookedTransactionStatusInfo`.
 
   </div>
 </details>

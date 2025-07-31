@@ -212,6 +212,15 @@ module.exports = {
             "topics/cards/overview/guide-issue",
             "topics/cards/overview/guide-update",
             "topics/cards/overview/guide-export",
+            {
+              type: "category",
+              label: "Card insurance",
+              link: { type: "doc", id: "topics/cards/overview/card-insurance" },
+              collapsed: true,
+              items: [
+                "topics/cards/overview/guide-insurance-integration",
+              ],
+            },
           ],
         },
         {

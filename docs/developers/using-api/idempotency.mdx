@@ -70,7 +70,7 @@ mutation ExampleWithIdempotency {
 ## Response behavior
 
 ### First request
-Returns the operation result and stores it with your idempotency key:
+Returns the operation result and stores it with your idempotency key.
 
 ```json
 {
@@ -92,7 +92,7 @@ Returns the operation result and stores it with your idempotency key:
 ```
 
 ### Subsequent requests
-Returns the **current state** of the original operation. If the payment status has changed (e.g., user provided consent), the response reflects this:
+Returns the **current state** of the original operation. If the payment status has changed (e.g., user provided consent), the response reflects this.
 
 ```json
 {
@@ -112,7 +112,7 @@ Returns the **current state** of the original operation. If the payment status h
 
 ## Error handling
 
-Swan handles idempotency differently based on when errors occur:
+Swan handles idempotency differently based on when errors occur.
 
 ### Validation errors (before execution)
 Requests that fail parameter validation (e.g., invalid IBAN format) never reach execution, so no idempotent result is stored.
@@ -135,5 +135,5 @@ For example, if a payment fails due to insufficient funds, retrying with the sam
 
 Idempotency keys expire after 24 hours. After expiration:
 - The same key can be reused for a new operation.
-- Previous results are no longer accessible via that key.
+- Previous results are no longer accessible when using that key.
 - This prevents indefinite storage of operation results.

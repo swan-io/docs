@@ -265,8 +265,12 @@ The account membership status can be `BindingUserError` for several reasons, inc
 
 Account members whose membership status is `BindingUserError` can still access basic account and card information, but they can't perform any [sensitive operations](../../users/consent/index.mdx#sensitive), such as making a transfer or viewing their card numbers.
 
-Other account members with the `canManageAccountMembership` permission and status `Enabled` can fix the mismatch.
-Refer to the guide to [fix a user binding error](./guide-fix-binding-error.mdx) for more information.
+**Who can resolve binding errors depends on the error type:**
+
+- **Self-resolvable**: Users can fix `emailVerifiedMatchError` and `idVerifiedMatchError` themselves by verifying their email or completing identification.
+- **Admin resolution required**: All other binding errors (`firstNameMatchError`, `lastNameMatchError`, `birthDateMatchError`, `mobilePhoneMatchError`) can only be resolved by other account members with the `canManageAccountMembership` permission and status `Enabled`.
+
+Refer to the guide to [fix a user binding error](./guide-fix-binding-error.mdx) for detailed resolution steps.
 
 :::info Updating account members
 After an account member's status is `Enabled`, updating their personal details doesn't cause a user binding error.

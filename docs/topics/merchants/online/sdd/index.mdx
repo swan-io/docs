@@ -116,6 +116,13 @@ You must [declare mandates to Swan](./guide-declare.mdx) using the API.
 You can declare them before or after they're signed.
 If you declare a mandate before it's signed, make sure the debtor signs it before you issue the first direct debit.
 
+When declaring a mandate, the combination of the Unique Mandate Reference (UMR) and the SEPA Creditor Identifier (SCI) must be unique. 
+If the UMR and SCI have already been declared in another mandate, the API returns a `PaymentMandateReferenceAlreadyUsedRejection` and rejects the mandate declaration.
+
+:::note Using Swan's SCI
+If a merchant uses Swan's SCI, they must still ensure mandate references are unique to prevent conflicts with other merchants using the same SCI. Duplicate references will cause mandate declarations to be rejected by the API.
+:::
+
 After declaring the mandate, you might choose to upload it to your Dashboard as a PDF.
 This isn't mandatory but can be helpful if a debtor's bank requests a copy of the signed mandate.
 

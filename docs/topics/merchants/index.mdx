@@ -84,14 +84,18 @@ Requesting merchant profiles for users that don't qualify may create false expec
 
 A merchant profile contains the following information:
 
-1. Business details
-1. Description of the business activity
-1. Link to the merchant's website or social network
-1. Projected volumes
-1. Payment frequency
-1. Logo (optional), in `.png` format and less than 1 MB. It's shown online and on the PDF of the payment mandate.
-1. Accent color
-1. Customer region
+| Field | Description |
+| --- | --- |
+| **Business details** | Required. The merchant’s name, product type (`product`, `services`, `digital goods`, or `donations`), and a short description of their activity. |
+| **Projected volumes** | Required. Include the expected monthly payment volume and average order value. Helps assess business size and risk. |
+| **Link to the merchant's website or social network** | Highly recommended. This helps us understand the merchant’s business. Sometimes required. |
+| **Description of the business activity** | Highly recommended. A clear explanation of what the merchant offers or sells. |
+| **Payment frequency** | Specify if payments are mostly one-off or recurring (e.g. subscriptions). |
+| **Logo** | Optional. Must be a `.png` file under 1 MB. Displayed online and on the mandate PDF. |
+| **Accent color** | Optional. Used to customize the mandate and payment page design. |
+| **Customer region** | The country or region from which the merchant expects to receive payments. |
+| **Additional information** | Required only if custom fields are needed. Details are shared in the `expected` section of the project. |
+| **Supporting documents** | Required only after a risk review. Specific documents are listed in the `paymentMethod` object via the API. |
 
 :::tip 
 To speed up **merchant profile enablement**, complete as many input fields as possible.  
@@ -124,6 +128,23 @@ Swan reviews both requests, but only the most recent is made public.
 All update requests are reviewed by Swan according to the same [risk guidelines](#risk) as a new merchant profile.
 :::
 
+### Merchant profile rejection {#profile-rejected}
+
+The merchant profile is created with the status PendingReview, and is visible right away on your Dashboard. 
+It is then updated to either Enabled or Rejected depending on the outcome of Swan's risk review.
+
+A merchant profile can be rejected for the following reasons:
+
+| Rejection reason | Explanation |
+| --- | --- |
+| `DuplicateProfile` | The profile is a duplicate of an existing one. |
+| `InconsistentOrMissingInformation` | Key information is missing or highly inconsistent—for example, an unrelated website. |
+| `UnsupportedActivity` | The activity is prohibited or the NACE code isn't supported. |
+| `ContractualCriteriaNotFulfilled` | The profile doesn’t meet specific criteria agreed upon with partners. |
+| `GenericRejection` | The profile was rejected for a general reason not covered by other categories. |
+| `SuspiciousBehavior` | The profile was rejected due to alerts related to suspicious processing behavior. |
+
+
 ## Payment methods {#methods}
 
 Your merchants can accept payments from their customers using any of several **merchant payment methods**.
@@ -139,6 +160,30 @@ You can request multiple methods in one API call.
 import OnlinePaymentMethods from './partials/_online-list.mdx';
 
 <OnlinePaymentMethods />
+
+### Payment method review {#method-review}
+
+All merchant payment method requests are subject to a risk review. 
+As part of this process, Swan may need to request additional information from the merchant to complete the assessment.
+
+The following statuses can apply to a payment method request:
+
+| Status | Description |
+| :--- | :--- |
+| `WaitingForInformation` | The payment method status is set to this when more information is needed for the review. The `verificationRequirements` list specifies what the partner needs to provide to trigger a new review. If supporting documents are required, they must be uploaded and a new review requested using the `requestSupportingDocumentCollectionReview` mutation. |
+| `PendingReview` | The request is awaiting a review. After all required information has been provided from the `WaitingForInformation` stage, the status returns to `PendingReview`, and a new review is conducted. |
+
+### Payment method rejection {#payment-method-rejected}
+
+A merchant payment method can be rejected for the following reasons:
+
+| Rejection reason | Explanation |
+| :--- | :--- |
+| `InvalidUseCase` | The requested payment method doesn’t make sense for the merchant’s business model. |
+| `InconsistentOrMissingInformation` | The merchant failed to provide, or refused to provide, requested information. |
+| `UnsupportedPaymentMethod` | The partner isn’t allowed to request this payment method. |
+| `ContractualCriteriaNotFulfilled` | The request violates a specific criterion agreed upon with the partner. |
+| `GenericRejection` | The request was rejected for a general reason not covered by other categories. |
 
 ### Rolling reserve {#rolling-reserve}
 

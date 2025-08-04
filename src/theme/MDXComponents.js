@@ -1,0 +1,28 @@
+import React from 'react';
+import MDXComponents from '@theme-original/MDXComponents';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { 
+  Req, 
+  Opt, 
+  Cond, 
+  Supported, 
+  Unsupported, 
+  FieldRequirementsLegend, 
+  SupportStatusLegend 
+} from '@site/src/components/FieldRequirements';
+
+export default {
+  // Re-use the default mapping
+  ...MDXComponents,
+  // Swan custom components
+  Req,
+  Opt,
+  Cond,
+  Supported,
+  Unsupported,
+  FieldRequirementsLegend,
+  SupportStatusLegend,
+  Tabs,
+  TabItem,
+};

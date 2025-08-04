@@ -703,6 +703,7 @@ module.exports = {
         "developers/using-api/pagination",
         "developers/using-api/payment-control",
         "developers/using-api/webhooks",
+        "developers/using-api/idempotency",
       ],
     },
     {

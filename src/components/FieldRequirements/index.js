@@ -35,13 +35,13 @@ export const Cnd = () => (
 
 export const Supported = () => (
   <span className="badge sup" onClick={() => scrollToClosest('support-status-legend')} title="Supported feature">
-    SUPPORTED
+    ✓
   </span>
 );
 
 export const Unsupported = () => (
   <span className="badge unsup" onClick={() => scrollToClosest('support-status-legend')} title="Unsupported feature">
-    UNSUPPORTED
+    ✗
   </span>
 );
 

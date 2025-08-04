@@ -45,6 +45,18 @@ export const Unsupported = () => (
   </span>
 );
 
+export const No = () => (
+  <span className="badge unsup no-click" title="No">
+    ✗
+  </span>
+);
+
+export const Yes = () => (
+  <span className="badge sup no-click" title="Yes">
+    ✓
+  </span>
+);
+
 // Legends
 export const FieldRequirementsLegend = () => (
   <div className="legend field-requirements-legend">

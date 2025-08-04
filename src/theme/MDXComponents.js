@@ -8,6 +8,8 @@ import {
   Cnd, 
   Supported, 
   Unsupported, 
+  Yes, 
+  No, 
   FieldRequirementsLegend, 
   SupportStatusLegend 
 } from '@site/src/components/FieldRequirements';
@@ -21,6 +23,8 @@ export default {
   Cnd,
   Supported,
   Unsupported,
+  Yes,
+  No,
   FieldRequirementsLegend,
   SupportStatusLegend,
   Tabs,

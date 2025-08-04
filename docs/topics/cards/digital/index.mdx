@@ -38,6 +38,7 @@ There are multiple ways to [add cards to a digital wallet](./guide-add.mdx):
 1. Your cardholders can do it themselves by entering their virtual or physical card number into the digital wallet.
 1. Your cardholders can use the Swan App and follow the in-app provisioning process.
 1. You can initiate the in-app provisioning process through the `addDigitalCard` mutation.
+1. If cardholders start manual provisioning but don't complete it, you can [help them transition to in-app provisioning](./guide-add.mdx#manual-to-inapp) using the `activateDigitalCard` mutation.
 
 ## Renewing digital cards {#auto-renew}
 
@@ -55,6 +56,7 @@ flowchart LR
     CP -.-> P
     CP -.-> CD
     P -.-> E[Enabled]
+    P -.->|activateDigitalCard| E
     E -.-> CD
     E <-.-> S[Suspended]
     S -.-> CD[Canceled]
@@ -74,11 +76,36 @@ flowchart LR
 | Digital card status | Explanation |
 |---|---|
 | `ConsentPending` | Request to add a digital card was sent with the `addDigitalCard` mutation and is waiting for the cardholder's consent<br/><br/>**Next steps**:<ul><li>If the cardholder consents, the status moves to `Pending`</li><li>If the cardholder doesn't consent, the status moves to `Canceled`</li><li>If you use the API to cancel the card, the status moves to `Canceled`</li></ul> |
-| `Pending` | Cardholder added the card to their digital Wallet manually, or they provided consent after you added the card with the API<br/><br/>**Next steps**:<ul><li>If the card is added to their Wallet successfully, the status moves to `Enabled`</li><li>If the card is declined during provisioning, the status moves to `Declined`</li></ul> |
+| `Pending` | Cardholder added the card to their digital Wallet manually, or they provided consent after you added the card with the API<br/><br/>**Next steps**:<ul><li>If the card is added to their Wallet successfully, the status moves to `Enabled`</li><li>If the card is declined during provisioning, the status moves to `Declined`</li><li>You can use the `activateDigitalCard` mutation to help complete the provisioning process</li></ul> |
 | `Enabled` | Digital card is available for use<br/><br/>**Next steps**:<ul><li>Cards can retain the status `Enabled` indefinitely</li><li>`Enabled` cards can also be `Suspended` and `Canceled`</li></ul> |
 | `Suspended` | Digital card is suspended and not available for use<br/><br/>*Cards can be suspended for various reasons, including a request from you or the cardholder, or a Swan action in the case of suspicious activity.*<br/><br/>**Next steps**:<ul><li>Restore the card's previous status with the API</li><li>Cancel the card with the API</li></ul> |
 | `Canceled` | Card is canceled, no longer available for use, and can't be reactivated |
 | `Declined` | Card was declined during the provisioning process |
+
+:::tip Transitioning from Manual to In-App Provisioning
+If a digital card is stuck in `Pending` status after manual provisioning (for example, the cardholder didn't complete OTP verification), you can use the `activateDigitalCard` mutation to help them complete the process without restarting. Learn more in the [transitioning from manual to in-app provisioning guide](./guide-add.mdx#manual-to-inapp).
+:::
+
+## Troubleshooting digital card provisioning {#troubleshooting}
+
+### Common issues and solutions
+
+**Digital card stuck in `Pending` status**
+- Check if the cardholder completed the manual provisioning process in their digital wallet.
+- Use the `activateDigitalCard` mutation to help complete the provisioning.
+- Verify that the `walletId` is correctly identified for the pending card.
+
+**Cannot retrieve `walletId` for pending cards**
+- This is a known limitation with Apple Pay - the platform doesn't provide access to `walletId` for pending tokens.
+- For Google Pay, ensure you're using the correct filters in your query to identify pending cards.
+
+**Certification requirements**
+- Manual provisioning doesn't require additional certification.
+- In-app provisioning requires certification - contact integration@swan.io to start the process.
+
+**Android vs iOS implementation differences**
+- Google Pay provides better support for retrieving pending card information.
+- Apple Pay has platform limitations that may affect certain provisioning flows.
 
 ## Guides {#guides}
 

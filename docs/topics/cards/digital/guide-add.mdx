@@ -24,7 +24,7 @@ Cardholders can also go digital by entering their card numbers directly into App
 
 ### Mutation
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gRGlnaXRhbEFwcGxlUGF5IHsKICBhZGREaWdpdGFsQ2FyZCgKICAgIGlucHV0OiB7CiAgICAgIGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiCiAgICAgIHdhbGxldFByb3ZpZGVyOiBBcHBsZVBheQogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkRGlnaXRhbENhcmRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZGlnaXRhbENhcmQgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gRGlnaXRhbENhcmRDb25zZW50UGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRGlnaXRhbENhcmQgewogIGFkZERpZ2l0YWxDYXJkKAogICAgaW5wdXQ6IHsKICAgICAgY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIKICAgICAgd2FsbGV0UHJvdmlkZXI6IEFwcGxlUGF5CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBBZGREaWdpdGFsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBkaWdpdGFsQ2FyZCB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBEaWdpdGFsQ2FyZENvbnNlbnRQZW5kaW5nU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {4-6} showLineNumbers
 mutation DigitalApplePay {
@@ -55,7 +55,7 @@ mutation DigitalApplePay {
 
 ### Payload
 
-```json {6,10} showLineNumbers
+```json {6} showLineNumbers
 {
   "data": {
     "addDigitalCard": {
@@ -73,70 +73,3 @@ mutation DigitalApplePay {
   }
 }
 ```
-
-## Transitioning from manual to in-app provisioning {#manual-to-inapp}
-
-When cardholders start manually adding a card to their digital wallet but don't complete the process (for example, they don't enter the OTP or encounter an error during verification), they can activate the digital card using your app or the Swan app. This eliminates the need for cardholders to restart the entire provisioning process.
-
-This process is particularly useful for Google Pay, where cardholders might begin manual provisioning but need assistance completing it.
-
-### Retrieve pending digital card
-
-First, retrieve the `digitalCardId` of the digital card in `Pending` status:
-
-<a href="https://explorer.swan.io?query=cXVlcnkgR2V0UGVuZGluZ0RpZ2l0YWxDYXJkIHsKICBjYXJkKGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiKSB7CiAgICBkaWdpdGFsQ2FyZHMoZmlsdGVyczogeyB3YWxsZXRJZDogIiRZT1VSX1dBTExFVF9JRCIsIHN0YXR1czogIlBlbmRpbmciIH0pIHsKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgLi4uIG9uIFBlbmRpbmdEaWdpdGFsQ2FyZCB7CiAgICAgICAgICAgIGlkCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
-
-```graphql showLineNumbers
-query GetPendingDigitalCard {
-  card(cardId: "$YOUR_CARD_ID") {
-    digitalCards(filters: { walletId: "$YOUR_WALLET_ID", status: "Pending" }) {
-      edges {
-        node {
-          ... on PendingDigitalCard {
-            id
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-### Activate the digital card
-
-Use the `activateDigitalCard` mutation to activate the pending digital card:
-
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gQWN0aXZhdGVEaWdpdGFsQ2FyZCB7CiAgYWN0aXZhdGVEaWdpdGFsQ2FyZChpbnB1dDogeyBkaWdpdGFsQ2FyZElkOiAiJFlPVVJfRElHSVRBTF9DQVJEX0lEIiB9KSB7CiAgICAuLi4gb24gQWN0aXZhdGVEaWdpdGFsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBkaWdpdGFsQ2FyZCB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBEaWdpdGFsQ2FyZEVuYWJsZWRTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
-
-```graphql {4} showLineNumbers
-mutation ActivateDigitalCard {
-  activateDigitalCard(
-    input: {
-      digitalCardId: "$YOUR_DIGITAL_CARD_ID"
-    }
-  ) {
-    ... on ActivateDigitalCardSuccessPayload {
-      __typename
-      digitalCard {
-        id
-        statusInfo {
-          ... on DigitalCardEnabledStatusInfo {
-            __typename
-          }
-        }
-      }
-    }
-    ... on Rejection {
-      __typename
-      message
-    }
-  }
-}
-```
-
-### Implementation notes
-
-- **Manual provisioning**: Does not require additional app certification.
-- **In-app provisioning**: Using your app requires a certification process. Contact integration@swan.io to get started.
-- **Android implementation**: Swan's Android app implements this process for Google Pay digital cards in `Pending` status.
-- **iOS limitation**: While the `activateDigitalCard` mutation works for Apple Pay tokens, Apple Pay doesn't currently provide a way to retrieve the `walletId` of a pending digital token, limiting the implementation on iOS.

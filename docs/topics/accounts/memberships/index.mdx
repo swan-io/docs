@@ -78,28 +78,73 @@ Whether your **account members can manage cards** and **for whom** depends on bo
 Please note that cardholders without the `canViewAccount` permission can view their own transaction history, even if they have no other permissions.
 
 <table>
-  <tr>
-    <th>`canManage`...</th>
-    <th>`AccountMembership` = true</th>
-    <th>`AccountMembership` = false</th>
-  </tr>
-  <tr>
-    <td>`Cards` = true</td>
-    <td>✅ View, add, and update cards for self<br />✅ View, add, and update cards for others∗</td>
-    <td>✅ View, add, and update cards for self<br />❌ Can't view, add, or update cards for others</td>
-  </tr>
-  <tr>
-    <td>`Cards` = false</td>
-    <td colspan="2">✅ View their own cards<br />✅ If they have an existing virtual card, they can print a physical card for self<br />❌ Can't add virtual cards for self<br />❌ Can't update any cards for self<br />❌ Can't view, add, or update cards for others</td>
-  </tr>
-  <tr>
-    <td>`Cards` = not provided</td>
-    <td>✅ View, add, and update cards for self<br />✅ View, add, and update cards for others</td>
-    <td>✅ View their own cards<br />✅ If they have an existing virtual card, they can print a physical card for self<br />❌ Can't add virtual cards for self<br />❌ Can't update any cards for self<br />❌ Can't view, add, or update cards for others</td>
-  </tr>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th><code>canManageCards</code> = true</th>
+      <th><code>canManageCards</code> = false</th>
+      <th><code>canManageCards</code> = not provided</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{backgroundColor: '#E0D9F0'}}>
+      <td colspan="4" style={{textAlign: 'center'}}><strong>canManageAccountMembership = true</strong></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for self</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for others*</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>View own cards only</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}>-</td>
+    </tr>
+    <tr>
+      <td>Print physical card from existing virtual</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}>-</td>
+    </tr>
+    <tr style={{backgroundColor: '#E0D9F0'}}>
+      <td colspan="4" style={{textAlign: 'center'}}><strong>canManageAccountMembership = false</strong></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for self</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for others*</td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+    </tr>
+    <tr>
+      <td>View own cards only</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>Print physical card from existing virtual</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+  </tbody>
 </table>
 
-∗ *others* → other account members
+\* *others* → other account members
 
 ### No permissions {#permissions-none}
 
@@ -115,33 +160,30 @@ To invite an account member, you must provide specific account membership fields
 
 **Requirements vary depending on the IBAN country**. Swan automatically sets these requirements based on the member's permissions, `accountCountry`, and `residencyAddress.country`. 
 
-Fields are marked as **required** (✅), **optional** (🔶), or **conditional** (❓): <br/>
-- ✅ (Required): must be completed.<br/> 
-- 🔶 (Optional): can be left blank; may have a default value.<br/>
-- ❓ (Conditional): required only in specific situations.
+<FieldRequirementsLegend />
 
 | API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇮🇹<br/>Italy |
 |---|:---:|:---:|:---:|:---:|:---:|
-| `accountID` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `canInitiatePayments` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `canManageAccountMembership` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `canManageBeneficiaries` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `canManageCards` | 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
-| `canViewAccount` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `consentRedirectUrl` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `email` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `language` | 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
-| `residencyAddress.addressLine1` | 🔶 | ❓ | ❓ | 🔶 | ✅ |
-| `residencyAddress.addressLine2` | 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
-| `residencyAddress.city` | 🔶 | ❓ | ❓ | 🔶 | ✅ |
-| `residencyAddress.country` | 🔶 | ❓ | ❓ | 🔶 | ✅ |
-| `residencyAddress.postalCode` | 🔶 | ❓ | ❓ | 🔶 | ✅ |
-| `residencyAddress.state` | 🔶 | 🔶 | 🔶 | 🔶 | 🔶 |
-| `restrictedTo.firstName` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `restrictedTo.lastName` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `restrictedTo.phoneNumber` | ❓ | ❓ | ❓ | ❓ | ❓ |
-| `restrictedTo.birthDate` | ❓ | ❓ | ❓ | ❓ | ❓ |
-| `taxIdentificationNumber` | 🔶 | ❓ | 🔶 | 🔶 | ❓ |
+| `accountID` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canInitiatePayments` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageAccountMembership` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageBeneficiaries` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageCards` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `canViewAccount` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `consentRedirectUrl` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `email` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `language` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `residencyAddress.addressLine1` | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `residencyAddress.city` | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.country` | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.postalCode` | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `restrictedTo.firstName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `restrictedTo.lastName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `restrictedTo.phoneNumber` | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> |
+| `restrictedTo.birthDate` | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> |
+| `taxIdentificationNumber` | <Opt /> | <Cnd /> | <Opt /> | <Opt /> | <Cnd /> |
 
 ### Detailed optional and conditional requirements
 

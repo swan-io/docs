@@ -5,7 +5,7 @@ import TabItem from '@theme/TabItem';
 import { 
   Req, 
   Opt, 
-  Cond, 
+  Cnd, 
   Supported, 
   Unsupported, 
   FieldRequirementsLegend, 
@@ -18,7 +18,7 @@ export default {
   // Swan custom components
   Req,
   Opt,
-  Cond,
+  Cnd,
   Supported,
   Unsupported,
   FieldRequirementsLegend,

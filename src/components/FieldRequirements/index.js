@@ -3,15 +3,15 @@ import './styles.css';
 
 // Field requirement badges
 export const Req = () => (
-  <span className="field-req-badge field-req-badge--required">REQ</span>
+  <span className="field-req-badge field-req-badge--required">● REQ</span>
 );
 
 export const Opt = () => (
-  <span className="field-req-badge field-req-badge--optional">OPT</span>
+  <span className="field-req-badge field-req-badge--optional">○ OPT</span>
 );
 
-export const Cond = () => (
-  <span className="field-req-badge field-req-badge--conditional">COND</span>
+export const Cnd = () => (
+  <span className="field-req-badge field-req-badge--conditional">◐ CND</span>
 );
 
 // Support status badges
@@ -31,10 +31,10 @@ export const FieldRequirementsLegend = () => (
       <Req /> <strong>Required:</strong> Field must be completed
     </div>
     <div className="field-req-legend-item">
-      <Opt /> <strong>Optional:</strong> Field can be left blank; may have a default value
+      <Cnd /> <strong>Conditional:</strong> Field is required only in specific situations
     </div>
     <div className="field-req-legend-item">
-      <Cond /> <strong>Conditional:</strong> Field is required only in specific situations
+      <Opt /> <strong>Optional:</strong> Field can be left blank; may have a default value
     </div>
   </div>
 );

@@ -246,9 +246,8 @@ Cards that meet all of the following requirements qualify for Maestro:
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    PCA((Physical<br/>card added)) -.-> I[Initiated]
+    PCA((Physical<br/>card added)) -.-> CP[ConsentPending]
     TA <-.-> S
-    I -.-> CP[ConsentPending]
     CP -.-> TA
     CP -.-> P[Processing]
     P -.-> TA[ToActivate]
@@ -283,7 +282,6 @@ Refer to the [card renewal statuses](#renew-statuses) to understand how they int
 
 | Physical card status | Explanation |
 |---|---|
-| `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation. |
 | `ConsentPending` | Request to print a physical card was received and is waiting for the cardholder's consent.<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the cardholder consents, the status moves to `Processing`.</li><li>If you used the `printPhysicalCard` mutation and the cardholder consents, the status moves to `Activated`.</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`.</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`.</li></ul> |
 | `Processing` | The card is in the process of being created with Swan's card issuing provider.<br/><br/>**Next steps**:<ul><li>After the card is created successfully in the card issuing provider's system, the status moves to `ToActivate`.</li><li>If you cancel the card with the API *before* the card issuing provider creates the card, the status moves to `Canceling`.</li></ul> |
 | `ToActivate` | The card is being printed by Swan's card issuing provider, then delivered to the cardholder.<br/><br/>After the cardholder receives the physical card, they need to activate it by performing a first transaction and entering the PIN. You can also activate the card with the `activatePhysicalCard` mutation.<br/><br/>**Next steps**:<ul><li>If the cardholder performs the transaction successfully, or you activate the card with the API, the status moves to `Activated`.</li><li>If the cardholder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`.</li></ul> |

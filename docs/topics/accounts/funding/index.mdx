@@ -212,11 +212,18 @@ import RollingReserveDefinition from '../../definitions/_rolling-reserve.mdx';
 
 <RollingReserveDefinition />
 
+The `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/developers/using-api/webhooks/#events-transactions) notify you when a rolling reserve is updated or released. 
+Subscribe to both webhooks to stay updated on your transactions' rolling reserve.
+
 ## Settlement date and booked time {#settlement}
 
-import SddBookedTime from '../../partials/_sdd-booked.mdx';
+**SEPA Direct Debit** transactions are **booked at 20:00 Central European [Summer] Time (CET/CEST)** on the settlement date if no rejection or cancellation has been issued or received.
+Note that settlements dates exclude weekends and SEPA holidays.
 
-<SddBookedTime />
+| Transaction initiated | Booked |
+| --- | --- |
+| Before 10:30 Central European [Summer] Time (CET/CEST)    | Next business day at 20:00 Central European [Summer] Time (CET/CEST) |
+| After 10:30 Central European [Summer] Time (CET/CEST)     | Within two business days at 20:00 Central European [Summer] Time (CET/CEST) |
 
 import DayTimeStandard from '../../partials/_day-time.mdx';
 
@@ -226,6 +233,16 @@ import DayTimeStandard from '../../partials/_day-time.mdx';
 
 If you use `requestedExecutionAt` when initiating your funding requests, you can schedule them up to one year in advance.
 Your scheduled requests must be for at least two business days in the future.
+
+## Canceling transactions {#canceling}
+
+Account holders and eligible account members can cancel SEPA Direct Debit funding transactions using the [`cancelTransaction`](https://api-reference.swan.io/mutations/cancel-transaction/) mutation.
+Only the full amount can be canceled.
+
+Transactions can only be canceled before they are sent to the SEPA payment gateway, respecting the current cutoff time.
+This is approximately **10:00 Central European [Summer] Time (CET/CEST)**.
+
+After this cutoff time, the transaction can't be canceled and will proceed to settlement.
 
 ## Guides {#guides}
 

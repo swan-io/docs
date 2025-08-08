@@ -77,29 +77,76 @@ If they try to grant the `canManageCards` permission anyway, the API returns a `
 Whether your **account members can manage cards** and **for whom** depends on both `canManageAccountMembership` and `canManageCards` permissions.
 Please note that cardholders without the `canViewAccount` permission can view their own transaction history, even if they have no other permissions.
 
+<SupportStatusLegend />
+
 <table>
-  <tr>
-    <th>`canManage`...</th>
-    <th>`AccountMembership` = true</th>
-    <th>`AccountMembership` = false</th>
-  </tr>
-  <tr>
-    <td>`Cards` = true</td>
-    <td>✓ View, add, and update cards for self<br />✓ View, add, and update cards for others∗</td>
-    <td>✓ View, add, and update cards for self<br />☒ Can't view, add, or update cards for others</td>
-  </tr>
-  <tr>
-    <td>`Cards` = false</td>
-    <td colspan="2">✓ View their own cards<br />✓ If they have an existing virtual card, they can print a physical card for self<br />☒ Can't add virtual cards for self<br />☒ Can't update any cards for self<br />☒ Can't view, add, or update cards for others</td>
-  </tr>
-  <tr>
-    <td>`Cards` = not provided</td>
-    <td>✓ View, add, and update cards for self<br />✓ View, add, and update cards for others</td>
-    <td>✓ View their own cards<br />✓ If they have an existing virtual card, they can print a physical card for self<br />☒ Can't add virtual cards for self<br />☒ Can't update any cards for self<br />☒ Can't view, add, or update cards for others</td>
-  </tr>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th><code>canManageCards</code> = true</th>
+      <th><code>canManageCards</code> = false</th>
+      <th><code>canManageCards</code> = not provided</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{backgroundColor: '#E0D9F0'}}>
+      <td colspan="4" style={{textAlign: 'center'}}><strong>canManageAccountMembership = true</strong></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for self</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for others*</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>View own cards only</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}>-</td>
+    </tr>
+    <tr>
+      <td>Print physical card from existing virtual</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}>-</td>
+    </tr>
+    <tr style={{backgroundColor: '#E0D9F0'}}>
+      <td colspan="4" style={{textAlign: 'center'}}><strong>canManageAccountMembership = false</strong></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for self</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for others*</td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+    </tr>
+    <tr>
+      <td>View own cards only</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>Print physical card from existing virtual</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+  </tbody>
 </table>
 
-∗ *others* → other account members
+\* *others* → other account members
 
 ### No permissions {#permissions-none}
 
@@ -108,6 +155,72 @@ For example, if you want to give a user a card associated with the account, but 
 
 In this case, all membership permission booleans are `false`.
 This type of invitation doesn't require consent from the account holder and skips the status `InvitationSent`.
+
+## Country requirements for account memberships {#permissions-grant}
+
+To invite an account member, you must provide specific account membership fields.
+
+**Requirements vary depending on the IBAN country**. Swan automatically sets these requirements based on the member's permissions, `accountCountry`, and `residencyAddress.country`.
+
+<FieldRequirementsLegend />
+
+| API field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇮🇹<br/>Italy |
+|---|:---:|:---:|:---:|:---:|:---:|
+| `accountID` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canInitiatePayments` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageAccountMembership` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageBeneficiaries` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageCards` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `canViewAccount` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `consentRedirectUrl` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `email` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `language` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `residencyAddress.addressLine1` | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `residencyAddress.city` | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.country` | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.postalCode` | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `restrictedTo.firstName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `restrictedTo.lastName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `restrictedTo.phoneNumber` | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> |
+| `restrictedTo.birthDate` | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> |
+| `taxIdentificationNumber` | <Opt /> | <Cnd /> | <Opt /> | <Opt /> | <Cnd /> |
+|  | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇮🇹<br/>Italy |
+
+### Detailed optional and conditional requirements
+
+#### Birthdate
+The `restrictedTo.birthDate` field is **required** if **any** of the following account membership permissions are set to `true`:
+- `canManageBeneficiaries`
+- `canInitiatePayments`
+- `canManageAccountMembership`
+- `canManageCards`
+
+#### Membership permissions
+
+If no value is provided for `canManageCards`, it defaults to the value of `canManageAccountMembership`.
+
+#### Phone number
+The `restrictedTo.phoneNumber` field is **required** if **any** of the following account membership permissions are set to `true`:
+  - `canManageBeneficiaries`
+  - `canInitiatePayments`
+  - `canManageAccountMembership`
+
+#### Residency address fields
+The `addressLine1`, `city`, `country`, and `postalCode` fields are **required** regardless of `residencyAddress.country`, in the following cases:
+
+- The `accountCountry` is 🇮🇹 Italy.
+- The `accountCountry` is 🇩🇪 Germany or 🇳🇱 Netherlands, and **one or both** of the following account membership permissions are set to `true`: 
+  - `canViewAccount`
+  - `canInitiatePayments`
+
+#### Tax identification number
+The `taxIdentificationNumber` field is **required** in the following cases:
+- If both `accountCountry` **and** `residencyAddress.country` are 🇮🇹 Italy, and the account membership has the `canInitiatePayments` permission set to `true`.
+- If both `accountCountry` **and** `residencyAddress.country` are 🇩🇪 Germany, and **one or both** of the following account membership permissions are set to `true`:
+  - ` canViewAccount`
+  - `canInitiatePayments`
 
 ## Membership language {#language}
 
@@ -180,10 +293,10 @@ flowchart LR
 
 | Account membership status | Explanation |
 |---|---|
-| `ConsentPending` | Request to add an account membership was sent with the `addAccountMembership` mutation and is waiting for the account holder's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the invited account member consents, the status moves to `InvitationSent`</li><li>If the invited account member doesn't consent, the status moves to `Disabled`</li></ul> |
+| `ConsentPending` | An account membership request was sent using the `addAccountMembership` mutation and is waiting for the inviter's consent.<br/><br/>Memberships with the status `ConsentPending` can't be updated. If there's an error in the invited account member's information, cancel the invitation and add a new account membership with the `addAccountMembership` mutation.<br/><br/>**Next steps**:<ul><li>If the invited account member consents, the status moves to `InvitationSent`</li><li>The account membership status moves to `Disabled` if the inviter opens the consent flow but doesn't consent, or if the invitation expires before the invited member consents. </li><li> For `Disabled` memberships because of expired consent, querying `AccountMembershipDisabledStatusInfo` shows the reason as `InvitationExpired`.</li></ul><br/>If you're subscribed to the `AccountMembership.Updated` webhook, you'll receive a notification when a membership is `Disabled`. |
 | `InvitationSent` | An invitation was sent to the invited account member.<br/><br/>**Next steps**:<ul><li>If the invited account member accepts the invitation and provides personal information that **matches** the information Swan already has about them, the status moves to `Enabled`</li><li>If the invited account member accepts the invitation, but provides personal information that **doesn't match** the information Swan already has about them, the status moves to `BindingUserError`</li><li>If the invited account member declines the membership, the status moves to `Disabled`</li></ul> |
 | `Enabled` | All user information matches, the account member has been awarded the correct [identification level](../../users/identifications/index.mdx#levels-processes), and the account member can use their account membership and corresponding permissions. |
-| `BindingUserError` | The personal information you submitted about the invited account member doesn't match the information they provide during the [sign-up process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on binding user errors for more information. |
+| `BindingUserError` | The personal information you submitted about the invited account member doesn't match the information they provide during the [sign-up process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on [binding user errors](./guide-fix-binding-error.mdx) for more information. |
 | `Suspended` | Account membership is suspended and not available for use.<br/><br/>Account memberships can be suspended for various reasons, including a request from you or the account's legal representative, or a Swan action in the case of suspicious activity.<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
 | `Disabled` | Account membership is disabled, is no longer available for use, and can't be restored. |
 
@@ -197,31 +310,25 @@ The account membership status can be `BindingUserError` for several reasons, inc
 
 Account members whose membership status is `BindingUserError` can still access basic account and card information, but they can't perform any [sensitive operations](../../users/consent/index.mdx#sensitive), such as making a transfer or viewing their card numbers.
 
-Other account members with the `canManageAccountMembership` permission and status `Enabled` can fix the mismatch.
-Refer to the guide to [fix a user binding error](./guide-fix-binding-error.mdx) for more information.
+**To fix binding errors**, refer to the [guide to fix a user binding error](./guide-fix-binding-error.mdx) for detailed resolution steps based on the specific error type.
 
 :::info Updating account members
 After an account member's status is `Enabled`, updating their personal details doesn't cause a user binding error.
 If fraud is suspected, [suspend the membership](./guide-suspend-resume.mdx).
 :::
 
-import UserBindingErrorOptions from './partials/_user-binding-error-list.mdx';
-
-<UserBindingErrorOptions />
-
 ## Removing identification {#remove-identification}
 
 Verifying your account members' identity is a required step in most circumstances.
 However, with a **detailed agreement with Swan**, you might be allowed to bypass identification for certain membership permissions.
 
-Even with identification removed, only memberships with certain permissions can bypass identification.
+Even if your project is configured to remove identification, memberships with the following permissions **can't bypass** it:
 
-| ✓ Can bypass identification | ☒ Can't bypass identification |
-| :---: | :---: |
-| `canViewAccount`<br />`canManageCards` | `canManageAccountMembership`<br />`canInitiatePayments`<br />`canManageBeneficiaries` |
+- `canManageAccountMembership`
+- `canInitiatePayments`
+- `canManageBeneficiaries`
 
-Note that memberships created before identification is removed still need to verify their identity.
-Adding this configuration **isn't retroactive**. 
+Note that this configuration **is retroactive**. Memberships created before identification was removed no longer need to verify their identity. 
 Contact your Technical Account Manager to ask about removing identification.
 
 ## Closed accounts and memberships {#closed}
@@ -236,7 +343,7 @@ When the account status changes to `Closed`, account members can view the accoun
 Account memberships have a `version` attribute.
 
 When a new membership is added, the `version` is `0`, then increases by a factor of 1 with each change.
-Changes includes including suspending, resuming, and updating the membership.
+Changes include suspending, resuming, and updating the membership.
 
 ## Sequence diagram  {#diagrams-add}
 

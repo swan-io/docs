@@ -1,0 +1,22 @@
+---
+title: 10 June 2025
+type: release
+---
+
+## Improvements
+
+🧭 **Account statement documents** now follow a new, more readable naming convention that includes the document language. The new format is: 
+`AccountStatement_[ProjectName]_[AccountNumber]_[period]_[documentLanguage]`.
+
+👫 **Account member invitations with a `ConsentPending` [status](/topics/accounts/memberships/#statuses) will now expire** if the inviter doesn't provide consent before the consent period ends. This automatically changes the account membership status to `Disabled`, allowing you to inform the user to send a new invitation.
+- If you're subscribed to the `AccountMembership.Updated` webhook, you'll receive a notification when the membership is `Disabled`.
+- When querying `AccountMembershipDisabledStatusInfo`, you'll see the reason `InvitationExpired`.
+
+✍️ You can now use [`CheckMerchantPayment`](https://api-reference.swan.io/objects/check-merchant-payment/) to track the **[statuses](/topics/merchants/online/checks/#payments-statuses) and [balances](/topics/merchants/online/checks/#payments-balances) of French check payments**. 
+
+## API updates
+
+### Upcoming breaking changes
+⚠️ Starting **July 1st**, the `shippingProvider` field in `PhysicalCardToActivateStatusInfo` and `PhysicalCardRenewedStatusInfo` will be migrated from a `String` to an `ENUM`. Please note that the shipping providers `La Poste` and `CORREOS` will soon be deprecated. 
+
+💶 On **August 1st**, we're removing the `merchantPayment` field in the `InitiateCheckMerchantPaymentSuccessPayload`, use [`checkMerchantPayment`](/topics/merchants/online/checks/guide-initiate) instead. We're also deprecating `merchantPayment`.

@@ -200,7 +200,8 @@ You have the option of **group** or **non-group delivery**.
 
 ### Shipping methods {#shipping-methods}
 
-You can set the shipping method for your users' physical cards. To do so, select the `shippingProvider` option in the `physicalCardCustomOptions` input when you [add a card](https://api-reference.swan.io/mutations/add-cards/). 
+You can set the shipping method for your users' physical cards. To do so, select the `shippingProvider` option in the `physicalCardCustomOptions` input when you [add a card](https://api-reference.swan.io/mutations/add-cards/), or use the [`printPhysicalCard`](https://api-reference.swan.io/mutations/print-physical-card) mutation.
+
 Choose from the following options:
 
 - `LaPosteTracked`
@@ -245,9 +246,8 @@ Cards that meet all of the following requirements qualify for Maestro:
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    PCA((Physical<br/>card added)) -.-> I[Initiated]
+    PCA((Physical<br/>card added)) -.-> CP[ConsentPending]
     TA <-.-> S
-    I -.-> CP[ConsentPending]
     CP -.-> TA
     CP -.-> P[Processing]
     P -.-> TA[ToActivate]
@@ -282,7 +282,6 @@ Refer to the [card renewal statuses](#renew-statuses) to understand how they int
 
 | Physical card status | Explanation |
 |---|---|
-| `Initiated` | Printing a physical was launched with either the `printPhysicalCard` or `addCards` *with physical card* mutation. |
 | `ConsentPending` | Request to print a physical card was received and is waiting for the cardholder's consent.<br/><br/>**Next steps**:<ul><li>If you used the `addCards` mutation and the cardholder consents, the status moves to `Processing`.</li><li>If you used the `printPhysicalCard` mutation and the cardholder consents, the status moves to `Activated`.</li><li>If you cancel the card with the API *before* consent, the status moves to `Canceling`.</li><li>If consent is refused or consent fails, the status moves directly to `Canceled`.</li></ul> |
 | `Processing` | The card is in the process of being created with Swan's card issuing provider.<br/><br/>**Next steps**:<ul><li>After the card is created successfully in the card issuing provider's system, the status moves to `ToActivate`.</li><li>If you cancel the card with the API *before* the card issuing provider creates the card, the status moves to `Canceling`.</li></ul> |
 | `ToActivate` | The card is being printed by Swan's card issuing provider, then delivered to the cardholder.<br/><br/>After the cardholder receives the physical card, they need to activate it by performing a first transaction and entering the PIN. You can also activate the card with the `activatePhysicalCard` mutation.<br/><br/>**Next steps**:<ul><li>If the cardholder performs the transaction successfully, or you activate the card with the API, the status moves to `Activated`.</li><li>If the cardholder makes **three incorrect attempts** to enter their PIN, the status moves to `Suspended`.</li></ul> |
@@ -362,8 +361,31 @@ flowchart LR
 
 | Card renewal status | Explanation |
 |---|---|
-| `ToRenew` | Status triggered automatically 10 weeks before the card's expiry date. After this status is triggered by the Swan API, you can't stop the renewal process.<br /><br />*If you or the cardholder doesn't want to renew a physical card, [cancel the card](./guide-cancel.mdx) **at least 11 weeks** before the expiry date.* |
+| `ToRenew` | Status triggered 10 weeks before expiry to schedule a renewal. The process can be stopped either by [canceling](./guide-cancel.mdx) the card, which permanently ends the renewal, or by [suspending](#renew-suspended) it, which temporarily pauses the process. The card will not be renewed if it remains suspended past 8-weeks. |
 | `Renewed` | Status triggered automatically 8 weeks before the card's expiry date. No updates to the delivery address can be made after this status is triggered. |
+
+### Suspended physical cards {#renew-suspended}
+
+The renewal process for a suspended physical card depends on when the card is **resumed**. Two key changes occur at **10 weeks** and **8 weeks** before expiry:
+- At **10 weeks** before expiry, eligible cards move to the `ToRenew` status.
+- Between **10 and 8 weeks** before expiry, there's a 2-week window to [update the shipping address](/topics/cards/physical/guide-renew).
+- At **8 weeks** before expiry, if the card is still in `ToRenew`, it moves to `Renewed`, and the new card is created and shipped.
+
+:::warning Renewal status requirement
+If a physical card isn't in `ToRenew` by the 8-week mark, a new card will not be issued and the existing card will be canceled at expiry.
+:::
+
+| Scenario | Physical card status at 10 weeks | Physical card status at 8 weeks | Physical card status at expiry date |
+|---|---|---|---|
+| Suspended and resumed more than **10 weeks** before expiry | `ToRenew` | `Renewed` | `Renewed` |
+| Suspended and not resumed more than **10 weeks** before expiry | `Suspended` | `Suspended` | `Canceled` |
+| Suspended and resumed between **10 and 8 weeks** before expiry | `ToRenew` | `Renewed` | `Renewed` |
+| Suspended and not resumed between **10 and 8 weeks** before expiry | `ToRenew` | `Suspended` | `Canceled` |
+| Suspended between **10 and 8 weeks** before expiry and resumed less than **8 weeks** before expiry | `ToRenew` | `Suspended` | `Canceled` |
+
+If a card is already in `Renewed` and is then `Suspended`, **both the existing and new card** will be `Suspended`. 
+This doesn't affect the shipping of the new card, it will still be sent. 
+You must resume the new card before it can be `Activated`.
 
 ### Activating the new card {#renew-activate}
 
@@ -387,4 +409,5 @@ Details about expired physical cards are available in the `card` query (`card` >
 - [Block & unblock physical cards](./guide-block-unblock.mdx)
     - Temporarily block a physical card
     - Unblock a physical card
+- [Renew physical cards](./guide-renew.mdx)
 - [Cancel physical cards](./guide-cancel.mdx)

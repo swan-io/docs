@@ -10,19 +10,23 @@ When testing your integration, you might need to simulate certain events with th
 
 ### Simulate updating merchant profile status {#simulate-profile-status}
 
-In Sandbox only, you need to update the merchant profile status to `Enabled`.
+In Sandbox, you need to update the merchant profile status to `Enabled`.
 
 1. Open your Swan Dashboard.
 1. Go to **Developers** > **Event Simulator**.
-1. Go to **Merchant payments**.
+1. Go to **Merchant profiles**.
 1. Go to the tab to update the merchant profile status.
 1. Change the merchant profile status to `Enabled`.
+
+:::info Testing API
+You can simulate enabling or updating a merchant profile using the `simulateMerchantProfileRequestOutcome` and `simulateMerchantProfileUpdateRequestOutcome` mutations in the Testing API.
+:::
 
 ## Merchant payment methods {#simulate-payment-method}
 
 ### Simulate updating merchant payment method status {#simulate-payment-method-status}
 
-In Sandbox only, you need to update the merchant payment method status to `Enabled`.
+In Sandbox, you need to update the merchant payment method status to `Enabled`.
 
 1. Open your Swan Dashboard.
 1. Go to **Developers** > **Event Simulator**.
@@ -32,32 +36,42 @@ In Sandbox only, you need to update the merchant payment method status to `Enabl
 
 ### Simulate enabling a payment method {#simulate-payment-method-enable}
 
-You can also use the **Partner Testing API**.
+You can also use the **Testing API** to simulate updating a merchant payment method.
 
-- Line 4: Enter the corresponding `merchantProfileId`.
-- Line 5: Choose the `methodType` you'd like to simulate activating.
+#### Guide {#guide}
 
-```graphql {4-5} showLineNumbers
+1. Call the `simulateMerchantPaymentMethodRequestOutcome` mutation (line 2).
+1. Add the `merchantPaymentMethodId` (line 4).
+1. Add `merchantPaymentMethodStatus` and select `Enabled` (line 5).
+1. Select the payment method type you want to simulate, for example `SepaDirectDebitB2BMerchantPaymentMethod`. (line 8).
+1. Add relevant rejection details to your mutation (lines 11 and 14).
+
+:::info Testing API
+Use the `simulateMerchantPaymentMethodUpdateRequestOutcome` mutation to simulate updating the merchant payment method.
+:::
+
+#### Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRW5hYmxlUGF5bWVudE1ldGhvZCB7CiAgc2ltdWxhdGVNZXJjaGFudFBheW1lbnRNZXRob2RSZXF1ZXN0T3V0Y29tZSgKICAgIGlucHV0OiB7CiAgICAgIG1lcmNoYW50UGF5bWVudE1ldGhvZElkOiAiJFlPVVJfUEFZTUVOVF9NRVRIT0RfSUQiCiAgICAgIG1lcmNoYW50UGF5bWVudE1ldGhvZFN0YXR1czogRW5hYmxlZAogICAgfQogICkgewogICAgLi4uIG9uIFNlcGFEaXJlY3REZWJpdEIyQk1lcmNoYW50UGF5bWVudE1ldGhvZCB7CiAgICAgIGlkCiAgICB9CiAgICAuLi4gb24gTm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTWVyY2hhbnRQYXltZW50TWV0aG9kV3JvbmdTdGF0dXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=test-api" className="explorer-badge">Open Testing API</a>
+
+```graphql {2,4-5,8,11,14} showLineNumbers
 mutation EnablePaymentMethod {
-  simulateUpdateMerchantProfile(
+  simulateMerchantPaymentMethodRequestOutcome(
     input: {
-      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
-      merchantPaymentMethod: { methodType: $METHOD_TYPE, status: Enabled }
+      merchantPaymentMethodId: "$YOUR_PAYMENT_METHOD_ID"
+      merchantPaymentMethodStatus: Enabled
     }
   ) {
-    ... on SimulateUpdateMerchantProfileSuccessPayload {
-      __typename
-    }
-    ... on NotFoundRejection {
+    ... on SepaDirectDebitB2BMerchantPaymentMethod {
       id
     }
-    ... on MerchantProfileWrongStatusRejection {
+    ... on NotFoundRejection {
+      message
+    }
+    ... on MerchantPaymentMethodWrongStatusRejection {
       __typename
+      message
     }
   }
 }
 ```
-
-:::caution SEPA Diret Debit
-For SEPA Direct Debit, you can *only* use the Partner Testing API to update the status of your payment methods.
-:::

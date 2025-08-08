@@ -1,0 +1,66 @@
+---
+title: Export account data
+---
+
+# Export account data
+
+You can export the account data available on the Dashboard, either from your Dashboard or with the API.
+
+## Dashboard {#dashboard}
+
+1. On your Dashboard, go to **Data** > **Accounts**.
+1. Click the **download icon** to trigger a `.csv` export.
+1. A modal appears. Click **Export data** to finalize the request.
+
+![Screenshot of Swan Dashboard account holders page with a callout download icon to trigger an export](../../../images/topics/accounts/accounts-export.png)
+
+## API {#api}
+
+1. Call the `exportAccountData` mutation.
+1. Add your `email`. A link to download the `.csv` export is sent to the email address you provide.
+1. Add the success payload and rejections.
+
+### Mutation {#api-mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0QWNjb3VudCB7CiAgZXhwb3J0QWNjb3VudERhdGEoCiAgICBpbnB1dDogewogICAgICBlbWFpbDogIiRZT1VSX0VNQUlMX0FERFJFU1MiCiAgICAgIGZpbHRlcnM6IHsgcGF5bWVudExldmVsczogTGltaXRlZCwgc3RhdHVzOiBPcGVuZWQgfQogICAgfQogICkgewogICAgLi4uIG9uIEV4cG9ydERhdGFTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZXhwb3J0SWQKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtU2ltdWx0YW5lb3VzRXhwb3J0c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE1heGltdW1EYWlseUV4cG9ydHNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {3,7} showLineNumbers
+mutation ExportAccount {
+  exportAccountData(
+    input: { email: "$YOUR_EMAIL_ADDRESS", filters: { paymentLevels: Limited, status: Opened } }
+  ) {
+    ... on ExportDataSuccessPayload {
+      __typename
+      exportId
+    }
+    ... on MaximumSimultaneousExportsRejection {
+      __typename
+      message
+    }
+    ... on MaximumDailyExportsReachedRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+### Payload {#api-payload}
+
+The payload returns the export ID.
+
+```json {5} showLineNumbers
+{
+  "data": {
+    "exportAccountData": {
+      "__typename": "ExportDataSuccessPayload",
+      "exportId": "$EXPORT_ID"
+    }
+  }
+}
+```
+
+## Next steps {#next}
+
+import ExportNextSteps from '../../partials/_export-next-steps.mdx';
+
+<ExportNextSteps />

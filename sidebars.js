@@ -87,6 +87,7 @@ module.exports = {
           items: [
             "topics/accounts/overview/guide-generate-statement",
             "topics/accounts/overview/guide-get-bank-details",
+            "topics/accounts/overview/guide-export",
           ],
         },
         {
@@ -211,6 +212,15 @@ module.exports = {
             "topics/cards/overview/guide-issue",
             "topics/cards/overview/guide-update",
             "topics/cards/overview/guide-export",
+            {
+              type: "category",
+              label: "Card insurance",
+              link: { type: "doc", id: "topics/cards/overview/card-insurance" },
+              collapsed: true,
+              items: [
+                "topics/cards/overview/guide-insurance-integration",
+              ],
+            },
           ],
         },
         {
@@ -244,6 +254,7 @@ module.exports = {
             "topics/cards/physical/guide-activate",
             "topics/cards/physical/guide-view-info",
             "topics/cards/physical/guide-block-unblock",
+            "topics/cards/physical/guide-renew",
             "topics/cards/physical/guide-cancel",
             "topics/cards/physical/sandbox",
           ],
@@ -390,6 +401,7 @@ module.exports = {
                 "topics/payments/credit-transfers/sepa/guide-initiate-ct",
                 "topics/payments/credit-transfers/sepa/guide-cancel-ct",
                 "topics/payments/credit-transfers/sepa/guide-refund-ct",
+                "topics/payments/credit-transfers/sepa/verification-of-payee",
                 "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-add-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",
@@ -691,6 +703,7 @@ module.exports = {
         "developers/using-api/pagination",
         "developers/using-api/payment-control",
         "developers/using-api/webhooks",
+        "developers/using-api/idempotency",
       ],
     },
     {

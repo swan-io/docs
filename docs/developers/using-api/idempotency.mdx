@@ -1,0 +1,139 @@
+---
+title: Idempotency
+---
+
+# Idempotency
+
+Idempotency ensures that API operations execute only once, even if you retry the same request multiple times.
+This prevents duplicate transactions caused by network issues, system interruptions, or request timeouts.
+
+## How it works
+
+When you include an `idempotencyKey` in a supported mutation:
+
+1. **First request**: Swan generates a unique identifier, executes the operation, and stores the result with your key.
+2. **Subsequent requests**: Swan checks for existing operations and returns the current state instead of creating a new one.
+3. **Key expiration**: After 24 hours, the same key can be reused for a new operation.
+
+## Supported operations
+
+Idempotency is available for operations that create resources or have side effects, including:
+
+- [`initiateCreditTransfers`](/topics/payments/credit-transfers/sepa/guide-initiate-ct/) to prevent duplicate payments.
+- Additional mutations will support idempotency in future updates.
+
+## Idempotency key requirements
+
+Your `idempotencyKey` must be:
+
+- **A unique string**: UUID v4 recommended (e.g., `156d000c-4b32-4e83-aa36-277f2c9b6290`).
+- **Maximum 255 characters**.
+- **Alphanumeric characters, hyphens, and underscores only**.
+- **Scoped to your authentication context**: Keys are isolated by project and user, ensuring the same key used by different projects or users will not conflict.
+
+## Example usage
+
+```graphql
+mutation ExampleWithIdempotency {
+  initiateCreditTransfers(
+    input: {
+      idempotencyKey: "156d000c-4b32-4e83-aa36-277f2c9b6290"
+      accountId: "$YOUR_ACCOUNT_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "IT23P0300203280632123553748"
+          name: "Francesca Verrilli"
+          isMyOwnIban: false
+          save: false
+        }
+      }
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      payment {
+        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Response behavior
+
+### First request
+Returns the operation result and stores it with your idempotency key.
+
+```json
+{
+  "data": {
+    "initiateCreditTransfers": {
+      "payment": {
+        "id": "cto_6b0b973e9c71de540776e300494be5fa",
+        "statusInfo": {
+          "__typename": "PaymentConsentPending",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=949872ab...",
+            "id": "949872ab-0c11-46b0-89d0-bc16c02db220"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Subsequent requests
+Returns the **current state** of the original operation. If the payment status has changed (e.g., user provided consent), the response reflects this.
+
+```json
+{
+  "data": {
+    "initiateCreditTransfers": {
+      "payment": {
+        "id": "cto_6b0b973e9c71de540776e300494be5fa",
+        "statusInfo": {
+          "__typename": "PaymentInitiated",
+          "status": "Initiated"
+        }
+      }
+    }
+  }
+}
+```
+
+## Error handling
+
+Swan handles idempotency differently based on when errors occur.
+
+### Validation errors (before execution)
+Requests that fail parameter validation (e.g., invalid IBAN format) never reach execution, so no idempotent result is stored.
+You can safely retry these requests with the same key after fixing the validation issues.
+
+### Business logic errors (during execution)  
+Requests that pass validation but fail during execution (e.g., insufficient funds) store the error result with the idempotency key.
+Subsequent requests with the same key return the identical error, even if conditions have changed.
+
+For example, if a payment fails due to insufficient funds, retrying with the same idempotency key returns the same error even after the account is funded.
+
+## Best practices
+
+- **Generate unique keys**: Use UUID v4 or similar for each distinct operation.
+- **Store keys locally**: Keep track of idempotency keys for operations you might need to retry.
+- **Handle current state**: Your application should handle responses that reflect the current state, not just the initial state.
+- **Use for critical operations**: Always include idempotency keys for payment initiation and other critical operations.
+
+## Key expiration
+
+Idempotency keys expire after 24 hours. After expiration:
+- The same key can be reused for a new operation.
+- Previous results are no longer accessible when using that key.
+- This prevents indefinite storage of operation results.

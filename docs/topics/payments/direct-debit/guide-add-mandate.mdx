@@ -4,15 +4,24 @@ title: Add a payment mandate
 
 # Add a payment mandate
 
-Add SEPA Direct Debit B2B received payment mandates with the API.
-Note that when **Swan receives** [new SEPA Direct Debit instructions](./index.mdx#received-instructions-new), the corresponding mandate is added **automatically**.
+Add SEPA Direct Debit B2B (Business-to-Business) received payment mandates [with the API](#api) or by [sending a link](#link) to an account member so they can register the mandate themselves.
+
+:::caution B2B mandates only
+This guide is for SEPA Direct Debit B2B mandates only. These mandates are required to authorize a company to debit an account. If an account member completes a non-B2B Direct Debit mandate, their creditor will handle its registration automatically.
+:::
+
+When **Swan receives** [new SEPA Direct Debit instructions](./index.mdx#received-instructions-new), the corresponding mandate is added **automatically**.
+
+## Add with API {#api}
+
+Add mandates programmatically using the `addReceivedSepaDirectDebitB2bMandate` mutation.
 
 :::tip Prerequisites
 1. You're an account member with the `canInitiatePayments` [membership permission](../../accounts/memberships/index.mdx#permissions).
 1. You're authenticating with a [user access token](../../../developers/using-api/authentication/index.mdx#tokens-user).
 :::
 
-## Guide {#guide}
+### Guide {#guide}
 
 1. Call the `addReceivedSepaDirectDebitB2bMandate` mutation.
 1. Add the Unique Mandate Reference (`mandateReference`) and SEPA Creditor Identifier (`creditorIdentifier`).
@@ -21,9 +30,9 @@ Note that when **Swan receives** [new SEPA Direct Debit instructions](./index.md
 1. Add the `AddReceivedSepaDirectDebitB2bMandateSuccessPayload`, including the `consentUrl`.
 1. Add rejections (not shown).
 
-## Mutation {#mutation}
+### Mutation {#mutation}
 
-🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWRkUmVjZWl2ZWRNYW5kYXRlIHsKICBhZGRSZWNlaXZlZFNlcGFEaXJlY3REZWJpdEIyYk1hbmRhdGUoCiAgICBpbnB1dDogewogICAgICBtYW5kYXRlUmVmZXJlbmNlOiAiJFlPVVJfVVJNIgogICAgICBjcmVkaXRvcklkZW50aWZpZXI6ICIkWU9VUl9TQ0kiCiAgICAgIGNyZWRpdG9yTmFtZTogIkthdGhlcmluZSBKb2huc29uIgogICAgICBpYmFuOiAiJFNXQU5fSUJBTiIKICAgICAgc2VxdWVuY2U6IE9uZU9mZgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkUmVjZWl2ZWRTZXBhRGlyZWN0RGViaXRCMmJNYW5kYXRlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3RhdHVzSW5mb0NvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgICAuLi4gb24gUmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGVTdGF0dXNJbmZvRW5hYmxlZCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgZW5hYmxlZEF0CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api)
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQWRkUmVjZWl2ZWRNYW5kYXRlIHsKICBhZGRSZWNlaXZlZFNlcGFEaXJlY3REZWJpdEIyYk1hbmRhdGUoCiAgICBpbnB1dDogewogICAgICBtYW5kYXRlUmVmZXJlbmNlOiAiJFlPVVJfVVJNIgogICAgICBjcmVkaXRvcklkZW50aWZpZXI6ICIkWU9VUl9TQ0kiCiAgICAgIGNyZWRpdG9yTmFtZTogIkthdGhlcmluZSBKb2huc29uIgogICAgICBpYmFuOiAiJFNXQU5fSUJBTiIKICAgICAgc2VxdWVuY2U6IE9uZU9mZgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkUmVjZWl2ZWRTZXBhRGlyZWN0RGViaXRCMmJNYW5kYXRlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3RhdHVzSW5mb0NvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgICAuLi4gb24gUmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGVTdGF0dXNJbmZvRW5hYmxlZCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgZW5hYmxlZEF0CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {4-9,12,17,20} showLineNumbers
 mutation AddReceivedMandate {
@@ -62,7 +71,7 @@ mutation AddReceivedMandate {
 
 ```
 
-## Payload {#payload}
+### Payload {#payload}
 
 The payload shows the mandate was added successfully with the status `ConsentPending`, and provides the `consentUrl` (line 10).
 
@@ -86,3 +95,30 @@ Make sure to send the `consentUrl` to your user so they can provide consent for 
   }
 }
 ```
+
+## Send a SEPA B2B mandate registration link {#link}
+
+Send a link to an account member with the `canInitiatePayments` [membership permission](../../accounts/memberships/index.mdx#permissions) so they can complete the mandate registration.
+
+### Step 1: Send link to account member {#send-link}
+
+1. Go to **Dashboard** > **Data** > **Accounts**.
+1. Click the account you need.
+1. Go to the **Received Direct Debit Mandates** tab.
+1. Click **Copy SDD B2B mandate form link**.
+1. Share the link with an account member with the `canInitiatePayments` membership permission.
+
+![Screenshot of the B2B mandate registration page](../../../images/topics/payments/direct-debit/SDD_mandate_copy_link.png)
+
+:::tip Save the link
+Account members can save the link to register future mandates.
+:::
+
+### Step 2: Account member completes process {#complete-process}
+
+1. The account member opens the link you provided.
+1. They log into Swan's banking interface.
+1. They enter their B2B mandate details exactly as shown on the original mandate.
+1. They consent to adding the payment mandate with [Strong Customer Authentication](/topics/users/consent/#sca).
+
+![Screenshot of the B2B mandate registration page](../../../images/topics/payments/direct-debit/B2B_mandate_page.png)

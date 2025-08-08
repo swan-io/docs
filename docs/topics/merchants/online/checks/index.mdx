@@ -35,6 +35,76 @@ When declaring checks with the API, there are five mandatory API fields:
 
 On the **back of the check**, the merchant must write their Swan account number as well as provide their signature.
 
+
+## Merchant check payments {#payments}
+Merchant check payments include one or more transactions.
+For example, one payment might include a check credit transaction and a refund transaction, for a total of two transactions.
+
+These transactions are **grouped together** in the **merchant payment object**. 
+Swan recommends using the merchant payment object in your integration to help merchants match orders, invoices, and sales to the correct object. 
+This provides better traceability and can help reconcile issues more efficiently. 
+It also makes it easier for you to handle the status of payments when there are return transactions after a payment is captured.
+
+### Check transaction types {#payments-transaction-types}
+
+There are **two transaction types** for merchant check payments.
+
+| Transaction type | Explanation | Impacted account balance |
+| :--- | :--- | :--- |
+| `CheckIn`        | Captured payment that first impacts the merchant's `Upcoming` balance, and then their `Booked` balance. | `Upcoming`<br />`Booked`   |
+| `CheckInReturn`  | Disputed payment that immediately impacts the merchant's `Booked` balance.                           | `Booked`                 |
+
+:::info Balances
+The impacted balances are Swan's standard [account balances](../../../accounts/index.mdx#balances), which aren't related to the payment object balances explained later on this page.
+:::
+
+### Payment object statuses {#payments-statuses}
+
+The merchant payment object has **distinct statuses** to follow a payment's lifecycle.
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    MPI((Merchant check<br/>payment initiated)) --> I[Initiated]
+    I -.-> RJ[Rejected]
+    I --> CP[Captured]
+    I -.-> CN[Canceled]
+    CP -.-> D[Disputed]
+
+    subgraph F[Final status]
+        RJ
+        CN
+        D
+    end
+
+    style MPI fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+```
+
+| Check payment object status | Explanation |
+|---|---|
+| `Initiated` | Merchant submitted the check information to Swan, but the check hasn't been processed yet. |
+| `Captured` | Check was accepted and funds were made available in the merchant's account. This can be a final status if the customer doesn't dispute the payment. |
+| `Rejected` | Check was rejected by Swan's check provider. Rejected checks are returned to the merchant by mail, using the account holder's address. |
+| `Canceled` | Check was canceled by the merchant before reaching Swan's check provider. If received, the check is returned to the merchant by mail, using the account holder's address. |
+| `Disputed` | The customer disputed the payment or the bank returned it after capture, for example due to insufficient funds. Disputed checks aren't returned to the merchant. |
+
+### Payment object balances {#payments-balances}
+
+The merchant payment object has **distinct balances** to follow a payment's lifecycle.
+
+| Check payment object balance | Explanation |
+|---|---|
+| `totalAuthorized` | Not used for checks; this balance is always zero. |
+| `availableToCancel` | Use this balance to verify whether the payment can be canceled. Cancellations must occur before Swan's check provider receives the check. |
+| `totalCanceled` | The total amount canceled for this merchant payment. |
+| `availableToCapture` | Not used for checks; this balance is always zero. |
+| `totalCaptured` | The amount captured by the merchant. This corresponds to the full payment amount after the check is successfully processed. |
+| `availableToRefund` | Checks cannot be refunded; this balance is always zero. |
+| `totalRefunded` | Checks cannot be refunded; this balance is always zero. |
+| `totalDisputed` | The total amount of this merchant payment disputed by the customer or returned by their bank. |
+
+
 ## Rolling reserve {#rolling-reserve}
 
 import RollingReserve from '../../partials/_rolling-reserve.mdx';
@@ -43,7 +113,9 @@ import RollingReserve from '../../partials/_rolling-reserve.mdx';
 
 | Payment method | Rolling reserve | Default amount |
 | --- | --- | --- |
-| French checks | ✓ **Yes** | 100% over 10 business days |
+| French checks | <Yes /> **Yes** | 100% over 10 business days |
+
+You can use the `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/developers/using-api/webhooks/#events-transactions) to be notified when a transaction's rolling reserve is updated and when the funds are released.
 
 ## Payment amount limit {#payment-limit}
 For security and risk management, Swan may apply a **payment amount limit** to single check payments. 
@@ -51,6 +123,16 @@ This limit defines the maximum amount a user can spend in one check transaction.
 If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` error.
 
 To [query this limit](./guide-request.mdx), use the `paymentAmountLimit` field at the `merchantPaymentMethod` level in the API.
+
+## Canceling payments {#canceling}
+
+Merchants can cancel check payments using the [`cancelMerchantPayment`](https://api-reference.swan.io/mutations/cancel-merchant-payment/) mutation.
+To understand if a payment is cancelable, check its `availableToCancel` balance.
+Only the full amount can be canceled.
+
+Checks can be canceled up until the point when they're received by the check processing center.
+The exact timing depends on postal services, so cancellation availability varies.
+Once the check processing center receives the check, it can't be canceled.
 
 ## Settlement date and booked time {#settlement}
 
@@ -127,27 +209,38 @@ A check transaction can be rejected for the following reasons:
 
 | Rejection reason | Explanation |
 | --- | --- |
-| `AmountMismatch` | Amount on the check and amount declared through the API don't match. |
-| `BeneficiaryMismatch` | Beneficiary name on the check and the name declared through the API don't match. |
-| `BeneficiaryMissingOrIncorrect` | Merchant's name is missing or incorrect. |
-| `CheckNotReceived` | Check wasn't received by Swan's check provider. This reason doesn't appear until 30 days after the check was declared. |
-| `CheckReceivedLate` | Check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check. |
+| `AmountMismatch` | The amount on the check and the amount declared through the API don't match. |
+| `BeneficiaryMismatch` | The beneficiary name on the check and the name declared through the API don't match. |
+| `BeneficiaryMissingOrIncorrect` | The merchant's name is missing or incorrect. |
+| `CheckNotReceived` | The check wasn't received by Swan's check provider. This reason doesn't appear until 30 days after the check was declared. |
+| `CheckReceivedLate` | The check was received by Swan's check provider more than 30 days after the check was declared, or if Swan's check provider received a canceled check. |
 | `DateMissing` | There's no date on the check. |
-| `DateInvalid` | Date on the check is in the future or isn't valid. |
-| `DebtorNameMissing` | Debtor's name (your merchant's customer) must appear on the check. |
+| `DateInvalid` | The date on the check is in the future or isn't valid. |
+| `DebtorNameMissing` | The debtor's name (your merchant's customer) must appear on the check. |
 | `InvalidOrMissingAmount` | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters). |
-| `SignatureMissing` | Debtor's signature is missing, or there was a problem with the signature. |
+| `SignatureMissing` | The debtor's signature is missing, or there was a problem with the signature. |
 
 ### Returned {#returned}
 
 Checks can be returned up to 10 business days after the transaction is `Booked`, and this window can be extended to 90 calendar days based on the reason for return.
 Note that checks aren't mailed back to the merchant.
 
-A check transaction might be returned for the following reasons (this list is not exhaustive):
+A check transaction might be returned for the following reasons:
 
-- Insufficient funds
-- Account closed
-- Loss or theft
+| Return reason                     | Explanation                                                                 |
+|---|---|
+| `AccountClosed` | The account is closed. |
+| `CheckBlocked` | The payer has blocked the check payment. |
+| `CheckOutdated` | The check is outdated. |
+| `DebtorDeceased` | The debtor is deceased. |
+| `EndorsementMissingOrInvalid` | The check payment can't be fulfilled because the beneficiary's signature on the check is missing or invalid. |
+| `Fraudulent` | The payment can't be fulfilled because it's a fraudulent check. |
+| `InsufficientFunds` | The payer has insufficient funds to fulfill the check payment. |
+| `LegalOrBankDecision` | The check payment can't be fulfilled because of a legal or banking issue on the payer's end. |
+| `MandatoryReferenceMissingOnCheck` | The check payment can't be fulfilled because a mandatory piece of information is missing on the check. |
+| `SignatureInvalid` | The check payment can't be fulfilled because the payer's signature is invalid. |
+| `SwanTechnicalErrorOccurred` | A technical error prevented the processing of this check. |
+| `TransactionDuplicated` | This transaction can't be fulfilled because it's a duplicate of another transaction. |
 
 By the time a check is returned, the merchant's account has already been credited.
 Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `checkInReturn` transaction is created automatically.

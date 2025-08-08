@@ -52,9 +52,17 @@ response_type=code
 &redirect_uri=$YOUR_REDIRECT_URI
 &scope=openid%20offline
 &state=kdqsjdlkjsqdlkqjsdlkjsqd
+&onboardingId=$ONBOARDINGID_OF_YOUR_CUSTOMER
+&accountMembershipId=$ACCOUNTMEMBERSHIPID_OF_YOUR_CUSTOMER
+&identificationLevel=Auto
+&firstName=Jules
+&lastName=Fleury
 
-# Full URL
-https://oauth.swan.io/oauth2/auth?response_type=code&client_id=$YOUR_CLIENT_ID&redirect_uri=$YOUR_REDIRECT_URI&scope=openid%20offline&state=kdqsjdlkjsqdlkqjsdlkjsqd
+# Example URL including the `onboardingId`
+https://oauth.swan.io/oauth2/auth?response_type=code&client_id=$YOUR_CLIENT_ID&redirect_uri=$YOUR_REDIRECT_URI&scope=openid%20offline&state=kdqsjdlkjsqdlkqjsdlkjsqd&onboardingId=$ONBOARDINGID_OF_YOUR_CUSTOMER&identificationLevel=Auto&firstName=Jules&lastName=Fleury
+
+# Example URL including the `accountMembershipId`
+https://oauth.swan.io/oauth2/auth?response_type=code&client_id=$YOUR_CLIENT_ID&redirect_uri=$YOUR_REDIRECT_URI&scope=openid%20offline&state=kdqsjdlkjsqdlkqjsdlkjsqd&accountMembershipId=$ACCOUNTMEMBERSHIPID_OF_YOUR_CUSTOMER&identificationLevel=Auto&firstName=Jules&lastName=Fleury
 ```
 
 #### Required parameters {#url-parameters-required}
@@ -71,10 +79,10 @@ https://oauth.swan.io/oauth2/auth?response_type=code&client_id=$YOUR_CLIENT_ID&r
 
 | Parameter | Description |
 | --- | --- |
-| `onboardingId` |  Avoids asking the customer to enter their own residence address if they provide that information during onboarding. |
-| `email` | If you include the `email` parameter, it triggers an [email verification](../../../topics/accounts/memberships/index.mdx#invite) flow automatically. If you include the parameter *and* the email address, it triggers the email verification flow with the email address pre-filled. |
-| `identificationLevel` |  Indicate your preferred [identification level](../../../topics/users/identifications/index.mdx#levels-processes): `PVID`, `QES`, `Expert`, or `Auto`.<br /><br />If you include the `onboardingId`, or if you're trying to reengage your user to complete their identification, Swan recommends setting `Auto` as your preferred identification level. `Auto` allows Swan to direct your users to the best identification flow for their situation.<br /><br />If you use the `Auto` identification level when **inviting account members**, include the `accountMembershipId` in the authorization URL. |
-| `phoneNumber`<br />`firstName`<br />`lastName`<br />`birthDate`<br />`birthCity`<br />`birthCountry`<br />`nationality`<br />`language`<br />`birthPlacePostalCode`<br />`residencyAddress`<br />`residencyAddressCity`<br />`residencyAddressCountry`<br />`residencyAddressPostalCode` |  Avoids asking the customer to enter this information during user registration.<br /><br />Required formats: <ul><li>`birthDate`: YYYY-MM-DD *(year-month-day)*</li><li>`birthCountry`, `nationality`, and `residencyAddressCountry`: ISO 3166-1 alpha-3 *(France = `FRA`)*</li><li>`language`: ISO 639-1 (alpha 2) *(Spanish = `es`)*</li></ul> |
+| `onboardingId`<br/>(line 11) |  Avoids asking the customer to enter their own residence address if they provide that information during onboarding. |
+| `email` | If you include the `email` parameter, it triggers an [email verification](../../../topics/accounts/memberships/index.mdx#invite) flow automatically. If you include the parameter *and* the email address, it triggers the email verification flow with the email address pre-filled.<br /><br />Email addresses must be **encoded**, for example `email=jules%40email.com`. |
+| `identificationLevel`<br/>(line 13) |  Indicate your preferred [identification level](../../../topics/users/identifications/index.mdx#levels-processes): `PVID`, `QES`, `Expert` or `Auto`.<br /><br />Swan recommends setting `Auto` as your preferred identification level when guiding users through an identification flow, reengaging them to complete it, or inviting account members.<br /><br /> `Auto` allows Swan to direct your users to the best identification flow for their situation.  If your project is configured to [bypass identification](../../../topics/accounts/memberships/index.mdx#remove-identification), eligible users will automatically skip it.<br /><br /> If you use the `Auto` identification level, make sure you include the `onboardingId` (line 11) or the `accountMembershipId` (line 12) in the authorization URL.|
+| `phoneNumber`<br />`firstName`<br />(line 14)<br/>`lastName`<br />(line 15)<br/>`birthDate`<br />`birthCity`<br />`birthCountry`<br />`nationality`<br />`language`<br />`birthPlacePostalCode`<br />`residencyAddress`<br />`residencyAddressCity`<br />`residencyAddressCountry`<br />`residencyAddressPostalCode` |  Avoids asking the customer to enter this information during user registration.<br /><br />Required formats: <ul><li>`phoneNumber`: **encoded**, including the plus `+` sign in the country code *(`phoneNumber=%2B3312345678901`, where `%2B` represents the plus sign)*</li><li>`birthDate`: YYYY-MM-DD *(year-month-day)*</li><li>`birthCountry`, `nationality`, and `residencyAddressCountry`: ISO 3166-1 alpha-3 *(France = `FRA`)*</li><li>`language`: ISO 639-1 (alpha 2) *(Spanish = `es`)*</li></ul> |
 
 ### 2.2 Receive approval from user {#code-approve}
 
@@ -132,7 +140,10 @@ curl -v -X POST <https://oauth.swan.io/oauth2/token> \\
 
 Assuming the information provided was correct, you'll receive a response with a user access token.
 
-<UseImmediately overview="After getting the token" />
+:::tip
+The user access token is encoded. 
+After it's decoded, you can use the `sub` field to identify the user. The `sub` in the `id_token` represents the Live `userID`, even for [Sandbox](/developers/tools/sandbox-users/) users.
+:::
 
 The example response explains that you're receiving a [bearer token](./index.mdx#bearer-auth), which is a cryptic string, and that the token provides user-level access for one hour.
 The token scope lets you know you can use the token for OpenID Connect purposes.
@@ -156,7 +167,26 @@ If your request returns an error, your **authorization code** from step 2 might 
 Use a new authorization code or a new client secret (or both) to try your request again.
 :::
 
-## Step 5: Refresh your access token {#refresh-token}
+## Step 5: Verify which user is logged in {#verify-user}
+
+After getting the token, **use it immediately** to **verify which user is logged in**.
+
+Adding a `phoneNumber` to the OAuth 2.0 URL in step 2.1 **isn't sufficient** to know which user is logged in.
+Sometimes, a phone number might have been used by a [deactivated user](../../../topics/users/index.mdx#deactivate) before being used for a new user.
+Additionally, your user might have replaced the number you provided with a different number, or gone through the process to [update their phone number](https://support.swan.io/hc/en-150/articles/16332148291741-Updating-your-phone-number) with Swan.
+
+It's impossible to detect these changes when getting a user access token, so it's **crucial to verify** that the user associated with the token is the logged-in user.
+
+Use the user access token to run [this query](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgdXNlciB7CiAgICBpZAogICAgZmlyc3ROYW1lCiAgICBsYXN0TmFtZQogICAgam9pbmVkQXQKICAgIGJpcnRoRGF0ZQogICAgY3JlYXRlZEF0CiAgICBzdGF0dXMKICB9Cn0K&tab=api) in the API Explorer and retrieve the associated `userID`.
+
+## Step 6: Refresh your access token {#refresh-token}
+
+:::tip
+Consider using [impersonation](/developers/using-api/authentication/guide-impersonate) because:
+- You don't need to manage or refresh user access tokens.
+- You can use a project access token with a `userID` to perform user-level actions.
+- It helps maintain security while creating a smoother user experience.
+:::
 
 When your user access token expires, you can use the refresh token provided in the cURL response to extend the usage of your user access token.
 Please note that while they don't expire, **refresh tokens are single-use**.

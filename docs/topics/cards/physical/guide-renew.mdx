@@ -1,0 +1,74 @@
+---
+title: Renew physical cards
+---
+
+# Renew physical cards
+
+Physical cards expire three years after they are printed.
+They're then automatically renewed for another three years unless the card is [cancelled](/topics/cards/physical/guide-cancel).
+
+If you want the renewed physical card to be delivered to a new address, call the `confirmPhysicalCardRenewal` mutation at least **8 weeks** before the card expires. If no action is taken, the renewed card will be shipped to the original delivery address.
+
+:::tip Prerequisites
+1. Confirm that the card is in `ToRenew` status before calling this mutation. 
+This status is automatically triggered **10 weeks** before the expiration date. 
+If you're subscribed to the `Card.Updated` [webhook](/developers/using-api/webhooks/#events-cards), you'll receive a notification when the physical card status changes to `ToRenew`.
+1. Verify the new physical card delivery address with the cardholder.
+:::
+
+## Guide {#guide}
+
+1. Call the `confirmPhysicalCardRenewal` mutation.
+2. Add the `cardId` for the physical card you're renewing (line 4).
+3. Add the updated physical card delivery `address` (line 5).
+4. Add the `ConfirmPhysicalCardRenewalSuccessPayload`, including any information you'd like to review (line 8).
+5. Add rejections (not shown).
+
+:::warning Delivery address guidelines
+You don't need to include the `companyName` in any `address` fields.
+Please consult the [guidelines for providing a card delivery address](./index.mdx#delivery-address) for more information.
+:::
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gUmVuZXdQaHlzaWNhbENhcmQgewogIGNvbmZpcm1QaHlzaWNhbENhcmRSZW5ld2FsKAogICAgaW5wdXQ6IHsKICAgICAgY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIKICAgICAgYWRkcmVzczogewogICAgICAgIGFkZHJlc3NMaW5lMTogIjEwIFJ1ZSBkZSBsYSBQYWl4IgogICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDAiCiAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIENvbmZpcm1QaHlzaWNhbENhcmRSZW5ld2FsU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBoeXNpY2FsQ2FyZCB7CiAgICAgICAgZXhwaXJ5RGF0ZQogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FyZE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQaHlzaWNhbENhcmRXcm9uZ1N0YXR1c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY3VycmVudFN0YXR1cwogICAgfQogICAgLi4uIG9uIEludmFsaWRTaGlwcGluZ1Byb3ZpZGVyUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4,5,8} showLineNumbers
+mutation RenewPhysicalCard {
+  confirmPhysicalCardRenewal(
+    input: {
+      cardId: "$YOUR_CARD_ID"
+      address: { addressLine1: "10 Rue de la Paix", city: "Paris", postalCode: "75000", country: "FRA" }
+    }
+  ) {
+    ... on ConfirmPhysicalCardRenewalSuccessPayload {
+      __typename
+      physicalCard {
+        expiryDate
+        statusInfo {
+          status
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms that the physical card expires on 09/21 (line 6), and its renewal status is `ToRenew` (line 8).
+
+```json {6,8} showLineNumbers
+{
+  "data": {
+    "confirmPhysicalCardRenewal": {
+      "__typename": "ConfirmPhysicalCardRenewalSuccessPayload",
+      "physicalCard": {
+        "expiryDate": "09/21",
+        "statusInfo": {
+          "status": "ToRenew"
+        }
+      }
+    }
+  }
+}
+```

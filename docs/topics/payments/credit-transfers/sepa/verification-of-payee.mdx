@@ -150,7 +150,7 @@ Verification of Payee provides verification results so end-users can make inform
 
 VoP applies to Standing Orders with two key differences:
 
-- **Initial verification only**: VoP happens at the initiation stage when creating the Standing Order
+- **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order
 - **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP
 
 ### Bulk payments {#bulk-payments}
@@ -164,23 +164,23 @@ For bulk credit transfers, each transfer in the batch must include a valid `Bene
 
 #### Opting out of VoP for bulk transfers
 
-Company accounts can opt-out of VoP for bulk transfers through the `updateBulkVerificationOfPayeeSetting` mutation. Individual accounts cannot opt-out.
+Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
 
 **Mutation input:**
 - `accountId`: The company account ID
-- `isBulkVerificationOfPayeeEnabled`: Boolean flag to enable/disable VoP for bulk transfers
-- `consentRedirectUrl`: URL for consent flow
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean flag to allow bulk transfers without VoP verification
+- `consentRedirectUrl`: URL for consent flow (required when changing settings)
 
-**Account field:**
-The `Account` type includes:
-- `isBulkVerificationOfPayeeEnabled`: Boolean field indicating VoP status for bulk transfers
-- Company accounts default to `false` (opted-out via Terms and Conditions)
-- Individual accounts always have this set to `true`
+**Account settings:**
+The `Account` type includes a `settings` object with:
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean field indicating if bulk transfers can be made without VoP
+- Company accounts can set this to `true` to opt-out of VoP for bulk transfers
+- Individual accounts cannot modify this setting
 
 **Restrictions:**
 - Only available for Company account types
-- Requires `canInitiatePayments` permission or account holder status
-- No SCA required for opting in
+- Requires both `canViewAccount` and `canInitiatePayments` permissions
+- No SCA required for changing this setting
 
 ## Integration flows for VoP {#integration-flows}
 

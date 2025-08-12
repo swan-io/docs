@@ -209,11 +209,10 @@ Swan provides two integration options based on your user experience (UX) needs a
   <div className="col col--6">
     <div className="card" style={{height: '100%', backgroundColor: '#f0f9f0', border: '1px solid #d4edda'}}>
       <div className="card__header">
-        <h3>🟢 Option 2: Custom verification (Recommended)</h3>
+        <h3>🟢 Option 2: Custom verification</h3>
       </div>
       <div className="card__body">
         <p><strong>Swan verifies beneficiary details on-demand using the `verifyBeneficiary` mutation</strong></p>
-        <p><strong>⭐ Swan strongly recommends this option</strong></p>
         <ul>
           <li>Complete control over VoP results presentation.</li>
           <li>Custom error handling and user guidance.</li>
@@ -239,7 +238,7 @@ Swan provides two integration options based on your user experience (UX) needs a
 
 For single credit transfers, you don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
 
-Option 1 is [not available for Bulk Credit Transfers](#payment-support). **For bulk credit transfers, we strongly recommend using Option 2**, which is designed to handle high-volume payments efficiently and aligns with standard market practices.
+Option 1 is [not available for Bulk Credit Transfers](#payment-support). Instead, **Option 2** is designed to handle high-volume payments efficiently and aligns with standard market practices.
 
 <div style={{textAlign: 'center'}}>
 ```mermaid
@@ -269,9 +268,9 @@ flowchart TD
 ```
 </div>
 
-## Option 2: Custom verification (Recommended) {#option-2}
+## Option 2: Custom verification {#option-2}
 
-Call the `verifyBeneficiary` mutation before initiating SEPA Credit Transfers to get full control over the verification user experience. Partners can decide the level of friction here, but we recommend having clear warnings and CTAs to verify or edit beneficiary details based on the verification result.
+Call the `verifyBeneficiary` mutation before initiating SEPA Credit Transfers to get full control over the verification user experience. You can decide the level of friction here, but we recommend having clear warnings and CTAs to verify or edit beneficiary details based on the verification result.
 
 ### verifyBeneficiary mutation {#verify-beneficiary-mutation}
 
@@ -324,7 +323,7 @@ flowchart TD
 
 ### Verification flow {#verification-flow}
 
-1. **Verify beneficiary**: Call the `verifyBeneficiary` mutation with `accountId`, IBAN, and account holder name.
+1. **Verify beneficiary**: Call the `verifyBeneficiary` mutation - include the `accountId`, IBAN, and account holder name.
 2. **Receive the verification result**: Match, Close match, No Match, or Verification not possible. A unique `BeneficiaryVerificationToken` is also returned.
 3. **Inform the end-user**: Display appropriate messaging and optional actions based on the verification result.
 4. **User proceeds**: The end-user can choose to proceed with the payment regardless of the result.
@@ -408,7 +407,7 @@ flowchart TD
 
 #### Custom UX examples {#custom-ux-examples}
 
-Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. Partners can decide the level of friction and optional actions to display:
+Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. You can decide the level of friction and optional actions to display:
 
 <Tabs>
   <TabItem value="match" label="✅ Match" default>

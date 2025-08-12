@@ -150,37 +150,37 @@ Verification of Payee provides verification results so end-users can make inform
 
 VoP applies to Standing Orders with two key differences:
 
-- **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order
-- **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP
+- **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
+- **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
 
 ### Bulk payments {#bulk-payments}
 
 For bulk credit transfers, each transfer in the batch must include a valid `BeneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
 
 #### Batch Credit Transfer requirements
-- Each `CreditTransferInput` in a batch must include a valid `BeneficiaryVerificationToken`
-- Submitting any transfer with full beneficiary details instead of a token will reject the entire batch
-- Company accounts that have opted out of VoP can submit batches without tokens
+- Each `CreditTransferInput` in a batch must include a valid `BeneficiaryVerificationToken`.
+- Submitting any transfer with full beneficiary details instead of a token will reject the entire batch.
+- Company accounts that have opted out of VoP can submit batches without tokens.
 
 #### Opting out of VoP for bulk transfers
 
 Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
 
 **Mutation input:**
-- `accountId`: The company account ID
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean flag to allow bulk transfers without VoP verification
-- `consentRedirectUrl`: URL for consent flow (required when changing settings)
+- `accountId`: The company account ID.
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean flag to allow bulk transfers without VoP verification.
+- `consentRedirectUrl`: URL for consent flow (required when changing settings).
 
 **Account settings:**
 The `Account` type includes a `settings` object with:
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean field indicating if bulk transfers can be made without VoP
-- Company accounts can set this to `true` to opt-out of VoP for bulk transfers
-- Individual accounts cannot modify this setting
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean field indicating if bulk transfers can be made without VoP.
+- Company accounts can set this to `true` to opt-out of VoP for bulk transfers.
+- Individual accounts cannot modify this setting.
 
 **Restrictions:**
-- Only available for Company account types
-- Requires both `canViewAccount` and `canInitiatePayments` permissions
-- No SCA required for changing this setting
+- Only available for Company account types.
+- Requires both `canViewAccount` and `canInitiatePayments` permissions.
+- No SCA required for changing this setting.
 
 ## Integration flows for VoP {#integration-flows}
 
@@ -274,18 +274,18 @@ Call the `verifyBeneficiary` mutation before initiating SEPA Credit Transfers to
 The `verifyBeneficiary` mutation pre-validates beneficiary details before payment initiation.
 
 **Required inputs:**
-- `accountId`: The account from which the payment will be made
-- IBAN: The beneficiary's IBAN
-- Account holder name: The beneficiary's name
+- `accountId`: The account from which the payment will be made.
+- IBAN: The beneficiary's IBAN.
+- Account holder name: The beneficiary's name.
 
 **Returns:**
-- Verification result: `Match`, `CloseMatch`, `NoMatch`, or `VerificationNotPossible`
-- `BeneficiaryVerificationToken`: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations
+- Verification result: `Match`, `CloseMatch`, `NoMatch`, or `VerificationNotPossible`.
+- `BeneficiaryVerificationToken`: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations.
 
 **Token validation:**
-- Tokens are validated for authenticity, status, and expiration
-- Invalid, expired, or undecryptable tokens result in a `ValidationRejection`
-- Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`
+- Tokens are validated for authenticity, status, and expiration.
+- Invalid, expired, or undecryptable tokens result in a `ValidationRejection`.
+- Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
 
 <div style={{textAlign: 'center'}}>
 ```mermaid
@@ -339,8 +339,8 @@ For single credit transfers only, you can still provide the full `sepaBeneficiar
 
 **Success Response:**
 The `InitiateCreditTransfersSuccessPayload` includes:
-- `beneficiaryVerificationResults`: Array of `VerifyBeneficiaryResult` in the same order as the beneficiary inputs
-- Standard payment information
+- `beneficiaryVerificationResults`: Array of `VerifyBeneficiaryResult` in the same order as the beneficiary inputs.
+- Standard payment information.
 
 <details>
 
@@ -415,29 +415,29 @@ Examples of how to present VoP verification results in your web banking interfac
   
   <TabItem value="close" label="⚠️ Close match">
     **Recommended actions**: 
-    - Display suggested name correction
-    - Offer to update beneficiary name
-    - Allow proceeding with original or suggested name
+    - Display the suggested name correction.
+    - Offer to update the beneficiary name.
+    - Allow proceeding with the original or suggested name.
     
     ![VoP Close match web banking screen](../../../../images/topics/payments/credit-transfers/vop/PC_close_match.png)
   </TabItem>
   
   <TabItem value="no-match" label="❌ No match">
     **Recommended actions**: 
-    - Clear warning about mismatch
-    - Option to edit beneficiary details
-    - Option to verify IBAN with recipient
-    - Allow proceeding with caution
+    - Clear warning about the mismatch.
+    - Option to edit the beneficiary details.
+    - Option to verify the IBAN with recipient.
+    - Allow proceeding with caution.
     
     ![VoP No match web banking screen](../../../../images/topics/payments/credit-transfers/vop/PC_no_match.png)
   </TabItem>
   
   <TabItem value="not-possible" label="❌ Verification not possible">
     **Recommended actions**: 
-    - Explain verification unavailable
-    - Suggest checking IBAN format
-    - Option to contact recipient's bank
-    - Allow proceeding with caution
+    - Explain verification is unavailable.
+    - Suggest checking the IBAN format.
+    - Option to contact the recipient's bank.
+    - Allow proceeding with caution.
     
     ![Verification not possible web banking screen](../../../../images/topics/payments/credit-transfers/vop/PC_no_verif.png)
   </TabItem>

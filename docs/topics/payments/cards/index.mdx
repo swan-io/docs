@@ -138,16 +138,16 @@ However, if the Swan account's `Available` balance is only 55€, Swan can accep
 ### Clearing {#clearing}
 
 After authorization, or when the merchant gets back online in the case of offline authorizations, the payment goes through **clearing**.
-During clearing,the payment is processed and the funds are transferred from the cardholder's account to the merchant's account.
+During clearing, the payment is processed and the funds are transferred from the cardholder's account to the merchant's account.
 
 Clearing usually occurs one to three days after the authorization, depending on the merchant.
-The process is not absolute, however, so make sure to review the examples section for several situational flows.
+The process is not absolute, so make sure to review the [examples](#examples) section for several situational flows.
 For example, all of the following can exist: authorizations without debit, debits without authorizations, and multiple debits for the same authorization.
 
 #### Partial and exceeding debits {#clearing-partial-exceeding}
 
 In situations where **only part of an authorized amount is debited** (for example, when only part of an order can be fulfilled), Swan updates the initial transaction to reflect the reduced `Pending` amount.
-Users can have several partial debits (consider the online shopping example).
+Users can have several partial debits (consider the online shopping [example](#examples)).
 
 If the debit amount **exceeds the amount initially authorized**, Swan links both transactions under the same payment to ensure accurate accounting and tracking.
 This also applies if a debit occurs after the authorization expires.
@@ -189,7 +189,7 @@ At Swan, you might encounter various capture types, including those described in
 
 Some merchants don't follow the classic authorization and debit payment flow.
 Discover alternative payment flows that work for different use cases.
-These are examples, not rules; merchants control their own flows and can makes changes at any time.
+These are examples, not rules; merchants control their own flows and can make changes at any time.
 
 <Tabs>
 <TabItem value="taxi" label={<span title="Taxi">🚗</span>} default>
@@ -261,7 +261,7 @@ Consider a cardholder ordering two items fulfilled by different sellers:
 **Online return** | Authorization + debit clearing + refund
 
 There are multiple ways to reimburse a payment.
-The most straightforward is for the merchant the refund the debit transaction (debit reversal).
+The most straightforward is for the merchant to refund the debit transaction (debit reversal).
 The merchant must be able to link the refund to the debit.
 
 Consider a cardholder who orders and returns a package, all online:
@@ -283,6 +283,8 @@ Consider a cardholder who orders and returns a package, all online:
 
 When items are returned in-store, they can be hard to link back to the debit.
 When a merchant needs to refund a customer but can't connect the refund transaction to the original debit, they create a new credit transaction.
+
+When merchants correctly reference the original debit authorization, Swan links the `CardOutCredit` transaction to the same `paymentId` as the original authorization.
 
 Consider a cardholder buying then returning an item in-store:
 
@@ -358,7 +360,7 @@ Consider a cardholder making a purchase on an airplane (such as food or duty-fre
 ## 3-D Secure (3DS) {#3ds}
 
 3-D Secure (3DS) is an extra security layer for online card payments.
-All Swan cards, including single-use virtual cards, are subject to 3DS compliance; however, because single-use virtual cards require consent when being creating, 3DS is more seamless.
+All Swan cards, including single-use virtual cards, are subject to 3DS compliance; however, because single-use virtual cards require consent when being created, 3DS is more seamless.
 
 With 3DS, cardholders are required to perform [Strong Customer Authentication](../../users/consent/index.mdx#sca) before finalizing their payment.
 As a card issuer, Swan must comply with the European Revised Directive on Payment Services (PSD2).

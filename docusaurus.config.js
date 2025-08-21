@@ -94,7 +94,7 @@ module.exports = {
       if (
         result != null &&
         result.frontMatter != null &&
-        result.frontMatter.type === "release"
+        (result.frontMatter.type === "release" || result.frontMatter.type === "preview")
       ) {
         return {
           ...result,

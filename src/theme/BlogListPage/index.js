@@ -10,8 +10,7 @@ import BlogLayout from "@theme/BlogLayout";
 import BlogListPaginator from "@theme/BlogListPaginator";
 import SearchMetadata from "@theme/SearchMetadata";
 import BlogPostItems from "@theme/BlogPostItems";
-import MDXContent from "@theme/MDXContent";
-import ComingUp from "../../../changelog/coming-up.mdx";
+import ChangelogTabs from "../../components/Changelog/Tabs";
 
 function BlogListPageMetadata(props) {
   const { metadata } = props;
@@ -28,20 +27,26 @@ function BlogListPageMetadata(props) {
     </>
   );
 }
+
 function BlogListPageContent(props) {
   const { metadata, items, sidebar } = props;
+  
   return (
     <BlogLayout sidebar={sidebar}>
       {metadata.page === 1 ? (
-        <MDXContent>
-          <ComingUp />
-        </MDXContent>
-      ) : null}
-      <BlogPostItems items={items} />
-      <BlogListPaginator metadata={metadata} />
+        <div className="changelog-page">
+          <ChangelogTabs items={items} metadata={metadata} />
+        </div>
+      ) : (
+        <>
+          <BlogPostItems items={items} />
+          <BlogListPaginator metadata={metadata} />
+        </>
+      )}
     </BlogLayout>
   );
 }
+
 export default function BlogListPage(props) {
   return (
     <HtmlClassNameProvider

@@ -6,19 +6,12 @@ import MDXContent from '@theme/MDXContent';
 import { usePluginData } from '@docusaurus/useGlobalData';
 
 const PreviewBadge = ({ status = 'preview' }) => {
-  const badgeConfig = {
+  const config = {
     'preview': { label: 'PREVIEW', class: 'preview' },
-    'coming-soon': { label: 'COMING SOON', class: 'coming-soon' },
-    'early-access': { label: 'EARLY ACCESS', class: 'early-access' }
-  };
+    'beta': { label: 'BETA', class: 'beta' }
+  }[status] || { label: 'PREVIEW', class: 'preview' };
   
-  const config = badgeConfig[status] || badgeConfig['preview'];
-  
-  return (
-    <span className={`preview-badge ${config.class}`}>
-      {config.label}
-    </span>
-  );
+  return <span className={`preview-badge ${config.class}`}>{config.label}</span>;
 };
 
 const ChangelogTabs = ({ items, metadata }) => {
@@ -27,14 +20,12 @@ const ChangelogTabs = ({ items, metadata }) => {
   // Get preview features by requiring them directly at build time
   const previewFeatures = (() => {
     try {
-      // This will be resolved at build time
       const previewContext = require.context('../../../docs/preview', false, /\.mdx$/);
       
       return previewContext.keys()
         .filter(key => !key.includes('index.mdx') && !key.includes('/partials/'))
         .map(key => {
-          const module = previewContext(key);
-          const frontMatter = module.frontMatter || {};
+          const { frontMatter = {} } = previewContext(key);
           const filename = key.replace('./', '').replace('.mdx', '');
           
           return {
@@ -46,9 +37,8 @@ const ChangelogTabs = ({ items, metadata }) => {
             link: `/preview/${filename}`
           };
         })
-        .filter(feature => feature.title); // Only include files with valid frontmatter
-    } catch (error) {
-      console.warn('Could not load preview features:', error);
+        .filter(feature => feature.title);
+    } catch {
       return [];
     }
   })();
@@ -78,9 +68,7 @@ const ChangelogTabs = ({ items, metadata }) => {
       <div className="changelog-content">
         {activeTab === 'latest' ? (
           <div className="latest-updates">
-            <MDXContent>
-              <ComingUp />
-            </MDXContent>
+            <MDXContent><ComingUp /></MDXContent>
             <BlogPostItems items={regularItems} />
             
             {metadata?.totalPages > 1 && (

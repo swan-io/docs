@@ -3,6 +3,7 @@ import Link from '@docusaurus/Link';
 import BlogPostItems from '@theme/BlogPostItems';
 import ComingUp from '../../../changelog/coming-up.mdx';
 import MDXContent from '@theme/MDXContent';
+import { usePluginData } from '@docusaurus/useGlobalData';
 
 const PreviewBadge = ({ status = 'preview' }) => {
   const badgeConfig = {
@@ -23,23 +24,39 @@ const PreviewBadge = ({ status = 'preview' }) => {
 const ChangelogTabs = ({ items, metadata }) => {
   const [activeTab, setActiveTab] = useState('latest');
   
-  // Remove preview blog data - we'll link to docs instead
+  // Get preview features by requiring them directly at build time
+  const previewFeatures = (() => {
+    try {
+      // This will be resolved at build time
+      const previewContext = require.context('../../../docs/preview', false, /\.mdx$/);
+      
+      return previewContext.keys()
+        .filter(key => !key.includes('index.mdx') && !key.includes('/partials/'))
+        .map(key => {
+          const module = previewContext(key);
+          const frontMatter = module.frontMatter || {};
+          const filename = key.replace('./', '').replace('.mdx', '');
+          
+          return {
+            title: frontMatter.title,
+            status: frontMatter.status || 'preview',
+            timeline: frontMatter.timeline,
+            category: frontMatter.category,
+            description: frontMatter.description,
+            link: `/preview/${filename}`
+          };
+        })
+        .filter(feature => feature.title); // Only include files with valid frontmatter
+    } catch (error) {
+      console.warn('Could not load preview features:', error);
+      return [];
+    }
+  })();
+  
+  // Remove preview articles from regular changelog items
   const regularItems = items.filter(item => 
     item.content?.frontMatter?.type !== 'preview'
   );
-  
-  // Hardcoded preview features that link to docs/preview/
-  const previewFeatures = [
-    {
-      title: 'Verification of Payee',
-      status: 'preview',
-      timeline: 'October 8, 2025',
-      category: 'Compliance',
-      description: 'Checking beneficiary details against account holder information before initiating SEPA Credit Transfers and Instant SEPA Credit Transfers.',
-      link: '/preview/verification-of-payee'
-    }
-    // Add more preview features here as needed
-  ];
   
   return (
     <div className="changelog-container">

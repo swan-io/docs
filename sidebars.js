@@ -749,4 +749,19 @@ module.exports = {
       ],
     },
   ],
+  previewSidebar: [
+    {
+      type: 'doc',
+      id: 'preview/index',
+      label: 'Preview Features',
+    },
+    {
+      type: 'category',
+      label: 'Features',
+      items: [
+        'preview/verification-of-payee',
+        // Add more preview features here
+      ],
+    },
+  ],
 };

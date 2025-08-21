@@ -23,13 +23,23 @@ const PreviewBadge = ({ status = 'preview' }) => {
 const ChangelogTabs = ({ items, metadata }) => {
   const [activeTab, setActiveTab] = useState('latest');
   
-  const previewItems = items.filter(item => 
-    item.content?.frontMatter?.type === 'preview'
-  );
-  
+  // Remove preview blog data - we'll link to docs instead
   const regularItems = items.filter(item => 
     item.content?.frontMatter?.type !== 'preview'
   );
+  
+  // Hardcoded preview features that link to docs/preview/
+  const previewFeatures = [
+    {
+      title: 'Verification of Payee',
+      status: 'preview',
+      timeline: 'October 8, 2025',
+      category: 'Compliance',
+      description: 'Checking beneficiary details against account holder information before initiating SEPA Credit Transfers and Instant SEPA Credit Transfers.',
+      link: '/preview/verification-of-payee'
+    }
+    // Add more preview features here as needed
+  ];
   
   return (
     <div className="changelog-container">
@@ -67,31 +77,33 @@ const ChangelogTabs = ({ items, metadata }) => {
         ) : (
           <div className="preview-features">
             <div className="preview-features-list">
-              {previewItems.length > 0 ? (
-                previewItems.map((article) => {
-                  const { frontMatter } = article.content;
-                  return (
-                    <article key={article.id} className="preview-entry">
-                      <div className="preview-header">
-                        <h3>
-                          <Link to={article.permalink} className="preview-title">
-                            {frontMatter?.title}
-                          </Link>
-                          <PreviewBadge status={frontMatter?.status} />
-                        </h3>
-                        <div className="preview-meta">
-                          {frontMatter?.timeline} • {frontMatter?.category}
-                        </div>
-                      </div>
-                      <div className="preview-content">
-                        <p>{frontMatter?.description}</p>
-                        <Link to={article.permalink} className="preview-read-more">
-                          Read full specification →
+              {previewFeatures.length > 0 ? (
+                previewFeatures.map((feature, index) => (
+                  <article 
+                    key={index} 
+                    className="preview-entry"
+                    onClick={() => window.location.href = feature.link}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="preview-header">
+                      <h3>
+                        <Link to={feature.link} className="preview-title">
+                          {feature.title}
                         </Link>
+                        <PreviewBadge status={feature.status} />
+                      </h3>
+                      <div className="preview-meta">
+                        {feature.timeline} • {feature.category}
                       </div>
-                    </article>
-                  );
-                })
+                    </div>
+                    <div className="preview-content">
+                      <p>{feature.description}</p>
+                      <Link to={feature.link} className="preview-read-more">
+                        Read full specification →
+                      </Link>
+                    </div>
+                  </article>
+                ))
               ) : (
                 <div className="preview-placeholder">
                   <p>No preview features available at the moment.<br/>Check back soon!</p>

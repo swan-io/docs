@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Link from '@docusaurus/Link';
 import BlogPostItems from '@theme/BlogPostItems';
 import ComingUp from '../../../changelog/coming-up.mdx';
+import PreviewInfo from '../../../docs/preview/partials/_preview-info.mdx';
 import MDXContent from '@theme/MDXContent';
 import { usePluginData } from '@docusaurus/useGlobalData';
 
@@ -80,6 +81,8 @@ const ChangelogTabs = ({ items, metadata }) => {
           </div>
         ) : (
           <div className="preview-features">
+            <MDXContent><PreviewInfo /></MDXContent>
+            
             <div className="preview-features-list">
               {previewFeatures.length > 0 ? (
                 previewFeatures.map((feature, index) => (

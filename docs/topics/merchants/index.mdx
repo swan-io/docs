@@ -24,8 +24,11 @@ To get started, contact your dedicated Technical Account Manager, or send an ema
 
 Accepting payments from customers comes with risk, and Swan prioritizes a **risk-based approach**.
 
-That's why Swan reviews all requests for merchant profiles, profile updates, and payment methods.
-You might be contacted for more information before Swan accepts or rejects the request.
+Swan reviews all requests for merchant profiles, profile updates, and payment methods. 
+Both profiles and payment methods initially start with the status `PendingReview`.
+
+For payment methods, Swan may change the status to `WaitingForInformation` when additional details are needed. 
+In such cases, you may be contacted to provide more information before Swan makes a final decision to approve or reject the request.
 
 To manage potential risk, if suspicious activity is detected, Swan can **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
 Swan can also reinstate a profile or payment method by changing the status to `Enabled`.
@@ -36,38 +39,6 @@ The user must create a new request, which Swan will review as a separate submiss
 
 Subscribe to numerous webhooks to facilitate your merchant integrations.
 Review the [full list of merchant webhooks](../../developers/using-api/webhooks.mdx#events-merchants), or subscribe to them directly from your **Dashboard** > **Developers** > **Webhooks**.
-
-### Profile & payment method statuses {#statuses}
-
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    MPMR((Merchant profile<br/>or payment method<br/>requested)) -.-> PR[PendingReview]
-    PR -.-> R[Rejected]
-    PR -.-> E[Enabled]
-    E <-.-> S[Suspended]
-    S -.-> R
-    S -.-> D
-    E -.-> D[Disabled]
-    subgraph U[Can use]
-        E
-    end
-    subgraph F[Final status]
-        D
-        R
-    end
-    style MPMR fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
-```
-
-| Profile status | Explanation |
-|---|---|
-| `PendingReview` | Profile or payment method request or update was submitted and is pending a review by Swan.<br /><br />**Next steps**: <ul><li>If the request or update doesn't meet requirements or is deemed risky by Swan, the status moves directly to `Rejected`.</li><li>Otherwise, the status moves to `Enabled`.</li></ul> |
-| `Enabled` | Profile or payment method is active.<br /><br /><ul><li>Use `PendingReview` merchant profiles to request payment methods and accept payments with activated payment methods.</li><li>Use `Enabled` payment methods to accept payments.</li><li>Updates to profiles and payment methods can only occur when they have the status `Enabled`.</li></ul> |
-| `Suspended` | Status **assigned by Swan** when the merchant's use of their profile or payment method needs to be reviewed. The status can't return to `Enabled` without a review. |
-| `Rejected` | Final status **assigned by Swan** when Swan decides the risk of this profile or the risk of this payment method for the associated merchant is too high, or for some other risk-related reason. |
-| `Disabled` | Final status **set by you** using the `requestMerchantPaymentMethods` mutation. |
 
 ## Merchant profiles {#profiles}
 
@@ -86,9 +57,9 @@ A merchant profile contains the following information:
 
 | Field | Description |
 | --- | --- |
-| **Business details** | Required. The merchant’s name, product type (`product`, `services`, `digital goods`, or `donations`), and a short description of their activity. |
+| **Business details** | Required. The merchant's name, product type (`product`, `services`, `digital goods`, or `donations`), and a short description of their activity. |
 | **Projected volumes** | Required. Include the expected monthly payment volume and average order value. Helps assess business size and risk. |
-| **Link to the merchant's website or social network** | Highly recommended. This helps us understand the merchant’s business. Sometimes required. |
+| **Link to the merchant's website or social network** | Highly recommended. This helps us understand the merchant's business. Sometimes required. |
 | **Description of the business activity** | Highly recommended. A clear explanation of what the merchant offers or sells. |
 | **Payment frequency** | Specify if payments are mostly one-off or recurring (e.g. subscriptions). |
 | **Logo** | Optional. Must be a `.png` file under 1 MB. Displayed online and on the mandate PDF. |
@@ -103,6 +74,38 @@ Providing your `customerRegion`, `paymentFrequency`, and at least a `socialNetwo
 :::
 
 The merchant profile is created with the status `PendingReview`, and is visible right away on your Dashboard.
+
+### Merchant profile statuses {#profile-statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    MPR((Merchant profile)) -.-> PR[PendingReview]
+    PR -.-> R[Rejected]
+    PR -.-> E[Enabled]
+    E <-.-> S[Suspended]
+    S -.-> R
+    S -.-> D
+    E -.-> D[Disabled]
+    subgraph U[Can use]
+        E
+    end
+    subgraph F[Final status]
+        D
+        R
+    end
+    style MPR fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Profile status | Explanation |
+|---|---|
+| `PendingReview` | The profile request or update was submitted and is pending a review by Swan. <br /><br />• If the request doesn't meet requirements or is deemed risky, the status moves directly to `Rejected`.<br />• Otherwise, the status moves to `Enabled`. <br /><br />**Next steps:**<br />• Use `PendingReview` merchant profiles to request payment methods. |
+| `Enabled` | The profile is active.<br /><br />• Use `Enabled` profiles to request payment methods and accept payments with activated payment methods.<br />• Updates to profiles can only occur when they are `Enabled`. |
+| `Suspended` | Status **assigned by Swan** when the merchant's use of their profile needs to be reviewed. The status can't return to `Enabled` without a review. |
+| `Rejected` | Final status **assigned by Swan** when the risk of this profile is too high, or for another risk-related reason. |
+| `Disabled` | Final status **set by you** using the `requestMerchantPaymentMethods` mutation. |
 
 ### Updating merchant profiles {#profiles-update}
 
@@ -140,7 +143,7 @@ A merchant profile can be rejected for the following reasons:
 | `DuplicateProfile` | The profile is a duplicate of an existing one. |
 | `InconsistentOrMissingInformation` | Key information is missing or highly inconsistent—for example, an unrelated website. |
 | `UnsupportedActivity` | The activity is prohibited or the NACE code isn't supported. |
-| `ContractualCriteriaNotFulfilled` | The profile doesn’t meet specific criteria agreed upon with partners. |
+| `ContractualCriteriaNotFulfilled` | The profile doesn't meet specific criteria agreed upon with partners. |
 | `GenericRejection` | The profile was rejected for a general reason not covered by other categories. |
 | `SuspiciousBehavior` | The profile was rejected due to alerts related to suspicious processing behavior. |
 
@@ -161,17 +164,44 @@ import OnlinePaymentMethods from './partials/_online-list.mdx';
 
 <OnlinePaymentMethods />
 
-### Payment method review {#method-review}
-
-All merchant payment method requests are subject to a risk review. 
+All merchant payment method requests are subject to a risk review and start with the status `PendingReview`. 
 As part of this process, Swan may need to request additional information from the merchant to complete the assessment.
 
-The following statuses can apply to a payment method request:
+### Payment method statuses {#method-statuses}
 
-| Status | Description |
-| :--- | :--- |
-| `WaitingForInformation` | The payment method status is set to this when more information is needed for the review. The `verificationRequirements` list specifies what the partner needs to provide to trigger a new review. If supporting documents are required, they must be uploaded and a new review requested using the `requestSupportingDocumentCollectionReview` mutation. |
-| `PendingReview` | The request is awaiting a review. After all required information has been provided from the `WaitingForInformation` stage, the status returns to `PendingReview`, and a new review is conducted. |
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    PMQ((Payment method<br/>requested)) -.-> WFI[WaitingForInformation]
+    WFI -.-> PR[PendingReview]
+    PR -.-> R[Rejected]
+    PR -.-> E[Enabled]
+    E <-.-> S[Suspended]
+    S -.-> R
+    S -.-> D[Disabled]
+    E -.-> D
+
+    subgraph U[Can use]
+        E
+    end
+    subgraph F[Final status]
+        D
+        R
+    end
+
+    style PMQ fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+```
+
+| Payment method status | Explanation |
+|---|---|
+| `PendingReview` | The payment method request or update was submitted and is awaiting a review by Swan.<br /><br />• If the request doesn't meet requirements or is deemed risky, the status moves directly to `Rejected`.<br />• Otherwise, the status moves to `Enabled`.|
+| `WaitingForInformation` | More information is needed before Swan can proceed with the review.<br /><br />• The `verificationRequirements` list specifies what the partner needs to provide to trigger a new review.<br />• If supporting documents are required, they must be uploaded and a new review requested using the `requestSupportingDocumentCollectionReview` mutation.<br />• After all required information has been provided, the status returns to `PendingReview`, and a new review is conducted. |
+| `Enabled` | The payment method is active.<br /><br />• Use `Enabled` payment methods to accept payments.<br />• Updates to payment methods can only occur when they are `Enabled`. |
+| `Suspended` | Status **assigned by Swan** when the merchant's use of their payment method needs to be reviewed. The status can't return to `Enabled` without a review. |
+| `Rejected` | Final status **assigned by Swan** when the risk of this payment method is too high, or for another risk-related reason. |
+| `Disabled` | Final status **set by you** using the `requestMerchantPaymentMethods` mutation. |
 
 ### Payment method rejection {#payment-method-rejected}
 
@@ -179,9 +209,9 @@ A merchant payment method can be rejected for the following reasons:
 
 | Rejection reason | Explanation |
 | :--- | :--- |
-| `InvalidUseCase` | The requested payment method doesn’t make sense for the merchant’s business model. |
+| `InvalidUseCase` | The requested payment method doesn't make sense for the merchant's business model. |
 | `InconsistentOrMissingInformation` | The merchant failed to provide, or refused to provide, requested information. |
-| `UnsupportedPaymentMethod` | The partner isn’t allowed to request this payment method. |
+| `UnsupportedPaymentMethod` | The partner isn't allowed to request this payment method. |
 | `ContractualCriteriaNotFulfilled` | The request violates a specific criterion agreed upon with the partner. |
 | `GenericRejection` | The request was rejected for a general reason not covered by other categories. |
 

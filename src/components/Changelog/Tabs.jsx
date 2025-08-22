@@ -32,7 +32,6 @@ const ChangelogTabs = ({ items, metadata }) => {
             title: frontMatter.title,
             status: frontMatter.status || 'preview',
             timeline: frontMatter.timeline,
-            category: frontMatter.category,
             description: frontMatter.description,
             link: `/preview/${filename}`
           };
@@ -98,7 +97,7 @@ const ChangelogTabs = ({ items, metadata }) => {
                         <PreviewBadge status={feature.status} />
                       </h3>
                       <div className="preview-meta">
-                        {feature.timeline} • {feature.category}
+                        <strong>ETA: </strong>{feature.timeline}
                       </div>
                     </div>
                     <div className="preview-content">

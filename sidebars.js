@@ -402,7 +402,6 @@ module.exports = {
                 "topics/payments/credit-transfers/sepa/guide-initiate-ct",
                 "topics/payments/credit-transfers/sepa/guide-cancel-ct",
                 "topics/payments/credit-transfers/sepa/guide-refund-ct",
-                "topics/payments/credit-transfers/sepa/verification-of-payee",
                 "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-add-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",
@@ -747,6 +746,22 @@ module.exports = {
           href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22",
         },
         "developers/contact",
+      ],
+    },
+  ],
+  previewSidebar: [
+    {
+      type: 'doc',
+      id: 'preview/index',
+      label: 'Preview Features',
+    },
+    {
+      type: 'category',
+      label: 'Features',
+      items: [
+        'preview/verification-of-payee',
+        'preview/belgian-ibans',
+        // Add more preview features here
       ],
     },
   ],

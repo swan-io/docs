@@ -9,6 +9,7 @@ import { usePluginData } from '@docusaurus/useGlobalData';
 const PreviewBadge = ({ status = 'preview' }) => {
   const config = {
     'preview': { label: 'PREVIEW', class: 'preview' },
+    'upcoming': { label: 'UPCOMING', class: 'upcoming' },
     'beta': { label: 'BETA', class: 'beta' }
   }[status] || { label: 'PREVIEW', class: 'preview' };
   

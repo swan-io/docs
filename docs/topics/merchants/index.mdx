@@ -105,7 +105,7 @@ flowchart LR
 | `Enabled` | The profile is active.<br /><br />• Use `Enabled` profiles to request payment methods and accept payments with activated payment methods.<br />• Updates to profiles can only occur when they are `Enabled`. |
 | `Suspended` | Status **assigned by Swan** when the merchant's use of their profile needs to be reviewed. The status can't return to `Enabled` without a review. |
 | `Rejected` | Final status **assigned by Swan** when the risk of this profile is too high, or for another risk-related reason. |
-| `Disabled` | Final status **set by you** using the `requestMerchantPaymentMethods` mutation. |
+| `Disabled` | Final status **set by you** using the `disableMerchantProfile` mutation. |
 
 ### Updating merchant profiles {#profiles-update}
 
@@ -201,7 +201,7 @@ flowchart LR
 | `Enabled` | The payment method is active.<br /><br />• Use `Enabled` payment methods to accept payments.<br />• Updates to payment methods can only occur when they are `Enabled`. |
 | `Suspended` | Status **assigned by Swan** when the merchant's use of their payment method needs to be reviewed. The status can't return to `Enabled` without a review. |
 | `Rejected` | Final status **assigned by Swan** when the risk of this payment method is too high, or for another risk-related reason. |
-| `Disabled` | Final status **set by you** using the `requestMerchantPaymentMethods` mutation. |
+| `Disabled` | Final status **set by you** using the `disableMerchantPaymentMethod` mutation. |
 
 ### Payment method rejection {#payment-method-rejected}
 
@@ -230,8 +230,19 @@ import RollingReserve from './partials/_rolling-reserve.mdx';
 | Internal Direct Debit - B2B | <No /> No | n/a |
 | French checks | <Yes /> **Yes** | 100% over 10 interbank business days |
 
-The `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/developers/using-api/webhooks/#events-transactions) notify you when a rolling reserve is updated or released. 
-Subscribe to both webhooks to stay updated on your transactions' rolling reserve.
+:::info Webhooks
+Subscribe to the relevant webhooks to stay informed about updates:
+- **Rolling reserve value, payment amount limit, and payment methods**: 
+  subscribe to the [merchant payment methods webhooks](/developers/using-api/webhooks/#events-merchants-payment-methods).  
+
+- **Merchant profile changes**:
+  subscribe to the [merchant profile webhooks](/developers/using-api/webhooks/#events-merchants-profiles).  
+
+- **Transaction-level rolling reserve releases**:
+  the `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/developers/using-api/webhooks/#events-transactions) notify you when the rolling reserve of an individual transaction is updated or released.  
+
+Use both merchant and transaction webhooks to cover account-level and transaction-level updates.
+:::
 
 ### Versions {#methods-versions-statuses}
 

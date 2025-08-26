@@ -752,7 +752,7 @@ module.exports = {
     {
       type: 'doc',
       id: 'preview/index',
-      label: 'Preview Features',
+      label: 'About preview items',
     },
     {
       type: 'category',

@@ -18,6 +18,22 @@ const PreviewBadge = ({ status = 'preview' }) => {
 
 const ChangelogTabs = ({ items, metadata }) => {
   const [activeTab, setActiveTab] = useState('latest');
+  const [etaSort, setEtaSort] = useState('ascending');
+  const [typeFilter, setTypeFilter] = useState('any');
+  
+  // Helper function to parse dd-mm-yyyy date format
+  const parseDate = (dateString) => {
+    if (!dateString) return null;
+    const [day, month, year] = dateString.split('-');
+    return new Date(year, month - 1, day);
+  };
+
+  // Helper function to check if date is in the future
+  const isFutureDate = (dateString) => {
+    const date = parseDate(dateString);
+    if (!date) return true; // Show items without dates
+    return date >= new Date();
+  };
   
   // Get preview features by requiring them directly at build time
   const previewFeatures = (() => {
@@ -34,14 +50,41 @@ const ChangelogTabs = ({ items, metadata }) => {
             title: frontMatter.title,
             status: frontMatter.status || 'preview',
             timeline: frontMatter.timeline,
+            chronology: frontMatter.chronology,
             description: frontMatter.description,
             link: `/preview/${filename}`
           };
         })
-        .filter(feature => feature.title);
+        .filter(feature => feature.title && isFutureDate(feature.chronology));
     } catch {
       return [];
     }
+  })();
+
+  // Filter and sort preview features
+  const filteredAndSortedFeatures = (() => {
+    let filtered = previewFeatures;
+
+    // Apply type filter
+    if (typeFilter !== 'any') {
+      filtered = filtered.filter(feature => feature.status === typeFilter);
+    }
+
+    // Sort by chronology
+    filtered.sort((a, b) => {
+      const dateA = parseDate(a.chronology);
+      const dateB = parseDate(b.chronology);
+      
+      // Handle items without dates (put them at the end)
+      if (!dateA && !dateB) return 0;
+      if (!dateA) return 1;
+      if (!dateB) return -1;
+      
+      const comparison = dateA - dateB;
+      return etaSort === 'ascending' ? comparison : -comparison;
+    });
+
+    return filtered;
   })();
   
   // Remove preview articles from regular changelog items
@@ -84,9 +127,40 @@ const ChangelogTabs = ({ items, metadata }) => {
           <div className="preview-features">
             <MDXContent><PreviewInfo /></MDXContent>
             
+            {/* Filter Controls */}
+            <div className="preview-filters">
+              <div className="filter-group">
+                <label htmlFor="eta-sort" className="filter-label">ETA:</label>
+                <select
+                  id="eta-sort"
+                  value={etaSort}
+                  onChange={(e) => setEtaSort(e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="ascending">Ascending</option>
+                  <option value="descending">Descending</option>
+                </select>
+              </div>
+              
+              <div className="filter-group">
+                <label htmlFor="type-filter" className="filter-label">Type:</label>
+                <select
+                  id="type-filter"
+                  value={typeFilter}
+                  onChange={(e) => setTypeFilter(e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="any">Any</option>
+                  <option value="preview">Preview</option>
+                  <option value="beta">Beta</option>
+                  <option value="upcoming">Upcoming</option>
+                </select>
+              </div>
+            </div>
+            
             <div className="preview-features-list">
-              {previewFeatures.length > 0 ? (
-                previewFeatures.map((feature, index) => (
+              {filteredAndSortedFeatures.length > 0 ? (
+                filteredAndSortedFeatures.map((feature, index) => (
                   <article 
                     key={index} 
                     className="preview-entry"
@@ -114,7 +188,7 @@ const ChangelogTabs = ({ items, metadata }) => {
                 ))
               ) : (
                 <div className="preview-placeholder">
-                  <p>No preview features available at the moment.<br/>Check back soon!</p>
+                  <p>No items match your current search parameters.<br/>Try adjusting the filters above.</p>
                   <Link to="https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22" className="btn-secondary">
                     View full roadmap
                   </Link>

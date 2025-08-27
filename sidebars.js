@@ -750,6 +750,7 @@ module.exports = {
       label: 'Preview',
       items: [
         'preview/verification-of-payee',
+        'preview/belgian-ibans',
         // Add more preview features here
       ],
     },
@@ -768,14 +769,6 @@ module.exports = {
         },
         // Add more preview features here
       ],
-    },
-    {
-      type: 'category',
-      label: 'Upcoming',
-      items: [
-        'preview/belgian-ibans',
-        // Add more upcoming features here
-      ],
-    },
+    }
   ],
 };

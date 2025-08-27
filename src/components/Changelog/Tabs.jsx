@@ -9,7 +9,6 @@ import { usePluginData } from '@docusaurus/useGlobalData';
 const PreviewBadge = ({ status = 'preview' }) => {
   const config = {
     'preview': { label: 'PREVIEW', class: 'preview' },
-    'upcoming': { label: 'UPCOMING', class: 'upcoming' },
     'beta': { label: 'BETA', class: 'beta' }
   }[status] || { label: 'PREVIEW', class: 'preview' };
   
@@ -153,7 +152,6 @@ const ChangelogTabs = ({ items, metadata }) => {
                   <option value="any">Any</option>
                   <option value="preview">Preview</option>
                   <option value="beta">Beta</option>
-                  <option value="upcoming">Upcoming</option>
                 </select>
               </div>
             </div>

@@ -69,6 +69,12 @@ module.exports = {
           label: "API Explorer",
         },
         { to: "changelog", label: "Changelog", position: "right" },
+        {
+          type: "doc",
+          position: "right",
+          docId: "preview/index",
+          label: "Preview",
+        },
       ],
     },
     // footer: {

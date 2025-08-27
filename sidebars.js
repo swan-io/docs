@@ -746,8 +746,10 @@ module.exports = {
       label: 'About preview items',
     },
     {
-      type: 'category',
-      label: 'Preview',
+      type: "category",
+      label: "Preview",
+      collapsible: false,
+      collapsed: false,
       items: [
         'preview/verification-of-payee',
         'preview/belgian-ibans',
@@ -755,8 +757,10 @@ module.exports = {
       ],
     },
     {
-      type: 'category',
-      label: 'Beta',
+      type: "category",
+      label: "Beta",
+      collapsible: false,
+      collapsed: false,
       items: [
         {
           type: "category",

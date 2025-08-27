@@ -22,7 +22,7 @@ export default function LayoutWrapper(props) {
           color: '#1971c2',
           zIndex: 1
         }}>
-          <strong>Preview Feature:</strong> You are viewing early implementations that may change before release. Use them to prepare and provide feedback to our team. Check out <a href="https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22" target="_blank" rel="noopener noreferrer" style={{color: '#1971c2', textDecoration: 'underline'}}>Swan's public roadmap</a> to see what else is in the works.
+          You are viewing early implementations that may change before release. Use them to prepare and provide feedback to our team. Check out <a href="https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22" target="_blank" rel="noopener noreferrer" style={{color: '#1971c2', textDecoration: 'underline'}}>Swan's public roadmap</a> to see what else is in the works.
         </div>
       )}
       {props.children}

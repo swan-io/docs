@@ -146,7 +146,6 @@ module.exports = {
         redirects,
       },
     ],
-    // Changelog blog
     [
       "@docusaurus/plugin-content-blog",
       {
@@ -157,7 +156,7 @@ module.exports = {
         id: "changelog",
         routeBasePath: "changelog",
         path: "./changelog",
-        exclude: ["coming-up.mdx", "preview/**"], // Exclude preview folder
+        exclude: ["coming-up.mdx"], // Exclude preview folder
         feedOptions: {
           type: "all",
           copyright: `Copyright © ${new Date().getFullYear()} Swan.`,

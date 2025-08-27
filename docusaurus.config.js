@@ -66,15 +66,18 @@ module.exports = {
         {
           position: "right",
           href: "https://explorer.swan.io/",
-          label: "API Explorer",
+          label: "API Explorer", 
+          className: "swan-api-explorer"
         },
-        { to: "changelog", label: "Changelog", position: "right" },
         {
-          type: "doc",
-          position: "right",
-          docId: "preview/index",
-          label: "Preview",
-        },
+          type: "html",
+          position: "right", 
+          value: `<div class="swan-unified-nav">
+            <a href="/changelog">Changelog</a>
+            <div class="separator"></div>
+            <a href="/preview">Preview</a>
+          </div>`
+        }
       ],
     },
     // footer: {

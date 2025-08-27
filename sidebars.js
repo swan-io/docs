@@ -743,11 +743,14 @@ module.exports = {
     {
       type: 'doc',
       id: 'preview/index',
-      label: 'About preview items',
+      label: 'Upcoming features',
+      className: 'sidebar-preview-notice',
     },
     {
-      type: 'category',
-      label: 'Preview',
+      type: "category",
+      label: "Preview",
+      collapsible: false,
+      collapsed: false,
       items: [
         'preview/verification-of-payee',
         'preview/belgian-ibans',
@@ -755,8 +758,10 @@ module.exports = {
       ],
     },
     {
-      type: 'category',
-      label: 'Beta',
+      type: "category",
+      label: "Beta",
+      collapsible: false,
+      collapsed: false,
       items: [
         {
           type: "category",

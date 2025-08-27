@@ -743,7 +743,8 @@ module.exports = {
     {
       type: 'doc',
       id: 'preview/index',
-      label: 'About preview items',
+      label: 'Upcoming features',
+      className: 'sidebar-preview-notice',
     },
     {
       type: "category",

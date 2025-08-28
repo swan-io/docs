@@ -12,10 +12,10 @@ export default function LayoutWrapper(props) {
         <div style={{
           backgroundColor: '#E0D9F0',
           border: '1px solid #c0b3e1',
-          borderRadius: '6px',
-          padding: '16px 20px',
+          borderRadius: '8px',
+          padding: '8px 24px',
           margin: '0 var(--ifm-spacing-horizontal)',
-          marginBottom: '1.5rem',
+          marginBottom: '1rem',
           textAlign: 'center',
           fontSize: '14px',
           lineHeight: '1.5',

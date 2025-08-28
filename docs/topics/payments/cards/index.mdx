@@ -482,12 +482,25 @@ Swan enriches card transactions with the following data (as availability allows)
 
 ### Displaying enriched info {#enriched-display}
 
-In the API and on your Dashboard, `enrichedTransactionInfo` doesn't override the existing merchant information received during the classic transaction flow.
-If you use Swan's Web Banking interface, however, the enriched information overrides the merchant name.
+In the API and on your Dashboard, `enrichedTransactionInfo` doesn't override the existing merchant information received during the classic transaction flow. 
+
+If `enrichedMerchantName` is empty in production, the standard `merchantName` from the card scheme should be displayed. Your own web banking interface should implement this same fallback logic.
+
+If you use Swan's Web Banking interface, however, the enriched information overrides the merchant name when available.
 
 The following image is sample enriched information as displayed on the Dashboard:
 
 ![Example of enriched card transaction information on the Dashboard](../../../images/topics/payments/cards/card-enriched-dashboard.png)
+
+### Carbon footprint calculation {#carbon-footprint}
+
+The `carbonFootprint` field represents the environmental impact of a transaction in grams of CO2 equivalent emitted.
+
+Swan calculates carbon footprint based on the amount spent and the merchant's business category. The calculation maps to official [Statistical Classification of Economic Activities (NACE)](https://ec.europa.eu/eurostat/web/nace) European Union categories, using published carbon footprint data from [Eurostat air emissions intensities by NACE Rev. 2 activity](https://ec.europa.eu/eurostat/databrowser/view/env_ac_aeint_r2/default/table?lang=en).
+
+[Triple](https://www.triple.org/) provides this calculation service and incorporates all CO2 equivalents for comprehensive environmental impact assessment. The calculation uses the latest available ratio data (2023 data as of April 2025) and currently doesn't account for merchant country variations.
+
+For example, a transaction at a grocery store for 50€ might calculate as 0.00546 grams of CO2 equivalent based on the supermarket category's emission intensity factor.
 
 ### Webhooks and enriched info {#enriched-webhooks}
 

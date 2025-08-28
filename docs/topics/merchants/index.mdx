@@ -171,27 +171,30 @@ As part of this process, Swan may need to request additional information from th
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+
 flowchart LR
-    PMQ((Payment method<br/>requested)) -.-> WFI[WaitingForInformation]
-    WFI -.-> PR[PendingReview]
-    PR -.-> R[Rejected]
-    PR -.-> E[Enabled]
-    E <-.-> S[Suspended]
-    S -.-> R
-    S -.-> D[Disabled]
-    E -.-> D
 
-    subgraph U[Can use]
-        E
-    end
-    subgraph F[Final status]
-        D
-        R
-    end
+PMQ((Payment method<br/>requested)) --> PR[PendingReview]
+PR <-.-> WFI[WaitingForInformation]
+PR --> R[Rejected]
+PR --> E[Enabled]
+E <-.-> S[Suspended]
+S --> R
+S --> D[Disabled]
+E --> D
 
-    style PMQ fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+subgraph U[Can use]
+    E
+end
+
+subgraph F[Final status]
+    D
+    R
+end
+
+style PMQ fill:#D4D3D5,stroke:#514F59
+style F fill:#fffdf4,stroke:#cca922
+style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
 ```
 
 | Payment method status | Explanation |

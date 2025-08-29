@@ -45,14 +45,17 @@ If a card was blocked because the PIN was entered incorrectly 3 times, the **car
 
 ### Finalizing card unblocking at an ATM
 
-To complete the unblocking process, the cardholder must insert their card at an ATM, and enter their original PIN. They don't need to withdraw money.
+To unblock their card, the cardholder must insert it into an ATM and enter their original PIN. They do not need to withdraw money. 
+The success of this process depends on two factors: the cardholder's **withdrawal permissions** and whether the **PIN** entered is correct.
 
-| Cardholder permission | PIN Entered | Transaction Outcome | Rejection Reason | Card Status Change |
+Following this process, the card will be either completely unblocked or remain suspended.
+
+| Withdrawal permission | PIN entered | Transaction outcome | Rejection reason | Card status change |
 | --- | --- | --- | --- | --- |
-| **Withdrawal permissions** | Correct | Accepted, proceeds normally | None | Card is completely unblocked |
+| **True** | Correct | Accepted, proceeds normally | None | Card is completely unblocked |
 | | Incorrect | Rejected | `InvalidPin` | Card remains suspended |
-| **No withdrawal permissions** | Correct | Rejected | `TransactionNotAuthorizedForCardholder` | Card is completely unblocked |
-| | Incorrect | Rejected | `InvalidPin` | Two more attempts before the card is suspened again |
+| **False** | Correct | Rejected | `TransactionNotAuthorizedForCardholder` | Card is completely unblocked |
+| | Incorrect | Rejected | `InvalidPin` | Two more attempts before the card is suspended again |
 
 #### Special case: Pending unblocking after `resumePhysicalCard`
 
@@ -60,4 +63,4 @@ If the cardholder has called the `resumePhysicalCard` mutation but hasn't comple
 
 - Any transaction attempt (with a correct or incorrect PIN) is rejected.  
 - The rejection reason is `InvalidPinAttemptsExceeded`.  
-- The card returns to a **Suspended** status.
+- The card returns to a `Suspended` status.

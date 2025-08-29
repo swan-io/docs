@@ -47,32 +47,111 @@ Belgian account holders follow Swan's standard onboarding requirements with thes
 | API field | Requirement | Notes |
 |---|:---:|---|
 | `accountCountry` | <Req /> | Must be Belgium |
-| `email` | <Req /> | Standard verification |
-| `employmentStatus` | <Req /> | Required for compliance |
+| `accountName` | <Opt /> | Custom name for the account |
+| `email` | <Req /> | Standard verification email |
+| `employmentStatus` | <Req /> | Employment status for compliance |
+| `language` | <Req /> | Language for communication and legal documents |
 | `monthlyIncome` | <Req /> | Belgian KYC requirement |
-| `residencyAddress` | <Req /> | Full Belgian residency address required |
-| `taxIdentificationNumber` | <Opt /> | Optional |
+| `redirectUrl` | <Opt /> | Post-onboarding redirect URL |
+| `residencyAddress` | <Req /> | Full Belgian residency address object |
+| `residencyAddress.addressLine1` | <Req /> | Primary address line |
+| `residencyAddress.addressLine2` | <Opt /> | Secondary address line |
+| `residencyAddress.city` | <Req /> | City of residence |
+| `residencyAddress.country` | <Req /> | Country of residence |
+| `residencyAddress.postalCode` | <Req /> | Postal code |
+| `residencyAddress.state` | <Opt /> | State or region |
+| `taxIdentificationNumber` | <Opt /> | Belgian tax identification |
 
 #### Company accounts
 
 | API field | Requirement | Notes |
 |---|:---:|---|
 | `accountCountry` | <Req /> | Must be Belgium |
-| `businessActivity` | <Req /> | Main industry or line of business of the organization |
-| `companyType` | <Req /> | Standard company verification |
-| `registrationNumber` | <Req /> | Required when the company [is registered](/topics/onboarding/company/#country-reqs-company-account-holder) |
+| `accountName` | <Opt /> | Custom name for the account |
+| `acquisitionChannel` | <Opt /> | How the customer was acquired |
+| `businessActivity` | <Req /> | Main industry or line of business |
+| `businessActivityDescription` | <Req /> | Detailed business activity description |
+| `companyType` | <Req /> | Legal structure of the company |
+| `email` | <Req /> | Company contact email |
+| `isRegistered` | <Req /> | Whether company is officially registered |
+| `language` | <Req /> | Language for communication and legal documents |
+| `name` | <Req /> | Official company name |
+| `monthlyPaymentVolume` | <Req /> | Expected monthly payment volume |
+| `redirectUrl` | <Opt /> | Post-onboarding redirect URL |
+| `registrationNumber` | <Cond /> | Required when the company [is registered](/topics/onboarding/company/#country-reqs-company-account-holder) |
 | `residencyAddress` | <Req /> | Primary registered address of the organization (headquarters and tax residency) |
-| `taxIdentificationNumber` | <Opt /> | Optional for Belgian entities |
+| `residencyAddress.addressLine1` | <Req /> | First address line |
+| `residencyAddress.addressLine2` | <Opt /> | Second address line |
+| `residencyAddress.city` | <Req /> | City of registration |
+| `residencyAddress.country` | <Req /> | Country of registration |
+| `residencyAddress.postalCode` | <Req /> | Postal code |
+| `residencyAddress.state` | <Opt /> | State or region |
+| `taxIdentificationNumber` | <Opt /> | Belgian tax identification |
+| `tradeName` | <Opt /> | Trading name if different from legal name |
+| `typeOfRepresentation` | <Req /> | Type of legal representation |
+| `vatNumber` | <Opt /> | VAT registration number |
+
+#### Ultimate Beneficial Owners (UBOs)
+
+For company accounts, Ultimate Beneficial Owners information is required:
+
+| API field | Requirement | Notes |
+|---|:---:|---|
+| `birthCity` | <Req /> | City where the UBO was born |
+| `birthCityPostalCode` | <Req /> | Postal code of birth city |
+| `birthCountryCode` | <Req /> | Country of birth (ISO 3166 format) |
+| `birthDate` | <Req /> | Date of birth |
+| `direct` | <Req /> | Direct ownership percentage |
+| `indirect` | <Req /> | Indirect ownership percentage |
+| `firstName` | <Req /> | First name |
+| `lastName` | <Req /> | Last name |
+| `gender` | <Req /> | Gender |
+| `residencyAddress.addressLine1` | <Req /> | Primary address line |
+| `residencyAddress.addressLine2` | <Opt /> | Secondary address line |
+| `residencyAddress.city` | <Req /> | City of residence |
+| `residencyAddress.country` | <Req /> | Country of residence |
+| `residencyAddress.postalCode` | <Req /> | Postal code |
+| `residencyAddress.state` | <Opt /> | State or region |
+| `residencyAddress.taxIdentificationNumber` | <Opt /> | Tax identification number |
+| `residencyAddress.title` | <Opt /> | Title or honorific |
+| `totalCapitalPercentage` | <Req /> | Total capital ownership percentage |
+| `type` | <Req /> | Type of beneficial ownership |
+
+#### Legal Representative
+
+| API field | Requirement | Notes |
+|---|:---:|---|
+| `personalAddress.addressLine1` | <Req /> | Primary address line |
+| `personalAddress.addressLine2` | <Opt /> | Secondary address line |
+| `personalAddress.city` | <Req /> | City of residence |
+| `personalAddress.country` | <Req /> | Country of residence |
+| `personalAddress.postalCode` | <Req /> | Postal code |
+| `personalAddress.state` | <Opt /> | State or region |
 
 ### Account memberships
 
-Belgian account memberships follow standard Swan patterns with no special requirements:
+Belgian account memberships follow standard Swan patterns:
 
-| API field | Requirement |
-|---|:---:|
-| `accountId` | <Req /> |
-| `email` | <Req /> |
-| `restrictedTo.firstName` | <Req /> |
-| `restrictedTo.lastName` | <Req /> |
-| `residencyAddress` | <Opt /> |
-| `taxIdentificationNumber` | <Opt /> |
+| API field | Requirement | Notes |
+|---|:---:|---|
+| `accountId` | <Req /> | Account to create membership for |
+| `canInitiatePayments` | <Req /> | Permission to initiate payments |
+| `canManageAccountMembership` | <Req /> | Permission to manage memberships |
+| `canManageBeneficiaries` | <Req /> | Permission to manage beneficiaries |
+| `canViewAccount` | <Req /> | Permission to view account details |
+| `canManageCards` | <Opt /> | Permission to manage cards - defaults to `canManageMembership` value |
+| `consentRedirectUrl` | <Req /> | URL for consent flow redirect |
+| `email` | <Req /> | Member's email address |
+| `language` | <Opt /> | Member's preferred language - defaults to account language |
+| `residencyAddress` | <Req /> | Full Belgian residency address object |
+| `residencyAddress.addressLine1` | <Opt /> | Primary address line |
+| `residencyAddress.addressLine2` | <Opt /> | Secondary address line |
+| `residencyAddress.city` | <Opt /> | City of residence |
+| `residencyAddress.country` | <Opt /> | Country of residence |
+| `residencyAddress.postalCode` | <Opt /> | Postal code |
+| `residencyAddress.state` | <Opt /> | State or region |
+| `restrictedTo.firstName` | <Req /> | Member's first name |
+| `restrictedTo.lastName` | <Req /> | Member's last name |
+| `restrictedTo.phoneNumber` | <Cond /> | Phone number - required for advanced permissions |
+| `restrictedTo.birthDate` | <Cond /> | Birth date - required for advanced permissions or card management |
+| `taxIdentificationNumber` | <Opt /> | Member's tax identification number |

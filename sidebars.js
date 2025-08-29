@@ -753,7 +753,6 @@ module.exports = {
       collapsed: false,
       items: [
         'preview/verification-of-payee',
-        'preview/belgian-ibans',
         // Add more preview features here
       ],
     },

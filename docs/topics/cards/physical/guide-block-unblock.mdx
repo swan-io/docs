@@ -42,3 +42,28 @@ If a card was blocked because the PIN was entered incorrectly 3 times, the **car
 - You can display the cardholder's PIN [with the API](./guide-view-info.mdx#view-pin).
 - If you use Swan's Web Banking interface, the [cardholder can view their PIN](https://support.swan.io/hc/en-150/articles/16423151195677-View-card-numbers-and-PIN#h_01HND9G193R7CQV275TSGZ59RC) themselves.
 :::
+
+### Finalizing card unblocking at an ATM
+
+To unblock their card, the cardholder must insert it into an ATM and enter their original PIN. They do not need to withdraw money. 
+
+The success of this process depends on two factors:
+- Whether the cardholder has withdrawal permissions.
+- Whether they enter the correct PIN.
+
+Following this process, the card will be either completely unblocked or remain suspended.
+
+| Withdrawal permission | PIN entered | Transaction outcome | Rejection reason | Card status change |
+| --- | --- | --- | --- | --- |
+| **True** | Correct | Accepted | None | Card is completely unblocked |
+| | Incorrect | Rejected | `InvalidPin` | Card remains suspended |
+| **False** | Correct | Rejected | `TransactionNotAuthorizedForCardholder` | Card is completely unblocked |
+| | Incorrect | Rejected | `InvalidPin` | Card remains active (2 attempts left before suspension) |
+
+#### Special case: Pending unblocking after `resumePhysicalCard`
+
+If the cardholder has called the `resumePhysicalCard` mutation but hasn't completed the ATM step, and the payment terminal doesn't support PIN resets:
+
+- The system rejects any transaction attempt (correct or incorrect PIN).
+- The rejection reason is `InvalidPinAttemptsExceeded`.  
+- The card becomes `Suspended` again.

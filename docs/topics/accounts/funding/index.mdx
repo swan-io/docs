@@ -236,11 +236,11 @@ Your scheduled requests must be for at least two business days in the future.
 
 ## Canceling transactions {#canceling}
 
-Account holders and eligible account members can cancel SEPA Direct Debit funding transactions using the [`cancelTransaction`](https://api-reference.swan.io/mutations/cancel-transaction/) mutation.
-Only the full amount can be canceled.
+Account holders and eligible account members can cancel SEPA Direct Debit funding transactions using the [`cancelTransaction`](https://api-reference.swan.io/mutations/cancel-transaction/) mutation. 
 
-Transactions can only be canceled before they are sent to the SEPA payment gateway, respecting the current cutoff time.
-This is approximately **10:00 Central European [Summer] Time (CET/CEST)**.
+To understand if a transaction is cancelable, check the `isCancelable` field of the transaction. This field returns `true` if the transaction can still be canceled, and `false` if the cancellation window has passed. 
+
+Only the full amount can be canceled. Transactions can only be canceled until the last business day before settlement, at around **10:00 Central European [Summer] Time (CET/CEST)**.
 
 After this cutoff time, the transaction can't be canceled and will proceed to settlement.
 

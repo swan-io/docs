@@ -212,15 +212,6 @@ module.exports = {
             "topics/cards/overview/guide-issue",
             "topics/cards/overview/guide-update",
             "topics/cards/overview/guide-export",
-            {
-              type: "category",
-              label: "Card insurance",
-              link: { type: "doc", id: "topics/cards/overview/card-insurance" },
-              collapsed: true,
-              items: [
-                "topics/cards/overview/guide-insurance-integration",
-              ],
-            },
           ],
         },
         {
@@ -402,7 +393,6 @@ module.exports = {
                 "topics/payments/credit-transfers/sepa/guide-initiate-ct",
                 "topics/payments/credit-transfers/sepa/guide-cancel-ct",
                 "topics/payments/credit-transfers/sepa/guide-refund-ct",
-                "topics/payments/credit-transfers/sepa/verification-of-payee",
                 "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-add-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",
@@ -749,5 +739,41 @@ module.exports = {
         "developers/contact",
       ],
     },
+  ],
+  previewSidebar: [
+    {
+      type: 'doc',
+      id: 'preview/index',
+      label: 'Upcoming features',
+      className: 'sidebar-preview-notice',
+    },
+    {
+      type: "category",
+      label: "Preview",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        'preview/verification-of-payee',
+        // Add more preview features here
+      ],
+    },
+    {
+      type: "category",
+      label: "Beta",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Card insurance",
+          link: { type: "doc", id: "preview/card-insurance/card-insurance" },
+          collapsed: true,
+          items: [
+            "preview/card-insurance/guide-insurance-integration",
+          ],
+        },
+        // Add more preview features here
+      ],
+    }
   ],
 };

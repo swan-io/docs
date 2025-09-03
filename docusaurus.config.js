@@ -66,9 +66,18 @@ module.exports = {
         {
           position: "right",
           href: "https://explorer.swan.io/",
-          label: "API Explorer",
+          label: "API Explorer", 
+          className: "swan-api-explorer"
         },
-        { to: "changelog", label: "Changelog", position: "right" },
+        {
+          type: "html",
+          position: "right", 
+          value: `<div class="swan-unified-nav">
+            <a href="/changelog">Changelog</a>
+            <div class="separator"></div>
+            <a href="/preview">Preview</a>
+          </div>`
+        }
       ],
     },
     // footer: {
@@ -159,7 +168,7 @@ module.exports = {
         id: "changelog",
         routeBasePath: "changelog",
         path: "./changelog",
-        exclude: ["coming-up.mdx"],
+        exclude: ["coming-up.mdx"], // Exclude preview folder
         feedOptions: {
           type: "all",
           copyright: `Copyright © ${new Date().getFullYear()} Swan.`,

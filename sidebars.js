@@ -361,6 +361,7 @@ module.exports = {
             "topics/payments/overview/guide-get-transaction-id",
             "topics/payments/overview/guide-get-transaction-list",
             "topics/payments/overview/guide-generate-transaction-statement",
+            "topics/payments/overview/guide-export",
           ],
         },
         {

@@ -135,6 +135,9 @@ module.exports = {
     [
       "@docusaurus/preset-classic",
       {
+        googleTagManager: {
+          containerId: 'GTM-NWPK43X',
+        },
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),

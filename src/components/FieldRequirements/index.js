@@ -61,9 +61,9 @@ export const Yes = () => (
 export const FieldRequirementsLegend = () => (
   <div className="legend field-requirements-legend">
     <h4>Field Requirements Legend</h4>
-    <div className="legend-item"><Req /> <strong>Required:</strong> must be completed.</div>
-    <div className="legend-item"><Cnd /> <strong>Conditional:</strong> required only in specific situations.</div>
-    <div className="legend-item"><Opt /> <strong>Optional:</strong> isn't required; may have a default value.</div>
+    <div className="legend-item"><Req /> <strong>Required:</strong>Must be completed.</div>
+    <div className="legend-item"><Cnd /> <strong>Conditional:</strong>Required only in specific situations.</div>
+    <div className="legend-item"><Opt /> <strong>Optional:</strong>Isn't required; may have a default value.</div>
   </div>
 );
 

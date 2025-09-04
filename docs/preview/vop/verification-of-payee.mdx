@@ -49,6 +49,7 @@ VoP happens before sending money to a beneficiary, through this process:
 
 1. **VoP required**: All SEPA Credit Transfers and Instant SEPA Credit Transfers must be verified before authorization.
 2. **Verification request**: Swan sends a VoP request to the beneficiary's bank with the IBAN and beneficiary name.
+2. **Verification request**: Swan sends a VoP request to the beneficiary's bank with the IBAN and beneficiary name.
 3. **Verification response**: The beneficiary's bank responds with the verification result.
 4. **Result displayed**: VoP result and associated warnings are shown to the end-user.
 
@@ -95,6 +96,8 @@ sequenceDiagram
         }
     }}%%
 ```
+
+Following the [European Payments Council (EPC)'s recommended matching rules](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2024-10/EPC288-23%20v1.0%20EPC%20Recommendations%20for%20the%20Matching%20Processes%20under%20the%20VOP%20Scheme%20Rulebook_0.pdf), the name is the first and last name of a natural person (individual), or the legal or commercial name of a legal person (company).
 
 Following the [European Payments Council (EPC)'s recommended matching rules](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2024-10/EPC288-23%20v1.0%20EPC%20Recommendations%20for%20the%20Matching%20Processes%20under%20the%20VOP%20Scheme%20Rulebook_0.pdf), the name is the first and last name of a natural person (individual), or the legal or commercial name of a legal person (company).
 
@@ -158,9 +161,37 @@ VoP applies to Standing Orders with two key differences:
 
 - **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
 - **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
+- **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
+- **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
 
 ### Bulk payments {#bulk-payments}
 
+For bulk credit transfers, each transfer in the batch must include a valid `BeneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
+
+#### Batch Credit Transfer requirements
+- Each `CreditTransferInput` in a batch must include a valid `BeneficiaryVerificationToken`.
+- Submitting any transfer with full beneficiary details instead of a token will reject the entire batch.
+- Company accounts that have opted out of VoP can submit batches without tokens.
+
+#### Opting out of VoP for bulk transfers
+
+Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
+
+**Mutation input:**
+- `accountId`: The company account ID.
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean flag to allow bulk transfers without VoP verification.
+- `consentRedirectUrl`: URL for consent flow (required when changing settings).
+
+**Account settings:**
+The `Account` type includes a `settings` object with:
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean field indicating if bulk transfers can be made without VoP.
+- Company accounts can set this to `true` to opt-out of VoP for bulk transfers.
+- Individual accounts cannot modify this setting.
+
+**Restrictions:**
+- Only available for Company account types.
+- Requires both `canViewAccount` and `canInitiatePayments` permissions.
+- No SCA required for changing this setting.
 For bulk credit transfers, each transfer in the batch must include a valid `BeneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
 
 #### Batch Credit Transfer requirements
@@ -220,6 +251,7 @@ Swan provides two integration options based on your user experience (UX) needs a
           <li>Custom error handling and user guidance.</li>
           <li>Best for: Enhanced UX and bulk payment flows.</li>
           <li>Aligns with standard market practices for bulk payments.</li>
+          <li>Aligns with standard market practices for bulk payments.</li>
         </ul>
       </div>
     </div>
@@ -235,11 +267,14 @@ Swan provides two integration options based on your user experience (UX) needs a
 | **Single Credit Transfers** | <Supported /> | <Supported /> | Required |
 | **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | Required (unless company account opts out) |
 | **Standing Orders** | <Supported /> | <Supported /> | Required at initiation stage |
+| **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | Required (unless company account opts out) |
+| **Standing Orders** | <Supported /> | <Supported /> | Required at initiation stage |
 
 ## Option 1: Default verification {#option-1}
 
 For single credit transfers, you don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
 
+Option 1 is [not available for Bulk Credit Transfers](#payment-support). Instead, **Option 2** is designed to handle high-volume payments efficiently and aligns with standard market practices.
 Option 1 is [not available for Bulk Credit Transfers](#payment-support). Instead, **Option 2** is designed to handle high-volume payments efficiently and aligns with standard market practices.
 
 <div style={{textAlign: 'center'}}>
@@ -272,6 +307,25 @@ flowchart TD
 
 ## Option 2: Custom verification {#option-2}
 
+Call the `verifyBeneficiary` mutation before initiating SEPA Credit Transfers to get full control over the verification user experience. You can decide the level of friction here, but we recommend having clear warnings and CTAs to verify or edit beneficiary details based on the verification result.
+
+### verifyBeneficiary mutation {#verify-beneficiary-mutation}
+
+The `verifyBeneficiary` mutation pre-validates beneficiary details before payment initiation.
+
+**Required inputs:**
+- `accountId`: The account from which the payment will be made.
+- IBAN: The beneficiary's IBAN.
+- Account holder name: The beneficiary's name.
+
+**Returns:**
+- Verification result: `Match`, `CloseMatch`, `NoMatch`, or `VerificationNotPossible`.
+- `BeneficiaryVerificationToken`: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations.
+
+**Token validation:**
+- Tokens are validated for authenticity, status, and expiration.
+- Invalid, expired, or undecryptable tokens result in a `ValidationRejection`.
+- Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
 Call the `verifyBeneficiary` mutation before initiating SEPA Credit Transfers to get full control over the verification user experience. You can decide the level of friction here, but we recommend having clear warnings and CTAs to verify or edit beneficiary details based on the verification result.
 
 ### verifyBeneficiary mutation {#verify-beneficiary-mutation}
@@ -325,6 +379,8 @@ flowchart TD
 
 ### Verification flow {#verification-flow}
 
+1. **Verify beneficiary**: Call the `verifyBeneficiary` mutation - include the `accountId`, IBAN, and account holder name.
+2. **Receive the verification result**: Match, Close match, No Match, or Verification not possible. A unique `BeneficiaryVerificationToken` is also returned.
 1. **Verify beneficiary**: Call the `verifyBeneficiary` mutation - include the `accountId`, IBAN, and account holder name.
 2. **Receive the verification result**: Match, Close match, No Match, or Verification not possible. A unique `BeneficiaryVerificationToken` is also returned.
 3. **Inform the end-user**: Display appropriate messaging and optional actions based on the verification result.
@@ -409,6 +465,7 @@ flowchart TD
 
 #### Custom UX examples {#custom-ux-examples}
 
+Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. You can decide the level of friction and optional actions to display:
 Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. You can decide the level of friction and optional actions to display:
 
 <Tabs>

@@ -33,7 +33,7 @@ VoP applies to all countries in the SEPA region. Payment Service Providers (PSPs
 | Payment Services Provider location | VoP mandatory date |
 | --- | --- |
 | 🇪🇺 [Eurozone](https://economy-finance.ec.europa.eu/euro/what-euro-area_en) | October 9, 2025 |
-| 🌍 Non-Eurozone | January 9, 2027 |
+| 🌐 Non-Eurozone | January 9, 2027 |
 
 The service is **free of charge** for Swan account holders as mandated by the regulation.
 
@@ -154,63 +154,6 @@ VoP applies to Standing Orders with two key differences:
 
 - **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
 - **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
-- **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
-- **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
-
-### Bulk payments {#bulk-payments}
-
-For bulk credit transfers, each transfer in the batch must include [a valid `BeneficiaryVerificationToken`](/preview/vop/guide-verify-beneficiary#step-3) obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
-
-#### Bulk Credit Transfer requirements
-- Each `CreditTransferInput` in a batch must include a valid `BeneficiaryVerificationToken`.
-- Submitting any transfer with full beneficiary details instead of a token will reject the entire batch.
-- Company accounts that have opted out of VoP can submit batches without tokens.
-
-#### Opting out of VoP for bulk transfers
-
-Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
-
-**Mutation input:**
-- `accountId`: The company account ID.
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean flag to allow bulk transfers without VoP verification.
-- `consentRedirectUrl`: URL for consent flow (required when changing settings).
-
-**Account settings:**
-The `Account` type includes a `settings` object with:
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean field indicating if bulk transfers can be made without VoP.
-- Company accounts can set this to `true` to opt-out of VoP for bulk transfers.
-- Individual accounts cannot modify this setting.
-
-**Restrictions:**
-- Only available for Company account types.
-- Requires both `canViewAccount` and `canInitiatePayments` permissions.
-- No SCA required for changing this setting.
-For bulk credit transfers, each transfer in the batch must include a valid `BeneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
-
-#### Batch Credit Transfer requirements
-- Each `CreditTransferInput` in a batch must include a valid `BeneficiaryVerificationToken`.
-- Submitting any transfer with full beneficiary details instead of a token will reject the entire batch.
-- Company accounts that have opted out of VoP can submit batches without tokens.
-
-#### Opting out of VoP for bulk transfers
-
-Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
-
-**Mutation input:**
-- `accountId`: The company account ID.
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean flag to allow bulk transfers without VoP verification.
-- `consentRedirectUrl`: URL for consent flow (required when changing settings).
-
-**Account settings:**
-The `Account` type includes a `settings` object with:
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean field indicating if bulk transfers can be made without VoP.
-- Company accounts can set this to `true` to opt-out of VoP for bulk transfers.
-- Individual accounts cannot modify this setting.
-
-**Restrictions:**
-- Only available for Company account types.
-- Requires both `canViewAccount` and `canInitiatePayments` permissions.
-- No SCA required for changing this setting.
 
 ## Integration flows for VoP {#integration-flows}
 
@@ -258,7 +201,7 @@ Swan provides two integration options based on your user experience (UX) needs a
 | Payment Type | 🟡 Option 1: Default | 🟢 Option 2: Custom | VoP requirements |
 | --- | :---: | :---: | --- |
 | **Single Credit Transfers** | <Supported /> | <Supported /> | Required |
-| **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | Required (unless company account opts out) |
+| **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | Required<br/>(unless company account [opts out](/preview/vop/guide-verify-beneficiary#company-opt-out)) |
 | **Standing Orders** | <Supported /> | <Supported /> | Required at initiation stage |
 
 ## Option 1: Default verification {#option-1}
@@ -343,7 +286,6 @@ flowchart TD
 
 #### Custom UX examples {#custom-ux-examples}
 
-
 Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. You can decide the level of friction and optional actions to display:
 
 <Tabs>
@@ -383,12 +325,18 @@ Examples of how to present VoP verification results in your web banking interfac
   </TabItem>
 </Tabs>
 
-## Standing Orders {#standing-orders}
+## Bulk payments {#bulk-payments}
 
-VoP applies to Standing Orders with these differences:
+For bulk credit transfers, each transfer in the batch must include [a valid `BeneficiaryVerificationToken`](/preview/vop/guide-verify-beneficiary#step-3) obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
 
-- **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
-- **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
+### Company opt-out for bulk transfers {#company-opt-out}
+
+Company end-users can [opt-out of VoP](/preview/vop/guide-verify-beneficiary#company-opt-out) for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
+
+**Restrictions**:
+- Only available for Company account types.
+- Requires both `canViewAccount` and `canInitiatePayments` permissions.
+- No SCA required for changing this setting.
 
 ## Next step {#next-steps}
 

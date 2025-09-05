@@ -2,25 +2,84 @@
 title: Verify beneficiary details
 ---
 
-import { AccountMembershipPermissions } from "@site/docs/partials/_account-membership-permissions.mdx";
+# Verify beneficiary details {#guide}
 
-# Verify beneficiary details
+Use the `verifyBeneficiary` mutation to verify beneficiary details before initiating SEPA Credit Transfers.
 
-Verify beneficiary details before initiating SEPA Credit Transfers using the `verifyBeneficiary` mutation.
+This mutation gives you full control over the verification user experience. This approach is required for bulk credit transfers and recommended when you want to customize how verification results are presented to end-users.
 
-## Guide {#guide}
-
-Verification of Payee (VoP) is mandatory for all SEPA Credit Transfers starting October 9, 2025, for Eurozone Payment Service Providers. This guide shows you how to verify beneficiary details before payment initiation.
-
-### Prerequisites {#prereqs}
-
+:::tip Prerequisites
 - You have a **company** or **individual** account with Swan.
 - Your account has the **canViewAccount** and **canInitiatePayments** permissions.
 - You're planning to initiate a SEPA Credit Transfer.
+:::
+
+<details>
+
+<summary>Detailed verification flow diagram</summary>
+
+<div className="invisible-subgraph">
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart TD
+    A["Enter beneficiary details"] --> B[Call verifyBeneficiary]
+    B --> C{Verification result}
+    
+    D["Ready to proceed"]
+    E["Check suggested name"]  
+    F["Verify details before proceeding"]
+    G["Verification service unavailable"]
+    
+    C -->|"Match"| D
+    C -->|"Close match"| E
+    C -->|"No match"| F
+    C -->|"Not possible"| G
+    
+    D --> H[" "]
+    E --> I["End-user reviews suggestion"]
+    F --> J["End-user verifies details"]
+    G --> K["End-user proceeds<br>despite no verification"]
+    
+    H --> L["End-user proceeds with payment"]
+    I --> L
+    J --> L
+    K --> L
+    
+    L --> M["Initiate transfer with beneficiary token"]
+    M --> N["User gives consent"]
+    N --> O["Payment authorized"]
+    
+    classDef default fill:#ffffff,stroke:#6240b5,stroke-width:1px,color:#271a48,rx:12,ry:12
+    classDef input fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef decision fill:#6240b5,stroke:#4e3391,stroke-width:2px,color:#ffffff,rx:20,ry:20
+    classDef success fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef warning fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef error fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef process fill:#f8f7fc,stroke:#c0b3e1,stroke-width:1px,color:#4e3391,rx:8,ry:8
+    classDef final fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#ffffff,rx:12,ry:12
+    classDef invisible fill:transparent,stroke:transparent,stroke-width:0px,color:transparent
+    
+    class A input
+    class C decision
+    class D success
+    class E warning
+    class F,G error
+    class B,I,J,K,M,N process
+    class L,O final
+    class H invisible
+```
+
+</div>
+
+</details>
 
 ### Step 1: Call verifyBeneficiary {#step-1}
 
-Use the `verifyBeneficiary` mutation to verify beneficiary details before payment initiation.
+**Required inputs:**
+- `accountId`: The account from which the payment will be made.
+- `iban`: The beneficiary's IBAN.
+- `name`: The beneficiary's account holder name.
 
 ```graphql title="Mutation" {4-6}
 mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
@@ -39,6 +98,13 @@ mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
     ... on ForbiddenRejection {
       message
     }
+    ... on ValidationRejection {
+      message
+      fields {
+        key
+        message
+      }
+    }
   }
 }
 ```
@@ -55,18 +121,19 @@ mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
 
 ### Step 2: Handle verification results {#step-2}
 
-The mutation returns one of four possible verification results:
+The mutation returns one of four possible verification results. **All results must be displayed to the end-user**.
 
-| Result | Description | Recommended action |
+| Result | Description | End-user action |
 | --- | --- | --- |
-| `Match` | Exact match found | Safe to proceed with payment |
-| `CloseMatch` | Close match with suggested correction | Review suggested name before proceeding |
-| `NoMatch` | No match found | Verify beneficiary details carefully |
-| `VerificationNotPossible` | IBAN verification failed | Check IBAN format or contact recipient's bank |
+| `Match` | Exact match found between provided details and account holder information | Safe to proceed with transfer |
+| `CloseMatch` | Close match with suggested correction from beneficiary's bank | Review suggested name correction before proceeding |
+| `NoMatch` | No match found between provided details and account holder information | Verify beneficiary details carefully before proceeding |
+| `VerificationNotPossible` | IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists | Verify beneficiary details carefully before proceeding |
 
-### Step 3: Display results to end-users {#step-3}
-
-Present the verification result and any warnings to your end-users. All verification results must be displayed to ensure informed decision-making.
+**Success response:**
+The mutation returns:
+- Verification result: `Match`, `CloseMatch`, `NoMatch`, or `VerificationNotPossible`.
+- `BeneficiaryVerificationToken`: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations.
 
 **Example response for close match:**
 
@@ -85,7 +152,7 @@ Present the verification result and any warnings to your end-users. All verifica
 }
 ```
 
-### Step 4: Use verification token {#step-4}
+### Step 3: Use verification token {#step-3}
 
 Include the `beneficiaryVerificationToken` when initiating the credit transfer instead of providing full beneficiary details.
 
@@ -103,6 +170,16 @@ mutation InitiateCreditTransfers($input: InitiateCreditTransfersInput!) {
           }
         }
       }
+    }
+    ... on ValidationRejection {
+      message
+      fields {
+        key
+        message
+      }
+    }
+    ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
+      message
     }
   }
 }
@@ -124,22 +201,25 @@ mutation InitiateCreditTransfers($input: InitiateCreditTransfersInput!) {
 }
 ```
 
+**Success Response:**
+The `InitiateCreditTransfersSuccessPayload` includes:
+- `beneficiaryVerificationResults`: Array of `VerifyBeneficiaryResult` in the same order as the beneficiary inputs.
+- Standard payment information.
+
 ## Token validation {#token-validation}
 
-**Important token requirements:**
-
-- Tokens are single-use and expire after successful consumption.
-- Tokens must be authentic and not expired.
-- Invalid tokens result in `ValidationRejection`.
-- Already consumed tokens result in `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
+**Token requirements:**
+- Tokens are validated for authenticity, status, and expiration.
+- Invalid, expired, or undecryptable tokens result in a `ValidationRejection`.
+- Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
 
 ## Bulk payments {#bulk-payments}
 
-For bulk credit transfers, each transfer in the batch **must** include a valid `beneficiaryVerificationToken`. Submitting any transfer with full beneficiary details instead of a token will reject the entire batch with a `ForbiddenRejection`.
+For bulk credit transfers, each transfer in the batch **must** include a valid `BeneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
 
 ### Company opt-out for bulk transfers {#company-opt-out}
 
-Company accounts can opt out of VoP for bulk transfers using the `updateAccountSettings` mutation. Individual accounts cannot opt out.
+Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
 
 ```graphql title="Mutation"
 mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
@@ -150,6 +230,15 @@ mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
           allowBulkCreditTransfersWithoutBeneficiaryVerification
         }
       }
+    }
+    ... on AccountNotFoundRejection {
+      message
+    }
+    ... on ForbiddenRejection {
+      message
+    }
+    ... on WrongAccountHolderTypeRejection {
+      message
     }
   }
 }
@@ -165,17 +254,29 @@ mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
 }
 ```
 
-**Opt-out restrictions:**
+**Mutation input:**
+- `accountId`: The company account ID.
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean flag to allow bulk transfers without VoP verification.
+- `consentRedirectUrl`: URL for consent flow (required when changing settings).
 
-- Only available for company account holders.
-- Requires `canViewAccount` and `canInitiatePayments` permissions.
-- No Strong Customer Authentication (SCA) required.
+**Account settings:**
+The `Account` type includes a `settings` object with:
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean field indicating if bulk transfers can be made without VoP.
+- Company accounts can set this to `true` to opt-out of VoP for bulk transfers.
+- Individual accounts cannot modify this setting.
 
-## Standing Orders {#standing-orders}
+**Restrictions:**
+- Only available for Company account types.
+- Requires both `canViewAccount` and `canInitiatePayments` permissions.
+- No SCA required for changing this setting.
 
-VoP verification happens at the scheduling stage when creating Standing Orders, not for each execution. Existing Standing Orders created before October 9, 2025, don't require verification.
+## Sandbox testing {#sandbox-testing}
 
-## Next steps {#next-steps}
+In the Sandbox environment, the `verifyBeneficiary` mutation will return simulated verification results based on the beneficiary name pattern:
 
-- Learn about [SEPA Credit Transfers](/docs/topics/payments/credit-transfers/sepa)
-- Explore [Payment control options](/docs/developers/using-api/payment-control)
+- Names starting with "Match" return `Match` result.
+- Names starting with "Close" return `CloseMatch` result.
+- Names starting with "No" return `NoMatch` result.
+- Names starting with "Not" return `VerificationNotPossible` result.
+
+This allows you to test all verification scenarios during development.

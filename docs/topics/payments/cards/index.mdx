@@ -219,6 +219,12 @@ This transaction impacts the account's `Booked` balance.
 
 If the credit request is to reverse a previous debit transaction, a new `CardOutDebitReversal` transaction is created linked to the original debit payment.
 
+If a merchant correctly references the original debit authorization, both `CardOutCredit` and `CardOutDebitReversal` transactions will share the original `paymentId`. This common ID improves transaction tracking and simplifies reconciliation.
+
+:::note Sandbox testing limitation
+The Event Simulator cannot directly link `CardOutCredit` transactions to existing payments. For testing purposes, you'll need to manually match refunds to original transactions using time, merchant, and amount data.
+:::
+
 ### Capture types {#capture-types}
 
 Capture refers to the process of completing a transaction and moving the funds from the customer's account to the merchant's account after authorization.
@@ -331,7 +337,7 @@ Consider a cardholder who orders and returns a package, all online:
 When items are returned in-store, they can be hard to link back to the debit.
 When a merchant needs to refund a customer but can't connect the refund transaction to the original debit, they create a new credit transaction.
 
-When merchants correctly reference the original debit authorization, Swan links the `CardOutCredit` transaction to the same `paymentId` as the original authorization.
+When merchants correctly reference the original debit authorization, Swan links both `CardOutCredit` and `CardOutDebitReversal` transactions to the same `paymentId` as the original authorization.
 
 Consider a cardholder buying then returning an item in-store:
 

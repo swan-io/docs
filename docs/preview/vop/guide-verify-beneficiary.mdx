@@ -1,5 +1,5 @@
 ---
-title: Verify beneficiary details
+title: Verify a beneficiary
 ---
 
 # Verify beneficiary details {#guide}
@@ -12,6 +12,7 @@ This mutation gives you full control over the verification user experience. This
 - You have a **company** or **individual** account with Swan.
 - Your account has the **canViewAccount** and **canInitiatePayments** permissions.
 - You're planning to initiate a SEPA Credit Transfer.
+- Authentication required with a **user access token** or **project access token**.
 :::
 
 <details>
@@ -76,9 +77,11 @@ flowchart TD
 
 ## Step 1: Call verifyBeneficiary {#step-1}
 
-Call the mutation with the account ID and beneficiary details you want to verify. The mutation returns a verification result and a 24-hour token for use in payment initiation.
+Call the mutation with the account ID and beneficiary details ([`beneficiaryInput`](https://api-reference.swan.io/inputs/beneficiary-input/)) you want to verify. The mutation returns a verification result and a 24-hour token for use in payment initiation.
 
-```graphql title="Mutation" {4-6}
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5QmVuZWZpY2lhcnkoJGlucHV0OiBWZXJpZnlCZW5lZmljaWFyeUlucHV0ISkgewogIHZlcmlmeUJlbmVmaWNpYXJ5KGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgdmVyaWZ5QmVuZWZpY2lhcnlSZXN1bHQgewogICAgICAgIHN0YXR1cwogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICAgICAgbmFtZVN1Z2dlc3Rpb24KICAgICAgICB9CiAgICAgIH0KICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAga2V5CiAgICAgICAgbWVzc2FnZQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4-6}
 mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
   verifyBeneficiary(input: $input) {
     ... on VerifyBeneficiarySuccessPayload {
@@ -108,16 +111,6 @@ mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
 }
 ```
 
-```json title="Variables"
-{
-  "input": {
-    "accountId": "$YOUR_ACCOUNT_ID",
-    "iban": "DE75512108001245126199",
-    "name": "Company ABC"
-  }
-}
-```
-
 ## Step 2: Handle verification results {#step-2}
 
 The mutation returns one of four possible verification results. **All results must be displayed to the end-user**.
@@ -135,9 +128,9 @@ Returned parameters:
 - **`expiresAt`**: Token expiration timestamp (24 hours from generation).
 - **`nameSuggestion`**: Available for `CloseMatch` results only.
 
-**Example response for close match:**
+**Example response for a close match:**
 
-```json title="Response"
+```json
 {
   "data": {
     "verifyBeneficiary": {

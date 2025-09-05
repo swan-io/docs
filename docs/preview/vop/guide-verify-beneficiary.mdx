@@ -74,23 +74,22 @@ flowchart TD
 
 </details>
 
-### Step 1: Call verifyBeneficiary {#step-1}
+## Step 1: Call verifyBeneficiary {#step-1}
 
-**Required inputs:**
-- `accountId`: The account from which the payment will be made.
-- `iban`: The beneficiary's IBAN.
-- `name`: The beneficiary's account holder name.
+Call the mutation with the account ID and beneficiary details you want to verify. The mutation returns a verification result and a 24-hour token for use in payment initiation.
 
 ```graphql title="Mutation" {4-6}
 mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
   verifyBeneficiary(input: $input) {
     ... on VerifyBeneficiarySuccessPayload {
-      result
-      beneficiaryVerificationToken
-      verifiedBeneficiary {
-        iban
-        name
+      verifyBeneficiaryResult {
+        status
+        ... on VerifyBeneficiaryCloseMatch {
+          nameSuggestion
+        }
       }
+      beneficiaryVerificationToken
+      expiresAt
     }
     ... on AccountNotFoundRejection {
       message
@@ -119,17 +118,22 @@ mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
 }
 ```
 
-### Step 2: Handle verification results {#step-2}
+## Step 2: Handle verification results {#step-2}
 
 The mutation returns one of four possible verification results. **All results must be displayed to the end-user**.
 
 | Result | Description | End-user action |
 | --- | --- | --- |
-| `NoMatch` | No match found between provided details and account holder information | Verify beneficiary details carefully before proceeding |
+| `Match` | Exact match found between the provided details and account holder information. | Safe to proceed with the transfer. |
+| `CloseMatch` | Close match with suggested correction from the beneficiary's bank. | Review suggested name correction before proceeding. |
+| `NoMatch` | No match found between the provided details and account holder information. | Verify beneficiary details carefully before proceeding. |
+| `VerificationNotPossible` | IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists. | Verify beneficiary details carefully before proceeding. |
 
 Returned parameters:
 - **`status`**: Verification result (see previous table).
 - **`beneficiaryVerificationToken`**: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations.
+- **`expiresAt`**: Token expiration timestamp (24 hours from generation).
+- **`nameSuggestion`**: Available for `CloseMatch` results only.
 
 **Example response for close match:**
 

@@ -125,15 +125,11 @@ The mutation returns one of four possible verification results. **All results mu
 
 | Result | Description | End-user action |
 | --- | --- | --- |
-| `Match` | Exact match found between provided details and account holder information | Safe to proceed with transfer |
-| `CloseMatch` | Close match with suggested correction from beneficiary's bank | Review suggested name correction before proceeding |
 | `NoMatch` | No match found between provided details and account holder information | Verify beneficiary details carefully before proceeding |
-| `VerificationNotPossible` | IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists | Verify beneficiary details carefully before proceeding |
 
-**Success response:**
-The mutation returns:
-- Verification result: `Match`, `CloseMatch`, `NoMatch`, or `VerificationNotPossible`.
-- `BeneficiaryVerificationToken`: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations.
+Returned parameters:
+- **`status`**: Verification result (see previous table).
+- **`beneficiaryVerificationToken`**: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations.
 
 **Example response for close match:**
 
@@ -141,18 +137,18 @@ The mutation returns:
 {
   "data": {
     "verifyBeneficiary": {
-      "result": "CloseMatch",
+      "verifyBeneficiaryResult": {
+        "status": "CloseMatch",
+        "nameSuggestion": "Company ABC Ltd"
+      },
       "beneficiaryVerificationToken": "bvt_1234567890abcdef",
-      "verifiedBeneficiary": {
-        "iban": "DE75512108001245126199",
-        "name": "Company ABC Ltd"
-      }
+      "expiresAt": "2024-10-10T14:30:00Z"
     }
   }
 }
 ```
 
-### Step 3: Use verification token {#step-3}
+## Step 3: Use verification token {#step-3}
 
 Include the `beneficiaryVerificationToken` when initiating the credit transfer instead of providing full beneficiary details.
 
@@ -201,21 +197,21 @@ mutation InitiateCreditTransfers($input: InitiateCreditTransfersInput!) {
 }
 ```
 
-**Success Response:**
 The `InitiateCreditTransfersSuccessPayload` includes:
-- `beneficiaryVerificationResults`: Array of `VerifyBeneficiaryResult` in the same order as the beneficiary inputs.
+- **`beneficiaryVerificationResults`**: Array of `VerifyBeneficiaryResult` in the same order as the beneficiary inputs.
 - Standard payment information.
 
 ## Token validation {#token-validation}
 
-**Token requirements:**
+**Token requirements**:
 - Tokens are validated for authenticity, status, and expiration.
 - Invalid, expired, or undecryptable tokens result in a `ValidationRejection`.
 - Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
+- Tokens expire 24 hours after generation.
 
 ## Bulk payments {#bulk-payments}
 
-For bulk credit transfers, each transfer in the batch **must** include a valid `BeneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
+For bulk credit transfers, each transfer in the batch **must** include a valid `beneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
 
 ### Company opt-out for bulk transfers {#company-opt-out}
 
@@ -254,29 +250,20 @@ mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
 }
 ```
 
-**Mutation input:**
-- `accountId`: The company account ID.
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean flag to allow bulk transfers without VoP verification.
-- `consentRedirectUrl`: URL for consent flow (required when changing settings).
-
-**Account settings:**
-The `Account` type includes a `settings` object with:
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: Boolean field indicating if bulk transfers can be made without VoP.
-- Company accounts can set this to `true` to opt-out of VoP for bulk transfers.
-- Individual accounts cannot modify this setting.
-
-**Restrictions:**
+**Requirements**:
 - Only available for Company account types.
 - Requires both `canViewAccount` and `canInitiatePayments` permissions.
-- No SCA required for changing this setting.
+- `consentRedirectUrl` required for the settings change flow.
 
 ## Sandbox testing {#sandbox-testing}
 
-In the Sandbox environment, the `verifyBeneficiary` mutation will return simulated verification results based on the beneficiary name pattern:
+In the Sandbox environment, the `verifyBeneficiary` mutation returns simulated verification results based on the beneficiary name pattern:
 
-- Names starting with "Match" return `Match` result.
-- Names starting with "Close" return `CloseMatch` result.
-- Names starting with "No" return `NoMatch` result.
-- Names starting with "Not" return `VerificationNotPossible` result.
+| Name starts with | Returns result |
+|------------------|----------------|
+| "Match" | `Match` |
+| "Close" | `CloseMatch` |
+| "No" | `NoMatch` |
+| "Not" | `VerificationNotPossible` |
 
-This allows you to test all verification scenarios during development.
+**Example**: Beneficiary name "Match Test User" returns a `Match` result.

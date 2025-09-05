@@ -219,7 +219,7 @@ This transaction impacts the account's `Booked` balance.
 
 If the credit request is to reverse a previous debit transaction, a new `CardOutDebitReversal` transaction is created linked to the original debit payment.
 
-When merchants correctly reference the original debit authorization, both `CardOutCredit` and `CardOutDebitReversal` transactions are linked to the same `paymentId` as the original authorization for improved transaction tracking and reconciliation.
+If a merchant correctly references the original debit authorization, both `CardOutCredit` and `CardOutDebitReversal` transactions will share the original `paymentId`. This common ID improves transaction tracking and simplifies reconciliation.
 
 :::note Sandbox testing limitation
 The Event Simulator cannot directly link `CardOutCredit` transactions to existing payments. For testing purposes, you'll need to manually match refunds to original transactions using time, merchant, and amount data.

@@ -103,6 +103,8 @@ Enter your information and click **Save**.
 - **Default response**: In case of a timeout, choose whether you **accept** or **reject** the transaction by default. Swan suggests choosing **accept** for a better cardholder experience.
 - **Timeout**: Timeout is up to 10 seconds (10000 milliseconds) in Sandbox. In Live, it's 1.5 seconds (1500 milliseconds) and not configurable.
 - **Secret**: Generate a secret. Make sure to add it to your `x-swan-secret` header.
+- **€0 authorizations**: Merchants can enable this to use zero-amount authorizations to check a card's validity. This is disabled by default.
+- **Credit authorizations**: Enable credit authorization forwarding for refund-related transactions (identified by `operationType: "Credit"`). This is disabled by default.
 
 If you use the API, you also need to provide `protocol`, which only has one option: `HttpJson`.
 
@@ -124,7 +126,7 @@ Note that times are written in [epoch millis](https://www.unixtimestamp.com/).
     "timeoutAt": 1646214666661, //Fallback time to default response
     "transactionId": "$TRANSACTION_ID",
     "paymentId": "$PAYMENT_ID",
-    "accountId": "$,ACCOUNT_ID",
+    "accountId": "$ACCOUNT_ID",
     "cardId": "$CARD_ID",
     "digitalCardWalletProvider": "ApplePay", //Digital token used for transaction; ApplePay, GooglePay, Merchant
     "dateTime": 1646214656661, //Time payment occured
@@ -151,6 +153,8 @@ Note that times are written in [epoch millis](https://www.unixtimestamp.com/).
     "subMerchantId": "452YEZ"
 }
 ```
+
+The `operationType` field identifies transaction types: `AtmWithdrawal` (ATM withdrawal), `CashBackPayment` (point-of-sale cash back), `Credit` (refund-related), `OtcWithdrawal` (over-the-counter withdrawal), `Payment` (standard transaction), `Quasicash` (cash-equivalent), and `VtsOrMdes` (digital wallet).
 
 :::caution Digital Wallet provider
 Per your and Swan's agreement with Mastercard, you **can't reject transactions** based on the digital wallet provider (line 7).

@@ -1,0 +1,181 @@
+---
+title: Verify beneficiary details
+---
+
+import { AccountMembershipPermissions } from "@site/docs/partials/_account-membership-permissions.mdx";
+
+# Verify beneficiary details
+
+Verify beneficiary details before initiating SEPA Credit Transfers using the `verifyBeneficiary` mutation.
+
+## Guide {#guide}
+
+Verification of Payee (VoP) is mandatory for all SEPA Credit Transfers starting October 9, 2025, for Eurozone Payment Service Providers. This guide shows you how to verify beneficiary details before payment initiation.
+
+### Prerequisites {#prereqs}
+
+- You have a **company** or **individual** account with Swan.
+- Your account has the **canViewAccount** and **canInitiatePayments** permissions.
+- You're planning to initiate a SEPA Credit Transfer.
+
+### Step 1: Call verifyBeneficiary {#step-1}
+
+Use the `verifyBeneficiary` mutation to verify beneficiary details before payment initiation.
+
+```graphql title="Mutation" {4-6}
+mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
+  verifyBeneficiary(input: $input) {
+    ... on VerifyBeneficiarySuccessPayload {
+      result
+      beneficiaryVerificationToken
+      verifiedBeneficiary {
+        iban
+        name
+      }
+    }
+    ... on AccountNotFoundRejection {
+      message
+    }
+    ... on ForbiddenRejection {
+      message
+    }
+  }
+}
+```
+
+```json title="Variables"
+{
+  "input": {
+    "accountId": "$YOUR_ACCOUNT_ID",
+    "iban": "DE75512108001245126199",
+    "name": "Company ABC"
+  }
+}
+```
+
+### Step 2: Handle verification results {#step-2}
+
+The mutation returns one of four possible verification results:
+
+| Result | Description | Recommended action |
+| --- | --- | --- |
+| `Match` | Exact match found | Safe to proceed with payment |
+| `CloseMatch` | Close match with suggested correction | Review suggested name before proceeding |
+| `NoMatch` | No match found | Verify beneficiary details carefully |
+| `VerificationNotPossible` | IBAN verification failed | Check IBAN format or contact recipient's bank |
+
+### Step 3: Display results to end-users {#step-3}
+
+Present the verification result and any warnings to your end-users. All verification results must be displayed to ensure informed decision-making.
+
+**Example response for close match:**
+
+```json title="Response"
+{
+  "data": {
+    "verifyBeneficiary": {
+      "result": "CloseMatch",
+      "beneficiaryVerificationToken": "bvt_1234567890abcdef",
+      "verifiedBeneficiary": {
+        "iban": "DE75512108001245126199",
+        "name": "Company ABC Ltd"
+      }
+    }
+  }
+}
+```
+
+### Step 4: Use verification token {#step-4}
+
+Include the `beneficiaryVerificationToken` when initiating the credit transfer instead of providing full beneficiary details.
+
+```graphql title="Mutation" {6}
+mutation InitiateCreditTransfers($input: InitiateCreditTransfersInput!) {
+  initiateCreditTransfers(input: $input) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      payment {
+        id
+        beneficiaryVerificationResults {
+          result
+          verifiedBeneficiary {
+            iban
+            name
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+```json title="Variables" {7}
+{
+  "input": {
+    "accountId": "$YOUR_ACCOUNT_ID",
+    "creditTransfers": [
+      {
+        "amount": { "value": "100.00", "currency": "EUR" },
+        "beneficiaryVerificationToken": "bvt_1234567890abcdef",
+        "reference": "Invoice 2024-001"
+      }
+    ],
+    "consentRedirectUrl": "https://mycompany.com/consent"
+  }
+}
+```
+
+## Token validation {#token-validation}
+
+**Important token requirements:**
+
+- Tokens are single-use and expire after successful consumption.
+- Tokens must be authentic and not expired.
+- Invalid tokens result in `ValidationRejection`.
+- Already consumed tokens result in `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
+
+## Bulk payments {#bulk-payments}
+
+For bulk credit transfers, each transfer in the batch **must** include a valid `beneficiaryVerificationToken`. Submitting any transfer with full beneficiary details instead of a token will reject the entire batch with a `ForbiddenRejection`.
+
+### Company opt-out for bulk transfers {#company-opt-out}
+
+Company accounts can opt out of VoP for bulk transfers using the `updateAccountSettings` mutation. Individual accounts cannot opt out.
+
+```graphql title="Mutation"
+mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
+  updateAccountSettings(input: $input) {
+    ... on UpdateAccountSettingsSuccessPayload {
+      account {
+        settings {
+          allowBulkCreditTransfersWithoutBeneficiaryVerification
+        }
+      }
+    }
+  }
+}
+```
+
+```json title="Variables"
+{
+  "input": {
+    "accountId": "$YOUR_COMPANY_ACCOUNT_ID",
+    "allowBulkCreditTransfersWithoutBeneficiaryVerification": true,
+    "consentRedirectUrl": "https://mycompany.com/consent"
+  }
+}
+```
+
+**Opt-out restrictions:**
+
+- Only available for company account holders.
+- Requires `canViewAccount` and `canInitiatePayments` permissions.
+- No Strong Customer Authentication (SCA) required.
+
+## Standing Orders {#standing-orders}
+
+VoP verification happens at the scheduling stage when creating Standing Orders, not for each execution. Existing Standing Orders created before October 9, 2025, don't require verification.
+
+## Next steps {#next-steps}
+
+- Learn about [SEPA Credit Transfers](/docs/topics/payments/credit-transfers/sepa)
+- Explore [Payment control options](/docs/developers/using-api/payment-control)

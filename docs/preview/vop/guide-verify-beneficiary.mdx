@@ -77,45 +77,44 @@ flowchart TD
 
 Call the mutation with the account ID and beneficiary details ([`beneficiaryInput`](https://api-reference.swan.io/inputs/beneficiary-input/)) you want to verify. The mutation returns a verification result and a 24-hour token for use in payment initiation.
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gTXlNdXRhdGlvbiB7CiAgdmVyaWZ5QmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBiZW5lZmljaWFyeTogewogICAgICAgIHNlcGE6IHsgaWJhbjogIklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIsIG5hbWU6ICJNYXRjaCIgfQogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmVyaWZ5QmVuZWZpY2lhcnlSZXN1bHQgewogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vdFBvc3NpYmxlIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlOb01hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICAgICAgfQogICAgICAgIHN0YXR1cwogICAgICB9CiAgICAgIGV4cGlyZXNBdAogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25NdXRhdGlvbiB7CiAgdmVyaWZ5QmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBiZW5lZmljaWFyeTogewogICAgICAgIHNlcGE6IHsKICAgICAgICAgIGliYW46ICJJVDAwMDAwMDEyMzQ1Njc4OTAxMjM0NTY3ODkiCiAgICAgICAgICBuYW1lOiAiQ2xvc2VNYXRjaCBUZXN0IE5hbWUiCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgICAgdmVyaWZ5QmVuZWZpY2lhcnlSZXN1bHQgewogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vdFBvc3NpYmxlIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlOb01hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIHN0YXR1cwogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2}
-mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
-  verifyBeneficiary(input: $input) {
+```graphql {6-7}
+mutation BeneficiaryVerificationMutation {
+  verifyBeneficiary(
+    input: { 
+      beneficiary: { 
+        sepa: { 
+          iban: "IT0000001234567890123456789", 
+          name: "CloseMatch Test Name" 
+        } 
+      } 
+    }
+  ) {
     ... on VerifyBeneficiarySuccessPayload {
-      verifyBeneficiaryResult {
-        status
-        ... on VerifyBeneficiaryCloseMatch {
-          nameSuggestion
-        }
-      }
+      __typename
       beneficiaryVerificationToken
       expiresAt
-    }
-    ... on AccountNotFoundRejection {
-      message
-    }
-    ... on ForbiddenRejection {
-      message
-    }
-    ... on ValidationRejection {
-      message
-      fields {
-        key
-        message
+      verifyBeneficiaryResult {
+        ... on VerifyBeneficiaryNotPossible {
+          __typename
+          status
+        }
+        ... on VerifyBeneficiaryNoMatch {
+          __typename
+          status
+        }
+        ... on VerifyBeneficiaryMatch {
+          __typename
+          status
+        }
+        ... on VerifyBeneficiaryCloseMatch {
+          __typename
+          nameSuggestion
+          status
+        }
+        status
       }
-    }
-  }
-}
-```
-
-```json title="Variables" {3,5-6}
-{
-  "input": {
-    "accountId": "$YOUR_ACCOUNT_ID",
-    "beneficiary": {
-      "name": "Company ABC Ltd",
-      "iban": "FR7699999001001383752268961"
     }
   }
 }
@@ -140,16 +139,18 @@ Returned parameters:
 
 **Example response for a close match:**
 
-```json {5,6,8,9}
+```json title="Returned Payload" {5-6,9-10}
 {
   "data": {
     "verifyBeneficiary": {
+      "__typename": "VerifyBeneficiarySuccessPayload",
+      "beneficiaryVerificationToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJpZGVtcG90ZW5jeUlkIjoiM2UwM2NlOWMtZDY4Mi00OWJmLTlkOWQtMzUzZGVkYTE0YTdiIiwiYmVuZWZpY2lhcnkiOnsiaWJhbiI6IklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIsIm5hbWUiOiJDbG9zZU1hdGNoIn0sInZlcmlmaWNhdGlvbiI6eyJleHBpcmVzQXQiOiIyMDI1LTA5LTA5VDE0OjM3OjAwLjAzM1oiLCJuYW1lU3VnZ2VzdGlvbiI6IkhlbnJpIER1cG9udCIsInN0YXR1cyI6IkNMT1NFX01BVENIIiwidmVyaWZpY2F0aW9uQXQiOiIyMDI1LTA5LTA4VDE0OjM3OjAwLjAzM1oiLCJyZXF1ZXN0SWQiOiIzZTAzY2U5Yy1kNjgyLTQ5YmYtOWQ5ZC0zNTNkZWRhMTRhN2IifSwiaWF0IjoxNzU3MzQyMjIwLCJleHAiOjE3NTc0Mjg2MjAsImp0aSI6IjNlMDNjZTljLWQ2ODItNDliZi05ZDlkLTM1M2RlZGExNGE3YiJ9.8NZwlo9fStOdGqQBJOIectms7AoavPI-H7wtzgZIt7k",
+      "expiresAt": "2025-09-09T14:37:00.033Z",
       "verifyBeneficiaryResult": {
-        "status": "CloseMatch",
-        "nameSuggestion": "Company ABC Ltd"
-      },
-      "beneficiaryVerificationToken": "bvt_1234567890abcdef",
-      "expiresAt": "2024-10-10T14:30:00Z"
+        "__typename": "VerifyBeneficiaryCloseMatch",
+        "nameSuggestion": "Henri Dupont",
+        "status": "CloseMatch"
+      }
     }
   }
 }
@@ -159,49 +160,66 @@ Returned parameters:
 
 Include the `beneficiaryVerificationToken` when initiating the credit transfer instead of providing full beneficiary details.
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnMoJGlucHV0OiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc0lucHV0ISkgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25SZXN1bHRzIHsKICAgICAgICBzdGF0dXMKICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgICAgcGF5bWVudCB7CiAgICAgICAgaWQKICAgICAgfQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAga2V5CiAgICAgICAgbWVzc2FnZQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbkFscmVhZHlDb25zdW1lZFJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcldpdGhWZXJpZmljYXRpb25Ub2tlbiB7CiAgaW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnMoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIwMTIzNGFiYy1kZTU2LTc4OWYtZ2hpMC1qa2wxMjM0NW1ub3AiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogImh0dHBzOi8vd3d3LnN3YW4uaW8vIgogICAgICBjcmVkaXRUcmFuc2ZlcnM6IHsKICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgIGJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uVG9rZW46ICJhYmNERUZnaGlKS0xtbm9wUVJTVHV2d1hZWjAxMjM0NTY3ODkuZXlKMlpYSnphVzl1SWpveExDSnBaR1Z0Y0c5MFpXNWplVWxrSWpvaU0yVXdNMk5sT1dNdFpEWTRNaTAwT1dKbUxUbGtPV1F0TXpVelpHVmtZVEUwWVRkaUlpd2lZbVZ1WldacFkybGhjbmtpT25zaWFXSmhiaUk2SWtsVU1qTlFNRE13TURJd016STRNRFl6TWpFeU16VTFNemMwT0NJc0ltNWhiV1VpT2lKRGJHOXpaVTFoZEdOb0luMHNJblpsY21sbWFXTmhkR2x2YmlJNmV5SmxlSEJwY21WelFYUWlPaUl5TURJMUxUQTVMVEE1VkRFME9qTTNPakF3TGpBek0xb2lMQ0p1WVcxbFUzVm5aMlZ6ZEdsdmJpSTZJa2hsYm5KcElFUjFjRzl1ZENJc0luTjBZWFIxY3lJNklrTk1UMU5GWDAxQlZFTklJaXdpZG1WeWFXWnBZMkYwYVc5dVFYUWlPaUl5TURJMUxUQTVMVEE0VkRFME9qTTNPakF3TGpBek0xb2lMQ0p5WlhGMVpYTjBTV1FpT2lJelpUQXpZMlU1WXkxa05qZ3lMVFE1WW1ZdE9XUTVaQzB6TlROa1pXUmhNVFJoTjJJaWZTd2lhV0YwSWpveE56VTNNelF5TWpJd0xDSmxlSEFpT2pFM05UYzBNamcyTWpBc0ltcDBhU0k2SWpObE1ETmpaVGxqTFdRMk9ESXRORGxpWmkwNVpEbGtMVE0xTTJSbFpHRXhOR0UzWWlKOS44Tlp3bG85ZlN0T2RHcVFCSk9JZWN0bXM3QW9hdlBJLUg3d3R6Z1pJdDdoIgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25SZXN1bHRzIHsKICAgICAgICBzdGF0dXMKICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vTWF0Y2ggewogICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vdFBvc3NpYmxlIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgICBwYXltZW50IHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBQYXltZW50Q29uc2VudFBlbmRpbmcgewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgfQogICAgLi4uIG9uIEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uVG9rZW5BbHJlYWR5Q29uc3VtZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgIH0KICB9Cn0%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2}
-mutation InitiateCreditTransfers($input: InitiateCreditTransfersInput!) {
-  initiateCreditTransfers(input: $input) {
+```graphql {8}
+mutation InitiateCreditTransferWithVerificationToken {
+  initiateCreditTransfers(
+    input: {
+      accountId: "01234abc-de56-789f-ghi0-jkl12345mnop"
+      consentRedirectUrl: "https://www.swan.io/"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        beneficiaryVerificationToken: "abcDEFghiJKLmnopQRSTuvwXYZ0123456789.eyJ2ZXJzaW9uIjoxLCJpZGVtcG90ZW5jeUlkIjoiM2UwM2NlOWMtZDY4Mi00OWJmLTlkOWQtMzUzZGVkYTE0YTdiIiwiYmVuZWZpY2lhcnkiOnsiaWJhbiI6IklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIsIm5hbWUiOiJDbG9zZU1hdGNoIn0sInZlcmlmaWNhdGlvbiI6eyJleHBpcmVzQXQiOiIyMDI1LTA5LTA5VDE0OjM3OjAwLjAzM1oiLCJuYW1lU3VnZ2VzdGlvbiI6IkhlbnJpIER1cG9udCIsInN0YXR1cyI6IkNMT1NFX01BVENIIiwidmVyaWZpY2F0aW9uQXQiOiIyMDI1LTA5LTA4VDE0OjM3OjAwLjAzM1oiLCJyZXF1ZXN0SWQiOiIzZTAzY2U5Yy1kNjgyLTQ5YmYtOWQ5ZC0zNTNkZWRhMTRhN2IifSwiaWF0IjoxNzU3MzQyMjIwLCJleHAiOjE3NTc0Mjg2MjAsImp0aSI6IjNlMDNjZTljLWQ2ODItNDliZi05ZDlkLTM1M2RlZGExNGE3YiJ9.8NZwlo9fStOdGqQBJOIectms7AoavPI-H7wtzgZIt7h"
+      }
+    }
+  ) {
     ... on InitiateCreditTransfersSuccessPayload {
+      __typename
       beneficiaryVerificationResults {
         status
         ... on VerifyBeneficiaryMatch {
           __typename
           status
         }
+        ... on VerifyBeneficiaryCloseMatch {
+          __typename
+          status
+          nameSuggestion
+        }
+        ... on VerifyBeneficiaryNoMatch {
+          __typename
+          status
+        }
+        ... on VerifyBeneficiaryNotPossible {
+          __typename
+          status
+        }
       }
       payment {
-        id
+        statusInfo {
+          ... on PaymentConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
       }
     }
-    ... on ValidationRejection {
-      message
-      fields {
-        key
-        message
-      }
     }
     ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
-      message
+      __typename
     }
-  }
-}
-```
-
-```json title="Variables" {7}
-{
-  "input": {
-    "accountId": "$YOUR_ACCOUNT_ID",
-    "creditTransfers": [
-      {
-        "amount": { "value": "100.00", "currency": "EUR" },
-        "beneficiaryVerificationToken": "bvt_1234567890abcdef",
-        "reference": "Invoice 2024-001"
-      }
-    ],
-    "consentRedirectUrl": "https://mycompany.com/consent"
+    ... on InternalErrorRejection {
+      __typename
+    }
+    ... on ForbiddenRejection {
+      __typename
+    }
+    ... on AccountNotFoundRejection {
+      id
+    }
   }
 }
 ```
@@ -209,6 +227,31 @@ mutation InitiateCreditTransfers($input: InitiateCreditTransfersInput!) {
 The `InitiateCreditTransfersSuccessPayload` includes:
 - **`beneficiaryVerificationResults`**: Array of `VerifyBeneficiaryResult` ordered by result types.
 - Standard payment information.
+
+```json title="Returned Payload" {7,9,16}
+{
+  "data": {
+    "initiateCreditTransfers": {
+      "__typename": "InitiateCreditTransfersSuccessPayload",
+      "beneficiaryVerificationResults": [
+        {
+          "status": "CloseMatch",
+          "__typename": "VerifyBeneficiaryCloseMatch",
+          "nameSuggestion": "Henri Dupont"
+        }
+      ],
+      "payment": {
+        "statusInfo": {
+          "__typename": "PaymentConsentPending",
+          "consent": {
+            "consentUrl": "https://identity.swan.io/consent?consentId=3866149b-2262-4a65-a1f5-f46c37ab9eee&env=Sandbox"
+          }
+        }
+      }
+    }
+  }
+}
+```
 
 ## Token validation {#token-validation}
 

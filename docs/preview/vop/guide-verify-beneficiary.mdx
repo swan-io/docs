@@ -6,12 +6,10 @@ title: Verify a beneficiary
 
 Use the `verifyBeneficiary` mutation to verify beneficiary details before initiating SEPA Credit Transfers.
 
-This mutation gives you full control over the verification user experience. This approach is required for bulk credit transfers and recommended when you want to customize how verification results are presented to end-users.
+This mutation gives you full control to customize how verification results are presented to end-users. This approach is required for bulk credit transfers.
 
 :::tip Prerequisites
-- You have a **company** or **individual** account with Swan.
-- Your account has the **canViewAccount** and **canInitiatePayments** permissions.
-- You're planning to initiate a SEPA Credit Transfer.
+- You're planning to initiate an Instant SEPA Credit Transfer, SEPA Credit Transfer or Internal Credit Transfer.
 - Authentication required with a **user access token** or **project access token**.
 :::
 
@@ -125,14 +123,14 @@ mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
 
 ## Step 2: Handle verification results {#step-2}
 
-The mutation returns one of four possible verification results. **All results must be displayed to the end-user**.
+The mutation returns one of four possible verification results. **For an optimal User Experience**, results and the recommended follow-up actions should be displayed to the end-user.
 
-| Result | Description | End-user action |
+| Result | Description | Recommended<br/>end-user action |
 | --- | --- | --- |
 | `Match` | Exact match found between the provided details and account holder information. | Safe to proceed with the transfer. |
 | `CloseMatch` | Close match with suggested correction from the beneficiary's bank. | Review suggested name correction before proceeding. |
 | `NoMatch` | No match found between the provided details and account holder information. | Verify beneficiary details carefully before proceeding. |
-| `VerificationNotPossible` | IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists. | Verify beneficiary details carefully before proceeding. |
+| `VerificationNotPossible` | Beneficiary verification failed. Check the IBAN format or try again. | Verify beneficiary details carefully before proceeding. |
 
 Returned parameters:
 - **`status`**: Verification result (see previous table).
@@ -157,7 +155,7 @@ Returned parameters:
 }
 ```
 
-## Step 3: Use verification token {#step-3}
+## Step 3: Use the verification token {#step-3}
 
 Include the `beneficiaryVerificationToken` when initiating the credit transfer instead of providing full beneficiary details.
 
@@ -209,7 +207,7 @@ mutation InitiateCreditTransfers($input: InitiateCreditTransfersInput!) {
 ```
 
 The `InitiateCreditTransfersSuccessPayload` includes:
-- **`beneficiaryVerificationResults`**: Array of `VerifyBeneficiaryResult` in the same order as the beneficiary inputs.
+- **`beneficiaryVerificationResults`**: Array of `VerifyBeneficiaryResult` ordered by result types.
 - Standard payment information.
 
 ## Token validation {#token-validation}
@@ -231,6 +229,11 @@ For bulk credit transfers, each transfer in the batch **must** include a valid `
 
 Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
 
+:::info
+Company opt-out mutation coming soon.
+:::
+
+<!--
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQWNjb3VudFNldHRpbmdzKCRpbnB1dDogVXBkYXRlQWNjb3VudFNldHRpbmdzSW5wdXQhKSB7CiAgdXBkYXRlQWNjb3VudFNldHRpbmdzKGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50U2V0dGluZ3NTdWNjZXNzIHsKICAgICAgYWNjb3VudCB7CiAgICAgICAgc2V0dGluZ3MgewogICAgICAgICAgYWxsb3dCdWxrQ3JlZGl0VHJhbnNmZXJzV2l0aG91dEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyTm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {2,6}
@@ -268,8 +271,8 @@ mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
 
 **Requirements**:
 - Only available for Company account types.
-- Requires both `canViewAccount` and `canInitiatePayments` permissions.
 - `consentRedirectUrl` required for the settings change flow.
+-->
 
 ## Sandbox testing {#sandbox-testing}
 

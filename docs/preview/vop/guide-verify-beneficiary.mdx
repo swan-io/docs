@@ -79,9 +79,9 @@ flowchart TD
 
 Call the mutation with the account ID and beneficiary details ([`beneficiaryInput`](https://api-reference.swan.io/inputs/beneficiary-input/)) you want to verify. The mutation returns a verification result and a 24-hour token for use in payment initiation.
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVmVyaWZ5QmVuZWZpY2lhcnkoJGlucHV0OiBWZXJpZnlCZW5lZmljaWFyeUlucHV0ISkgewogIHZlcmlmeUJlbmVmaWNpYXJ5KGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgdmVyaWZ5QmVuZWZpY2lhcnlSZXN1bHQgewogICAgICAgIHN0YXR1cwogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICAgICAgbmFtZVN1Z2dlc3Rpb24KICAgICAgICB9CiAgICAgIH0KICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAga2V5CiAgICAgICAgbWVzc2FnZQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gTXlNdXRhdGlvbiB7CiAgdmVyaWZ5QmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBiZW5lZmljaWFyeTogewogICAgICAgIHNlcGE6IHsgaWJhbjogIklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIsIG5hbWU6ICJNYXRjaCIgfQogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgdmVyaWZ5QmVuZWZpY2lhcnlSZXN1bHQgewogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vdFBvc3NpYmxlIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlOb01hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICAgICAgfQogICAgICAgIHN0YXR1cwogICAgICB9CiAgICAgIGV4cGlyZXNBdAogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-6}
+```graphql {2}
 mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
   verifyBeneficiary(input: $input) {
     ... on VerifyBeneficiarySuccessPayload {
@@ -111,6 +111,18 @@ mutation VerifyBeneficiary($input: VerifyBeneficiaryInput!) {
 }
 ```
 
+```json title="Variables" {3,5-6}
+{
+  "input": {
+    "accountId": "$YOUR_ACCOUNT_ID",
+    "beneficiary": {
+      "name": "Company ABC Ltd",
+      "iban": "FR7699999001001383752268961"
+    }
+  }
+}
+```
+
 ## Step 2: Handle verification results {#step-2}
 
 The mutation returns one of four possible verification results. **All results must be displayed to the end-user**.
@@ -130,7 +142,7 @@ Returned parameters:
 
 **Example response for a close match:**
 
-```json
+```json {5,6,8,9}
 {
   "data": {
     "verifyBeneficiary": {
@@ -149,19 +161,21 @@ Returned parameters:
 
 Include the `beneficiaryVerificationToken` when initiating the credit transfer instead of providing full beneficiary details.
 
-```graphql title="Mutation" {6}
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnMoJGlucHV0OiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc0lucHV0ISkgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25SZXN1bHRzIHsKICAgICAgICBzdGF0dXMKICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgICAgcGF5bWVudCB7CiAgICAgICAgaWQKICAgICAgfQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAga2V5CiAgICAgICAgbWVzc2FnZQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbkFscmVhZHlDb25zdW1lZFJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2}
 mutation InitiateCreditTransfers($input: InitiateCreditTransfersInput!) {
   initiateCreditTransfers(input: $input) {
     ... on InitiateCreditTransfersSuccessPayload {
+      beneficiaryVerificationResults {
+        status
+        ... on VerifyBeneficiaryMatch {
+          __typename
+          status
+        }
+      }
       payment {
         id
-        beneficiaryVerificationResults {
-          result
-          verifiedBeneficiary {
-            iban
-            name
-          }
-        }
       }
     }
     ... on ValidationRejection {
@@ -203,8 +217,11 @@ The `InitiateCreditTransfersSuccessPayload` includes:
 **Token requirements**:
 - Tokens are validated for authenticity, status, and expiration.
 - Invalid, expired, or undecryptable tokens result in a `ValidationRejection`.
-- Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
+- A token is consumed after it has been used in one initiation. Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
 - Tokens expire 24 hours after generation.
+:::tip
+Note that the same token can be used multiple times in the same initiation (meaning multiple credit transfers to the same beneficiary, within the same API call).
+:::
 
 ## Bulk payments {#bulk-payments}
 
@@ -214,10 +231,12 @@ For bulk credit transfers, each transfer in the batch **must** include a valid `
 
 Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
 
-```graphql title="Mutation"
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQWNjb3VudFNldHRpbmdzKCRpbnB1dDogVXBkYXRlQWNjb3VudFNldHRpbmdzSW5wdXQhKSB7CiAgdXBkYXRlQWNjb3VudFNldHRpbmdzKGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50U2V0dGluZ3NTdWNjZXNzIHsKICAgICAgYWNjb3VudCB7CiAgICAgICAgc2V0dGluZ3MgewogICAgICAgICAgYWxsb3dCdWxrQ3JlZGl0VHJhbnNmZXJzV2l0aG91dEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyTm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,6}
 mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
   updateAccountSettings(input: $input) {
-    ... on UpdateAccountSettingsSuccessPayload {
+    ... on UpdateAccountSettingsSuccess {
       account {
         settings {
           allowBulkCreditTransfersWithoutBeneficiaryVerification
@@ -230,14 +249,14 @@ mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
     ... on ForbiddenRejection {
       message
     }
-    ... on WrongAccountHolderTypeRejection {
+    ... on AccountHolderNotFoundRejection {
       message
     }
   }
 }
 ```
 
-```json title="Variables"
+```json title="Variables" {4}
 {
   "input": {
     "accountId": "$YOUR_COMPANY_ACCOUNT_ID",

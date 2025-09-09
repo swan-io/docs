@@ -152,8 +152,8 @@ Verification of Payee provides verification results so end-users can make inform
 
 VoP applies to Standing Orders with two key differences:
 
-- **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
-- **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
+1. **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
+2. **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
 
 ## Integration flows for VoP {#integration-flows}
 
@@ -185,7 +185,7 @@ Swan provides two integration options based on your user experience (UX) needs a
         <ul>
           <li>Complete control over VoP results presentation.</li>
           <li>Custom error handling and user guidance.</li>
-          <li>Required for bulk payment flows.</li>
+          <li>Required for bulk payments.</li>
           <li>Best for: Enhanced UX and high-volume use cases.</li>
         </ul>
         <p><a href="guide-verify-beneficiary">Learn how to verify beneficiary details →</a></p>
@@ -201,7 +201,7 @@ Swan provides two integration options based on your user experience (UX) needs a
 | Payment Type | 🟡 Option 1: Default | 🟢 Option 2: Custom | VoP requirements |
 | --- | :---: | :---: | --- |
 | **Single Credit Transfers** | <Supported /> | <Supported /> | Required |
-| **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | Required<br/>(unless company account [opts out](/preview/vop/guide-verify-beneficiary#company-opt-out)) |
+| **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | Required<br/>(unless the company account [opts out](/preview/vop/guide-verify-beneficiary#company-opt-out)) |
 | **Standing Orders** | <Supported /> | <Supported /> | Required at initiation stage |
 
 ## Option 1: Default verification {#option-1}
@@ -286,7 +286,7 @@ flowchart TD
 
 #### Custom UX examples {#custom-ux-examples}
 
-Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. You can decide the level of friction and optional actions to display:
+Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. You can decide the level of friction and optional actions to display.
 
 <Tabs>
   <TabItem value="match" label="✅ Match" default>
@@ -333,8 +333,8 @@ For bulk credit transfers, each transfer in the batch must include [a valid `Ben
 
 Company end-users can [opt-out of VoP](/preview/vop/guide-verify-beneficiary#company-opt-out) for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
 
-**Restrictions**:
-- Only available for Company account types.
+### Restrictions
+- Only available for company account types.
 - Requires both `canViewAccount` and `canInitiatePayments` permissions.
 - No SCA required for changing this setting.
 

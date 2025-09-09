@@ -6,7 +6,7 @@ title: Verify a beneficiary
 
 Use the `verifyBeneficiary` mutation to verify beneficiary details before initiating SEPA Credit Transfers.
 
-This mutation gives you full control to customize how verification results are presented to end-users. This approach is required for bulk credit transfers.
+This mutation gives you full control to customize how verification results are presented to end-users. This is required for bulk credit transfers.
 
 :::tip Prerequisites
 - You're planning to initiate an Instant SEPA Credit Transfer, SEPA Credit Transfer or Internal Credit Transfer.
@@ -79,9 +79,9 @@ Call the mutation with the beneficiary details ([`beneficiaryInput`](https://api
 
 The `verifyBeneficiary` mutation accepts different types of beneficiary inputs:
 
-- **SEPA beneficiary** (`sepa`): For external SEPA Credit Transfers using IBAN and name
-- **Swan account** (`swanAccount`): For internal transfers between Swan accounts  
-- **Trusted beneficiary** (`trustedBeneficiaryId`): For pre-verified beneficiaries saved in your account
+- **SEPA beneficiary** (`sepa`): For external SEPA Credit Transfers using IBAN and name.
+- **Swan account** (`swanAccount`): For internal transfers between Swan accounts. 
+- **Trusted beneficiary** (`trustedBeneficiaryId`): For pre-verified beneficiaries saved in your account.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25NdXRhdGlvbiB7CiAgdmVyaWZ5QmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBiZW5lZmljaWFyeTogewogICAgICAgIHNlcGE6IHsKICAgICAgICAgIGliYW46ICJJVDAwMDAwMDEyMzQ1Njc4OTAxMjM0NTY3ODkiCiAgICAgICAgICBuYW1lOiAiQ2xvc2VNYXRjaCBUZXN0IE5hbWUiCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgICAgdmVyaWZ5QmVuZWZpY2lhcnlSZXN1bHQgewogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vdFBvc3NpYmxlIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlOb01hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIHN0YXR1cwogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -128,16 +128,16 @@ mutation BeneficiaryVerificationMutation {
 
 ## Step 2: Handle verification results {#step-2}
 
-The mutation returns one of four possible verification results. **For an optimal User Experience**, results and the recommended follow-up actions should be displayed to the end-user.
+The mutation returns one of four possible verification results. **For an optimal user experience**, display the results and the recommended end-user action.
 
 | Result | Description | Recommended<br/>end-user action |
 | --- | --- | --- |
 | `Match` | Exact match found between the provided details and account holder information. | Safe to proceed with the transfer. |
-| `CloseMatch` | Close match with suggested correction from the beneficiary's bank. | Review suggested name correction before proceeding. |
+| `CloseMatch` | Close match with suggested correction from the beneficiary's bank. | Consider the suggested name correction before proceeding. |
 | `NoMatch` | No match found between the provided details and account holder information. | Verify beneficiary details carefully before proceeding. |
 | `VerificationNotPossible` | Beneficiary verification failed. Check the IBAN format or try again. | Verify beneficiary details carefully before proceeding. |
 
-Returned parameters:
+#### Returned parameters
 - **`status`**: Verification result (see previous table).
 - **`beneficiaryVerificationToken`**: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations.
 - **`expiresAt`**: Token expiration timestamp (24 hours from generation).
@@ -230,11 +230,9 @@ mutation InitiateCreditTransferWithVerificationToken {
 }
 ```
 
-The `InitiateCreditTransfersSuccessPayload` includes:
-- **`beneficiaryVerificationResults`**: Array of `VerifyBeneficiaryResult` ordered by result types.
-- Standard payment information.
+The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificationResults`, an array of `VerifyBeneficiaryResult` objects ordered by result types.
 
-```json title="Returned Payload" {7,9,16}
+```json title="Payload" {7,9,16}
 {
   "data": {
     "initiateCreditTransfers": {
@@ -261,18 +259,18 @@ The `InitiateCreditTransfersSuccessPayload` includes:
 
 ## Token validation {#token-validation}
 
-**Token requirements**:
+### Requirements
 - Tokens are validated for authenticity, status, and expiration.
 - Invalid, expired, or undecryptable tokens result in a `ValidationRejection`.
 - A token is consumed after it has been used in one initiation. Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
 - Tokens expire 24 hours after generation.
 :::tip
-Note that the same token can be used multiple times in the same initiation (meaning multiple credit transfers to the same beneficiary, within the same API call).
+The same token can be used multiple times in the same initiation. This means you can initiate multiple credit transfers to the same beneficiary, within the same API call.
 :::
 
 ## Bulk payments {#bulk-payments}
 
-For bulk credit transfers, each transfer in the batch **must** include a valid `beneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
+For bulk credit transfers, each transfer in the batch **must** include a valid `beneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will result in a `ForbiddenRejection`.
 
 ### Company opt-out for bulk transfers {#company-opt-out}
 
@@ -321,7 +319,7 @@ mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
 
 ## Sandbox testing {#sandbox-testing}
 
-In the Sandbox environment, the `verifyBeneficiary` mutation returns simulated verification results based on the beneficiary name pattern:
+In the Sandbox environment, the `verifyBeneficiary` mutation returns simulated verification results based on the beneficiary name pattern.
 
 | Name starts with | Returns result |
 |------------------|----------------|
@@ -333,16 +331,16 @@ In the Sandbox environment, the `verifyBeneficiary` mutation returns simulated v
 **Example**: Beneficiary name "Match Henri Dupont" returns a `Match` result.
 
 :::tip
-Note that if a trusted beneficiary ID is used as input, the verification will be based on the Trusted Beneficiary name.
+If a trusted beneficiary ID is used as input, the verification will be based on the Trusted Beneficiary name.
 :::
 
 ### Testing bulk payments {#testing-bulk-payments}
 
 <FieldRequirementsLegend />
 
-By default, in Sandbox:
+#### Default sandbox requirements
 
-| Account type | VoP for bulk transfers | BeneficiaryTokens requirement |
+| Account type | VoP for bulk transfers | BeneficiaryToken requirements |
 | --- | --- | --- |
 | **Company** | Opted out | <Opt /> |
 | **Individual** | Opted in | <Req /> |

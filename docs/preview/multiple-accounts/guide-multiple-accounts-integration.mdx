@@ -1,0 +1,52 @@
+---
+title: Configure card insurance package
+---
+
+:::caution No coverage for existing cards
+Card insurance is currently in private beta.
+:::
+
+This guide explains how to configure insurance on card products, issue cards with insurance, support card insurance claims.
+
+## 1. Configure insurance on card products
+
+When creating a card product, link it to a card insurance object by setting the [`defaultInsurancePackage`](https://api-reference.swan.io/objects/card-insurance-configuration/#cardinsuranceconfigurationdefaultinsurancepackagecardinsurancepackage). 
+This package is automatically applied when a card is issued.
+
+The `availableInsurancePackages` field lists all eligible insurance packages for the card product.
+
+By default, new card products include three packages: **Basic**, **Essential**, and **Premium**. For pre-existing card products, contact your Product Integration Manager (PIM) to add the `availableInsurancePackages` and set your `defaultInsurancePackage`.
+
+## 2. Card product review and validation
+
+After configuring your insurance settings, your PIM will review and validate the card product before it can be used.
+
+:::caution
+To issue cards with insurance, it's mandatory to display the [standard marketing and legal mentions](https://docs.google.com/presentation/d/159nE02OtxcZ_uVQIpX8H7fLVC9VubPAf/edit?slide=id.g33c8ca1d644_0_302#slide=id.g33c8ca1d644_0_302) regarding the insurance coverage package within your app or website. Swan includes this information in the Terms and Conditions.
+:::
+
+## 3. Card insurance subscription
+
+Swan automatically creates a [card insurance subscription](/preview/card-insurance#insurance-subscription) when a new card is issued, if the following conditions are met:
+
+- The cardholder's account membership is `Enabled`.
+- The account holder is `Verified`.
+
+## 4. Support insurance claims 
+
+Include a link to the insurance provider's claims portal in your Web banking app so users can file claims independently.
+
+The `claimsUrl` available in the card query leads to the insurance provider's claims portal. 
+Use this query to retrieve the `claimsUrl` for a cardholder to access the claims interface:
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0Q2xhaW1zUG9ydGFsVXJsIHsKICBjYXJkKGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiKSB7CiAgICBpbnN1cmFuY2VTdWJzY3JpcHRpb24gewogICAgICBjbGFpbXNVcmwKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API explorer</a>
+
+
+```graphql
+query GetClaimsPortalUrl {
+  card(cardId: "$YOUR_CARD_ID") {
+    insuranceSubscription {
+      claimsUrl
+    }
+  }
+}

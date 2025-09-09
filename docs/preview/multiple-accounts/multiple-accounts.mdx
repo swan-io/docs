@@ -1,287 +1,239 @@
 ---
-title: Card insurance
+title: Multiple accounts
 ---
 
-:::caution No coverage for existing cards
-Card insurance is currently in private beta.
+Create additional accounts for an existing company account holder without repeating the onboarding and Know Your Business (KYB) processes.
+
+:::info Specific coverage 
+Contact your Strategic Account Manager (SAM) to request the multiple accounts feature.
 :::
 
 ## Overview {#overview}
 
-Swan now offers insurance packages that can be added to payment cards, providing extra protection for cardholders. Partners can choose to create cards with embedded insurance or without it.
+**Multiple accounts allow a single company to create additional Swan accounts** under the same legal entity. These accounts share the same registration number and [local IBAN](/topics/accounts/ibans/#local) as the first account created at onboarding.
 
-There are three standard insurance packages available:
+Each account operates independently with its own IBAN, balances, and transaction flows, making it easy to create additional accounts for specific business needs. 
 
-- **Basic**
-- **Essential**
-- **Premium**
+They have the same capabilities as regular accounts, including issuing and accepting all payment types (e.g., [Card payments](/topics/payments/cards/), [SEPA Credit Transfers](/topics/payments/credit-transfers/sepa/)). 
 
-Once an insurance package is assigned to a card product, all new cards created under that product will automatically include the chosen insurance by default.
+To accept payments, each account requires its own [merchant profile review](/topics/merchants/#profiles), so a new profile and payment method must be requested for each additional account created.
 
-:::caution No coverage for existing cards
-Insurance is not retroactive. Existing cards won't be updated automatically. To add insurance, you must issue a new card.
-:::
+## Eligibility {#eligibility}
 
 ## Card insurance coverage {#insurance-coverage}
 
-The following tables outline the card insurance coverage included with Swan cards. 
+Multiple accounts are only available for [**company account](/topics/onboarding/company/) types**, which include:
 
-:::info Specific coverage 
-Specific coverage varies by **insurance plan**. To consult the details of a card's insurance coverage, please **request the terms and conditions notice** directly from your Product Integration Manager (PIM).
+- Registered companies
+- Self-employed workers
+- Associations or non-profit organizations
+
+:::caution Individual accounts
+Individual accounts are eligible. To open an additional account under the same account holder, the user must undergo a new onboarding process, but the KYC verification does not need to be repeated.
 :::
 
-<Tabs>
-  <TabItem value="identity" label="🛡️ Identity protection" default>
-    **Coverage**: Protection against identity-related fraud and document loss
-    
-    **What's included**:
-    
-    | Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
-    |---|---|:---:|:---:|:---:|---|
-    | Loss or theft of identity documents | Reimbursement of costs for renewing identity documents (including duplicate fees, stamp duty, and identity document photos). |  <Yes />  | <Yes /> | <Yes /> | Up to €350 per year and per claim |
-    | Bank card fraud | Reimbursement for amounts fraudulently debited before reporting loss or theft. | <Yes /> | <Yes /> | <Yes /> | Up to €3,000 per year |
-    | Phishing guarantee | Reimbursement for financial losses due to phishing (above €50). | <Yes /> | <Yes /> | <Yes /> | Up to €1,000 per year |
-  </TabItem>
-  
-  <TabItem value="travel" label="✈️ Travel insurance">
-    **Coverage**: Protection for travel-related incidents and expenses
-    
-    **What's included**:
-    
-    | Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
-    |---|---|:---:|:---:|:---:|---|
-    | Travel delay (train or flight) | Reimbursement of expenses from train or flight delays of 4+ hours. |  |  | <Yes /> | Up to €400 per delay |
-    | Delayed baggage | Reimbursement of essential purchases due to delayed baggage. |  |  | <Yes /> | Up to €800 per delay |
-    | Lost, stolen, or damaged baggage | Reimbursement for baggage loss, theft, or damage. |  |  | <Yes /> | Up to €800 per baggage, €250 per valuable item; €70 deductible per claim |
-    | Trip modification or cancellation | Reimbursement of non-recoverable trip costs due to valid reasons (illness, accident, summons, strike, theft, visa refusal). |  | <Yes /> | <Yes /> | Up to €5,000 per year |
-    | Travel assistance and repatriation | Medical expense reimbursement abroad and repatriation services. |  |  | <Yes /> | €100,000 (medical), €2,500 (ski accident), €1,500 (repatriation of remains) |
-  </TabItem>
-  
-  <TabItem value="car-rental" label="🚗 Car rental">
-    **Coverage**: Protection for rental vehicle incidents
-    
-    **What's included**:
-    
-    | Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
-    |---|---|:---:|:---:|:---:|---|
-    | Rental vehicle coverage | Coverage for incidents related to rental vehicles. |  | <Yes /> | <Yes /> | Up to 2 incidents per year |
-  </TabItem>
-  
-  <TabItem value="legal" label="⚖️ Legal protection">
-    **Coverage**: Legal support for digital identity and reputation issues
-    
-    **What's included**:
-    
-    | Insurance type | Explanation | Basic | Essential | Premium | Coverage limit |
-    |---|---|:---:|:---:|:---:|---|
-    | E-reputation legal protection | Legal support for identity theft, cyber-harassment, or damage to online reputation. | <Yes /> | <Yes /> | <Yes /> | Up to €15,000 per dispute |
-  </TabItem>
-</Tabs>
+## Requirements
 
-## Card insurance product configuration {#insurance-configuration}
+### Legal representative requirements
 
-You can assign one of the [three standard insurance packages](/preview/card-insurance) at the card product level. 
-Once set, the package is automatically linked to any new card issued from that card product.
+All accounts under the same account holder share the **same [legal representative](/topics/onboarding/company/#representatives)** (account admin). Only the legal representative of the first account can create additional accounts. Changes to the legal representative follow the standard process but must be applied across all accounts belonging to the same account holder.
 
-:::info Configure your card product    
-Follow the [step-by-step guide](/preview/card-insurance/guide-insurance-integration) to configure insurance on your card product.
+### Account holder requirements
+
+The following criteria must be met by the account holder:
+
+| **Requirement** | **Value** |
+| --- | --- |
+| `accountHolder.verificationStatus` | `Verified` |
+| `accountHolder.status` | `Enabled` |
+| `accountHolder.type` | `Company` |
+| `accountHolder.account.status` | `Opened` |
+
+## Key benefits and use cases
+
+Offering multiple accounts provides flexibility and operational benefits for different use cases.
+
+### Use cases
+
+- **Freelancers** can use this feature for tax management.
+- **Small and medium businesses (SMBs)** often use separate accounts for advanced spending management, like managing financial flows by supplier, department, or region.
+- **Homeowner associations (HOAs)** can use an "operating account" for day-to-day expenses and a "reserve account" for common area expenses (e.g. repairs).
+
+### Operational benefits
+
+- Skip onboarding for each new account.
+- Share the same KYB, avoiding duplicate requests.
+- Re-KYB checks are performed on a single account holder for all associated accounts.
+
+## Feature activation
+
+The multiple accounts feature is available to all partners, but it isn't **activated** by default. Before creating additional accounts, you must contact your **Strategic Account Manager (SAM)** to request it.
+
+When making a request, make sure to include:
+
+- The purpose of creating multiple accounts.
+- The number of accounts requested.
+
+:::caution Individual accounts
+Your request is subject to a **compliance review**, as well as a contract and pricing review if accepted.
 :::
 
-## Card insurance billing {#insurance-billing}
-Pricing varies by insurance level (Basic, Essential, Premium). Partners are billed monthly for active insurance subscriptions. 
-For specific pricing details, refer to your terms and conditions or contact your Product Integration Manager (PIM).
+## API implementation
 
-## Insurance subscription {#insurance-subscription}
+Once the feature is **activated**, you can create additional accounts.
 
-### Insurance subscription statuses {#subscription-statuses}
+1. Call the `openAccount` mutation.
+:::info Multiple accounts guide 
+Follow the [**step-by-step guide**](https://www.notion.so/Guide-Open-multiple-accounts-265a3427555a80539c53d4acb4603592?pvs=21) to create multiple accounts.
+:::
+    
+2. Collect the legal representative's confirmation in your banking app. A consent URL or Strong Customer Authentication (SCA) is not required.
 
-When a user orders a card with insurance, Swan begins the process of creating an insurance subscription with our insurance partner.
+:::caution Confirmation
+You must include a clear confirmation step, such as a button, for the legal representative to confirm their intent.
+:::
 
-The subscription progresses through these statuses in order: **Pending** → **Processing** → **Enabled**, or **Canceled** (if the associated card is canceled).
+The new account is created under the same account holder, sharing the same KYB and legal representative. All additional accounts have an `Unlimited` payment level and the `PaymentService` account type.
 
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    ICO((Insurance card<br/>ordered)) --> P[Pending]
-    P --> PR[Processing]
-    PR --> E[Enabled]
-    E --> C[Canceled]
+## Account conditions
 
-    NotePending["Waiting for:<br/>• Account holder status = Verified<br/>• Account membership status = Enabled"] -.-> P
+### Account creation limit
 
-    subgraph AS[&nbsp;&nbsp;Active subscription&nbsp;&nbsp;]
-        E
-    end
+By default, users are limited to one account until the multiple accounts feature is **activated**. 
 
-    subgraph F[Final status]
-        C
-    end
+After the feature is **activated**, users may be granted a maximum number of accounts, which is defined during the compliance review and documented in a welcome letter. 
 
-    style ICO fill:#D4D3D5,stroke:#514F59
-    style P fill:#D4D3D5,stroke:#514F59
-    style PR fill:#D4D3D5,stroke:#514F59
-    style NotePending fill:#f3f3f3,stroke:#bbb,stroke-dasharray: 4
-    style AS fill:#dfedf2,stroke:#4d8296,stroke-width:3px
-    style F fill:#fffdf4,stroke:#cca922
+Users are technically restricted from creating new accounts after reaching the maximum limit.
+
+:::info Account status 
+Only accounts with an Opened status counts toward the maximum limit. Suspended, Closing, or Closed accounts don’t count.
+:::
+
+### Checking your account creation limit
+
+1. Call the `projectInfo` query (line 2).
+1. Select `multipleAccountsSettings` (line 3).
+1. Add `accountCreationLimit` and `canOpenAccount` to check your account creation limit (lines 4-5).
+
+<h3 id="query-main">Query</h3>
+
+<a href="https://explorer.swan.io?query=cXVlcnkgQWNjb3VudENyZWF0aW9uTGltaXQgewogIHByb2plY3RJbmZvIHsKICAgIG11bHRpcGxlQWNjb3VudHNTZXR0aW5ncyB7CiAgICAgIGFjY291bnRDcmVhdGlvbkxpbWl0CiAgICAgIGNhbk9wZW5BY2NvdW50CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2} showLineNumbers
+query AccountCreationLimit {
+  projectInfo {
+    multipleAccountsSettings {
+      accountCreationLimit
+      canOpenAccount
+    }
+  }
+}
+```
+<h3 id="payload-main">Payloads</h3>
+
+The `multipleAccountsSettings` query returns a payload that indicates the current status of the multiple accounts feature for an account holder.
+
+**Example one: Multiple accounts not active**
+
+This payload shows the response when the multiple accounts feature has **not** been **activated**.
+
+- `accountCreationLimit`: `1` indicates that only the initial account can be created.
+- `canOpenAccount`: `false` confirms that additional accounts cannot be created.
+
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "multipleAccountsSettings": {
+        "accountCreationLimit": 1,
+        "canOpenAccount": false
+      }
+    }
+  }
+}
 ```
 
-| Status | Explanation |
-|---|---|
-| `Pending`| Insurance subscription is waiting for the account membership to be `Enabled`, and the account holder to be `Verified`. |
-| `Processing`| The insurance subscription request is sent to the insurance partner for adhesion. |
-| `Enabled` | The insurance subscription is active and insurance is valid. <br/><br/>If you're subscribed to the `cardInsuranceSubscription.Created` webhook, you'll receive a notification when a subscription is `Enabled`. |
-| `Canceled`| The insurance subscription is `Canceled` when the associated card is canceled. |
+**Example two: Multiple accounts active**
 
-### Insurance subscription flow {#subscription-flow}
+This payload shows the response when the multiple accounts feature has been **activated**.
 
-When a card product with insurance is ordered, Swan creates an insurance subscription (called an "adhesion" by the insurance partner). Swan automatically applies the insurance package set for the card product.
+- `accountCreationLimit`: `6` shows that a maximum of six accounts can be created.
+- `canOpenAccount`: `true` confirms that additional accounts can be opened.
 
-### Sequence diagram
-
-The following diagram details a common flow of how the user, Your system (you), Swan and the insurance partner interact when ordering a new card with embedded insurance.
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Your system
-    participant Swan
-    participant Insurance partner
-
-    alt User orders card via Web Banking
-        User->>Swan: Orders card
-    else You order card via API
-        Your system->>Swan: Calls card creation API
-        Note over Your system,Swan: addCard, addCards, or addCardsWithGroupDelivery
-    end
-
-    Swan-->>Your system: Returns card with insurancePackageId
-    Swan->>User: Shows consent screen
-    User->>Swan: Accepts terms
-    Swan->>Your system: Webhook: subscription.Created
-    Note over Swan: Waits for: <br> Account membership = Enabled <br />& Account holder = Verified
-    Swan->>Insurance partner: Creates subscription
-    Insurance partner-->>Swan: Confirms & activates
-    Swan->>Your system: Webhook: subscription.Updated
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "multipleAccountsSettings": {
+        "accountCreationLimit": 6,
+        "canOpenAccount": true
+      }
+    }
+  }
+}
 ```
-### Steps
+## Shared account details
 
-1. A card is ordered by either:
-   - **The user**, through their Web Banking interface.
-   - **You**, through the API using one of the following mutations:  
-     `addCard` (single card), `addCards` (multiple cards), or `addCardsWithGroupDelivery` (multiple cards with shared delivery).
+### IBAN country
 
-2. An `insurancePackageId` is attributed to the card.
+All accounts under the same account holder share the same IBAN country. To create an account with a different IBAN country, the legal representative must complete a new company onboarding process.
 
-3. **Swan sends a consent request to your user**, and they review and **accept the insurance terms** on the consent screen. 
-This screen is localized based on the account member's language.
+### Company registration number
 
-4. After consent, **Swan sends a** `cardInsuranceSubscription.Created` **webhook** to your system.
+All additional accounts are linked to one account holder with a single registration number. To create an account for another company, the user must complete a new company onboarding process with the new company's registration number.
 
-5. Swan creates the **insurance subscription** (called an "adhesion" by our insurance partner).
+## Account management
 
-:::caution
-Insurance subscription creation only happens when the account membership is `Enabled` and the account holder verification status is `Verified`. The creation of a subscription may be **delayed** until these conditions are met.
-:::
+### Legal documents
 
-5. **Swan sends a** `cardInsuranceSubscription.Updated` **webhook** to your system once the insurance partner confirms the subscription.
+The same **Terms and Conditions** and **Partnership Conditions** apply to all accounts under the same account holder. Legal documents are generated in the same way as for single accounts.
 
-:::info Card insurance activation
-Once subscribed, the insurance is automatically activated. Your user can view the insurance notice, and access the URL to the insurance claims portal through their Web Banking interface.
-:::
+### Account closure
 
-## Card insurance claims {#insurance-claims}
+Standard [account closure](/topics/accounts/closure/) rules apply. Each account can be closed individually. You can request closure of the first account (created during onboarding) while keeping any additional accounts active.
 
-When an eligible event occurs, cardholders should submit a claim through the **insurance claims portal**, or by contacting our assistance provider, depending on the type of claim.
+## Billing
 
-### Reporting a card insurance claim {#report-insurance-claims}
+### End-customer billing
 
-#### Reporting through the claims portal
+Each active account is billed independently, resulting in one invoice per account.
 
-The insurance claims portal is available in the cardholder's Web Banking interface. 
-It's typically used for standard claims such as:
-- Lost documents
-- Travel delays
-- Purchase protection
-- Card fraud
+### Partner billing
 
-To submit a claim, cardholders must:
-1. Create an account in the insurance claims portal using the email linked to their Swan account.
-1. Upload the required documents.
-1. Track the progress of their claim in the insurance claims portal.
+Active account pricing is applied at the account holder level, resulting in a new fee for active accounts on your invoice.
 
-Our **insurance partner handles the entire claims process** after it's submitted. 
-Cardholders must follow up directly through the portal. 
-If compensation is approved, it's credited directly to the cardholder's Swan account.
+## Setting access in Web banking
 
-:::info Customized claims portal    
-By default, the claims management interface provided by our insurance partner is co-branded with **your logo and accent color**, like your Swan interfaces (Web Banking and consent screens).
-:::
+The web banking setting `canOpenAccount` is a project-level configuration that controls whether your end users can open additional accounts directly from Swan Web banking.
 
-#### Reporting to our assistance provider
+This setting is activated by default. Unless you deactivate it, end users will be able to open multiple accounts from Swan’s interface. 
 
-Our assistance provider handles urgent claims such as:
-- Medical emergencies  
-- Repatriation  
-- Hospitalisation  
-- Legal assistance
+To restrict account opening to your own banking application, deactivate the `canOpenAccount` setting in your **Dashboard** > **Settings** > **Web banking**. 
 
-These must be reported **by phone** for immediate support.
+### Key benefits
 
-They handle the entire claims process. 
-If compensation is approved, it is credited directly to the cardholder's Swan account.
+Controlling this setting gives you greater flexibility to:
 
-### Claim types and reporting process {#insurance-claims-process}
+1. **Restrict by pricing plan:** Restrict access to the Multiple Accounts feature by pricing plan. 
+1. **Differentiate by account limits:** Define the number of additional accounts a user can create for each pricing plan, for example, allowing one additional account for a Basic plan and up to five for a Premium one.
 
-The following table outlines how to report different claim types:
+## Rejections
 
-<Tabs>
-  <TabItem value="identity" label="🛡️ Identity protection" default>
-    **Process**: Report incidents and submit required documentation for identity-related claims
-    
-    **Claim procedures**:
-    
-    | Insurance cover type | How to report | Required documents |
-    |---|---|---|
-    | Loss or theft of identity documents | - Report through the insurance claims portal<br />- Within 30 business days | - Police report (loss or theft)<br />- Proof of renewal costs using Swan's card |
-    | Bank card fraud | - Report card as lost/stolen to Swan<br />- Within 2 business days<br />- Then submit the incident through the insurance claims portal<br />- Within 30 days | - Police report<br />- Confirmation the card was reported<br />- Proof that Swan denied coverage<br />- Screenshot of disputed transactions |
-    | Phishing guarantee | - Notify Swan and report card<br />- Within 2 business days<br />- File police report and submit claim through the insurance claims portal<br />- Within 2 days | - ID card<br />- Proof that Swan denied coverage<br />- Copy of fraudulent messages (email, SMS, etc.) |
-  </TabItem>
-  
-  <TabItem value="travel" label="✈️ Travel insurance">
-    **Process**: Submit travel-related claims with appropriate documentation and timing
-    
-    **Claim procedures**:
-    
-    | Insurance cover type | How to report | Required documents |
-    |---|---|---|
-    | Travel delay (train or flight) | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Carrier-issued delay certificate<br />- Receipts (meals, hotel, transport)<br />- Proof of business travel<br />- Travel ticket<br />- Declaration of honor and explanation |
-    | Delayed baggage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Proof of business travel<br />- Travel ticket<br />- Baggage check-in receipt<br />- Receipts for essential purchases |
-    | Lost, stolen, or damaged baggage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Proof of business travel<br />- Travel ticket and baggage check-in receipt<br />- Carrier-issued loss certificate<br />- Inventory and receipts of lost items |
-    | Trip modification or cancellation | - Initiate cancellation/modification<br />- Within 72 hours<br />- Then submit through the insurance claims portal<br />- Within 15 days | - Certificate of cancellation/modification<br />- Proof of reason (medical certificate, summons, etc.)<br />- Proof of reservation and payment with a Swan card<br />- Proof of retained cancellation fees |
-    | Travel assistance and repatriation | - Contact our assistance provider by phone<br />- Within 5 days | - Medical certificates<br />- Hospital bills<br />- Tickets or transport proof<br />- Description of the events |
-  </TabItem>
-  
-  <TabItem value="car-rental" label="🚗 Car rental">
-    **Process**: Report rental vehicle incidents with proper documentation
-    
-    **Claim procedures**:
-    
-    | Insurance cover type | How to report | Required documents |
-    |---|---|---|
-    | Rental vehicle coverage | - Submit the incident through the insurance claims portal<br />- Within 15 days | - Rental contract<br />- Signed vehicle condition report<br />- Police report (if stolen) |
-  </TabItem>
-  
-  <TabItem value="legal" label="⚖️ Legal protection">
-    **Process**: Contact assistance provider for legal support and documentation
-    
-    **Claim procedures**:
-    
-    | Insurance cover type | How to report | Required documents |
-    |---|---|---|
-    | E-reputation legal protection | - Contact our assistance provider by phone | - Documentation of the dispute<br />- Proof of related expenses |
-  </TabItem>
-</Tabs>
+Multiple account creations can be rejected for the following reasons:
+
+| Rejection reason | Description |
+| --- | --- |
+| `AccountHolderNotFoundRejection` | The provided account holder ID doesn’t match an existing `AccountHolder`. |
+| `ForbiddenRejection` | The project isn’t allowed to create multiple accounts, or the wrong context is used. |
+| `AccountMembershipNotEligibleRejection` | The user isn’t eligible to open the account. They must be the account legal representative. |
+| `AccountHolderTypeNotEligibleRejection` | The account holder type must be `Company`. |
+| `AccountHolderStatusNotEligibleRejection` | The account holder status must be `Enabled`. |
+| `AccountHolderVerificationStatusNotEligibleRejection` | The account holder must have a `Verified` KYC status. |
+| `AccountHolderAccountsTypeNotEligibleRejection` | All associated accounts must be `EndCustomer` or `CapitalDepositMainAccount`. |
+| `AccountHolderAccountsStatusNotEligibleRejection` | No active accounts available. All associated accounts are `Closed`, `Closing`, or `Suspended`. |
+| `AccountHolderAccountsCreationLimitRejection` | The maximum number of `Opened` accounts has been reached. Check project settings for multiple accounts. |
+| `AccountHolderProjectSettingNotEligibleRejection` | Account creation is disabled in project settings. |
 
 ## Guides {#guides}
 
-- [Configure card insurance package](guide-insurance-integration.mdx)
+- [Create multiple accounts](guide-multiple-accounts-integration.mdx)

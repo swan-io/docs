@@ -1,52 +1,99 @@
 ---
-title: Configure card insurance package
+title: Create multiple accounts
 ---
 
-:::caution No coverage for existing cards
-Card insurance is currently in private beta.
-:::
+This guide explains how to open additional accounts for one account holder. 
 
-This guide explains how to configure insurance on card products, issue cards with insurance, support card insurance claims.
+## Guide {#guide}
 
-## 1. Configure insurance on card products
+1. Call the `openAccount` mutation.
+2. Include the `accountHolderId`  (line 4).
+3. Add the `language` parameter (optional) to select the [account language](/topics/accounts/#language). If not specified, English (`en`) is used as the default language (line 5).
+4. Add a `name` parameter (optional) for the account. If not specified, "My account" is used as the default name (line 6).
+5. Add the `OpenAccountSuccessPayload` payload (line 9) and any information you'd like to receive about the additional account.
+6. Add all rejections.
 
-When creating a card product, link it to a card insurance object by setting the [`defaultInsurancePackage`](https://api-reference.swan.io/objects/card-insurance-configuration/#cardinsuranceconfigurationdefaultinsurancepackagecardinsurancepackage). 
-This package is automatically applied when a card is issued.
+## Mutation {#mutation}
 
-The `availableInsurancePackages` field lists all eligible insurance packages for the card product.
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlQWNjb3VudCB7CiAgb3BlbkFjY291bnQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SG9sZGVySWQ6ICIkQUNDT1VOVF9IT0xERVJfSUQiCiAgICAgIGxhbmd1YWdlOiBlbgogICAgICBuYW1lOiAiVGF4ZXMiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gT3BlbkFjY291bnRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudCB7CiAgICAgICAgQklDCiAgICAgICAgSUJBTgogICAgICAgIGNvdW50cnkKICAgICAgICBjdXJyZW5jeQogICAgICAgIGlkCiAgICAgICAgbGFuZ3VhZ2UKICAgICAgICBuYW1lCiAgICAgICAgcGF5bWVudExldmVsCiAgICAgICAgcGF5bWVudEFjY291bnRUeXBlCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlck5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlclR5cGVOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJTdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJWZXJpZmljYXRpb25TdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c1R5cGVOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c1N0YXR1c05vdEVsaWdpYmxlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-By default, new card products include three packages: **Basic**, **Essential**, and **Premium**. For pre-existing card products, contact your Product Integration Manager (PIM) to add the `availableInsurancePackages` and set your `defaultInsurancePackage`.
-
-## 2. Card product review and validation
-
-After configuring your insurance settings, your PIM will review and validate the card product before it can be used.
-
-:::caution
-To issue cards with insurance, it's mandatory to display the [standard marketing and legal mentions](https://docs.google.com/presentation/d/159nE02OtxcZ_uVQIpX8H7fLVC9VubPAf/edit?slide=id.g33c8ca1d644_0_302#slide=id.g33c8ca1d644_0_302) regarding the insurance coverage package within your app or website. Swan includes this information in the Terms and Conditions.
-:::
-
-## 3. Card insurance subscription
-
-Swan automatically creates a [card insurance subscription](/preview/card-insurance#insurance-subscription) when a new card is issued, if the following conditions are met:
-
-- The cardholder's account membership is `Enabled`.
-- The account holder is `Verified`.
-
-## 4. Support insurance claims 
-
-Include a link to the insurance provider's claims portal in your Web banking app so users can file claims independently.
-
-The `claimsUrl` available in the card query leads to the insurance provider's claims portal. 
-Use this query to retrieve the `claimsUrl` for a cardholder to access the claims interface:
-
-<a href="https://explorer.swan.io?query=cXVlcnkgR2V0Q2xhaW1zUG9ydGFsVXJsIHsKICBjYXJkKGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiKSB7CiAgICBpbnN1cmFuY2VTdWJzY3JpcHRpb24gewogICAgICBjbGFpbXNVcmwKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API explorer</a>
-
-
-```graphql
-query GetClaimsPortalUrl {
-  card(cardId: "$YOUR_CARD_ID") {
-    insuranceSubscription {
-      claimsUrl
+```graphql {2-3} showLineNumbers
+mutation CreateAccount {
+  openAccount(
+    input: {
+      accountHolderId: "$ACCOUNT_HOLDER_ID"
+      language: en
+      name: "Taxes"
+    }
+  ) {
+    ... on OpenAccountSuccessPayload {
+      __typename
+      account {
+        BIC
+        IBAN
+        country
+        currency
+        id
+        language
+        name
+        paymentLevel
+        paymentAccountType
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderNotFoundRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderTypeNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderStatusNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderVerificationStatusNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderAccountsTypeNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderAccountsStatusNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountMembershipNotEligibleRejection {
+      __typename
+      message
     }
   }
 }
+```
+
+## Payload {#payload}
+
+The payload confirms that the physical card is `Canceled` (line 8) because it was reported as `Lost` (line 9).
+
+```json {8} showLineNumbers
+{
+  "data": {
+    "openAccount": {
+      "__typename": "ForbiddenRejection",
+      "message": "Opening an additional account will be available soon"
+    }
+  }
+}
+```

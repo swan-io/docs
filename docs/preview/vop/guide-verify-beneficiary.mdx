@@ -75,7 +75,13 @@ flowchart TD
 
 ## Step 1: Call verifyBeneficiary {#step-1}
 
-Call the mutation with the account ID and beneficiary details ([`beneficiaryInput`](https://api-reference.swan.io/inputs/beneficiary-input/)) you want to verify. The mutation returns a verification result and a 24-hour token for use in payment initiation.
+Call the mutation with the beneficiary details ([`beneficiaryInput`](https://api-reference.swan.io/inputs/beneficiary-input/)) you want to verify. The mutation returns a verification result and a 24-hour token for use in payment initiation.
+
+The `verifyBeneficiary` mutation accepts different types of beneficiary inputs:
+
+- **SEPA beneficiary** (`sepa`): For external SEPA Credit Transfers using IBAN and name
+- **Swan account** (`swanAccount`): For internal transfers between Swan accounts  
+- **Trusted beneficiary** (`trustedBeneficiaryId`): For pre-verified beneficiaries saved in your account
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25NdXRhdGlvbiB7CiAgdmVyaWZ5QmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBiZW5lZmljaWFyeTogewogICAgICAgIHNlcGE6IHsKICAgICAgICAgIGliYW46ICJJVDAwMDAwMDEyMzQ1Njc4OTAxMjM0NTY3ODkiCiAgICAgICAgICBuYW1lOiAiQ2xvc2VNYXRjaCBUZXN0IE5hbWUiCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbgogICAgICBleHBpcmVzQXQKICAgICAgdmVyaWZ5QmVuZWZpY2lhcnlSZXN1bHQgewogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vdFBvc3NpYmxlIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlOb01hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIHN0YXR1cwogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -281,7 +287,13 @@ Company opt-out mutation coming soon.
 
 ```graphql {2,6}
 mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
-  updateAccountSettings(input: $input) {
+  updateAccountSettings(
+    input: {
+      accountId: "01234abc-de56-789f-ghi0-jkl12345mnop"
+      allowBulkCreditTransfersWithoutBeneficiaryVerification: true
+      consentRedirectUrl: "https://mycompany.com/consent"
+    }
+  ) {
     ... on UpdateAccountSettingsSuccess {
       account {
         settings {
@@ -298,16 +310,6 @@ mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
     ... on AccountHolderNotFoundRejection {
       message
     }
-  }
-}
-```
-
-```json title="Variables" {4}
-{
-  "input": {
-    "accountId": "$YOUR_COMPANY_ACCOUNT_ID",
-    "allowBulkCreditTransfersWithoutBeneficiaryVerification": true,
-    "consentRedirectUrl": "https://mycompany.com/consent"
   }
 }
 ```

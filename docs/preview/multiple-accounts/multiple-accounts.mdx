@@ -20,9 +20,7 @@ To accept payments, each account requires its own [merchant profile review](/top
 
 ## Eligibility {#eligibility}
 
-## Card insurance coverage {#insurance-coverage}
-
-Multiple accounts are only available for [**company account](/topics/onboarding/company/) types**, which include:
+Multiple accounts are available for **[company account](/topics/onboarding/company/) types**, which include:
 
 - Registered companies
 - Self-employed workers
@@ -32,13 +30,13 @@ Multiple accounts are only available for [**company account](/topics/onboarding/
 Individual accounts are eligible. To open an additional account under the same account holder, the user must undergo a new onboarding process, but the KYC verification does not need to be repeated.
 :::
 
-## Requirements
+## Requirements {#requirements}
 
-### Legal representative requirements
+### Legal representative requirements {#legal-rep-requirements}
 
 All accounts under the same account holder share the **same [legal representative](/topics/onboarding/company/#representatives)** (account admin). Only the legal representative of the first account can create additional accounts. Changes to the legal representative follow the standard process but must be applied across all accounts belonging to the same account holder.
 
-### Account holder requirements
+### Account holder requirements {#account-holder-requirements}
 
 The following criteria must be met by the account holder:
 
@@ -49,23 +47,23 @@ The following criteria must be met by the account holder:
 | `accountHolder.type` | `Company` |
 | `accountHolder.account.status` | `Opened` |
 
-## Key benefits and use cases
+## Key benefits and use cases {#key-benefits}
 
 Offering multiple accounts provides flexibility and operational benefits for different use cases.
 
-### Use cases
-
-- **Freelancers** can use this feature for tax management.
-- **Small and medium businesses (SMBs)** often use separate accounts for advanced spending management, like managing financial flows by supplier, department, or region.
-- **Homeowner associations (HOAs)** can use an "operating account" for day-to-day expenses and a "reserve account" for common area expenses (e.g. repairs).
-
-### Operational benefits
+### Operational benefits {#operational-benefits}
 
 - Skip onboarding for each new account.
 - Share the same KYB, avoiding duplicate requests.
 - Re-KYB checks are performed on a single account holder for all associated accounts.
 
-## Feature activation
+### Use cases {#use-cases}
+
+- **Freelancers** can use this feature for tax management.
+- **Small and medium businesses (SMBs)** often use separate accounts for advanced spending management, like managing financial flows by supplier, department, or region.
+- **Homeowner associations (HOAs)** can use an "operating account" for day-to-day expenses and a "reserve account" for common area expenses (e.g. repairs).
+
+## Feature activation {#feature-activation}
 
 The multiple accounts feature is available to all partners, but it isn't **activated** by default. Before creating additional accounts, you must contact your **Strategic Account Manager (SAM)** to request it.
 
@@ -74,17 +72,17 @@ When making a request, make sure to include:
 - The purpose of creating multiple accounts.
 - The number of accounts requested.
 
-:::caution Individual accounts
+:::caution Compliance review
 Your request is subject to a **compliance review**, as well as a contract and pricing review if accepted.
 :::
 
-## API implementation
+## API implementation {#implementation}
 
 Once the feature is **activated**, you can create additional accounts.
 
 1. Call the `openAccount` mutation.
 :::info Multiple accounts guide 
-Follow the [**step-by-step guide**](https://www.notion.so/Guide-Open-multiple-accounts-265a3427555a80539c53d4acb4603592?pvs=21) to create multiple accounts.
+Follow the [**step-by-step guide**](guide-multiple-accounts-integration.mdx) to create multiple accounts.
 :::
     
 2. Collect the legal representative's confirmation in your banking app. A consent URL or Strong Customer Authentication (SCA) is not required.
@@ -95,9 +93,9 @@ You must include a clear confirmation step, such as a button, for the legal repr
 
 The new account is created under the same account holder, sharing the same KYB and legal representative. All additional accounts have an `Unlimited` payment level and the `PaymentService` account type.
 
-## Account conditions
+## Account conditions {#account-conditions}
 
-### Account creation limit
+### Account creation limit {#account-creation-limit}
 
 By default, users are limited to one account until the multiple accounts feature is **activated**. 
 
@@ -106,10 +104,10 @@ After the feature is **activated**, users may be granted a maximum number of acc
 Users are technically restricted from creating new accounts after reaching the maximum limit.
 
 :::info Account status 
-Only accounts with an Opened status counts toward the maximum limit. Suspended, Closing, or Closed accounts don’t count.
+Only accounts with an Opened status counts toward the maximum limit. Suspended, Closing, or Closed accounts don't count.
 :::
 
-### Checking your account creation limit
+### Checking your account creation limit {#checking-your-account-creation-limit}
 
 1. Call the `projectInfo` query (line 2).
 1. Select `multipleAccountsSettings` (line 3).
@@ -172,60 +170,60 @@ This payload shows the response when the multiple accounts feature has been **ac
   }
 }
 ```
-## Shared account details
+## Shared account details {#shared-account-details}
 
-### IBAN country
+### IBAN country {#iban-country}
 
 All accounts under the same account holder share the same IBAN country. To create an account with a different IBAN country, the legal representative must complete a new company onboarding process.
 
-### Company registration number
+### Company registration number {#company-registration-number}
 
 All additional accounts are linked to one account holder with a single registration number. To create an account for another company, the user must complete a new company onboarding process with the new company's registration number.
 
-## Account management
+## Account management {#account-management}
 
-### Legal documents
+### Legal documents {#legal-documents}
 
 The same **Terms and Conditions** and **Partnership Conditions** apply to all accounts under the same account holder. Legal documents are generated in the same way as for single accounts.
 
-### Account closure
+### Account closure {#account-closure}
 
 Standard [account closure](/topics/accounts/closure/) rules apply. Each account can be closed individually. You can request closure of the first account (created during onboarding) while keeping any additional accounts active.
 
-## Billing
+## Billing {#billing}
 
-### End-customer billing
+### End-customer billing {#end-customer-billing}
 
 Each active account is billed independently, resulting in one invoice per account.
 
-### Partner billing
+### Partner billing {#partner-billing}
 
 Active account pricing is applied at the account holder level, resulting in a new fee for active accounts on your invoice.
 
-## Setting access in Web banking
+## Setting access in Web banking {#web-banking-access}
 
 The web banking setting `canOpenAccount` is a project-level configuration that controls whether your end users can open additional accounts directly from Swan Web banking.
 
-This setting is activated by default. Unless you deactivate it, end users will be able to open multiple accounts from Swan’s interface. 
+This setting is activated by default. Unless you deactivate it, end users will be able to open multiple accounts from Swan's interface. 
 
 To restrict account opening to your own banking application, deactivate the `canOpenAccount` setting in your **Dashboard** > **Settings** > **Web banking**. 
 
-### Key benefits
+### Key benefits {#web-banking-benefits}
 
 Controlling this setting gives you greater flexibility to:
 
 1. **Restrict by pricing plan:** Restrict access to the Multiple Accounts feature by pricing plan. 
 1. **Differentiate by account limits:** Define the number of additional accounts a user can create for each pricing plan, for example, allowing one additional account for a Basic plan and up to five for a Premium one.
 
-## Rejections
+## Rejections {#rejections}
 
 Multiple account creations can be rejected for the following reasons:
 
 | Rejection reason | Description |
 | --- | --- |
-| `AccountHolderNotFoundRejection` | The provided account holder ID doesn’t match an existing `AccountHolder`. |
-| `ForbiddenRejection` | The project isn’t allowed to create multiple accounts, or the wrong context is used. |
-| `AccountMembershipNotEligibleRejection` | The user isn’t eligible to open the account. They must be the account legal representative. |
+| `AccountHolderNotFoundRejection` | The provided account holder ID doesn't match an existing `AccountHolder`. |
+| `ForbiddenRejection` | The project isn't allowed to create multiple accounts, or the wrong context is used. |
+| `AccountMembershipNotEligibleRejection` | The user isn't eligible to open the account. They must be the account legal representative. |
 | `AccountHolderTypeNotEligibleRejection` | The account holder type must be `Company`. |
 | `AccountHolderStatusNotEligibleRejection` | The account holder status must be `Enabled`. |
 | `AccountHolderVerificationStatusNotEligibleRejection` | The account holder must have a `Verified` KYC status. |

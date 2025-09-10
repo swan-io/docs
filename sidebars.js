@@ -753,7 +753,15 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
-        'preview/verification-of-payee',
+        {
+          type: "category",
+          label: "Verification of Payee (VoP)",
+          link: { type: "doc", id: "preview/vop/verification-of-payee" },
+          collapsed: true,
+          items: [
+            'preview/vop/guide-verify-beneficiary',
+          ],
+        },
         'preview/belgian-ibans',
         // Add more preview features here
       ],

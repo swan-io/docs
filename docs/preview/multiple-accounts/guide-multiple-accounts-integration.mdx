@@ -2,22 +2,22 @@
 title: Create multiple accounts
 ---
 
-This guide explains how to open additional accounts for one account holder. 
+This guide explains how to open additional accounts linked to one account holder. 
 
 ## Guide {#guide}
 
-1. Call the `openAccount` mutation.
+1. Call the `openAccount` mutation (line 2).
 2. Include the `accountHolderId`  (line 4).
 3. Add the `language` parameter (optional) to select the [account language](/topics/accounts/#language). If not specified, English (`en`) is used as the default language (line 5).
 4. Add a `name` parameter (optional) for the account. If not specified, "My account" is used as the default name (line 6).
 5. Add the `OpenAccountSuccessPayload` payload (line 9) and any information you'd like to receive about the additional account.
-6. Add all rejections.
+6. Add all rejections (lines 26 - 58).
 
 ## Mutation {#mutation}
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlQWNjb3VudCB7CiAgb3BlbkFjY291bnQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SG9sZGVySWQ6ICIkQUNDT1VOVF9IT0xERVJfSUQiCiAgICAgIGxhbmd1YWdlOiBlbgogICAgICBuYW1lOiAiVGF4ZXMiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gT3BlbkFjY291bnRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudCB7CiAgICAgICAgQklDCiAgICAgICAgSUJBTgogICAgICAgIGNvdW50cnkKICAgICAgICBjdXJyZW5jeQogICAgICAgIGlkCiAgICAgICAgbGFuZ3VhZ2UKICAgICAgICBuYW1lCiAgICAgICAgcGF5bWVudExldmVsCiAgICAgICAgcGF5bWVudEFjY291bnRUeXBlCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlck5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlclR5cGVOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJTdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJWZXJpZmljYXRpb25TdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c1R5cGVOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c1N0YXR1c05vdEVsaWdpYmxlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2-3} showLineNumbers
+```graphql {2,4-6,9} showLineNumbers
 mutation CreateAccount {
   openAccount(
     input: {

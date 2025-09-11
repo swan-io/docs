@@ -204,7 +204,7 @@ mutation InitiateCreditTransferWithVerificationToken {
 }
 ```
 
-The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificationResults`, an array of `VerifyBeneficiaryResult` objects.
+The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificationResults`, an array of `VerifyBeneficiaryResult` objects. Results are ordered in the same sequence as the credit transfers in your request.
 
 ```json title="Payload" {7,9,16}
 {
@@ -231,6 +231,16 @@ The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificatio
 }
 ```
 
+### Token usage permissions {#token-permissions}
+
+When you initiate a credit transfer using a token, the same membership rights apply as described in [Beneficiaries permissions](/topics/payments/credit-transfers/#beneficiaries-permissions).
+
+| Permission type | Add trusted beneficiaries<br/>via save parameter | Initiation using<br/>swanAccount token | Initiation using<br/>TrustedBeneficiary token |
+|---|:---:|:---:|:---:|
+| **canManageBeneficiaries** only | <Yes />  | <No /> | <No /> |
+| **canInitiatePayments** only | <No /> | <Yes />  | <Yes />  |
+| **canInitiatePayments** +<br/>**canManageBeneficiaries** | <Yes />  | <Yes />  | <Yes />  |
+
 ## Token validation {#token-validation}
 
 ### Requirements
@@ -242,13 +252,23 @@ The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificatio
 The same token can be used multiple times in the same initiation. This means you can initiate multiple credit transfers to the same beneficiary, within the same API call.
 :::
 
+## Saving beneficiaries during verification
+
+:::info Upcoming feature
+This feature will be available soon in Swan's API.
+:::
+
+When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `save` to `true`. This will indicate that if the returned token is successfully used to initiate a credit transfer, a Trusted Beneficiary will be created.
+
+No Trusted Beneficiary is added when calling `verifyBeneficiary`, but your request to save it is contained within the token. The beneficiary is only saved after successful payment authorization, similar to the functionality described in [Add a beneficiary](../sepa/guide-add-beneficiary).
+
 ## Bulk payments {#bulk-payments}
 
 For bulk credit transfers, each transfer in the batch **must** include a valid `beneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will result in a `ForbiddenRejection`.
 
 ### Company opt-out for bulk transfers {#company-opt-out}
 
-Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
+Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out. This setting applies to both Sandbox and Live environments.
 
 :::info
 Company opt-out mutation coming soon.
@@ -316,7 +336,7 @@ If a trusted beneficiary ID is used as input, the verification will be based on 
 
 <FieldRequirementsLegend />
 
-#### Default sandbox requirements
+#### Default sandbox and live requirements
 
 | Account type | VoP for bulk transfers | BeneficiaryToken requirements |
 | --- | --- | --- |

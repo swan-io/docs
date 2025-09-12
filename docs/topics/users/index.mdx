@@ -68,32 +68,67 @@ The following diagram illustrates the steps to sign up for Swan.
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart TB
-    SUL([Opens sign-up link]) -.-> M([Enters mobile number])
-    M -.-> C([Confirms mobile number])
-    C -.Using computer.-> CO[Receives text message with<br />link to open on mobile device]
-    C -.Using mobile device.-> MD[Receives text message<br />with verification code]
-    CO -.-> CO2([Opens link to verify number])
-    CO2 -.-> CO3([Confirms number a second time])
-    MD -.-> MD2([Enters code to verify number])
-    CO3 -.-> PI([Enters personal information])
-    MD2 -.-> PI
-    PI -.-> P([Chooses passcode])
-    P -.Identification required.-> BI([Enters birth information])
-    BI -.-> RI([Enters residency information])
-    RI -.-> CI([Confirms personal, birth,<br />and residency information])
-    CI -.-> O
-    O --> S[Can access Swan]
-    P --Identification not required--> S
+    MobileEntry([User sign-up started on mobile with<br/>an OAuth 2.0 link]) -.-> EntersMobileNumber([Enters mobile number])
+    DesktopEntry([User sign-up started on desktop with<br/>an OAuth 2.0 link]) -.-> EntersMobileNumber
+
+    EntersMobileNumber -- User on mobile --> ConfirmsMobileNumberMobile([Confirms mobile number])
+    EntersMobileNumber -- User on desktop --> ReceivesLink([Receives text message with<br/>link to open on mobile device])
+
+    ConfirmsMobileNumberMobile --> ReceivesCode([Receives verification code in text message])
+    ReceivesCode --> EntersCode([Enters verification code])
+    EntersCode --> QueryParams{Are query parameters filled?}
+    
+    ReceivesLink --> OpensLink([Opens link to verify number])
+    OpensLink --> QueryParams
+
+    QueryParams -- No --> EntersPI([Enters personal information])
+    QueryParams -- Yes --> UserStartedDesktop{User started sign-up on desktop?}
+
+    EntersPI --> UserStartedDesktop
+    UserStartedDesktop -- Yes --> ConfirmsNumber([Confirms number a second time])
+    ConfirmsNumber --> ChoosesPasscode([Chooses 6-digit passcode])
+    UserStartedDesktop -- No --> ChoosesPasscode
+
+    ChoosesPasscode --> ConfirmsPasscode([Confirms 6-digit passcode])
+
+    ConfirmsPasscode --> EmailVerificationIncluded{Email verification included in OAuth URL?}
+    EmailVerificationIncluded -- Yes --> EmailVerificationFlow([Email verification flow])
+    EmailVerificationIncluded -- No --> EntersBirthInfo
+
+    EmailVerificationFlow --> EntersBirthInfo([Enters birth information])
+    EntersBirthInfo --> EntersResidencyInfo([Enters residency information])
+    EntersResidencyInfo --> ConfirmsInfo([Confirms personal, birth,<br/>and residency information])
+
+    ConfirmsInfo --> O
+
     subgraph O[Optional or performed later]
         direction LR
         IV([Completes identification]) ~~~ B([Configures biometrics])
     end
-    style CO fill:#D4D3D5,stroke:#514F59
-    style MD fill:#D4D3D5,stroke:#514F59
-    style S fill:#fffdf4,stroke:#cca922,stroke-width:3px
-    style O fill:#dfedf2,stroke:#4d8296,stroke-dasharray: 5 5
-```
 
+    O --> S[Can access Swan]
+
+    style S fill:#fffdf4,stroke:#cca922,stroke-width:3px
+    style O fill:#E6F3F8,stroke:#4D8296,stroke-dasharray: 5 5
+    style IV fill:#E6E6FA,stroke:#6A5ACD
+    style B fill:#E6E6FA,stroke:#6A5ACD
+    style EntersMobileNumber fill:#D4D3D5,stroke:#514F59
+    style ConfirmsMobileNumberMobile fill:#D4D3D5,stroke:#514F59
+    style ReceivesCode fill:#D4D3D5,stroke:#514F59
+    style EntersCode fill:#D4D3D5,stroke:#514F59
+    style ReceivesLink fill:#D4D3D5,stroke:#514F59
+    style OpensLink fill:#D4D3D5,stroke:#514F59
+    style ConfirmsNumber fill:#D4D3D5,stroke:#514F59
+    style EntersPI fill:#D4D3D5,stroke:#514F59
+    style ChoosesPasscode fill:#D4D3D5,stroke:#514F59
+    style ConfirmsPasscode fill:#D4D3D5,stroke:#514F59
+    style EmailVerificationFlow fill:#D4D3D5,stroke:#514F59
+    style EntersBirthInfo fill:#D4D3D5,stroke:#514F59
+    style EntersResidencyInfo fill:#D4D3D5,stroke:#514F59
+    style ConfirmsInfo fill:#D4D3D5,stroke:#514F59
+    style UserStartedDesktop fill:#E6E6FA,stroke:#6A5ACD
+    style QueryParams fill:#E6E6FA,stroke:#6A5ACD
+```
 <details>
   <summary>End-user perspective of signing up</summary>
   <div>

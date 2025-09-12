@@ -781,8 +781,17 @@ module.exports = {
             "preview/card-insurance/guide-insurance-integration",
           ],
         },
+        {
+          type: "category",
+          label: "Multiple accounts",
+          link: { type: "doc", id: "preview/multiple-accounts/multiple-accounts" },
+          collapsed: true,
+          items: [
+            "preview/multiple-accounts/guide-multiple-accounts-integration",
+          ],
+        },
         // Add more preview features here
       ],
-    }
+    },
   ],
 };

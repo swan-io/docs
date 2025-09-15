@@ -215,25 +215,33 @@ Companies and individual account holders can impose spending limits over three p
 
 ### Hour-level aggregation
 
-Swan aggregate spending limits at the hour level for all cards with monthly, weekly, and daily spending limit periods. This change affects spending limits computation only and provides more precise control over rolling periods.
+Aggregate spending limits are rolling limits that track the total amount spent within a defined period - daily, monthly or weekly.
+Each new payment is aggregated against the total spending during the defined time period.
+Swan computes aggregate spending limits at the **hour level** for cards with daily, weekly, and monthly periods.
+Hour-level aggregation provides more precise control over rolling period calculations, ensuring that spending limit is computated consistently. 
+
+:::info Hour-level aggregation impact
+Only spending limit calculations are affected; actual transaction timestamps and records remain unchanged.  
+:::
 
 #### How hour-level aggregation works
 
-For spending limits computation only, each payment will be timestamped at the first second of the first minute of any hour (:00:00). Each hour will reset the rolling period calculation.
+When a payment is processed, it's rounded down to the start if the hour (HH:00:00) for spending limit calulations. The rolling window is then calculated form that hour mark, not the exact transaction time. 
 
-Example: Payment at `Today 16:30` on a card with daily spending limit
-- Current spending calculated from: `Yesterday 16:30 (excluded)` to `Today 16:30 (included)`
-- If payment is accepted, it will be timestamped at: `Today 16:00:00`
-- Result: `Tomorrow 16:00` the payment will no longer be included in daily spending calculation
+**Example**: Payment make `Today` at **16:30** on a card with daily spending limit
+- For computation, the payment is recorded as `Today` at **16:00**.
+- The 24-hour (daily) rolling window closes `Tomorrow` at **16:00**, at which point the payment is no longer included in daily spending calculation
 
 #### Affected spending limit periods
 
-- `Daily` (24 hours rolling) - payments timestamped to the hour.
-- `Weekly` (7 days rolling) - payments timestamped to the hour.
-- `Monthly` (30 days rolling) - payments timestamped to the hour.
+Payments are timestamped to the hour for the following limit periods:
 
-:::info Rolling spending limit
-This change does not affect `Always` (lifetime) spending limits or Swan's imposed spending limits.
+- `Daily`: 24 hours rolling
+- `Weekly`: 7 days rolling
+- `Monthly`: 30 days rolling
+
+:::info Other limits
+Lifetime (`Always`) limits and **Swan imposed** spending limits aren't impacted. 
 :::
 
 ### Cards with a lifetime limit {#limits-lifetime}

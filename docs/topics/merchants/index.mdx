@@ -30,7 +30,7 @@ Both profiles and payment methods initially start with the status `PendingReview
 For payment methods, Swan may change the status to `WaitingForInformation` when additional details are needed. 
 In such cases, you'll receive these details within the `verificationRequirements` list. New information must be provided at the Merchant Profile level.
 
-To manage potential risk, if suspicious activity is detected, Swan can **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
+To manage potential risk, Swan can change the rolling reserve and the payment amount limit. If suspicious activity is detected, we can also **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
 Swan can also reinstate a profile or payment method by changing the status to `Enabled`.
 Finally, if Swan assigns the status `Rejected` to a profile or payment method, the decision is final and can't be reversed. 
 The user must submit a new request for the account holder, which Swan will review as a separate submission.
@@ -242,6 +242,11 @@ Subscribe to the relevant webhooks to stay informed about updates:
 
 Use both merchant and transaction webhooks to cover account-level and transaction-level updates.
 :::
+
+### Payment amount limit {#payment-limit}
+For security and risk management, Swan may apply a **payment amount limit** to single card payments. 
+This limit defines the maximum amount a user can spend in one card transaction. 
+If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` error.
 
 ### Versions {#methods-versions-statuses}
 

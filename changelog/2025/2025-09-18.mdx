@@ -5,33 +5,33 @@ type: release
 
 ## Improvements
 
-Starting September 18, the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome` will support the new `WaitingForInformation` status and return a list of `verificationRequirements`.
+Starting ****September 18th****, the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome` will support the new `WaitingForInformation` status and return a list of `verificationRequirements`.
 
-Starting September 18, a new optional field `expectedMerchantProfileAdditionalInformation` will be available at the `projectInfo` level. This field is only available upon prior agreement with Swan and allows you to customize information collected for Merchant Profiles in specific use cases. The information can then be provided using the `additionalInformation` field in Merchant Profiles and in the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations.
+Starting **September 18th**, a new optional field `expectedMerchantProfileAdditionalInformation` will be available at the `projectInfo` level. This field is only available upon prior agreement with Swan and allows you to customize information collected for Merchant Profiles in specific use cases. The information can then be provided using the `additionalInformation` field in Merchant Profiles and in the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations.
 
 ## API updates
 
 ### Upcoming breaking changes
 
-On October 16, the `CardUrl` field will be removed. This field is being deprecated. Use `cardMaskedNumber`, `expiryDate`, and `cardDesignUrl` instead.
+On **October 16th**, the `CardUrl` field will be removed. This field is being deprecated. Use `cardMaskedNumber`, `expiryDate`, and `cardDesignUrl` instead.
 
-#### Merchant onboarding and payment methods
+#### Merchant profiles and payment methods
 
-Starting September 18th, the following changes will apply to Merchant profiles and the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations:
+Starting **September 18th**, the following changes will apply to Merchant profiles and the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations:
 
 - The `expectedMonthlyPaymentVolume`, `invoiceExample`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, and `termsAndConditions` will be deprecated.
 - We're introducing these new fields: `expectedMonthlyMerchantProcessingVolume`, `merchantWebsiteUrl`, `socialNetworkUrl`, `supportWebsiteUrl`, and `termsAndConditionsUrl`.
 - We'll deprecate `rejectReasons` for Card Payment Methods, and `rejectionReasons` will replace `rejectReasons` for `Rejected Merchant Profiles` and `Merchant Payment Methods`.
 
-On October 16th, a new `WaitingForInformation` status and `verificationRequirements` list will be available for Merchant Profiles on Merchant Payment Methods to communicate missing information. These requirements must be provided at the Merchant Profile level using the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations. A new `supportingDocumentCollections` field will also be available at the Merchant Profile level for providing required documents.
+Starting **October 16th**, a new `WaitingForInformation` status and `verificationRequirements` list will be available for Merchant Profiles on Merchant Payment Methods to communicate missing information. These requirements must be provided at the Merchant Profile level using the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations. A new `supportingDocumentCollections` field will also be available at the Merchant Profile level for providing required documents.
 
-On October 16th the `invoiceExample`, `expectedMonthlyPaymentVolume`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, `termsAndConditions` fields will be removed from the API.
+On **October 16th** the `invoiceExample`, `expectedMonthlyPaymentVolume`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, `termsAndConditions` fields will be removed from the API.
 
-On October 16th, `rejectReasons` will be removed for `Card Payment Methods`.
+On **October 16th**, `rejectReasons` will be removed for `Card Payment Methods`.
 
-On October 16th, `rejectionReasons` for `Rejected` Merchant Profiles and Merchant Payment Methods will become mandatory in the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome`.
+Starting **October 16th**, `rejectionReasons` for `Rejected` Merchant Profiles and Merchant Payment Methods will become mandatory in the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome`.
 
-Starting October 16th, we're introducing dynamic rolling reserve changes and Maximum Payment Amount limits will be introduced at the Merchant Payment Method level to mitigate risk. Subscribe to the `MerchantPaymentMethod.Created` and `MerchantPaymentMethod.Updated` webhooks for these updates.
+Starting **October 16th**, we're introducing dynamic rolling reserve changes and Maximum Payment Amount limits will be introduced at the Merchant Payment Method level to mitigate risk. Subscribe to the `MerchantPaymentMethod.Created` and `MerchantPaymentMethod.Updated` webhooks for these updates.
 
 ## Reminders
 
@@ -39,6 +39,6 @@ Starting October 16th, we're introducing dynamic rolling reserve changes and Max
 
 ## Coming Up
 
-On October 21, card-issuing spending limits will be aggregated at the hour level. For spending-limit computation, each payment will be timestamped at the first second of the first minute of the hour, and each hour will reset the rolling period.
+Starting October 21st, card-issuing spending limits will be aggregated at the hour level. For spending-limit computation, each payment will be timestamped at the first second of the first minute of the hour, and each hour will reset the rolling period.
 
 This change applies to cards with `monthly`, `weekly`, and `daily` values in spendingLimits.period.

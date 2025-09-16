@@ -333,6 +333,8 @@ For bulk credit transfers, VoP requirements depend on the account type and verif
 
 Swan applies different default VoP requirements based on account type to balance regulatory compliance with operational efficiency:
 
+<FieldRequirementsLegend />
+
 | Account type | Default token requirement | Beneficiary tokens | Can change setting |
 | --- | --- | --- | --- |
 | **Company** | Optional | <Opt /> | <Yes /> |
@@ -352,33 +354,33 @@ Partners must implement the `updateAccountSettings` mutation to ensure the best 
 
 To modify VoP settings for bulk transfers, users must meet these requirements:
 
-- **Account holder type**: Company accounts only
-- **User permissions**: Both `canViewAccount` and `canInitiatePayments`
-- **Account membership status**: Enabled
+- **Account holder type**: Company accounts only.
+- **User permissions**: Both `canViewAccount` and `canInitiatePayments`.
+- **Account membership status**: Enabled.
 
 ### Consent requirements {#consent-requirements}
 
-- **Opting in** (enabling VoP): No consent required
-- **Opting out** (disabling VoP): User consent required, subject to Strong Customer Authentication (SCA) for audit trail purposes
+- **Opting in** (mandatory VoP): No consent required.
+- **Opting out** (optional VoP): User consent required, subject to Strong Customer Authentication (SCA) for audit trail purposes.
 
 ### Impact on bulk transfer flows {#bulk-transfer-flows}
 
 The account-level setting directly affects how bulk credit transfers are processed:
 
 **Company account with VoP optional (opted out):**
-- Bulk transfers can proceed without `beneficiaryVerificationToken`
-- [Option 2: Custom verification](#option-2) is recommended but not required
-- Partners have flexibility in implementation
+- Bulk transfers can proceed without `beneficiaryVerificationToken`.
+- [Option 2: Custom verification](#option-2) is recommended but not required.
+- Partners have flexibility in implementation.
 
 **Company account with VoP required (opted in):**
-- All bulk transfers must include valid `beneficiaryVerificationToken` from `verifyBeneficiary` mutation
-- [Option 2: Custom verification](#option-2) is mandatory
-- Transfers without tokens will be rejected with `ForbiddenRejection`
+- All bulk transfers must include valid `beneficiaryVerificationToken` from `verifyBeneficiary` mutation.
+- [Option 2: Custom verification](#option-2) is mandatory.
+- Transfers without tokens will be rejected with `ForbiddenRejection`.
 
 **Individual accounts:**
-- VoP is always required for bulk transfers
-- Cannot be changed through settings
-- Partners must implement [Option 2: Custom verification](#option-2) to support individual bulk transfers
+- VoP is always required for bulk transfers.
+- Cannot be changed through settings.
+- Partners must implement [Option 2: Custom verification](#option-2) to support individual bulk transfers.
 
 :::tip Implementation guidance
 **For companies opting in to VoP:** If you haven't implemented the `verifyBeneficiary` mutation, display a clear message to end-users explaining that enabling VoP verification will require additional steps in their transfer flow.
@@ -427,11 +429,11 @@ mutation UpdateAccountSettings {
 
 #### Parameters {#parameters}
 
-- **`accountId`**: The company account ID to update
+- **`accountId`**: The company account ID to update.
 - **`allowBulkCreditTransfersWithoutBeneficiaryVerification`**: 
-  - `true` = VoP optional for bulk transfers (opt out)
-  - `false` = VoP required for bulk transfers (opt in)
-- **`consentRedirectUrl`**: Required for the consent flow when opting out
+  - `true` = VoP optional for bulk transfers (opt out).
+  - `false` = VoP required for bulk transfers (opt in).
+- **`consentRedirectUrl`**: Required for the consent flow when opting out.
 
 #### Success response {#success-response}
 

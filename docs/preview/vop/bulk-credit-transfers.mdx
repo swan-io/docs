@@ -63,7 +63,7 @@ You must implement [the `updateAccountSettings` mutation](#updating-settings) to
 
 ## Updating account settings {#updating-settings}
 
-Use the `updateAccountSettings` mutation to allow company account holders to modify their bulk transfer VoP requirements:
+Use the `updateAccountSettings` mutation to allow company account holders to modify their bulk transfer VoP requirements.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQWNjb3VudFNldHRpbmdzKCRpbnB1dDogVXBkYXRlQWNjb3VudFNldHRpbmdzSW5wdXQhKSB7CiAgdXBkYXRlQWNjb3VudFNldHRpbmdzKGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50U2V0dGluZ3NTdWNjZXNzIHsKICAgICAgYWNjb3VudCB7CiAgICAgICAgc2V0dGluZ3MgewogICAgICAgICAgYWxsb3dCdWxrQ3JlZGl0VHJhbnNmZXJzV2l0aG91dEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyTm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -112,7 +112,7 @@ mutation UpdateAccountSettings {
 
 ### Success response {#success-response}
 
-For opt-in requests (no consent required):
+For opt-in requests (no consent required).
 
 ```json title="Payload" {7}
 {
@@ -129,7 +129,7 @@ For opt-in requests (no consent required):
 }
 ```
 
-For opt-out requests (consent required):
+For opt-out requests (consent required).
 
 ```json title="Payload" {4,6}
 {
@@ -146,30 +146,25 @@ For opt-out requests (consent required):
 
 ### Error handling {#error-handling}
 
-The mutation can return several rejection types:
+The mutation can return several rejection types.
 
 | Rejection | Description |
 | --- | --- |
-| **AccountNotFoundRejection** | The provided account ID doesn't exist |
-| **AccountHolderNotFoundRejection** | The account holder doesn't exist |
+| **AccountNotFoundRejection** | The provided account ID doesn't exist. |
+| **AccountHolderNotFoundRejection** | The account holder doesn't exist. |
 | **AccountHolderTypeNotEligibleRejection** | Only company account holders can modify this setting |
 | **AccountMembershipNotEligibleRejection** | User lacks required permissions (`canViewAccount` + `canInitiatePayments`) |
-| **AccountMembershipStatusNotEligibleRejection** | User's account membership must be **Enabled** |
+| **AccountMembershipStatusNotEligibleRejection** | User's account membership must be `Enabled`. |
 | **ForbiddenRejection** | User not allowed or wrong context used |
 
 ## Sandbox testing {#sandbox-testing}
 
 <FieldRequirementsLegend />
 
-### Default sandbox and live requirements
+### Sandbox testing
 
-| Account type | Default token requirement |
-| --- | :---: |
-| **Company** | <Opt /> |
-| **Individual** | <Req /> |
+VoP requirements in sandbox match the live environment behavior. Company accounts default to optional VoP but can modify settings via the [account settings mutation](#updating-settings), while individual accounts always require VoP tokens for bulk transfers.
 
-Company accounts can modify their VoP requirements through the [account settings](#updating-settings), while individual accounts always require VoP for bulk transfers.
+## Preparing for disputes {#dispute-preparation}
 
-## Dispute protection {#dispute-protection}
-
-Swan maintains a complete audit trail of VoP setting changes and verification history for each bulk credit transfer. While this history isn't currently exposed through the API, we recommend partners log account setting changes in their own systems for reference during dispute resolution. If an end-user disputes that funds were transferred to the wrong beneficiary, this history provides essential evidence for liability determination.
+Swan logs all VoP setting changes and verification history for dispute protection. These logs aren't currently available through the API, so we recommend you record these changes in your own systems. This audit trail helps determine liability if an end-user disputes a payment to the wrong beneficiary.

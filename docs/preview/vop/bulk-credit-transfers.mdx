@@ -18,10 +18,10 @@ This regulatory framework allows Swan to offer different default VoP requirement
 
 <FieldRequirementsLegend />
 
-| Account type | Default token requirement | Can change setting |
-| --- | :---: | :---: |
-| **Company** | <Opt /> | <Yes /> |
-| **Individual** | <Req /> | <No /> |
+| Account type | Default token requirement | Can change setting | Consent requirements |
+| --- | :---: | :---: | --- |
+| **Company** | <Opt /> | <Yes /> | **Opted in**: No consent required.<br/>**Opted out**: User consent required via SCA. |
+| **Individual** | <Req /> | <No /> | Cannot change settings |
 
 :::note Why these defaults?
 Swan opts out company accounts by default to accelerate bulk file processing and reduce friction in high-volume business flows. Individual accounts remain opted in for enhanced consumer protection, and this setting cannot be changed. When multiple company accounts exist for the same account holder, all accounts are opted out by default regardless of any previous account settings.
@@ -48,10 +48,6 @@ Use [the `updateAccountSettings` mutation](#updating-settings) to modify company
 - Company account holder only.
 - User must have both `canViewAccount` and `canInitiatePayments` permissions.
 - Account membership must be Enabled.
-
-**Consent flow:**
-- Opting in (require VoP): No consent needed.
-- Opting out (make VoP optional): User consent required via SCA.
 
 :::warning Integration requirement
 You must implement [the `updateAccountSettings` mutation](#updating-settings) to allow company account holders to change their bulk transfer VoP requirements. Without this implementation, users cannot opt in or out of mandatory VoP and must contact support@swan.io instead, creating friction and delays.

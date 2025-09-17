@@ -213,35 +213,64 @@ Companies and individual account holders can impose spending limits over three p
 - 7 days rolling (`Weekly`)
 - 30 days rolling (`Monthly`)
 
-### Hour-level aggregation
+### Hour-level aggregation {#hour-level-aggregation}
 
 Aggregate spending limits are rolling limits that track the total amount spent within a defined period - daily, monthly or weekly.
 Each new payment is aggregated against the total spending during the defined time period.
 Swan computes aggregate spending limits at the **hour level** for cards with daily, weekly, and monthly periods.
-Hour-level aggregation provides more precise control over rolling period calculations, ensuring that spending limit is computated consistently. 
+Hour-level aggregation provides more precise control over rolling period calculations, ensuring that spending limit is computed consistently. 
 
 :::info Hour-level aggregation impact
 Only spending limit calculations are affected; actual transaction timestamps and records remain unchanged.  
 :::
 
-#### How hour-level aggregation works
+#### How hour-level aggregation works {#hour-level-aggregation-calculation}
 
-When a payment is processed, it's rounded down to the start if the hour (HH:00:00) for spending limit calulations. The rolling window is then calculated form that hour mark, not the exact transaction time. 
+When a payment is processed, it's **rounded down** to the start of the hour (HH:00:00) it occurred for spending limit calculations. The rolling window is then calculated from that hour mark, not the exact transaction time. 
 
-**Example**: Payment make `Today` at **16:30** on a card with daily spending limit
-- For computation, the payment is recorded as `Today` at **16:00**.
-- The 24-hour (daily) rolling window closes `Tomorrow` at **16:00**, at which point the payment is no longer included in daily spending calculation
+<div className="row margin-bottom--lg">
+  <div className="col col--6">
+    <div className="card" style={{height: '100%', backgroundColor: '#f8f5ff', border: '1px solid #d6bcfa'}}>
+      <div className="card__header">
+        <h3>🟣 Example 1: Daily rolling limit</h3>
+      </div>
+      <div className="card__body">
+        <p><strong>A payment is made today at 16:30 on a card with a daily spending limit.</strong></p>
+        <ul>
+          <li>For computation, the payment is recorded as <strong>today at 16:00</strong>.</li>
+          <li>The 24-hour (daily) rolling window closes <strong>tomorrow at 16:00</strong>.</li>
+          <li>After this time, the payment is no longer included in the daily spending calculation.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div className="col col--6">
+    <div className="card" style={{height: '100%', backgroundColor: '#f0f8ff', border: '1px solid #add8e6'}}>
+      <div className="card__header">
+        <h3>🔵 Example 2: Weekly rolling limit</h3>
+      </div>
+      <div className="card__body">
+        <p><strong>A payment is made on Monday at 11:45 with a 7-day rolling limit.</strong></p>
+        <ul>
+          <li>For computation, the payment is recorded as <strong>Monday at 11:00</strong>.</li>
+          <li>The 7-day (weekly) rolling window closes on the following <strong>Monday at 11:00</strong>.</li>
+          <li>After this time, the payment is no longer included in the weekly spending calculation.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-#### Affected spending limit periods
+#### Affected spending limit periods {#affected-spending-limit-periods}
 
 Payments are timestamped to the hour for the following limit periods:
 
-- `Daily`: 24 hours rolling
-- `Weekly`: 7 days rolling
-- `Monthly`: 30 days rolling
+- 24 hours rolling (`Daily`)
+- 7 days rolling (`Weekly`)
+- 30 days rolling (`Monthly`)
 
 :::info Other limits
-Lifetime (`Always`) limits and **Swan imposed** spending limits aren't impacted. 
+Lifetime (`Always`) limits and **Swan-imposed** spending limits aren't impacted. 
 :::
 
 ### Cards with a lifetime limit {#limits-lifetime}

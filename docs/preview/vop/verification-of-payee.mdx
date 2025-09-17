@@ -33,7 +33,7 @@ VoP applies to all countries in the SEPA region. Payment Service Providers (PSPs
 | Payment Services Provider location | VoP mandatory date |
 | --- | --- |
 | 🇪🇺 [Eurozone](https://economy-finance.ec.europa.eu/euro/what-euro-area_en) | October 9, 2025 |
-| 🌐 Non-Eurozone | January 9, 2027 |
+| 🌍 Non-Eurozone | January 9, 2027 |
 
 The service is **free of charge** for Swan account holders as mandated by the regulation.
 
@@ -181,7 +181,7 @@ Swan provides two integration options based on your user experience (UX) needs a
         <h3>🟢 Option 2: Custom verification</h3>
       </div>
       <div className="card__body">
-        <p><strong>Use [the `verifyBeneficiary` mutation](guide-verify-beneficiary) for full control over verification presentation</strong></p>
+        <p><strong>Use [the `verifyBeneficiary` mutation](/preview/vop/guide-verify-beneficiary) for full control over verification presentation</strong></p>
         <ul>
           <li>Complete control over VoP results presentation.</li>
           <li>Custom error handling and user guidance.</li>
@@ -201,7 +201,7 @@ Swan provides two integration options based on your user experience (UX) needs a
 | Payment Type | 🟡 Option 1: Default | 🟢 Option 2: Custom | VoP requirements |
 | --- | :---: | :---: | --- |
 | **Single Credit Transfers** | <Supported /> | <Supported /> | Required |
-| **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | Required<br/>(unless the company account [opts out](/preview/vop/guide-verify-beneficiary#company-opt-out)) |
+| **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | [See bulk transfers →](/preview/vop/bulk-credit-transfers) |
 | **Standing Orders** | <Supported /> | <Supported /> | Required at initiation stage |
 
 ## Option 1: Default verification {#option-1}
@@ -275,7 +275,7 @@ flowchart TD
 
 ### Verification flow {#verification-flow}
 
-1. **Verify beneficiary**: Call [the `verifyBeneficiary` mutation](/preview/vop/guide-verify-beneficiary#step-1) - include the [beneficiary details](guide-verify-beneficiary#step-1) to check against.
+1. **Verify beneficiary**: Call [the `verifyBeneficiary` mutation](/preview/vop/guide-verify-beneficiary#step-1) - include the [beneficiary details](/preview/vop/guide-verify-beneficiary#step-1) to check against.
 2. **Receive the verification result**: Match, Close match, No Match, or Verification not possible. A unique [`BeneficiaryVerificationToken`](/preview/vop/guide-verify-beneficiary#step-3) is also returned.
 3. **Inform the end-user**: Display appropriate messaging and optional actions based on the verification result.
 4. **User proceeds**: The end-user can choose to proceed with the payment regardless of the result.
@@ -325,19 +325,26 @@ Examples of how to present VoP verification results in your web banking interfac
   </TabItem>
 </Tabs>
 
-## Bulk payments {#bulk-payments}
+## Bulk credit transfers {#bulk-credit-transfers}
 
-For bulk credit transfers, each transfer in the batch must include [a valid `BeneficiaryVerificationToken`](/preview/vop/guide-verify-beneficiary#step-3) obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will be rejected with a `ForbiddenRejection`.
+For bulk credit transfers, VoP requirements depend on the account type and account-level verification settings. Company accounts can customize their VoP requirements, while individual accounts always require verification tokens for bulk transfers.
 
-### Company opt-out for bulk transfers {#company-opt-out}
+:::info Requirements
+Bulk credit transfers require [Option 2: Custom verification](#option-2) using the [`verifyBeneficiary`](/preview/vop/guide-verify-beneficiary) mutation. The default verification flow doesn't support bulk payments.
+:::
 
-Company end-users can [opt-out of VoP](/preview/vop/guide-verify-beneficiary#company-opt-out) for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
+### Default requirements by account type {#bulk-requirements-summary}
 
-### Restrictions
-- Only available for company account types.
-- Requires both `canViewAccount` and `canInitiatePayments` permissions.
-- No SCA required for changing this setting.
+<FieldRequirementsLegend />
 
-## Next step {#next-steps}
+| Account type | Default token requirement | Can modify setting |
+| --- | :---: | :---: |
+| **Company** | <Opt /> | <Yes /> |
+| **Individual** | <Req /> | <No /> |
 
-→ Learn how to [verify beneficiary details](/preview/vop/guide-verify-beneficiary) using the `verifyBeneficiary` mutation.
+**Learn more**: [Configure bulk credit transfers with VoP →](/preview/vop/bulk-credit-transfers)
+
+## Next steps {#next-steps}
+
+→ Learn how to [verify beneficiary details](/preview/vop/guide-verify-beneficiary) using the `verifyBeneficiary` mutation  
+→ Configure [bulk credit transfers with VoP](/preview/vop/bulk-credit-transfers) for high-volume use cases

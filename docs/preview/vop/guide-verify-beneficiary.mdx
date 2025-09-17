@@ -6,7 +6,7 @@ title: Verify a beneficiary
 
 Use the `verifyBeneficiary` mutation to verify beneficiary details before initiating SEPA Credit Transfers.
 
-This mutation gives you full control to customize how verification results are presented to end-users. This is required for bulk credit transfers.
+This mutation gives you full control to customize how verification results are presented to end-users. This is required for bulk credit transfers when verification tokens are mandatory for the account.
 
 :::tip Prerequisites
 - You're planning to initiate an Instant SEPA Credit Transfer, SEPA Credit Transfer or Internal Credit Transfer.
@@ -204,7 +204,7 @@ mutation InitiateCreditTransferWithVerificationToken {
 }
 ```
 
-The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificationResults`, an array of `VerifyBeneficiaryResult` objects.
+The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificationResults`, an array of `VerifyBeneficiaryResult` objects. Results are ordered in the same sequence as the credit transfers in your request.
 
 ```json title="Payload" {7,9,16}
 {
@@ -231,6 +231,16 @@ The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificatio
 }
 ```
 
+### Token usage permissions {#token-permissions}
+
+When you initiate a credit transfer using a token, the same membership rights apply as described in [Beneficiaries permissions](/topics/payments/credit-transfers/#beneficiaries-permissions).
+
+| Permission type | Add trusted beneficiaries<br/>via `save` parameter | Initiation using<br/>swanAccount token | Initiation using<br/>TrustedBeneficiary token |
+|---|:---:|:---:|:---:|
+| **canManageBeneficiaries** only | <Yes />  | <No /> | <No /> |
+| **canInitiatePayments** only | <No /> | <Yes />  | <Yes />  |
+| **canInitiatePayments** +<br/>**canManageBeneficiaries** | <Yes />  | <Yes />  | <Yes />  |
+
 ## Token validation {#token-validation}
 
 ### Requirements
@@ -238,58 +248,33 @@ The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificatio
 - Invalid, expired, or undecryptable tokens result in a `ValidationRejection`.
 - A token is consumed after it has been used in one initiation. Already consumed tokens result in a `BeneficiaryVerificationTokenAlreadyConsumedRejection`.
 - Tokens expire 24 hours after generation.
+
 :::tip
 The same token can be used multiple times in the same initiation. This means you can initiate multiple credit transfers to the same beneficiary, within the same API call.
 :::
 
-## Bulk payments {#bulk-payments}
+## Saving beneficiaries during verification
 
-For bulk credit transfers, each transfer in the batch **must** include a valid `beneficiaryVerificationToken` obtained through the `verifyBeneficiary` mutation. If any transfer in a batch is submitted with full beneficiary details instead of a token, the entire batch initiation will result in a `ForbiddenRejection`.
-
-### Company opt-out for bulk transfers {#company-opt-out}
-
-Company end-users can opt-out of VoP for bulk transfers through the `updateAccountSettings` mutation. Individual end-users cannot opt-out.
-
-:::info
-Company opt-out mutation coming soon.
+:::info Upcoming feature
+This feature will be available soon in Swan's API.
 :::
 
-<!--
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQWNjb3VudFNldHRpbmdzKCRpbnB1dDogVXBkYXRlQWNjb3VudFNldHRpbmdzSW5wdXQhKSB7CiAgdXBkYXRlQWNjb3VudFNldHRpbmdzKGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50U2V0dGluZ3NTdWNjZXNzIHsKICAgICAgYWNjb3VudCB7CiAgICAgICAgc2V0dGluZ3MgewogICAgICAgICAgYWxsb3dCdWxrQ3JlZGl0VHJhbnNmZXJzV2l0aG91dEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyTm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `save` to `true`. This will indicate that if the returned token is successfully used to initiate a credit transfer, a trusted beneficiary will be created.
 
-```graphql {2,6}
-mutation UpdateAccountSettings($input: UpdateAccountSettingsInput!) {
-  updateAccountSettings(
-    input: {
-      accountId: "$YOUR_ACCOUNT_ID"
-      allowBulkCreditTransfersWithoutBeneficiaryVerification: true
-      consentRedirectUrl: "https://mycompany.com/consent"
-    }
-  ) {
-    ... on UpdateAccountSettingsSuccess {
-      account {
-        settings {
-          allowBulkCreditTransfersWithoutBeneficiaryVerification
-        }
-      }
-    }
-    ... on AccountNotFoundRejection {
-      message
-    }
-    ... on ForbiddenRejection {
-      message
-    }
-    ... on AccountHolderNotFoundRejection {
-      message
-    }
-  }
-}
-```
+No trusted beneficiary is added when calling `verifyBeneficiary`, but your request to save it is contained within the token. The beneficiary is only saved after successful payment authorization, similar to the functionality described in [Add a beneficiary](/topics/payments/credit-transfers/sepa/guide-add-beneficiary).
 
-**Requirements**:
-- Only available for Company account types.
-- `consentRedirectUrl` required for the settings change flow.
--->
+## Bulk credit transfers {#bulk-credit-transfers}
+
+For bulk credit transfers, verification tokens are required based on account type and account-level settings:
+
+- **Individual accounts**: Verification tokens are always required.
+- **Company accounts**: Verification tokens are optional by default, but can be made required through account settings.
+
+:::warning Breaking change for individual accounts
+If your integration supports individual account holders performing bulk credit transfers, you must implement the `verifyBeneficiary` mutation and provide verification tokens. Bulk transfers without tokens will be rejected for individual accounts.
+:::
+
+[Learn more about bulk credit transfers with VoP →](/preview/vop/bulk-credit-transfers)
 
 ## Sandbox testing {#sandbox-testing}
 
@@ -311,14 +296,3 @@ Any other beneficiary name returns a `Match` result.
 :::tip
 If a trusted beneficiary ID is used as input, the verification will be based on the Trusted Beneficiary name.
 :::
-
-### Testing bulk payments {#testing-bulk-payments}
-
-<FieldRequirementsLegend />
-
-#### Default sandbox requirements
-
-| Account type | VoP for bulk transfers | BeneficiaryToken requirements |
-| --- | --- | --- |
-| **Company** | Opted out | <Opt /> |
-| **Individual** | Opted in | <Req /> |

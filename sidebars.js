@@ -760,6 +760,7 @@ module.exports = {
           collapsed: true,
           items: [
             'preview/vop/guide-verify-beneficiary',
+            'preview/vop/bulk-credit-transfers',
           ],
         },
         'preview/belgian-ibans',

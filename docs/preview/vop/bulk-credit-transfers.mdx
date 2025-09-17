@@ -7,12 +7,14 @@ title: Bulk credit transfers with VoP
 Configure account-level verification settings to control VoP requirements for bulk credit transfers based on your business needs.
 
 :::info Requirements
-Bulk credit transfers require [Option 2: Custom verification](/preview/vop/verification-of-payee#option-2) using [the `verifyBeneficiary` mutation](/preview/vop/guide-verify-beneficiary). The default verification flow doesn't support bulk payments.
+Bulk credit transfers require [custom verification](/preview/vop/verification-of-payee#option-2) using [the `verifyBeneficiary` mutation](/preview/vop/guide-verify-beneficiary). The default verification flow doesn't support bulk payments.
 :::
 
 ## VoP requirements for bulk transfers {#bulk-requirements}
 
-Swan applies different default VoP requirements based on account type to balance regulatory compliance with operational efficiency:
+Under the [European Instant Payments Regulation (IPR)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202400886), Payment Service Users (PSUs) that are not consumers and submit multiple payment orders can opt out from verification services during their contractual relationship with their PSP.
+
+This regulatory framework allows Swan to offer different default VoP requirements based on account type:
 
 <FieldRequirementsLegend />
 
@@ -35,7 +37,7 @@ Company account holders can control VoP requirements for bulk transfers:
 Individual accounts always require VoP and cannot modify this setting.
 
 :::tip Implementation note
-If you haven't implemented `verifyBeneficiary` and companies want to opt in to mandatory VoP, warn them this will add verification steps to their transfer flow.
+If you haven't implemented `verifyBeneficiary` and companies want to opt in to mandatory VoP, communicate that bulk transfers will temporarily be limited to accounts that remain opted out until you implement the verification flow.
 :::
 
 ### Changing VoP settings {#changing-settings}
@@ -166,4 +168,4 @@ Company accounts can modify their VoP requirements through the [account settings
 
 ## Dispute protection {#dispute-protection}
 
-Swan maintains a complete audit trail of VoP setting changes and verification history for each bulk credit transfer. If an end-user disputes that funds were transferred to the wrong beneficiary, this history provides essential evidence for liability determination.
+Swan maintains a complete audit trail of VoP setting changes and verification history for each bulk credit transfer. While this history isn't currently exposed through the API, we recommend partners log account setting changes in their own systems for reference during dispute resolution. If an end-user disputes that funds were transferred to the wrong beneficiary, this history provides essential evidence for liability determination.

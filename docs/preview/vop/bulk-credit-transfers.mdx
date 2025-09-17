@@ -1,13 +1,13 @@
 ---
-title: Bulk credit transfers with VoP
+title: Bulk credit transfers
 ---
 
 # Bulk credit transfers with VoP
 
-Configure account-level verification settings to control VoP requirements for bulk credit transfers based on your business needs.
+Manage VoP requirements for bulk transfers in your account settings to fit your business needs.
 
 :::info Requirements
-Bulk credit transfers require [custom verification](/preview/vop/verification-of-payee#option-2) using [the `verifyBeneficiary` mutation](/preview/vop/guide-verify-beneficiary). The default verification flow doesn't support bulk payments.
+Bulk credit transfers require [custom verification](/preview/vop/verification-of-payee#option-2) using the [`verifyBeneficiary`](/preview/vop/guide-verify-beneficiary) mutation. The default verification flow doesn't support bulk payments.
 :::
 
 ## VoP requirements for bulk transfers {#bulk-requirements}
@@ -24,7 +24,9 @@ This regulatory framework allows Swan to offer different default VoP requirement
 | **Individual** | <Req /> | <No /> | Cannot change settings |
 
 :::note Why these defaults?
-Swan opts out company accounts by default to accelerate bulk file processing and reduce friction in high-volume business flows. Individual accounts remain opted in for enhanced consumer protection, and this setting cannot be changed. When multiple company accounts exist for the same account holder, all accounts are opted out by default regardless of any previous account settings.
+- Swan opts out company accounts by default to accelerate bulk file processing and reduce friction in high-volume business flows.
+- Individual accounts remain opted in for enhanced consumer protection, and this setting cannot be changed. 
+- When multiple company accounts exist for the same account holder, all accounts are opted out by default regardless of any previous account settings.
 :::
 
 ## Account-level verification settings {#account-settings}
@@ -36,18 +38,24 @@ Company account holders can control VoP requirements for bulk transfers:
 
 Individual accounts always require VoP and cannot modify this setting.
 
-:::tip Implementation note
-If you haven't implemented `verifyBeneficiary` and companies want to opt in to mandatory VoP, communicate that bulk transfers will temporarily be limited to accounts that remain opted out until you implement the verification flow.
+:::tip Before implementing VoP
+To enable mandatory VoP for company accounts, you must first implement the `verifyBeneficiary` mutation.
+
+**Communicate to companies**: Until implementation is complete, bulk transfers are limited to accounts that remain opted out of mandatory VoP.
 :::
 
 ### Changing VoP settings {#changing-settings}
 
-Use [the `updateAccountSettings` mutation](#updating-settings) to modify company account settings:
+Use [the `updateAccountSettings` mutation](#updating-settings) to modify company account settings.
 
-**Requirements:**
+####Requirements
 - Company account holder only.
 - User must have both `canViewAccount` and `canInitiatePayments` permissions.
-- Account membership must be Enabled.
+- Account membership must be `Enabled`.
+
+####Consent flow
+- Opting in (require VoP): No consent needed.
+- Opting out (make VoP optional): User consent required via SCA.
 
 :::warning Integration requirement
 You must implement [the `updateAccountSettings` mutation](#updating-settings) to allow company account holders to change their bulk transfer VoP requirements. Without this implementation, users cannot opt in or out of mandatory VoP and must contact support@swan.io instead, creating friction and delays.
@@ -55,7 +63,7 @@ You must implement [the `updateAccountSettings` mutation](#updating-settings) to
 
 ## Updating account settings {#updating-settings}
 
-Use the `updateAccountSettings` mutation to allow company account holders to modify their bulk transfer VoP requirements:
+Use the `updateAccountSettings` mutation to allow company account holders to modify their bulk transfer VoP requirements.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQWNjb3VudFNldHRpbmdzKCRpbnB1dDogVXBkYXRlQWNjb3VudFNldHRpbmdzSW5wdXQhKSB7CiAgdXBkYXRlQWNjb3VudFNldHRpbmdzKGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50U2V0dGluZ3NTdWNjZXNzIHsKICAgICAgYWNjb3VudCB7CiAgICAgICAgc2V0dGluZ3MgewogICAgICAgICAgYWxsb3dCdWxrQ3JlZGl0VHJhbnNmZXJzV2l0aG91dEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyTm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -104,7 +112,7 @@ mutation UpdateAccountSettings {
 
 ### Success response {#success-response}
 
-For opt-in requests (no consent required):
+For opt-in requests (no consent required).
 
 ```json title="Payload" {7}
 {
@@ -121,7 +129,7 @@ For opt-in requests (no consent required):
 }
 ```
 
-For opt-out requests (consent required):
+For opt-out requests (consent required).
 
 ```json title="Payload" {4,6}
 {
@@ -138,30 +146,25 @@ For opt-out requests (consent required):
 
 ### Error handling {#error-handling}
 
-The mutation can return several rejection types:
+The mutation can return several rejection types.
 
 | Rejection | Description |
 | --- | --- |
-| **AccountNotFoundRejection** | The provided account ID doesn't exist |
-| **AccountHolderNotFoundRejection** | The account holder doesn't exist |
+| **AccountNotFoundRejection** | The provided account ID doesn't exist. |
+| **AccountHolderNotFoundRejection** | The account holder doesn't exist. |
 | **AccountHolderTypeNotEligibleRejection** | Only company account holders can modify this setting |
 | **AccountMembershipNotEligibleRejection** | User lacks required permissions (`canViewAccount` + `canInitiatePayments`) |
-| **AccountMembershipStatusNotEligibleRejection** | User's account membership must be **Enabled** |
+| **AccountMembershipStatusNotEligibleRejection** | User's account membership must be `Enabled`. |
 | **ForbiddenRejection** | User not allowed or wrong context used |
 
 ## Sandbox testing {#sandbox-testing}
 
 <FieldRequirementsLegend />
 
-### Default sandbox and live requirements
+### Sandbox testing
 
-| Account type | Default token requirement |
-| --- | :---: |
-| **Company** | <Opt /> |
-| **Individual** | <Req /> |
+VoP requirements in sandbox match the live environment behavior. Company accounts default to optional VoP but can modify settings via the [account settings mutation](#updating-settings), while individual accounts always require VoP tokens for bulk transfers.
 
-Company accounts can modify their VoP requirements through the [account settings](#updating-settings), while individual accounts always require VoP for bulk transfers.
+## Preparing for disputes {#dispute-preparation}
 
-## Dispute protection {#dispute-protection}
-
-Swan maintains a complete audit trail of VoP setting changes and verification history for each bulk credit transfer. While this history isn't currently exposed through the API, we recommend partners log account setting changes in their own systems for reference during dispute resolution. If an end-user disputes that funds were transferred to the wrong beneficiary, this history provides essential evidence for liability determination.
+Swan logs all VoP setting changes and verification history for dispute protection. These logs aren't currently available through the API, so we recommend you record these changes in your own systems. This audit trail helps determine liability if an end-user disputes a payment to the wrong beneficiary.

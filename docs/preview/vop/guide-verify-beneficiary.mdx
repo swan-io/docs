@@ -235,7 +235,7 @@ The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificatio
 
 When you initiate a credit transfer using a token, the same membership rights apply as described in [Beneficiaries permissions](/topics/payments/credit-transfers/#beneficiaries-permissions).
 
-| Permission type | Add trusted beneficiaries<br/>via save parameter | Initiation using<br/>swanAccount token | Initiation using<br/>TrustedBeneficiary token |
+| Permission type | Add trusted beneficiaries<br/>via `save` parameter | Initiation using<br/>swanAccount token | Initiation using<br/>TrustedBeneficiary token |
 |---|:---:|:---:|:---:|
 | **canManageBeneficiaries** only | <Yes />  | <No /> | <No /> |
 | **canInitiatePayments** only | <No /> | <Yes />  | <Yes />  |
@@ -259,7 +259,7 @@ The same token can be used multiple times in the same initiation. This means you
 This feature will be available soon in Swan's API.
 :::
 
-When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `save` to `true`. This will indicate that if the returned token is successfully used to initiate a credit transfer, a Trusted Beneficiary will be created.
+When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `save` to `true`. This will indicate that if the returned token is successfully used to initiate a credit transfer, a trusted beneficiary will be created.
 
 No Trusted Beneficiary is added when calling `verifyBeneficiary`, but your request to save it is contained within the token. The beneficiary is only saved after successful payment authorization, similar to the functionality described in [Add a beneficiary](/topics/payments/credit-transfers/sepa/guide-add-beneficiary).
 
@@ -267,15 +267,11 @@ No Trusted Beneficiary is added when calling `verifyBeneficiary`, but your reque
 
 For bulk credit transfers, verification tokens are required based on account type and account-level settings:
 
-- **Individual accounts**: Verification tokens always required.
-- **Company accounts**: Verification tokens optional by default, can be made required through account settings.
+- **Individual accounts**: Verification tokens are always required.
+- **Company accounts**: Verification tokens are optional by default, but can be made required through account settings.
 
 :::warning Breaking change for individual accounts
 If your integration supports individual account holders performing bulk credit transfers, you must implement the `verifyBeneficiary` mutation and provide verification tokens. Bulk transfers without tokens will be rejected for individual accounts.
-
-**Migration options:**
-1. **Recommended**: Implement the `verifyBeneficiary` mutation to support VoP.
-2. **Alternative**: Restrict bulk credit transfer access to company accounts only.
 :::
 
 [Learn more about bulk credit transfers with VoP →](/preview/vop/bulk-credit-transfers)

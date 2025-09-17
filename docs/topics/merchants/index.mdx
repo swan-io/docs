@@ -98,7 +98,7 @@ flowchart LR
 | Profile status | Explanation |
 |:---:|---|
 | `PendingReview` | The profile is under review by Swan. <br /><br />• If the profile doesn't meet our requirements or we consider it a risk, we'll change the status to `Rejected`. Otherwise, we'll change the status to `Enabled`. <br />• Request payment methods while a profile is `PendingReview`. |
-| `Enabled` | The profile is active.<br /><br />• Use `Enabled` profiles to request payment methods and accept payments with activated payment methods.<br />• Updates to profiles can only occur when they are `Enabled`. |
+| `Enabled` | The profile is active.<br /><br />Capabilities:<br />• Request payment methods and accept payments.<br />• Make updates to the profile's information. |
 | `Suspended` | **Swan** assigns this status when we need to review a merchant's profile. The profile can't be `Enabled` again until we complete our review. |
 | `Rejected` | **Swan** assigns this **final status** when a profile's risk is too high, or for other risk-related reasons. |
 | `Disabled` | **You** set this final status using the `disableMerchantProfile` mutation. |
@@ -195,7 +195,7 @@ style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
 
 | Payment method status | Explanation |
 |---|---|
-| `PendingReview` | The payment method is under review by Swan. <br /><br />• If the request doesn't meet our requirements or we consider it a risk, we'll change the status to `Rejected`.<br />• Otherwise, we'll change the status to `Enabled`.|
+| `PendingReview` | The payment method is under review by Swan. <br /><br />• If the request doesn't meet our requirements or we consider it a risk, we'll change the status to `Rejected`.<br />• Otherwise, we'll change the status to `Enabled`. <br /><br />Capabilities:<br />• While a profile is `PendingReview`, you can still request payment methods.|
 | `WaitingForInformation` | More information is needed before the payment method can be reviewed by Swan.<br /><br />• The `verificationRequirements` shows what the Partner must provide to trigger a new review.<br />• Submit supporting documents and request a new review using the `requestSupportingDocumentCollectionReview` mutation.<br />• After all required information is submitted, the status returns to `PendingReview` for a new review. |
 | `Enabled` | The payment method is active.<br /><br />• Use `Enabled` payment methods to accept payments.<br />• Updates to payment methods can only occur when they are `Enabled`. |
 | `Suspended` | **Swan** assigns this status when we need to review the merchant's use of their payment method. The payment method can't be `Enabled` again until we complete our review. |

@@ -7,7 +7,14 @@ type: release
 
 Starting ****September 18th****, the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome` will support the new `WaitingForInformation` status and return a list of `verificationRequirements`.
 
-Starting **September 18th**, a new optional field `expectedMerchantProfileAdditionalInformation` will be available at the `projectInfo` level. This field is only available upon prior agreement with Swan and allows you to customize information collected for merchant profiles in specific use cases. The information can then be provided using the `additionalInformation` field in merchant profiles and in the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations.
+Starting **September 18th**, a new optional field `expectedMerchantProfileAdditionalInformation` will be available at the `projectInfo` level. 
+This field is only available upon prior agreement with Swan and allows you to customize information collected for merchant profiles in specific use cases. 
+The information can then be provided using the `additionalInformation` field in merchant profiles and in the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations.
+
+Starting **October 21st**, card-issuing spending limits will be aggregated at the hour level. 
+For spending-limit computation, each payment will be timestamped at the first second of the first minute of the hour, and each hour will reset the rolling period.
+
+This change applies to cards with `daily`, `weekly`, and `monthly` spending limit periods.
 
 ## API updates
 
@@ -33,23 +40,12 @@ Starting **September 18th**, a new optional field `expectedMerchantProfileAdditi
 🛒 On **October 16th**, the following merchant onboarding and payment methods breaking changes will take effect:
 
 - A new `WaitingForInformation` status and `verificationRequirements` list will be available for merchant profiles on Merchant Payment Methods to communicate missing information. These requirements must be provided at the merchant profile level using the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations. 
-
 - A new `supportingDocumentCollections` field will also be available at the merchant profile level for providing required documents.
-
 - The fields `invoiceExample`, `expectedMonthlyPaymentVolume`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, `termsAndConditions` will be **removed** from the API.
-
 - `rejectReasons` will be removed for Card Payment Methods.
-
 - `rejectionReasons` for `Rejected` merchant profiles and Merchant Payment Methods will become mandatory in the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome`.
-
 - Dynamic rolling reserve changes and maximum payment amount limits will be introduced at the merchant payment method level to mitigate risk. Subscribe to the `MerchantPaymentMethod.Created` and `MerchantPaymentMethod.Updated` webhooks for these updates.
 
 ## Reminders
 
 ⚖️ Starting **October 31st**, the `taxIdentificationNumber` will be a mandatory field at onboarding when an account holder's residency country does not match the accountCountry. [CRS (Common Reporting Standard) regulations](https://www.oecd.org/content/dam/oecd/en/topics/policy-issue-focus/aeoi/jersey-guidance-notes-crs.pdf). For example, Spanish residents opening French accounts will need to provide their tax identification number.
-
-## Coming Up
-
-Starting **October 21st**, card-issuing spending limits will be aggregated at the hour level. For spending-limit computation, each payment will be timestamped at the first second of the first minute of the hour, and each hour will reset the rolling period.
-
-This change applies to cards with `daily`, `weekly`, and `monthly` spending limit periods.

@@ -1,13 +1,13 @@
 ---
-title: Bulk credit transfers with VoP
+title: Bulk credit transfers
 ---
 
 # Bulk credit transfers with VoP
 
-Configure account-level verification settings to control VoP requirements for bulk credit transfers based on your business needs.
+Manage VoP requirements for bulk transfers in your account settings to fit your business needs.
 
 :::info Requirements
-Bulk credit transfers require [custom verification](/preview/vop/verification-of-payee#option-2) using [the `verifyBeneficiary` mutation](/preview/vop/guide-verify-beneficiary). The default verification flow doesn't support bulk payments.
+Bulk credit transfers require [custom verification](/preview/vop/verification-of-payee#option-2) using the [`verifyBeneficiary`](/preview/vop/guide-verify-beneficiary) mutation. The default verification flow doesn't support bulk payments.
 :::
 
 ## VoP requirements for bulk transfers {#bulk-requirements}
@@ -24,7 +24,9 @@ This regulatory framework allows Swan to offer different default VoP requirement
 | **Individual** | <Req /> | <No /> |
 
 :::note Why these defaults?
-Swan opts out company accounts by default to accelerate bulk file processing and reduce friction in high-volume business flows. Individual accounts remain opted in for enhanced consumer protection, and this setting cannot be changed. When multiple company accounts exist for the same account holder, all accounts are opted out by default regardless of any previous account settings.
+- Swan opts out company accounts by default to accelerate bulk file processing and reduce friction in high-volume business flows.
+- Individual accounts remain opted in for enhanced consumer protection, and this setting cannot be changed. 
+- When multiple company accounts exist for the same account holder, all accounts are opted out by default regardless of any previous account settings.
 :::
 
 ## Account-level verification settings {#account-settings}
@@ -36,20 +38,22 @@ Company account holders can control VoP requirements for bulk transfers:
 
 Individual accounts always require VoP and cannot modify this setting.
 
-:::tip Implementation note
-If you haven't implemented `verifyBeneficiary` and companies want to opt in to mandatory VoP, communicate that bulk transfers will temporarily be limited to accounts that remain opted out until you implement the verification flow.
+:::tip Before implementing VoP
+To enable mandatory VoP for company accounts, you must first implement the `verifyBeneficiary` mutation.
+
+**Communicate to companies**: Until implementation is complete, bulk transfers are limited to accounts that remain opted out of mandatory VoP.
 :::
 
 ### Changing VoP settings {#changing-settings}
 
-Use [the `updateAccountSettings` mutation](#updating-settings) to modify company account settings:
+Use [the `updateAccountSettings` mutation](#updating-settings) to modify company account settings.
 
-**Requirements:**
+####Requirements
 - Company account holder only.
 - User must have both `canViewAccount` and `canInitiatePayments` permissions.
-- Account membership must be Enabled.
+- Account membership must be `Enabled`.
 
-**Consent flow:**
+####Consent flow
 - Opting in (require VoP): No consent needed.
 - Opting out (make VoP optional): User consent required via SCA.
 

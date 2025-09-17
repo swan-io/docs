@@ -27,48 +27,32 @@ Swan opts out company accounts by default to accelerate bulk file processing and
 
 ## Account-level verification settings {#account-settings}
 
-Company account holders can modify their VoP requirements for bulk transfers through your application using [the `updateAccountSettings` mutation](#updating-settings). This provides the flexibility needed for different business use cases while maintaining compliance.
+Company account holders can control VoP requirements for bulk transfers:
 
-:::warning Integration requirement
-You must implement [the `updateAccountSettings` mutation](#updating-settings) to ensure the best user experience and maintain compliance.
+- **VoP optional (opted out)**: Bulk transfers can proceed with or without verification tokens.
+- **VoP required (opted in)**: All bulk transfers must include verification tokens from `verifyBeneficiary`.
 
-If not implemented, company end-users can request changes through support@swan.io. This fallback creates friction and delays, and is not recommended.
+Individual accounts always require VoP and cannot modify this setting.
+
+:::tip Implementation note
+If you haven't implemented `verifyBeneficiary` and companies want to opt in to mandatory VoP, warn them this will add verification steps to their transfer flow.
 :::
 
-### Setting requirements {#setting-requirements}
+### Changing VoP settings {#changing-settings}
 
-To modify VoP settings for bulk transfers, users must meet these requirements:
+Use [the `updateAccountSettings` mutation](#updating-settings) to modify company account settings:
 
-- **Account holder type**: Company accounts only.
-- **User permissions**: Both `canViewAccount` and `canInitiatePayments`.
-- **Account membership status**: Enabled.
+**Requirements:**
+- Company account holder only.
+- User must have both `canViewAccount` and `canInitiatePayments` permissions.
+- Account membership must be Enabled.
 
-### Consent requirements {#consent-requirements}
+**Consent flow:**
+- Opting in (require VoP): No consent needed.
+- Opting out (make VoP optional): User consent required via SCA.
 
-- **Opting in** (mandatory VoP): No consent required.
-- **Opting out** (optional VoP): User consent required, subject to Strong Customer Authentication (SCA) for audit trail purposes.
-
-## Impact on bulk transfer flows {#bulk-transfer-flows}
-
-The account-level setting directly affects how bulk credit transfers are processed:
-
-**Company account with VoP optional (opted out):**
-- Bulk transfers can proceed without `beneficiaryVerificationToken`.
-- [Option 2: Custom verification](/preview/vop/verification-of-payee#option-2) is recommended but not required.
-- You have flexibility in implementation.
-
-**Company account with VoP required (opted in):**
-- All bulk transfers must include valid `beneficiaryVerificationToken` from `verifyBeneficiary` mutation.
-- [Option 2: Custom verification](/preview/vop/verification-of-payee#option-2) is mandatory.
-- Transfers without tokens will be rejected with `ForbiddenRejection`.
-
-**Individual accounts:**
-- VoP is always required for bulk transfers.
-- Cannot be changed through settings.
-- You must implement [Option 2: Custom verification](/preview/vop/verification-of-payee#option-2) to support individual bulk transfers.
-
-:::tip Implementation guidance
-**For companies opting in to VoP:** If you haven't implemented the `verifyBeneficiary` mutation, display a clear message to end-users explaining that enabling VoP verification will require additional steps in their transfer flow.
+:::warning Integration requirement
+You must implement [the `updateAccountSettings` mutation](#updating-settings). If not implemented, end-users must contact support@swan.io, creating friction and delays.
 :::
 
 ## Updating account settings {#updating-settings}
@@ -114,17 +98,17 @@ mutation UpdateAccountSettings {
 
 ### Parameters {#parameters}
 
-- **`accountId`**: The company account ID to update.
-- **`allowBulkCreditTransfersWithoutBeneficiaryVerification`**: 
+- `accountId`: The company account ID to update.
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: 
   - `true` = VoP optional for bulk transfers (opt out).
   - `false` = VoP required for bulk transfers (opt in).
-- **`consentRedirectUrl`**: Required for the consent flow when opting out.
+- `consentRedirectUrl`: Required for the consent flow when opting out.
 
 ### Success response {#success-response}
 
 For opt-in requests (no consent required):
 
-```json title="Payload" {6}
+```json title="Payload" {7}
 {
   "data": {
     "updateAccountSettings": {
@@ -141,7 +125,7 @@ For opt-in requests (no consent required):
 
 For opt-out requests (consent required):
 
-```json title="Payload" {4-6}
+```json title="Payload" {4,6}
 {
   "data": {
     "updateAccountSettings": {
@@ -173,10 +157,10 @@ The mutation can return several rejection types:
 
 ### Default sandbox and live requirements
 
-| Account type | Token requirement for bulk transfers | BeneficiaryToken requirements |
-| --- | --- | --- |
-| **Company** | Optional (opted out) | <Opt /> |
-| **Individual** | Required (opted in) | <Req /> |
+| Account type | Default token requirement |
+| --- | :---: |
+| **Company** | <Opt /> |
+| **Individual** | <Req /> |
 
 Company accounts can modify their VoP requirements through the [account settings](#updating-settings), while individual accounts always require VoP for bulk transfers.
 

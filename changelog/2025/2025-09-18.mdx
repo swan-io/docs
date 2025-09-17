@@ -5,19 +5,21 @@ type: release
 
 ## Improvements
 
-🛒 The following improvements have been made to merchant profiles and the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations:
+🛒 The following improvements have been made to [merchant profiles and merchant payment methods](/topics/merchants/), and the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations:
 
 - The Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome` now support the new `WaitingForInformation` status and return a list of `verificationRequirements`.
 - A new optional field `expectedMerchantProfileAdditionalInformation` is now available at the `projectInfo` level. 
 This field is only available upon prior agreement with Swan and allows you to customize information collected for merchant profiles in specific use cases. 
 The information can then be provided using the `additionalInformation` field in merchant profiles and in the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations.
-- The `expectedMonthlyPaymentVolume`, `invoiceExample`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, and `termsAndConditions` fields have been deprecated. We've introduced the `expectedMonthlyMerchantProcessingVolume`, `merchantWebsiteUrl`, `socialNetworkUrl`, `supportWebsiteUrl`, and `termsAndConditionsUrl` fields.
+- The `invoiceExample` field has been deprecated.
+- The `expectedMonthlyPaymentVolume`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, and `termsAndConditions` fields are being deprecated and replaced with the new fields: `expectedMonthlyMerchantProcessingVolume`, `merchantWebsiteUrl`, `socialNetworkUrl`, `supportWebsiteUrl`, and `termsAndConditionsUrl`.
 - We've deprecated and replaced `rejectReasons` with `rejectionReasons` for rejected merchant profiles and merchant payment methods.
 
 ## API updates
 
 ### Upcoming breaking changes
 
+📡 Starting **October 9th**, bulk SEPA Credit Transfers from individual account holders will be rejected if verification tokens aren't included in the payment initiation. You must either implement the `verifyBeneficiary` mutation (recommended) or restrict bulk credit transfer access to company accounts only. This change applies to both Live and Sandbox environments.
 
 💳 On **October 16th**, the `CardUrl` field will be removed. This field is being deprecated. Use `cardMaskedNumber`, `expiryDate`, and `cardDesignUrl` instead.
 

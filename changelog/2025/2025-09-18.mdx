@@ -5,37 +5,22 @@ type: release
 
 ## Improvements
 
-Starting ****September 18th****, the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome` will support the new `WaitingForInformation` status and return a list of `verificationRequirements`.
+The Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome` now support the new `WaitingForInformation` status and return a list of `verificationRequirements`.
 
-Starting **September 18th**, a new optional field `expectedMerchantProfileAdditionalInformation` will be available at the `projectInfo` level. 
+A new optional field `expectedMerchantProfileAdditionalInformation` is now available at the `projectInfo` level. 
 This field is only available upon prior agreement with Swan and allows you to customize information collected for merchant profiles in specific use cases. 
 The information can then be provided using the `additionalInformation` field in merchant profiles and in the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations.
 
-Starting **October 21st**, card-issuing spending limits will be aggregated at the hour level. 
-For spending-limit computation, each payment will be timestamped at the first second of the first minute of the hour, and each hour will reset the rolling period.
+The `expectedMonthlyPaymentVolume`, `invoiceExample`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, and `termsAndConditions` fields have been deprecated. We've introduced the `expectedMonthlyMerchantProcessingVolume`, `merchantWebsiteUrl`, `socialNetworkUrl`, `supportWebsiteUrl`, and `termsAndConditionsUrl` fields.
 
-This change applies to cards with `daily`, `weekly`, and `monthly` spending limit periods.
+We've deprecated and replaced `rejectReasons` with `rejectionReasons` for rejected merchant profiles and merchant payment methods.
 
 ## API updates
 
 ### Upcoming breaking changes
 
+
 💳 On **October 16th**, the `CardUrl` field will be removed. This field is being deprecated. Use `cardMaskedNumber`, `expiryDate`, and `cardDesignUrl` instead.
-
-💸 Effective **October 19th**, we are introducing the following updates to the `initiateCreditTransfers` endpoint to improve its usability and clarity:
-
-- The `save` parameter will now default to `false`.
-- The `mode` parameter is now a **required** field. The default value is set to `Regular`.
-- The `isMyOwnIban` and `beneficiaryId` input fields have been **removed**.
-- The API will now return a `ValidationRejection` error instead of `ForbiddenRejection` when an input contains **invalid** data.
-
-#### Merchant profiles and payment methods
-
-🛒 Starting **September 18th**, the following changes will apply to Merchant profiles and the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations:
-
-- The `expectedMonthlyPaymentVolume`, `invoiceExample`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, and `termsAndConditions` will be deprecated.
-- We're introducing these **new fields**: `expectedMonthlyMerchantProcessingVolume`, `merchantWebsiteUrl`, `socialNetworkUrl`, `supportWebsiteUrl`, and `termsAndConditionsUrl`.
-- We'll deprecate `rejectReasons` for Card Payment Methods, and `rejectionReasons` will replace `rejectReasons` for rejected merchant profiles and merchant payment methods.
 
 🛒 On **October 16th**, the following merchant onboarding and payment methods breaking changes will take effect:
 
@@ -46,6 +31,15 @@ This change applies to cards with `daily`, `weekly`, and `monthly` spending limi
 - `rejectionReasons` for `Rejected` merchant profiles and Merchant Payment Methods will become mandatory in the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome`.
 - Dynamic rolling reserve changes and maximum payment amount limits will be introduced at the merchant payment method level to mitigate risk. Subscribe to the `MerchantPaymentMethod.Created` and `MerchantPaymentMethod.Updated` webhooks for these updates.
 
-## Reminders
+💸 Effective **October 19th**, we're introducing the following updates to the `initiateCreditTransfers` endpoint to improve its usability and clarity:
 
-⚖️ Starting **October 31st**, the `taxIdentificationNumber` will be a mandatory field at onboarding when an account holder's residency country does not match the accountCountry. [CRS (Common Reporting Standard) regulations](https://www.oecd.org/content/dam/oecd/en/topics/policy-issue-focus/aeoi/jersey-guidance-notes-crs.pdf). For example, Spanish residents opening French accounts will need to provide their tax identification number.
+- The `save` parameter will now default to `false`.
+- The `mode` parameter is now a **required** field. The default value is set to `Regular`.
+- The `isMyOwnIban` and `beneficiaryId` input fields have been **removed**.
+- The API will now return a `ValidationRejection` error instead of `ForbiddenRejection` when an input contains **invalid** data.
+
+## Update
+
+🧭 Starting **October 21st**, card-issuing spending limits will be aggregated at the hour level. 
+For spending-limit computation, each payment will be timestamped at the first second of the first minute of the hour, and each hour will reset the rolling period.
+This change applies to cards with `daily`, `weekly`, and `monthly` spending limit periods.

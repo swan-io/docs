@@ -7,7 +7,7 @@ type: release
 
 🛒 Improvements to [merchant profiles and merchant payment methods](/topics/merchants/), and the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations:
 
-- The Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome` now support the new `WaitingForInformation` status and return a list of `verificationRequirements`.
+- The Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome` mutations now support the new `WaitingForInformation` status and return a list of `verificationRequirements`.
 - A new optional field `expectedMerchantProfileAdditionalInformation` is now available at the `projectInfo` level. This field is only available upon prior agreement with Swan and allows you to customize information collected for merchant profiles in specific use cases. 
 
   The information can then be provided using the `additionalInformation` field in merchant profiles and in the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations.
@@ -21,13 +21,13 @@ type: release
 
 📡 Starting **October 9th**, bulk SEPA Credit Transfers from individual account holders will be rejected if [verification tokens](/preview/vop/guide-verify-beneficiary/#step-3) aren't included in the payment initiation. You must either implement the `verifyBeneficiary` mutation (recommended) or restrict bulk credit transfer access to company accounts only. This change applies to both Live and Sandbox environments.
 
-💳 On **October 16th**, the `CardUrl` field will be removed. This field is being deprecated. Use `cardMaskedNumber`, `expiryDate`, and `cardDesignUrl` instead.
+💳 On **October 16th**, the `CardUrl` field will be removed. Use `cardMaskedNumber`, `expiryDate`, and `cardDesignUrl` instead.
 
 🛒 On **October 16th**, the following merchant onboarding and payment methods breaking changes will take effect:
 
 - A new `WaitingForInformation` status and `verificationRequirements` list will be available for merchant profiles and merchant payment methods to communicate missing information. These requirements must be provided at the merchant profile level using the `requestMerchantProfile` and `requestMerchantProfileUpdate` mutations. 
 - A new `supportingDocumentCollections` field will also be available at the merchant profile level for providing required documents.
-- The fields `invoiceExample`, `expectedMonthlyPaymentVolume`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, `termsAndConditions` will be **removed** from the API.
+- The fields `invoiceExample`, `expectedMonthlyPaymentVolume`, `merchantWebsite`, `socialNetwork`, `supportWebsite`, `termsAndConditions` will be **removed**.
 - `rejectReasons` will be **removed** for card payment methods.
 - `rejectionReasons` for `Rejected` merchant profiles and merchant payment methods will become **mandatory** in the Testing APIs `simulateMerchantProfileRequestOutcome` and `simulateMerchantPaymentMethodRequestOutcome`.
 - Dynamic rolling reserve changes and maximum payment amount limits will be introduced at the merchant payment method level to mitigate risk. Subscribe to the `MerchantPaymentMethod.Created` and `MerchantPaymentMethod.Updated` webhooks for these updates.
@@ -42,5 +42,5 @@ type: release
 ## Update
 
 🧭 Starting **October 21st**, card-issuing spending limits will be [aggregated at the hour level](/topics/cards/#hour-level-aggregation). 
-For spending-limit computation, each payment will be timestamped at the first second of the first minute of the hour, and each hour will reset the rolling period.
+To calculate card spending limits, each payment is recorded at the start of the hour. The rolling period is then based on that hour, not the exact transaction time.
 This change applies to cards with `daily`, `weekly`, and `monthly` spending limit periods.

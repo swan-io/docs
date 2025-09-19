@@ -761,6 +761,7 @@ module.exports = {
           items: [
             'preview/vop/guide-verify-beneficiary',
             'preview/vop/bulk-credit-transfers',
+            'preview/vop/incoming-vop-requests',
           ],
         },
         'preview/belgian-ibans',

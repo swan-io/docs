@@ -68,7 +68,7 @@ sequenceDiagram
 ```
 
 :::note No action required
-This process is automatic - Swan handles all incoming VoP requests without requiring any implementation from partners.
+This process is automatic. Swan handles all incoming VoP requests for you with no additional implementation.
 :::
 
 ## Supported identification types {#identification-types}
@@ -77,22 +77,22 @@ Swan supports the following payee identification types (refer to [Mambu's VoP id
 
 ### Name {#name-type}
 The name of the legal entity or of the individual:
-- **Company IBAN**: AccountHolder.companyName.
-- **Individual IBAN**: AccountHolder.firstName + AccountHolder.lastName.
+- **Company IBAN**: `AccountHolder.companyName`.
+- **Individual IBAN**: `AccountHolder.firstName` + `AccountHolder.lastName`.
 
 ### Tax number {#tax-number-type}
 The number assigned by a tax authority to identify an organisation:
-- **Company IBAN**: AccountHolder.registration.taxIdentificationNumber.
+- **Company IBAN**: `AccountHolder.registration.taxIdentificationNumber`.
 - **Individual IBAN**: Not applicable.
 
 ### Company identification {#company-identification-type}
 The country authority given organisation identification (e.g., corporate registration number):
-- **Company IBAN**: AccountHolder.registration.
+- **Company IBAN**: `AccountHolder.registration`.
 - **Individual IBAN**: Not applicable.
 
 ### SIREN {#siren-type}
 The SIREN number is a 9 digit code assigned by INSEE, the French National Institute for Statistics and Economic Studies, to identify an organisation in France:
-- **Company IBAN**: AccountHolder.registration (same as company_identification).
+- **Company IBAN**: `AccountHolder.registration` (same as `company_identification`).
 - **Individual IBAN**: Not applicable.
 
 ## VoP matching algorithm {#matching-algorithm}
@@ -101,7 +101,7 @@ Accurate matching is crucial for a robust VoP implementation. Swan uses differen
 
 ### Exact matching {#exact-matching}
 
-When the payee identification type is one of **tax_number**, **company_identification** or **siren**, Swan does not run the matching algorithm. Only result is **match** or **no match**.
+When the payee identification type is one of **`tax_number`**, **`company_identification`** or **`siren`**, Swan does not run the matching algorithm. The only possible result is **match** or **no match**.
 
 **Examples:**
 
@@ -112,7 +112,7 @@ When the payee identification type is one of **tax_number**, **company_identific
 
 ### Name matching with Levenshtein distance {#name-matching}
 
-When the payee identification type is **name**, Swan runs the matching algorithm with the Levenshtein distance. Result can be **match**, **close match** or **no match**.
+When the payee identification type is **`name`**, Swan runs the matching algorithm with the Levenshtein distance. Result can be **match**, **close match** or **no match**.
 
 Swan uses the **Levenshtein distance** to compare the name provided by the PSP to the data in the system. 
 
@@ -143,7 +143,7 @@ It is possible to receive **Impossible to match** (refer to [Mambu's VoP failure
 
 - The payee identification type is not supported for VoP
 - The IBAN is not present in Swan's system  
-- The account is in statuses **Suspended**, **Closing** or **Closed**
+- The account is in statuses **`Suspended`**, **`Closing`** or **`Closed`**
 
 ## VoP and credit transfer {#vop-and-credit-transfer}
 

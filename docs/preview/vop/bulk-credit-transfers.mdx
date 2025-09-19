@@ -48,14 +48,14 @@ To enable mandatory VoP for company accounts, you must first implement the `veri
 
 Use [the `updateAccountSettings` mutation](#updating-settings) to modify company account settings.
 
-####Requirements
+#### Requirements
 - Company account holder only.
 - User must have both `canViewAccount` and `canInitiatePayments` permissions.
 - Account membership must be `Enabled`.
 
-####Consent flow
+#### Consent flow
 - Opting in (require VoP): No consent needed.
-- Opting out (make VoP optional): User consent required via SCA.
+- Opting out (make VoP optional): User consent required through [SCA](/topics/users/consent/#sca).
 
 :::warning Integration requirement
 You must implement [the `updateAccountSettings` mutation](#updating-settings) to allow company account holders to change their bulk transfer VoP requirements. Without this implementation, users cannot opt in or out of mandatory VoP and must use our [support request form](https://support.swan.io/hc/en-150) instead, creating friction and delays.
@@ -158,8 +158,6 @@ The mutation can return several rejection types.
 | **ForbiddenRejection** | User not allowed or wrong context used |
 
 ## Sandbox testing {#sandbox-testing}
-
-### Sandbox testing
 
 VoP requirements in sandbox match the live environment behavior. Company accounts default to optional VoP but can modify settings via the [account settings mutation](#updating-settings), while individual accounts always require VoP tokens for bulk transfers.
 

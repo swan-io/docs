@@ -7,7 +7,7 @@ title: Incoming VoP requests
 Swan automatically responds to VoP requests from other Payment Service Providers when they verify details before sending transfers to Swan accounts.
 
 :::info Regulatory requirement
-Under the [European Instant Payments Regulation (IPR)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202400886), all PSPs in the SEPA zone must offer VoP services for both outgoing and incoming transfers starting October 9, 2025.
+Under the [European Instant Payments Regulation (IPR)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202400886), all PSPs in the SEPA zone must offer VoP services for incoming transfers starting October 5, 2025.
 :::
 
 ## How incoming VoP works {#how-it-works}
@@ -108,7 +108,7 @@ Swan returns one of four possible results:
 | **Match** | Exact or very close match (95%+ similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
 | **Close match** | Similar but not identical (80-94% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span> |
 | **No match** | Significant differences (under 80% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
-| **Impossible to match** | Account not found, unsupported ID type, or account suspended | N/A |
+| **Impossible to match** | Account not found, unsupported ID type, account closed or suspended | N/A |
 
 ### Examples {#examples}
 
@@ -120,7 +120,8 @@ Swan returns one of four possible results:
 - "Henri Dupont" vs "John Doe" → No match (25% similarity)
 
 **ID number matching examples:**
-- Stored: "DE136695976", Received: "136695976" → **No match** (exact matching required)
+- Stored: "DE136695976", Received: "136695976" → **No match**
+- Stored: "9234.56.788", Received: "923456788" → **No match**
 
 ## What this means for transfers {#transfer-implications}
 

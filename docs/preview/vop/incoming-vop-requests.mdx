@@ -4,7 +4,7 @@ title: Incoming VoP requests
 
 # Incoming Verification of Payee requests
 
-Swan automatically responds to VoP requests from other Payment Service Providers when they verify details before sending transfers to Swan accounts.
+Swan automatically responds to VoP requests from other Payment Service Providers (PSPs) when they verify details before sending transfers to Swan accounts.
 
 :::info Regulatory requirement
 Under the [European Instant Payments Regulation (IPR)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202400886), all PSPs in the SEPA zone must offer VoP services for incoming transfers starting October 5, 2025.
@@ -68,12 +68,12 @@ sequenceDiagram
 ```
 
 :::note No action required
-This process is automatic. Swan handles all incoming VoP requests without requiring any implementation.
+This process is automatic. Swan handles all incoming VoP requests; no implementation is required.
 :::
 
 ## Supported identification types {#identification-types}
 
-Swan supports the following payee identification types (refer to [Mambu's VoP identification types documentation](https://docs.numeral.io/docs/vop-identification-types#supported-identification-types-in-vop)) with Swan BIC:
+Swan supports the following payee identification types (refer to [Mambu's VoP identification types documentation](https://docs.numeral.io/docs/vop-identification-types#supported-identification-types-in-vop)) with Swan [Bank Identifier Code (BIC)](/topics/accounts/ibans/#local):
 
 ### Name {#name-type}
 The name of the legal entity or of the individual:
@@ -86,12 +86,12 @@ The number assigned by a tax authority to identify an organisation:
 - **Individual IBAN**: Not applicable.
 
 ### Company identification {#company-identification-type}
-The country authority given organisation identification (e.g., corporate registration number):
+The identification assigned to an organization by a national authority (e.g., corporate registration number):
 - **Company IBAN**: `AccountHolder.registration`.
 - **Individual IBAN**: Not applicable.
 
 ### SIREN {#siren-type}
-The SIREN number is a 9 digit code assigned by INSEE, the French National Institute for Statistics and Economic Studies, to identify an organisation in France:
+The SIREN number is a 9-digit code assigned by INSEE, the French National Institute for Statistics and Economic Studies, to identify an organisation in France:
 - **Company IBAN**: `AccountHolder.registration` (same as `company_identification`).
 - **Individual IBAN**: Not applicable.
 
@@ -108,7 +108,7 @@ Swan returns one of four possible results:
 | **Match** | Exact or very close match (95%+ similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
 | **Close match** | Similar but not identical (80-94% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span> |
 | **No match** | Significant differences (under 80% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
-| **Impossible to match** | Account not found, unsupported ID type, account closed or suspended | N/A |
+| **Impossible to match** | Account not found, unsupported ID type, account closed or suspended | Not applicable |
 
 ### Examples {#examples}
 
@@ -129,7 +129,7 @@ Since VoP verification happens before the actual transfer, Swan cannot link inco
 
 ## Monitoring and logging {#monitoring}
 
-Swan plans to log VoP requests and results starting Q4 2025 to compile statistics and improve matching algorithm configuration if necessary.
+Starting Q4 2025, Swan will log VoP requests and results to compile statistics and improve the matching algorithm configuration if necessary.
 
 ## Next steps {#next-steps}
 

@@ -9,9 +9,9 @@ type: release
 
 ## Improvements
 
-🚚 We've added a new [shipping method](/topics/cards/physical/#shipping-methods) for physical cards. `LaPosteTracked`, available for international deliveries, provides cardholders outside of France with a reliable option to track their card's delivery from our France printing hub.
+🚚 We've added `LaPosteTracked` as a new [shipping method](/topics/cards/physical/#shipping-methods) for international card deliveries. This option provides cardholders outside of France with a reliable way to track their card's delivery from our printing hub in France.
 
-📄 You can now use structured, country-specific formats to specify [**invoice references in transactions](/topics/payments/credit-transfers/sepa/guide-initiate-ct),** making reconciliation easier. For **SEPA Credit Transfers**, use the `labelType` field to define the reference standard, with the value in `label` or `transaction.label` when retrieving data. Specify the `ogmVcs` type for Belgian OGM VCS references.
+📄 You can now use structured, country-specific formats to specify [invoice references in transactions](/topics/payments/credit-transfers/sepa/guide-initiate-ct), making reconciliation easier. For SEPA Credit Transfers, use the `labelType` field to define the reference standard, and add the value in `label`. This value will be returned in `transaction.label` when retrieving transaction data. You can now specify the `ogmVcs` type for Belgian OGM VCS standard references.
 
 ## Verification of Payee (VoP)
 
@@ -19,7 +19,7 @@ type: release
 
 ⚠️ *The following updates are currently available in our **Sandbox** environment and will be released to the **Live** environment on **October 9th**.*
 
-💸 We're introducing updates to the `initiateCreditTransfers` endpoint to include Verification of Payee. 
+💸 We've updated the `initiateCreditTransfers` endpoint to include Verification of Payee. 
 
 - Swan now [automatically verifies beneficiary details](/preview/vop/verification-of-payee#option-1) and shows the results on the consent screen for single credit transfers without a `beneficiaryVerificationToken` in the `initiateCreditTransfers` call.
 - You can now initiate multiple credit transfers to the same beneficiary in one API call using the same beneficiaryVerificationToken. [Membership rights](/preview/vop/guide-verify-beneficiary/#token-permissions) apply as described in [beneficiaries permissions](/topics/payments/credit-transfers/#beneficiaries-permissions) when using tokens.
@@ -34,7 +34,7 @@ type: release
 
 ### VoP rollout
 
-🃏 On October 9th, Company accounts will by default be [opted out](/preview/vop/bulk-credit-transfers#bulk-requirements) of Verification of Payee (VoP) for bulk credit transfers, while Individual accounts will be opted in. You can [change this setting](/preview/vop/bulk-credit-transfers#changing-settings) with the `updateAccountSettings` mutation, once `verifyBeneficiary` is implemented.
+🃏 On October 9th, **company accounts** will by default be [opted out](/preview/vop/bulk-credit-transfers#bulk-requirements) of Verification of Payee (VoP) for bulk credit transfers, while **individual accounts** will be opted in. You can [change this setting](/preview/vop/bulk-credit-transfers#changing-settings) with the `updateAccountSettings` mutation, once `verifyBeneficiary` is implemented.
 
 📡 On October 9th, the `verifyBeneficiary` mutation will be available to [verify beneficiary details](/preview/vop/guide-verify-beneficiary/) before initiating SEPA Credit Transfers, Instant SEPA Credit Transfers, and Internal Credit Transfers. Use the `save` parameter to add a trusted beneficiary when the returned token successfully initiates a credit transfer.
 
@@ -44,9 +44,9 @@ type: release
 
 ### Upcoming breaking changes
 
-🛑 Starting **October 9th**, the `initiateCreditTransfers` mutation will return a new [rejection reason](https://api-reference.swan.io/objects/beneficiary-verification-token-already-consumed-rejection/) if the `BeneficiaryVerificationToken` of the credit transfer was previously used in another transfer initiation. 
+🛑 Starting **October 9th**, the `initiateCreditTransfers` mutation will return a new [rejection reason](https://api-reference.swan.io/objects/beneficiary-verification-token-already-consumed-rejection/) if the `BeneficiaryVerificationToken` was previously used in another credit transfer initiation. 
 
-✔️ Starting **October 31st**, in the context of the Verification of Payee regulation, the `beneficiaryVerification` query will be deprecated. Use `verifyBeneficiary` instead, to ensure uninterrupted service.
+✔️ Starting **October 31st**, in the context of the Verification of Payee regulation, the `beneficiaryVerification` query will be deprecated. Use `verifyBeneficiary` instead to ensure uninterrupted service.
 
 ## Update
 

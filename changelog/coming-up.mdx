@@ -15,7 +15,7 @@ Instead, retrieve the ID from the `merchantPayment` field, which now returns the
 
 📡 Starting **October 9th**, bulk SEPA Credit Transfers from individual account holders will be rejected if [verification tokens](/preview/vop/guide-verify-beneficiary/#step-3) aren't included in the payment initiation. You must either implement the `verifyBeneficiary` mutation (recommended) or restrict bulk credit transfer access to company accounts only. This change applies to both Live and Sandbox environments.
 
-🛑 Starting **October 9th**, the `initiateCreditTransfers` mutation will return a new [rejection reason](https://api-reference.swan.io/objects/beneficiary-verification-token-already-consumed-rejection/) if the `BeneficiaryVerificationToken` was previously used in another credit transfer initiation. 
+🛑 Starting **October 9th**, the `initiateCreditTransfers` mutation will return a new [rejection reason](https://api-reference.swan.io/objects/beneficiary-verification-token-already-consumed-rejection/) if the `BeneficiaryVerificationToken` was already used to initiate another credit transfer.
 
 💳 On **October 16th**, the `CardUrl` field will be removed. This field is being deprecated. Use `cardMaskedNumber`, `expiryDate`, and `cardDesignUrl` instead.
 
@@ -35,7 +35,7 @@ Instead, retrieve the ID from the `merchantPayment` field, which now returns the
 - The `isMyOwnIban` and `beneficiaryId` input fields will be **removed**.
 - The API will return a `ValidationRejection` error instead of `ForbiddenRejection` when an input contains **invalid** data.
 
-✔️ Starting **October 31st**, in the context of the Verification of Payee regulation, the `beneficiaryVerification` query will be deprecated. Use `verifyBeneficiary` instead to ensure uninterrupted service.
+✔️ Starting **October 31st**, the `beneficiaryVerification` query will be deprecated. Use the `verifyBeneficiary` mutation instead to ensure uninterrupted service.
 
 ⚠️ Starting **October 31st**, the `taxIdentificationNumber` will be a mandatory field during onboarding when an account holder's residency country doesn't match the `accountCountry`. This is to comply with [CRS (Common Reporting Standard) regulations](https://www.oecd.org/content/dam/oecd/en/topics/policy-issue-focus/aeoi/jersey-guidance-notes-crs.pdf).
 

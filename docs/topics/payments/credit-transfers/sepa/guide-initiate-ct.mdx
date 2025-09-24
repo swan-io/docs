@@ -73,12 +73,12 @@ mutation SepaDefault {
 
 ### Structured invoice reference  {#structured-invoice-reference}
 
-Send a SEPA Credit Transfer with an optional structured invoice reference using the `labelType` field.
+Send a SEPA Credit Transfer with an optional structured or unstructured invoice reference using the `labelType` field.
 
-:::info Optional structured reference
-- `labelType`: optional field. Example: `OgmVcs`, which currently supports the Belgian OGM VCS - a 12-digit reference number used in Belgium for payment reconciliation.
-- `label`: when `labelType` is used, this field contains the structured reference value.
-- `transaction.label`: contains the structured reference value when retrieving transaction data through a query.
+:::info Structured reference
+- `labelType`: optional; determines the label format — unstructured, structured without a specific standard, or structured using a specific invoice reference standard, such as `OgmVcs` (Belgian OGM VCS standard) or `Iso` (ISO 11649 standard).
+- `label`: contains the reference value according to `labelType`. Can be structured or unstructured.
+- `transaction.label`: returns the reference value when retrieving transaction data through a query.
 :::
 
 1. Call the `initiateCreditTransfers` mutation.

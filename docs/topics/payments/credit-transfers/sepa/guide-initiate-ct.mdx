@@ -71,19 +71,19 @@ mutation SepaDefault {
 }
 ```
 
-### Specify invoice reference  {#invoice-reference}
+### Structured invoice reference  {#structured-invoice-reference}
 
-You can now add a structured invoice reference to a SEPA Credit Transfer using the new, optional `labelType` field.
+Send a SEPA Credit Transfer with an optional structured invoice reference using the `labelType` field.
 
-:::info Optional invoice reference label
-- When using the optional `labelType` field, the reference value is provided in the `label` field. 
-- When retrieving transaction data, the structured reference value can be found in the `transaction.label` field, with its type identified by the `labelType` field.
-- This feature currently supports the Belgian OGM VCS reference, a standard 12-digit reference number used in Belgium for payment reconciliation. Select the `OgmVcs` in the `labelType` field for Belgian OGM VCS.
+:::info Optional structured reference
+- `labelType`: optional field. Example: `OgmVcs`, which currently supports the Belgian OGM VCS - a 12-digit reference number used in Belgium for payment reconciliation.
+- `label`: when `labelType` is used, this field contains the structured reference value.
+- `transaction.label`: contains the structured reference value when retrieving transaction data through a query.
 :::
 
 1. Call the `initiateCreditTransfers` mutation.
 1. Add all required information, marked by an (*) asterisk in API Explorer, including and information such as your redirect URL (line 4), your Swan `accountId` (line 5), and your transfer amount (line 7).
-1. For this use case, add information about your `sepaBeneficiary` (line 8), including their name and IBAN (lines 9-10).
+1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 8-10).
 1. Add `labelType`, choose an option (lines 13-14), and add the reference value in the `label` input.
 1. Add the `InitiateCreditTransfersSuccessPayload` payload (line 18).
 1. Add the consent URL to the success payload (line 22): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
@@ -91,7 +91,7 @@ You can now add a structured invoice reference to a SEPA Credit Transfer using t
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gaW5pdGlhdGVXaXRoTGFiZWxUeXBlIHsKICBpbml0aWF0ZUNyZWRpdFRyYW5zZmVycygKICAgIGlucHV0OiB7CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJVDIzUDAzMDAyMDMyODA2MzIxMjM1NTM3NDgiCiAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICB9CiAgICAgICAgbGFiZWxUeXBlOiBPZ21WY3MKICAgICAgICBsYWJlbDogIjAwMDAwMDAwMDA5NyIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBheW1lbnRDb25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbkFscmVhZHlDb25zdW1lZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VucwogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4,5,7,9-10,13-14,18,22} showLineNumbers
+```graphql {4,5,7,8-10,13-14,18,22} showLineNumbers
 mutation initiateWithLabelType {
   initiateCreditTransfers(
     input: {

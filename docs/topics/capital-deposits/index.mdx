@@ -47,18 +47,26 @@ flowchart LR
     WS -.-> CA
     WR -.-> CA
     WNT -.-> CO[Completed]
-    subgraph V[Valid]
+
+    %% Backward transitions
+    WNT -->|rejected| WRE
+    WRE --> WS
+
+    subgraph F[Final status]
+        direction TB
+        CA
+        style V fill:#fff,stroke:#fff,stroke-width:0px,color:#fff
         CO
     end
-    subgraph F[Final status]
-        CA
-        V
+
+    subgraph CO[Completed]
     end
+    
     style DC fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
     style WS stroke-width:2px, stroke-dasharray: 5 5
     style WNT stroke-width:2px, stroke-dasharray: 5 5
-    style V fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style CO fill:#dfedf2,stroke:#4d8296,stroke-width:3px
 ```
 
 | Case status| Explanation |
@@ -66,7 +74,7 @@ flowchart LR
 | `WaitingForRequirements` | Default status after the `CapitalDepositCase` is created, providing there were no technical issues.<br/><br/>You complete the company onboarding process and upload required documents to pass to the next status. |
 | `WaitingForShareDepositCertificate` | **_Notary reviews_** _the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_. |
 | `WaitingForRegisterExtract` | You upload your register extract for notary review. |
-| `WaitingForNotaryTransfer` | **_Notary reviews_** _the register extract_. |
+| `WaitingForNotaryTransfer` | **_Notary reviews_** _the register extract_. If the document is rejected, the case will move back to `WaitingForRegisterExtract`. |
 | `Canceled` | You can request to cancel a `CapitalDepositCase` any time before completion by submitting a request to [Swan Support](https://partner-support.swan.io/hc/en-gb/requests). When a case is canceled, the shareholder is also canceled. |
 | `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
 

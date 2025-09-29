@@ -92,6 +92,15 @@ module.exports = {
         },
         {
           type: "category",
+          label: "Multiple accounts",
+          link: { type: "doc", id: "topics/accounts/multiple-accounts/index" },
+          collapsed: true,
+          items: [
+            "/topics/accounts/multiple-accounts/guide-multiple-accounts-integration.mdx",
+          ],
+        },
+        {
+          type: "category",
           label: "Account memberships",
           link: { type: "doc", id: "topics/accounts/memberships/index" },
           collapsed: true,

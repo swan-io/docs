@@ -1,0 +1,190 @@
+---
+title: Create multiple accounts
+---
+
+This guide explains how to open additional accounts linked to one account holder. 
+
+## Guide {#guide}
+
+1. Call the `openAccount` mutation (line 2).
+2. Include the `accountHolderId`  (line 4).
+3. Add the `language` parameter (optional) to select the [account language](/topics/accounts/#language). If not specified, English (`en`) is used as the default language (line 5).
+4. Add a `name` parameter (optional) for the account. If not specified, "My account" is used as the default name (line 6).
+5. Use the `OpenAccountSuccessPayload` payload (line 9) to specify the information you'd like to receive about the additional account.
+6. Include error handling for all rejection types defined in the `OpenAccountPayload` union (lines 26-73).
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlQWNjb3VudCB7CiAgb3BlbkFjY291bnQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SG9sZGVySWQ6ICIkQUNDT1VOVF9IT0xERVJfSUQiCiAgICAgIGxhbmd1YWdlOiBlbgogICAgICBuYW1lOiAiVGF4ZXMiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gT3BlbkFjY291bnRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudCB7CiAgICAgICAgQklDCiAgICAgICAgSUJBTgogICAgICAgIGNvdW50cnkKICAgICAgICBjdXJyZW5jeQogICAgICAgIGlkCiAgICAgICAgbGFuZ3VhZ2UKICAgICAgICBuYW1lCiAgICAgICAgcGF5bWVudExldmVsCiAgICAgICAgcGF5bWVudEFjY291bnRUeXBlCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlck5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlclR5cGVOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJTdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJWZXJpZmljYXRpb25TdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c1R5cGVOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c1N0YXR1c05vdEVsaWdpYmxlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJQcm9qZWN0U2V0dGluZ3NOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c0NyZWF0aW9uTGltaXRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQcm9qZWN0U2V0dGluZ3NOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,4-6,9} showLineNumbers
+mutation CreateAccount {
+  openAccount(
+    input: {
+      accountHolderId: "$ACCOUNT_HOLDER_ID"
+      language: en
+      name: "Taxes"
+    }
+  ) {
+    ... on OpenAccountSuccessPayload {
+      __typename
+      account {
+        BIC
+        IBAN
+        country
+        currency
+        id
+        language
+        name
+        paymentLevel
+        paymentAccountType
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderNotFoundRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderTypeNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderStatusNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderVerificationStatusNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderAccountsTypeNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderAccountsStatusNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountMembershipNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderProjectSettingsNotEligibleRejection {
+      __typename
+      message
+    }
+    ... on AccountHolderAccountsCreationLimitRejection {
+      __typename
+      message
+    }
+    ... on ProjectSettingsNotFoundRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The mutation returns all of the requested information such as the account details, the `accountId` (line 10) and the account `status` (line 16).
+
+```json {10,16} showLineNumbers
+{
+  "data": {
+    "openAccount": {
+      "__typename": "OpenAccountSuccessPayload",
+      "account": {
+        "IBAN": "FR7699999001007663023512982",
+        "BIC": "SWNBFR22",
+        "currency": "EUR",
+        "country": "FRA",
+        "id": "9217e570-f785-4c88-be55-dc8b626ca8c7", 
+        "language": "en",
+        "name": "Taxes",
+        "paymentLevel": "Unlimited",
+        "paymentAccountType": "PaymentService",
+        "statusInfo": {
+          "status": "Opened"
+        }
+      }
+    }
+  }
+}
+```
+
+## Checking your account creation limit {#checking-your-account-creation-limit}
+
+### Query {#account-creation-limit-query}
+
+1. Call the `projectInfo` query (line 2).
+1. Select `multipleAccountsSettings` (line 3).
+1. Add `accountCreationLimit` and `canOpenAccount` to check your account creation limit (lines 4-5).
+
+<h3 id="query-main">Query</h3>
+
+<a href="https://explorer.swan.io?query=cXVlcnkgQWNjb3VudENyZWF0aW9uTGltaXQgewogIHByb2plY3RJbmZvIHsKICAgIG11bHRpcGxlQWNjb3VudHNTZXR0aW5ncyB7CiAgICAgIGFjY291bnRDcmVhdGlvbkxpbWl0CiAgICAgIGNhbk9wZW5BY2NvdW50CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2-5} showLineNumbers
+query AccountCreationLimit {
+  projectInfo {
+    multipleAccountsSettings {
+      accountCreationLimit
+      canOpenAccount
+    }
+  }
+}
+```
+<h3 id="payload-main">Payloads</h3>
+
+The `multipleAccountsSettings` query returns a payload that indicates the current status of the multiple accounts feature for an account holder.
+
+**Example one: Multiple accounts not active**
+
+This payload shows the response when the multiple accounts feature has **not** been **activated**.
+
+- `accountCreationLimit`: `1` indicates that only the initial account can be created.
+- `canOpenAccount`: `false` confirms that additional accounts cannot be created.
+
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "multipleAccountsSettings": {
+        "accountCreationLimit": 1,
+        "canOpenAccount": false
+      }
+    }
+  }
+}
+```
+
+**Example two: Multiple accounts active**
+
+This payload shows the response when the multiple accounts feature has been **activated**.
+
+- `accountCreationLimit`: `6` shows that a maximum of six accounts can be created.
+- `canOpenAccount`: `true` confirms that additional accounts can be opened.
+
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "multipleAccountsSettings": {
+        "accountCreationLimit": 6,
+        "canOpenAccount": true
+      }
+    }
+  }
+}
+```

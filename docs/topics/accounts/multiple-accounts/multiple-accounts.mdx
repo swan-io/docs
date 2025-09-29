@@ -1,0 +1,171 @@
+---
+title: Multiple accounts
+---
+
+Create additional accounts for an existing company account holder without repeating the onboarding and Know Your Business (KYB) processes.
+
+:::info Specific coverage 
+Contact your Strategic Account Manager (SAM) to request the multiple accounts feature.
+:::
+
+## Overview {#overview}
+
+**Multiple accounts allow a single company to create additional Swan accounts** under the same legal entity. These accounts share the same registration number and [local IBAN](/topics/accounts/ibans/#local) as the first account created during onboarding.
+
+Each account operates independently with its own IBAN, balances, and transaction flows, making it easy to create additional accounts for specific business needs. 
+
+They have the same capabilities as regular accounts, including issuing and accepting all payment types (e.g., [card payments](/topics/payments/cards/), [SEPA Credit Transfers](/topics/payments/credit-transfers/sepa/)). 
+
+To accept payments, each account requires its own [merchant profile review](/topics/merchants/#profiles), so a new profile and payment method must be requested for each additional account created.
+
+## Eligibility {#eligibility}
+
+Multiple accounts are available for **[company account](/topics/onboarding/company/) types**, which include:
+
+- Registered companies
+- Self-employed workers
+- Associations or non-profit organizations
+
+:::info Individual accounts
+Individuals may create additional accounts. A new onboarding process is required, but Know Your Customer (KYC) isn't repeated.
+:::
+
+## Requirements {#requirements}
+
+### Legal representative requirements {#legal-rep-requirements}
+
+All accounts under the same account holder share the **same [legal representative](/topics/onboarding/company/#representatives)** (account admin). Only the legal representative of the first account can create additional accounts. Changes to the legal representative follow the standard process but must be applied across all accounts belonging to the same account holder.
+
+### Account holder requirements {#account-holder-requirements}
+
+The following criteria must be met by the account holder:
+
+| **Requirement** | **Value** |
+| --- | --- |
+| `accountHolder.verificationStatus` | `Verified` |
+| `accountHolder.status` | `Enabled` |
+| `accountHolder.type` | `Company` |
+| `accountHolder.account.status` | `Opened` |
+
+## Key benefits and use cases {#key-benefits}
+
+### Operational benefits {#operational-benefits}
+
+- Skip onboarding for each new account.
+- Share KYB verification across all accounts, reducing duplicate checks.
+- Perform re-KYB verification on one account holder across all accounts.
+
+### Use cases {#use-cases}
+
+- **Freelancers** can use this feature for tax management.
+- **Small and medium businesses (SMBs)** often use separate accounts for advanced spending management, like managing financial flows by supplier, department, or region.
+- **Homeowner associations (HOAs)** can use an "operating account" for day-to-day expenses and a "reserve account" for common area expenses (e.g. repairs).
+
+## Feature activation {#feature-activation}
+
+The multiple accounts feature is available to all partners, but **isn't activated** by default. Contact your Strategic Account Manager (SAM) to request activation before creating accounts.
+
+When requesting the feature, make sure to include:
+- The purpose for creating additional accounts.
+- The number of accounts needed.
+
+:::caution Compliance review
+Your request is subject to a **compliance review**, as well as a contract and pricing review if accepted.
+:::
+
+## API implementation {#implementation}
+
+Once the feature is activated, you can create additional accounts.
+
+1. Call the `openAccount` mutation.
+:::info Multiple accounts guide 
+Follow the [**step-by-step guide**](guide-multiple-accounts-integration.mdx) to create multiple accounts.
+:::
+    
+2. Collect the legal representative's confirmation in your banking app. A consent URL or Strong Customer Authentication (SCA) is not required.
+
+:::caution Confirmation
+You must include a clear confirmation step, such as a button, for the legal representative to confirm their intent.
+:::
+
+The new account is created under the same account holder, sharing the same KYB and legal representative. All additional accounts have an `Unlimited` payment level and the `PaymentService` account type.
+
+## Account conditions {#account-conditions}
+
+### Account creation limit {#account-creation-limit}
+
+By default, users are limited to one account until the multiple accounts feature is activated. 
+
+After the feature is activated, users may be granted a maximum number of accounts, which is defined during the compliance review and documented in a welcome letter. 
+
+Users are restricted from creating new accounts after reaching the maximum limit.
+
+:::info Account status 
+Only accounts with an `Opened` status count toward the maximum limit. `Suspended`, `Closing`, or `Closed` accounts do not.
+:::
+
+## Shared account details {#shared-account-details}
+
+### IBAN country {#iban-country}
+
+All accounts under the same account holder share the same IBAN country. To create an account with a different IBAN country, the legal representative must complete a new company onboarding process.
+
+### Company registration number {#company-registration-number}
+
+All additional accounts are linked to one account holder with a single registration number. To create an account for another company, the user must complete a new company onboarding process with the new company's registration number.
+
+## Account management {#account-management}
+
+### Legal documents {#legal-documents}
+
+The same **Terms and Conditions** and **Partnership Conditions** apply to all accounts under the same account holder. Legal documents are generated in the same way as for single accounts.
+
+### Account closure {#account-closure}
+
+Standard [account closure rules](/topics/accounts/closure/#closure-partner) apply. Each account can be closed individually. You can request closure of the first account (created during onboarding) while keeping any additional accounts active.
+
+## Billing {#billing}
+
+### End-customer billing {#end-customer-billing}
+
+Each active account is billed independently, resulting in one invoice per account.
+
+### Partner billing {#partner-billing}
+
+Active account pricing is applied at the account holder level, resulting in a new fee for active accounts on your invoice.
+
+## Setting access in Web banking {#web-banking-access}
+
+The web banking setting `canOpenAccount` is a project-level configuration that controls whether an account holder can open additional accounts directly from Swan Web banking.
+
+This setting is activated by default. Unless you deactivate it, end users will be able to open multiple accounts from Swan's interface. 
+
+To restrict account opening to your own banking application, deactivate the `canOpenAccount` setting in your **Dashboard** > **Settings** > **Web banking**. 
+
+### Key benefits {#web-banking-benefits}
+
+Controlling this setting gives you greater flexibility to:
+
+1. **Restrict by pricing plan:** Restrict access to the Multiple Accounts feature by pricing plan. 
+1. **Differentiate by account limits:** Define how many additional accounts a user can create. For instance, one additional account for Basic plans and up to five for Premium plans.
+
+## Rejections {#rejections}
+
+Multiple account creations can be rejected for the following reasons:
+
+| Rejection reason | Description |
+| --- | --- |
+| `AccountHolderNotFoundRejection` | The provided account holder ID doesn't match an existing `AccountHolder`. |
+| `ForbiddenRejection` | The project isn't allowed to create multiple accounts, or the wrong context is used. |
+| `AccountMembershipNotEligibleRejection` | The user isn't eligible to open the account. They must be the account legal representative. |
+| `AccountHolderTypeNotEligibleRejection` | The account holder type must be `Company`. |
+| `AccountHolderStatusNotEligibleRejection` | The account holder status must be `Enabled`. |
+| `AccountHolderVerificationStatusNotEligibleRejection` | The account holder must have a `Verified` KYC status. |
+| `AccountHolderAccountsTypeNotEligibleRejection` | All associated accounts must be `EndCustomer` or `CapitalDepositMainAccount`. |
+| `AccountHolderAccountsStatusNotEligibleRejection` | No active accounts available. All associated accounts are `Closed`, `Closing`, or `Suspended`. |
+| `AccountHolderAccountsCreationLimitRejection` | The maximum number of `Opened` accounts has been reached. Check project settings for multiple accounts. |
+| `AccountHolderProjectSettingNotEligibleRejection` | Account creation is disabled in project settings. |
+
+## Guides {#guides}
+
+- [Create multiple accounts](guide-multiple-accounts-integration.mdx)

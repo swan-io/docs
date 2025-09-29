@@ -20,7 +20,7 @@ To accept payments, each account requires its own [merchant profile review](/top
 
 ## Eligibility {#eligibility}
 
-Multiple accounts are available for **[company account](/topics/onboarding/company/) types**, which include:
+Multiple Accounts is available for **[company account](/topics/onboarding/company/) types**, which include:
 
 - Registered companies
 - Self-employed workers
@@ -78,7 +78,7 @@ Your request is subject to a **compliance review**, as well as a contract and pr
 Once the feature is activated, you can create additional accounts.
 
 1. Call the `openAccount` mutation.
-:::info Multiple accounts guide 
+:::info Multiple Accounts guide 
 Follow the [**step-by-step guide**](guide-multiple-accounts-integration.mdx) to create multiple accounts.
 :::
     
@@ -100,73 +100,12 @@ After the feature is activated, users may be granted a maximum number of account
 
 Users are restricted from creating new accounts after reaching the maximum limit.
 
+Call the `projectInfo` query to check your account creation limit.
+
 :::info Account status 
-Only accounts with an Opened status count toward the maximum limit. Suspended, Closing, or Closed accounts do not.
+Only accounts with an `Opened` status count toward the maximum limit. `Suspended`, `Closing`, or `Closed` accounts do not. 
 :::
 
-### Checking your account creation limit {#checking-your-account-creation-limit}
-
-1. Call the `projectInfo` query (line 2).
-1. Select `multipleAccountsSettings` (line 3).
-1. Add `accountCreationLimit` and `canOpenAccount` to check your account creation limit (lines 4-5).
-
-<h3 id="query-main">Query</h3>
-
-<a href="https://explorer.swan.io?query=cXVlcnkgQWNjb3VudENyZWF0aW9uTGltaXQgewogIHByb2plY3RJbmZvIHsKICAgIG11bHRpcGxlQWNjb3VudHNTZXR0aW5ncyB7CiAgICAgIGFjY291bnRDcmVhdGlvbkxpbWl0CiAgICAgIGNhbk9wZW5BY2NvdW50CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
-
-```graphql {2-5} showLineNumbers
-query AccountCreationLimit {
-  projectInfo {
-    multipleAccountsSettings {
-      accountCreationLimit
-      canOpenAccount
-    }
-  }
-}
-```
-<h3 id="payload-main">Payloads</h3>
-
-The `multipleAccountsSettings` query returns a payload that indicates the current status of the Multiple Accounts feature for an account holder.
-
-**Example one: Multiple accounts not active**
-
-This payload shows the response when Multiple Accounts has **not** been **activated**.
-
-- `accountCreationLimit`: `1` indicates that only the initial account can be created.
-- `canOpenAccount`: `false` confirms that additional accounts cannot be created.
-
-```json {5,6} showLineNumbers
-{
-  "data": {
-    "projectInfo": {
-      "multipleAccountsSettings": {
-        "accountCreationLimit": 1,
-        "canOpenAccount": false
-      }
-    }
-  }
-}
-```
-
-**Example two: Multiple accounts active**
-
-This payload shows the response when Multiple Accounts has been **activated**.
-
-- `accountCreationLimit`: `6` shows that a maximum of six accounts can be created.
-- `canOpenAccount`: `true` confirms that additional accounts can be opened.
-
-```json {5,6} showLineNumbers
-{
-  "data": {
-    "projectInfo": {
-      "multipleAccountsSettings": {
-        "accountCreationLimit": 6,
-        "canOpenAccount": true
-      }
-    }
-  }
-}
-```
 ## Shared account details {#shared-account-details}
 
 ### IBAN country {#iban-country}

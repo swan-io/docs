@@ -93,10 +93,10 @@ module.exports = {
         {
           type: "category",
           label: "Multiple accounts",
-          link: { type: "doc", id: "/topics/accounts/multiple-accounts/index" },
+          link: { type: "doc", id: "topics/accounts/multiple-accounts/index" },
           collapsed: true,
           items: [
-            "/topics/accounts/multiple-accounts/guide-multiple-accounts-integration",
+            "topics/accounts/multiple-accounts/guide-multiple-accounts-integration",
           ],
         },
         {

@@ -12,12 +12,14 @@ If you use Swan's Web Banking interface, your users can also block and resume ac
 
 To block account members permanently, follow the guide to [disable an account membership](./guide-disable.mdx).
 
+## Suspend a membership {#guide-suspend}
+
 :::tip Prerequisites
 - You have the **`canManageAccountMembership`** permission.
 - You're not suspending yourself or the legal representative's membership.
+- Suspending a membership does not require consent.
+- You can use either a user access token or a project access token.
 :::
-
-## Suspend a membership {#guide-suspend}
 
 1. Call the `suspendAccountMembership` mutation.
 1. Add the account membership ID.
@@ -88,6 +90,12 @@ mutation SuspendMembership {
 ```
 
 ## Resume a membership {#guide-resume}
+
+:::tip Prerequisites
+- You have the **`canManageAccountMembership`** permission.
+- Resuming a membership requires consent.
+- You must use a user access token. Project access tokens cannot be used to resume account memberships.
+:::
 
 :::note Suspended only
 You can only resume a membership if the account membership's status was `Suspended`, or temporarily blocked.

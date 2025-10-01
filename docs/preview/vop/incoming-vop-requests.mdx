@@ -95,22 +95,6 @@ The SIREN number is a 9-digit code assigned by INSEE, the French National Instit
 - **Company IBAN**: `AccountHolder.registration` (same as `company_identification`).
 - **Individual IBAN**: Not applicable.
 
-## Important matching considerations {#matching-considerations}
-
-### Trade names and merchant names {#trade-merchant-names}
-
-Swan does not verify against trade names or merchant names. VoP matching uses only the legal company name registered in Swan's system.
-
-**For Swan's partners**: If your end users save beneficiaries using trade names or merchant names instead of legal names, VoP requests will return **No match** results. Communicate to your users that they should save beneficiaries using the legal company name that appears on official documents.
-
-**Example**: If a company's legal name is "PIANA SAS" but they operate as "Happy Place," VoP requests using "Happy Place" will return **No match**.
-
-### Middle names {#middle-names}
-
-Swan verifies against the complete name stored in the system, including middle names.
-
-**Example**: If an account holder's name is "Henri Charles Dupont" but the VoP request only includes "Henri Dupont," the result will be **No match**.
-
 ## VoP matching and results {#matching-and-results}
 
 Swan returns verification results based on how closely the provided details match the account holder information. Understanding these results helps you anticipate what other PSPs experience when sending transfers to Swan accounts.
@@ -121,8 +105,8 @@ Swan returns one of four possible results:
 
 | Result type | When it occurs | Matching approach |
 | --- | --- | --- |
-| **Match** | Exact or very close match (100% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
-| **Close match** | Similar but not identical (80-99% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span> |
+| **Match** | Exact or very close match (95%+ similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
+| **Close match** | Similar but not identical (80-94% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span> |
 | **No match** | Significant differences (under 80% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
 | **Impossible to match** | Account not found, unsupported ID type, account closed or suspended | Not applicable |
 
@@ -133,7 +117,7 @@ Swan returns one of four possible results:
 - "Henri Dupont" vs "Henri Dupont" → Match (100% similarity)
 - "Henri Dupont" vs "Henri Dupond" → Close match (92% similarity)
 - "Henri Dupont" vs "Henry Dupond" → Close match (83% similarity)
-- "Henri Dupont" vs "Malika Ngoma" → No match (8% similarity)
+- "Henri Dupont" vs "John Doe" → No match (25% similarity)
 
 **ID number matching examples:**
 - Stored: "DE136695976", Received: "136695976" → **No match**

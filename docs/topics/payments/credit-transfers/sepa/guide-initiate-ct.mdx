@@ -156,9 +156,13 @@ Send an Instant SEPA Credit Transfer to a beneficiary within the SEPA network.
 1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 10-11).
 1. For `mode`, choose `InstantWithFallback`, which begins as an instant transfer but falls back to a regular transfer if instant isn't available.
     - If you'd rather cancel the transfer if instant isn't available, choose `InstantWithoutFallback` instead.
-1. Add the `InitiateCreditTransfersSuccessPayload` payload.
+6. Add the `InitiateCreditTransfersSuccessPayload` payload.
 1. Add the consent URL to the success payload (line 28): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
+
+:::tip Schedule transfers
+You can use the `requestedExecutionAt` parameter to schedule a transfer up to one year in advance. These upcoming transfers can be canceled before execution using the `cancelTransaction` mutation.
+:::
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gU2VwYUluc3RhbnQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJRTI3Qk9GSTkwMDAxNzI0MjUyMSIKICAgICAgICAgIG5hbWU6ICJEaWxsb24gQnlybmUiCiAgICAgICAgICBpc015T3duSWJhbjogZmFsc2UKICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgfQogICAgICAgIG1vZGU6IEluc3RhbnRXaXRoRmFsbGJhY2sKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIGNyZWF0ZWRBdAogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 

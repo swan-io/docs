@@ -16,14 +16,7 @@ When another PSP initiates a transfer to a Swan account, they first send a VoP r
 
 ### Process overview {#process-overview}
 
-Swan operates as a responding PSP registered with the [EPC Directory Service (EDS)](https://www.europeanpaymentscouncil.eu/what-we-do/other-epc-activities/epc-directory-service). We partner with Mambu Payments to compute and provide VoP matching results.
-
-Mambu Payments supports three integration modes (refer to [Mambu's VoP documentation](https://docs.numeral.io/docs/respond-to-vop-requests)):
-- Synchronised accounts.
-- Account holder information requests to your system.
-- Pass-through integration with your system.
-
-Swan uses the "Account holder information requests to your system" integration mode to protect end users' data.
+Swan operates as a responding PSP registered with the [EPC Directory Service (EDS)](https://www.europeanpaymentscouncil.eu/what-we-do/other-epc-activities/epc-directory-service).
 
 ```mermaid
 sequenceDiagram
@@ -97,19 +90,16 @@ The SIREN number is a 9-digit code assigned by INSEE, the French National Instit
 
 ## Important matching considerations {#matching-considerations}
 
-### Trade names and merchant names {#trade-merchant-names}
+### Providing correct account holder information {#correct-information}
 
-Swan does not verify against trade names or merchant names. VoP matching uses only the legal company name registered in Swan's system.
+Swan verifies against the exact legal name and details registered in the system. To ensure successful incoming transfers, advise your users to provide senders with their exact account name and IBAN as they appear on their Swan account.
 
-**For Swan's partners**: If your end users save beneficiaries using trade names or merchant names instead of legal names, VoP requests will return **No match** results. Communicate to your users that they should save beneficiaries using the legal company name that appears on official documents.
+**Key points to communicate to your users:**
+- Use the complete legal name, including all registered middle names.
+- Ensure correct spelling of all names.
+- Provide the legal company name, not trade names or merchant names.
 
-**Example**: If a company's legal name is "PIANA SAS" but they operate as "Happy Place," VoP requests using "Happy Place" will return **No match**.
-
-### Middle names {#middle-names}
-
-Swan verifies against the complete name stored in the system, including middle names.
-
-**Example**: If an account holder's name is "Henri Charles Dupont" but the VoP request only includes "Henri Dupont," the result will be **No match**.
+**Example**: If a company's legal name is "PIANA SAS" but they operate as "Happy Place," senders must use "PIANA SAS" for VoP requests to match. Similarly, if an account holder's name is "Henri Charles Dupont," senders should use the complete name, not just "Henri Dupont."
 
 ## VoP matching and results {#matching-and-results}
 

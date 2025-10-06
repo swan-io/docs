@@ -1,21 +1,11 @@
 :::tip Upcoming features
-Passcode reset improvements, [card insurance](https://docs.swan.io/preview/card-insurance/), and more!<br />
-Check out [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to see what's in the works. :rocket:
+[Card insurance](https://docs.swan.io/preview/card-insurance/), [Belgian IBANs](http://localhost:3000/preview/belgian-ibans) and more! Check out [Swan's public roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to see what's in the works. :rocket:
 :::
 
 <details>
   <summary>⚠️ **Upcoming breaking changes**</summary>
 
   <div>
-
-⚠️ Starting **October 1st**, we're removing the `paymentId` field from the `initiateSepaDirectDebitMerchantPayment` mutation. 
-Instead, retrieve the ID from the `merchantPayment` field, which now returns the Merchant Payment object.
-
-📖 Starting **October 9th**, the new **[Verification of Payee](/preview/vop/verification-of-payee/)** regulation takes effect.
-
-📡 Starting **October 9th**, bulk SEPA Credit Transfers from individual account holders will be rejected if [verification tokens](/preview/vop/guide-verify-beneficiary/#step-3) aren't included in the payment initiation. You must either implement the `verifyBeneficiary` mutation (recommended) or restrict bulk credit transfer access to company accounts only. This change applies to both Live and Sandbox environments.
-
-🛑 Starting **October 9th**, the `initiateCreditTransfers` mutation will return a new [rejection reason](https://api-reference.swan.io/objects/beneficiary-verification-token-already-consumed-rejection/) if the `BeneficiaryVerificationToken` was already used to initiate another credit transfer.
 
 💳 On **October 16th**, the `CardUrl` field will be removed. This field is being deprecated. Use `cardMaskedNumber`, `expiryDate`, and `cardDesignUrl` instead.
 
@@ -37,9 +27,19 @@ Instead, retrieve the ID from the `merchantPayment` field, which now returns the
 
 ✔️ Starting **October 31st**, the `beneficiaryVerification` query will be deprecated. Use the `verifyBeneficiary` mutation instead to ensure uninterrupted service.
 
-⚠️ Starting **October 31st**, the `taxIdentificationNumber` will be a mandatory field during onboarding when an account holder's residency country doesn't match the `accountCountry`. This is to comply with [CRS (Common Reporting Standard) regulations](https://www.oecd.org/content/dam/oecd/en/topics/policy-issue-focus/aeoi/jersey-guidance-notes-crs.pdf).
+⚖️ Starting **October 31st**, the `taxIdentificationNumber` will be a mandatory field at onboarding when an account holder's residency country does not match the `accountCountry`. This is to comply with [CRS (Common Reporting Standard) regulations](https://www.oecd.org/content/dam/oecd/en/topics/policy-issue-focus/aeoi/jersey-guidance-notes-crs.pdf).
 
-👥 Starting **December 31st**, the `bookedBalanceAfter` field will be removed from the transaction query. Use the `balanceAfter.amount` on `BookedTransactionStatusInfo` instead.
+🔍 Starting **November 12th**, the `onboarding(id: ID!)` query may return `null` when no onboarding exists for the given ID, instead of always returning an `Onboarding` object.
+
+🔄 On **November 12th**, the `verificationFlow` field will be removed from the `OnboardingInfo` object. This field is deprecated and no longer serves any purpose.
+
+🔗 On **November 12th**, the `redirectUrl` field will be removed from both the `Onboarding` and `OnboardingInfo` objects. It has been deprecated for two years and replaced by the `oauthRedirectParameters` object.
+
+👤 On **November 12th**, the `title` field will be removed from the Ultimate Beneficial Owner (UBO) object. It has been deprecated and replaced by the `gender` field.
+
+📊 On **November 12th**, the `onboardingState` field will be removed from the `OnboardingInfo` object. This field is deprecated and no longer serves any purpose.
+
+💥 Starting **December 31st**, the `bookedBalanceAfter` field will be removed from the transaction query. Use the `balanceAfter.amount` on `BookedTransactionStatusInfo` instead.
 
   </div>
 </details>

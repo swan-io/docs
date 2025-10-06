@@ -1,0 +1,37 @@
+---
+title: 9 October 2025
+type: release
+---
+
+## New features
+
+🔐 We've overhauled the [passcode reset experience](/topics/users/consent/) to make it faster, clearer, and self-serve for all users. The new flows are faster, with synchronous completion for most users via face verification, and an async review only when full identification is required. This generates fewer support interventions and improves time to recovery when a passcode is forgotten.
+
+## Improvements
+
+📭 We've implemented a Regex to enforce better formatting for the [`postalCode`](https://api-reference.swan.io/inputs/complete-address-input/#completeaddressinputpostalcodestring--) field in physical addresses when ordering cards.
+
+## API updates
+
+### Upcoming breaking changes
+
+🔍 Starting **November 12th**, the `onboarding(id: ID!)` query may return `null` when no onboarding exists for the given ID, instead of always returning an `Onboarding` object.
+
+🔄 On **November 12th**, the `verificationFlow` field will be removed from the `OnboardingInfo` object. This field is deprecated and no longer serves any purpose.
+
+🔗 On **November 12th**, the `redirectUrl` field will be removed from both the `Onboarding` and `OnboardingInfo` objects. It has been deprecated for two years and replaced by the `oauthRedirectParameters` object.
+
+👤 On **November 12th**, the `title` field will be removed from the Ultimate Beneficial Owner (UBO) object. It has been deprecated and replaced by the `gender` field.
+
+📊 On **November 12th**, the `onboardingState` field will be removed from the `OnboardingInfo` object. This field is deprecated and no longer serves any purpose.
+
+### Updates
+
+💸 On **October 19th**, we will introduce the following updates to the `initiateCreditTransfers` endpoint to improve its usability and clarity:
+
+- The `save` parameter now defaults to `false`.
+- The `mode` parameter is now a **required** field. The default value is set to `Regular`.
+- The `isMyOwnIban` and `beneficiaryId` input fields have been **removed**.
+- The API now returns a `ValidationRejection` error instead of `ForbiddenRejection` when an input contains **invalid** data.
+
+⚖️ Starting **October 31st**, the `taxIdentificationNumber` will be a mandatory field at onboarding when an account holder's residency country does not match the `accountCountry`. This is to comply with [CRS (Common Reporting Standard) regulations](https://www.oecd.org/content/dam/oecd/en/topics/policy-issue-focus/aeoi/jersey-guidance-notes-crs.pdf).

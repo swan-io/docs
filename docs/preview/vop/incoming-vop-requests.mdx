@@ -16,14 +16,7 @@ When another PSP initiates a transfer to a Swan account, they first send a VoP r
 
 ### Process overview {#process-overview}
 
-Swan operates as a responding PSP registered with the [EPC Directory Service (EDS)](https://www.europeanpaymentscouncil.eu/what-we-do/other-epc-activities/epc-directory-service). We partner with Mambu Payments to compute and provide VoP matching results.
-
-Mambu Payments supports three integration modes (refer to [Mambu's VoP documentation](https://docs.numeral.io/docs/respond-to-vop-requests)):
-- Synchronised accounts.
-- Account holder information requests to your system.
-- Pass-through integration with your system.
-
-Swan uses the "Account holder information requests to your system" integration mode to protect end users' data.
+Swan operates as a responding PSP registered with the [EPC Directory Service (EDS)](https://www.europeanpaymentscouncil.eu/what-we-do/other-epc-activities/epc-directory-service).
 
 ```mermaid
 sequenceDiagram
@@ -73,7 +66,7 @@ This process is automatic. Swan handles all incoming VoP requests; no implementa
 
 ## Supported identification types {#identification-types}
 
-Swan supports the following payee identification types (refer to [Mambu's VoP identification types documentation](https://docs.numeral.io/docs/vop-identification-types#supported-identification-types-in-vop)) with Swan [Bank Identifier Code (BIC)](/topics/accounts/ibans/#local):
+Swan supports the following payee identification types with a Swan [Bank Identifier Code (BIC)](/topics/accounts/ibans/#local):
 
 ### Name {#name-type}
 The name of the legal entity or of the individual:
@@ -95,6 +88,21 @@ The SIREN number is a 9-digit code assigned by INSEE, the French National Instit
 - **Company IBAN**: `AccountHolder.registration` (same as `company_identification`).
 - **Individual IBAN**: Not applicable.
 
+## Matching considerations {#matching-considerations}
+
+### Account holder information accuracy {#correct-information}
+
+To ensure successful incoming transfers, your users must provide senders with their exact account name and IBAN as they appear on their Swan account. Swan verifies incoming transfers against the legal name and details registered in the system.
+
+**Key points to communicate to your users:**
+- Use the complete legal name, including all registered middle names.
+- Ensure all names are spelled correctly.
+- For business accounts, use the full legal company name, not a trade or merchant name. 
+
+You may share [our end-user support article](https://support.swan.io/hc/en-150/articles/30680956306333-Verification-of-Payee-VoP) to assist with user training.
+
+**Example**: If a company's legal name is "MY COMPANY SAS" but they operate as "Awesome Company", senders must use "MY COMPANY SAS" for VoP requests to match. Similarly, if an account holder's name is "Henri Charles Dupont," senders should use the complete name, not just "Henri Dupont."
+
 ## VoP matching and results {#matching-and-results}
 
 Swan returns verification results based on how closely the provided details match the account holder information. Understanding these results helps you anticipate what other PSPs experience when sending transfers to Swan accounts.
@@ -105,8 +113,8 @@ Swan returns one of four possible results:
 
 | Result type | When it occurs | Matching approach |
 | --- | --- | --- |
-| **Match** | Exact or very close match (95%+ similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
-| **Close match** | Similar but not identical (80-94% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span> |
+| **Match** | Exact or very close match (100% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
+| **Close match** | Similar but not identical (80-99% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span> |
 | **No match** | Significant differences (under 80% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
 | **Impossible to match** | Account not found, unsupported ID type, account closed or suspended | Not applicable |
 
@@ -117,7 +125,7 @@ Swan returns one of four possible results:
 - "Henri Dupont" vs "Henri Dupont" → Match (100% similarity)
 - "Henri Dupont" vs "Henri Dupond" → Close match (92% similarity)
 - "Henri Dupont" vs "Henry Dupond" → Close match (83% similarity)
-- "Henri Dupont" vs "John Doe" → No match (25% similarity)
+- "Henri Dupont" vs "Malika Ngoma" → No match (8% similarity)
 
 **ID number matching examples:**
 - Stored: "DE136695976", Received: "136695976" → **No match**

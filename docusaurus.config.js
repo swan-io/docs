@@ -158,7 +158,7 @@ module.exports = {
         redirects: [
           {
             from: '/preview/verification-of-payee',
-            to: '/preview/vop/verification-of-payee',
+            to: '/topics/payments/credit-transfers/sepa/vop/verification-of-payee',
           },
         ]
       },

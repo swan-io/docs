@@ -157,6 +157,16 @@ The mutation can return several rejection types.
 | **AccountMembershipStatusNotEligibleRejection** | User's account membership must be `Enabled`. |
 | **ForbiddenRejection** | User not allowed or wrong context used |
 
+### Webhook notifications {#webhook-notifications}
+
+Subscribe to the `AccountSetting.Updated` [webhook](/developers/using-api/webhooks/) to receive notifications when the `allowBulkCreditTransfersWithoutBeneficiaryVerification` setting changes.
+
+Setting changes can be triggered by:
+- The user through the `updateAccountSettings` mutation.
+- A Swan agent following a user support request.
+
+This webhook helps you track account setting changes and maintain an audit trail for dispute protection.
+
 ## Sandbox testing {#sandbox-testing}
 
 VoP requirements in sandbox match the live environment behavior. Company accounts default to optional VoP but can modify settings via the [account settings mutation](#updating-settings), while individual accounts always require VoP tokens for bulk transfers.

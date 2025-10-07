@@ -160,10 +160,6 @@ module.exports = {
             from: '/preview/verification-of-payee',
             to: '/preview/vop/verification-of-payee',
           },
-          {
-            from: '/topics/payments/credit-transfers/sepa/verification-of-payee',
-            to: '/preview/vop/verification-of-payee',
-          },
         ]
       },
     ],

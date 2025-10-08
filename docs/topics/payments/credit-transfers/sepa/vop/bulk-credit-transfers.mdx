@@ -7,7 +7,7 @@ title: Bulk credit transfers
 Manage VoP requirements for bulk transfers in your account settings to fit your business needs.
 
 :::info Requirements
-Bulk credit transfers require [custom verification](/preview/vop/verification-of-payee#option-2) using the [`verifyBeneficiary`](/preview/vop/guide-verify-beneficiary) mutation. The default verification flow doesn't support bulk payments.
+Bulk credit transfers require [custom verification](/topics/payments/credit-transfers/sepa/vop/verification-of-payee#option-2) using the [`verifyBeneficiary`](/topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary) mutation. The default verification flow doesn't support bulk payments.
 :::
 
 ## VoP requirements for bulk transfers {#bulk-requirements}
@@ -156,6 +156,16 @@ The mutation can return several rejection types.
 | **AccountMembershipNotEligibleRejection** | User lacks required permissions (`canViewAccount` + `canInitiatePayments`) |
 | **AccountMembershipStatusNotEligibleRejection** | User's account membership must be `Enabled`. |
 | **ForbiddenRejection** | User not allowed or wrong context used |
+
+### Webhook notifications {#webhook-notifications}
+
+Subscribe to the `AccountSetting.Updated` [webhook](/developers/using-api/webhooks/) to receive notifications when the `allowBulkCreditTransfersWithoutBeneficiaryVerification` setting changes.
+
+Setting changes can be triggered by:
+- The user through the `updateAccountSettings` mutation.
+- A Swan agent following a user support request.
+
+This webhook helps you track account setting changes and maintain an audit trail for dispute protection.
 
 ## Sandbox testing {#sandbox-testing}
 

@@ -402,6 +402,17 @@ module.exports = {
                 "topics/payments/credit-transfers/sepa/guide-initiate-ct",
                 "topics/payments/credit-transfers/sepa/guide-cancel-ct",
                 "topics/payments/credit-transfers/sepa/guide-refund-ct",
+                {
+                  type: "category",
+                  label: "Verification of Payee (VoP)",
+                  link: { type: "doc", id: "topics/payments/credit-transfers/sepa/vop/verification-of-payee" },
+                  collapsed: true,
+                  items: [
+                    'topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary',
+                    'topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers',
+                    'topics/payments/credit-transfers/sepa/vop/incoming-vop-requests',
+                  ],
+                },
                 "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-add-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",
@@ -756,27 +767,8 @@ module.exports = {
       label: 'Upcoming features',
       className: 'sidebar-preview-notice',
     },
-    {
-      type: "category",
-      label: "Preview",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Verification of Payee (VoP)",
-          link: { type: "doc", id: "preview/vop/verification-of-payee" },
-          collapsed: true,
-          items: [
-            'preview/vop/guide-verify-beneficiary',
-            'preview/vop/bulk-credit-transfers',
-            'preview/vop/incoming-vop-requests',
-          ],
-        },
-        'preview/belgian-ibans',
-        // Add more preview features here
-      ],
-    },
+    'preview/belgian-ibans',
+    // Add more preview features here
     {
       type: "category",
       label: "Beta",

@@ -155,12 +155,7 @@ module.exports = {
     [
       "@docusaurus/plugin-client-redirects",
       {
-        redirects: [
-          {
-            from: '/preview/verification-of-payee',
-            to: '/topics/payments/credit-transfers/sepa/vop/verification-of-payee',
-          },
-        ]
+        redirects: redirects,
       },
     ],
     [

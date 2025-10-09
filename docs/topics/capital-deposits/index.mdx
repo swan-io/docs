@@ -16,11 +16,11 @@ Several key stakeholders are involved in the capital deposit process: **you**; *
 
 The capital deposit process consists of a few main actions:
 
-- Creating a Swan capital deposit case to collect everything
-- Creating Swan accounts
-- Verifying identities
-- Uploading documents
-- Transferring funds
+- Creating a Swan capital deposit case to collect everything.
+- Creating Swan accounts.
+- Verifying identities.
+- Uploading documents.
+- Transferring funds.
 
 Learn more about the stakeholders and their interactions to complete a capital deposit on this page before continuing to the [guide for 🇫🇷 France](./france/guide.mdx).
 
@@ -28,20 +28,25 @@ Learn more about the stakeholders and their interactions to complete a capital d
 
 The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case) API object compiles all information for a capital deposit case, including:
 
-1. Details about the future company
-1. Company account
-1. Shareholder information
-1. Capital deposit documents
+1. Details about the future company.
+1. Company account.
+1. Shareholder information.
+1. Capital deposit documents.
 
 ### Case statuses {#case-statuses}
+
+The `CapitalDepositCase` object includes two status fields that work together to provide visibility into your capital deposit progress:
+
+- **`status`**: The main case status that indicates which major phase the case is in.
+- **`statusDetails`**: A sub-status that provides additional context about what's happening within certain phases. When the status detail would simply duplicate the main status, this value is `null` to avoid confusion.
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    DC((Capital deposit<br/>case created)) -.-> WR[WaitingFor<br/>Requirements]
+    DC((Capital deposit<br/>case created)) -.-> WR[WaitingFor<br/>Requirements<br/><em>statusDetails active</em>]
     WR -.-> WS[WaitingForShare<br/>DepositCertificate<br/><em>Notary</em>]
     WS -.-> WRE[WaitingFor<br/>RegisterExtract]
-    WRE -.-> WNT[WaitingFor<br/>NotaryTransfer<br/><em>Notary</em>]
+    WRE -.-> WNT[WaitingFor<br/>NotaryTransfer<br/><em>statusDetails active</em>]
     WNT -.-> CA[Canceled]
     WRE -.-> CA
     WS -.-> CA
@@ -68,19 +73,26 @@ flowchart LR
     style CO fill:#dfedf2,stroke:#4d8296,stroke-width:3px
 ```
 
-| Case status| Explanation |
-| --- | --- |
-| `WaitingForRequirements` | Default status after the `CapitalDepositCase` is created, providing there were no technical issues.<br/><br/>You complete the company onboarding process and upload required documents to pass to the next status. |
-| `WaitingForShareDepositCertificate` | **_Notary reviews_** _the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_. |
-| `WaitingForRegisterExtract` | You upload your register extract for notary review. |
-| `WaitingForNotaryTransfer` | **_Notary reviews_** _the register extract_. If the document is rejected by either Swan or the notary, the case will move back to `WaitingForRegisterExtract`. |
-| `Canceled` | You can request to cancel a `CapitalDepositCase` any time before completion by submitting a request to [Swan Support](https://partner-support.swan.io/hc/en-gb/requests). When a case is canceled, the shareholder is also canceled. |
-| `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
+#### Status reference {#case-statuses-reference}
+
+| Case status | Status details | Explanation |
+| --- | --- | --- |
+| `WaitingForRequirements` | `Started` | The case has been initiated and is pending shareholder verification, transfers, document uploads, and completion of company onboarding. |
+| `WaitingForRequirements` | `Pending` | Swan is reviewing the submitted information. |
+| `WaitingForRequirements` | `WaitingForInformation` | After review, Swan has requested additional details from the customer and is awaiting their response. |
+| `WaitingForRequirements` | `null` | All initial requirements are being gathered. This is the default status after the `CapitalDepositCase` is created, provided there were no technical issues.<br/><br/>You complete the company onboarding process and upload required documents to pass to the next status. |
+| `WaitingForShareDepositCertificate` | `null` | **_Notary reviews_** _the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_. |
+| `WaitingForRegisterExtract` | `null` | You upload your register extract for notary review. |
+| `WaitingForNotaryTransfer` | `ReadyToBeVerified` | The company's account is ready and awaiting final verification. |
+| `WaitingForNotaryTransfer` | `Verified` | The company's account has been successfully verified. |
+| `WaitingForNotaryTransfer` | `null` | **_Notary reviews_** _the register extract_. If the document is rejected by either Swan or the notary, the case will move back to `WaitingForRegisterExtract`. |
+| `Canceled` | `null` | You can request to cancel a `CapitalDepositCase` any time before completion by submitting a request to [Swan Support](https://partner-support.swan.io/hc/en-gb/requests). When a case is canceled, the shareholder is also canceled. |
+| `Completed` | `null` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
 
 ## Required documents {#documents}
 
 Processing your capital shares deposit **requires several documents**.
-These can be uploading using the API.
+These can be uploaded using the API.
 Documents must meet Swan's requirements; otherwise, the document will be assigned the status `Refused` and you'll need to upload the document again.
 
 ### List of required documents {#documents-list}
@@ -195,7 +207,7 @@ flowchart LR
 | Document status | Explanation |
 | --- | --- |
 | `Pending`   | Place for the document is created, but the document isn't uploaded yet. |
-| `Uploaded`  | Document successfully uploaded; you can change and re-upload the document as long it retains the status `Uploaded`<br/><br/>**Next step**: Swan reviews the document and either validates or refuses it. |
+| `Uploaded`  | Document successfully uploaded; you can change and re-upload the document as long it retains the status `Uploaded`.<br/><br/>**Next step**: Swan reviews the document and either validates or refuses it. |
 | `Validated` | Swan validated the document. |
 | `Refused`   | Document doesn't meet requirements.<br/><br/>**Next step**: Upload a new document, then the status returns to `Uploaded`. |
 

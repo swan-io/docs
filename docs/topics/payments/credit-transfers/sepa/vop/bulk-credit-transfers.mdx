@@ -7,7 +7,7 @@ title: Bulk credit transfers
 Manage VoP requirements for bulk transfers in your account settings to fit your business needs.
 
 :::info Requirements
-Bulk credit transfers require [custom verification](/preview/vop/verification-of-payee#option-2) using the [`verifyBeneficiary`](/preview/vop/guide-verify-beneficiary) mutation. The default verification flow doesn't support bulk payments.
+Bulk credit transfers require [custom verification](/topics/payments/credit-transfers/sepa/vop/verification-of-payee#option-2) using the [`verifyBeneficiary`](/topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary) mutation. The default verification flow doesn't support bulk payments.
 :::
 
 ## VoP requirements for bulk transfers {#bulk-requirements}
@@ -48,14 +48,14 @@ To enable mandatory VoP for company accounts, you must first implement the `veri
 
 Use [the `updateAccountSettings` mutation](#updating-settings) to modify company account settings.
 
-####Requirements
+#### Requirements
 - Company account holder only.
 - User must have both `canViewAccount` and `canInitiatePayments` permissions.
 - Account membership must be `Enabled`.
 
-####Consent flow
+#### Consent flow
 - Opting in (require VoP): No consent needed.
-- Opting out (make VoP optional): User consent required via SCA.
+- Opting out (make VoP optional): User consent required through [SCA](/topics/users/consent/#sca).
 
 :::warning Integration requirement
 You must implement [the `updateAccountSettings` mutation](#updating-settings) to allow company account holders to change their bulk transfer VoP requirements. Without this implementation, users cannot opt in or out of mandatory VoP and must use our [support request form](https://support.swan.io/hc/en-150) instead, creating friction and delays.
@@ -157,9 +157,17 @@ The mutation can return several rejection types.
 | **AccountMembershipStatusNotEligibleRejection** | User's account membership must be `Enabled`. |
 | **ForbiddenRejection** | User not allowed or wrong context used |
 
-## Sandbox testing {#sandbox-testing}
+### Webhook notifications {#webhook-notifications}
 
-### Sandbox testing
+Subscribe to the `AccountSetting.Updated` [webhook](/developers/using-api/webhooks/) to receive notifications when the `allowBulkCreditTransfersWithoutBeneficiaryVerification` setting changes.
+
+Setting changes can be triggered by:
+- The user through the `updateAccountSettings` mutation.
+- A Swan agent following a user support request.
+
+This webhook helps you track account setting changes and maintain an audit trail for dispute protection.
+
+## Sandbox testing {#sandbox-testing}
 
 VoP requirements in sandbox match the live environment behavior. Company accounts default to optional VoP but can modify settings via the [account settings mutation](#updating-settings), while individual accounts always require VoP tokens for bulk transfers.
 

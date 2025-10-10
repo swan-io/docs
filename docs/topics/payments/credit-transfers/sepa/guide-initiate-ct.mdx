@@ -4,18 +4,17 @@ title: Initiate a credit transfer
 
 # Initiate a credit transfer
 
-:::warning VoP Integration Required
-Starting October 9, 2025, Swan automatically includes [Verification of Payee (VoP)](/preview/vop/verification-of-payee) in all SEPA Credit Transfers. For an optimal user experience, consider integrating the `verifyBeneficiary` mutation.
-:::
-
 Send SEPA Credit Transfers, Instant SEPA Credit Transfers, and Swan Internal Credit Transfers with the API.
-Review sample mutations for all three, as well as a payload.
 
 If you use [Swan's Web Banking frontend](https://swan-io.github.io/swan-partner-frontend/specs/banking/transfer), your users can send transfers from their account directly.
 
 :::tip Prerequisites
 1. You're an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
 1. You're authenticating with a [user access token](../../../../developers/using-api/authentication/index.mdx#tokens-user).
+:::
+
+:::info VoP Integration
+Swan automatically includes [Verification of Payee (VoP)](/topics/payments/credit-transfers/sepa/vop/verification-of-payee) in all single SEPA Credit Transfers. For an optimal user experience, consider integrating the `verifyBeneficiary` mutation.
 :::
 
 ## Send a SEPA Credit Transfer {#guide-sepa}
@@ -71,6 +70,81 @@ mutation SepaDefault {
 }
 ```
 
+### Add an invoice reference  {#invoice-reference}
+
+Send a SEPA Credit Transfer with an optional structured or unstructured [invoice reference](/topics/payments/credit-transfers/sepa/#invoice-references) by using the `labelType` and `label` fields.
+
+1. Call the `initiateCreditTransfers` mutation.
+1. Add all required information, marked by an (*) asterisk in API Explorer, including any information such as your consent redirect URL (line 4), your Swan `accountId` (line 5), and your transfer amount (line 7).
+1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 8-10).
+1. Add `labelType`, choose an option (lines 13-14), and add the reference value in the `label` input.
+1. Add the `InitiateCreditTransfersSuccessPayload` (line 18).
+1. Add the consent URL to the success payload (line 22): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Include error handling for all rejection types defined in the `initiateCreditTransfersPayload` union (lines 31-55)
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gaW5pdGlhdGVXaXRoTGFiZWxUeXBlIHsKICBpbml0aWF0ZUNyZWRpdFRyYW5zZmVycygKICAgIGlucHV0OiB7CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJVDIzUDAzMDAyMDMyODA2MzIxMjM1NTM3NDgiCiAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICB9CiAgICAgICAgbGFiZWxUeXBlOiBPZ21WY3MKICAgICAgICBsYWJlbDogIjAwMDAwMDAwMDA5NyIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBheW1lbnRDb25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbkFscmVhZHlDb25zdW1lZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VucwogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4,5,7,8-10,13-14,18,22} showLineNumbers
+mutation initiateWithLabelType {
+  initiateCreditTransfers(
+    input: {
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+      accountId: "$YOUR_ACCOUNT_ID"
+      creditTransfers: {
+        amount: { value: "100", currency: "EUR" }
+        sepaBeneficiary: {
+          iban: "IT23P0300203280632123553748"
+          name: "Francesca Verrilli"
+          save: false
+        }
+        labelType: OgmVcs
+        label: "000000000097"
+      }
+    }
+  ) {
+    ... on InitiateCreditTransfersSuccessPayload {
+      __typename
+      payment {
+        statusInfo {
+          ... on PaymentConsentPending {
+            __typename
+            consent {
+              consentUrl
+            }
+          }
+        }
+      }
+    }
+    ... on ValidationRejection {
+      __typename
+      fields {
+        code
+        message
+        path
+      }
+      message
+    }
+    ... on BeneficiaryVerificationTokenAlreadyConsumedRejection {
+      __typename
+      message
+      beneficiaryVerificationTokens
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on AccountNotFoundRejection {
+      id
+      message
+    }
+  }
+}
+```
+
 ## Send an Instant SEPA Credit Transfer {#guide-instant}
 
 Send an Instant SEPA Credit Transfer to a beneficiary within the SEPA network.
@@ -81,9 +155,13 @@ Send an Instant SEPA Credit Transfer to a beneficiary within the SEPA network.
 1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 10-11).
 1. For `mode`, choose `InstantWithFallback`, which begins as an instant transfer but falls back to a regular transfer if instant isn't available.
     - If you'd rather cancel the transfer if instant isn't available, choose `InstantWithoutFallback` instead.
-1. Add the `InitiateCreditTransfersSuccessPayload` payload.
+6. Add the `InitiateCreditTransfersSuccessPayload` payload.
 1. Add the consent URL to the success payload (line 28): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
+
+:::tip Schedule transfers
+You can use the `requestedExecutionAt` parameter to schedule a transfer up to one year in advance. These upcoming transfers can be canceled before execution using the `cancelTransaction` mutation.
+:::
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gU2VwYUluc3RhbnQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJRTI3Qk9GSTkwMDAxNzI0MjUyMSIKICAgICAgICAgIG5hbWU6ICJEaWxsb24gQnlybmUiCiAgICAgICAgICBpc015T3duSWJhbjogZmFsc2UKICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgfQogICAgICAgIG1vZGU6IEluc3RhbnRXaXRoRmFsbGJhY2sKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIGNyZWF0ZWRBdAogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gUGF5bWVudENvbnNlbnRQZW5kaW5nIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -178,6 +256,10 @@ mutation SwanInternal {
 ```
 
 ## Send multiple credit transfers {#guide-multiple}
+
+:::tip Bulk credit transfers with VoP
+For bulk credit transfers requiring Verification of Payee (VoP), you must use verification tokens from the `verifyBeneficiary` mutation. [Learn more about bulk credit transfers with VoP →](/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers)
+:::
 
 Send up to 2500 credit transfers in a single API call.
 You can send a mix of SEPA Credit Transfers, Instant SEPA Credit Transfers, and Swan Internal Credit Transfers in the same mutation.

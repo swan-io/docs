@@ -92,6 +92,15 @@ module.exports = {
         },
         {
           type: "category",
+          label: "Multiple accounts",
+          link: { type: "doc", id: "topics/accounts/multiple-accounts/index" },
+          collapsed: true,
+          items: [
+            "topics/accounts/multiple-accounts/guide-multiple-accounts-integration",
+          ],
+        },
+        {
+          type: "category",
           label: "Account memberships",
           link: { type: "doc", id: "topics/accounts/memberships/index" },
           collapsed: true,
@@ -393,6 +402,17 @@ module.exports = {
                 "topics/payments/credit-transfers/sepa/guide-initiate-ct",
                 "topics/payments/credit-transfers/sepa/guide-cancel-ct",
                 "topics/payments/credit-transfers/sepa/guide-refund-ct",
+                {
+                  type: "category",
+                  label: "Verification of Payee (VoP)",
+                  link: { type: "doc", id: "topics/payments/credit-transfers/sepa/vop/verification-of-payee" },
+                  collapsed: true,
+                  items: [
+                    'topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary',
+                    'topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers',
+                    'topics/payments/credit-transfers/sepa/vop/incoming-vop-requests',
+                  ],
+                },
                 "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-add-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",
@@ -747,26 +767,8 @@ module.exports = {
       label: 'Upcoming features',
       className: 'sidebar-preview-notice',
     },
-    {
-      type: "category",
-      label: "Preview",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Verification of Payee (VoP)",
-          link: { type: "doc", id: "preview/vop/verification-of-payee" },
-          collapsed: true,
-          items: [
-            'preview/vop/guide-verify-beneficiary',
-            'preview/vop/bulk-credit-transfers',
-          ],
-        },
-        'preview/belgian-ibans',
-        // Add more preview features here
-      ],
-    },
+    'preview/belgian-ibans',
+    // Add more preview features here
     {
       type: "category",
       label: "Beta",
@@ -780,15 +782,6 @@ module.exports = {
           collapsed: true,
           items: [
             "preview/card-insurance/guide-insurance-integration",
-          ],
-        },
-        {
-          type: "category",
-          label: "Multiple accounts",
-          link: { type: "doc", id: "preview/multiple-accounts/multiple-accounts" },
-          collapsed: true,
-          items: [
-            "preview/multiple-accounts/guide-multiple-accounts-integration",
           ],
         },
         // Add more preview features here

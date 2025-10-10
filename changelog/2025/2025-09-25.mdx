@@ -1,0 +1,47 @@
+---
+title: 25 September 2025
+type: release
+---
+
+## New features
+
+🏦 With [Multiple Accounts](/topics/accounts/multiple-accounts/), company account holders can create additional accounts without repeating onboarding or Know Your Business (KYB) processes.
+
+## Improvements
+
+🚚 We've added `LaPosteTracked` as a new [shipping method](/topics/cards/physical/#shipping-methods) for international card deliveries. This gives cardholders outside of France a reliable way to track their card's delivery from our printing hub.
+
+📄 We've made it easier to reconcile payments by allowing you to use structured and unstructured formats for [invoice references in transactions](/topics/payments/credit-transfers/sepa/guide-initiate-ct#invoice-reference). For SEPA Credit Transfers, use the `labelType` field to choose the reference standard and the `label` field for the value. When you retrieve transaction data, this value will be in the `transaction.label`. You can also specify the `ogmVcs` type for Belgian OGM VCS references.
+
+## Verification of Payee (VoP) updates
+
+⚠️ *The following updates are currently available in our **Sandbox** environment and will be released to the **Live** environment on **October 9th**.*
+
+### 💸 `initiateCreditTransfers` endpoint updates
+
+- We'll [automatically verify the beneficiary's details](/topics/payments/credit-transfers/sepa/vop/verification-of-payee#option-1) and display the results on the consent screen for single SEPA Credit Transfers without a `beneficiaryVerificationToken` in the `initiateCreditTransfers` call.
+- You can now include a [`beneficiaryVerificationToken`](/topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary/#step-3) when initiating a credit transfer instead of providing full beneficiary details. Account [membership rights](/topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary/#token-permissions) remain the same as those described in [beneficiaries permissions](/topics/payments/credit-transfers/#beneficiaries-permissions) when using tokens.
+- A new `beneficiaryVerificationResults` field has been added to [`InitiateCreditTransfersSuccessPayload`](https://api-reference.swan.io/objects/initiate-credit-transfers-success-payload/).
+
+### 📅 `scheduleStandingOrder` endpoint updates
+
+- When calling the `scheduleStandingOrder` mutation, we'll automatically verify the beneficiary's details and display the results in the consent screen.
+- A new `beneficiaryVerificationResult` field has been added to the  [`ScheduleStandingOrderSuccessPayload`](https://api-reference.swan.io/objects/schedule-standing-order-success-payload/).
+
+📒  You can now retrieve the `beneficiaryVerificationResult` using the  `transaction`, `transactions`, `standingOrder`, and `TrustedBeneficiary` queries.
+
+### VoP rollout
+
+📥 Starting **October 5th**, we'll **automatically** handle all [incoming VoP requests](/topics/payments/credit-transfers/sepa/vop/incoming-vop-requests/) from other Payment Service Providers (PSPs). Beneficiary details will be verified, and the result will be returned to the PSP before funds are transferred into a Swan account. No action is required from you.
+
+🃏 On **October 9th**, **company accounts** will be [opted out](/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers#bulk-requirements) of VoP for bulk credit transfers by default, while **individual accounts** will be opted in. You can [change the setting for bulk transfers](/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers#changing-settings) with the `updateAccountSettings` mutation, once the `verifyBeneficiary`  mutation is implemented.
+
+📡 On **October 9th**, the `verifyBeneficiary` mutation will be available to [verify beneficiary details](/topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary/) before initiating credit transfers. Use the `save` parameter to add a trusted beneficiary when the returned token successfully initiates the credit transfer.
+
+📩 On **October 19th**, the `save` parameter of the `verifyBeneficiary` mutation will default to `false`.
+
+### Upcoming breaking changes
+
+🛑 Starting **October 9th**, the `initiateCreditTransfers` mutation will return a new [rejection reason](https://api-reference.swan.io/objects/beneficiary-verification-token-already-consumed-rejection/) if the `BeneficiaryVerificationToken` was already used to initiate another credit transfer.
+
+✔️ Starting **October 31st**, the `beneficiaryVerification` query will be deprecated. Use the `verifyBeneficiary` mutation instead to ensure uninterrupted service.

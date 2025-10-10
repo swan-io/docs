@@ -2,7 +2,7 @@
 title: Create multiple accounts
 ---
 
-This guide explains how to open additional accounts linked to one account holder. 
+This guide explains how to create additional accounts linked to one account holder. 
 
 ## Guide {#guide}
 
@@ -117,6 +117,70 @@ The mutation returns all of the requested information such as the account detail
         "statusInfo": {
           "status": "Opened"
         }
+      }
+    }
+  }
+}
+```
+
+## Check your account creation limit {#check-your-account-creation-limit}
+
+1. Call the `projectInfo` query (line 2).
+1. Select `multipleAccountsSettings` (line 3).
+1. Add `accountCreationLimit` and `canOpenAccount` to check your account creation limit (lines 4-5).
+
+### Query {#query-account-creation-limit}
+
+<a href="https://explorer.swan.io?query=cXVlcnkgQWNjb3VudENyZWF0aW9uTGltaXQgewogIHByb2plY3RJbmZvIHsKICAgIG11bHRpcGxlQWNjb3VudHNTZXR0aW5ncyB7CiAgICAgIGFjY291bnRDcmVhdGlvbkxpbWl0CiAgICAgIGNhbk9wZW5BY2NvdW50CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2-5} showLineNumbers
+query AccountCreationLimit {
+  projectInfo {
+    multipleAccountsSettings {
+      accountCreationLimit
+      canOpenAccount
+    }
+  }
+}
+```
+### Payloads
+
+The `multipleAccountsSettings` query returns a payload that indicates the current status of the Multiple Accounts feature for an account holder.
+
+**Example one: Multiple Accounts is active**
+
+This payload shows the response when Multiple Accounts has **not** been **activated**.
+
+- `accountCreationLimit`: `1` indicates that only the initial account can be created (line 5).
+- `canOpenAccount`: `false` confirms that additional accounts cannot be created (line 6).
+
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "multipleAccountsSettings": {
+        "accountCreationLimit": 1,
+        "canOpenAccount": false
+      }
+    }
+  }
+}
+```
+
+**Example two: Multiple Accounts is active**
+
+This payload shows the response when Multiple Accounts has been **activated**.
+
+- `accountCreationLimit`: `6` shows that a maximum of six accounts can be created (line 5).
+- `canOpenAccount`: `true` confirms that additional accounts can be opened (line 6).
+
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "multipleAccountsSettings": {
+        "accountCreationLimit": 6,
+        "canOpenAccount": true
       }
     }
   }

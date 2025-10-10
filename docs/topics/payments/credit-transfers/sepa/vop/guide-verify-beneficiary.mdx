@@ -206,6 +206,10 @@ mutation InitiateCreditTransferWithVerificationToken {
 
 The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificationResults`, an array of `VerifyBeneficiaryResult` objects. Results are ordered in the same sequence as the credit transfers in your request.
 
+:::note Result ordering
+On the consent screen, results are reordered by risk status for a clearer display: `NoMatch` → `NotPossible` → `CloseMatch` → `Match`.
+:::
+
 ```json title="Payload" {7,9,16}
 {
   "data": {
@@ -235,11 +239,11 @@ The `InitiateCreditTransfersSuccessPayload` includes the `beneficiaryVerificatio
 
 When you initiate a credit transfer using a token, the same membership rights apply as described in [Beneficiaries permissions](/topics/payments/credit-transfers/#beneficiaries-permissions).
 
-| Permission type | Add trusted beneficiaries<br/>via `save` parameter | Initiation using<br/>swanAccount token | Initiation using<br/>TrustedBeneficiary token |
+| Permission type | Add trusted beneficiaries using `save` parameter | Initiation using token from `swanAccount` or SEPA verification | Initiation using token from `trustedBeneficiaryId` verification |
 |---|:---:|:---:|:---:|
-| **canManageBeneficiaries** only | <Yes />  | <No /> | <No /> |
-| **canInitiatePayments** only | <No /> | <Yes />  | <Yes />  |
-| **canInitiatePayments** +<br/>**canManageBeneficiaries** | <Yes />  | <Yes />  | <Yes />  |
+| `canManageBeneficiaries` only | <Yes />  | <No /> | <No /> |
+| `canInitiatePayments` only | <No /> | <No />  | <Yes />  |
+| `canInitiatePayments` + <br/>`canManageBeneficiaries` | <Yes />  | <Yes />  | <Yes />  |
 
 ## Token validation {#token-validation}
 
@@ -254,10 +258,6 @@ The same token can be used multiple times in the same initiation. This means you
 :::
 
 ## Saving beneficiaries during verification
-
-:::info Upcoming feature
-This feature will be available soon in Swan's API.
-:::
 
 When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `save` to `true`. This will indicate that if the returned token is successfully used to initiate a credit transfer, a trusted beneficiary will be created.
 
@@ -274,7 +274,7 @@ For bulk credit transfers, verification tokens are required based on account typ
 If your integration supports individual account holders performing bulk credit transfers, you must implement the `verifyBeneficiary` mutation and provide verification tokens. Bulk transfers without tokens will be rejected for individual accounts.
 :::
 
-[Learn more about bulk credit transfers with VoP →](/preview/vop/bulk-credit-transfers)
+[Learn more about bulk credit transfers with VoP →](/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers)
 
 ## Sandbox testing {#sandbox-testing}
 

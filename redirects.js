@@ -450,4 +450,24 @@ module.exports = [
     from: "/partnership/overview/protections",
     to: "/partnership/protections/financial/",
   },
+  {
+    from: '/preview/verification-of-payee',
+    to: '/topics/payments/credit-transfers/sepa/vop/verification-of-payee',
+  },
+  {
+    from: '/preview/vop/verification-of-payee',
+    to: '/topics/payments/credit-transfers/sepa/vop/verification-of-payee',
+  },
+  {
+    from: '/preview/vop/guide-verify-beneficiary',
+    to: '/topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary',
+  },
+  {
+    from: '/preview/vop/bulk-credit-transfers',
+    to: '/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers',
+  },
+  {
+    from: '/preview/vop/incoming-vop-requests',
+    to: '/topics/payments/credit-transfers/sepa/vop/incoming-vop-requests',
+  },
 ];

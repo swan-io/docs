@@ -4,13 +4,13 @@ title: SEPA Credit Transfers
 
 # SEPA Credit Transfers
 
-:::warning
-Starting October 9, 2025, Swan automatically includes [Verification of Payee (VoP)](/preview/vop/verification-of-payee) in all SEPA Credit Transfers to comply with the EU Instant Payments Regulation.
-:::
-
 ## Overview {#overview}
 
 Transfer euros between accounts located in the [Single Euro Payments Area (SEPA)](../../index.mdx#sepa).
+
+:::info
+Swan automatically includes [Verification of Payee (VoP)](/topics/payments/credit-transfers/sepa/vop/verification-of-payee) in all SEPA Credit Transfers to comply with the EU Instant Payments Regulation.
+:::
 
 Swan supports several types of credit transfers.
 Note the acronyms; while the documentation doesn't use them, the acronyms are sometimes present in the API and used in written and verbal communication.
@@ -46,7 +46,7 @@ Due to the manual review, flagged SEPA Credit Transfers take longer to execute.
 ### Verifying beneficiaries {#beneficiary-verification}
 
 :::danger Breaking change
-The `beneficiaryVerification` query will be deprecated. Plan [your migration](/preview/vop/verification-of-payee) before the compliance deadline to ensure uninterrupted service.
+The `beneficiaryVerification` query will be deprecated. Plan [your migration](/topics/payments/credit-transfers/sepa/vop/verification-of-payee) before the compliance deadline to ensure uninterrupted service.
 :::
 
 **IBAN verification** allows debtors to verify that credit transfers are sent to the right beneficiary *before* initiating the transfer, thus reducing errors and potential fraud.
@@ -71,6 +71,22 @@ If there's an information mismatch or partial match, the financial institution c
 
 Swan also **validates the format** of all beneficiary IBANs.
 You can [check the format of your IBANs](../../../accounts/ibans/guide-validate.mdx) with the API before using them to send a transfer.
+
+### Invoice references
+
+You can include an **optional** [invoice reference](./guide-initiate-ct#invoice-reference.mdx) when you initiate a SEPA Credit Transfer using the `labelType` and `label` fields.
+Use `labelType` to specify the format of the invoice reference, and provide the specific value of the reference in the `label` field.
+
+The `labelType` can be one of the following:
+
+| `labelType` | Description | Example `label` |
+| :---: | --- | :---: |
+| `Unstructured` | Free text with no specific format.  | `Invoice April 2025` |
+| `Structured`| Structured reference without a specific standard. | `1234567890AB` |
+| `OgmVcs`| [Belgian OGM VCS standard](https://www.europeanpaymentscouncil.eu/sites/default/files/inline-files/Febelfin%20-%20AOS-OGMVCS_0.pdf), a 12-digit reference number used for payment reconciliation. | `123456789012`       |
+| `Iso` | [ISO 11649](https://www.iso.org/standard/50649.html), the Structured Creditor Reference standard, widely used in Europe.  | `RF18539007547034` |
+
+You'll find the invoice reference in the `transaction.label` field after retrieving your transaction data.
 
 ### Transfer limitations {#limitations}
 

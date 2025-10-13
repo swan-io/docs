@@ -7,12 +7,14 @@ title: Get information about a merchant profile
 Use the `merchantProfile` query to get information about a single merchant profile.
 For example, you can get information about:
 
-- Information you provided when you added the merchant profile, such as expected average transaction amount
-- Requested updates to the merchant profile
-- `base64` string for the merchant logo
-- Payment methods and their statuses
+- Information you provided when you added the merchant profile, such as expected average transaction amount.
+- Requested updates to the merchant profile.
+- `base64` string for the merchant logo.
+- Payment methods and their statuses.
 
-## Query {#query}
+## Getting general information about the merchant profile {#general-info}
+
+### Query {#query-general}
 
 <a href="https://explorer.swan.io?query=cXVlcnkgbWVyY2hhbnRQcm9maWxlSW5mbyB7CiAgbWVyY2hhbnRQcm9maWxlKGlkOiAiJE1FUkNIQU5UX1BST0ZJTEVfSUQiKSB7CiAgICBhY2NvdW50SWQKICAgIGNyZWF0ZWRBdAogICAgaWQKICAgIG1lcmNoYW50TmFtZQogICAgcHJvZHVjdFR5cGUKICAgIHN0YXR1c0luZm8gewogICAgICBzdGF0dXMKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -31,7 +33,7 @@ query merchantProfileInfo {
 }
 ```
 
-## Payload {#payload}
+### Payload {#payload-general}
 
 ```json {} showLineNumbers
 {
@@ -45,6 +47,86 @@ query merchantProfileInfo {
       "statusInfo": {
         "status": "Enabled"
       }
+    }
+  }
+}
+```
+
+## Getting the reason of a merchant profile rejection {#rejection-reason}
+
+### Query {#query-rejection}
+
+```graphql {} showLineNumbers
+query merchantProfileInfo {
+  merchantProfile(id: "$MERCHANT_PROFILE_ID") {
+    id
+    statusInfo {
+      status
+      ... on RejectedMerchantProfileStatusInfo {
+        rejectionReason
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-rejection}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "merchantProfile": {
+      "id": "$MERCHANT_PROFILE_ID",
+      "statusInfo": {
+        "status": "Rejected",
+        "rejectionReason": "$REJECTION_REASON"
+      }
+    }
+  }
+}
+```
+
+## Getting the list of payment methods on a merchant profile {#payment-methods}
+
+### Query {#query-payment-methods}
+
+```graphql {} showLineNumbers
+query merchantProfileInfo {
+  merchantProfile(id: "$MERCHANT_PROFILE_ID") {
+    id
+    statusInfo {
+      status
+    }
+    merchantPaymentMethods {
+      id
+      type
+      statusInfo {
+        status
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-payment-methods}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "merchantProfile": {
+      "id": "$MERCHANT_PROFILE_ID",
+      "statusInfo": {
+        "status": "Enabled"
+      },
+      "merchantPaymentMethods": [
+        {
+          "id": "$PAYMENT_METHOD_ID",
+          "type": "SepaDirectDebitCore",
+          "statusInfo": {
+            "status": "Enabled"
+          }
+        }
+      ]
     }
   }
 }

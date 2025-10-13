@@ -1,0 +1,288 @@
+---
+title: Providing missing information
+---
+
+# Providing missing information
+
+If some information is missing before a review can be finalized, your merchant payment method will have the status `WaitingForInformation`.
+Along with this status, you will have a list of verification requirements and supporting documents that need to be shared.
+
+:::tip Webhook
+Listen to the `MerchantPaymentMethod.Updated` webhook to know when the status of the payment method changes.
+:::
+
+## Step 1: See which information is missing {#step-1}
+
+To find the missing information, look into the verification requirements associated with the `WaitingForInformation` status.
+
+There are three main types of verification requirements: **fields**, **supporting document purposes**, and **additional information**.
+
+Additional information is only required for some projects. See [step 2](#step-2) below.
+
+### Query {#query-requirements}
+
+```graphql {} showLineNumbers
+query GetPaymentMethodRequirements {
+  merchantPaymentMethod(id: "$MERCHANT_PAYMENT_METHOD_ID") {
+    id
+    statusInfo {
+      __typename
+      status
+      
+      ... on WaitingForInformationMerchantPaymentMethodStatusInfo {
+        verificationRequirements {
+          ... on MerchantRequirements {
+            fields
+          }
+          ... on SupportingDocumentRequirements {
+            supportingDocumentPurposes
+          }
+          ... on AdditionalInformationRequirements {
+            additionalInformation
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-requirements}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "merchantPaymentMethod": {
+      "id": "$MERCHANT_PAYMENT_METHOD_ID",
+      "statusInfo": {
+        "__typename": "WaitingForInformationMerchantPaymentMethodStatusInfo",
+        "status": "WaitingForInformation",
+        "verificationRequirements": [
+          {
+            "fields": [
+              "MerchantWebsite"
+            ]
+          },
+          {
+            "supportingDocumentPurposes": [
+              "CompanyTreasury"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+## Step 2: Check if a project is concerned by additional information {#step-2}
+
+Some projects are concerned by additional information.
+To know if this is the case for you, use the `projectInfo` query.
+
+### Query {#query-additional-info}
+
+```graphql {} showLineNumbers
+query CheckIfAdditionalInformationApplies {
+  projectInfo {
+    expectedMerchantProfileAdditionalInformation
+  }
+}
+```
+
+### Payload {#payload-additional-info}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "expectedMerchantProfileAdditionalInformation": [
+        "NumberOfEmployees"
+      ]
+    }
+  }
+}
+```
+
+## Step 3: Update the merchant profile with the missing information {#step-3}
+
+For verification requirements indicated under `fields` and `additionalInformation`, provide them by requesting a merchant profile update.
+
+:::info Merchant profile level
+All information is provided at the merchant profile level because it may be needed for more than one payment method.
+This avoids asking for the same information again.
+:::
+
+### Mutation {#mutation-update}
+
+1. Add the required fields on the input.
+1. If you are concerned by additional information, add them here.
+1. Add `ValidationRejection` to the mutation to make sure you catch any invalid fields (e.g. if the provided URL has an invalid format).
+1. Add `requestMerchantProfileUpdate` to the payload to confirm the requested fields.
+
+```graphql {} showLineNumbers
+mutation RequestMerchantProfileUpdate {
+  requestMerchantProfileUpdate(input: {
+    merchantProfileId: "$MERCHANT_PROFILE_ID"
+    merchantWebsiteUrl: "https://www.mywebsite.com"
+    additionalInformation: [
+      {
+        defaultInformation: {
+          type: NumberOfEmployees
+          value: "5"
+        }
+      }
+    ]
+  }) {
+    __typename
+    ... on RequestMerchantProfileUpdateSuccessPayload {
+      merchantProfile {
+        id
+        merchantWebsiteUrl
+        requestMerchantProfileUpdate {
+          id
+          status
+          merchantWebsiteUrl
+          additionalInformation {
+            ... on DefaultAdditionalInformation {
+              type
+              value
+            }
+          }
+        }
+      }
+    }
+    ... on Rejection {
+      message
+    }
+    ... on ValidationRejection {
+      fields {
+        path
+        code
+        message
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-update}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "requestMerchantProfileUpdate": {
+      "__typename": "RequestMerchantProfileUpdateSuccessPayload",
+      "merchantProfile": {
+        "id": "$MERCHANT_PROFILE_ID",
+        "merchantWebsiteUrl": null,
+        "requestMerchantProfileUpdate": {
+          "id": "$UPDATE_REQUEST_ID",
+          "status": "PendingReview",
+          "merchantWebsiteUrl": "https://www.mygreatwebsite.fr/",
+          "additionalInformation": [
+            {
+              "type": "NumberOfEmployees",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+## Step 4: Get the supporting documents collection {#step-4}
+
+Whenever supporting documents are required by a payment method, the merchant profile will have a supporting documents collection with the `WaitingForDocument` status.
+
+1. Use the `merchantProfile` query.
+1. Add the `supportingDocumentCollections` field.
+1. Optionally, use a filter to have only the collections waiting for document.
+1. Add `requiredSupportingDocumentPurposes` with the fields `name` and `acceptableSupportingDocumentTypes` to know which documents need to be sent.
+
+:::tip Document purposes
+A purpose indicates what is needed (e.g. `CompanyRegistration`) and the acceptable document types indicate which types of document can be uploaded to satisfy this purpose.
+:::
+
+### Query {#query-documents}
+
+```graphql {} showLineNumbers
+query GetSupportingDocumentCollection {
+  merchantProfile(id: "$MERCHANT_PROFILE_ID") {
+    supportingDocumentCollections(filters: {
+      status: WaitingForDocument
+    }) {
+      totalCount
+      edges {
+        node {
+          id
+          statusInfo { status }
+          requiredSupportingDocumentPurposes {
+            name
+            label
+            description
+            acceptableSupportingDocumentTypes
+          }
+          supportingDocuments {
+            id
+            supportingDocumentType
+            statusInfo { status }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload {#payload-documents}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "merchantProfile": {
+      "supportingDocumentCollections": {
+        "totalCount": 1,
+        "edges": [
+          {
+            "node": {
+              "id": "$SUPPORTING_DOCUMENT_COLLECTION_ID",
+              "statusInfo": {
+                "status": "WaitingForDocument"
+              },
+              "requiredSupportingDocumentPurposes": [
+                {
+                  "name": "CompanyRegistration",
+                  "label": "Proof of registration (less than 3 months old)",
+                  "description": "A document that provides evidence of the legal registration of a company or business entity with the relevant government authority. The document has to be less than 3 months old.",
+                  "acceptableSupportingDocumentTypes": [
+                    "RegisterExtract",
+                    "ArticlesOfIncorporation",
+                    "CapitalShareDepositCertificate",
+                    "UBODeclaration"
+                  ]
+                }
+              ],
+              "supportingDocuments": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+## Step 5: Upload documents {#step-5}
+
+Supporting documents work the same way as for onboarding and transactions.
+
+Use the collection ID from the previous step to generate the supporting document upload link.
+
+Refer to the guide: [Upload a supporting document for an onboarding](/topics/accounts/documents/guide-upload-onboarding.mdx).
+
+## Step 6: Request a collection review {#step-6}
+
+Refer to the guide: [Request a supporting document collection review](/topics/accounts/documents/guide-request-collection-review.mdx).

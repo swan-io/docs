@@ -8,14 +8,14 @@ If some information is missing before a review can be finalized, your merchant p
 Along with this status, you will have a list of verification requirements and supporting documents that need to be shared.
 
 :::tip Webhook
-Listen to the `MerchantPaymentMethod.Updated` webhook to know when the status of the payment method changes.
+Subscribe to the `MerchantPaymentMethod.Updated` webhook to know when the status of the payment method changes.
 :::
 
 ## Step 1: See which information is missing {#step-1}
 
-To find the missing information, look into the verification requirements associated with the `WaitingForInformation` status.
+To find the missing information, check the verification requirements associated with the `WaitingForInformation` status.
 
-There are three main types of verification requirements: **fields**, **supporting document purposes**, and **additional information**.
+There are three types of verification requirements: **fields**, **supporting document purposes**, and **additional information**.
 
 Additional information is only required for some projects. See [step 2](#step-2) below.
 
@@ -109,16 +109,15 @@ query CheckIfAdditionalInformationApplies {
 For verification requirements indicated under `fields` and `additionalInformation`, provide them by requesting a merchant profile update.
 
 :::info Merchant profile level
-All information is provided at the merchant profile level because it may be needed for more than one payment method.
-This avoids asking for the same information again.
+You provide all information at the merchant profile level because it may be needed for more than one payment method. This prevents duplicate requests.
 :::
 
 ### Mutation {#mutation-update}
 
-1. Add the required fields on the input.
-1. If you are concerned by additional information, add them here.
-1. Add `ValidationRejection` to the mutation to make sure you catch any invalid fields (e.g. if the provided URL has an invalid format).
-1. Add `requestMerchantProfileUpdate` to the payload to confirm the requested fields.
+1. Add the required fields to the input.
+1. If your project requires additional information, add it here.
+1. Add `ValidationRejection` to catch any invalid fields (for example, if the provided URL has an invalid format).
+1. Add `requestMerchantProfileUpdate` to the success payload to retrieve the update status.
 
 ```graphql {} showLineNumbers
 mutation RequestMerchantProfileUpdate {
@@ -203,7 +202,7 @@ Whenever supporting documents are required by a payment method, the merchant pro
 1. Add `requiredSupportingDocumentPurposes` with the fields `name` and `acceptableSupportingDocumentTypes` to know which documents need to be sent.
 
 :::tip Document purposes
-A purpose indicates what is needed (e.g. `CompanyRegistration`) and the acceptable document types indicate which types of document can be uploaded to satisfy this purpose.
+A purpose indicates what's needed (for example, `CompanyRegistration`). The `acceptableSupportingDocumentTypes` field lists which document types can satisfy each purpose.
 :::
 
 ### Query {#query-documents}
@@ -279,10 +278,12 @@ query GetSupportingDocumentCollection {
 
 Supporting documents work the same way as for onboarding and transactions.
 
-Use the collection ID from the previous step to generate the supporting document upload link.
+Use the collection ID from the previous step to generate the supporting document upload link. 
 
-Refer to the guide: [Upload a supporting document for an onboarding](/topics/accounts/documents/guide-upload-onboarding.mdx).
+Refer to the guide: [Upload a supporting document for an onboarding](/topics/accounts/documents/guide-upload-onboarding).
 
 ## Step 6: Request a collection review {#step-6}
 
-Refer to the guide: [Request a supporting document collection review](/topics/accounts/documents/guide-request-collection-review.mdx).
+Request a review for the collection. 
+
+Refer to the guide: [Request a supporting document collection review](/topics/accounts/documents/guide-request-collection-review).

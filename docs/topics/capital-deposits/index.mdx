@@ -40,12 +40,10 @@ The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit
 flowchart TD
     DC([Case created]) --> WIR[WaitingForInitialRequirements]
     WIR --> PIR[PendingInternalReview]
-    PIR --> WAI{Additional info<br/>needed?}
-    WAI -->|No| WNSC
-    WAI -->|Yes| WFAI[WaitingForAdditionalInformation]
+    PIR --> WFAI[WaitingForAdditionalInformation]
+    PIR --> WNSC[WaitingForNotaryShareDepositCertificate<br/><em>Notary reviews</em>]
     WFAI --> PIR
     
-    WNSC[WaitingForNotaryShareDepositCertificate<br/><em>Notary reviews</em>]
     WNSC --> WRE[WaitingForRegisterExtract]
     WRE --> WNT[WaitingForNotaryTransfer<br/><em>Notary reviews</em>]
     WNT -->|Approved| CO([Completed])

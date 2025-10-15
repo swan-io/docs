@@ -36,36 +36,31 @@ The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit
 ### Case statuses {#case-statuses}
 
 ```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    DC((Capital deposit<br/>case created)) -.-> WR[WaitingFor<br/>Requirements]
-    WR -.-> WS[WaitingForShare<br/>DepositCertificate<br/><em>Notary</em>]
-    WS -.-> WRE[WaitingFor<br/>RegisterExtract]
-    WRE -.-> WNT[WaitingFor<br/>NotaryTransfer<br/><em>Notary</em>]
-    WNT -.-> CA[Canceled]
-    WRE -.-> CA
-    WS -.-> CA
-    WR -.-> CA
-    WNT -.-> CO[Completed]
-
-    %% Backward transitions
-    WNT -->|rejected| WRE
-
-    subgraph F[Final status]
-        direction TB
-        CA
-        style V fill:#fff,stroke:#fff,stroke-width:0px,color:#fff
-        CO
-    end
-
-    subgraph CO[Completed]
-    end
+%%{ init: { 'flowchart': { 'curve': 'basis' } } }%%
+flowchart TD
+    DC([Case created]) --> WIR[WaitingForInitialRequirements]
+    WIR --> PIR[PendingInternalReview]
+    PIR --> WAI{Additional info<br/>needed?}
+    WAI -->|No| WNSC
+    WAI -->|Yes| WFAI[WaitingForAdditionalInformation]
+    WFAI --> PIR
     
+    WNSC[WaitingForNotaryShareDepositCertificate<br/><em>Notary reviews</em>]
+    WNSC --> WRE[WaitingForRegisterExtract]
+    WRE --> WNT[WaitingForNotaryTransfer<br/><em>Notary reviews</em>]
+    WNT -->|Approved| CO([Completed])
+    WNT -.->|Rejected| WRE
+    
+    WIR -.-> CA([Canceled])
+    PIR -.-> CA
+    WFAI -.-> CA
+    WRE -.-> CA
+
     style DC fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-    style WS stroke-width:2px, stroke-dasharray: 5 5
-    style WNT stroke-width:2px, stroke-dasharray: 5 5
     style CO fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style CA fill:#f5e6e6,stroke:#c74444,stroke-width:2px
+    style WNSC fill:#f9f9ff,stroke:#6b6bff,stroke-dasharray: 5 5
+    style WNT fill:#f9f9ff,stroke:#6b6bff,stroke-dasharray: 5 5
 ```
 
 | Case status | Explanation |

@@ -2,7 +2,7 @@
 title: Generate account statement
 ---
 
-# Generate an account statement
+# Generate account statement
 
 Generate an account statement for a custom time period **using the API** or on your **Dashboard**.
 
@@ -10,8 +10,7 @@ Generate an account statement for a custom time period **using the API** or on y
 
 1. Call the `generateAccountStatement` mutation.
 1. Add the `accountId`.
-1. Add the `openingDate` and `closingDate` using format `YYYY-MM-DDT00:00:00.000Z`.
-   - Maximum period: three months.
+1. Add the `openingDate` and `closingDate` with the following format: `YYYY-MM-DDT00:00:00.000Z` (up to three months).
 1. Set the `language` for your account statement, and provide the file `format` (`PDF` or `CSV`).
 1. Add all information you'd like to review about the statement (lines 11-27).
 
@@ -54,9 +53,9 @@ mutation GenerateAccountStatement {
 ### Payload {#payload}
 
 The mutation returns all of the requested information.
-The `period` field shows `Custom` (line 15) for on-demand statements. Swan automatically generates statements with `period` values of `Monthly` or `Quarterly`.
+Notice the `period` = `Custom` (line 15), indicating that you generated this account statement, not Swan.
 
-The `statusInfo.status` shows `Pending` while Swan generates the statement (line 17).
+The `statusInfo` > `status` is `Pending` while the statement is being generated (line 17).
 
 ```json {15,17} showLineNumbers
 {
@@ -171,7 +170,7 @@ You can also generate statements from your Dashboard.
 
 ![Screenshot of the Dashboard Account statements tab](../../../images/topics/accounts/statement-generate-1.png)
 
-5. Enter the opening date and closing date. The time period can cover **up to three months**.
+5. Enter the start date and closing date. The time period can cover **up to three months**.
 1. Choose the format and language.
 1. Click **Save**.
 

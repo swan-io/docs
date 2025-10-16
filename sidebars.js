@@ -191,7 +191,6 @@ module.exports = {
           link: { type: "doc", id: "topics/capital-deposits/index" },
           collapsed: true,
           items: [
-            "topics/capital-deposits/guide-update-shareholder-amount",
             "topics/capital-deposits/guide-cancel",
           ],
         },

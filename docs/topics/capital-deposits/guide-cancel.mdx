@@ -21,15 +21,17 @@ import CancelCase from './partials/_cancel-case.mdx';
 
 ## Mutation {#mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsQ2FzZSB7CiAgY2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlKGlucHV0OiB7IGlkOiAiJENBUElUQUxfREVQT1NJVF9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNhcGl0YWxEZXBvc2l0Q2FzZSB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FwaXRhbERlcG9zaXRDYXNlQ2FuTm90QmVGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5Ob3RCZUNhbmNlbGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsQ2FzZSB7CiAgY2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlKGlucHV0OiB7IGlkOiAiJENBUElUQUxfREVQT1NJVF9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNhcGl0YWxEZXBvc2l0Q2FzZSB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FwaXRhbERlcG9zaXRDYXNlQ2FuTm90QmVGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5Ob3RCZUNhbmNlbGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2,3} showLineNumbers
+```graphql {2,3,6-8} showLineNumbers
 mutation CancelCase {
   cancelCapitalDepositCase(input: { id: "$CAPITAL_DEPOSIT_CASE_ID" }) {
     ... on CancelCapitalDepositCaseSuccessPayload {
       __typename
       capitalDepositCase {
-        status
+        statusInfo {
+          status
+        }
       }
     }
   }
@@ -41,13 +43,15 @@ mutation CancelCase {
 
 
 
-```graphql {6} showLineNumbers
+```graphql {6-8} showLineNumbers
 {
   "data": {
     "cancelCapitalDepositCase": {
       "__typename": "CancelCapitalDepositCaseSuccessPayload",
       "capitalDepositCase": {
-        "status": "Canceled"
+        "statusInfo": {
+          "status": "Canceled"
+        }
       }
     }
   }

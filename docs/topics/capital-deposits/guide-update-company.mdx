@@ -1,0 +1,97 @@
+---
+title: Update a capital deposit company
+---
+
+# Update a capital deposit company
+
+Use the API to update the company information linked to a capital deposit case.
+
+import UpdateCompanyPrereqs from './partials/_update-company-prereqs.mdx';
+
+:::tip Prerequisites
+<UpdateCompanyPrereqs />
+:::
+
+## Guide {#steps}
+
+1. Call the `updateCapitalDepositCompany` mutation.
+1. Add the capital deposit case ID.
+1. Add the fields you want to update: `companyName` and/or `residencyAddress`.
+1. Add the success payload and any information you'd like to receive.
+1. Add rejections (not shown).
+
+:::info Automatic synchronization
+Updating these fields automatically syncs the data across both the capital deposit case and the associated account holder.
+:::
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQ29tcGFueSB7CiAgdXBkYXRlQ2FwaXRhbERlcG9zaXRDb21wYW55KAogICAgaW5wdXQ6IHsKICAgICAgaWQ6ICIkQ0FQSVRBTF9ERUBPU0lUX0NBU0VfSUQiCiAgICAgIGNvbXBhbnlOYW1lOiAiQWNtZSIKICAgICAgcmVzaWRlbmN5QWRkcmVzczogewogICAgICAgIGFkZHJlc3NMaW5lMTogIjEwIFJ1ZSBkZSBSaXZvbGkiCiAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgIHBvc3RhbENvZGU6ICI3NTAwMSIKICAgICAgICBzdGF0ZTogIsOObGUtZGUtRnJhbmNlIgogICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBVcGRhdGVDYXBpdGFsRGVwb3NpdENvbXBhbnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY2FwaXRhbERlcG9zaXRDYXNlIHsKICAgICAgICBpZAogICAgICAgIGNvbXBhbnlOYW1lCiAgICAgICAgY29tcGFueU9uYm9hcmRpbmcgewogICAgICAgICAgYWNjb3VudEhvbGRlciB7CiAgICAgICAgICAgIGluZm8gewogICAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgfQogICAgICAgICAgICByZXNpZGVuY3lBZGRyZXNzIHsKICAgICAgICAgICAgICBhZGRyZXNzTGluZTEKICAgICAgICAgICAgICBjaXR5CiAgICAgICAgICAgICAgcG9zdGFsQ29kZQogICAgICAgICAgICAgIGNvdW50cnkKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5Ob3RCZUZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcGl0YWxEZXBvc2l0Q29tcGFueUNhbk5vdEJlVXBkYXRlZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2-4} showLineNumbers
+mutation UpdateCompany {
+  updateCapitalDepositCompany(
+    input: {
+      id: "$CAPITAL_DEPOSIT_CASE_ID"
+      companyName: "Acme"
+      residencyAddress: {
+        addressLine1: "10 Rue de Rivoli"
+        city: "Paris"
+        postalCode: "75001"
+        state: "Île-de-France"
+        country: "FRA"
+      }
+    }
+  ) {
+    ... on UpdateCapitalDepositCompanySuccessPayload {
+      __typename
+      capitalDepositCase {
+        id
+        companyName
+        companyOnboarding {
+          accountHolder {
+            info {
+              name
+            }
+            residencyAddress {
+              addressLine1
+              city
+              postalCode
+              country
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+```graphql {6-7,11,14-18} showLineNumbers
+{
+  "data": {
+    "updateCapitalDepositCompany": {
+      "__typename": "UpdateCapitalDepositCompanySuccessPayload",
+      "capitalDepositCase": {
+        "id": "$CAPITAL_DEPOSIT_CASE_ID",
+        "companyName": "Acme",
+        "companyOnboarding": {
+          "accountHolder": {
+            "info": {
+              "name": "Acme"
+            },
+            "residencyAddress": {
+              "addressLine1": "10 Rue de Rivoli",
+              "city": "Paris",
+              "postalCode": "75001",
+              "country": "FRA"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```

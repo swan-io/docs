@@ -192,6 +192,7 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/capital-deposits/guide-update-shareholder-amount",
+            "topics/capital-deposits/guide-update-company",
             "topics/capital-deposits/guide-cancel",
           ],
         },

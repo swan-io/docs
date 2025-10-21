@@ -1,0 +1,54 @@
+---
+title: 23 October 2025
+type: release
+---
+
+## Improvements
+
+📡 A new `statusInfo` field has been added to the [`CapitalDepositCase` object](https://api-reference.swan.io/objects/capital-deposit-case/), providing a clearer and more detailed view of each capital deposit's progress.
+
+This new field introduces a single, explicit status that better reflects the case lifecycle, making it easier to track progress. The existing `status` field remains available but is now deprecated. No breaking changes, you can adopt `statusInfo` at your own pace. These changes are also reflected in the Dashboard, though it will continue to display the `status` label.
+
+New granular statuses include:
+
+- **`WaitingForInitialRequirements`**: The case has been initiated and is waiting for shareholder verification, fund transfers, document uploads, and completion of company onboarding.
+- **`PendingInternalReview`**: Swan is reviewing the information and documents provided.
+- **`WaitingForAdditionalInformation`**: Additional details or corrections have been requested and are pending customer response.
+
+These new statuses replace the former `WaitingForRequirements` status, offering clearer visibility into early-stage capital deposit progress.
+
+💰 You can now update a shareholder's deposit amount directly through the API using the new [`updateCapitalDepositShareholderAmount` mutation](https://api-reference.swan.io/mutations/update-capital-deposit-shareholder-amount/). This allows you to easily correct deposit amounts without contacting support. The mutation is available when the capital deposit case is in `WaitingForInitialRequirements`, `PendingInternalReview`, or `WaitingForAdditionalInformation` (or the deprecated `WaitingForRequirements`), and the shareholder status is `PendingOnboarding`, `WaitingForVerification`, or `WaitingForTransfer`. Updating an amount automatically recalculates the total capital deposit.
+
+🏬 You can now update capital deposit company information directly through the API using the new [`updateCapitalDepositCompany` mutation](https://api-reference.swan.io/mutations/update-capital-deposit-company/). This first version lets you correct the company name and postal address linked to a capital deposit, without contacting support. The mutation is available when the capital deposit case is in `WaitingForInitialRequirements`, `PendingInternalReview`, or `WaitingForAdditionalInformation` (or the deprecated `WaitingForRequirements`), and the company onboarding is finalized.
+
+Updating these fields automatically syncs the data across both the capital deposit case and the associated account holder.
+
+📄 You can now manage account statements with more precision:
+
+- A new `Voided` status has been added to indicate an incorrect statement. When a statement is `Voided`, a corrected version is automatically regenerated with the same characteristics to replace it (format, opening and closing dates, and language). This new status is reflected in a more detailed `statusInfo` object, which will replace the previous `status` field (see upcoming breaking changes).
+- For better clarity and consistency, several fields have been updated:
+  - The generic `fees` field is now split into `feeCredits` (sum of credit fee transactions) and `feeDebits` (sum of debit fee transactions).
+  - The `type` field has been replaced with `format`.
+- A new webhook is now available to keep you updated on statement changes. [`AccountStatement.Voided`](https://api-reference.swan.io/enums/webhook-event-type/) is triggered when a statement is marked as `Voided`.
+
+## API updates
+
+### Upcoming breaking changes
+
+🧹 Starting **December 1st**, the deprecated `totalCapitalDepositAmount` field will be removed from the [`CreateCapitalDepositCaseInput` object](https://api-reference.swan.io/inputs/create-capital-deposit-case-input/). The total capital deposit amount will now be automatically computed from shareholders' contribution amounts, but it will still be included in responses.
+
+⚠️ Starting **January 23rd, 2026**, the following fields will be removed from the [`accountStatement`](https://api-reference.swan.io/queries/account-statement/) and [`accountStatements`](https://api-reference.swan.io/queries/account-statements/) queries and from the [`generateAccountStatement` mutation](https://api-reference.swan.io/mutations/generate-account-statement/) response:
+
+- The `fees` field is fully replaced by `feeCredits` and `feeDebits`.
+- The `status` field is replaced by the new `statusInfo` object.
+- The statement download `url`, previously located in the `type` object, is now available only within `statusInfo`.
+
+### Reminders
+
+👉 Check all reminders of already-announced upcoming breaking changes on [docs.swan.io/changelog](https://docs.swan.io/changelog).
+
+## Coming up
+
+Feature, feature, feature, and more!
+
+Check out [Swan's public roadmap](https://roadmap.swan.io) to see what's in the works. 🚀

@@ -36,45 +36,42 @@ The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit
 ### Case statuses {#case-statuses}
 
 ```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    DC((Capital deposit<br/>case created)) -.-> WR[WaitingFor<br/>Requirements]
-    WR -.-> WS[WaitingForShare<br/>DepositCertificate<br/><em>Notary</em>]
-    WS -.-> WRE[WaitingFor<br/>RegisterExtract]
-    WRE -.-> WNT[WaitingFor<br/>NotaryTransfer<br/><em>Notary</em>]
-    WNT -.-> CA[Canceled]
-    WRE -.-> CA
-    WS -.-> CA
-    WR -.-> CA
-    WNT -.-> CO[Completed]
-
-    %% Backward transitions
-    WNT -->|rejected| WRE
-
-    subgraph F[Final status]
-        direction TB
-        CA
-        style V fill:#fff,stroke:#fff,stroke-width:0px,color:#fff
-        CO
-    end
-
-    subgraph CO[Completed]
-    end
+%%{ init: { 'flowchart': { 'curve': 'basis' } } }%%
+flowchart TD
+    DC([Case created]) --> WIR[WaitingForInitialRequirements]
+    WIR --> PIR[PendingInternalReview]
+    PIR --> WFAI[WaitingForAdditionalInformation]
+    PIR --> WNSC[WaitingForNotaryShareDepositCertificate<br/><em>Notary reviews</em>]
+    WFAI --> PIR
     
+    WNSC --> WRE[WaitingForRegisterExtract]
+    WRE --> WNT[WaitingForNotaryTransfer<br/><em>Notary reviews</em>]
+    WNT -->|Approved| CO([Completed])
+    WNT -.->|Rejected| WRE
+    
+    WIR -.-> CA([Canceled])
+    PIR -.-> CA
+    WFAI -.-> CA
+    WRE -.-> CA
+    WNSC -.-> CA
+    WNT -.-> CA
+
     style DC fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-    style WS stroke-width:2px, stroke-dasharray: 5 5
-    style WNT stroke-width:2px, stroke-dasharray: 5 5
     style CO fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+    style CA fill:#f5e6e6,stroke:#c74444,stroke-width:2px
+    style WNSC fill:#f9f9ff,stroke:#6b6bff,stroke-dasharray: 5 5
+    style WNT fill:#f9f9ff,stroke:#6b6bff,stroke-dasharray: 5 5
 ```
 
-| Case status| Explanation |
+| Case status | Explanation |
 | --- | --- |
-| `WaitingForRequirements` | Default status after the `CapitalDepositCase` is created, providing there were no technical issues.<br/><br/>You complete the company onboarding process and upload required documents to pass to the next status. |
-| `WaitingForShareDepositCertificate` | **_Notary reviews_** _the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_. |
-| `WaitingForRegisterExtract` | You upload your register extract for notary review. |
+| `WaitingForInitialRequirements` | The case has been initiated and is waiting for shareholder verification, fund transfers, document uploads, and completion of company onboarding. |
+| `PendingInternalReview` | Swan is reviewing the information and documents provided. |
+| `WaitingForAdditionalInformation` | After review, Swan has requested additional details or corrections from the customer and is awaiting their response. |
+| `WaitingForNotaryShareDepositCertificate` | **_Notary reviews_** _the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_. |
+| `WaitingForRegisterExtract` | The end-user uploads their register extract for notary review. |
 | `WaitingForNotaryTransfer` | **_Notary reviews_** _the register extract_. If the document is rejected by either Swan or the notary, the case will move back to `WaitingForRegisterExtract`. |
-| `Canceled` | You can request to cancel a `CapitalDepositCase` any time before completion by submitting a request to [Swan Support](https://partner-support.swan.io/hc/en-gb/requests). When a case is canceled, the shareholder is also canceled. |
+| `Canceled` | The case was canceled before completion by either you or Swan. When a case is canceled, the shareholder status becomes [`CapitalDepositCanceled `](#shareholders-statuses). |
 | `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
 
 ## Required documents {#documents}
@@ -253,7 +250,7 @@ flowchart LR
 sequenceDiagram
 autonumber
 participant SH as Shareholder
-participant P as Partner
+participant P as Partner (You)
 participant S as Swan
 participant N as Notary
     P->>S: Creates capital deposit case
@@ -280,6 +277,20 @@ import UpdateShareholderPrereqs from './partials/_update-shareholder-prereqs.mdx
 Updating a shareholder's deposit amount automatically triggers a recalculation of the total capital deposit amount for the case.
 
 Follow the guide to [update a shareholder's capital deposit amount](./guide-update-shareholder-amount.mdx).
+
+## Updating company information {#update-company}
+
+You can update the main company information linked to a capital deposit directly through the API.
+
+This allows you to correct the company name and postal address without contacting the Support team.
+
+import UpdateCompanyPrereqs from './partials/_update-company-prereqs.mdx';
+
+<UpdateCompanyPrereqs />
+
+Updating these fields automatically syncs the data across both the capital deposit case and the associated account holder.
+
+Follow the guide to [update a capital deposit company](./guide-update-company.mdx).
 
 ## Canceling a capital deposit {#cancel}
 

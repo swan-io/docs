@@ -54,6 +54,7 @@ mutation GenerateAccountStatement {
 ### Payload {#payload}
 
 The mutation returns all of the requested information.
+
 The `period` field shows `Custom` (line 16) for on-demand statements. Swan automatically generates statements with `period` values of `Monthly` or `Custom`.
 
 The `statusInfo.status` shows `Pending` while Swan generates the statement (line 18).
@@ -127,11 +128,13 @@ query GetAccountStatement {
 
 #### Payload {#retrieve-payload}
 
+The `period` field shows `Custom` (line 8) for on-demand statements.
+
 Use the `url` to download the statement (line 12).
 
 1. Copy the `url` from the payload.
 1. Paste the `url` into your preferred browser and press enter.
-1. The document downloads automatically after you press enter.
+1. The document downloads automatically.
 
 ```json {8,12} showLineNumbers
 {
@@ -156,7 +159,7 @@ Use the `url` to download the statement (line 12).
 :::caution Account statement statuses
 - **`Pending`**: The statement is being generated.
 - **`Generated`**: The statement is ready to download. The `url` field contains the download link.
-- **`Failed`**: Statement generation failed. Generate a new statement.
+- **`Failed`**: Statement generation failed. Double-check your account ID and generate a new statement.
 - **`Voided`**: The statement has been voided. A voided statement `url` is still available for reference.
 :::
 

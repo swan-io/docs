@@ -5,7 +5,7 @@ type: release
 
 ## Improvements
 
-🔍 The [`CapitalDepositCase` object](https://api-reference.swan.io/objects/capital-deposit-case/) now includes a `statusInfo` field with granular status tracking. This replaces the generic `WaitingForRequirements` status with three clear stages:
+🔍 We improved granular status tracking for capital deposit cases by introducing the `statusInfo` field in the [`CapitalDepositCase` object](https://api-reference.swan.io/objects/capital-deposit-case/). This field provides more detailed status updates and replaces the generic `WaitingForRequirements` status with three clear stages:
 
 - **`WaitingForInitialRequirements`**: Shareholder verification, fund transfers, document uploads, and company onboarding are pending.
 - **`PendingInternalReview`**: Swan is reviewing submitted information and documents.
@@ -13,21 +13,21 @@ type: release
 
 The existing `status` field remains available but is deprecated. This is not a breaking change, you can adopt `statusInfo` at your own pace. The Dashboard continues to display the `status` label.
 
-💰 The [`updateCapitalDepositShareholderAmount` mutation](https://api-reference.swan.io/mutations/update-capital-deposit-shareholder-amount/) lets you correct shareholder deposit amounts. Requirements:
+💰 You can now correct shareholder deposit amounts with the [`updateCapitalDepositShareholderAmount` mutation](https://api-reference.swan.io/mutations/update-capital-deposit-shareholder-amount/). Requirements:
 
 - Capital deposit case status is `WaitingForInitialRequirements`, `PendingInternalReview`, or `WaitingForAdditionalInformation`. Also supports the deprecated `WaitingForRequirements` status.
 - Shareholder status is `PendingOnboarding`, `WaitingForVerification`, or `WaitingForTransfer`.
 
 Updating an amount automatically recalculates the total capital deposit.
 
-🏬 The [`updateCapitalDepositCompany` mutation](https://api-reference.swan.io/mutations/update-capital-deposit-company/) lets you correct the company name and postal address linked to a capital deposit. Requirements:
+🏬 You can now correct company details linked to capital deposits with the [`updateCapitalDepositCompany` mutation](https://api-reference.swan.io/mutations/update-capital-deposit-company/). This lets you update the company name and postal address. Requirements:
 
 - Capital deposit case status is `WaitingForInitialRequirements`, `PendingInternalReview`, or `WaitingForAdditionalInformation`. Also supports the deprecated `WaitingForRequirements` status.
 - Company onboarding is `Finalized`.
 
 Updates sync automatically across both the capital deposit case and the associated account holder.
 
-📄 Account statements now include precise status tracking and refined field structure:
+📄 We improved account statement tracking and structure with more precise status updates and refined fields:
 
 - **New `Voided` status**: Marks incorrect statements. When voided, a corrected version regenerates automatically with identical characteristics (format, language, opening and closing dates). The `statusInfo` object reflects this status and will replace the `status` field (see upcoming breaking changes).
 - **Refined fee fields**: The `fees` field is now split into `feeCredits` (sum of credit fee transactions) and `feeDebits` (sum of debit fee transactions).

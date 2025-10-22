@@ -9,10 +9,10 @@ Generate an account statement for a custom time period **using the API** or on y
 ## API guide {#guide}
 
 1. Call the `generateAccountStatement` mutation.
-1. Add the `accountId`.
-1. Add the `openingDate` and `closingDate` using format `YYYY-MM-DDT00:00:00.000Z`.
+1. Add the `accountId` (line 4).
+1. Add the `openingDate` and `closingDate` using format `YYYY-MM-DDT00:00:00.000Z` (lines 5-6).
    - Maximum period: three months.
-1. Set the `language` for your account statement, and provide the file `format` (`PDF` or `CSV`).
+1. Set the `language` for your account statement, and provide the file `format` (`PDF` or `CSV`) (lines 7-8).
 1. Add all information you'd like to review about the statement (lines 11-27).
 
 ### Mutation {#mutation}
@@ -90,12 +90,12 @@ After generating the account statement, the `statusInfo` > `status` changes to `
 When the status is `Generated`, you can retrieve the download URL.
 
 1. Call the `accountStatement` query.
-1. Add the account statement `id`.
-1. Add `statusInfo` for all statuses. The URL to download the statement is provided in `statusInfo` > `GeneratedStatusInfo` > `url` (line 11).
+1. Add the account statement `id` (line 2).
+1. Add `statusInfo` for all statuses (line 8). The URL to download the statement is provided in `statusInfo` > `GeneratedStatusInfo` > `url` (line 12).
 
 <a href="https://explorer.swan.io?query=cXVlcnkgR2V0QWNjb3VudFN0YXRlbWVudCB7CiAgYWNjb3VudFN0YXRlbWVudChpZDogIiRBQ0NPVU5UX1NUQVRFTUVOVF9JRCIpIHsKICAgIGNsb3NpbmdEYXRlCiAgICBjcmVhdGVkQXQKICAgIGlkCiAgICBvcGVuaW5nRGF0ZQogICAgcGVyaW9kCiAgICBzdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICAgIC4uLiBvbiBHZW5lcmF0ZWRTdGF0dXNJbmZvIHsKICAgICAgICBzdGF0dXMKICAgICAgICB1cmwKICAgICAgfQogICAgICAuLi4gb24gUGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgIHN0YXR1cwogICAgICB9CiAgICAgIC4uLiBvbiBGYWlsZWRTdGF0dXNJbmZvIHsKICAgICAgICBzdGF0dXMKICAgICAgfQogICAgICAuLi4gb24gVm9pZGVkU3RhdHVzSW5mbyB7CiAgICAgICAgc3RhdHVzCiAgICAgICAgdXJsCiAgICAgIH0KICAgIH0KICAgIHVwZGF0ZWRBdAogIH0KfQo=" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2,9,11} showLineNumbers
+```graphql {2,8,12} showLineNumbers
 query GetAccountStatement {
   accountStatement(id: "$ACCOUNT_STATEMENT_ID") {
     closingDate
@@ -130,7 +130,7 @@ query GetAccountStatement {
 Use the `url` to download the statement (line 12).
 
 1. Copy the `url` from the payload.
-1. Paste the `url` into your preferred browser.
+1. Paste the `url` into your preferred browser and press enter.
 1. The document downloads automatically after you press enter.
 
 ```json {8,12} showLineNumbers

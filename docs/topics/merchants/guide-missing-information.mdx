@@ -1,0 +1,313 @@
+---
+title: Provide missing information
+---
+
+# Provide missing information
+
+When your merchant payment method has the status `WaitingForInformation`, you need to provide missing verification requirements and supporting documents before the review can be finalized.
+
+This guide shows you how to identify what's missing and provide it.
+
+:::tip Webhook
+Subscribe to the `MerchantPaymentMethod.Updated` webhook to know when the status of the payment method changes.
+:::
+
+## Guide {#guide}
+
+1. See which information is missing by checking the verification requirements.
+1. Check if your project requires additional information.
+1. Update the merchant profile with the missing information.
+1. Get the supporting documents collection ID.
+1. Upload documents.
+1. Request a collection review.
+
+### Step 1: See which information is missing {#step-1}
+
+To find the missing information, check the verification requirements associated with the `WaitingForInformation` status.
+
+There are three types of verification requirements: **fields**, **supporting document purposes**, and **additional information**.
+
+Additional information is only required for some projects. (See [step 2](#step-2).)
+
+#### Query {#query-requirements}
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0UGF5bWVudE1ldGhvZFJlcXVpcmVtZW50cyB7CiAgbWVyY2hhbnRQYXltZW50TWV0aG9kKGlkOiAiJE1FUkNIQU5UX1BBWU1FTlRfTUVUSE9EX0lEIikgewogICAgaWQKICAgIHN0YXR1c0luZm8gewogICAgICBfX3R5cGVuYW1lCiAgICAgIHN0YXR1cwogICAgICAKICAgICAgLi4uIG9uIFdhaXRpbmdGb3JJbmZvcm1hdGlvbk1lcmNoYW50UGF5bWVudE1ldGhvZFN0YXR1c0luZm8gewogICAgICAgIHZlcmlmaWNhdGlvblJlcXVpcmVtZW50cyB7CiAgICAgICAgICAuLi4gb24gTWVyY2hhbnRSZXF1aXJlbWVudHMgewogICAgICAgICAgICBmaWVsZHMKICAgICAgICAgIH0KICAgICAgICAgIC4uLiBvbiBTdXBwb3J0aW5nRG9jdW1lbnRSZXF1aXJlbWVudHMgewogICAgICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRQdXJwb3NlcwogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIEFkZGl0aW9uYWxJbmZvcm1hdGlvblJlcXVpcmVtZW50cyB7CiAgICAgICAgICAgIGFkZGl0aW9uYWxJbmZvcm1hdGlvbgogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {8} showLineNumbers
+query GetPaymentMethodRequirements {
+  merchantPaymentMethod(id: "$MERCHANT_PAYMENT_METHOD_ID") {
+    id
+    statusInfo {
+      __typename
+      status
+      
+      ... on WaitingForInformationMerchantPaymentMethodStatusInfo {
+        verificationRequirements {
+          ... on MerchantRequirements {
+            fields
+          }
+          ... on SupportingDocumentRequirements {
+            supportingDocumentPurposes
+          }
+          ... on AdditionalInformationRequirements {
+            additionalInformation
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### Payload {#payload-requirements}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "merchantPaymentMethod": {
+      "id": "$MERCHANT_PAYMENT_METHOD_ID",
+      "statusInfo": {
+        "__typename": "WaitingForInformationMerchantPaymentMethodStatusInfo",
+        "status": "WaitingForInformation",
+        "verificationRequirements": [
+          {
+            "fields": [
+              "MerchantWebsite"
+            ]
+          },
+          {
+            "supportingDocumentPurposes": [
+              "CompanyTreasury"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### Step 2: Check if this project requires additional information {#step-2}
+
+Some projects require additional information.
+Use the `projectInfo` query to check if this applies to your project. 
+
+#### Query {#query-additional-info}
+
+<a href="https://explorer.swan.io?query=cXVlcnkgQ2hlY2tJZkFkZGl0aW9uYWxJbmZvcm1hdGlvbkFwcGxpZXMgewogIHByb2plY3RJbmZvIHsKICAgIGV4cGVjdGVkTWVyY2hhbnRQcm9maWxlQWRkaXRpb25hbEluZm9ybWF0aW9uCiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {} showLineNumbers
+query CheckIfAdditionalInformationApplies {
+  projectInfo {
+    expectedMerchantProfileAdditionalInformation
+  }
+}
+```
+
+#### Payload {#payload-additional-info}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "expectedMerchantProfileAdditionalInformation": [
+        "NumberOfEmployees"
+      ]
+    }
+  }
+}
+```
+
+### Step 3: Update the merchant profile with the missing information {#step-3}
+
+For verification requirements indicated under `fields` and `additionalInformation`, provide them by requesting a merchant profile update.
+
+:::info Merchant profile level
+You provide all information at the merchant profile level because it may be needed for more than one payment method. This prevents duplicate requests.
+:::
+
+#### Mutation {#mutation-update}
+
+1. Add the required fields to the input.
+1. If your project requires additional information, add it here.
+1. Add `ValidationRejection` to catch any invalid fields (for example, if the provided URL has an invalid format).
+1. Add `requestMerchantProfileUpdate` to the success payload to retrieve the update status.
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gUmVxdWVzdE1lcmNoYW50UHJvZmlsZVVwZGF0ZSB7CiAgcmVxdWVzdE1lcmNoYW50UHJvZmlsZVVwZGF0ZShpbnB1dDogewogICAgbWVyY2hhbnRQcm9maWxlSWQ6ICIkTUVSQ0hBTlRfUFJPRklMRV9JRCIKICAgIG1lcmNoYW50V2Vic2l0ZVVybDogImh0dHBzOi8vd3d3Lm15d2Vic2l0ZS5jb20iCiAgICBhZGRpdGlvbmFsSW5mb3JtYXRpb246IFsKICAgICAgewogICAgICAgIGRlZmF1bHRJbmZvcm1hdGlvbjogewogICAgICAgICAgdHlwZTogTnVtYmVyT2ZFbXBsb3llZXMKICAgICAgICAgIHZhbHVlOiAiNSIKICAgICAgICB9CiAgICAgIH0KICAgIF0KICB9KSB7CiAgICBfX3R5cGVuYW1lCiAgICAuLi4gb24gUmVxdWVzdE1lcmNoYW50UHJvZmlsZVVwZGF0ZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgbWVyY2hhbnRQcm9maWxlIHsKICAgICAgICBpZAogICAgICAgIG1lcmNoYW50V2Vic2l0ZVVybAogICAgICAgIHJlcXVlc3RNZXJjaGFudFByb2ZpbGVVcGRhdGUgewogICAgICAgICAgaWQKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgbWVyY2hhbnRXZWJzaXRlVXJsCiAgICAgICAgICBhZGRpdGlvbmFsSW5mb3JtYXRpb24gewogICAgICAgICAgICAuLi4gb24gRGVmYXVsdEFkZGl0aW9uYWxJbmZvcm1hdGlvbiB7CiAgICAgICAgICAgICAgdHlwZQogICAgICAgICAgICAgIHZhbHVlCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIGZpZWxkcyB7CiAgICAgICAgcGF0aAogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {3-4,7-10,15,35} showLineNumbers
+mutation RequestMerchantProfileUpdate {
+  requestMerchantProfileUpdate(input: {
+    merchantProfileId: "$MERCHANT_PROFILE_ID"
+    merchantWebsiteUrl: "https://www.mywebsite.com"
+    additionalInformation: [
+      {
+        defaultInformation: {
+          type: NumberOfEmployees
+          value: "5"
+        }
+      }
+    ]
+  }) {
+    __typename
+    ... on RequestMerchantProfileUpdateSuccessPayload {
+      merchantProfile {
+        id
+        merchantWebsiteUrl
+        requestMerchantProfileUpdate {
+          id
+          status
+          merchantWebsiteUrl
+          additionalInformation {
+            ... on DefaultAdditionalInformation {
+              type
+              value
+            }
+          }
+        }
+      }
+    }
+    ... on Rejection {
+      message
+    }
+    ... on ValidationRejection {
+      fields {
+        path
+        code
+        message
+      }
+    }
+  }
+}
+```
+
+#### Payload {#payload-update}
+
+The new provided values appear under `requestMerchantProfileUpdate`. The values will only be reflected on the merchant profile after the request is approved by Swan.
+
+```json {} showLineNumbers
+{
+  "data": {
+    "requestMerchantProfileUpdate": {
+      "__typename": "RequestMerchantProfileUpdateSuccessPayload",
+      "merchantProfile": {
+        "id": "$MERCHANT_PROFILE_ID",
+        "merchantWebsiteUrl": null,
+        "requestMerchantProfileUpdate": {
+          "id": "$UPDATE_REQUEST_ID",
+          "status": "PendingReview",
+          "merchantWebsiteUrl": "https://www.mygreatwebsite.fr/",
+          "additionalInformation": [
+            {
+              "type": "NumberOfEmployees",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+### Step 4: Get the supporting documents collection ID {#step-4}
+
+When supporting documents are required by a payment method, the merchant profile has a supporting documents collection with the `WaitingForDocument` status.
+
+Query the merchant profile to get the collection ID and see which documents are required.
+
+:::tip Document purposes
+A purpose indicates what's needed (for example, `CompanyRegistration`). The `acceptableSupportingDocumentTypes` field lists which document types can satisfy each purpose.
+
+For more details about required documents, refer to the [Document Center](/partnership/document-center/company-registration).
+:::
+
+#### Query {#query-documents}
+
+1. Call the `merchantProfile` query with your merchant profile ID (line 2).
+1. Add the `supportingDocumentCollections` field to your query (line 3).
+1. Add a filter for `status: WaitingForDocument` to return only collections waiting for documents (line 4).
+1. Include `requiredSupportingDocumentPurposes` with the fields `name` and `acceptableSupportingDocumentTypes` to see which documents are needed (line 11).
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0U3VwcG9ydGluZ0RvY3VtZW50Q29sbGVjdGlvbiB7CiAgbWVyY2hhbnRQcm9maWxlKGlkOiAiJE1FUkNIQU5UX1BST0ZJTEVfSUQiKSB7CiAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9ucyhmaWx0ZXJzOiB7CiAgICAgIHN0YXR1czogV2FpdGluZ0ZvckRvY3VtZW50CiAgICB9KSB7CiAgICAgIHRvdGFsQ291bnQKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgaWQKICAgICAgICAgIHN0YXR1c0luZm8geyBzdGF0dXMgfQogICAgICAgICAgcmVxdWlyZWRTdXBwb3J0aW5nRG9jdW1lbnRQdXJwb3NlcyB7CiAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgbGFiZWwKICAgICAgICAgICAgZGVzY3JpcHRpb24KICAgICAgICAgICAgYWNjZXB0YWJsZVN1cHBvcnRpbmdEb2N1bWVudFR5cGVzCiAgICAgICAgICB9CiAgICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRzIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgc3VwcG9ydGluZ0RvY3VtZW50VHlwZQogICAgICAgICAgICBzdGF0dXNJbmZvIHsgc3RhdHVzIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2-4,11-12,15} showLineNumbers
+query GetSupportingDocumentCollection {
+  merchantProfile(id: "$MERCHANT_PROFILE_ID") {
+    supportingDocumentCollections(filters: {
+      status: WaitingForDocument
+    }) {
+      totalCount
+      edges {
+        node {
+          id
+          statusInfo { status }
+          requiredSupportingDocumentPurposes {
+            name
+            label
+            description
+            acceptableSupportingDocumentTypes
+          }
+          supportingDocuments {
+            id
+            supportingDocumentType
+            statusInfo { status }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### Payload {#payload-documents}
+
+```json {} showLineNumbers
+{
+  "data": {
+    "merchantProfile": {
+      "supportingDocumentCollections": {
+        "totalCount": 1,
+        "edges": [
+          {
+            "node": {
+              "id": "$SUPPORTING_DOCUMENT_COLLECTION_ID",
+              "statusInfo": {
+                "status": "WaitingForDocument"
+              },
+              "requiredSupportingDocumentPurposes": [
+                {
+                  "name": "CompanyRegistration",
+                  "label": "Proof of registration (less than 3 months old)",
+                  "description": "A document that provides evidence of the legal registration of a company or business entity with the relevant government authority. The document has to be less than 3 months old.",
+                  "acceptableSupportingDocumentTypes": [
+                    "RegisterExtract",
+                    "ArticlesOfIncorporation",
+                    "CapitalShareDepositCertificate",
+                    "UBODeclaration"
+                  ]
+                }
+              ],
+              "supportingDocuments": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### Step 5: Upload documents {#step-5}
+
+Supporting documents work the same way as for onboarding and transactions.
+
+Use the collection ID from the previous step to generate the supporting document upload link. 
+
+Refer to the guide: [Upload a supporting document for an onboarding](/topics/accounts/documents/guide-upload-onboarding).
+
+### Step 6: Request a collection review {#step-6}
+
+Request a review for the collection. 
+
+Refer to the guide: [Request a supporting document collection review](/topics/accounts/documents/guide-request-collection-review).

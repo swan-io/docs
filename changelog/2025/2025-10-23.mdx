@@ -1,0 +1,49 @@
+---
+title: 23 October 2025
+type: release
+---
+
+## Improvements
+
+We've made improvements to capital deposits to give you better visibility into case progress and more flexibility to correct information without restarting the process.
+
+🔍 We improved granular status tracking for capital deposit cases by introducing the `statusInfo` field in the [`CapitalDepositCase` object](https://api-reference.swan.io/objects/capital-deposit-case/). This field provides more detailed status updates and replaces the generic `WaitingForRequirements` status with three clear stages:
+
+- **`WaitingForInitialRequirements`**: Shareholder verification, fund transfers, document uploads, and company onboarding are pending.
+- **`PendingInternalReview`**: Swan is reviewing submitted information and documents.
+- **`WaitingForAdditionalInformation`**: Swan has requested corrections or additional details.
+
+The existing `status` field remains available but is deprecated. We recommend migrating to `statusInfo` for more detailed status information, though you can adopt it at your own pace without breaking your integration. The Dashboard continues to display the `status` label.
+
+💰 You can now correct shareholder deposit amounts with the [`updateCapitalDepositShareholderAmount` mutation](https://api-reference.swan.io/mutations/update-capital-deposit-shareholder-amount/). Requirements:
+
+- Capital deposit case status is `WaitingForInitialRequirements`, `PendingInternalReview`, or `WaitingForAdditionalInformation`. Also supports the deprecated `WaitingForRequirements` status.
+- Shareholder status is `PendingOnboarding`, `WaitingForVerification`, or `WaitingForTransfer`.
+
+Updating an amount automatically recalculates the total capital deposit.
+
+🏬 You can now correct company details linked to capital deposits with the [`updateCapitalDepositCompany` mutation](https://api-reference.swan.io/mutations/update-capital-deposit-company/). This lets you update the company name and postal address. Requirements:
+
+- Capital deposit case status is `WaitingForInitialRequirements`, `PendingInternalReview`, or `WaitingForAdditionalInformation`. Also supports the deprecated `WaitingForRequirements` status.
+- Company onboarding is `Finalized`.
+
+Updates sync automatically across both the capital deposit case and the associated account holder.
+
+📄 Account statements now feature a more refined structure, clearer field names, and precise status tracking.
+
+- **New `Voided` status**: We've added the Voided status to mark incorrect statements. When a statement is voided, a corrected version automatically regenerates with identical characteristics (format, language, dates). The `statusInfo` object reflects this new status.
+- **Refined fee fields**: The `fees` field is now split into `feeCredits` (sum of credit fee transactions) and `feeDebits` (sum of debit fee transactions).
+- **Clearer format naming**: The `type` field is now renamed to `format`.
+- **New webhook**: [`AccountStatement.Voided`](/developers/using-api/webhooks#events-accounts) now triggers when a statement is marked as`Voided`.
+
+## API updates
+
+### Upcoming breaking changes
+
+🧹 On **December 1st**, the deprecated `totalCapitalDepositAmount` field will be removed from the [`CreateCapitalDepositCaseInput` object](https://api-reference.swan.io/inputs/create-capital-deposit-case-input/). Instead, specify each shareholder's deposit amount in the `individualShareholders` and `companyShareholders` arrays. Swan automatically calculates the total. The calculated total remains available in the [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case/) response.
+
+⚠️ Starting **January 23rd, 2026**, the following fields will be removed from the [`accountStatement`](https://api-reference.swan.io/queries/account-statement/) and [`accountStatements`](https://api-reference.swan.io/queries/account-statements/) queries and from the [`generateAccountStatement` mutation](https://api-reference.swan.io/mutations/generate-account-statement/) response:
+
+- `fees` is replaced by `feeCredits` and `feeDebits`.
+- `status` is replaced by the `statusInfo` object.
+- The statement download `url`, previously in the `type` object, is now only in `statusInfo`.

@@ -69,9 +69,7 @@ This process is automatic. Swan handles all incoming VoP requests; no implementa
 Swan supports the following payee identification types with a Swan [Bank Identifier Code (BIC)](/topics/accounts/ibans/#local):
 
 ### Name {#name-type}
-The name of the legal entity or of the individual:
-- **Company IBAN**: `AccountHolder.companyName`.
-- **Individual IBAN**: `AccountHolder.firstName` + `AccountHolder.lastName`.
+The name of the legal entity or of the individual: `AccountHolderInfo.name`.
 
 ### Tax number {#tax-number-type}
 The number assigned by a tax authority to identify an organisation:
@@ -96,7 +94,7 @@ Swan uses an enhanced matching algorithm that checks multiple name variations to
 
 For company accounts, Swan checks the received name against six variations:
 
-1. Legal name (`AccountHolder.companyName`)
+1. Legal name (`AccountHolderInfo.name`)
 2. Trade name (`CompanyInfo.tradeName`)
 3. Legal name + "Swan"
 4. Trade name + "Swan"
@@ -122,7 +120,7 @@ Swan checks all variations and returns the best matching result to the requestin
 
 For individual accounts, Swan checks the received name against three variations:
 
-1. Individual name (`AccountHolder.firstName` + `AccountHolder.lastName`)
+1. Individual name (`AccountHolderInfo.name`)
 2. Individual name + "Swan"
 3. Individual name + Project name (`ProjectInfo.name`)
 

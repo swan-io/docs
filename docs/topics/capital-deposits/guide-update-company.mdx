@@ -14,11 +14,11 @@ import UpdateCompanyPrereqs from './partials/_update-company-prereqs.mdx';
 
 ## Guide {#steps}
 
-1. Call the `updateCapitalDepositCompany` mutation.
+1. Call the `updateCapitalDepositCaseCompany` mutation.
 1. Add the capital deposit case ID.
 1. Add the fields you want to update: `companyName` and/or `residencyAddress`.
 1. Add the success payload and any information you'd like to receive.
-1. Add rejections (not shown).
+1. Add rejections.
 
 :::info Automatic synchronization
 Updating these fields automatically syncs the data across both the capital deposit case and the associated account holder.
@@ -26,13 +26,13 @@ Updating these fields automatically syncs the data across both the capital depos
 
 ## Mutation {#mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQ29tcGFueSB7CiAgdXBkYXRlQ2FwaXRhbERlcG9zaXRDb21wYW55KAogICAgaW5wdXQ6IHsKICAgICAgaWQ6ICIkQ0FQSVRBTF9ERUBPU0lUX0NBU0VfSUQiCiAgICAgIGNvbXBhbnlOYW1lOiAiQWNtZSIKICAgICAgcmVzaWRlbmN5QWRkcmVzczogewogICAgICAgIGFkZHJlc3NMaW5lMTogIjEwIFJ1ZSBkZSBSaXZvbGkiCiAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgIHBvc3RhbENvZGU6ICI3NTAwMSIKICAgICAgICBzdGF0ZTogIsOObGUtZGUtRnJhbmNlIgogICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBVcGRhdGVDYXBpdGFsRGVwb3NpdENvbXBhbnlTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY2FwaXRhbERlcG9zaXRDYXNlIHsKICAgICAgICBpZAogICAgICAgIGNvbXBhbnlOYW1lCiAgICAgICAgY29tcGFueU9uYm9hcmRpbmcgewogICAgICAgICAgYWNjb3VudEhvbGRlciB7CiAgICAgICAgICAgIGluZm8gewogICAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgfQogICAgICAgICAgICByZXNpZGVuY3lBZGRyZXNzIHsKICAgICAgICAgICAgICBhZGRyZXNzTGluZTEKICAgICAgICAgICAgICBjaXR5CiAgICAgICAgICAgICAgcG9zdGFsQ29kZQogICAgICAgICAgICAgIGNvdW50cnkKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5Ob3RCZUZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcGl0YWxEZXBvc2l0Q29tcGFueUNhbk5vdEJlVXBkYXRlZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQ29tcGFueSB7CiAgdXBkYXRlQ2FwaXRhbERlcG9zaXRDYXNlQ29tcGFueSgKICAgIGlucHV0OiB7CiAgICAgIGNhcGl0YWxEZXBvc2l0Q2FzZUlkOiAiJENBUElUQUxfREVQT1NJVF9DQVNFX0lEIgogICAgICBjb21wYW55TmFtZTogIkFjbWUiCiAgICAgIHJlc2lkZW5jeUFkZHJlc3M6IHsKICAgICAgICBhZGRyZXNzTGluZTE6ICIxMCBSdWUgZGUgUml2b2xpIgogICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDEiCiAgICAgICAgc3RhdGU6ICLDjmxlLWRlLUZyYW5jZSIKICAgICAgICBjb3VudHJ5OiAiRlJBIgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlQ2FwaXRhbERlcG9zaXRDYXNlQ29tcGFueVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjYXBpdGFsRGVwb3NpdENhc2UgewogICAgICAgIGlkCiAgICAgICAgY29tcGFueU5hbWUKICAgICAgICBjb21wYW55T25ib2FyZGluZyB7CiAgICAgICAgICBhY2NvdW50SG9sZGVyIHsKICAgICAgICAgICAgaW5mbyB7CiAgICAgICAgICAgICAgbmFtZQogICAgICAgICAgICB9CiAgICAgICAgICAgIHJlc2lkZW5jeUFkZHJlc3MgewogICAgICAgICAgICAgIGFkZHJlc3NMaW5lMQogICAgICAgICAgICAgIGNpdHkKICAgICAgICAgICAgICBwb3N0YWxDb2RlCiAgICAgICAgICAgICAgY291bnRyeQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQ2FwaXRhbERlcG9zaXRDYXNlQ2FuTm90QmVGb3VuZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEJhZFJlcXVlc3RSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2-4} showLineNumbers
+```graphql {2-6,15} showLineNumbers
 mutation UpdateCompany {
-  updateCapitalDepositCompany(
+  updateCapitalDepositCaseCompany(
     input: {
-      id: "$CAPITAL_DEPOSIT_CASE_ID"
+      capitalDepositCaseId: "$CAPITAL_DEPOSIT_CASE_ID"
       companyName: "Acme"
       residencyAddress: {
         addressLine1: "10 Rue de Rivoli"
@@ -43,7 +43,7 @@ mutation UpdateCompany {
       }
     }
   ) {
-    ... on UpdateCapitalDepositCompanySuccessPayload {
+    ... on UpdateCapitalDepositCaseCompanySuccessPayload {
       __typename
       capitalDepositCase {
         id
@@ -63,19 +63,39 @@ mutation UpdateCompany {
         }
       }
     }
+    ... on CapitalDepositCaseCanNotBeFoundRejection {
+      __typename
+      message
+    }
+    ... on BadRequestRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
   }
 }
 ```
 
 ## Payload {#payload}
 
-```graphql {6-7,11,14-18} showLineNumbers
+```graphql {} showLineNumbers
 {
   "data": {
-    "updateCapitalDepositCompany": {
-      "__typename": "UpdateCapitalDepositCompanySuccessPayload",
+    "updateCapitalDepositCaseCompany": {
+      "__typename": "UpdateCapitalDepositCaseCompanySuccessPayload",
       "capitalDepositCase": {
-        "id": "$CAPITAL_DEPOSIT_CASE_ID",
+        "id": "a4c9da36-56e1-4ed8-b0a1-2c9f3d7e8b12",
         "companyName": "Acme",
         "companyOnboarding": {
           "accountHolder": {

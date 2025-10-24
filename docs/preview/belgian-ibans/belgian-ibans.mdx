@@ -21,7 +21,7 @@ Offering Belgian IBANs expands Swan's local IBAN coverage, allowing you to offer
 
 Belgian IBANs are available for:
 - **Account holders** registered in Belgium and in Swan-supported European markets.
-- **[Account members](/topics/accounts/memberships/)** invited to a Belgian account, regardless of their location..
+- **[Account members](/topics/accounts/memberships/)** invited to a Belgian account, regardless of their location.
 - **Business accounts** for Belgian companies and subsidiaries.
 
 ## Integration impact
@@ -32,13 +32,15 @@ Belgian IBAN support maintains full compatibility with existing Swan integration
 - **Standard [onboarding flow](/topics/onboarding/)**: Uses existing [individual](/topics/onboarding/individual/) and [company](/topics/onboarding/company/) onboarding processes.
 - **Consistent permissions**: Account membership permissions work identically across all local IBANs.
 
-### Onboarding requirements
+## Onboarding requirements
 
 Belgian account holders follow Swan's standard onboarding requirements with these specifics:
 
 <FieldRequirementsLegend />
 
-#### Individual accounts
+### Individual accounts
+
+#### Account information
 
 | API field | Requirement | Notes |
 |---|:---:|---|
@@ -58,7 +60,23 @@ Belgian account holders follow Swan's standard onboarding requirements with thes
 | `residencyAddress.state` | <Opt /> | State or region |
 | `taxIdentificationNumber` | <Opt /> | Belgian tax identification |
 
-#### Company accounts
+#### Identification
+
+Belgian individual accounts require identity verification following Swan's [identification](/topics/users/identifications/) process.
+
+| Account country | Recommended level | Other supported levels |
+|---|---|---|
+| 🇧🇪 Belgium | QES | Expert + first transfer<br />PVID |
+
+:::info Identification level
+This may change from QES to Expert to align with the Netherlands when launching Belgian IBANs.
+:::
+
+[Learn more about identity verification methods ➜](/partnership/document-center/identity/)
+
+### Company accounts
+
+#### Account information
 
 | API field | Requirement | Notes |
 |---|:---:|---|
@@ -87,9 +105,29 @@ Belgian account holders follow Swan's standard onboarding requirements with thes
 | `typeOfRepresentation` | <Req /> | Type of legal representation |
 | `vatNumber` | <Opt /> | VAT registration number |
 
+#### Identification
+
+***Self-employed accounts***
+
+Belgian self-employed account holders use **QES** identification.
+
+:::info Self-employed identification
+We might update self-employed identification to **`QES` + [`First transfer`](/topics/onboarding/account-holders/#first-transfer)** when launching Belgian IBANs.
+:::
+
+***Company accounts***
+
+Belgian company accounts require identity verification for the [account admin](/topics/onboarding/company/#representatives).
+
+| Account country | Recommended level | Other supported levels |
+|---|---|---|
+| 🇧🇪 Belgium | Expert | QES<br />PVID |
+
+[Learn more about identity verification methods ➜](/partnership/document-center/identity/)
+
 #### Ultimate Beneficial Owners (UBOs)
 
-For company accounts, Ultimate Beneficial Owners information is required:
+For company accounts, the UBOs information is required:
 
 | API field | Requirement | Notes |
 |---|:---:|---|
@@ -124,7 +162,7 @@ For company accounts, Ultimate Beneficial Owners information is required:
 | `personalAddress.postalCode` | <Req /> | Postal code |
 | `personalAddress.state` | <Opt /> | State or region |
 
-### Account memberships
+## Account memberships
 
 Belgian account memberships follow standard Swan patterns:
 
@@ -151,3 +189,7 @@ Belgian account memberships follow standard Swan patterns:
 | `restrictedTo.phoneNumber` | <Cnd /> | Phone number - required for advanced permissions |
 | `restrictedTo.birthDate` | <Cnd /> | Birth date - required for advanced permissions or card management |
 | `taxIdentificationNumber` | <Opt /> | Member's tax identification number |
+
+## Card printing
+
+Cards for Belgian accounts are printed and shipped from Swan's [🇫🇷 France hub in Dijon](/topics/cards/physical/#hubs-france).

@@ -88,20 +88,69 @@ The SIREN number is a 9-digit code assigned by INSEE, the French National Instit
 - **Company IBAN**: `AccountHolder.registration` (same as `company_identification`).
 - **Individual IBAN**: Not applicable.
 
-## Matching considerations {#matching-considerations}
+## Matching algorithm {#matching-algorithm}
 
-### Account holder information accuracy {#correct-information}
+Swan uses an enhanced matching algorithm that checks multiple name variations to improve verification success rates.
+
+### Company accounts {#company-matching}
+
+For company accounts, Swan checks the received name against six variations:
+
+1. Legal name (`AccountHolder.companyName`)
+2. Trade name (`CompanyInfo.tradeName`)
+3. Legal name + "Swan"
+4. Trade name + "Swan"
+5. Legal name + Project name (`ProjectInfo.name`)
+6. Trade name + Project name
+
+#### Example
+
+<details>
+<summary>**Swan receives "Awesome Company" for an IBAN.**</summary>
+
+| Received name | Swan checks against | Result type |
+| --- | --- | --- |
+| Awesome Company | Legal name: "AWESOME COMPANY SAS" | Close match (83%) |
+| Awesome Company | Trade name: "Awesome Company" | Match (100%) |
+| Awesome Company | Legal name + Swan: "AWESOME COMPANY SAS Swan" | No match (65%) |
+| Awesome Company | Trade name + Swan: "Awesome Company Swan" | Close match (87%) |
+| Awesome Company | Legal name + Project: "AWESOME COMPANY SAS FinanceApp" | No match (58%) |
+| Awesome Company | Trade name + Project: "Awesome Company FinanceApp" | Close match (78%) |
+
+Swan checks all variations and returns the best matching result to the requesting PSP.
+</details>
+
+### Individual accounts {#individual-matching}
+
+For individual accounts, Swan checks the received name against three variations:
+
+1. Individual name (`AccountHolder.firstName` + `AccountHolder.lastName`)
+2. Individual name + "Swan"
+3. Individual name + Project name (`ProjectInfo.name`)
+
+**Example**: When Swan receives "Marie Dubois" for an individual IBAN:
+
+| Received name | Swan checks against | Result type |
+| --- | --- | --- |
+| Marie Dubois | Individual name: "Marie Claire Dubois" | Close match (89%) |
+| Marie Dubois | Individual name + Swan: "Marie Claire Dubois Swan" | Close match (75%) |
+| Marie Dubois | Individual name + Project: "Marie Claire Dubois PayApp" | No match (68%) |
+
+Swan checks all variations and returns the best matching result to the requesting PSP.
+
+## Account holder information accuracy {#correct-information}
 
 To ensure successful incoming transfers, your users must provide senders with their exact account name and IBAN as they appear on their Swan account. Swan verifies incoming transfers against the legal name and details registered in the system.
 
 **Key points to communicate to your users:**
 - Use the complete legal name, including all registered middle names.
 - Ensure all names are spelled correctly.
-- For business accounts, use the full legal company name, not a trade or merchant name. 
+- For business accounts, use the full legal company name, not a trade or merchant name.
+- Consider sharing your trade name if it differs significantly from your legal name, as Swan's matching algorithm also checks trade names.
 
 You may share [our end-user support article](https://support.swan.io/hc/en-150/articles/30680956306333-Verification-of-Payee-VoP) to assist with user training.
 
-**Example**: If a company's legal name is "MY COMPANY SAS" but they operate as "Awesome Company", senders must use "MY COMPANY SAS" for VoP requests to match. Similarly, if an account holder's name is "Henri Charles Dupont," senders should use the complete name, not just "Henri Dupont."
+**Example**: If a company's legal name is "MY COMPANY SAS" but they operate as "Awesome Company", senders can use either name. Swan's matching algorithm checks both the legal name and trade name to improve verification success. Similarly, if an account holder's name is "Henri Charles Dupont," senders should use the complete name, not just "Henri Dupont."
 
 ## VoP matching and results {#matching-and-results}
 
@@ -118,18 +167,26 @@ Swan returns one of four possible results:
 | **No match** | Significant differences (under 70% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
 | **Impossible to match** | Account not found, unsupported ID type, account closed or suspended | Not applicable |
 
-### Examples {#examples}
+### Name matching examples {#name-examples}
 
-**Name matching examples:**
-
+**Individual names:**
 - "Henri Dupont" vs "Henri Dupont" → Match (100% similarity)
 - "Henri Dupont" vs "Henri Dupond" → Close match (92% similarity)
 - "Henri Dupont" vs "Henry Dupond" → Close match (83% similarity)
 - "Henri Dupont" vs "Malika Ngoma" → No match (8% similarity)
 
-**ID number matching examples:**
+**Company names:**
+- "Awesome Company SAS" vs "Awesome Company SAS" → Match (100% similarity)
+- "Awesome Company" vs "Awesome Company SAS" → Close match (83% similarity)
+- "Awesome Co" vs "Awesome Company" → Close match (73% similarity)
+- "Different Business Ltd" vs "Awesome Company SAS" → No match (15% similarity)
+
+### ID number matching examples {#id-examples}
+
+ID numbers require exact matches:
 - Stored: "DE136695976", Received: "136695976" → **No match**
 - Stored: "9234.56.788", Received: "923456788" → **No match**
+- Stored: "DE136695976", Received: "DE136695976" → **Match**
 
 ## What this means for transfers {#transfer-implications}
 

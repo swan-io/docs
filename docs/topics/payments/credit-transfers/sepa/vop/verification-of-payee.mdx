@@ -159,45 +159,68 @@ The beneficiary's bank can return one of four verification results. **All result
 Verification of Payee provides verification results so end-users can make informed decisions, but doesn't block payments from proceeding.
 :::
 
+### User liability with Verification of Payee {#user-liability}
+
+If a Swan user consents to a transfer after receiving a Close Match, No Match or a Verification Not Possible warning, they accept the risks. This means:
+
+- They are responsible if the money goes to the wrong account.
+- They won't be entitled to a refund for the incorrect transfer.
+
+End-users can refer to their Swan account's Terms and Conditions for more information about VoP liability.
+
 ### Standing Orders {#standing-orders}
 
-VoP applies to Standing Orders with two key differences:
+For **[Standing Orders](/topics/payments/credit-transfers/sepa/guide-schedule-so)**, VoP is performed at the **creation** of the standing order only. This means that:
+- Verification occurs once during setup.
+- Subsequent recurring transfers use the verified beneficiary details.
+- Results are displayed to the end-user during the creation consent.
 
-1. **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
-2. **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
+:::tip Custom verification with Standing Orders
+When using Option 2 (custom verification), Standing Orders are **not compatible** with the `verifyBeneficiary` mutation. Standing Orders can only be used with Option 1 (default verification).
+:::
 
-## Integration flows for VoP {#integration-flows}
+## Integration options {#integration-options}
 
-Swan provides two integration options based on your user experience (UX) needs and development limitations to ensure a compliant integration.
+Swan offers two options for integrating VoP into your application. Partners are expected to use custom verification (Option 2) when possible.
 
-<div className="row margin-bottom--lg">
-  <div className="col col--6">
-    <div className="card" style={{height: '100%', backgroundColor: '#fffbf0', border: '1px solid #ffeaa7'}}>
-      <div className="card__header">
-        <h3>🟡 Option 1: Default verification</h3>
+<div style={{padding: '24px', background: 'linear-gradient(135deg, #6240b5 0%, #4e3391 100%)', borderRadius: '16px', marginBottom: '32px'}}>
+  <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px'}}>
+    <div style={{background: 'rgba(255, 255, 255, 0.95)', padding: '24px', borderRadius: '12px', border: '2px solid #ffeaa7'}}>
+      <div style={{marginBottom: '16px'}}>
+        <span style={{fontSize: '32px', marginBottom: '8px', display: 'block'}}>🟡</span>
+        <h3 style={{margin: '0 0 8px 0', color: '#271a48'}}>Option 1: Default verification</h3>
+        <p style={{margin: 0, fontSize: '14px', color: '#6b7280'}}>Swan handles VoP</p>
       </div>
-      <div className="card__body">
-        <p><strong>Swan automatically verifies beneficiary details when the end-user initiates a credit transfer</strong></p>
-        <ul>
-          <li>No additional development required for single SEPA Credit Transfers.</li>
-          <li>Swan displays VoP results and warnings in the consent screen.</li>
-          <li>Best for: Quick compliance and existing integrations.</li>
+      <div style={{marginBottom: '16px'}}>
+        <h4 style={{fontSize: '14px', fontWeight: 600, color: '#271a48', marginBottom: '8px'}}>How it works</h4>
+        <p style={{fontSize: '14px', color: '#4b5563', margin: '0 0 12px 0'}}>Beneficiary verification happens automatically during payment initiation. Results are displayed on Swan's consent screen.</p>
+      </div>
+      <div>
+        <h4 style={{fontSize: '14px', fontWeight: 600, color: '#271a48', marginBottom: '8px'}}>Best for</h4>
+        <ul style={{fontSize: '14px', color: '#4b5563', margin: 0, paddingLeft: '20px'}}>
+          <li>Quick implementation with minimal development</li>
+          <li>Single credit transfers only (Bulk not supported)</li>
+          <li>Standing orders</li>
         </ul>
       </div>
     </div>
-  </div>
-  <div className="col col--6">
-    <div className="card" style={{height: '100%', backgroundColor: '#f0f9f0', border: '1px solid #d4edda'}}>
-      <div className="card__header">
-        <h3>🟢 Option 2: Custom verification</h3>
+    
+    <div style={{background: 'rgba(255, 255, 255, 0.95)', padding: '24px', borderRadius: '12px', border: '2px solid #d4edda'}}>
+      <div style={{marginBottom: '16px'}}>
+        <span style={{fontSize: '32px', marginBottom: '8px', display: 'block'}}>🟢</span>
+        <h3 style={{margin: '0 0 8px 0', color: '#271a48'}}>Option 2: Custom verification</h3>
+        <p style={{margin: 0, fontSize: '14px', color: '#6b7280'}}>Full control over VoP</p>
       </div>
-      <div className="card__body">
-        <p><strong>Use [the `verifyBeneficiary` mutation](/topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary) for full control over verification presentation</strong></p>
-        <ul>
-          <li>Complete control over VoP results presentation.</li>
-          <li>Custom error handling and user guidance.</li>
-          <li>Required for bulk payments.</li>
-          <li>Best for: Enhanced UX and high-volume use cases.</li>
+      <div style={{marginBottom: '16px'}}>
+        <h4 style={{fontSize: '14px', fontWeight: 600, color: '#271a48', marginBottom: '8px'}}>How it works</h4>
+        <p style={{fontSize: '14px', color: '#4b5563', margin: '0 0 12px 0'}}>Use the <code style={{background: '#f3f4f6', padding: '2px 6px', borderRadius: '4px', fontSize: '13px'}}>verifyBeneficiary</code> mutation to verify details before payment initiation. Build custom UX for displaying results and handling user actions.</p>
+      </div>
+      <div>
+        <h4 style={{fontSize: '14px', fontWeight: 600, color: '#271a48', marginBottom: '8px'}}>Best for</h4>
+        <ul style={{fontSize: '14px', color: '#4b5563', margin: 0, paddingLeft: '20px'}}>
+          <li>Customized user experience and messaging</li>
+          <li>Bulk credit transfers (Required)</li>
+          <li>Early fraud detection</li>
         </ul>
         <p><a href="guide-verify-beneficiary">Learn how to verify beneficiary details →</a></p>
       </div>

@@ -79,8 +79,8 @@ Call the mutation with the beneficiary details ([`beneficiaryInput`](https://api
 
 The `verifyBeneficiary` mutation accepts different types of beneficiary inputs:
 
-- **SEPA beneficiary** (`sepa`): For external SEPA Credit Transfers using IBAN and name.
-- **Swan account** (`swanAccount`): For internal transfers between Swan accounts. 
+- **SEPA beneficiary** (`sepa`): For external SEPA Credit Transfers using IBAN and name. The maximum length for the beneficiary name must be ≤ 70 characters.
+- **Swan account** (`swanAccount`): For internal transfers between Swan accounts. The maximum length for the beneficiary name must be ≤ 70 characters.
 - **Trusted beneficiary** (`trustedBeneficiaryId`): For pre-verified beneficiaries saved in your account.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25NdXRhdGlvbiB7CiAgdmVyaWZ5QmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBiZW5lZmljaWFyeTogewogICAgICAgIHNlcGE6IHsgaWJhbjogIklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIsIG5hbWU6ICJDbG9zZU1hdGNoIiB9CiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuCiAgICAgIGV4cGlyZXNBdAogICAgICB2ZXJpZnlCZW5lZmljaWFyeVJlc3VsdCB7CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Tm90UG9zc2libGUgewogICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vTWF0Y2ggewogICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlDbG9zZU1hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
@@ -263,6 +263,17 @@ When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `sa
 
 No trusted beneficiary is added when calling `verifyBeneficiary`, but your request to save it is contained within the token. The beneficiary is only saved after successful payment authorization, similar to the functionality described in [Add a beneficiary](/topics/payments/credit-transfers/sepa/guide-add-beneficiary).
 
+## Get a beneficiary verification result {#get-result}
+
+You can retrieve the beneficiary verification result used in a transaction using the `transaction`, `transactions`, `standingOrder`, and `TrustedBeneficiary` queries.
+
+**Example steps:**
+
+1. Call the `transaction` query.
+1. Check the boxes for `id` and `SEPACreditTransferTransaction`.
+1. Under `SEPACreditTransferTransaction`, check the boxes for `beneficiaryVerificationResult`.
+1. Additionally, under the box `VerifyBeneficiaryCloseMatch`, you may check the box for `nameSuggestion` to retrieve the correct name returned by the receiving bank.
+
 ## Bulk credit transfers {#bulk-credit-transfers}
 
 For bulk credit transfers, verification tokens are required based on account type and account-level settings:
@@ -275,6 +286,14 @@ If your integration supports individual account holders performing bulk credit t
 :::
 
 [Learn more about bulk credit transfers with VoP →](/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers)
+
+## Verification of Payee with Server-to-server (S2S) consent {#s2s-consent}
+
+You can initiate credit transfers using the server-to-server consent feature with Verification of Payee.
+
+:::note Integration options
+Server-to-Server consent works with both VoP integration options: Option 1 and Option 2.
+:::
 
 ## Sandbox testing {#sandbox-testing}
 

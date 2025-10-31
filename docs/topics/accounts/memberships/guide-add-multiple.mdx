@@ -14,7 +14,10 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 ## Step 1: Add account memberships {#api-add}
 
 1. Call the `addAccountMemberships` mutation.
-1. Add the account ID to which you're inviting account members (line 4) and your `consentRedirectUrl` (line 5).
+1. Add the account ID to which you're inviting account members (line 4).
+1. Add the `consentRedirectUrl` (line 5):
+    - `consentRedirectUrl` is **optional** when all invited members have no permissions (only `canViewAccount: false` or no permissions at all).
+    - `consentRedirectUrl` is **mandatory** when any invited member is granted permissions beyond viewing. The API will return a validation rejection if missing.
 1. Add one invited account member block for each invitee (lines 7-21).
 1. In each `restrictedTo` object (lines 9-14), add information about the invited account members.
     - If you're only granting `canViewAccount` permissions, or you're [not granting any permissions](./index.mdx#permissions-none), the invited account member's `birthDate` isn't required.

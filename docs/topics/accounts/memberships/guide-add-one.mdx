@@ -17,9 +17,9 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 1. In the `restrictedTo` object, add information about the invited account member (lines 6-9).
     - If you're only granting `canViewAccount` permissions, or you're [not granting any permissions](./index.mdx#permissions-none), the invited account member's `birthDate` isn't required.
     - Include a `+` in front of the phone number.
-1. Add the `consentRedirectUrl` (line 11):
-    - `consentRedirectUrl` is **optional** when inviting members with no permissions (only `canViewAccount: false` or no permissions at all).
-    - `consentRedirectUrl` is **mandatory** when granting any permissions beyond viewing—the API will return a validation rejection if missing.
+1. Add your `consentRedirectUrl` (line 11).
+    - Required when granting permissions beyond viewing (the API returns a validation rejection if omitted).
+    - Optional for view-only access or no permissions.
 1. Choose `true` for the permissions you'd like to grant to the invited account member (lines 13-17).
 1. Choose the [account membership language](./index.mdx#language) (line 18). If no language is chosen, the membership inherits the [account language](../index.mdx#language).
 1. Add the success payload, including any information you'd like to review (line 20).
@@ -34,7 +34,7 @@ If you don't include the `CanManageCards` permission in your API call, it inheri
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQWRkTWVtYmVyIHsKICBhZGRBY2NvdW50TWVtYmVyc2hpcCgKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRBQ0NPVU5UX0lEIgogICAgICByZXN0cmljdGVkVG86IHsKICAgICAgICBmaXJzdE5hbWU6ICJKdWxlcyIKICAgICAgICBsYXN0TmFtZTogIkZsZXVyeSIKICAgICAgICBwaG9uZU51bWJlcjogIiszMzYwMDAwMDAwMCIKICAgICAgICBiaXJ0aERhdGU6ICJ5eXl5LW1tLWRkIgogICAgICB9CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRSRURJUkVDVF9VUkwiCiAgICAgIGVtYWlsOiAianVsZXMuZmxldXJ5QG15YnJhbmQuaW8iCiAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IHRydWUKICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogdHJ1ZQogICAgICBjYW5NYW5hZ2VDYXJkczogZmFsc2UKICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgbGFuZ3VhZ2U6IGVuCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkQWNjb3VudE1lbWJlcnNoaXBTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudE1lbWJlcnNoaXAgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcENvbnNlbnRQZW5kaW5nU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEJhZEFjY291bnRTdGF0dXNSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW52YWxpZFBob25lTnVtYmVyUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gUGVybWlzc2lvbkNhbm5vdEJlR3JhbnRlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4,6-9,11,13-18,21,27,30} showLineNumbers
+```graphql {4,6-9,11,13-17,18} showLineNumbers
 mutation AddMember {
   addAccountMembership(
     input: {
@@ -78,7 +78,7 @@ mutation AddMember {
 
 ## Step 2: Get consent to add member {#get-consent}
 
-1. Get the `consentUrl`, included in the payload (line 11). Remember, the payload only provides the `consentUrl` if you added it in step 1.6.
+1. Get the `consentUrl`, included in the payload (line 11). Remember, the payload only provides the `consentUrl` if you added it in step 1.7.
 1. Send the `consentUrl` to the account holder, the account's legal representative, or the account member with `canManageAccountMembership` permissions.
 1. As soon as consent is provided, they're redirected to your `consentRedirectUrl` defined in the initial API call, which fetches an OAuth 2.0 authorization code and a user access token.
 1. **Store** the invited account member's new `accountMembershipId`. You'll need it to bind the membership.

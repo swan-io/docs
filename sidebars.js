@@ -286,8 +286,8 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/merchants/guide-onboarding-overview",
-            "topics/merchants/guide-missing-information",
             "topics/merchants/profiles/guide-request",
+            "topics/merchants/guide-missing-information",
             "topics/merchants/profiles/guide-update",
             "topics/merchants/profiles/guide-get-info",
             "topics/merchants/sandbox",

@@ -302,7 +302,7 @@ flowchart LR
 | `Enabled` | All user information matches, the account member has been awarded the correct [identification level](../../users/identifications/index.mdx#levels-processes), and the account member can use their account membership and corresponding permissions. |
 | `BindingUserError` | The personal information you submitted about the invited account member doesn't match the information they provide during the [sign-up process](../../users/index.mdx#signup). The mismatch must be solved before continuing.<br/><br/>Refer to the section on [binding user errors](./guide-fix-binding-error.mdx) for more information. |
 | `Suspended` | Account membership is suspended and not available for use.<br/><br/>Account memberships can be suspended for various reasons, including a request from you or the account's legal representative, or a Swan action in the case of suspicious activity.<br/><br/>**Next steps**:<ul><li>Restore the account membership's previous status with the API</li><li>Cancel the account membership with the API</li></ul> |
-| `Disabled` | Account membership is disabled, is no longer available for use, and can't be restored. |
+| `Disabled` | Account membership is disabled, is no longer available for use, and can't be restored.<br/><br/>When an account member's membership is disabled, their [recurring SingleUseVirtualCards](/topics/cards/virtual/#suv-recurring) are [automatically reassigned to the account's Legal Representative](/topics/accounts/memberships/guide-disable#impact-cards). |
 
 ### Binding user errors {#binding-errors}
 
@@ -320,14 +320,6 @@ Account members whose membership status is `BindingUserError` can still access b
 After an account member's status is `Enabled`, updating their personal details doesn't cause a user binding error.
 If fraud is suspected, [suspend the membership](./guide-suspend-resume.mdx).
 :::
-
-### Impact on recurring SingleUseVirtualCards {#impact-cards}
-
-When an account member's membership is disabled, their recurring SingleUseVirtualCards are automatically reassigned to the account's Legal Representative. The cards remain active and functional after reassignment to ensure business continuity.
-
-This reassignment only affects recurring SingleUseVirtualCards; other card types may have different behaviors.
-
-[Learn more about recurring SingleUseVirtualCards](/topics/cards/virtual/#suv-recurring)
 
 ## Removing identification {#remove-identification}
 

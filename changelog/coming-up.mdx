@@ -7,10 +7,6 @@
 
   <div>
 
-    ✔️ Starting **October 31st**, the `beneficiaryVerification` query will be deprecated. Use the `verifyBeneficiary` mutation instead to ensure uninterrupted service.
-
-    ⚖️ Starting **October 31st**, the `taxIdentificationNumber` will be a mandatory field at onboarding when an account holder's residency country does not match the `accountCountry`. This is to comply with [CRS (Common Reporting Standard) regulations](https://www.oecd.org/content/dam/oecd/en/topics/policy-issue-focus/aeoi/jersey-guidance-notes-crs.pdf).
-
     📄 On **November 12th**:
     - The [`verificationFlow`](https://api-reference.swan.io/objects/onboarding-info/#onboardinginfoverificationflowverificationflow---) field will be removed from the [`OnboardingInfo` object](https://api-reference.swan.io/objects/onboarding-info/). This field is deprecated and no longer serves any purpose.
     - The [`redirectUrl` field](https://api-reference.swan.io/objects/onboarding#onboardingredirecturlstring---) will be removed from both the [`Onboarding`](https://api-reference.swan.io/objects/onboarding) and [`OnboardingInfo`](https://api-reference.swan.io/objects/onboarding-info) objects. It has been deprecated for two years and replaced by the [`oauthRedirectParameters` object](https://api-reference.swan.io/objects/oauth-redirect-parameters/).
@@ -21,11 +17,15 @@
 
     🧹 On **December 1st**, the deprecated `totalCapitalDepositAmount` field will be removed from the [`CreateCapitalDepositCaseInput` object](https://api-reference.swan.io/inputs/create-capital-deposit-case-input/). The total is now computed automatically from shareholder contribution amounts. It remains available in responses.
 
+    🧹 On **December 1st**, the deprecated `companyInfoBySiren` query will be removed. Company information retrieval is now integrated directly into the onboarding creation and update flows, eliminating the need for separate queries.
+
     ⚠️ Starting **January 23rd, 2026**, the following fields will be removed from the [`accountStatement`](https://api-reference.swan.io/queries/account-statement/) and [`accountStatements`](https://api-reference.swan.io/queries/account-statements/) queries and from the [`generateAccountStatement` mutation](https://api-reference.swan.io/mutations/generate-account-statement/) response:
 
     - `fees` is replaced by `feeCredits` and `feeDebits`.
     - `status` is replaced by the `statusInfo` object.
     - The statement download `url`, previously in the `type` object, is now only in `statusInfo`.
+
+    🧹 On **February 5th, 2026**, the deprecated `status` field will be removed from the [`CapitalDepositCase` object](https://api-reference.swan.io/objects/capital-deposit-case/). Use the'statusInfo' field (introduced October 23, 2025) instead. The'statusInfo' field provides more granular status updates including `WaitingForInitialRequirements`, `PendingInternalReview`, and `WaitingForAdditionalInformation`.
 
   </div>
 </details>

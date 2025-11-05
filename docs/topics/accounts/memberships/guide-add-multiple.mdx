@@ -14,7 +14,10 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 ## Step 1: Add account memberships {#api-add}
 
 1. Call the `addAccountMemberships` mutation.
-1. Add the account ID to which you're inviting account members (line 4) and your `consentRedirectUrl` (line 5).
+1. Add the account ID of the account where you're inviting members (line 4).
+1. Add your `consentRedirectUrl` (line 5).
+    - Required: if any member receives any permissions (the API returns a validation rejection if omitted).
+    - Optional: if all members have view-only access or no permissions.
 1. Add one invited account member block for each invitee (lines 7-21).
 1. In each `restrictedTo` object (lines 9-14), add information about the invited account members.
     - If you're only granting `canViewAccount` permissions, or you're [not granting any permissions](./index.mdx#permissions-none), the invited account member's `birthDate` isn't required.
@@ -114,7 +117,7 @@ The account holder, legal representative of the account, or account member with 
 
 1. Get the `consentUrl`, included in the payload (lines 11).
     - All consent URLs are the same when adding members in bulk.
-    - Remember, the payload only provides the `consentUrl` if you added it in step 1.7.
+    - Remember, the payload only provides the `consentUrl` if you added it in step 1.8.
 1. Send the `consentUrl` to the account holder, the account's legal representative, or the account member with `canManageAccountMembership` permissions.
 1. As soon as consent is provided, they're redirected to your `consentRedirectUrl` defined in the initial API call, which fetches an OAuth 2.0 authorization code and a user access token.
 1. **Store** the invited account member's new `accountMembershipId`. You'll need it to bind the membership.

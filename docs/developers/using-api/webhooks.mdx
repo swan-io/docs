@@ -140,30 +140,25 @@ This example demonstrates creating three separate subscriptions with different e
 mutation AddCriticalEventsSubscription {
   addWebhookSubscription(
     input: {
-      url: "https://api.yourcompany.com/webhooks/critical"
+      label: "Critical events"
+      endpoint: "https://api.yourcompany.com/webhooks/critical"
       secret: "$YOUR_WEBHOOK_SECRET_CRITICAL"
-      subscriptions: [
-        {
-          eventType: Consent.Granted
-        }
-        {
-          eventType: Consent.Refused
-        }
-        {
-          eventType: AccountMembership.Suspended
-        }
-        {
-          eventType: Account.Closing
-        }
+      eventTypes: [
+        "Consent.Granted"
+        "Consent.Refused"
+        "AccountMembership.Suspended"
+        "Account.Closing"
       ]
+      status: Enabled
     }
   ) {
-    ... on AddWebhookSubscriptionSuccessPayload {
+    ... on WebhookSubscriptionSuccessPayload {
       __typename
       webhookSubscription {
         id
-        url
-        secret
+        label
+        endpoint
+        eventTypes
       }
     }
   }
@@ -174,30 +169,25 @@ mutation AddCriticalEventsSubscription {
 mutation AddPaymentEventsSubscription {
   addWebhookSubscription(
     input: {
-      url: "https://api.yourcompany.com/webhooks/payments"
+      label: "Payment events"
+      endpoint: "https://api.yourcompany.com/webhooks/payments"
       secret: "$YOUR_WEBHOOK_SECRET_PAYMENTS"
-      subscriptions: [
-        {
-          eventType: Transaction.Booked
-        }
-        {
-          eventType: Transaction.Pending
-        }
-        {
-          eventType: Transaction.Rejected
-        }
-        {
-          eventType: MerchantPayment.Captured
-        }
+      eventTypes: [
+        "Transaction.Booked"
+        "Transaction.Pending"
+        "Transaction.Rejected"
+        "MerchantPayment.Captured"
       ]
+      status: Enabled
     }
   ) {
-    ... on AddWebhookSubscriptionSuccessPayload {
+    ... on WebhookSubscriptionSuccessPayload {
       __typename
       webhookSubscription {
         id
-        url
-        secret
+        label
+        endpoint
+        eventTypes
       }
     }
   }
@@ -208,27 +198,24 @@ mutation AddPaymentEventsSubscription {
 mutation AddAdminEventsSubscription {
   addWebhookSubscription(
     input: {
-      url: "https://api.yourcompany.com/webhooks/admin"
+      label: "Administrative events"
+      endpoint: "https://api.yourcompany.com/webhooks/admin"
       secret: "$YOUR_WEBHOOK_SECRET_ADMIN"
-      subscriptions: [
-        {
-          eventType: AccountInvoice.Generated
-        }
-        {
-          eventType: AccountStatement.Generated
-        }
-        {
-          eventType: SupportingDocumentCollection.Updated
-        }
+      eventTypes: [
+        "AccountInvoice.Generated"
+        "AccountStatement.Generated"
+        "SupportingDocumentCollection.Updated"
       ]
+      status: Enabled
     }
   ) {
-    ... on AddWebhookSubscriptionSuccessPayload {
+    ... on WebhookSubscriptionSuccessPayload {
       __typename
       webhookSubscription {
         id
-        url
-        secret
+        label
+        endpoint
+        eventTypes
       }
     }
   }

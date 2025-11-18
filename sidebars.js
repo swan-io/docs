@@ -286,8 +286,8 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/merchants/guide-onboarding-overview",
-            "topics/merchants/guide-missing-information",
             "topics/merchants/profiles/guide-request",
+            "topics/merchants/guide-missing-information",
             "topics/merchants/profiles/guide-update",
             "topics/merchants/profiles/guide-get-info",
             "topics/merchants/sandbox",
@@ -417,7 +417,6 @@ module.exports = {
                     'topics/payments/credit-transfers/sepa/vop/incoming-vop-requests',
                   ],
                 },
-                "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-add-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",
                 "topics/payments/credit-transfers/sepa/guide-cancel-so",

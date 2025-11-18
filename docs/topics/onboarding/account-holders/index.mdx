@@ -52,9 +52,9 @@ The account holder verification process can include the following elements:
 
 1. **Onboarding**: Process is finalized for either an [**individual**](../individual/index.mdx) or a [**company**](../company/index.mdx), which creates a user, an account holder, an account, and an account membership linking the user to the account.
 1. [**Identification**](../../users/identifications/index.mdx): User that opened the [individual](../individual/index.mdx#identification-recommendations) or [company](../company/index.mdx#identification-recommendations) account completes identification with an ID document and a picture or video.
+1. [**First transfer**](#first-transfer): Users may need to send a first transfer to their new Swan account.
 1. [**Document collection**](../../accounts/documents/index.mdx): Swan collects required documents.
 1. **Clarification**: Swan might contact the user to clarify details from onboarding, identification, or document collection.
-1. [**First transfer**](#first-transfer): Certain users need to send a first transfer to their new Swan account.
 1. **Review**: Swan reviews all provided elements.
 
 After Swan **validates the review**, the account holder is verified and their account receives its primary IBAN.
@@ -104,6 +104,16 @@ If the account holder verification status is `WaitingForInformation`, the accoun
 
 ### First transfer {#first-transfer}
 
+:::tip Prerequisites
+Before a user can make their first transfer, the following conditions must be met:
+
+- Onboarding status: `Finalized`  
+  The user's onboarding is complete, and all required supporting documents have been uploaded.
+
+- Identification status: `Valid`  
+  The user's identification was successfully completed.
+:::
+
 import FirstTransfer from '../../partials/_first-transfer.mdx';
 
 <FirstTransfer />
@@ -117,31 +127,39 @@ Review the [guide to request a first transfer](./guide-request-first-transfer.md
 A first transfer is always required for self-employed and individual accounts for which the **[account country](../../accounts/index.mdx#account-country)** is **Germany**, regardless of registration or residency.
 :::
 
-Users must send first transfers from a bank account in their name.
-First transfers from third-party payment platforms and online banking services aren’t accepted. 
+Users must send first transfers from an account in their name.
+Not all third-party payment platforms or online banks are accepted for first transfers.
 Share this [Support Center article](https://support.swan.io/hc/en-150/articles/17774309993501-First-transfer-request) with your users. 
-It lists the platforms and online banking services that aren't accepted for a first transfer.
+It explains why a first transfer may be requested, and the possible outcomes.
 
 Users can send any amount in the first transfer.
 While there is technically no deadline for sending the transfer, the user's [account is `Limited`](../../accounts/index.mdx#account-type-level) until the transfer is validated.
 
 #### First transfer and account holder verification status {#first-transfer-waiting}
 
-When Swan requests the first transfer, the account holder verification status changes to `WaitingForInformation`.
+A first transfer request is made when the account holder verification status is `Pending`.
+After Swan makes the request, the account holder verification status changes to `WaitingForInformation`.
 
 After the user sends their transfer, the account holder verification status changes to `Pending` while Swan checks the transfer source.
-If transferred from an acceptable account, the account holder verification status changes to `Verified`.
 Note that if the account used to send the first transfer is located outside of the European Economic Area (EEA), it may be subject to additional review.
 
-:::info Supporting documents
-If Swan requests [supporting documents](../../accounts/documents/index.mdx) from the user as well, the account holder verification status remains `WaitingForInformation` after receiving the first transfer.
-When the documents are received, the account holder verification status changes to `Pending` while Swan reviews them.
+#### First transfer outcomes {#first-transfer-outcomes}
+
+| **Outcome** | **Description** | **Account holder verification status update** |
+|---|---|---|
+| Account holder is verified | The first transfer source was accepted, and we approved the account holder. | `Verified` |
+| Account holder is refused | The first transfer source wasn't accepted, and we didn't approve the account holder. | `Refused` |
+| Additional transfer requested | The first transfer came from an unaccepted source. We asked the user to send another transfer from a different account in their name. | `WaitingForInformation` |
+| Additional documents requested | We received the first transfer and asked the user for [supporting documents](../../accounts/documents/index.mdx). | `WaitingForInformation` |
+
+:::info Additional transfer or documents
+After the additional transfer or documents are received, the account holder verification status changes from `WaitingForInformation` to `Pending` while Swan reviews them. Depending on the outcome, the status changes to either `Verified` or `Refused`. 
 :::
 
 ## Sequence diagram {#verification-process-diagram}
 
 This diagram **details a common flow** of how Swan, the account holder, and you interact during verification.
-Your integration might flow differently.
+Note that the flow includes alternate scenarios (A or B) where the path is determined by your integration choices. Your final integration might flow differently.
 
 ```mermaid
 sequenceDiagram autoNumber
@@ -155,27 +173,29 @@ participant S as Swan
     S ->> U: Sends text message inviting the account<br/>holder to complete identification
     U ->> S: Provides identification provider<br/>with required elements
     S ->> S: Verifies identification
-    note right of P: If supporting documents are required
-    alt Partner provides documents
-        S ->> P: Sends webhook about missing supporting documents
-        P ->> U: Requests documents
-        U ->> P: Provides documents
-        P ->>S: Uploads documents with the API
-    else Account holder provides documents
-        S ->> U: Sends email requesting supporting documents
-        U ->> S: Uploads documents to banking interface
-    end
-    S ->> S: Swan reviews identity<br/>verification and documents
-    note right of P: If a first transfer is required
-    alt Partner notifies user about first transfer
+
+    note over P,S: If a first transfer is required, the process splits into one of two scenarios:
+    alt SCENARIO A: Partner notifies user about first transfer
         S ->> P: Sends email notifying about required first transfer
         P ->> U: Requests first transfer
         U ->> S: Sends first transfer
-    else Swan requests first transfer from user
+    else SCENARIO B: Swan requests first transfer from user
         S ->> U: Sends email requesting first transfer
         U ->> S: Sends first transfer
     end
     S ->> S: Swan reviews first transfer
+
+    note over P,S: If supporting documents are required, the process splits into one of two scenarios:
+    alt SCENARIO A: Partner provides documents
+        S ->> P: Sends webhook about missing supporting documents
+        P ->> U: Requests documents
+        U ->> P: Provides documents
+        P ->>S: Uploads documents with the API
+    else SCENARIO B: Account holder provides documents
+        S ->> U: Sends email requesting supporting documents
+        U ->> S: Uploads documents to banking interface
+    end
+    S ->> S: Swan reviews identity<br/>verification and documents
 ```
 
 ## Guides {#guides}

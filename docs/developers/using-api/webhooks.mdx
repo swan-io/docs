@@ -32,6 +32,10 @@ participant E as External event
     S ->> P: Returns resource
 ```
 
+:::tip
+For guidance on optimizing your webhook setup, refer to [best practices for webhook consumption](#best-practices).
+:::
+
 ### Response time {#overview-response}
 
 Webhooks operate with a near-real-time efficiency, typically delivering responses **within seconds** of the event.
@@ -54,12 +58,12 @@ You can also trigger the webhook manually at any time.
 ### Subscription limits {#subscription-limits}
 
 In order to avoid overconsumption caused by too many subscriptions to the same webhook event, there's a limit on how many subscriptions you can enable per event.
-Please consider unsubscribing if you have multiple subscriptions to the same event.
+Consider following [best practices for webhook consumption](#best-practices) to optimize your subscription strategy.
 
 The following limits apply:
 
-- **Sandbox**: 10 subscriptions per event
-- **Live**: 5 subscriptions per event
+- **Sandbox**: 10 subscriptions per event.
+- **Live**: 5 subscriptions per event.
 
 :::warning Legacy subscriptions
 All webhook subscriptions enabled before these limits were established remain intact.
@@ -88,6 +92,148 @@ If you have security restrictions in your infrastructure, you might need to add 
 - 52.51.125.72
 - 54.194.47.212
 :::
+
+## Best practices for webhook consumption {#best-practices}
+
+Effective webhook management ensures critical events are processed promptly and improves your integration's reliability.
+
+### Event subscription strategy {#best-practices-subscription}
+
+Rather than subscribing to all available events, determine exactly which events your integration needs to monitor.
+Subscriptions can be created, modified, or removed at any time, so start with essential events and expand as needed.
+
+**Subscribing to all events creates several challenges:**
+
+- **Endpoint downtime impact**: When a single endpoint receives all events, any downtime creates a significant backlog, causing delays across all event types and creating blind spots in your monitoring.
+- **Event volume disparity**: Some events occur far more frequently than others. For example, `Transaction.Booked` events can significantly outnumber `Account.Created` events, potentially delaying critical low-volume events.
+- **Processing bottlenecks**: High-volume, low-priority events can prevent timely processing of critical events that require immediate action.
+
+### Event prioritization {#best-practices-priority}
+
+Assess the criticality of each event type based on your integration's business logic and user experience requirements.
+
+Consider these factors when prioritizing events:
+
+- **Immediate impact**: Events that affect user-facing operations or require real-time responses (e.g., payment authorizations, account suspensions).
+- **Business criticality**: Events that trigger essential workflows or compliance requirements.
+- **Volume considerations**: High-volume events that can be processed asynchronously without immediate user impact.
+
+For example, `Consent.Granted` might require immediate processing to complete a user action, while `AccountInvoice.Generated` can be processed with more flexibility.
+
+### Endpoint architecture {#best-practices-endpoints}
+
+Create separate webhook subscriptions with dedicated endpoints for different priority levels.
+This architecture prevents low-priority events from blocking critical ones and isolates failures to specific event categories.
+
+**Benefits of distributed webhook handling:**
+
+- **Isolated processing**: Critical events aren't delayed by high-volume routine events.
+- **Targeted scaling**: Scale endpoint capacity based on specific event volume and criticality.
+- **Simplified troubleshooting**: Endpoint-specific issues are easier to diagnose and resolve.
+- **Improved reliability**: Downtime or processing issues for one category don't affect others.
+
+#### Example: Multiple subscription setup {#best-practices-example}
+
+This example demonstrates creating three separate subscriptions with different endpoints based on priority levels.
+
+```graphql title="Critical events endpoint"
+mutation AddCriticalEventsSubscription {
+  addWebhookSubscription(
+    input: {
+      url: "https://api.yourcompany.com/webhooks/critical"
+      secret: "$YOUR_WEBHOOK_SECRET_CRITICAL"
+      subscriptions: [
+        {
+          eventType: Consent.Granted
+        }
+        {
+          eventType: Consent.Refused
+        }
+        {
+          eventType: AccountMembership.Suspended
+        }
+        {
+          eventType: Account.Closing
+        }
+      ]
+    }
+  ) {
+    ... on AddWebhookSubscriptionSuccessPayload {
+      __typename
+      webhookSubscription {
+        id
+        url
+        secret
+      }
+    }
+  }
+}
+```
+
+```graphql title="Payment events endpoint"
+mutation AddPaymentEventsSubscription {
+  addWebhookSubscription(
+    input: {
+      url: "https://api.yourcompany.com/webhooks/payments"
+      secret: "$YOUR_WEBHOOK_SECRET_PAYMENTS"
+      subscriptions: [
+        {
+          eventType: Transaction.Booked
+        }
+        {
+          eventType: Transaction.Pending
+        }
+        {
+          eventType: Transaction.Rejected
+        }
+        {
+          eventType: MerchantPayment.Captured
+        }
+      ]
+    }
+  ) {
+    ... on AddWebhookSubscriptionSuccessPayload {
+      __typename
+      webhookSubscription {
+        id
+        url
+        secret
+      }
+    }
+  }
+}
+```
+
+```graphql title="Administrative events endpoint"
+mutation AddAdminEventsSubscription {
+  addWebhookSubscription(
+    input: {
+      url: "https://api.yourcompany.com/webhooks/admin"
+      secret: "$YOUR_WEBHOOK_SECRET_ADMIN"
+      subscriptions: [
+        {
+          eventType: AccountInvoice.Generated
+        }
+        {
+          eventType: AccountStatement.Generated
+        }
+        {
+          eventType: SupportingDocumentCollection.Updated
+        }
+      ]
+    }
+  ) {
+    ... on AddWebhookSubscriptionSuccessPayload {
+      __typename
+      webhookSubscription {
+        id
+        url
+        secret
+      }
+    }
+  }
+}
+```
 
 ## Event handling {#event-handling}
 
@@ -162,19 +308,19 @@ However, you can receive `Transaction.Booked` and `Transaction.Released` webhook
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    A(<i>Authorization</i><br/>Transaction.Pending) --> P((Possibilities))
-    P --> B(<i>Debit</i><br/>Transaction.Booked) --> D(<i>Released</i><br/>Transaction.Released)
-    P --> C(<i>Released</i><br/>Transaction.Released) --> E(<i>Debit</i><br/>Transaction.Booked)
-    style P fill:#dfedf2,stroke:#4d8296
-    style C fill:#fffdf4,stroke:#cca922
-    style D fill:#fffdf4,stroke:#cca922
-    style B fill:#f6ddcc,stroke:#c12236
-    style E fill:#f6ddcc,stroke:#c12236
+    A[Authorization] -.->|Transaction.Pending| B[Debit]
+    B -.->|Transaction.Booked| C[Released]
+    C -.->|Transaction.Released| D[Settled]
+    A -.-> E[Webhook order]
+    B -.-> E
+    C -.-> E
+    E ==> F[Any order<br/>possible]
+    style F fill:#D4F0FC, stroke:#4C8EA9
 ```
 
-## List of webhook events {#events}
+## Webhook events {#events}
 
-The first part of the `eventType` will tell you what resources to query in an API call. In the following table, you will find all the event types and examples of their functional triggers.
+This section describes the available webhook events.
 
 ### [Account holders](../../topics/onboarding/account-holders/index.mdx) {#events-account-holders}
 

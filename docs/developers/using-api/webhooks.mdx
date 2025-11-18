@@ -295,37 +295,39 @@ However, you can receive `Transaction.Booked` and `Transaction.Released` webhook
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    A[Authorization] -.->|Transaction.Pending| B[Debit]
-    B -.->|Transaction.Booked| C[Released]
-    C -.->|Transaction.Released| D[Settled]
-    A -.-> E[Webhook order]
-    B -.-> E
-    C -.-> E
-    E ==> F[Any order<br/>possible]
-    style F fill:#D4F0FC, stroke:#4C8EA9
+    A(<i>Authorization</i><br/>Transaction.Pending) --> P((Possibilities))
+    P --> B(<i>Debit</i><br/>Transaction.Booked) --> D(<i>Released</i><br/>Transaction.Released)
+    P --> C(<i>Released</i><br/>Transaction.Released) --> E(<i>Debit</i><br/>Transaction.Booked)
+    style P fill:#dfedf2,stroke:#4d8296
+    style C fill:#fffdf4,stroke:#cca922
+    style D fill:#fffdf4,stroke:#cca922
+    style B fill:#f6ddcc,stroke:#c12236
+    style E fill:#f6ddcc,stroke:#c12236
 ```
 
 ## Webhook events {#events}
 
 This section describes the available webhook events.
 
+The first part of the `eventType` will tell you what resource to query in an API call.
+
 ### [Account holders](../../topics/onboarding/account-holders/index.mdx) {#events-account-holders}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `AccountHolder.Created` | Onboarding was finalized |
 | `AccountHolder.Updated` | Swan updated a banking verification status |
 
 ### [Account onboarding](../../topics/onboarding/index.mdx) {#events-onboarding}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `Onboarding.Created` | New onboarding was created either through the API or the no-code interface |
 | `Onboarding.Updated` | Onboarding was either finalized, or changed because new data was added to it |
 
 ### [Account memberships](../../topics/accounts/memberships/index.mdx) {#events-account-memberships}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `AccountMembership.Bound` | User was bound with the account membership |
 | `AccountMembership.Created` | New account membership was created |
@@ -336,13 +338,13 @@ This section describes the available webhook events.
 
 ### Account settings {#events-account-settings}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `AccountSetting.Updated` | The [`allowBulkCreditTransfersWithoutBeneficiaryVerification` setting](/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers/#parameters) changed. |
 
 ### [Accounts](../../topics/accounts/index.mdx) {#events-accounts}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `Account.Created` | Onboarding was finalized |
 | `Account.Updated` | Account attribute was changed |
@@ -353,14 +355,14 @@ This section describes the available webhook events.
 
 ### [Billing](../../topics/accounts/billing/index.mdx) {#events-billing}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `AccountInvoice.Generated` | New invoice was generated and available for download |
 | `AccountInvoice.Updated` | Invoice or refund note was updated |
 
 ### [Capital deposits](../../topics/capital-deposits/index.mdx) {#events-capital-deposits}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `CapitalDepositCaseEvent.Created` | Capital deposit case was created |
 | `CapitalDepositCaseEvent.Updated` | Capital deposit case was updated |
@@ -371,14 +373,14 @@ This section describes the available webhook events.
 
 ### [Cards](../../topics/cards/index.mdx) {#events-cards}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `Card.Created` | New virtual card was created |
 | `Card.Updated` | Physical card was printed, spending limit was updated, and more (doesn't not include PIN notifications) |
 
 ### [Consent](../../topics/users/consent/index.mdx) {#events-consent}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `Consent.Canceled` | Consent was canceled by the Partner or the end user |
 | `Consent.Created` | Consent was created for a sensitive operation |
@@ -389,7 +391,7 @@ This section describes the available webhook events.
 
 ### [Funding](../../topics/accounts/funding/index.mdx) {#events-funding}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `FundingLimitSettingsChangeRequest.Created` | Funding limit settings change request was created |
 | `FundingLimitSettingsChangeRequest.Updated` | Funding limit settings change request was updated |
@@ -400,7 +402,7 @@ This section describes the available webhook events.
 
 #### Merchant profiles {#events-merchants-profiles}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `MerchantProfile.Created` | Merchant profile was created |
 | `MerchantProfile.Updated` | Merchant profile was updated |
@@ -409,7 +411,7 @@ This section describes the available webhook events.
 
 #### Merchant payment methods {#events-merchants-payment-methods}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `MerchantPaymentMethod.Created` | Merchant payment method was created |
 | `MerchantPaymentMethod.Updated` | Merchant payment method was updated |
@@ -418,14 +420,14 @@ This section describes the available webhook events.
 
 #### Merchant payment links {#events-merchants-payment-links}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `MerchantPaymentLink.Created` | Merchant payment link was created |
 | `MerchantPaymentLink.Updated` | Merchant payment link was updated |
 
 #### Merchant payments {#events-merchants-payments}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `MerchantPayment.Authorized` | Merchant payment was authorized |
 | `MerchantPayment.Captured` | Merchant payment was captured |
@@ -435,7 +437,7 @@ This section describes the available webhook events.
 
 ### [Payments](../../topics/payments/index.mdx) {#events-payments}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `ReceivedDirectDebitMandate.Created` | Received direct debit mandate was created either through the API or automatically by Swan |
 | `ReceivedDirectDebitMandate.Updated` | Received direct debit mandate was updated |
@@ -444,7 +446,7 @@ This section describes the available webhook events.
 
 ### [Supporting documents](../../topics/accounts/documents/index.mdx) {#events-documents}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `SupportingDocumentCollection.Created` | A new supporting document collection was created |
 | `SupportingDocumentCollection.Updated` | A supporting document collection was either finalized or updated |
@@ -452,7 +454,7 @@ This section describes the available webhook events.
 
 ### [Transactions](../../topics/payments/index.mdx#transactions) {#events-transactions}
 
-| `eventType` | Explanation | Impacts |
+| `eventType` | Trigger | Impacts |
 | --- | --- | --- |
 | `Transaction.Booked` | Transaction was completed and will appear on the account statement | All payment types |
 | `Transaction.Canceled` | Upcoming transaction was canceled | Credit transfers and direct debits |
@@ -468,7 +470,7 @@ This section describes the available webhook events.
 
 ### [Users](../../topics/users/index.mdx) {#events-users}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `User.Joined` | User joins your project |
 | `User.Updated` | User's information was updated, such as their phone number |

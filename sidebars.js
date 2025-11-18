@@ -417,7 +417,6 @@ module.exports = {
                     'topics/payments/credit-transfers/sepa/vop/incoming-vop-requests',
                   ],
                 },
-                "topics/payments/credit-transfers/sepa/guide-verify-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-add-beneficiary",
                 "topics/payments/credit-transfers/sepa/guide-schedule-so",
                 "topics/payments/credit-transfers/sepa/guide-cancel-so",

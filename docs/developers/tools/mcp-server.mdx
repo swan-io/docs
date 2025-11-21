@@ -1,0 +1,142 @@
+---
+title: MCP server
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# MCP server
+
+Swan's MCP ([Model Context Protocol](https://modelcontextprotocol.io/docs/getting-started/intro)) server gives AI assistants intelligent access to Swan's GraphQL API schema through two specialized search tools.
+
+## Why use the MCP server
+
+Swan's GraphQL schema is comprehensive but large, containing over 200,000 characters. This creates challenges when working with AI assistants:
+
+- Most AI models cannot load schemas of this size.
+- Large context windows waste tokens processing irrelevant types.
+- Finding specific types or fields becomes impractical.
+- Response times suffer from unnecessary information processing.
+
+The MCP server solves these problems by providing filtered, context-aware schema access. Instead of loading the entire schema, AI assistants retrieve only the relevant portions needed to answer your questions.
+
+**Benefits**:
+
+- Search by keywords to find relevant types and fields.
+- Get detailed type information with configurable depth.
+- Receive compact schema snippets (typically under 20KB instead of 200KB+).
+- Navigate complex type hierarchies efficiently.
+
+## Available tools
+
+The MCP server provides two tools your AI assistant uses automatically:
+
+### search-graphql-schema
+
+Searches Swan's GraphQL schema using keywords and returns only relevant parts.
+
+**Example queries**:
+
+- "Find all types related to payments"
+- "What fields are available for user accounts?"
+- "Show me authentication-related types"
+
+### introspect-graphql-type
+
+Gets detailed information about specific GraphQL types, including fields, related types, and dependencies.
+
+**Example queries**:
+
+- "What is the Account type?"
+- "How do I create a payment using the GraphQL API?"
+- "Show me all fields on the Transaction type"
+
+## Setup
+
+Add this configuration to your AI coding agent's MCP settings.
+
+<Tabs groupId="mcp-config">
+<TabItem value="cursor" label="Cursor">
+
+Add to your Cursor MCP configuration file:
+- **Linux/macOS**: `~/.cursor/mcp.json`
+- **Windows**: `%USERPROFILE%\.cursor\mcp.json`
+
+```json
+{
+  "mcpServers": {
+    "swan-graphql": {
+      "url": "https://mcp.swan.io/graphql/mcp"
+    }
+  }
+}
+```
+
+Restart Cursor after saving the configuration.
+
+**Learn more**: [Cursor MCP documentation](https://docs.cursor.com/context/model-context-protocol)
+
+</TabItem>
+<TabItem value="claude" label="Claude Desktop">
+
+Add to your Claude Desktop configuration file:
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "swan-graphql": {
+      "url": "https://mcp.swan.io/graphql/mcp"
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving the configuration.
+
+**Learn more**: [Claude Desktop MCP guide](https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop)
+
+</TabItem>
+<TabItem value="generic" label="Generic MCP client">
+
+```json
+{
+  "mcpServers": {
+    "swan-graphql": {
+      "url": "https://mcp.swan.io/graphql/mcp"
+    }
+  }
+}
+```
+
+Refer to your MCP client's documentation for the configuration file location and setup instructions.
+
+**Learn more**: [Model Context Protocol documentation](https://modelcontextprotocol.io/)
+
+</TabItem>
+</Tabs>
+
+## Use cases
+
+Connect AI coding assistants like Cursor to the MCP server for accurate help understanding Swan's API and generating complex GraphQL queries for your integration.
+
+**Example**: Ask your AI assistant "How do I create a SEPA Credit Transfer?" and it will search the schema, find the relevant mutation, and generate a complete query with all required fields.
+
+## How it works
+
+When you ask your AI assistant a question about Swan's API:
+
+1. The AI assistant identifies which MCP tool to use based on your question.
+2. The tool searches Swan's schema for relevant information.
+3. The MCP server returns only the schema portions needed to answer your question.
+4. Your AI assistant uses this information to provide accurate, schema-based responses.
+
+This approach keeps context windows manageable while ensuring accurate, up-to-date API information.
+
+## Next steps
+
+- [Learn about Swan's GraphQL API](/developers/graphql)
+- [Explore the API with API Explorer](/developers/tools/api-explorer)
+- [Test your integration in Sandbox](/developers/tools/sandbox-users)

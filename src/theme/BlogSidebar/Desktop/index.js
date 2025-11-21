@@ -147,16 +147,15 @@ export default function BlogSidebarDesktop({ sidebar }) {
         </svg>
 
         <h3>Subscribe to the Swan Changelog</h3>
-        <p>Enter your email to subscribe.</p>
         <iframe
           data-w-type="embedded"
           frameBorder="0"
           scrolling="no"
           marginHeight="0"
           marginWidth="0"
-          src="https://1s14q.mjt.lu/wgt/1s14q/0oj1/form?c=dc051a32"
+          src="https://xr22w.mjt.lu/wgt/xr22w/0oqk/form?c=ce289285"
           width="100%"
-          style={{ height: 480 }}
+          style={{ height: "480px" }}
         ></iframe>
       </Modal>
       <script

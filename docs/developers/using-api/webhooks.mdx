@@ -102,25 +102,19 @@ Effective webhook management ensures critical events are processed promptly and 
 Rather than subscribing to all available events, determine exactly which events your integration needs to monitor.
 Subscriptions can be created, modified, or removed at any time, so start with essential events and expand as needed.
 
+When assessing which events to subscribe to, consider:
+
+- **Immediate impact**: Events that affect user-facing operations or require real-time responses (e.g., `Consent.Granted`, `AccountMembership.Suspended`).
+- **Business criticality**: Events that trigger essential workflows or compliance requirements.
+- **Volume**: High-volume events like `Transaction.Booked` that can be processed asynchronously without immediate user impact.
+
 **Subscribing to all events creates several challenges:**
 
 - **Endpoint downtime impact**: When a single endpoint receives all events, any downtime creates a significant backlog, causing delays across all event types and creating blind spots in your monitoring.
 - **Event volume disparity**: Some events occur far more frequently than others. For example, `Transaction.Booked` events can significantly outnumber `Account.Created` events, potentially delaying critical low-volume events.
 - **Processing bottlenecks**: High-volume, low-priority events can prevent timely processing of critical events that require immediate action.
 
-### Event prioritization {#best-practices-priority}
-
-Assess the criticality of each event type based on your integration's business logic and user experience requirements.
-
-Consider these factors when prioritizing events:
-
-- **Immediate impact**: Events that affect user-facing operations or require real-time responses (e.g., payment authorizations, account suspensions).
-- **Business criticality**: Events that trigger essential workflows or compliance requirements.
-- **Volume considerations**: High-volume events that can be processed asynchronously without immediate user impact.
-
-For example, `Consent.Granted` might require immediate processing to complete a user action, while `AccountInvoice.Generated` can be processed with more flexibility.
-
-### Endpoint architecture {#best-practices-endpoints}
+### Use separate endpoints by priority {#best-practices-endpoints}
 
 Create separate webhook subscriptions with dedicated endpoints for different priority levels.
 This architecture prevents low-priority events from blocking critical ones and isolates failures to specific event categories.

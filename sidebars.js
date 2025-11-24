@@ -687,15 +687,7 @@ module.exports = {
             "developers/tools/testing-api",
             "developers/tools/event-simulator",
             "developers/tools/sandbox-users",
-            {
-              type: "category",
-              label: "MCP server",
-              link: { type: "doc", id: "developers/tools/mcp-server" },
-              collapsed: true,
-              items: [
-                "developers/tools/mcp-server-advanced",
-              ],
-            },
+            "developers/tools/mcp-server",
             "developers/tools/postman-collection",
           ],
         },

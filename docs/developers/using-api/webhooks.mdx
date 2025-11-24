@@ -99,36 +99,43 @@ Effective webhook management ensures critical events are processed promptly and 
 
 ### Subscribe only to essential events {#best-practices-subscription}
 
-Rather than subscribing to all available events, determine exactly which events your integration needs to monitor.
-Subscriptions can be created, modified, or removed at any time, so start with essential events and expand as needed.
+Determine exactly which events your integration needs rather than subscribing to all available events.
+This keeps your webhook traffic focused and ensures critical events aren't lost in noise.
 
-When assessing which events to subscribe to, consider:
+**Challenges of subscribing to all events:**
 
-- **Immediate impact**: Events that affect user-facing operations or require real-time responses (e.g., `Consent.Granted`, `AccountMembership.Suspended`).
-- **Business criticality**: Events that trigger essential workflows or compliance requirements.
-- **Volume**: High-volume events like `Transaction.Booked` that can be processed asynchronously without immediate user impact.
+- **Processing bottlenecks**: High-volume, low-priority events can delay critical events that require immediate action.
+- **Event volume disparity**: `Transaction.Booked` events can significantly outnumber `Account.Created` events, potentially delaying important low-volume events.
+- **Blind spots during downtime**: When a single endpoint receives all events, any downtime creates a significant backlog across all event types.
 
-**Subscribing to all events creates several challenges:**
+**How to choose your events:**
 
-- **Endpoint downtime impact**: When a single endpoint receives all events, any downtime creates a significant backlog, causing delays across all event types and creating blind spots in your monitoring.
-- **Event volume disparity**: Some events occur far more frequently than others. For example, `Transaction.Booked` events can significantly outnumber `Account.Created` events, potentially delaying critical low-volume events.
-- **Processing bottlenecks**: High-volume, low-priority events can prevent timely processing of critical events that require immediate action.
+- **Immediate impact**: Prioritize events affecting user-facing operations (e.g., `Consent.Granted`, `AccountMembership.Suspended`).
+- **Business criticality**: Include events that trigger essential workflows or compliance requirements.
+- **Volume**: Consider whether high-volume events like `Transaction.Booked` can be processed asynchronously.
+
+Subscriptions can be created, modified, or removed at any time—start with essential events and expand as needed.
 
 ### Use separate endpoints by priority {#best-practices-endpoints}
 
 Create separate webhook subscriptions with dedicated endpoints for different priority levels.
-This architecture prevents low-priority events from blocking critical ones and isolates failures to specific event categories.
+This ensures critical events are processed immediately, regardless of overall event volume.
 
-**Benefits of distributed webhook handling:**
+**Challenges of using a single endpoint:**
 
-- **Isolated processing**: Critical events aren't delayed by high-volume routine events.
-- **Targeted scaling**: Scale endpoint capacity based on specific event volume and criticality.
-- **Simplified troubleshooting**: Endpoint-specific issues are easier to diagnose and resolve.
-- **Improved reliability**: Downtime or processing issues for one category don't affect others.
+- **Cascading delays**: High-volume routine events block time-sensitive critical events.
+- **Difficult troubleshooting**: Issues affect all event types simultaneously, making root cause analysis harder.
+- **Scaling limitations**: You can't allocate more resources to critical events without over-provisioning for everything.
+
+**How to structure your endpoints:**
+
+- **Isolate by priority**: Route critical events (consent, account status changes) to a dedicated high-priority endpoint.
+- **Scale independently**: Allocate endpoint capacity based on specific event volume and criticality.
+- **Contain failures**: Downtime or issues for one category won't affect others.
 
 #### Example: Multiple subscription setup {#best-practices-example}
 
-This example demonstrates creating three separate subscriptions with different endpoints based on priority levels.
+Create separate subscriptions for different priority levels.
 
 ```graphql title="Critical events endpoint"
 mutation AddCriticalEventsSubscription {

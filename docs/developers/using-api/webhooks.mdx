@@ -32,6 +32,10 @@ participant E as External event
     S ->> P: Returns resource
 ```
 
+:::tip
+For guidance on optimizing your webhook setup, refer to [best practices for webhook consumption](#best-practices).
+:::
+
 ### Response time {#overview-response}
 
 Webhooks operate with a near-real-time efficiency, typically delivering responses **within seconds** of the event.
@@ -54,7 +58,7 @@ You can also trigger the webhook manually at any time.
 ### Subscription limits {#subscription-limits}
 
 In order to avoid overconsumption caused by too many subscriptions to the same webhook event, there's a limit on how many subscriptions you can enable per event.
-Please consider unsubscribing if you have multiple subscriptions to the same event.
+Consider following [best practices for webhook consumption](#best-practices) to optimize your subscription strategy.
 
 The following limits apply:
 
@@ -88,6 +92,135 @@ If you have security restrictions in your infrastructure, you might need to add 
 - 52.51.125.72
 - 54.194.47.212
 :::
+
+## Best practices for webhook consumption {#best-practices}
+
+Effective webhook management ensures critical events are processed promptly and improves your integration's reliability.
+
+### Subscribe only to essential events {#best-practices-subscription}
+
+Determine exactly which events your integration needs rather than subscribing to all available events.
+
+**Challenges of subscribing to all events:**
+
+- **Processing bottlenecks**: You risk delaying critical events behind a queue of high-volume, low-priority events.
+- **Event volume spikes**: Frequent events like `Transaction.Booked` can bury rarer, high-value events like `Account.Created`.
+- **Blind spots during downtime**: When a single endpoint receives all events, any downtime creates a significant backlog across all event types.
+
+**How to choose your events:**
+
+- **Immediate impact**: Prioritize events affecting user-facing operations (e.g., `Consent.Granted`, `AccountMembership.Suspended`).
+- **Business criticality**: Include events that trigger essential workflows or compliance requirements.
+- **Batch processing**: Consider whether high-volume events like `Transaction.Booked` can be processed asynchronously.
+
+You can create, modify, or remove subscriptions at any time. Start with essential events and expand as needed.
+
+### Use separate endpoints by priority {#best-practices-endpoints}
+
+Create separate webhook subscriptions with dedicated endpoints for different priority levels.
+This ensures critical events are processed immediately, regardless of overall event volume.
+
+**Challenges of using a single endpoint:**
+
+- **Cascading delays**: High-volume routine events block time-sensitive critical events.
+- **Difficult troubleshooting**: Issues affect all event types simultaneously, making it harder to find the source of the problem.
+- **Scaling limitations**: Increasing capacity for critical events requires increasing it for all events.
+
+**How to structure your endpoints:**
+
+- **Isolate by priority**: Route critical events (consent, account status changes) to a dedicated high-priority endpoint.
+- **Scale independently**: Allocate endpoint capacity based on specific event volume and priority.
+- **Separate by function**: Use different endpoints for distinct workflows so an issue in one area doesn't block another.
+
+#### Example: Multiple subscription setup {#best-practices-example}
+
+Create separate subscriptions for different priority levels.
+
+```graphql title="Critical events endpoint"
+mutation AddCriticalEventsSubscription {
+  addWebhookSubscription(
+    input: {
+      label: "Critical events"
+      endpoint: "https://api.yourcompany.com/webhooks/critical"
+      secret: "$YOUR_WEBHOOK_SECRET_CRITICAL"
+      eventTypes: [
+        "Consent.Granted"
+        "Consent.Refused"
+        "AccountMembership.Suspended"
+        "Account.Closing"
+      ]
+      status: Enabled
+    }
+  ) {
+    ... on WebhookSubscriptionSuccessPayload {
+      __typename
+      webhookSubscription {
+        id
+        label
+        endpoint
+        eventTypes
+      }
+    }
+  }
+}
+```
+
+```graphql title="Payment events endpoint"
+mutation AddPaymentEventsSubscription {
+  addWebhookSubscription(
+    input: {
+      label: "Payment events"
+      endpoint: "https://api.yourcompany.com/webhooks/payments"
+      secret: "$YOUR_WEBHOOK_SECRET_PAYMENTS"
+      eventTypes: [
+        "Transaction.Booked"
+        "Transaction.Pending"
+        "Transaction.Rejected"
+        "MerchantPayment.Captured"
+      ]
+      status: Enabled
+    }
+  ) {
+    ... on WebhookSubscriptionSuccessPayload {
+      __typename
+      webhookSubscription {
+        id
+        label
+        endpoint
+        eventTypes
+      }
+    }
+  }
+}
+```
+
+```graphql title="Administrative events endpoint"
+mutation AddAdminEventsSubscription {
+  addWebhookSubscription(
+    input: {
+      label: "Administrative events"
+      endpoint: "https://api.yourcompany.com/webhooks/admin"
+      secret: "$YOUR_WEBHOOK_SECRET_ADMIN"
+      eventTypes: [
+        "AccountInvoice.Generated"
+        "AccountStatement.Generated"
+        "SupportingDocumentCollection.Updated"
+      ]
+      status: Enabled
+    }
+  ) {
+    ... on WebhookSubscriptionSuccessPayload {
+      __typename
+      webhookSubscription {
+        id
+        label
+        endpoint
+        eventTypes
+      }
+    }
+  }
+}
+```
 
 ## Event handling {#event-handling}
 
@@ -172,27 +305,27 @@ flowchart LR
     style E fill:#f6ddcc,stroke:#c12236
 ```
 
-## List of webhook events {#events}
+## Webhook events {#events}
 
-The first part of the `eventType` will tell you what resources to query in an API call. In the following table, you will find all the event types and examples of their functional triggers.
+This section describes the available webhook events. The first part of the `eventType` indicates what resource to query in an API call.
 
 ### [Account holders](../../topics/onboarding/account-holders/index.mdx) {#events-account-holders}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `AccountHolder.Created` | Onboarding was finalized |
 | `AccountHolder.Updated` | Swan updated a banking verification status |
 
 ### [Account onboarding](../../topics/onboarding/index.mdx) {#events-onboarding}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `Onboarding.Created` | New onboarding was created either through the API or the no-code interface |
 | `Onboarding.Updated` | Onboarding was either finalized, or changed because new data was added to it |
 
 ### [Account memberships](../../topics/accounts/memberships/index.mdx) {#events-account-memberships}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `AccountMembership.Bound` | User was bound with the account membership |
 | `AccountMembership.Created` | New account membership was created |
@@ -203,13 +336,13 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### Account settings {#events-account-settings}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `AccountSetting.Updated` | The [`allowBulkCreditTransfersWithoutBeneficiaryVerification` setting](/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers/#parameters) changed. |
 
 ### [Accounts](../../topics/accounts/index.mdx) {#events-accounts}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `Account.Created` | Onboarding was finalized |
 | `Account.Updated` | Account attribute was changed |
@@ -220,14 +353,14 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### [Billing](../../topics/accounts/billing/index.mdx) {#events-billing}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `AccountInvoice.Generated` | New invoice was generated and available for download |
 | `AccountInvoice.Updated` | Invoice or refund note was updated |
 
 ### [Capital deposits](../../topics/capital-deposits/index.mdx) {#events-capital-deposits}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `CapitalDepositCaseEvent.Created` | Capital deposit case was created |
 | `CapitalDepositCaseEvent.Updated` | Capital deposit case was updated |
@@ -238,14 +371,14 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### [Cards](../../topics/cards/index.mdx) {#events-cards}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `Card.Created` | New virtual card was created |
 | `Card.Updated` | Physical card was printed, spending limit was updated, and more (doesn't not include PIN notifications) |
 
 ### [Consent](../../topics/users/consent/index.mdx) {#events-consent}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `Consent.Canceled` | Consent was canceled by the Partner or the end user |
 | `Consent.Created` | Consent was created for a sensitive operation |
@@ -256,7 +389,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### [Funding](../../topics/accounts/funding/index.mdx) {#events-funding}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `FundingLimitSettingsChangeRequest.Created` | Funding limit settings change request was created |
 | `FundingLimitSettingsChangeRequest.Updated` | Funding limit settings change request was updated |
@@ -267,7 +400,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 #### Merchant profiles {#events-merchants-profiles}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `MerchantProfile.Created` | Merchant profile was created |
 | `MerchantProfile.Updated` | Merchant profile was updated |
@@ -276,7 +409,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 #### Merchant payment methods {#events-merchants-payment-methods}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `MerchantPaymentMethod.Created` | Merchant payment method was created |
 | `MerchantPaymentMethod.Updated` | Merchant payment method was updated |
@@ -285,14 +418,14 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 #### Merchant payment links {#events-merchants-payment-links}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `MerchantPaymentLink.Created` | Merchant payment link was created |
 | `MerchantPaymentLink.Updated` | Merchant payment link was updated |
 
 #### Merchant payments {#events-merchants-payments}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `MerchantPayment.Authorized` | Merchant payment was authorized |
 | `MerchantPayment.Captured` | Merchant payment was captured |
@@ -302,7 +435,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### [Payments](../../topics/payments/index.mdx) {#events-payments}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `ReceivedDirectDebitMandate.Created` | Received direct debit mandate was created either through the API or automatically by Swan |
 | `ReceivedDirectDebitMandate.Updated` | Received direct debit mandate was updated |
@@ -311,7 +444,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### [Supporting documents](../../topics/accounts/documents/index.mdx) {#events-documents}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `SupportingDocumentCollection.Created` | A new supporting document collection was created |
 | `SupportingDocumentCollection.Updated` | A supporting document collection was either finalized or updated |
@@ -319,7 +452,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### [Transactions](../../topics/payments/index.mdx#transactions) {#events-transactions}
 
-| `eventType` | Explanation | Impacts |
+| `eventType` | Trigger | Impacts |
 | --- | --- | --- |
 | `Transaction.Booked` | Transaction was completed and will appear on the account statement | All payment types |
 | `Transaction.Canceled` | Upcoming transaction was canceled | Credit transfers and direct debits |
@@ -335,7 +468,7 @@ The first part of the `eventType` will tell you what resources to query in an AP
 
 ### [Users](../../topics/users/index.mdx) {#events-users}
 
-| `eventType` | Explanation |
+| `eventType` | Trigger |
 | --- | --- |
 | `User.Joined` | User joins your project |
 | `User.Updated` | User's information was updated, such as their phone number |

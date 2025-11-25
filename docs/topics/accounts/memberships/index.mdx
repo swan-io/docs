@@ -21,9 +21,19 @@ The grandparent is the legal representative (and an account member), and the gra
 
 ### Inviting members {#invite}
 
+The invitation process allows you to grant account access to new members. When you invite someone to become an account member, they receive an email notification asking them to accept the invitation and bind their Swan user account to the membership.
+
 You can invite account members by phone number or by verified email.
 Use the API to add one membership or multiple memberships.
 If you use Swan's Web Banking interface, your users can [invite members](https://support.swan.io/hc/en-150/articles/17648698750877-Add-a-member-to-your-account) directly from the app.
+
+**Invitation flow**:
+
+1. A requester with the `canManageAccountMembership` permission creates a new account membership using the API or Swan's Web Banking interface.
+1. The new membership is created with the status `ConsentPending` or `InvitationSent`, depending on whether consent is required.
+1. Swan sends an email invitation to the invited member (depending on your [notification configuration](#notifications)).
+1. The invited member clicks the link in the email, signs in or signs up to Swan, and accepts the invitation.
+1. The membership is bound to the user's Swan account and the status changes to `Enabled`.
 
 | Method | Explanation |
 | --- | --- |
@@ -377,10 +387,31 @@ participant S as Swan
 ∗ The **requester** can be the account holder, the account's legal representative, or an account member with the `canManageAccountMembership` permission.
 The requester provides consent (diagram line 4).
 
+## Notifications {#notifications}
+
+Swan sends email notifications to users when account memberships are managed. These notifications support your partner project branding, including your logo and accent colors.
+
+### Join your banking space {#notification-invitation}
+
+When you invite someone to become an account member, Swan sends them an email invitation with a link to accept the membership.
+
+**Trigger**: The invitation email is sent when you create a new account membership with the status `InvitationSent`. Depending on your integration approach, this happens automatically through Swan's Web Banking interface or requires an additional API call when using the API.
+
+**Configuration**: The invitation notification is sent based on your integration setup:
+
+- **Swan Web Banking**: Invitations are sent automatically when using Swan's no-code Web Banking interface, unless disabled in your Dashboard settings.
+- **Custom implementation**: If you've forked Swan's Web Banking frontend or built your own interface, you need to call the `sendAccountMembershipInviteNotification` mutation after creating the membership to send the branded invitation email.
+- **API integration**: When using the API directly, call the `sendAccountMembershipInviteNotification` mutation to send invitation notifications. Learn more in the [guide to resend membership invitation notifications](./guide-resend-invitation.mdx).
+
+The email is sent to the account member's email address in their preferred language (or the account's default language if not set).
+
+If an invited member doesn't receive their invitation, you can resend it up to five times per day using the same mutation, as long as the membership status remains `InvitationSent`.
+
 ## Guides {#guides}
 
 - [Add a membership](./guide-add-one.mdx)
 - [Add multiple memberships](./guide-add-multiple.mdx)
+- [Resend membership invitation notification](./guide-resend-invitation.mdx)
 - [Fix a user binding error](./guide-fix-binding-error.mdx)
 - [Update a membership](./guide-update.mdx)
 - [Suspend or resume a membership](./guide-suspend-resume.mdx)

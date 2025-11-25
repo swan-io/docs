@@ -62,8 +62,8 @@ Consider following [best practices for webhook consumption](#best-practices) to 
 
 The following limits apply:
 
-- **Sandbox**: 10 subscriptions per event.
-- **Live**: 5 subscriptions per event.
+- **Sandbox**: 10 subscriptions per event
+- **Live**: 5 subscriptions per event
 
 :::warning Legacy subscriptions
 All webhook subscriptions enabled before these limits were established remain intact.
@@ -114,7 +114,7 @@ This keeps your webhook traffic focused and ensures critical events aren't lost 
 - **Business criticality**: Include events that trigger essential workflows or compliance requirements.
 - **Volume**: Consider whether high-volume events like `Transaction.Booked` can be processed asynchronously.
 
-Subscriptions can be created, modified, or removed at any time—start with essential events and expand as needed.
+You can create, modify, or remove subscriptions at any time. Start with essential events and expand as needed.
 
 ### Use separate endpoints by priority {#best-practices-endpoints}
 
@@ -124,14 +124,14 @@ This ensures critical events are processed immediately, regardless of overall ev
 **Challenges of using a single endpoint:**
 
 - **Cascading delays**: High-volume routine events block time-sensitive critical events.
-- **Difficult troubleshooting**: Issues affect all event types simultaneously, making root cause analysis harder.
+- **Difficult troubleshooting**: Issues affect all event types simultaneously, making it harder to find the source of the problem.
 - **Scaling limitations**: You can't allocate more resources to critical events without over-provisioning for everything.
 
 **How to structure your endpoints:**
 
 - **Isolate by priority**: Route critical events (consent, account status changes) to a dedicated high-priority endpoint.
-- **Scale independently**: Allocate endpoint capacity based on specific event volume and criticality.
-- **Contain failures**: Downtime or issues for one category won't affect others.
+- **Scale independently**: Allocate endpoint capacity based on specific event volume and priority.
+- **Separate by function**: Use different endpoints for distinct workflows so an issue in one area doesn't block another.
 
 #### Example: Multiple subscription setup {#best-practices-example}
 

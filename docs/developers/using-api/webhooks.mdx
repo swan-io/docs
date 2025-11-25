@@ -104,8 +104,8 @@ This keeps your webhook traffic focused and ensures critical events aren't lost 
 
 **Challenges of subscribing to all events:**
 
-- **Processing bottlenecks**: High-volume, low-priority events can delay critical events that require immediate action.
-- **Event volume disparity**: `Transaction.Booked` events can significantly outnumber `Account.Created` events, potentially delaying important low-volume events.
+- **Processing bottlenecks**: You risk delaying critical events behind a queue of high-volume, low-priority events.
+- **Event volume spikes**: Frequent events like `Transaction.Booked` can bury rarer, high-value events like `Account.Created`.
 - **Blind spots during downtime**: When a single endpoint receives all events, any downtime creates a significant backlog across all event types.
 
 **How to choose your events:**
@@ -125,7 +125,7 @@ This ensures critical events are processed immediately, regardless of overall ev
 
 - **Cascading delays**: High-volume routine events block time-sensitive critical events.
 - **Difficult troubleshooting**: Issues affect all event types simultaneously, making it harder to find the source of the problem.
-- **Scaling limitations**: You can't allocate more resources to critical events without over-provisioning for everything.
+- **Scaling limitations**: Increasing capacity for critical events requires increasing it for all events.
 
 **How to structure your endpoints:**
 

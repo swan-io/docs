@@ -107,6 +107,7 @@ module.exports = {
           items: [
             "topics/accounts/memberships/guide-add-one",
             "topics/accounts/memberships/guide-add-multiple",
+            "topics/accounts/memberships/guide-resend-invitation",
             "topics/accounts/memberships/guide-fix-binding-error",
             "topics/accounts/memberships/guide-update",
             "topics/accounts/memberships/guide-suspend-resume",

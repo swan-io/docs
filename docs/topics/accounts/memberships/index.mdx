@@ -21,7 +21,7 @@ The grandparent is the legal representative (and an account member), and the gra
 
 ### Inviting members {#invite}
 
-The invitation process allows you to grant account access to new members. When you invite someone to become an account member, they receive an email notification asking them to accept the invitation and bind their Swan user account to the membership.
+The invitation process allows you to grant account access to new users. When you invite someone to become an account member, they receive an email notification asking them to accept the invitation and bind their Swan user to their account membership in order to grant access to the account on which you invited them.
 
 You can invite account members by phone number or by verified email.
 Use the API to add one membership or multiple memberships.
@@ -33,7 +33,7 @@ If you use Swan's Web Banking interface, your users can [invite members](https:/
 1. The new membership is created with the status `ConsentPending` or `InvitationSent`, depending on whether consent is required.
 1. Swan sends an email invitation to the invited member (depending on your [notification configuration](#notifications)).
 1. The invited member clicks the link in the email, signs in or signs up to Swan, and accepts the invitation.
-1. The membership is bound to the user's Swan account and the status changes to `Enabled`.
+1. The user is bound to the account membership and the status changes to `Enabled` or `BindingUserError`.
 
 | Method | Explanation |
 | --- | --- |
@@ -403,8 +403,13 @@ When you invite someone to become an account member, Swan sends them an email in
 
 **Configuration**: The invitation notification is sent based on your integration setup:
 
-- **Swan Web Banking**: Invitations are sent automatically when using Swan's no-code Web Banking interface, unless disabled in your Dashboard settings.
-- **Custom implementation**: If you've forked Swan's Web Banking frontend or built your own interface, you need to call the `sendAccountMembershipInviteNotification` mutation after creating the membership to send the branded invitation email.
+- **Swan Web Banking**: Invitations are sent automatically when using Swan's no-code Web Banking interface, unless the `canAddNewMembers` web banking setting is disabled in your **Dashboard**.
+- **Swan Web Banking forked**: If you've forked Swan's no-code Web Banking frontend, invitations are sent automatically.
+
+:::caution Forked Web Banking migration
+If you forked Swan's Web Banking before the migration to branded partner notifications, you must update your forked Web Banking to continue relying on Swan to send the invitation notification by email.
+:::
+
 - **API integration**: When using the API directly, call the `sendAccountMembershipInviteNotification` mutation to send invitation notifications. Learn more in the [guide to resend membership invitation notifications](./guide-resend-invitation.mdx).
 
 The email is sent to the account member's email address in their preferred language (or the account's default language if not set).

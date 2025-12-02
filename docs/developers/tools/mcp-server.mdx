@@ -1,0 +1,183 @@
+---
+title: MCP servers
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# MCP server
+
+Swan provides MCP ([Model Context Protocol](https://modelcontextprotocol.io/)) servers that give AI assistants direct access to Swan's GraphQL API schema and documentation. Use them to generate accurate GraphQL queries and get answers about Swan's API.
+
+:::note
+Swan's MCP servers only support the Streamable HTTP transport protocol.
+:::
+
+## GraphQL schema server
+
+**URL**: `https://mcp.swan.io/graphql/mcp`
+
+This server lets AI assistants explore Swan's GraphQL schema to help you write queries, mutations, and understand type relationships.
+
+### Setup {#graphql-setup}
+
+<Tabs groupId="mcp-config">
+<TabItem value="cursor" label="Cursor">
+
+Add to your Cursor MCP configuration file:
+- **macOS/Linux**: `~/.cursor/mcp.json`
+- **Windows**: `%USERPROFILE%\.cursor\mcp.json`
+
+```json
+{
+  "mcpServers": {
+    "swan-graphql": {
+      "url": "https://mcp.swan.io/graphql/mcp"
+    }
+  }
+}
+```
+
+After saving the configuration, enable the server in **Cursor Settings** > **MCP**.
+
+Refer to [Cursor's MCP documentation](https://docs.cursor.com/context/model-context-protocol) for more information.
+
+</TabItem>
+<TabItem value="claude-desktop" label="Claude Desktop">
+
+Add to your Claude Desktop configuration file:
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "swan-graphql": {
+      "url": "https://mcp.swan.io/graphql/mcp"
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving the configuration.
+
+Refer to [Claude Desktop's MCP guide](https://modelcontextprotocol.io/quickstart/user) for more information.
+
+</TabItem>
+<TabItem value="claude-code" label="Claude Code">
+
+Run the following command:
+
+```bash
+claude mcp add --transport http swan-graphql https://mcp.swan.io/graphql/mcp
+```
+
+Refer to [Claude Code's MCP documentation](https://docs.anthropic.com/en/docs/claude-code/mcp) for more information.
+
+</TabItem>
+<TabItem value="other" label="Other clients">
+
+Use the following settings to configure any MCP-compatible client:
+
+- **URL**: `https://mcp.swan.io/graphql/mcp`
+- **Transport**: Streamable HTTP
+
+Refer to your client's documentation and the [Model Context Protocol specification](https://modelcontextprotocol.io/) for setup instructions.
+
+</TabItem>
+</Tabs>
+
+### Available tools {#graphql-tools}
+
+| Tool | Description | Example prompts |
+|------|-------------|-----------------|
+| `search-graphql-schema` | Searches the schema using keywords to find relevant types, fields, and operations. | • "Find all types related to payments"<br/>• "What fields are available for accounts?"<br/>• "Show me SEPA credit transfer mutations"<br/>• "Search for card-related types" |
+| `introspect-graphql-type` | Gets detailed information about specific GraphQL types, including fields and related types. | • "What is the Account type?"<br/>• "Show me all fields on the Transaction type"<br/>• "How do I create a SEPA credit transfer?"<br/>• "Explain the AccountMembership type and its relationships" |
+
+## Documentation server
+
+**URL**: `https://mcp.swan.io/docs/mcp`
+
+This server lets AI assistants search Swan's documentation to help you find guides, concepts, and integration information.
+
+### Setup {#docs-setup}
+
+<Tabs groupId="mcp-config-docs">
+<TabItem value="cursor" label="Cursor">
+
+Add to your Cursor MCP configuration file:
+- **macOS/Linux**: `~/.cursor/mcp.json`
+- **Windows**: `%USERPROFILE%\.cursor\mcp.json`
+
+```json
+{
+  "mcpServers": {
+    "swan-docs": {
+      "url": "https://mcp.swan.io/docs/mcp"
+    }
+  }
+}
+```
+
+After saving the configuration, enable the server in **Cursor Settings** > **MCP**.
+
+Refer to [Cursor's MCP documentation](https://docs.cursor.com/context/model-context-protocol) for more information.
+
+</TabItem>
+<TabItem value="claude-desktop" label="Claude Desktop">
+
+Add to your Claude Desktop configuration file:
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "swan-docs": {
+      "url": "https://mcp.swan.io/docs/mcp"
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving the configuration.
+
+Refer to [Claude Desktop's MCP guide](https://modelcontextprotocol.io/quickstart/user) for more information.
+
+</TabItem>
+<TabItem value="claude-code" label="Claude Code">
+
+Run the following command:
+
+```bash
+claude mcp add --transport http swan-docs https://mcp.swan.io/docs/mcp
+```
+
+Refer to [Claude Code's MCP documentation](https://docs.anthropic.com/en/docs/claude-code/mcp) for more information.
+
+</TabItem>
+<TabItem value="other" label="Other clients">
+
+Use the following settings to configure any MCP-compatible client:
+
+- **URL**: `https://mcp.swan.io/docs/mcp`
+- **Transport**: Streamable HTTP
+
+Refer to your client's documentation and the [Model Context Protocol specification](https://modelcontextprotocol.io/) for setup instructions.
+
+</TabItem>
+</Tabs>
+
+### Available tools {#docs-tools}
+
+| Tool | Description | Example prompts |
+|------|-------------|-----------------|
+| `search-documentation` | Searches Swan's documentation to find relevant guides and information. | • "How do I onboard a company account holder?"<br/>• "What are the card spending limits?"<br/>• "Explain SEPA Direct Debit mandates"<br/>• "Find information about account memberships" |
+
+## Next steps
+
+- [Learn about Swan's GraphQL API](../graphql.mdx)
+- [Explore the API with API Explorer](./api-explorer.mdx)
+- [Test your integration in Sandbox](./sandbox-users.mdx)

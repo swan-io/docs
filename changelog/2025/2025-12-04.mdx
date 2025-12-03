@@ -5,11 +5,11 @@ type: release
 
 ## New features
 
-🤖 Swan now provides [MCP (Model Context Protocol) servers](/developers/tools/mcp-servers) that give AI assistants direct access to Swan's GraphQL schema and documentation. Use them with tools like Claude Desktop, Claude Code, or Cursor to generate accurate queries and get answers about the API.
+🤖 Swan's new [MCP (Model Context Protocol) servers](/developers/tools/mcp-servers) give AI assistants direct access to Swan's GraphQL schema and documentation. Use them with Claude Desktop, Claude Code, or Cursor to generate accurate queries and get answers about the API.
 
 ## Improvements
 
-🔗 Supporting documents for merchant profiles can now be provided via a Web Banking link. Retrieve the upload form URL from [`supportingDocumentCollectionUrl`](https://api-reference.swan.io/objects/supporting-document-collection/#supportingdocumentcollectionsupportingdocumentcollectionurlstring--) in the associated [`SupportingDocumentCollection`](https://api-reference.swan.io/objects/supporting-document-collection/) object. Share this URL with your users so they can upload documents directly in Web Banking.
+🔗 Your users can now upload merchant profile supporting documents directly in Web Banking. Retrieve the upload URL from [`supportingDocumentCollectionUrl`](https://api-reference.swan.io/objects/supporting-document-collection/#supportingdocumentcollectionsupportingdocumentcollectionurlstring--) in the [`SupportingDocumentCollection`](https://api-reference.swan.io/objects/supporting-document-collection/) object and share it with them.
 
 📩 Several email notifications now support your project's branding (logo, accent colors):
 
@@ -17,23 +17,26 @@ type: release
 - **Account holder verification**: First transfer, Request supporting documents, Request supporting documents reminders, Your account is opened.
 - **Account memberships**: Join your banking space.
 
-Some notifications can be configured with your Account Manager. Your project's current configuration has already been applied to avoid disruptions.
+Additional notifications can be configured with your Account Manager. Your current configuration has been applied automatically to avoid disruptions.
 
-📈 The Insights tab on your Dashboard now includes new visualizations for capital deposits and KYC multi-touch lead times:
+📈 The Insights tab on your Dashboard now includes new visualizations:
 
-- **KYC**: New multi-touch lead time graph tracking total verification time for complex cases. The "One-touch vs. multi-touch" graph now focuses on completed processes, and iterations are simplified to match SLAs ("Within 9 hours" vs. "More than 9 hours").
-- **Capital deposits**: New dedicated section tracking deposit status, total lead time, and individual step duration.
+- **Capital deposits**: New section tracking deposit status, total lead time, and step duration.
+- **KYC multi-touch lead time**: New graph tracking total verification time for complex cases. The "One-touch vs. multi-touch" graph now focuses on completed processes, with iterations simplified to match SLAs ("Within 9 hours" vs. "More than 9 hours").
 
-*Coming soon: graphs related to Support operations.*
+*Coming soon: Support operations graphs.*
 
 ## API updates
 
 ### Upcoming breaking changes
 
-🛡️ Starting **December 18**, we're introducing stricter input validation for several mutations to improve security and error handling. The following fields now strictly enforce specific formats. Providing an incorrect value returns a `ValidationRejection` error:
+🛡️ Starting **December 18**, we're introducing stricter input validation for several mutations to improve security and error handling. The following fields now enforce specific formats, returning a `ValidationRejection` for invalid values:
 
-- [`addVirtualIbanEntry`](https://api-reference.swan.io/mutations/add-virtual-iban-entry/): The `accountId` field now accepts **only** a valid UUID.
-- [`disableAccountMembership`](https://api-reference.swan.io/mutations/disable-account-membership/) and [`resumeAccountMembership`](https://api-reference.swan.io/mutations/resume-account-membership/): The `accountMembershipId` field now accepts **only** a valid UUID.
-- [`resumeAccountMembership`](https://api-reference.swan.io/mutations/resume-account-membership/): The `consentRedirectUrl` field now accepts **only** a valid URL format.
+| Mutation | Field | Required format |
+|----------|-------|-----------------|
+| [`addVirtualIbanEntry`](https://api-reference.swan.io/mutations/add-virtual-iban-entry/) | `accountId` | Valid UUID |
+| [`disableAccountMembership`](https://api-reference.swan.io/mutations/disable-account-membership/) | `accountMembershipId` | Valid UUID |
+| [`resumeAccountMembership`](https://api-reference.swan.io/mutations/resume-account-membership/) | `accountMembershipId` | Valid UUID |
+| [`resumeAccountMembership`](https://api-reference.swan.io/mutations/resume-account-membership/) | `consentRedirectUrl` | Valid URL |
 
-📩 Starting **December 18**, the account membership invitation will migrate to the new white-labelled notification template. If you use a forked version of Swan's Web Banking, you must fetch the latest version from Swan's repository and deploy it to continue relying on Swan to send invitation emails.
+📩 Starting **December 18**, account membership invitations migrate to the new branded notification template. If you use a forked version of Web Banking, fetch and deploy the latest version from Swan's repository to continue receiving Swan-sent invitation emails.

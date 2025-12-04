@@ -1,0 +1,111 @@
+---
+title: Resend membership invitation notification
+---
+
+# Resend membership invitation notification
+
+If an invited account member doesn't receive their invitation email, you can resend it using the [`sendAccountMembershipInviteNotification` mutation](https://api-reference.swan.io/mutations/send-account-membership-invite-notification/).
+
+This guide explains how to send partner-branded email notifications when inviting account members.
+
+## Guide {#guide}
+
+### Prerequisites {#prerequisites}
+
+- You must authenticate with a **user access token** associated with an existing account member who has the `canManageAccountMembership` permission.
+- Only account members with the `canManageAccountMembership` permission can send invitation notifications.
+- The account membership status must be `InvitationSent`.
+- You can resend invitations up to **five times per day** per membership.
+
+### Step 1: Call the mutation {#call-mutation}
+
+Call the `sendAccountMembershipInviteNotification` mutation with the `accountMembershipId` of the membership for which you want to send the invitation.
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gUmVzZW5kSW52aXRhdGlvbiB7CiAgc2VuZEFjY291bnRNZW1iZXJzaGlwSW52aXRlTm90aWZpY2F0aW9uKAogICAgaW5wdXQ6IHsgYWNjb3VudE1lbWJlcnNoaXBJZDogIiRZT1VSX0FDQ09VTlRfTUVNQkVSU0hJUF9JRCIgfQogICkgewogICAgLi4uIG9uIFNlbmRBY2NvdW50TWVtYmVyc2hpcEludml0ZU5vdGlmaWNhdGlvblN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBub3RpZmljYXRpb25SZXF1ZXN0SWQKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwU3RhdHVzTm90RWxpZ2libGVSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTWF4aW11bURhaWx5SW52aXRhdGlvbnNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFVzZXJOb3RBbGxvd2VkVG9NYW5hZ2VBY2NvdW50TWVtYmVyc2hpcFJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBVc2VyTm90QWxsb3dlZFRvU2VuZEFjY291bnRNZW1iZXJzaGlwSW52aXRhdGlvblJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {3} showLineNumbers
+mutation ResendInvitation {
+  sendAccountMembershipInviteNotification(
+    input: { accountMembershipId: "$YOUR_ACCOUNT_MEMBERSHIP_ID" }
+  ) {
+    ... on SendAccountMembershipInviteNotificationSuccessPayload {
+      __typename
+      notificationRequestId
+    }
+    ... on AccountMembershipNotFoundRejection {
+      id
+      message
+    }
+    ... on AccountMembershipStatusNotEligibleRejection {
+      message
+    }
+    ... on MaximumDailyInvitationsReachedRejection {
+      message
+    }
+    ... on UserNotAllowedToManageAccountMembershipRejection {
+      message
+    }
+    ... on UserNotAllowedToSendAccountMembershipInvitationRejection {
+      message
+    }
+    ... on ForbiddenRejection {
+      message
+    }
+    ... on ValidationRejection {
+      fields {
+        code
+        message
+        path
+      }
+      message
+    }
+  }
+}
+```
+
+### Step 2: Receive the confirmation {#confirmation}
+
+The API returns a `notificationRequestId` that you can use to track the email delivery if needed.
+
+If a user reports problems with email delivery, provide this ID to [Swan Support](https://support.swan.io/hc/en-150) to help investigate the issue.
+
+```json {4} showLineNumbers
+{
+  "data": {
+    "sendAccountMembershipInviteNotification": {
+      "__typename": "SendAccountMembershipInviteNotificationSuccessPayload",
+      "notificationRequestId": "3f5a787a-5709-43a2-90dd-7508b71cdf7b"
+    }
+  }
+}
+```
+
+:::info Delivery status
+The API currently does not display the delivery status of notifications. Please contact [Swan Support](https://support.swan.io/hc/en-150) if you encounter any issues with email delivery.
+:::
+
+## Rejection reasons {#rejections}
+
+The mutation can return several rejection reasons if the request can't be completed:
+
+| Rejection | Reason |
+|---|---|
+| `AccountMembershipNotFoundRejection` | The account membership ID doesn't exist. |
+| `AccountMembershipStatusNotEligibleRejection` | The account membership status must be `InvitationSent` to send an invitation notification. |
+| `MaximumDailyInvitationsReachedRejection` | You've reached the maximum of five invitation emails per day for this membership. |
+| `UserNotAllowedToManageAccountMembershipRejection` | The authenticated user doesn't have the `canManageAccountMembership` permission. |
+| `UserNotAllowedToSendAccountMembershipInvitationRejection` | The user's account membership status must be `Enabled` to send invitations. |
+| `ForbiddenRejection` | The operation is forbidden in the current context. |
+| `ValidationRejection` | The request contains validation errors. |
+
+## Notification details {#details}
+
+The invitation notification email:
+
+- Is sent to the email address specified when creating the account membership.
+- Uses the account member's preferred language if set, otherwise the account's default language.
+- Includes your partner branding (logo and accent colors).
+- Contains a link for the invited member to accept the invitation and bind their Swan user account to the membership.
+- Can be translated into multiple languages automatically.
+
+If you have feedback about notification translations, contact [Swan Support](https://support.swan.io/hc/en-150) and specify the notification and language.

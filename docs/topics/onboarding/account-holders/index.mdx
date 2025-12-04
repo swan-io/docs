@@ -198,6 +198,56 @@ participant S as Swan
     S ->> S: Swan reviews identity<br/>verification and documents
 ```
 
+## Notifications {#notifications}
+
+import NotificationBranding from '../../partials/_notification-branding.mdx';
+
+Swan sends email notifications to users during the account holder verification process.
+
+<NotificationBranding />
+
+### First transfer notification {#notification-first-transfer}
+
+When a Swan KYC analyst determines that a first transfer is needed for verification, they can manually request it from the user. This notification isn't sent to every user; it's sent only when Swan identifies it as a necessary verification step.
+
+**Trigger**: Manual request by a Swan KYC analyst after the user completes identification but before the account holder verification status changes to `Verified`.
+
+**Configuration**: Swan can configure this notification on your behalf based on your preferred communication flow. Contact us to discuss your preference. The available options include sending notifications directly to the end customer, to you as the partner, copying both parties, or using the API to manage communications yourself.
+
+The email includes the account's IBAN and BIC to help users complete the transfer.
+
+### Supporting documents notifications {#notification-documents}
+
+When Swan's KYC team needs additional supporting documents to complete the verification process, they can request them from the user through email notifications.
+
+#### Request supporting documents {#notification-documents-request}
+
+This notification informs the user that supporting documents are required and provides a link to upload them.
+
+**Trigger**: Manual request by a Swan KYC analyst when additional supporting documents are needed for an onboarding-related document collection.
+
+**Configuration**: Swan can configure this notification on your behalf. Contact your Account Manager to discuss your preferences. The available communication options are the same as for the first transfer notification.
+
+The email includes a call-to-action button that redirects users to an onboarding page where they can upload the requested documents. Even if documents have already been requested for a given collection, triggering this action sends a new email.
+
+#### Request supporting documents reminders {#notification-documents-reminders}
+
+To help ensure users provide the necessary documents, Swan automatically sends reminder emails at regular intervals.
+
+**Trigger**: Automatic reminders are sent when a Swan KYC analyst has requested additional supporting documents and your notification settings allow end customer communication.
+
+Reminders are sent after 2, 4, 7, 14, and 21 days as long as the supporting document collection status remains `WaitingForDocument`.
+
+**Configuration**: Reminders are only sent when your document collection settings are configured to communicate with the end customer (either directly or copied to you as the Partner). No reminders are sent when communications are Partner-only or managed via API.
+
+### Account opened notification {#notification-account-opened}
+
+When the verification process is complete and the account is ready for full use, Swan automatically notifies the user.
+
+**Trigger**: Automatic when the account holder verification status changes to `Verified` and the account payment status changes to `Unlimited`, meaning the user can use all available funds.
+
+**Configuration**: Swan can configure this notification on your behalf. Contact us to discuss your preferences. The available communication options include sending to the end customer, to you as the partner, or managing via API.
+
 ## Guides {#guides}
 
 * [Monitor onboarding to track the verification process](../overview/guide-get-info.mdx)

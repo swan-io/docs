@@ -688,7 +688,7 @@ module.exports = {
             "developers/tools/testing-api",
             "developers/tools/event-simulator",
             "developers/tools/sandbox-users",
-            "developers/tools/mcp-server",
+            "developers/tools/mcp-servers",
             "developers/tools/postman-collection",
           ],
         },

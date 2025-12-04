@@ -1,0 +1,41 @@
+---
+title: 4 December 2025
+type: release
+---
+
+## New features
+
+🤖 Swan's new [MCP (Model Context Protocol) servers](/developers/tools/mcp-servers) give AI assistants direct access to Swan's GraphQL schema and documentation. Use them with Claude Desktop, Claude Code, or Cursor to generate accurate queries and get answers about the API.
+
+## Improvements
+
+🔗 Your users can now upload merchant profile supporting documents directly in Web Banking. Retrieve the upload link from [`supportingDocumentCollectionUrl`](https://api-reference.swan.io/objects/supporting-document-collection/#supportingdocumentcollectionsupportingdocumentcollectionurlstring--) in the [`SupportingDocumentCollection`](https://api-reference.swan.io/objects/supporting-document-collection/) object and share it with them.
+
+📩 Account opening email notifications have been rebranded to support your project's branding (logo, accent colors):
+
+- **[Account onboarding](/topics/onboarding/#notifications)**: Your account terms and conditions.
+- **[Account holder verification](/topics/onboarding/account-holders#notifications)**: First transfer, Request supporting documents, Request supporting documents reminders, Your account is opened.
+
+Your current configuration has been applied automatically to avoid disruptions. Swan can configure some of these notifications on your behalf; [submit a request](https://support.swan.io/hc/en-150/requests/new) if you're interested.
+
+📈 The Insights tab on your Dashboard now includes new visualizations:
+
+- **Capital deposits**: New section tracking deposit status, total lead time, and step duration.
+- **KYC multi-touch lead time**: New graph tracking total verification time for complex cases. The "One-touch vs. multi-touch" graph now focuses on completed processes, with iterations simplified to match service level agreements ("Within 9 hours" vs. "More than 9 hours").
+
+*Coming soon: Support operations graphs.*
+
+## API updates
+
+### Upcoming breaking changes
+
+🛡️ Starting **December 18**, we're introducing stricter input validation for several mutations to improve security and error handling. The following fields now enforce specific formats, returning a `ValidationRejection` for invalid values:
+
+| Mutation | Field | Required format |
+|----------|-------|-----------------|
+| [`addVirtualIbanEntry`](https://api-reference.swan.io/mutations/add-virtual-iban-entry/) | `accountId` | Valid UUID |
+| [`disableAccountMembership`](https://api-reference.swan.io/mutations/disable-account-membership/) | `accountMembershipId` | Valid UUID |
+| [`resumeAccountMembership`](https://api-reference.swan.io/mutations/resume-account-membership/) | `accountMembershipId` | Valid UUID |
+| [`resumeAccountMembership`](https://api-reference.swan.io/mutations/resume-account-membership/) | `consentRedirectUrl` | Valid URL |
+
+📩 Starting **December 18**, the [account membership invitation](/topics/accounts/memberships/#notifications) notification will be rebranded with your project's branding (logo, accent colors). If you use a forked version of Web Banking, fetch and deploy the latest version from Swan's repository to continue receiving Swan-sent invitation emails.

@@ -787,10 +787,9 @@ module.exports = {
             "preview/belgian-ibans/partnership_document-center_company-registration_belgium",
           ],
         },
-        // Add more preview features here
+        "preview/new-onboarding/index",
       ],
     },
-    // Add more categories here
     {
       type: "category",
       label: "Beta",
@@ -806,7 +805,6 @@ module.exports = {
             "preview/card-insurance/guide-insurance-integration",
           ],
         },
-        // Add more beta features here
       ],
     },
   ],

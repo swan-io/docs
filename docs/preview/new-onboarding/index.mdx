@@ -1,77 +1,159 @@
 ---
-title: New onboarding API
+title: Account onboarding enhancements
 ---
 
-# New onboarding API
+# Account onboarding enhancements
 
-Streamlined onboarding mutations and queries with cleaner naming conventions, typed responses, and clear authentication requirements.
+Redesigned onboarding mutations and queries with cleaner naming, typed responses, and consistent authentication patterns.
+
+:::info Target availability
+This API is in active development and will be available shortly.
+:::
 
 ## Overview
 
-Swan is introducing a redesigned onboarding API that replaces the existing v1 mutations and queries. The new API provides:
+We are introducing a redesigned onboarding API that replaces the existing mutations and queries. The new API provides improved developer experience through consistent naming conventions, structured input types, and typed responses.
 
-- **Consistent naming**: Clear distinction between public endpoints (no token) and authenticated endpoints (project token).
-- **Typed responses**: Mutations return typed success payloads with the onboarding object.
-- **Unified types**: New `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding` types with structured account and admin information.
-- **Dedicated registry query**: New query for French company registry data, replacing automatic field population.
+### What's changing
 
-## Authentication patterns
+| Aspect | Current API | New API |
+|---|---|---|
+| **Naming** | Mixed patterns (`onboardIndividualAccountHolder`, `unauthenticatedOnboardPublic...`) | Consistent pattern (`createIndividualAccountHolderOnboarding`, `createPublicIndividualAccountHolderOnboarding`) |
+| **Input structure** | Flat input with all fields at root level | Nested structure with `accountInfo` and `accountAdmin` objects |
+| **Response types** | Generic `Onboarding` type for all responses | Typed `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding` |
+| **Registry data** | Automatically populates empty onboarding fields | Dedicated query; no auto-population |
+| **Authentication** | Implicit token requirements | Explicit `Public` prefix for unauthenticated endpoints |
+
+### Authentication patterns
 
 The new API uses a consistent pattern across all endpoints:
 
 | Endpoint type | Token required | Use case |
 |---|---|---|
-| `Public` mutations and queries | None | End-user facing flows, public onboarding links. |
-| Standard mutations and queries | Project token | Backend integrations, partner-initiated onboarding. |
-| `finalize` mutation | User token | Completing onboarding after user identification. |
+| `Public` mutations and queries | None | End-user facing flows, public onboarding links |
+| Standard mutations and queries | Project access token | Backend integrations, partner-initiated onboarding |
+| `finalize` mutation | User access token | Completing onboarding after user identification |
 
 ## Individual onboarding
 
-### Create onboarding
+### Create an individual onboarding
 
-| Mutation | Authentication | Replaces |
-|---|---|---|
-| `createPublicIndividualAccountHolderOnboarding` | None | `unauthenticatedOnboardPublicIndividualAccountHolder` |
-| `createIndividualAccountHolderOnboarding` | Project token | `onboardIndividualAccountHolder` |
+Use `createIndividualAccountHolderOnboarding` with a project access token, or `createPublicIndividualAccountHolderOnboarding` without authentication.
 
-Both mutations return a `CreateIndividualAccountHolderOnboardingSuccessPayload` containing the new `IndividualAccountHolderOnboarding` type.
+| New mutation | Replaces |
+|---|---|
+| `createIndividualAccountHolderOnboarding` | `onboardIndividualAccountHolder` |
+| `createPublicIndividualAccountHolderOnboarding` | `unauthenticatedOnboardPublicIndividualAccountHolder` |
 
-### Update onboarding
+#### Mutation
 
-| Mutation | Authentication | Replaces |
-|---|---|---|
-| `updatePublicIndividualAccountHolderOnboarding` | None | `unauthenticatedUpdateIndividualOnboarding` |
-| `updateIndividualAccountHolderOnboarding` | Project token | `updateIndividualOnboarding` |
+```graphql
+mutation CreateIndividualOnboarding {
+  createIndividualAccountHolderOnboarding(
+    input: {
+      accountInfo: {
+        country: FRA
+        name: "Personal account"
+      }
+      accountAdmin: {
+        email: "malika.ngomao@mybrand.io"
+        employmentStatus: Employee
+        preferredLanguage: fr
+        monthlyIncome: Between3000And4500
+        address: {
+          addressLine1: "123 avenue de Paris"
+          city: "Paris"
+          country: "FRA"
+          postalCode: "75000"
+        }
+      }
+    }
+  ) {
+    ... on CreateIndividualAccountHolderOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+#### Payload
+
+```json
+{
+  "data": {
+    "createIndividualAccountHolderOnboarding": {
+      "__typename": "CreateIndividualAccountHolderOnboardingSuccessPayload",
+      "onboarding": {
+        "id": "ae06faf6-13b2-4e9e-891b-e78ecd5ca0e4",
+        "statusInfo": {
+          "status": "Valid"
+        }
+      }
+    }
+  }
+}
+```
+
+### Update an individual onboarding
+
+Use `updateIndividualAccountHolderOnboarding` with a project access token, or `updatePublicIndividualAccountHolderOnboarding` without authentication.
+
+| New mutation | Replaces |
+|---|---|
+| `updateIndividualAccountHolderOnboarding` | `updateIndividualOnboarding` |
+| `updatePublicIndividualAccountHolderOnboarding` | `unauthenticatedUpdateIndividualOnboarding` |
 
 ## Company onboarding
 
-### Create onboarding
+### Create a company onboarding
 
-| Mutation | Authentication | Replaces |
-|---|---|---|
-| `createPublicCompanyAccountHolderOnboarding` | None | `unauthenticatedOnboardPublicCompanyAccountHolder` |
-| `createCompanyAccountHolderOnboarding` | Project token | `onboardCompanyAccountHolder` |
+Use `createCompanyAccountHolderOnboarding` with a project access token, or `createPublicCompanyAccountHolderOnboarding` without authentication.
 
-### Update onboarding
+| New mutation | Replaces |
+|---|---|
+| `createCompanyAccountHolderOnboarding` | `onboardCompanyAccountHolder` |
+| `createPublicCompanyAccountHolderOnboarding` | `unauthenticatedOnboardPublicCompanyAccountHolder` |
 
-| Mutation | Authentication | Replaces |
-|---|---|---|
-| `updatePublicCompanyAccountHolderOnboarding` | None | `unauthenticatedUpdateCompanyOnboarding` |
-| `updateCompanyAccountHolderOnboarding` | Project token | `updateCompanyOnboarding` |
+### Update a company onboarding
+
+Use `updateCompanyAccountHolderOnboarding` with a project access token, or `updatePublicCompanyAccountHolderOnboarding` without authentication.
+
+| New mutation | Replaces |
+|---|---|
+| `updateCompanyAccountHolderOnboarding` | `updateCompanyOnboarding` |
+| `updatePublicCompanyAccountHolderOnboarding` | `unauthenticatedUpdateCompanyOnboarding` |
 
 ## Finalize onboarding
 
-The `finalizeAccountHolderOnboarding` mutation replaces `finalizeOnboarding` and requires a **user token**. It returns an `AccountHolderOnboarding` union type.
+The `finalizeAccountHolderOnboarding` mutation replaces `finalizeOnboarding`. It requires a **user access token** and returns an `AccountHolderOnboarding` union type.
+
+| New mutation | Replaces |
+|---|---|
+| `finalizeAccountHolderOnboarding` | `finalizeOnboarding` |
 
 ## Queries
 
 ### Retrieve onboarding information
 
-| Query | Authentication | Replaces |
+| New query | Authentication | Replaces |
 |---|---|---|
 | `publicAccountHolderOnboarding` | None | `onboardingInfo` |
-| `accountHolderOnboarding` | Project token | `onboarding` |
-| `accountHolderOnboardings` | Project token | `onboardings` |
+| `accountHolderOnboarding` | Project access token | `onboarding` |
+| `accountHolderOnboardings` | Project access token | `onboardings` |
 
 All queries return the `AccountHolderOnboarding` union type, which resolves to either `IndividualAccountHolderOnboarding` or `CompanyAccountHolderOnboarding`.
 
@@ -79,53 +161,65 @@ All queries return the `AccountHolderOnboarding` union type, which resolves to e
 
 New dedicated queries retrieve company information from official registries. This replaces the previous behavior where empty onboarding fields were automatically populated with registry data.
 
-| Query | Authentication |
+| New query | Authentication |
 |---|---|
 | `publicCompanyInfoRegistryData` | None |
-| `companyInfoRegistryData` | Project token |
+| `companyInfoRegistryData` | Project access token |
 
-Both queries return a `CompanyInfo` type. Currently available for companies registered in **France** only.
+Both queries accept a company registration number and return a `CompanyInfo` type. Currently available for companies registered in **France** only.
+
+:::caution Behavior change
+The new API **does not** automatically populate onboarding fields with registry data. You must explicitly call `companyInfoRegistryData` or `publicCompanyInfoRegistryData` to retrieve registry information, then use that data when creating or updating the onboarding.
+:::
 
 ## New types
 
-### IndividualAccountHolderOnboarding
+### Input structure
+
+The new API uses a nested input structure that separates account-level information from account admin (individual) information.
+
+```graphql
+input CreateIndividualAccountHolderOnboardingInput {
+  accountInfo: IndividualAccountHolderOnboardingAccountInput!
+  accountAdmin: IndividualAccountHolderOnboardingAccountAdminInput!
+  oAuthRedirectParameters: OAuthRedirectParametersInput
+}
+```
+
+For company onboardings, the input also includes company-specific fields.
+
+### Response types
+
+#### IndividualAccountHolderOnboarding
 
 ```graphql
 type IndividualAccountHolderOnboarding implements AccountHolderOnboardingBase {
+  id: String!
+  statusInfo: StatusInfo!
+  supportingDocumentCollection: SupportingDocumentCollection
+  createdAt: DateTime!
+  updatedAt: DateTime!
   accountInfo: IndividualAccountHolderOnboardingAccount
   accountAdmin: IndividualAccountHolderOnboardingAccountAdmin
 }
 ```
 
-The `accountInfo` field contains account-level details (name, country, intended usage), while `accountAdmin` contains the individual's personal information (identity, address, tax details).
-
-### CompanyAccountHolderOnboarding
+#### CompanyAccountHolderOnboarding
 
 ```graphql
 type CompanyAccountHolderOnboarding implements AccountHolderOnboardingBase {
+  id: String!
+  statusInfo: StatusInfo!
+  supportingDocumentCollection: SupportingDocumentCollection
+  createdAt: DateTime!
+  updatedAt: DateTime!
   accountInfo: CompanyAccountHolderOnboardingAccount
   accountAdmin: CompanyAccountHolderOnboardingAccountAdmin
   company: CompanyInfo
 }
 ```
 
-Includes all individual fields plus a `company` field with business details, UBOs, and representatives.
-
-### AccountHolderOnboardingBase
-
-All onboarding types implement this interface:
-
-```graphql
-interface AccountHolderOnboardingBase {
-  id: String!
-  statusInfo: StatusInfo!
-  supportingDocumentCollection: SupportingDocumentCollection
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-```
-
-### AccountHolderOnboarding union
+#### AccountHolderOnboarding union
 
 ```graphql
 union AccountHolderOnboarding = IndividualAccountHolderOnboarding | CompanyAccountHolderOnboarding

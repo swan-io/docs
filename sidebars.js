@@ -321,7 +321,7 @@ module.exports = {
                 "topics/merchants/online/sdd/guide-sdd",
                 "topics/merchants/online/sdd/guide-request",
                 "topics/merchants/online/sdd/guide-declare",
-                "topics/merchants/online/sdd/get-mandate",
+                "topics/merchants/online/sdd/guide-get-mandate",
                 "topics/merchants/online/sdd/guide-initiate",
                 "topics/merchants/online/sdd/guide-update",
                 "topics/merchants/online/sdd/guide-create-link",

@@ -20,7 +20,7 @@ We are introducing a redesigned onboarding API that replaces the existing mutati
 |---|---|---|
 | **Naming** | Mixed patterns (`onboardIndividualAccountHolder`, `unauthenticatedOnboardPublic...`) | Consistent pattern (`createIndividualAccountHolderOnboarding`, `createPublicIndividualAccountHolderOnboarding`) |
 | **Input structure** | Flat input with all fields at root level | Nested structure with `accountInfo`, `accountAdmin`, and `company` objects |
-| **Data requirements** | Limited data collection | ~25-30 new fields for improved risk assessment and compliance |
+| **Data requirements** | Limited data collection | New fields to strengthen risk assessment and compliance |
 | **Response types** | Generic `Onboarding` type for all responses | Typed `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding` |
 | **Registry data** | Automatically populates empty onboarding fields | Dedicated query; no auto-population |
 
@@ -47,8 +47,8 @@ Call the `createIndividualAccountHolderOnboarding` mutation with a project acces
 
 The input uses a nested structure with two required objects:
 
-- `accountInfo`: Account-level details (`country`, `name`, `intendedUsage` <sup>(new)</sup>).
-- `accountAdmin`: Individual's personal information (`email`, `employmentStatus`, `monthlyIncome`, `address`, `sourceOfFunds` <sup>(new)</sup>, etc.).
+- `accountInfo`: Account-level details (`country`, `name`, `intendedUsages` <sup>(new)</sup>).
+- `accountAdmin`: Individual's personal information (`email`, `employmentStatus`, `monthlyIncome`, `address`, `sourcesOfFunds` <sup>(new)</sup>, etc.).
 
 ```graphql
 input CreateIndividualAccountHolderOnboardingInput {
@@ -80,7 +80,7 @@ Call the `createCompanyAccountHolderOnboarding` mutation with a project access t
 
 The input uses a nested structure with three required objects:
 
-- `accountInfo`: Account-level details (`country`, `name`, `intendedUsage` <sup>(new)</sup>).
+- `accountInfo`: Account-level details (`country`, `name`, `intendedUsages` <sup>(new)</sup>).
 - `accountAdmin`: Legal representative's personal information (`email`, `firstName`, `lastName`, `typeOfRepresentation`, etc.).
 - `company`: Company details (`registrationNumber`, `name`, `legalForm`, `ultimateBeneficialOwners`, `representatives`, etc.).
 
@@ -124,14 +124,13 @@ Single-onboarding queries return a payload union that includes the `AccountHolde
 
 ### Company registry data
 
-New dedicated queries retrieve company information from official registries, enabling pre-fill capabilities for smoother onboarding. This replaces the previous behavior where empty onboarding fields were automatically populated with registry data.
+A new dedicated query retrieves company information from official registries, enabling pre-fill capabilities for smoother onboarding. This replaces the previous behavior where empty onboarding fields were automatically populated with registry data.
 
 | New query | Authentication |
 |---|---|
-| `publicCompanyInfoRegistryData` | None |
 | `companyInfoRegistryData` | Project access token |
 
-Both queries require a `registrationNumber` and `residencyAddressCountry`. Currently available for companies registered in **France** (`FRA`) only.
+The query requires a `registrationNumber` and `residencyAddressCountry`. Currently available for companies registered in **France** (`FRA`) only.
 
 #### Query
 
@@ -179,6 +178,24 @@ query GetCompanyRegistryData {
 :::caution Behavior change
 The new API **does not** automatically populate onboarding fields with registry data. You must explicitly query the registry, then use that data when creating or updating the onboarding.
 :::
+
+## Field reference
+
+:::warning Work in progress
+Field requirements and validations are being finalized. This section will be updated before release.
+:::
+
+The new API organizes fields into distinct categories:
+
+| Category | Description |
+|---|---|
+| **Account** | Account-level settings (`accountCountry`, `accountName`). |
+| **Account administrator** | Information about the person opening the account (`email`, `language`, `typeOfRepresentation`, address details). |
+| **Organization** | Company details (`name`, `registrationNumber`, `businessActivity`, `monthlyPaymentVolume`, address, tax identifiers). |
+| **Representatives** | Legal representatives of the organization (personal details, roles, addresses). |
+| **Ultimate Beneficial Owners** | UBOs with ownership details (`direct`, `indirect`, `totalCapitalPercentage`, `type`). |
+
+Field requirements vary by country. French company onboardings support pre-fill via the `companyInfoRegistryData` query for organization, representative, and UBO fields.
 
 ## Response types
 

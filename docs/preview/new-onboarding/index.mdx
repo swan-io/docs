@@ -18,11 +18,11 @@ We are introducing a redesigned onboarding API that replaces the existing mutati
 
 | Aspect | Current API | New API |
 |---|---|---|
-| **Naming** | Mixed patterns (`onboardIndividualAccountHolder`, `unauthenticatedOnboardPublic...`) | Consistent pattern (`createIndividualAccountHolderOnboarding`, `createPublicIndividualAccountHolderOnboarding`) |
-| **Input structure** | Flat input with all fields at root level | Nested structure with `accountInfo`, `accountAdmin`, and `company` objects |
-| **Data requirements** | Limited data collection | New fields to strengthen risk assessment and compliance |
-| **Response types** | Generic `Onboarding` type for all responses | Typed `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding` |
-| **Registry data** | Automatically populates empty onboarding fields | Dedicated query; no auto-population |
+| **Naming** | Mixed patterns (`onboardIndividualAccountHolder`, `unauthenticatedOnboardPublic...`). | Consistent pattern (`createIndividualAccountHolderOnboarding`, `createPublicIndividualAccountHolderOnboarding`). |
+| **Input structure** | Flat input with all fields at root level. | Nested structure with `accountInfo`, `accountAdmin`, and `company` objects. |
+| **Data requirements** | Limited data collection. | New fields to strengthen risk assessment and compliance. |
+| **Response types** | Generic `Onboarding` type for all responses. | Typed `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`. |
+| **Registry data** | Automatically populates empty onboarding fields. | Dedicated query; no auto-population. |
 
 ### Authentication patterns
 
@@ -30,9 +30,9 @@ The new API uses a consistent pattern across all endpoints:
 
 | Endpoint type | Token required | Use case |
 |---|---|---|
-| `Public` mutations and queries | None | Public onboarding links |
-| Standard mutations and queries | Project access token | Backend integrations, partner-initiated onboarding |
-| `finalize` mutation | User access token | Completing onboarding after user identification |
+| `Public` mutations and queries | None | Public onboarding links. |
+| Standard mutations and queries | Project access token | Backend integrations, partner-initiated onboarding. |
+| `finalize` mutation | User access token | Completing onboarding after user identification. |
 
 ## Individual onboarding
 
@@ -185,17 +185,12 @@ The new API **does not** automatically populate onboarding fields with registry 
 Field requirements and validations are being finalized. This section will be updated before release.
 :::
 
-The new API organizes fields into distinct categories:
+The following pages provide complete field mappings from the current API to the new API:
 
-| Category | Description |
-|---|---|
-| **Account** | Account-level settings (`accountCountry`, `accountName`). |
-| **Account administrator** | Information about the person opening the account (`email`, `language`, `typeOfRepresentation`, address details). |
-| **Organization** | Company details (`name`, `registrationNumber`, `businessActivity`, `monthlyPaymentVolume`, address, tax identifiers). |
-| **Representatives** | Legal representatives of the organization (personal details, roles, addresses). |
-| **Ultimate Beneficial Owners** | UBOs with ownership details (`direct`, `indirect`, `totalCapitalPercentage`, `type`). |
+- [Individual onboarding fields](./individual)
+- [Company onboarding fields](./company)
 
-Field requirements vary by country. French company onboardings support pre-fill via the `companyInfoRegistryData` query for organization, representative, and UBO fields.
+Field requirements vary by country. French company onboardings support pre-fill via the `companyInfoRegistryData` query for company, representative, and UBO fields.
 
 ## Response types
 

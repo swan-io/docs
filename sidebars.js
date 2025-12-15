@@ -787,7 +787,16 @@ module.exports = {
             "preview/belgian-ibans/partnership_document-center_company-registration_belgium",
           ],
         },
-        "preview/new-onboarding/index",
+        {
+          type: "category",
+          label: "Account onboarding enhancements",
+          link: { type: "doc", id: "preview/new-onboarding/index" },
+          collapsed: true,
+          items: [
+            "preview/new-onboarding/individual",
+            "preview/new-onboarding/company",
+          ],
+        },
       ],
     },
     {

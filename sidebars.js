@@ -772,7 +772,7 @@ module.exports = {
       label: 'Upcoming features',
       className: 'sidebar-preview-notice',
     },
-    {
+    /*{
       type: "category",
       label: "Preview",
       collapsible: false,
@@ -789,7 +789,7 @@ module.exports = {
         },
         // Add more preview features here
       ],
-    },
+    },*/
     // Add more categories here
     {
       type: "category",

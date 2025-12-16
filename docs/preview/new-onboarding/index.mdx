@@ -1,0 +1,230 @@
+---
+title: Account onboarding enhancements
+---
+
+# Account onboarding enhancements
+
+Redesigned onboarding mutations and queries with cleaner naming, typed responses, and improved data collection for enhanced risk assessment and regulatory compliance.
+
+:::info Target availability
+This API is in active development and will be available by the end of Q1 2026.
+:::
+
+## Overview
+
+We are introducing a redesigned onboarding API that replaces the existing mutations and queries. The new API provides improved developer experience through consistent naming conventions, structured input types, and typed responses.
+
+### What's changing
+
+| Aspect | Current API | New API |
+|---|---|---|
+| **Naming** | Mixed patterns (`onboardIndividualAccountHolder`, `unauthenticatedOnboardPublic...`). | Consistent pattern (`createIndividualAccountHolderOnboarding`, `createPublicIndividualAccountHolderOnboarding`). |
+| **Input structure** | Flat input with all fields at root level. | Nested structure with `accountInfo`, `accountAdmin`, and `company` objects. |
+| **Data requirements** | Limited data collection. | New fields to strengthen risk assessment and compliance. |
+| **Response types** | Generic `Onboarding` type for all responses. | Typed `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`. |
+| **Registry data** | Automatically populates empty onboarding fields. | Dedicated query; no auto-population. |
+
+### Authentication patterns
+
+The new API uses a consistent pattern across all endpoints.
+
+| Endpoint type | Token required | Use case |
+|---|---|---|
+| `Public` mutations and queries | None | Public onboarding links. |
+| Standard mutations and queries | Project access token | Backend integrations, partner-initiated onboarding. |
+| `finalize` mutation | User access token | Completing onboarding after user identification. |
+
+## Individual onboarding
+
+### Create an individual onboarding
+
+Call the `createIndividualAccountHolderOnboarding` mutation with a project access token.
+
+| New mutation | Replaces |
+|---|---|
+| `createIndividualAccountHolderOnboarding` | `onboardIndividualAccountHolder` |
+| `createPublicIndividualAccountHolderOnboarding` | `unauthenticatedOnboardPublicIndividualAccountHolder` |
+
+The input uses a nested structure with two required objects:
+
+- `accountInfo`: Account-level details (`country`, `name`, `intendedUsages` <sup>(new)</sup>).
+- `accountAdmin`: Individual's personal information (`email`, `employmentStatus`, `monthlyIncome`, `address`, `sourcesOfFunds` <sup>(new)</sup>, etc.).
+
+```graphql
+input CreateIndividualAccountHolderOnboardingInput {
+  accountInfo: IndividualAccountHolderOnboardingAccountInput!
+  accountAdmin: IndividualAccountHolderOnboardingAccountAdminInput!
+  oAuthRedirectParameters: OAuthRedirectParametersInput
+}
+```
+
+### Update an individual onboarding
+
+Call the `updateIndividualAccountHolderOnboarding` mutation with a project access token.
+
+| New mutation | Replaces |
+|---|---|
+| `updateIndividualAccountHolderOnboarding` | `updateIndividualOnboarding` |
+| `updatePublicIndividualAccountHolderOnboarding` | `unauthenticatedUpdateIndividualOnboarding` |
+
+## Company onboarding
+
+### Create a company onboarding
+
+Call the `createCompanyAccountHolderOnboarding` mutation with a project access token.
+
+| New mutation | Replaces |
+|---|---|
+| `createCompanyAccountHolderOnboarding` | `onboardCompanyAccountHolder` |
+| `createPublicCompanyAccountHolderOnboarding` | `unauthenticatedOnboardPublicCompanyAccountHolder` |
+
+The input uses a nested structure with three required objects:
+
+- `accountInfo`: Account-level details (`country`, `name`, `intendedUsages` <sup>(new)</sup>).
+- `accountAdmin`: Legal representative's personal information (`email`, `firstName`, `lastName`, `typeOfRepresentation`, etc.).
+- `company`: Company details (`registrationNumber`, `name`, `legalForm`, `ultimateBeneficialOwners`, `representatives`, etc.).
+
+```graphql
+input CreateCompanyAccountHolderOnboardingInput {
+  accountInfo: CompanyAccountHolderOnboardingAccountInput!
+  accountAdmin: CompanyAccountHolderOnboardingAccountAdminInput!
+  oAuthRedirectParameters: OAuthRedirectParametersInput
+  company: CompanyInfoInput!
+}
+```
+
+### Update a company onboarding
+
+Call the `updateCompanyAccountHolderOnboarding` mutation with a project access token.
+
+| New mutation | Replaces |
+|---|---|
+| `updateCompanyAccountHolderOnboarding` | `updateCompanyOnboarding` |
+| `updatePublicCompanyAccountHolderOnboarding` | `unauthenticatedUpdateCompanyOnboarding` |
+
+## Finalize onboarding
+
+The `finalizeAccountHolderOnboarding` mutation replaces `finalizeOnboarding`. It requires a **user access token** and returns an `AccountHolderOnboarding` union type.
+
+| New mutation | Replaces |
+|---|---|
+| `finalizeAccountHolderOnboarding` | `finalizeOnboarding` |
+
+## Queries
+
+### Retrieve onboarding information
+
+| New query | Authentication | Replaces |
+|---|---|---|
+| `publicAccountHolderOnboarding` | None | `onboardingInfo` |
+| `accountHolderOnboarding` | Project access token | `onboarding` |
+| `accountHolderOnboardings` | Project access token | `onboardings` |
+
+Single-onboarding queries return a payload union that includes the `AccountHolderOnboarding` on success. The `accountHolderOnboardings` query returns an `AccountHolderOnboardingConnection` for [paginated results](/developers/using-api/pagination).
+
+### Company registry data
+
+A new dedicated query retrieves company information from official registries, enabling pre-fill capabilities for smoother onboarding. Currently available for companies registered in **France (`FRA`) only**. This replaces the previous behavior where empty onboarding fields were automatically populated with registry data.
+
+| New query | Authentication |
+|---|---|
+| `companyInfoRegistryData` | Project access token |
+
+The query requires a `registrationNumber` and `residencyAddressCountry`.
+
+:::caution Behavior change
+The new API **does not** automatically populate onboarding fields with registry data. You must explicitly query the registry, then use that data when creating or updating the onboarding.
+:::
+
+#### Query
+
+```graphql
+query GetCompanyRegistryData {
+  companyInfoRegistryData(
+    input: {
+      registrationNumber: "123456789"
+      residencyAddressCountry: FRA
+    }
+  ) {
+    ... on CompanyInfoRegistryDataSuccessPayload {
+      companyInfo {
+        name
+        legalForm
+        registrationDate
+        address {
+          addressLine1
+          city
+          postalCode
+          country
+        }
+        ultimateBeneficialOwners {
+          firstName
+          lastName
+        }
+        representatives {
+          ... on OnboardingIndividualRepresentative {
+            firstName
+            lastName
+            roles
+          }
+        }
+      }
+    }
+    ... on CompanyRegistryNotFoundRejection {
+      message
+      registrationNumber
+      country
+    }
+  }
+}
+```
+
+## Field reference
+
+:::warning Work in progress
+Field requirements and validations are being finalized. This section will be updated before release.
+:::
+
+The following pages provide complete field mappings from the deprecated API to the new API:
+
+- [Individual onboarding fields](./individual)
+- [Company onboarding fields](./company)
+
+Field requirements vary by country. French company onboardings support pre-fill via the `companyInfoRegistryData` query for company, representative, and UBO fields.
+
+## Response types
+
+### IndividualAccountHolderOnboarding
+
+```graphql
+type IndividualAccountHolderOnboarding implements AccountHolderOnboardingBase {
+  id: ID!
+  statusInfo: OnboardingStatusInfo!
+  supportingDocumentCollection: SupportingDocumentCollection
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  accountInfo: IndividualAccountHolderOnboardingAccount
+  accountAdmin: IndividualAccountHolderOnboardingAccountAdmin
+}
+```
+
+### CompanyAccountHolderOnboarding
+
+```graphql
+type CompanyAccountHolderOnboarding implements AccountHolderOnboardingBase {
+  id: ID!
+  statusInfo: OnboardingStatusInfo!
+  supportingDocumentCollection: SupportingDocumentCollection
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  accountInfo: CompanyAccountHolderOnboardingAccount
+  accountAdmin: CompanyAccountHolderOnboardingAccountAdmin
+  company: CompanyInfo
+}
+```
+
+### AccountHolderOnboarding union
+
+```graphql
+union AccountHolderOnboarding = IndividualAccountHolderOnboarding | CompanyAccountHolderOnboarding
+```

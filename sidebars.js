@@ -772,7 +772,7 @@ module.exports = {
       label: 'Upcoming features',
       className: 'sidebar-preview-notice',
     },
-    /*{
+    {
       type: "category",
       label: "Preview",
       collapsible: false,
@@ -780,17 +780,16 @@ module.exports = {
       items: [
         {
           type: "category",
-          label: "Belgian IBANS",
-          link: { type: "doc", id: "preview/belgian-ibans/belgian-ibans" },
+          label: "Account onboarding enhancements",
+          link: { type: "doc", id: "preview/new-onboarding/index" },
           collapsed: true,
           items: [
-            "preview/belgian-ibans/partnership_document-center_company-registration_belgium",
+            "preview/new-onboarding/individual",
+            "preview/new-onboarding/company",
           ],
         },
-        // Add more preview features here
       ],
-    },*/
-    // Add more categories here
+    },
     {
       type: "category",
       label: "Beta",
@@ -806,7 +805,6 @@ module.exports = {
             "preview/card-insurance/guide-insurance-integration",
           ],
         },
-        // Add more beta features here
       ],
     },
   ],

@@ -772,7 +772,7 @@ module.exports = {
       label: 'Upcoming features',
       className: 'sidebar-preview-notice',
     },
-    {
+    /*{
       type: "category",
       label: "Preview",
       collapsible: false,

@@ -772,21 +772,12 @@ module.exports = {
       label: 'Upcoming features',
       className: 'sidebar-preview-notice',
     },
-    /*{
+    {
       type: "category",
       label: "Preview",
       collapsible: false,
       collapsed: false,
       items: [
-        {
-          type: "category",
-          label: "Belgian IBANS",
-          link: { type: "doc", id: "preview/belgian-ibans/belgian-ibans" },
-          collapsed: true,
-          items: [
-            "preview/belgian-ibans/partnership_document-center_company-registration_belgium",
-          ],
-        },
         {
           type: "category",
           label: "Account onboarding enhancements",

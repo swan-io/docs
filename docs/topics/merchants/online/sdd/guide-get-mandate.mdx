@@ -1,0 +1,53 @@
+---
+title: Get mandate URL
+---
+
+After a SEPA Direct Debit (SDD) mandate has been declared, you may need to retrieve the mandate information. 
+You can retrieve a specific mandate using the **payment mandate ID**.
+
+:::tip Prerequisites
+1. **Mandate declaration:** A SEPA Direct Debit mandate must have been previously declared using the [`addSepaDirectDebitPaymentMandate`](./guide-declare) mutation.
+1. **Mandate ID:** You must know the **unique payment mandate ID** of the mandate you want to retrieve.
+:::
+
+## API {#api}
+
+Queries are customizable. This guide focuses solely on using the `paymentMandate` query to get the mandate URL.
+
+1.  Call the `paymentMandate` query.
+2.  Add your payment mandate ID (line 2). Include the `SEPAPaymentDirectDebitMandate` fragment with the fields you need (line 3).
+3.  Under `SEPAPaymentDirectDebitMandate`, check the boxes for `id`, `name` and `mandateDocumentUrl` (lines 4-6).
+    * `mandateDocumentUrl` allows you to receive a **download URL** in the payload.
+
+### Query {#query}
+
+<a href="https://explorer.swan.io/?query=cXVlcnkgR2V0TWFuZGF0ZSB7CiAgcGF5bWVudE1hbmRhdGUoaWQ6ICIkWU9VUl9NQU5EQVRFX0lEIikgewogICAgLi4uIG9uIFNFUEFQYXltZW50RGlyZWN0RGViaXRNYW5kYXRlIHsKICAgICAgaWQKICAgICAgbmFtZQogICAgICBtYW5kYXRlRG9jdW1lbnRVcmwKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,3,4-6} showLineNumbers
+query GetMandate {
+  paymentMandate(id: "$YOUR_MANDATE_ID") {
+    ... on SEPAPaymentDirectDebitMandate {
+      id
+      name
+      mandateDocumentUrl
+    }
+  }
+}
+```
+
+### Payload {#payload}
+
+1. The response includes a mandate name (line 5), and the download URL (line 6).
+1. Paste the URL into your browser, then press enter. This triggers the download of your PDF.
+
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "paymentMandate": {
+      "id": "$YOUR_MANDATE_ID",
+      "name": "B2B/Core SEPA Direct Debit Mandate",
+      "mandateDocumentUrl": "$YOUR_MANDATE_URL"
+    }
+  }
+}
+```

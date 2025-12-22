@@ -30,7 +30,7 @@ The new API uses a consistent pattern across all endpoints.
 
 | Endpoint type | Token required | Use case |
 |---|---|---|
-| `Public` mutations and queries | None | Public onboarding links. |
+| `Public` mutations and queries | None | Public onboarding links. Only available if public URLs are enabled in the Dashboard. |
 | Standard mutations and queries | Project access token | Backend integrations, partner-initiated onboarding. |
 | `finalize` mutation | User access token | Completing onboarding after user identification. |
 
@@ -47,7 +47,7 @@ Call the `createIndividualAccountHolderOnboarding` mutation with a project acces
 
 The input uses a nested structure with two required objects:
 
-- `accountInfo`: Account-level details (`country`, `name`, `intendedUsages` <sup>(new)</sup>).
+- `accountInfo`: Account-level details (`country`, `name`).
 - `accountAdmin`: Individual's personal information (`email`, `employmentStatus`, `monthlyIncome`, `address`, `sourcesOfFunds` <sup>(new)</sup>, etc.).
 
 ```graphql
@@ -80,7 +80,7 @@ Call the `createCompanyAccountHolderOnboarding` mutation with a project access t
 
 The input uses a nested structure with three required objects:
 
-- `accountInfo`: Account-level details (`country`, `name`, `intendedUsages` <sup>(new)</sup>).
+- `accountInfo`: Account-level details (`country`, `name`).
 - `accountAdmin`: Legal representative's personal information (`email`, `firstName`, `lastName`, `typeOfRepresentation`, etc.).
 - `company`: Company details (`registrationNumber`, `name`, `legalForm`, `ultimateBeneficialOwners`, `representatives`, etc.).
 
@@ -197,7 +197,7 @@ Field requirements vary by country. French company onboardings support pre-fill 
 ### IndividualAccountHolderOnboarding
 
 ```graphql
-type IndividualAccountHolderOnboarding implements AccountHolderOnboardingBase {
+type IndividualAccountHolderOnboarding {
   id: ID!
   statusInfo: OnboardingStatusInfo!
   supportingDocumentCollection: SupportingDocumentCollection
@@ -211,7 +211,7 @@ type IndividualAccountHolderOnboarding implements AccountHolderOnboardingBase {
 ### CompanyAccountHolderOnboarding
 
 ```graphql
-type CompanyAccountHolderOnboarding implements AccountHolderOnboardingBase {
+type CompanyAccountHolderOnboarding {
   id: ID!
   statusInfo: OnboardingStatusInfo!
   supportingDocumentCollection: SupportingDocumentCollection

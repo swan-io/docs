@@ -458,6 +458,7 @@ module.exports = [
     from: '/preview/belgian-ibans/belgian-ibans',
     to: '/topics/accounts/ibans/#local',
   },
+// 
   {
     from: '/preview/belgian-ibans/partnership_document-center_company-registration_belgium',
     to: '/partnership/document-center/company-registration/belgium',

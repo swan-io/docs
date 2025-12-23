@@ -599,9 +599,10 @@ module.exports = {
           collapsed: true,
           items: [
             "partnership/document-center/company-registration/france",
+            "partnership/document-center/company-registration/belgium",
+            "partnership/document-center/company-registration/netherlands",
             "partnership/document-center/company-registration/germany",
             "partnership/document-center/company-registration/italy",
-            "partnership/document-center/company-registration/netherlands",
             "partnership/document-center/company-registration/spain",
           ],
         },

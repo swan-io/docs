@@ -451,6 +451,18 @@ module.exports = [
     to: "/partnership/protections/financial/",
   },
   {
+    from: '/preview/belgian-ibans',
+    to: '/topics/accounts/ibans/#local',
+  },
+  {
+    from: '/preview/belgian-ibans/belgian-ibans',
+    to: '/topics/accounts/ibans/#local',
+  },
+  {
+    from: '/preview/belgian-ibans/partnership_document-center_company-registration_belgium',
+    to: '/partnership/document-center/company-registration/belgium',
+  },
+  {
     from: '/preview/verification-of-payee',
     to: '/topics/payments/credit-transfers/sepa/vop/verification-of-payee',
   },

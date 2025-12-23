@@ -451,6 +451,50 @@ module.exports = [
     to: "/partnership/protections/financial/",
   },
   {
+    from: '/preview/belgian-ibans',
+    to: '/topics/accounts/ibans/#local',
+  },
+  {
+    from: '/preview/belgian-ibans/belgian-ibans',
+    to: '/topics/accounts/ibans/#local',
+  },
+  {
+    from: '/preview/belgian-ibans#onboarding-requirements',
+    to: '/topics/onboarding/',
+  },
+  {
+    from: '/preview/belgian-ibans#individual-accounts',
+    to: '/topics/onboarding/individual/#country-reqs',
+  },
+  {
+    from: '/preview/belgian-ibans#company-accounts',
+    to: '/topics/onboarding/company/#country-reqs',
+  },
+  {
+    from: '/preview/belgian-ibans#account-memberships',
+    to: '/topics/accounts/memberships/#country-reqs',
+  },
+  {
+    from: '/preview/belgian-ibans#card-printing',
+    to: '/topics/cards/physical/#hubs-france',
+  },
+  {
+    from: '/preview/belgian-ibans#identification',
+    to: '/topics/users/identifications/#levels-processes',
+  },
+  {
+    from: '/preview/belgian-ibans#ultimate-beneficial-owners-ubos',
+    to: '/topics/onboarding/company/#country-reqs-ubo',
+  },
+  {
+    from: '/preview/belgian-ibans#legal-representative',
+    to: '/topics/onboarding/company/#country-reqs-lr-address',
+  },
+  {
+    from: '/preview/belgian-ibans/partnership_document-center_company-registration_belgium',
+    to: '/partnership/document-center/company-registration/belgium',
+  },
+  {
     from: '/preview/verification-of-payee',
     to: '/topics/payments/credit-transfers/sepa/vop/verification-of-payee',
   },

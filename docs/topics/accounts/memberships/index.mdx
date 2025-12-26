@@ -232,6 +232,31 @@ The `taxIdentificationNumber` field is **required** in the following cases:
   - ` canViewAccount`
   - `canInitiatePayments`
 
+## Validation rules {#validation}
+
+Certain account membership fields must follow specific validation patterns.
+
+### First name and last name {#validation-names}
+
+The `restrictedTo.firstName` and `restrictedTo.lastName` fields must match the following validation pattern:
+
+```regex
+/^(?:[A-Za-zÀ-ÖÙ-öù-ƿǄ-ʯʹ-ʽΈ-ΊΎ-ΡΣ-ҁҊ-Ֆա-ևႠ-Ⴥა-ჺᄀ-፜፩-ᎏᵫ-ᶚḀ-῾ⴀ-ⴥ⺀-⿕ぁ-ゖゝ-ㇿ㋿-鿯鿿-ꒌꙀ-ꙮꚀ-ꚙꜦ-ꞇꞍ-ꞿꥠ-ꥼＡ-Ｚａ-ｚ]| |'|-|Ά|Ό|,)*$/
+```
+
+This pattern accepts the following characters:
+
+- Unicode letters from various scripts, including Latin, Cyrillic, Greek, Armenian, Georgian, Korean, Japanese, and Chinese.
+- Spaces.
+- Apostrophes (`'`).
+- Hyphens (`-`).
+- Commas (`,`).
+- Special Greek characters (`Ά`, `Ό`).
+
+:::info Aligned with user creation
+These validation rules are the same as those applied when [creating users](../../users/index.mdx).
+:::
+
 ## Membership language {#language}
 
 You can choose and update the language used for account memberships.

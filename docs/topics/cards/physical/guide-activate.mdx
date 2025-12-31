@@ -4,13 +4,14 @@ title: Activate physical cards
 
 # Activate physical cards
 
-Activate physical cards by either:
+Activate a physical card with the API after the cardholder receives it.
 
-1. Entering the PIN when making your first payment, or
-1. Calling the `activatePhysicalCard` mutation which returns a consent. You'll need the identifier on the back of the physical card to call this mutation.
+## Methods {#methods}
 
-When you use the API, make sure you are authenticated with a user access token belonging to the cardholder.
-Then a `consentUrl` is returned which invites the user to start Strong Customer Authentication with Swan.
+Physical cards can be activated in two ways:
+
+1. **First transaction**: The cardholder enters their PIN during an in-person Chip and PIN payment.
+1. **API**: Call the `activatePhysicalCard` mutation (explained in this guide).
 
 ## Activation reminder notifications {#activation-reminders}
 
@@ -21,3 +22,111 @@ To encourage timely card activation, Swan can send reminder email notifications 
 - Partners can enable or disable this feature from **Dashboard** > **Settings** > **Notifications**.
 
 Review the [email notifications table](../../projects/index.mdx#notifications-email) on the Projects page for more information.
+
+## Guide {#guide}
+
+:::note Prerequisites
+- Physical card status: **ToActivate**.
+- You have the **identifier** printed on the back of the physical card.
+- You're authenticated with a **user access token** for the cardholder.
+:::
+
+1. Call the `activatePhysicalCard` mutation.
+1. Add the `identifier` from the back of the physical card (line 4).
+1. Add your `consentRedirectUrl` (line 5).
+1. Add the success payload, including the `consentUrl` (line 17).
+1. Add rejections (not shown).
+
+### Mutation {#mutation}
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQWN0aXZhdGVDYXJkIHsKICBhY3RpdmF0ZVBoeXNpY2FsQ2FyZCgKICAgIGlucHV0OiB7CiAgICAgIGlkZW50aWZpZXI6ICIkWU9VUl9QSFlTSUNBTF9DQVJEX0lERU5USUZJRVIiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBBY3RpdmF0ZVBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIGV4cGlyeURhdGUKICAgICAgICBpZGVudGlmaWVyCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gQmFkQWNjb3VudFN0YXR1c1JlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQaHlzaWNhbENhcmROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgICAgaWRlbnRpZmllcgogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcmROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBVc2VyTm90Q2FyZEhvbGRlclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFBoeXNpY2FsQ2FyZFdyb25nU3RhdHVzUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgICBpZGVudGlmaWVyCiAgICAgIGN1cnJlbnRTdGF0dXMKICAgICAgZXhwZWN0ZWRTdGF0dXMKICAgIH0KICAgIC4uLiBvbiBDYW5ub3RBY3RpdmF0ZVBoeXNpY2FsQ2FyZFJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgICAgaWRlbnRpZmllcgogICAgfQogIH0KfQo%3D&tab=api)
+
+```graphql title="Mutation" showLineNumbers
+mutation ActivateCard {
+  activatePhysicalCard(
+    input: {
+      identifier: "$YOUR_PHYSICAL_CARD_IDENTIFIER"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on ActivatePhysicalCardSuccessPayload {
+      __typename
+      physicalCard {
+        expiryDate
+        identifier
+        statusInfo {
+          status
+        }
+      }
+      consent {
+        consentUrl
+      }
+    }
+    ... on BadAccountStatusRejection {
+      id
+      message
+    }
+    ... on PhysicalCardNotFoundRejection {
+      message
+      identifier
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on CardNotFoundRejection {
+      id
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+      fields {
+        code
+        message
+        path
+      }
+    }
+    ... on UserNotCardHolderRejection {
+      __typename
+      message
+    }
+    ... on PhysicalCardWrongStatusRejection {
+      message
+      identifier
+      currentStatus
+      expectedStatus
+    }
+    ... on CannotActivatePhysicalCardRejection {
+      message
+      identifier
+    }
+  }
+}
+```
+
+### Payload {#payload}
+
+The cardholder must consent to activate the physical card.
+Open the `consentUrl` returned in the payload to complete Strong Customer Authentication with Swan.
+After consent, the physical card status changes to **Activated**.
+
+```json title="Payload" showLineNumbers
+{
+  "data": {
+    "activatePhysicalCard": {
+      "__typename": "ActivatePhysicalCardSuccessPayload",
+      "physicalCard": {
+        "expiryDate": "12/28",
+        "identifier": "$YOUR_PHYSICAL_CARD_IDENTIFIER",
+        "statusInfo": {
+          "status": "ToActivate"
+        }
+      },
+      "consent": {
+        "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+      }
+    }
+  }
+}
+```

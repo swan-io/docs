@@ -1,0 +1,28 @@
+---
+title: 15 January 2026
+type: release
+---
+
+## New features
+
+📅 Set card spending limits based on calendar periods (resetting monthly on the 1st, weekly on Monday, or daily at midnight) instead of rolling periods. Calendar-based limits make it easier for finance teams to control budgets by calendar month, week, or day. Configure calendar limits using the new `mode` field in [`SpendingLimitInput`](https://api-reference.swan.io/inputs/spending-limit-input/) with options for `daily`, `weekly`, or `monthly` calendar recurrence.
+
+## Improvements
+
+📄 The [`generateTransactionStatement` mutation](https://api-reference.swan.io/mutations/generate-transaction-statement/) now works for incoming and outgoing `Booked` [International Credit Transfers](/topics/payments/credit-transfers/international/). Use it to prove a transaction was executed by Swan.
+
+## API updates
+
+### Upcoming breaking changes
+
+🌍 Starting this month, a new `accountId` field is available as an optional parameter in [`internationalBeneficiaryDynamicForms`](https://api-reference.swan.io/queries/international-beneficiary-dynamic-forms/). It becomes mandatory on **March 31, 2026**. Update your integration during this period to ensure continued support for international credit transfer queries.
+
+### Reminders
+
+📆 On **April 1, 2026**, the following fields will be removed from the [`accountStatement`](https://api-reference.swan.io/queries/account-statement/) and [`accountStatements`](https://api-reference.swan.io/queries/account-statements/) queries and from the [`generateAccountStatement`](https://api-reference.swan.io/mutations/generate-account-statement/) mutation response:
+
+- `fees` will be replaced by `feeCredits` and `feeDebits`.
+- `status` will be replaced by the `statusInfo` object.
+- The statement download `url`, previously in the `type` object, will only be available in `statusInfo`.
+
+👉 Check all reminders of already-announced upcoming breaking changes on [docs.swan.io/changelog](https://docs.swan.io/changelog).

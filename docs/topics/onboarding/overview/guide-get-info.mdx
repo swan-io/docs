@@ -21,7 +21,7 @@ The onboarding can have [any status](../index.mdx#statuses).
 
 1. Call the `onboardings` query.
 1. Add all the query options you'd like to monitor.
-    * For this exercise, add: `createdAt`, `email`, `info` > `type`, `onboardingUrl`, `onboardingState`, `statusInfo` > `status`, `id`, and `totalCount`.
+    * For this exercise, add: `createdAt`, `email`, `info` > `type`, `onboardingUrl`, `statusInfo` > `status`, `id`, and `totalCount`.
     * To `statusInfo` > `status`, add a **rejection** as well: `OnboardingInvalidStatusInfo` with `errors`, `field`, and `status`.
 1. You can only get information for up to **100 onboardings** at a time. Add [pagination](../../../developers/using-api/pagination.mdx) to tailor your response to the information you need.
 
@@ -40,7 +40,6 @@ query MonitorOnboarding {
           type
         }
         onboardingUrl
-        onboardingState
         statusInfo {
           status
           ... on OnboardingInvalidStatusInfo {
@@ -77,7 +76,6 @@ Review the sample payload with two `Ongoing` onboardings, one `Invalid` and one 
               "type": "Company"
             },
             "onboardingUrl": "https://api.banking.swan.io/projects/$PROJECT_ID/onboardings/$ONBOARDING_ID?lang=es",
-            "onboardingState": "Ongoing",
             "statusInfo": {
               "status": "Invalid",
               "__typename": "OnboardingInvalidStatusInfo",
@@ -101,7 +99,6 @@ Review the sample payload with two `Ongoing` onboardings, one `Invalid` and one 
               "type": "Individual"
             },
             "onboardingUrl": "https://api.banking.swan.io/projects/$PROJECT_ID/onboardings/$ONBOARDING_ID?lang=en",
-            "onboardingState": "Ongoing",
             "statusInfo": {
               "status": "Valid"
             },
@@ -116,7 +113,6 @@ Review the sample payload with two `Ongoing` onboardings, one `Invalid` and one 
               "type": "Individual"
             },
             "onboardingUrl": "https://api.banking.swan.io/projects/$PROJECT_ID/onboardings/$ONBOARDING_ID?lang=fr",
-            "onboardingState": "Completed",
             "statusInfo": {
               "status": "Finalized"
             },

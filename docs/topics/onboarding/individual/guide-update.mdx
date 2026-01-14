@@ -19,13 +19,12 @@ To test updating an individual onboarding, **add an account name**.
 1. Enter the onboarding ID retrieved in step 1.
 1. Check the box for `accountName`, then add an account name (example: MyBrand).
 1. Add desired messages to the success payload, either for validation or in case of rejection.
-    * **Recommendation**: Inside the `UpdateIndividualOnboardingSuccessPayload` option, add `onboardingState` and `statusInfo` > `status` to confirm the onboarding is still ongoing and valid after making the update.
 
 ## Mutation {#mutation}
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmcgewogIHVwZGF0ZUluZGl2aWR1YWxPbmJvYXJkaW5nKAogICAgaW5wdXQ6IHsKICAgICAgb25ib2FyZGluZ0lkOiAiJE9OQk9BUkRJTkdfSUQiLAogICAgICBhY2NvdW50TmFtZTogIlBlcnNvbmFsIGFjY291bnQiIH0KICApIHsKICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVXBkYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmdTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgb25ib2FyZGluZyB7CiAgICAgICAgYWNjb3VudE5hbWUKICAgICAgICBvbmJvYXJkaW5nU3RhdGUKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBtZXNzYWdlCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-5,19-22} showLineNumbers
+```graphql {4-5,18-21} showLineNumbers
 mutation UpdateIndividualOnboarding {
   updateIndividualOnboarding(
     input: {
@@ -45,7 +44,6 @@ mutation UpdateIndividualOnboarding {
       __typename
       onboarding {
         accountName
-        onboardingState
         statusInfo {
           status
         }
@@ -65,14 +63,13 @@ mutation UpdateIndividualOnboarding {
 
 ## Payload {#payload}
 
-```json {6-9} showLineNumbers
+```json {6-8} showLineNumbers
 {
   "data": {
     "updateIndividualOnboarding": {
       "__typename": "UpdateIndividualOnboardingSuccessPayload",
       "onboarding": {
         "accountName": "MyBrand",
-        "onboardingState": "Ongoing",
         "statusInfo": {
           "status": "Valid"
       }

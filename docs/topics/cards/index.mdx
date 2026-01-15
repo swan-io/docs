@@ -167,14 +167,12 @@ Spending limits are imposed for several reasons.
 ### Rolling vs. calendar periods {#limits-periods}
 
 Swan supports two types of spending limit periods: **rolling** and **calendar**.
-Choose the type that best matches your needs and use case.
 
-**Rolling periods** don't depend on a determined date, day of the week, or time.
-Instead, rolling spending limits consider the amount spent over a period of time (last 24 hours, last 7 days, last 30 days).
-Rolling periods are the default if no mode is specified.
+**Rolling periods** track the total spent over a moving window of time, such as the last 24 hours, 7 days, or 30 days.
+Rolling is the default period type and is best suited for continuous fraud protection or when spending patterns don't follow a fixed schedule.
 
-**Calendar periods** reset at a specific time on a specific day.
-For example, monthly calendar limits reset on the 1st of each month at a chosen hour, and weekly limits reset on a chosen day of the week at a chosen hour.
+**Calendar periods** reset at a fixed date and time, such as the 1st of every month or every Monday at a specific hour.
+Calendar periods are best suited for budgeting cycles, expense management, or when spending needs to align with payroll or billing schedules.
 
 :::info Non-existent dates
 If a calendar period's reset date doesn't exist in a given month, the limit resets on the next available day.
@@ -233,15 +231,14 @@ Companies and individual account holders can impose spending limits over the fol
 - Monthly calendar: Resets on a specified day of the month (1-31) at a specified hour.
 
 :::warning Compatibility
-When setting a spending limit, you must use either a rolling mode **or** a calendar mode, not both.
-The period (`Daily`, `Weekly`, `Monthly`) must match the mode type chosen.
+Each spending limit must be either rolling or calendar. You can't combine both period types on the same card.
 :::
 
 ### Hour-level aggregation {#hour-level-aggregation}
 
 Aggregate spending limits track the total amount spent within a defined period.
 Each new payment is added to the total spending for the defined period.
-Swan computes these limits at the **hour level** for all cards with `Daily`, `Weekly`, and `Monthly` limits (both rolling and calendar modes), ensuring more precise and consistent period calculations.
+Swan computes these limits at the **hour level** for all cards with `Daily`, `Weekly`, and `Monthly` limits (both rolling and calendar periods), ensuring more precise and consistent period calculations.
 
 :::info Hour-level aggregation impact
 Only spending limit calculations are affected; actual transaction timestamps and records remain unchanged.  

@@ -334,12 +334,15 @@ mutation MultipleTransfers {
 
 ## Identify the initiating user {#initiating-user}
 
-Identify which user initiated a credit transfer by querying the payment's consent information, or by storing user details at the time of initiation.
+User identification helps you maintain effective internal controls and traceability over payment operations.
 
-### Query the payment for consent information {#query-payment}
+Identify which user initiated a credit transfer by querying the payment before consent is granted, or by storing user details at the time of initiation.
 
-When a credit transfer is initiated, the payment includes consent information that identifies the user who initiated and consented to the transfer.
-Query the payment's `statusInfo` to access the `consent` object, which contains the `userId` and full `user` details.
+### Query the payment before consent is granted {#query-payment}
+
+While a payment is in `ConsentPending` status, you can query the payment's `statusInfo` to access the `consent` object, which contains the `userId` and full `user` details for the user who must consent to the transfer.
+
+Once the payment moves to `Initiated` or `Rejected`, the `PaymentConsentPending` fragment returns null and user information is no longer available through this method.
 
 1. Call the `payment` query.
 1. Add the payment ID.
@@ -372,12 +375,12 @@ query GetPaymentInitiator {
 
 ### Store user information at initiation {#store-at-initiation}
 
-We recommend storing the user's information when initiating the transfer.
+For reliable, long-term access to initiator information, store the user details at the time you initiate the transfer.
 
 The `initiateCreditTransfers` mutation requires a [user access token](../../../../developers/using-api/authentication/index.mdx#tokens-user), which identifies the initiating user.
 When you call the mutation successfully, store the user ID or account membership ID alongside the `paymentId` returned in the response.
 
-This provides immediate access to user information without requiring additional queries, and remains available even after the consent status changes.
+This approach provides immediate access to user information without additional queries, and remains available regardless of the payment's consent status.
 
 ## Payload {#payload}
 

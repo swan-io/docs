@@ -1,0 +1,35 @@
+---
+title: 29 January 2026
+type: release
+---
+
+## New features
+
+📅 Set **card spending limits** based on **calendar periods** (e.g., resetting monthly on the 1st day of the month at midnight) instead of only rolling periods (e.g., last 30 days). Calendar-based limits make it easier for finance teams to control budgets by calendar month, week, or day. Configure calendar limits using the new `mode` field in `SpendingLimitInput` with options for daily, weekly, or monthly calendar recurrence.
+
+## Improvements
+
+🧭 When a SEPA Credit Transfer is received without a customer-provided reference, the sending bank must include `NotProvided` as the reference value per SEPA standards. Swan now displays these as empty strings in Web Banking and the API for better readability.
+
+📖 [Identify which user initiated a credit transfer](/topics/payments/credit-transfers/sepa/guide-initiate-ct/#identify-initiator) by querying the payment before consent is granted, or by storing user details at the time of initiation.
+
+## API updates
+
+### Upcoming breaking changes
+
+👮 Starting **February 5**, new rejections apply to the [`openAccount`](https://api-reference.swan.io/mutations/open-account/) mutation to prevent fraud patterns involving successive opening and closing of [multiple accounts](/topics/accounts/multiple-accounts/) to bypass the [account creation limit](/topics/accounts/multiple-accounts/#account-creation-limit):
+
+- All accounts now count toward the maximum limit regardless of status (`Opened`, `Suspended`, `Closing`, or `Closed`). Previously, only `Opened` accounts counted. This change affects the existing `AccountHolderAccountsCreationLimitRejection`.
+- If one or more of the account holder's accounts is `Suspended`, Swan rejects opening multiple accounts with `AccountHolderAccountsSuspendedStatusNotEligibleRejection`.
+
+🚫 Starting **February 28**, the following rules apply to [limited accounts](/topics/accounts/#account-type-level):
+
+- Any incoming **international transfer** or **SEPA Credit Transfer** (instant or standard) **exceeding €50** received on a limited account will be **automatically rejected**.
+- The **maximum cumulative balance** for a limited account is set at **€150**.
+- Any incoming SEPA Credit Transfer or international transfer, **regardless of amount**, whose receipt would cause the account balance to exceed this €150 ceiling will also be automatically rejected.
+
+This change mainly affects the **first incoming transfer made while the account holder is still completing verification**. During this phase, the account remains in a limited status, and any first transfer exceeding these limits will be automatically rejected.
+
+### Reminders
+
+👉 Review all reminders of already-announced upcoming breaking changes on [docs.swan.io/changelog](https://docs.swan.io/changelog).

@@ -9,6 +9,10 @@
 
     🧹 On **February 5, 2026**, the deprecated `status` field will be removed from the [`CapitalDepositCase` object](https://api-reference.swan.io/objects/capital-deposit-case/). Use the `statusInfo` field (introduced October 23, 2025) instead. The `statusInfo` field provides more granular status updates including `WaitingForInitialRequirements`, `PendingInternalReview`, and `WaitingForAdditionalInformation`.
 
+    👮 On **February 5, 2026**, new rejections apply to the [`openAccount`](https://api-reference.swan.io/mutations/open-account/) mutation: all accounts now count toward the [account creation limit](/topics/accounts/multiple-accounts/#account-creation-limit) regardless of status (`Opened`, `Suspended`, `Closing`, or `Closed`), and if one or more of the account holder's accounts is `Suspended`, Swan rejects opening multiple accounts with `AccountHolderAccountsSuspendedStatusNotEligibleRejection`.
+
+    🚫 On **February 28, 2026**, incoming transfers on [limited accounts](/topics/accounts/#account-type-level) exceeding €50 will be automatically rejected, and any transfer that would cause the balance to exceed €150 will also be rejected.
+
     🌍 On **March 31, 2026**, the `accountId` field becomes mandatory in [`internationalBeneficiaryDynamicForms`](https://api-reference.swan.io/queries/international-beneficiary-dynamic-forms/) and [`internationalCreditTransferTransactionDetailsDynamicForm`](https://api-reference.swan.io/queries/international-credit-transfer-transaction-details-dynamic-form/). It is available now as an optional parameter. Update your integration before this date to ensure continued support for international credit transfer queries.
 
     📆 On **April 1, 2026**, the following fields will be removed from the [`accountStatement`](https://api-reference.swan.io/queries/account-statement/) and [`Account.statements`](https://api-reference.swan.io/objects/account/) queries and from the [`generateAccountStatement`](https://api-reference.swan.io/mutations/generate-account-statement/) mutation response:

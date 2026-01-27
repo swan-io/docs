@@ -3,10 +3,6 @@ title: 29 January 2026
 type: release
 ---
 
-## New features
-
-📅 Set **card spending limits** based on **calendar periods** instead of only rolling periods. Calendar limits reset on fixed dates (e.g., the 1st of each month) rather than rolling windows (e.g., last 30 days), making budget control easier for finance teams. Configure them using the new `mode` field in `SpendingLimitInput` with options for `Daily`, `Weekly`, or `Monthly` recurrence.
-
 ## Improvements
 
 🧭 SEPA Credit Transfers received without a customer-provided reference now display as empty strings in Web Banking and the API, instead of showing `NotProvided`.
@@ -33,10 +29,17 @@ The process happens in two stages:
 - All accounts now count toward the maximum limit regardless of status (`Opened`, `Suspended`, `Closing`, or `Closed`). Previously, only `Opened` accounts counted. This change affects the existing `AccountHolderAccountsCreationLimitRejection`.
 - If one or more of the account holder's accounts is `Suspended`, Swan rejects opening multiple accounts with `AccountHolderAccountsSuspendedStatusNotEligibleRejection`.
 
-🚫 Starting **February 28**, the following rules apply to [limited accounts](/topics/accounts/#account-type-level):
+🚫 Starting **February 26**, the following rules apply to [limited accounts](/topics/accounts/#account-type-level):
 
-- Incoming international transfers or SEPA Credit Transfers (instant or standard) exceeding **€50** are automatically rejected.
+- Incoming SEPA Credit Transfers (instant or regular) exceeding **€50** are automatically rejected.
 - The maximum cumulative balance is **€150**.
-- Any incoming transfer, regardless of amount, that would cause the balance to exceed this ceiling is also rejected.
+- Any incoming SEPA Credit Transfer, regardless of amount, that would cause the balance to exceed this ceiling is also rejected.
+- Any incoming international transfer, regardless of amount, is automatically rejected.
 
 This change mainly affects the first incoming transfer made while the account holder is still completing verification. During this phase, the account remains limited, and any transfer exceeding these limits is automatically rejected.
+
+This change does not affect Capital Deposit accounts, except international credit transfers which are now automatically rejected on Capital Deposit accounts as well.
+
+### Reminders
+
+👉 Review all reminders of already-announced upcoming breaking changes on [docs.swan.io/changelog](https://docs.swan.io/changelog).

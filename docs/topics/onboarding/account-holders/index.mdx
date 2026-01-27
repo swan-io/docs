@@ -156,6 +156,29 @@ Note that if the account used to send the first transfer is located outside of t
 After the additional transfer or documents are received, the account holder verification status changes from `WaitingForInformation` to `Pending` while Swan reviews them. Depending on the outcome, the status changes to either `Verified` or `Refused`. 
 :::
 
+### Limited account transfer restrictions {#limited-account-restrictions}
+
+Limited accounts are subject to incoming transfer restrictions to ensure regulatory compliance.
+
+#### Transfer amount restrictions {#transfer-amount-restrictions}
+
+- Any incoming SEPA Credit Transfer (instant or regular) exceeding €50 received on a limited account is automatically rejected.
+- Any incoming International Credit Transfer, regardless of its amount, received on a limited account is automatically rejected.
+
+#### Balance restrictions {#balance-restrictions}
+
+The maximum cumulative balance allowed on a limited account is €150.
+Any incoming SEPA Credit Transfer, regardless of its amount, that would cause the balance to exceed €150 is automatically rejected.
+
+#### Impact on first transfers {#impact-first-transfers}
+
+These restrictions primarily affect the first incoming transfer made while the account holder is completing verification.
+During this phase, the account remains in `Limited` status, and any first transfer exceeding the limits is automatically rejected.
+
+Users sending their first transfer should use a SEPA Credit Transfer and ensure the amount is €50 or less and won't cause the account balance to exceed €150.
+
+Learn more about [account limitations and capabilities](../../accounts/index.mdx#account-type-level).
+
 ## Sequence diagram {#verification-process-diagram}
 
 This diagram **details a common flow** of how Swan, the account holder, and you interact during verification.

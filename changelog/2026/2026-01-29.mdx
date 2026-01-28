@@ -11,7 +11,7 @@ type: release
 
 ## Important update
 
-📎 Swan is regenerating all bank details PDFs created before November 5, 2025 to reflect Swan SAS's new address. Bank details generated after this date already contain the new address.
+📎 Swan is regenerating all bank details PDFs created before November 4, 2025 to reflect Swan SAS's new address. Bank details generated after this date already contain the new address.
 
 This applies to both main and virtual IBANs. Listen to the `Account.Updated` webhook to synchronize your system—this webhook only fires when main IBAN bank details are regenerated. Query your virtual IBANs separately to synchronize them as well.
 
@@ -34,8 +34,8 @@ The process happens in two stages:
 - Incoming SEPA Credit Transfers (instant or regular) exceeding **€50** are automatically rejected.
 - The maximum cumulative balance is **€150**.
 - Any incoming SEPA Credit Transfer, regardless of amount, that would cause the balance to exceed this ceiling is also rejected.
-- Any incoming International Credit Transfer, regardless of amount, is automatically rejected.
+- Any incoming Swift credit transfer, regardless of amount, is automatically rejected.
 
 This change mainly affects the first incoming transfer made while the account holder is still completing verification. During this phase, the account remains limited, and any transfer exceeding these limits is automatically rejected.
 
-Capital Deposit accounts are unaffected, except International Credit Transfers are now rejected on these accounts too.
+Capital Deposit accounts are unaffected, except for Swift credit transfers which are now rejected on these accounts too.

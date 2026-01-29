@@ -782,6 +782,15 @@ module.exports = {
       items: [
         {
           type: "category",
+          label: "In-person cards",
+          link: { type: "doc", id: "preview/in-person/cards/index" },
+          collapsed: true,
+          items: [
+            // Guide pages will be added here in Step 2
+          ],
+        },
+        {
+          type: "category",
           label: "Account onboarding enhancements",
           link: { type: "doc", id: "preview/new-onboarding/index" },
           collapsed: true,

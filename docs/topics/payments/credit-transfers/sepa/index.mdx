@@ -91,6 +91,20 @@ While finalizing verification, the account's `paymentLevel` is `Limited` and the
 1. Swan accounts aren't designed to have a **negative balance**. Therefore, Swan checks an account's `Available` balance before executing credit transfers every time. If there isn't enough in the account, the transfer is rejected for insufficient funds.
 1. If you'd like to plan credit transfers in advance, you can do so **up to one year in the future** using the `requestedExecutionAt` input when initiating your transfer.
 
+#### Limited account restrictions {#limited-account-restrictions}
+
+Limited accounts have additional incoming transfer restrictions. Incoming SEPA Credit Transfers are automatically rejected if they:
+
+- Exceed €50.
+- Would cause the account balance to exceed €150.
+
+These restrictions apply while account holder verification is in progress and the account payment level is `Limited`.
+They are removed when the account holder verification status changes to `Verified` and the payment level changes to `Unlimited`.
+
+These restrictions primarily affect first transfers during account holder verification.
+
+Learn more about [limited account restrictions](../../../onboarding/account-holders/index.mdx#limited-account-restrictions).
+
 ## Instant SEPA Credit Transfers {#instant}
 
 The speedy version of SEPA Credit Transfers, Instant SEPA Credit Transfers have three key characteristics:

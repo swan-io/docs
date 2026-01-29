@@ -1,0 +1,43 @@
+---
+title: 29 January 2026
+type: release
+---
+
+## Important update
+
+📎 Swan is regenerating all bank details PDFs created before November 4, 2025, to reflect Swan SAS's new address. Bank details generated after this date already contain the new address.
+
+This applies to both main and virtual IBANs. Subscribe to the `Account.Updated` webhook to synchronize your system. This webhook is triggered only when main IBAN bank details are regenerated. Query your virtual IBANs separately to synchronize them as well.
+
+The process happens in two stages:
+
+- Starting **Friday, January 30**, regeneration begins in Production Sandbox.
+- Starting **Monday, February 2**, regeneration begins in Production Live, pending successful completion of Production Sandbox. It should take one week to complete.
+
+## Improvements
+
+🧭 SEPA Credit Transfers received without a customer-provided reference now display as empty strings in Web Banking and the API, instead of showing `NotProvided`.
+
+📖 [Identify which user initiated a credit transfer](/topics/payments/credit-transfers/sepa/guide-initiate-ct/#identify-initiator) by querying the payment before consent is granted, or by storing user details at the time of initiation.
+
+🔧 The `reference` field for standing orders has been updated to align with SEPA scheme requirements: the underscore character (`_`) is no longer accepted. New regex pattern: `^[A-Za-z0-9-?.+\/:,'() ]{1,35}$`.
+
+## API updates
+
+### Upcoming breaking changes
+
+👮 Starting **February 5**, new rejections apply to the [`openAccount`](https://api-reference.swan.io/mutations/open-account/) mutation to prevent fraud patterns involving successive opening and closing of [multiple accounts](/topics/accounts/multiple-accounts/) to bypass the [account creation limit](/topics/accounts/multiple-accounts/#account-creation-limit):
+
+- All accounts now count toward the maximum limit regardless of status (`Opened`, `Suspended`, `Closing`, or `Closed`). Previously, only `Opened` accounts counted. This change affects the existing `AccountHolderAccountsCreationLimitRejection`.
+- If one or more of the account holder's accounts is `Suspended`, Swan rejects opening multiple accounts with `AccountHolderAccountsSuspendedStatusNotEligibleRejection`.
+
+🚫 Starting **February 26**, the following rules apply to [limited accounts](/topics/accounts/#account-type-level):
+
+- Incoming SEPA Credit Transfers (instant or regular) exceeding **€50** are automatically rejected.
+- The maximum cumulative balance is **€150**.
+- Any incoming SEPA Credit Transfer, regardless of amount, that would cause the balance to exceed this limit is also rejected.
+- Any incoming SWIFT transfer, regardless of amount, is automatically rejected.
+
+This change mainly affects the first incoming transfer made while the account holder is still completing verification. During verification, the account remains limited, and any transfer exceeding these limits is automatically rejected.
+
+Capital deposit accounts are unaffected, except that all transfers sent on SWIFT are now rejected for these accounts as well.

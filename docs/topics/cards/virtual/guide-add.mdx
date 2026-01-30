@@ -102,6 +102,69 @@ The cards are created asynchronously and then change to the `Enabled` status.
 Depending on how many cards you're creating, it can take up to several minutes to complete the process.
 For performance reasons, you can create up to **250 cards** per API call.
 
+### Spending limit configuration {#spending-limit-config}
+
+When configuring the `spendingLimit` field, you can choose between [rolling and calendar periods](../index.mdx#limits-periods).
+
+Use the `mode` field to specify whether the limit follows a rolling period or resets on a calendar schedule.
+If you don't specify a mode, the limit defaults to rolling.
+
+The following example sets a calendar-based monthly limit that resets on the 1st of each month at midnight (hour 0):
+
+```graphql {12-18} showLineNumbers
+mutation AddCardsWithCalendarLimit {
+  addCards(
+    input: {
+      cards: [
+        {
+          accountMembershipId: "$YOUR_ACCOUNT_MEMBERSHIP_ID"
+          withdrawal: true
+          international: true
+          nonMainCurrencyTransactions: true
+          eCommerce: true
+          spendingLimit: {
+            period: Monthly
+            amount: { value: "1000", currency: "EUR" }
+            mode: {
+              calendar: {
+                monthly: { startDay: 1, startHour: 0 }
+              }
+            }
+          }
+        }
+      ]
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on AddCardsSuccessPayload {
+      __typename
+      cards {
+        id
+        spendingLimits {
+          period
+          amount {
+            value
+            currency
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+For a rolling period, you can either omit the `mode` field entirely (defaults to rolling) or specify it explicitly:
+
+```graphql {5-7} showLineNumbers
+spendingLimit: {
+  period: Weekly
+  amount: { value: "500", currency: "EUR" }
+  mode: {
+    rolling: { rollingValue: 1 }
+  }
+}
+```
+
 ## Print physical cards when adding virtual cards {#print-with-virtual}
 
 Please refer to the guides in the **physical cards section** to learn more about creating virtual and physical cards at the same time.

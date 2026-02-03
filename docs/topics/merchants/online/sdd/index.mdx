@@ -230,22 +230,22 @@ When an SDD transaction is **rejected**, the debtor's account is not debited.
 
 An SDD transaction might be rejected for the following reasons:
 
-| Rejection reason | Explanation |
-|---|---|
-| `BankRefused` | The payment was refused by the debtor's bank. |
-| `DebtorAccountClosed` | The debtor's bank account is closed. |
-| `DebtorAccountConsumer` | The debtor is not a business account, and the transaction is an SDD B2B transaction. |
-| `DebtorAccountUnknown` | The IBAN provided doesn't match an existing account at the debtor's bank. |
-| `DebtorDeceased` | The debtor is deceased. |
-| `InsufficientFunds` | The debtor has insufficient funds to fulfill the transaction. |
-| `MandateInvalid` | The payment mandate is invalid, possibly because it was canceled, incorrectly completed, or the B2B mandate wasn't declared. |
-| `ReasonNotSpecifiedByBank` | The debtor's bank can't disclose the rejection reason due to local data protection laws. |
-| `ReasonNotSpecifiedByDebtor` | The payment was rejected at the debtor's request. |
-| `RegulatoryReason` | The payment was rejected for regulatory reasons not covered by other specific reason codes. |
-| `SwanRefused` | Swan refused the transaction due to risk management or compliance requirements. |
-| `TransactionDuplicated` | The transaction can't be fulfilled because it is a duplicate of another transaction. |
-| `TransactionOnAccountTypeNotAllowed` | The account can't be debited because direct debits aren't allowed for this account type, for regulatory restrictions. |
-| `TransactionTypeNotAllowed` | The direct debit can't be processed because the debtor account is blocked. |
+| Rejection reason | Explanation | Action |
+|---|---|---|
+| `BankRefused` | The payment was refused by the debtor's bank. | Contact the debtor to check with their bank or use an alternative payment method. |
+| `DebtorAccountClosed` | The debtor's bank account is closed. | Contact the debtor to provide an active account for the transaction. |
+| `DebtorAccountConsumer` | The debtor is not a business account, and the transaction is an SDD B2B transaction. | Use a Core (B2C) SEPA Direct Debit scheme instead of B2B, or ask the debtor to provide a business account. |
+| `DebtorAccountUnknown` | The IBAN provided doesn't match an existing account at the debtor's bank. | Verify the debtor's IBAN and bank details, then retry with correct information. |
+| `DebtorDeceased` | The debtor is deceased. | Contact the debtor's legal representatives or estate to arrange alternative payment. |
+| `InsufficientFunds` | The debtor has insufficient funds to fulfill the transaction. | Contact the debtor to add funds to their account, or schedule the payment for a later date. |
+| `MandateInvalid` | The payment mandate is invalid, possibly because it was canceled, incorrectly completed, or the B2B mandate wasn't declared. | Create a new valid mandate with the debtor before initiating the direct debit. |
+| `ReasonNotSpecifiedByBank` | The debtor's bank can't disclose the rejection reason due to local data protection laws. | Contact the debtor to check with their bank for more details or try an alternative payment method. |
+| `ReasonNotSpecifiedByDebtor` | The payment was rejected at the debtor's request. | Contact the debtor to understand the issue and resolve it before retrying. |
+| `RegulatoryReason` | The payment was rejected for regulatory reasons not covered by other specific reason codes. | Contact Swan Support to understand the specific regulatory requirement and provide necessary documentation. |
+| `SwanRefused` | Swan refused the transaction due to risk management or compliance requirements. | Contact Swan Support to understand the specific reason and required next steps. |
+| `TransactionDuplicated` | The transaction can't be fulfilled because it is a duplicate of another transaction. | Check if the original transaction was already processed. Avoid resubmitting the same transaction multiple times. |
+| `TransactionOnAccountTypeNotAllowed` | The account can't be debited because direct debits aren't allowed for this account type, for regulatory restrictions. | Verify the debtor's account type supports direct debits or use a different payment method. |
+| `TransactionTypeNotAllowed` | The direct debit can't be processed because the debtor account is blocked. | Contact the debtor to unblock their account or use an alternative payment method. |
 
 When an SDD transaction is rejected, regardless of the reason, the merchant receives a notification and can attempt a new SDD at a later date.
 

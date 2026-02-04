@@ -503,6 +503,7 @@ module.exports = {
           items: [
             "topics/users/consent/guide-configure-notifications",
             "topics/users/consent/guide-create-multiconsent",
+            "topics/users/consent/guide-cancel",
             "topics/users/consent/guide-implement-s2s",
             "topics/users/consent/guide-integrate-sca",
           ],

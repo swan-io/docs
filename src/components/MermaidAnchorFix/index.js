@@ -7,6 +7,9 @@ export default function MermaidAnchorFix() {
   useEffect(() => {
     if (!hash) return;
 
+    let intervalId;
+    let safetyTimeoutId;
+
     const scrollToHash = () => {
       const el = document.querySelector(hash);
       if (el) el.scrollIntoView();
@@ -16,13 +19,12 @@ export default function MermaidAnchorFix() {
       let lastHeight = document.body.scrollHeight;
       let stableCount = 0;
 
-      const interval = setInterval(() => {
+      intervalId = setInterval(() => {
         const currentHeight = document.body.scrollHeight;
         if (currentHeight === lastHeight) {
           stableCount++;
-          // Height unchanged for 3 consecutive checks (300ms of stability)
           if (stableCount >= 3) {
-            clearInterval(interval);
+            clearInterval(intervalId);
             scrollToHash();
           }
         } else {
@@ -31,8 +33,7 @@ export default function MermaidAnchorFix() {
         }
       }, 100);
 
-      // Safety net
-      setTimeout(() => clearInterval(interval), 10000);
+      safetyTimeoutId = setTimeout(() => clearInterval(intervalId), 10000);
     };
 
     const observer = new MutationObserver(() => {
@@ -48,10 +49,12 @@ export default function MermaidAnchorFix() {
 
     observer.observe(document.body, { childList: true, subtree: true });
 
-    const timeout = setTimeout(() => observer.disconnect(), 5000);
+    const observerTimeout = setTimeout(() => observer.disconnect(), 5000);
     return () => {
       observer.disconnect();
-      clearTimeout(timeout);
+      clearTimeout(observerTimeout);
+      clearInterval(intervalId);
+      clearTimeout(safetyTimeoutId);
     };
   }, [hash]);
 

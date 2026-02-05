@@ -12,7 +12,29 @@ export default function MermaidAnchorFix() {
       if (el) el.scrollIntoView();
     };
 
-    // Wait for all Mermaid containers to have rendered SVGs
+    const waitForStableLayout = () => {
+      let lastHeight = document.body.scrollHeight;
+      let stableCount = 0;
+
+      const interval = setInterval(() => {
+        const currentHeight = document.body.scrollHeight;
+        if (currentHeight === lastHeight) {
+          stableCount++;
+          // Height unchanged for 3 consecutive checks (300ms of stability)
+          if (stableCount >= 3) {
+            clearInterval(interval);
+            scrollToHash();
+          }
+        } else {
+          stableCount = 0;
+          lastHeight = currentHeight;
+        }
+      }, 100);
+
+      // Safety net
+      setTimeout(() => clearInterval(interval), 10000);
+    };
+
     const observer = new MutationObserver(() => {
       const containers = document.querySelectorAll('.docusaurus-mermaid-container');
       if (containers.length === 0) return;
@@ -20,8 +42,7 @@ export default function MermaidAnchorFix() {
       const allRendered = [...containers].every(c => c.querySelector('svg'));
       if (allRendered) {
         observer.disconnect();
-        // Wait for SVGs to reach final dimensions
-        setTimeout(() => scrollToHash(), 3000);
+        waitForStableLayout();
       }
     });
 

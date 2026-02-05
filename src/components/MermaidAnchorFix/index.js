@@ -21,7 +21,7 @@ export default function MermaidAnchorFix() {
       if (allRendered) {
         observer.disconnect();
         // Wait for SVGs to reach final dimensions
-        setTimeout(() => scrollToHash(), 800);
+        setTimeout(() => scrollToHash(), 3000);
       }
     });
 

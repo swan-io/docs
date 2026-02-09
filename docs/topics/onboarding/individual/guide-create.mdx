@@ -18,7 +18,7 @@ Create a unique individual onboarding link for each user with the API.
 
 1. Call the `onboardIndividualAccountHolder` mutation.
 1. Enter information for all required API fields for the account country, as noted in [country requirements for individual accounts](./index.mdx#country-reqs).
-1. Include optional fields as needed for your use case (such as `accountName` or `redirectUrl`).
+1. Include optional fields as needed for your use case (such as `accountName` or `oAuthRedirectParameters`).
 1. Add optional messages to the success payload, either for validation or in case of rejection.
 
 ### Mutation {#mutation}
@@ -67,14 +67,13 @@ mutation CreateIndividualOnboarding {
 
 If you added validation or rejection messages, you'll see information such as the `onboardingId` as well as the current status `Ongoing (Valid)` in the success payload.
 
-```json {6-7,9} showLineNumbers
+```json {6,8} showLineNumbers
 {
   "data": {
     "onboardIndividualAccountHolder": {
       "__typename": "OnboardIndividualAccountHolderSuccessPayload",
       "onboarding": {
         "id": "ae06faf6-13b2-4e9e-891b-e78ecd5ca0e4",
-        "onboardingState": "Ongoing",
         "statusInfo": {
           "status": "Valid"
         }

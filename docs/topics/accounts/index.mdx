@@ -85,8 +85,17 @@ Swan accounts have different capabilities determined by the combination of these
 | Level + Type | Capabilities |
 | --- | --- |
 | `Limited` + `EMoney` | <Yes /> The account can be used for certain actions, such as inviting account members and adding virtual cards.<br /><br /><No /> Account holder verification isn't complete.<br /><No /> The account's main IBAN isn't displayed.<br /><No /> Payments can't be made from the account. |
-| `Limited` + `PaymentService` | <Yes /> The account's main IBAN is displayed.<br /><Yes /> Money can be added to the account.<br /><br /><No /> Account holder verification isn't complete.<br /><No /> Payments can't be made from the account. |
+| `Limited` + `PaymentService` | <Yes /> The account's main IBAN is displayed.<br /><Yes /> Money can be added to the account.<br /><br /><No /> Account holder verification isn't complete.<br /><No /> Payments can't be made from the account.<br /><No /> Incoming SEPA Credit Transfers exceeding €50 are automatically rejected.<br /><No /> Maximum cumulative balance is €150.<br /><No /> Incoming International Credit Transfers are automatically rejected regardless of amount. |
 | `Unlimited` + `PaymentService` | <Yes /> Account holder verification status is `Verified`.<br /><Yes /> Payments can be made from the account.<br /><Yes /> The account's main IBAN is displayed.<br /><Yes /> All accounts functions are possible. |
+
+:::info Restrictions on incoming transfers for limited accounts
+Limited accounts can only receive incoming SEPA Credit Transfers of €50 or less, and the total balance can't exceed €150.
+Any transfer that exceeds these limits is automatically rejected.
+These restrictions apply to both SEPA Credit Transfers (instant and regular).
+Incoming International Credit Transfers are automatically rejected regardless of amount.
+
+These restrictions primarily impact first transfers during the account holder verification process when accounts are in `Limited` status.
+:::
 
 ## Balances {#balances}
 
@@ -246,7 +255,7 @@ flowchart LR
 | --- | --- |
 | `Opened` | Account is open and can be used |
 | `Suspended` | Swan can suspend an account if there's suspicion of fraud. While suspended, the account can't be used. This results in the following events: <br/><br/> 1. All card payments are `Rejected`. <br/> 2. SEPA Credit Transfers: <br/> &nbsp;&nbsp;&nbsp;&nbsp; ◦ Incoming Credit Transfers are `Accepted`. <br/> &nbsp;&nbsp;&nbsp;&nbsp; ◦ Outgoing Credit Transfers are `Rejected`. <br/> 3. SEPA Direct Debits (SDD): <br/> &nbsp;&nbsp;&nbsp;&nbsp; ◦ Incoming SDDs are `Booked`. <br/> &nbsp;&nbsp;&nbsp;&nbsp; ◦ Outgoing SDDs are `Rejected` or `Returned` on the scheduled date. <br/> 4. Funds available in the account can't be used while Swan reviews the suspension. <br/> 5. Some previously authorized transactions are `Booked`. <br/> 6. For merchant accounts: received French check payments are `Returned`. |
-| `Closing` | While an account is closing, the following events occur:<br/><br/><ol><li>All cards are canceled.</li><li>Incoming SEPA Credit Transfers are automatically returned.</li><li>All standing orders are canceled.</li><li>All payment mandates for incoming SEPA Direct Debits are canceled, and any attempted incoming SEPA Direct Debit is rejected.</li><li>Your users must cancel all outgoing SEPA Direct Debits. Swan has no control over those payments mandates.</li></ol>The account status remains `Closing` until:<br/><br/><ul><li>The `Booked` balance is zero.∗</li><li>The last incoming SEPA Credit Transfer happened more than 30 days ago.</li><li>The last outgoing SEPA Credit Transfer happened more than 5 days ago.</li></ul> |
+| `Closing` | While an account is closing, the following events occur:<br/><br/><ol><li>All cards are instantly canceled.</li><li>All virtual IBANs are instantly canceled.</li><li>All standing orders are instantly canceled.</li><li>Incoming SEPA Credit Transfers are automatically returned.</li><li>All payment mandates for incoming SEPA Direct Debits are canceled, and any attempted incoming SEPA Direct Debit is rejected.</li><li>Your users must cancel all outgoing SEPA Direct Debits. Swan has no control over those payment mandates.</li></ol>The account status remains `Closing` until:<br/><br/><ul><li>The `Booked` balance is zero.∗</li><li>The last incoming SEPA Credit Transfer happened more than 30 days ago.</li><li>The last outgoing SEPA Credit Transfer happened more than 5 days ago.</li></ul> |
 | `Closed` | For all `Closed` accounts, access and account statements remain available for one year through the API or with Swan's Web Banking interface. |
 
 :::caution Remaining funds in Closing account ∗

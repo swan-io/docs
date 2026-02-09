@@ -12,6 +12,7 @@ import SearchMetadata from "@theme/SearchMetadata";
 import BlogPostItems from "@theme/BlogPostItems";
 import MDXContent from "@theme/MDXContent";
 import ComingUp from "../../../changelog/coming-up.mdx";
+import ToastSubscribed from "../../components/ToastSubscribed";
 
 function BlogListPageMetadata(props) {
   const { metadata } = props;
@@ -29,9 +30,11 @@ function BlogListPageMetadata(props) {
   );
 }
 function BlogListPageContent(props) {
-  const { metadata, items, sidebar } = props;
+  const { metadata, items, sidebar, history } = props;
+
   return (
     <BlogLayout sidebar={sidebar}>
+      {history.location.hash === "#subscribed" && <ToastSubscribed />}
       {metadata.page === 1 ? (
         <MDXContent>
           <ComingUp />

@@ -21,7 +21,7 @@ Create a unique company onboarding link for each user with the API.
     1. Start with general company information (lines 4-21).
     1. Next, add details about your ultimate beneficial owner (UBO).
     1. Finally, add details about your legal representative (if needed; not shown).
-1. Include optional fields as needed for your use case (such as `accountName` or `redirectUrl`).
+1. Include optional fields as needed for your use case (such as `accountName` or `oAuthRedirectParameters`).
 1. Add optional messages to the success payload, either for validation or in case of rejection.
 
 ### Mutation {#mutation}
@@ -74,7 +74,6 @@ mutation CreateCompanyOnboarding {
       __typename
       onboarding {
         id
-        onboardingState
         statusInfo {
           status
         }
@@ -103,14 +102,13 @@ mutation CreateCompanyOnboarding {
 
 If you added validation or rejection messages, you'll see information such as the `onboardingId` as well as the current status `Valid` in the success payload.
 
-```json {6,8} showLineNumbers
+```json {6,7} showLineNumbers
 {
   "data": {
     "onboardCompanyAccountHolder": {
       "__typename": "OnboardCompanyAccountHolderSuccessPayload",
       "onboarding": {
         "id": "eda0ceec-0e20-4d1b-bbee-b3e3a4227c99",
-        "onboardingState": "Ongoing",
         "statusInfo": {
           "status": "Valid"
         }

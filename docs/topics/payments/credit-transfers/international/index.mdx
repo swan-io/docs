@@ -91,7 +91,7 @@ Any attempt to send a SWIFT transfer in other currencies is rejected.
     | H - L | Haiti, Holy See (Vatican City State), Honduras, Hong Kong (locally with the CHATS system), Hungary, Iceland, India, Indonesia, Ireland, Isle of Man, Israel, Italy, Jamaica, Japan, Jersey, Kazakhstan, Kenya, Kiribati, Kuwait, Laos, Latvia, Liberia, Liechtenstein, Lithuania, Luxembourg |
     | M - O | Macedonia (Republic of North), Malawi, Malaysia, Malta, Marshall Islands, Martinique, Mauritania, Mauritius, Mayotte, Mexico, Micronesia (Federated States of), Monaco, Montenegro, Montserrat, Morocco, Namibia, Nepal, Netherlands, New Caledonia, New Zealand, Niger, Niue, Norfolk Island, Northern Mariana Islands, Norway |
     | P - S | Palau, Papua New Guinea, Paraguay, Peru, Poland, Portugal, Reunion, Romania, Rwanda, Saint Helena, Saint Lucia, Saint Vincent and Grenadines, Samoa, San Marino, Sao Tome and Principe, Senegal, Serbia, Seychelles, Sierra Leone, Singapore, Slovakia, Slovenia, Solomon Islands, South Africa, South Korea, Spain, Sri Lanka, Suriname, Sweden, Switzerland |
-    | T - Z | Taiwan (Republic of China), Tajikistan, Tanzania, Thailand, Timor-Leste, Tonga, Tunisia, Turks and Caicos Islands, Tuvalu, Ukraine (both PrivatBank and non-PrivatBank recipients), United Arab Emirates, United Kingdom, Uruguay, Uzbekistan, Vietnam, Wallis and Futuna Islands, Zambia |
+    | T - Z | Taiwan (Republic of China), Tajikistan, Tanzania, Thailand, Timor-Leste, Tonga, Tunisia, Turks and Caicos Islands, Tuvalu, United Arab Emirates, United Kingdom, Uruguay, Uzbekistan, Vietnam, Wallis and Futuna Islands, Zambia |
 
     **Important**: Attempts to send United States Dollars `USD` using `swift_code` to countries not listed are rejected.
   </TabItem>
@@ -111,7 +111,7 @@ Any attempt to send a SWIFT transfer in other currencies is rejected.
     | H - L | Haiti, Holy See (Vatican City State), Honduras, Hong Kong, SAR China (locally with the CHATS system), India, Indonesia, Israel, Jamaica, Japan, Jersey, Kazakhstan, Kenya, Kiribati, South Korea, Kosovo, Kuwait, Lao PDR, Lesotho, Liberia |
     | M - O | Macedonia (Republic of North), Malawi, Malaysia, Maldives, Marshall Islands, Mauritania, Mauritius, Mexico, Micronesia (Federated States of), Moldova, Montenegro, Montserrat, Morocco, Mozambique, Namibia, Nepal, New Caledonia, New Zealand, Niger, Niue, Norfolk Island, Oman |
     | P - S | Palau, Papua New Guinea, Paraguay, Peru, Qatar, Rwanda, Saint Helena, Saint Lucia, Saint Vincent and Grenadines, Samoa, San Marino, Sao Tome and Principe, Saudi Arabia, Senegal, Serbia, Seychelles, Sierra Leone, Singapore, Solomon Islands, South Africa, Sri Lanka, Suriname |
-    | T - Z | Taiwan (Republic of China), Tajikistan, Tanzania (United Republic of), Thailand, Timor-Leste, Tonga, Tunisia, Tuvalu, Ukraine, United Arab Emirates, United Kingdom, United States of America, Uruguay, Uzbekistan, Vietnam, Wallis and Futuna Islands, Zambia |
+    | T - Z | Taiwan (Republic of China), Tajikistan, Tanzania (United Republic of), Thailand, Timor-Leste, Tonga, Tunisia, Tuvalu, United Arab Emirates, United Kingdom, United States of America, Uruguay, Uzbekistan, Vietnam, Wallis and Futuna Islands, Zambia |
 
     **Important**: Attempts to send Euros `EUR` using `swift_code` to countries not listed are rejected.
   </TabItem>
@@ -126,7 +126,7 @@ Any attempt to send a SWIFT transfer in other currencies is rejected.
     | First letter | Allowed countries |
     |-------------|-------------------|
     | A - L | Albania, Aruba, Azerbaijan, Bahrain, Bangladesh, Bermuda, Bosnia and Herzegovina, Cape Verde, Costa Rica, Dominican Republic, Egypt, Faroe Islands, Georgia, Greenland, Guatemala, Guernsey, Jersey, Kazakhstan, Kosovo, Kuwait, Israel, Lesotho |
-    | M - Z | Maldives, Moldova, Montenegro, Mozambique, Mauritania, Mauritius, North Macedonia, Oman, Qatar, Saint Lucia, Serbia, Saudi Arabia, Seychelles, Sao Tome and Principe, Tunisia, Timor-Leste, Ukraine, United Arab Emirates (UAE) |
+    | M - Z | Maldives, Moldova, Montenegro, Mozambique, Mauritania, Mauritius, North Macedonia, Oman, Qatar, Saint Lucia, Serbia, Saudi Arabia, Seychelles, Sao Tome and Principe, Tunisia, Timor-Leste, United Arab Emirates (UAE) |
 
     **Important**: Attempts to send Great British Pounds `GBP` using `swift_code` to countries not listed are rejected.
   </TabItem>
@@ -341,13 +341,24 @@ Consider the following image:
 1. Swan books the incoming SWIFT transfer's remaining amount (€850) immediately to the Swan user's account.
 1. Swan charges a €5 processing fee separately from the transfer.
 
+### Limited account restrictions {#incoming-limited-account-restrictions}
+
+Limited accounts have restrictions on incoming International Credit Transfers to ensure regulatory compliance.
+
+- Any incoming International Credit Transfer, regardless of its amount, on a limited account is automatically rejected.
+
+These restrictions apply while the account holder is completing verification and the account remains in `Limited` status.
+They are removed when the account holder verification status changes to `Verified` and the payment level changes to `Unlimited`.
+
+Learn more about [limited accounts and verification](../../../onboarding/account-holders/index.mdx#limited-account-restrictions).
+
 ### SWIFT details {#incoming-swift}
 
 Incoming International Credit Transfers sent on SWIFT can be sent with one of the following specifications:
 
 1. **`SHA`**: Splits fees between the debtor and their beneficiary. For instance, the payer might pay the fees charged by their bank and the beneficiary might pay the intermediary banks fees. The standard flow example uses `SHA`.
 1. **`BEN`**: All fees paid by the beneficiary by deducting them from the transaction amount.
-1. **`OUR`**: All fees paid by the debtor. Some banks might not respect this, though, so it’s possible to receive an intermediary bank fee as a beneficiary anyway.
+1. **`OUR`**: All fees paid by the debtor. Some banks might not respect this, though, so it's possible to receive an intermediary bank fee as a beneficiary anyway.
 
 ### Booked transfers {#incoming-booked}
 

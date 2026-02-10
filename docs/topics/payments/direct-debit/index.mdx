@@ -73,12 +73,13 @@ The specifications of the received payment mandate depend on whether the mandate
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
 flowchart LR
-    B2B((B2B mandate<br/>added)) -.-> CP[ConsentPending]
+    B2B((B2B mandate<br/>added)) -.-> CIP[ConsentInitiation-<br/>Pending]
     COR((Core mandate<br/>added)) --> E[Enabled]
+    CIP -.-> CP[ConsentPending]
+    CP -.-> CIP
     CP ---> E
     CP <-.-> S[Suspended]
-    CP -.-> C[Canceled]
-    E -.-> C
+    E -.-> C[Canceled]
     E <-.-> S
     S -.-> C
     subgraph U[Can use mandate]
@@ -95,9 +96,10 @@ flowchart LR
 
 | Payment mandate status | Explanation |
 | --- |---|
-| `ConsentPending` | B2B received payment mandate was added while setting up a direct debit.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`</li><li>If requested by the debtor, the status moves to `Suspended`</li><li>If the debtor doesn't consent to the mandate, the status moves to `Canceled`.</li></ul>*Core received mandates never have the status `ConsentPending`.* |
+| `ConsentInitiationPending` | B2B received payment mandate is awaiting consent initiation. This status applies when:<ul><li>A direct debit instruction is received without an existing mandate, and the mandate is added automatically.</li><li>A mandate is updated and requires user approval before the updated mandate can be activated.</li></ul>**Next steps**: Call the [`enableReceivedDirectDebitMandate`](./guide-enable-mandate.mdx) mutation to initiate consent. After the debtor provides consent, the status moves to `Enabled`. If consent is refused or expires, the status remains `ConsentInitiationPending` and consent can be re-initiated.<br/><br/>*Core received mandates never have the status `ConsentInitiationPending`.* |
+| `ConsentPending` | B2B received payment mandate has an active consent request pending debtor action.<br/><br/>**Next steps**: <ul><li>If the debtor consents to the mandate, the status moves to `Enabled`.</li><li>If the debtor refuses consent or the consent expires, the status returns to `ConsentInitiationPending`.</li></ul>*Core received mandates never have the status `ConsentPending`.* |
 | `Enabled` | Received payment mandate is valid and direct debit instructions can be fulfilled. |
-| `Suspended` | Debtor requested the received payment mandate be suspended.<br/><br/>For example, you want to stop a creditor from taking money from the account temporarily, and you'll inform Swan when to change the status back to `Enabled`.  |
+| `Suspended` | Debtor requested the received payment mandate be suspended, using the [`suspendReceivedDirectDebitMandate`](./guide-suspend-mandate.mdx) mutation.<br/><br/>For example, you want to stop a creditor from taking money from the account temporarily, and you'll inform Swan when to change the status back to `Enabled`.<br/><br/>Learn more: [Suspend a payment mandate](./guide-suspend-mandate.mdx). |
 | `Canceled` | Received payment mandate is canceled and no longer available for use. Note that Swan cancels `OneOff` mandates **automatically** after they're used. |
 
 ## Received direct debit instructions {#received-instructions}
@@ -113,7 +115,7 @@ If the **instruction is new to Swan**, the following events occur:
 
 1. Swan adds the SEPA Direct Debit received payment mandate:
     - **Core**: Adds the mandate with the status `Enabled`.
-    - **B2B**: Adds the mandate with the status `ConsentInitiationPending`. After the debtor consents to the mandate, the status changes to `Enabled`.
+    - **B2B**: Adds the mandate with the status `ConsentInitiationPending`. After calling `enableReceivedDirectDebitMandate`, a consent is created and the status moves to `ConsentPending`. Once the debtor consents to the mandate, the status changes to `Enabled`.
 1. Swan creates a `SepaDirectDebitOut` transaction with the status `Upcoming`.
 1. Swan executes the transaction on the requested date, indicated in the instruction, if all checks pass (refer to execution date and time).
 

@@ -16,6 +16,14 @@ Checks must be **unique**, with a different CMC7 code and RLMC key for each chec
 If a check is canceled or rejected, however, the same check can be resubmitted.
 Please note that checks aren't sent back to the account holder unless they're rejected.
 
+:::caution Beneficiary name
+The beneficiary name on the check must match the **account holder name** or the **merchant profile name** exactly.
+If it doesn't, the check is rejected (`BeneficiaryMismatch` or `BeneficiaryMissingOrIncorrect`).
+:::
+
+On the **back of the check**, the merchant must write their Swan account number as well as provide their signature.
+
+
 ## Required API fields {#fields}
 
 When declaring checks with the API, there are five mandatory API fields:
@@ -28,8 +36,6 @@ When declaring checks with the API, there are five mandatory API fields:
     - Series 3: account number; 12 digits
 1. `rlmcKey` (Recomposition de la Ligne Magnétique du Chèque): 2-digit code calculated based on the CMC7.
 1. `merchantProfileId`: your developers should enter the merchant's profile ID number.
-
-On the **back of the check**, the merchant must write their Swan account number as well as provide their signature.
 
 
 ## Merchant check payments {#payments}

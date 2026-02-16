@@ -21,7 +21,7 @@ For example, one payment might include a capture transaction and a refund transa
 
 These transactions are grouped together in the **merchant payment object**.
 Swan recommends using the merchant payment object in your integration to help merchants match orders, invoices, and sales to the correct object.
-This provides better traceability and can help reconcile issues more efficiently.
+This makes it easier to track payments and helps reconcile issues more efficiently.
 
 ## Card transaction types {#transaction-types}
 
@@ -37,15 +37,15 @@ Instead, they're represented at the payment level, visible through the payment o
 
 | Transaction type | Explanation | Possible statuses |
 | --- | --- | --- |
-| `CardInCredit` | Captured payment that will eventually get settled via a separate Credit Transfer. | `Upcoming`, `Settled` |
-| `CardInCreditReversal` | Refunded payment that will eventually get settled via a separate Credit Transfer. | `Upcoming`, `Settled` |
-| `CardInCreditChargeback` | Disputed payment that will eventually get settled via a separate Credit Transfer. | `Upcoming`, `Settled` |
-| `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, that will eventually get settled via a separate Credit Transfer. | `Upcoming`, `Settled` |
+| `CardInCredit` | Captured payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditReversal` | Refunded payment that will eventually get settled through a separate Credit Transfer. | `Upcoming`, `Settled` |
+| `CardInCreditChargeback` | Disputed payment that will eventually get settled through a separate Credit Transfer. | `Upcoming`, `Settled` |
+| `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, that will eventually get settled through a separate Credit Transfer. | `Upcoming`, `Settled` |
 
 ### Settled status {#settled-status}
 
 When the `Settled` status is applied to these transactions, it means that a Credit Transfer has been `Booked` on the account to settle the merchant.
-The individual card transactions don't impact the balance. The `Settled` status is final and doesn't affect the balance. Instead, the Credit Transfer impacts the `Booked` balance directly.
+Individual card transactions don't affect the balance. The `Settled` status is final and doesn't affect the balance. Instead, the Credit Transfer affects the `Booked` balance directly.
 
 Every `Settled` transaction includes a `settlementTransactionId` field to identify the Credit Transfer impacting the balance.
 Additionally, each Credit Transfer received to settle in-person card transactions includes the list of settled transactions.
@@ -56,7 +56,7 @@ The merchant payment object has **distinct statuses** to follow a payment's life
 
 | Payment object status | Explanation |
 | --- | --- |
-| `Initiated` | The payment has been created on the terminal app and is ready to be taken. |
+| `Initiated` | The payment was created on the terminal app and is ready to be taken. |
 | `Authorized` | Authorization for the payment was received, but the funds aren't captured yet. The funds are guaranteed for the merchant. |
 | `Captured` | Authorized payments for which the funds have moved out of the customer's account. This can be a final status if the customer doesn't dispute the payment or request a refund. |
 | `Rejected` | Authorization denied by the issuer or by Swan. |
@@ -92,12 +92,12 @@ This could change as merchants start processing if Swan's monitoring systems det
 
 ## Settlement process {#settlement}
 
-For in-person card payments, the settlement comes in the form of a Credit Transfer.
+For in-person card payments, the settlement is a credit transfer.
 
 1. When the merchant payment is created, underlying transactions are created as `Upcoming`.
-1. When the settlement arrives in the form of a Credit Transfer, the transactions are updated to `Settled`.
-1. The card transactions themselves don't affect any of the account balances. However, the Credit Transfer is immediately `Booked`, affecting the balance, making the corresponding funds available.
-1. Transactions captured on a given day are `Settled` **1 business day** later. No rolling reserve applies on the settlement Credit Transfer.
+1. When the settlement arrives as a Credit Transfer, the transactions are updated to `Settled`.
+1. The credit transfer is immediately `Booked`. It affects the balance and makes the corresponding funds available. Card transactions don't affect any of the account balances. 
+1. Transactions captured on a given day are `Settled` within **one business day** later. No rolling reserve applies to the settlement credit transfer.
 
 import DayTime from '../../../topics/partials/_day-time.mdx';
 
@@ -123,9 +123,9 @@ Rejection reasons table coming soon.
 
 ## Chargebacks and disputes {#chargebacks}
 
-Cardholders might create chargebacks, which opens a dispute.
-Merchants can view the dispute automatically; the merchant payment object status and balances all change to reflect the dispute.
-However, it's not possible to act on these disputes directly via Swan's APIs or dashboards.
+Cardholders might request a chargeback, which opens a dispute.
+Merchants can automatically view the dispute; the merchant payment object status and balances are updated to reflect the dispute.
+However, it's not possible to act on these disputes directly using Swan's APIs or dashboards.
 
 To respond to disputes, ask your merchant to [submit a request](https://support.swan.io) to the Swan Support team.
 

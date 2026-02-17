@@ -38,17 +38,19 @@ Instead, they're represented at the payment level, visible through the payment o
 | Transaction type | Explanation | Possible statuses |
 | --- | --- | --- |
 | `CardInCredit` | Captured payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
-| `CardInCreditReversal` | Refunded payment that will eventually get settled through a separate Credit Transfer. | `Upcoming`, `Settled` |
-| `CardInCreditChargeback` | Disputed payment that will eventually get settled through a separate Credit Transfer. | `Upcoming`, `Settled` |
-| `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, that will eventually get settled through a separate Credit Transfer. | `Upcoming`, `Settled` |
+| `CardInCreditReversal` | Refunded payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditChargeback` | Disputed payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
 
 ### Settled status {#settled-status}
 
-When the `Settled` status is applied to these transactions, it means that a Credit Transfer has been `Booked` on the account to settle the merchant.
-Individual card transactions don't affect the balance. The `Settled` status is final and doesn't affect the balance. Instead, the Credit Transfer affects the `Booked` balance directly.
+The `Settled` status indicates that a credit transfer was `Booked` on the account to settle the merchant.
+Individual card transactions don't affect the balance; the `Settled` status is final. Instead, the credit transfer affects the `Booked` balance directly.
 
-Every `Settled` transaction has a `settlementTransactionId` field to identify the Credit Transfer affecting the balance.
-Additionally, each Credit Transfer received to settle in-person card transactions includes the list of settled transactions.
+Every `Settled` transaction has a `settlementTransactionId` field to identify the credit transfer affecting the balance.
+Additionally, each credit transfer received to settle in-person card transactions includes the list of settled transactions.
+
+{/* TODO: Add mermaid diagram showing payment object status lifecycle (ref: SDD page for pattern) */}
 
 ## Payment object statuses {#payment-statuses}
 
@@ -65,6 +67,8 @@ The merchant payment object has **distinct statuses** to follow a payment's life
 | `Disputed` | Customer disputed the payment with their bank for some or all of the amount. |
 
 ## Payment object balances {#payment-balances}
+
+{/* TODO: Extract this table into a shared partial (identical to online cards payment object balances) */}
 
 The merchant payment object has **distinct balances** to follow a payment's lifecycle.
 Use these balances to understand what actions have been done on a payment, and what actions can be taken (such as canceling or refunding a payment).
@@ -95,7 +99,7 @@ This could change as merchants start processing if Swan's monitoring systems det
 For in-person card payments, the settlement is a credit transfer.
 
 1. When the merchant payment is created, underlying transactions are created as `Upcoming`.
-1. When the settlement arrives as a Credit Transfer, the transactions are updated to `Settled`.
+1. When the settlement arrives as a credit transfer, the transactions are updated to `Settled`.
 1. The credit transfer is immediately `Booked`. It affects the balance and makes the corresponding funds available. Card transactions don't affect any of the account balances. 
 1. Transactions captured on a given day are `Settled` within **one business day** later. No rolling reserve applies to the settlement credit transfer.
 
@@ -127,7 +131,7 @@ Cardholders might request a chargeback, which opens a dispute.
 Merchants can automatically view the dispute; the merchant payment object status and balances are updated to reflect the dispute.
 However, it's not possible to act on these disputes directly using Swan's APIs or dashboards.
 
-To respond to disputes, ask your merchant to [submit a request](https://support.swan.io) to the Swan Support team.
+To respond to disputes, ask your merchant to [submit a request](https://supportform.swan.io/) to the Swan Support team.
 
 ## Guides {#guides}
 

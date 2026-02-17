@@ -1,0 +1,147 @@
+---
+title: In-person cards
+---
+
+# In-person cards
+
+For many businesses, accepting card payments in person is not just a convenience; it's a must-have.
+From brick-and-mortar shops to health professionals, home care service providers, taxi drivers, and contractors, many professionals need to accept card payments on the go or on their own premises.
+
+With Swan's API, you can let merchants turn their smartphones into a card terminal and accept payments through a simple terminal app in just a few taps.
+
+:::info Merchants only
+This section only applies to **merchants** accepting card payments.
+Visit the [card payments section](../../../topics/payments/cards/index.mdx) for information about payments made with cards *from* a Swan account.
+:::
+
+## Merchant card payments {#merchant-card-payments}
+
+Merchant card payments include **one or more transactions**.
+For example, one payment might include a capture transaction and a refund transaction, for a total of two transactions.
+
+These transactions are grouped together in the **merchant payment object**.
+Swan suggests using the merchant payment object in your integration. This helps merchants match orders, invoices, and sales to the right payment.```
+This makes it easier to track payments and helps reconcile issues more efficiently.
+
+## Card transaction types {#transaction-types}
+
+There are **four transaction types** for in-person merchant card payments.
+
+:::info Statuses specific to in-person card payments
+These statuses are specific to in-person card payments.
+Other payment methods might behave differently.
+:::
+
+Authorizations aren't included in a transaction type.
+Instead, they're represented at the payment level, visible through the payment object status `Authorized` and payment object balance `totalAuthorized`.
+
+| Transaction type | Explanation | Possible statuses |
+| --- | --- | --- |
+| `CardInCredit` | Captured payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditReversal` | Refunded payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditChargeback` | Disputed payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
+
+### Settled status {#settled-status}
+
+The `Settled` status indicates that a credit transfer was `Booked` on the account to settle the merchant.
+Individual card transactions don't affect the balance; the `Settled` status is final. Instead, the credit transfer affects the `Booked` balance directly.
+
+Every `Settled` transaction has a `settlementTransactionId` field to identify the credit transfer affecting the balance.
+Additionally, each credit transfer received to settle in-person card transactions includes the list of settled transactions.
+
+{/* TODO: Add mermaid diagram showing payment object status lifecycle (ref: SDD page for pattern) */}
+
+## Payment object statuses {#payment-statuses}
+
+The merchant payment object has **distinct statuses** to follow a payment's lifecycle.
+
+| Payment object status | Explanation |
+| --- | --- |
+| `Initiated` | The payment was created on the terminal app and is ready to be taken. |
+| `Authorized` | Authorization for the payment was received, but the funds aren't captured yet. The funds are guaranteed for the merchant. |
+| `Captured` | Authorized payments for which the funds have moved out of the customer's account. This can be a final status if the customer doesn't dispute the payment or request a refund. |
+| `Rejected` | Authorization denied by the issuer or by Swan. |
+| `Canceled` | Card payment was canceled, authorization voided, and the funds can't be captured. |
+| `Refunded` | Payments reversed by the merchant for some or all of the amount. |
+| `Disputed` | Customer disputed the payment with their bank for some or all of the amount. |
+
+## Payment object balances {#payment-balances}
+
+{/* TODO: Extract this table into a shared partial (identical to online cards payment object balances) */}
+
+The merchant payment object has **distinct balances** to follow a payment's lifecycle.
+Use these balances to understand what actions have been done on a payment, and what actions can be taken (such as canceling or refunding a payment).
+
+| Payment object balance | Explanation |
+| --- | --- |
+| `totalAuthorized` | The total authorized amount for this merchant payment. |
+| `availableToCancel` | The authorized amount that can be released. Refer to this balance to verify whether the payment can be canceled. Cancellations must occur before the amount is captured. |
+| `totalCanceled` | The total amount canceled for this merchant payment. |
+| `availableToCapture` | The amount available for merchants to capture if the capture isn't automatic. |
+| `totalCaptured` | The amount captured by the merchant. When the capture for card payments is automatic, `totalCaptured` is always equal to `totalAuthorized`. |
+| `availableToRefund` | The amount the merchant can refund. Use this balance to know if a payment is eligible for a refund. |
+| `totalRefunded` | The total amount refunded for this merchant payment. |
+| `totalDisputed` | The total amount of this merchant payment disputed by the customer. |
+
+## Rolling reserve {#rolling-reserve}
+
+In-person card payments are **not subject to a rolling reserve** by default.
+This could change as merchants start processing if Swan's monitoring systems detect suspicious patterns and activities.
+
+## Payment amount limit {#payment-limit}
+
+In-person card payments are **not subject to a payment amount limit** by default.
+This could change as merchants start processing if Swan's monitoring systems detect suspicious patterns and activities.
+
+## Settlement process {#settlement}
+
+For in-person card payments, the settlement is a credit transfer.
+
+1. When the merchant payment is created, underlying transactions are created as `Upcoming`.
+1. When the settlement arrives as a credit transfer, the transactions are updated to `Settled`.
+1. The credit transfer is immediately `Booked`. It affects the balance and makes the corresponding funds available. Card transactions don't affect any of the account balances. 
+1. Transactions captured on a given day are `Settled` within **one business day** later. No rolling reserve applies to the settlement credit transfer.
+
+import DayTime from '../../../topics/partials/_day-time.mdx';
+
+<DayTime />
+
+## Refunds {#refunds}
+
+import InPersonCardRefundLimitation from '../partials/_in-person-card-refund-limitation.mdx';
+
+<InPersonCardRefundLimitation />
+
+## R-transactions {#r-transactions}
+
+### Rejected {#rejected}
+
+Card payments can be rejected for the following reasons:
+
+{/* TODO: Insert table with list of rejection reasons and explanations when available from PM */}
+
+:::note Rejection reasons
+Rejection reasons table coming soon.
+:::
+
+## Chargebacks and disputes {#chargebacks}
+
+Cardholders might request a chargeback, which opens a dispute.
+Merchants can automatically view the dispute; the merchant payment object status and balances are updated to reflect the dispute.
+However, it's not possible to act on these disputes directly using Swan's APIs or dashboards.
+
+To respond to disputes, ask your merchant to [submit a request](https://supportform.swan.io/) to the Swan Support team.
+
+## Guides {#guides}
+
+{/* TODO: Uncomment when guide pages are created
+- [Accept in-person payments with cards](./guide-accept.mdx)
+- [Request in-person card payment method](./guide-request-method.mdx)
+- [Create in-person card payments](./guide-create-payments.mdx)
+- [Sandbox](./sandbox.mdx)
+*/}
+
+:::note Guides coming soon
+Step-by-step guides for accepting in-person card payments are in development.
+:::

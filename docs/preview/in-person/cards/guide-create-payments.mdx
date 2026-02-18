@@ -4,6 +4,99 @@ title: Create in-person card payments
 
 # Create in-person card payments
 
-:::note In progress
-This guide is in progress. Content coming soon.
-:::
+Create payment intents so your merchants can accept card payments from customers using their smartphone terminal.
+
+## Prerequisites {#prerequisites}
+
+- A **merchant profile** with the status **Enabled**.
+- An **in-person card payment method** with the status **Enabled**. If you don't have one yet, [request the payment method](./guide-request-method.mdx) first.
+- A project access token, or, if you're an account member, a user access token with **Can manage members** user rights.
+
+## Step 1: Create a payment intent {#create-intent}
+
+Call the `createInPersonPaymentIntent` mutation.
+
+```graphql
+mutation CreateInPersonPayment {
+  createInPersonPaymentIntent(
+    input: {
+      amount: { value: "50", currency: "EUR" }
+      label: "Payment for order #1234"
+      externalReference: "order-1234"
+    }
+  ) {
+    ... on CreateInPersonPaymentIntentSuccessPayload {
+      __typename
+      inPersonPaymentIntent {
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+### Mutation input {#mutation-input}
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `amount` | `AmountInput` | ✅ | Amount for the payment intent. |
+| `label` | `String` | No | Label for the payment intent, displayed on the merchant's bank statement. |
+| `externalReference` | `String` | No | Reference to match the payment with your external system (for example, an order ID). |
+| `paymentMethodIdentifier` | `String` | No | Payment method identifier. |
+| `redirectUrl` | `String` | No | URL to redirect to after payment. |
+
+## Step 2: Process the payment {#process-payment}
+
+After creating the payment intent, the merchant uses their terminal app to process the payment. The payment intent moves through several statuses as it progresses.
+
+## Payment intent statuses {#statuses}
+
+| Status | Explanation |
+| --- | --- |
+| `Created` | Payment intent created and ready to be processed by the terminal app. |
+| `Initiated` | Payment initiated on the terminal. |
+| `ConsentPending` | Waiting for the customer to consent (for example, entering their PIN). |
+| `PaymentPending` | Payment is being processed. |
+| `Completed` | Payment successfully processed. |
+| `Rejected` | Payment rejected. A `reason` field provides details. |
+| `Canceled` | Payment canceled. A `reason` field provides details. |
+| `Expired` | Payment intent expired before it could be processed. |
+
+## Step 3: Confirm the payment {#confirm-payment}
+
+After the payment is completed, the merchant payment object is updated and the underlying transactions are created as `Upcoming`. When [settlement](./index.mdx#settlement) arrives, the transactions are updated to `Settled`.
+
+You can query the payment intent status at any time:
+
+```graphql
+query GetInPersonPaymentIntent {
+  inPersonPaymentIntent(id: "$YOUR_PAYMENT_INTENT_ID") {
+    id
+    statusInfo {
+      status
+      ... on InPersonPaymentIntentCompletedStatusInfo {
+        completedAt
+      }
+      ... on InPersonPaymentIntentRejectedStatusInfo {
+        rejectedAt
+        reason
+      }
+      ... on InPersonPaymentIntentCanceledStatusInfo {
+        canceledAt
+        reason
+      }
+    }
+  }
+}
+```
+
+import InPersonCardRefundLimitation from '../partials/_in-person-card-refund-limitation.mdx';
+
+<InPersonCardRefundLimitation />

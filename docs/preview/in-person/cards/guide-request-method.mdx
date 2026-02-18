@@ -1,0 +1,73 @@
+---
+title: Request in-person card payment method
+---
+
+# Request in-person card payment method
+
+Request the in-person card payment method so your merchants can accept card payments using their smartphone terminal.
+
+## Prerequisites {#prerequisites}
+
+- A **merchant profile** with the status **Enabled**. If you don't have one yet, [request a merchant profile](../../../topics/merchants/profiles/guide-request.mdx) first.
+- A project access token, or, if you're an account member, a user access token with **Can manage members** user rights.
+
+## Request the payment method {#request}
+
+Call the `requestMerchantPaymentMethods` mutation.
+
+{/* TODO: Verify exact PaymentMethodInput shape for InPersonCard with engineering. The paymentMethods input likely uses InPersonCard as the method type, but the exact field structure needs confirmation. */}
+
+```graphql
+mutation RequestInPersonCardMethod {
+  requestMerchantPaymentMethods(
+    input: {
+      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
+      paymentMethods: [
+        {
+          type: InPersonCard
+        }
+      ]
+    }
+  ) {
+    ... on RequestMerchantPaymentMethodsSuccessPayload {
+      __typename
+      merchantPaymentMethods {
+        id
+        methodName
+        statusInfo {
+          status
+        }
+        version
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on MerchantProfileNotReadyRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+## Payment method review {#review}
+
+The payment method is created with the status `PendingReview` and version number `1`.
+
+Swan reviews all new merchant payment methods. Swan might contact you for additional information before accepting or rejecting the payment method.
+
+After the review, the status is updated to either `Enabled` or `Rejected`.
+
+| Status | Explanation |
+| --- | --- |
+| `PendingReview` | Payment method submitted and waiting for Swan's review. |
+| `Enabled` | Payment method approved. The merchant can accept in-person card payments. |
+| `Suspended` | Swan suspended the payment method due to detected risk. |
+| `Disabled` | Payment method deactivated. |
+| `Rejected` | Payment method rejected. The decision is final. The merchant must submit a new request. |
+
+:::tip
+Subscribe to merchant webhooks to monitor payment method status changes. Review the full list of [merchant webhooks](../../../topics/merchants/index.mdx) or subscribe to them from your **Dashboard** > **Developers** > **Webhooks**.
+:::

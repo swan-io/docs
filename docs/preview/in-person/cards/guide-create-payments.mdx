@@ -10,7 +10,7 @@ Create payment intents so your merchants can accept card payments from customers
 
 - A **merchant profile** with the status **Enabled**.
 - An **in-person card payment method** with the status **Enabled**. If you don't have one yet, [request the payment method](./guide-request-method.mdx) first.
-- A project access token, or, if you're an account member, a user access token with **Can manage members** user rights.
+- A project access token, or a user access token with **Can manage members** rights.
 
 ## Step 1: Create a payment intent {#create-intent}
 
@@ -47,14 +47,15 @@ mutation CreateInPersonPayment {
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `amount` | `AmountInput` | ✅ | Amount for the payment intent. |
-| `label` | `String` | No | Label for the payment intent, displayed on the merchant's bank statement. |
+| `label` | `String` | No | Label shown on the merchant's bank statement. |
 | `externalReference` | `String` | No | Reference to match the payment with your external system (for example, an order ID). |
 | `paymentMethodIdentifier` | `String` | No | Payment method identifier. |
 | `redirectUrl` | `String` | No | URL to redirect to after payment. |
 
 ## Step 2: Process the payment {#process-payment}
 
-After creating the payment intent, the merchant uses their terminal app to process the payment. The payment intent moves through several statuses as it progresses.
+After creating the payment intent, the merchant uses their terminal app to process the payment.
+The payment intent moves through several statuses as it progresses.
 
 ## Payment intent statuses {#statuses}
 
@@ -64,14 +65,16 @@ After creating the payment intent, the merchant uses their terminal app to proce
 | `Initiated` | Payment initiated on the terminal. |
 | `ConsentPending` | Waiting for the customer to consent (for example, entering their PIN). |
 | `PaymentPending` | Payment is being processed. |
-| `Completed` | Payment successfully processed. |
+| `Completed` | Payment processed successfully. |
 | `Rejected` | Payment rejected. A `reason` field provides details. |
 | `Canceled` | Payment canceled. A `reason` field provides details. |
-| `Expired` | Payment intent expired before it could be processed. |
+| `Expired` | Payment intent expired before processing. |
 
 ## Step 3: Confirm the payment {#confirm-payment}
 
-After the payment is completed, the merchant payment object is updated and the underlying transactions are created as `Upcoming`. When [settlement](./index.mdx#settlement) arrives, the transactions are updated to `Settled`.
+After the payment is completed, the merchant payment object is updated.
+The underlying transactions are created as `Upcoming`.
+When [settlement](./index.mdx#settlement) arrives, the transactions update to `Settled`.
 
 You can query the payment intent status at any time:
 

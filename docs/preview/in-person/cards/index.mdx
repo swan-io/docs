@@ -4,10 +4,11 @@ title: In-person cards
 
 # In-person cards
 
-For many businesses, accepting card payments in person is not just a convenience; it's a must-have.
-From brick-and-mortar shops to health professionals, home care service providers, taxi drivers, and contractors, many professionals need to accept card payments on the go or on their own premises.
+For many businesses, accepting card payments in person is a must-have.
+Shops, health professionals, home care providers, taxi drivers, and contractors all need to accept card payments on the go.
 
-With Swan's API, you can let merchants turn their smartphones into a card terminal and accept payments through a simple terminal app in just a few taps.
+With Swan's API, merchants can turn their smartphone into a card terminal.
+They accept payments through a simple terminal app in just a few taps.
 
 :::info Merchants only
 This section only applies to **merchants** accepting card payments.
@@ -17,11 +18,11 @@ Visit the [card payments section](../../../topics/payments/cards/index.mdx) for 
 ## Merchant card payments {#merchant-card-payments}
 
 Merchant card payments include **one or more transactions**.
-For example, one payment might include a capture transaction and a refund transaction, for a total of two transactions.
+For example, one payment might include a capture and a refund, for a total of two transactions.
 
-These transactions are grouped together in the **merchant payment object**.
-Swan suggests using the merchant payment object in your integration. This helps merchants match orders, invoices, and sales to the right payment.
-This makes it easier to track payments and helps reconcile issues more efficiently.
+These transactions are grouped in the **merchant payment object**.
+Swan suggests using this object in your integration to help merchants match orders, invoices, and sales to the right payment.
+This makes it easier to track payments and resolve issues.
 
 ## Card transaction types {#transaction-types}
 
@@ -32,23 +33,24 @@ These statuses are specific to in-person card payments.
 Other payment methods might behave differently.
 :::
 
-Authorizations aren't included in a transaction type.
-Instead, they're represented at the payment level, visible through the payment object status `Authorized` and payment object balance `totalAuthorized`.
+Authorizations aren't a transaction type.
+Instead, they appear at the payment level through the payment object status `Authorized` and the balance `totalAuthorized`.
 
 | Transaction type | Explanation | Possible statuses |
 | --- | --- | --- |
-| `CardInCredit` | Captured payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
-| `CardInCreditReversal` | Refunded payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
-| `CardInCreditChargeback` | Disputed payment that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
-| `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, that will eventually get settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCredit` | Captured payment that will be settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditReversal` | Refunded payment that will be settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditChargeback` | Disputed payment that will be settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCreditChargebackReversal` | Overturned dispute that will be settled through a separate credit transfer. | `Upcoming`, `Settled` |
 
 ### Settled status {#settled-status}
 
-The `Settled` status indicates that a credit transfer was `Booked` on the account to settle the merchant.
-Individual card transactions don't affect the balance; the `Settled` status is final. Instead, the credit transfer affects the `Booked` balance directly.
+The `Settled` status means a credit transfer was `Booked` on the account to settle the merchant.
+Individual card transactions don't affect the balance. The `Settled` status is final.
+Instead, the credit transfer affects the `Booked` balance directly.
 
-Every `Settled` transaction has a `settlementTransactionId` field to identify the credit transfer affecting the balance.
-Additionally, each credit transfer received to settle in-person card transactions includes the list of settled transactions.
+Every `Settled` transaction includes a `settlementTransactionId` field. Use it to identify the credit transfer that affects the balance.
+Each settlement credit transfer also includes the list of settled transactions.
 
 {/* TODO: Add mermaid diagram showing payment object status lifecycle (ref: SDD page for pattern) */}
 
@@ -59,11 +61,11 @@ The merchant payment object has **distinct statuses** to follow a payment's life
 | Payment object status | Explanation |
 | --- | --- |
 | `Initiated` | The payment was created on the terminal app and is ready to be taken. |
-| `Authorized` | Authorization for the payment was received, but the funds aren't captured yet. The funds are guaranteed for the merchant. |
-| `Captured` | Authorized payments for which the funds have moved out of the customer's account. This can be a final status if the customer doesn't dispute the payment or request a refund. |
+| `Authorized` | Authorization received, but funds aren't captured yet. The funds are guaranteed for the merchant. |
+| `Captured` | Funds moved out of the customer's account. This can be a final status if the customer doesn't dispute or request a refund. |
 | `Rejected` | Authorization denied by the issuer or by Swan. |
-| `Canceled` | Card payment was canceled, authorization voided, and the funds can't be captured. |
-| `Refunded` | Payments reversed by the merchant for some or all of the amount. |
+| `Canceled` | Card payment canceled. The authorization is voided and funds can't be captured. |
+| `Refunded` | Payment reversed by the merchant for some or all of the amount. |
 | `Disputed` | Customer disputed the payment with their bank for some or all of the amount. |
 
 ## Payment object balances {#payment-balances}
@@ -71,28 +73,28 @@ The merchant payment object has **distinct statuses** to follow a payment's life
 {/* TODO: Extract this table into a shared partial (identical to online cards payment object balances) */}
 
 The merchant payment object has **distinct balances** to follow a payment's lifecycle.
-Use these balances to understand what actions have been done on a payment, and what actions can be taken (such as canceling or refunding a payment).
+Use these balances to check what happened on a payment and what you can still do (such as cancel or refund).
 
 | Payment object balance | Explanation |
 | --- | --- |
 | `totalAuthorized` | The total authorized amount for this merchant payment. |
-| `availableToCancel` | The authorized amount that can be released. Refer to this balance to verify whether the payment can be canceled. Cancellations must occur before the amount is captured. |
+| `availableToCancel` | The authorized amount that can be released. Check this balance to verify if the payment can be canceled. Cancellations must occur before the amount is captured. |
 | `totalCanceled` | The total amount canceled for this merchant payment. |
-| `availableToCapture` | The amount available for merchants to capture if the capture isn't automatic. |
-| `totalCaptured` | The amount captured by the merchant. When the capture for card payments is automatic, `totalCaptured` is always equal to `totalAuthorized`. |
-| `availableToRefund` | The amount the merchant can refund. Use this balance to know if a payment is eligible for a refund. |
+| `availableToCapture` | The amount merchants can capture if the capture isn't automatic. |
+| `totalCaptured` | The amount captured by the merchant. When capture is automatic, `totalCaptured` always equals `totalAuthorized`. |
+| `availableToRefund` | The amount the merchant can refund. Check this balance to know if a refund is possible. |
 | `totalRefunded` | The total amount refunded for this merchant payment. |
 | `totalDisputed` | The total amount of this merchant payment disputed by the customer. |
 
 ## Rolling reserve {#rolling-reserve}
 
 In-person card payments are **not subject to a rolling reserve** by default.
-This could change as merchants start processing if Swan's monitoring systems detect suspicious patterns and activities.
+This could change if Swan's monitoring systems detect suspicious patterns.
 
 ## Payment amount limit {#payment-limit}
 
 In-person card payments are **not subject to a payment amount limit** by default.
-This could change as merchants start processing if Swan's monitoring systems detect suspicious patterns and activities.
+This could change if Swan's monitoring systems detect suspicious patterns.
 
 ## Settlement process {#settlement}
 
@@ -100,8 +102,8 @@ For in-person card payments, the settlement is a credit transfer.
 
 1. When the merchant payment is created, underlying transactions are created as `Upcoming`.
 1. When the settlement arrives as a credit transfer, the transactions are updated to `Settled`.
-1. The credit transfer is immediately `Booked`. It affects the balance and makes the corresponding funds available. Card transactions don't affect any of the account balances. 
-1. Transactions captured on a given day are `Settled` within **one business day** later. No rolling reserve applies to the settlement credit transfer.
+1. The credit transfer is immediately `Booked`. It affects the balance and makes the corresponding funds available. Card transactions don't affect any account balances. 
+1. Transactions captured on a given day are `Settled` within **one business day**. No rolling reserve applies to the settlement credit transfer.
 
 import DayTime from '../../../topics/partials/_day-time.mdx';
 
@@ -122,25 +124,25 @@ Card payments can be rejected for the following reasons:
 | Status reason | Explanation | Next steps |
 | --- | --- | --- |
 | `CardNotSupported` | The card doesn't support this type of purchase. | Ask the customer to use a different card. |
-| `RejectedByCardAcquirer` | The payment was declined by the acquirer due to fraud suspicion or risk rules. | Present as a generic decline. Don't share specific details with the customer. |
-| `RejectedByCardIssuer` | The card was declined by the issuer. The card might be invalid, lost, stolen, or restricted. | Ask the customer to contact their card issuer. |
-| `SoftDecline3dsRequired` | The transaction requires 3D Secure authentication. | Retry the payment with authentication. If already authenticated, ask the customer to contact their card issuer. |
-| `SoftDeclineCardDetailsInvalid` | The card number or expiration date is incorrect. | Ask the customer to retry with the correct card details. |
+| `RejectedByCardAcquirer` | The payment was declined by the acquirer due to fraud or risk rules. | Present as a generic decline. Don't share details with the customer. |
+| `RejectedByCardIssuer` | The card was declined by the issuer. It might be invalid, lost, stolen, or restricted. | Ask the customer to contact their card issuer. |
+| `SoftDecline3dsRequired` | The transaction requires 3D Secure authentication. | Retry with authentication. If already done, ask the customer to contact their issuer. |
+| `SoftDeclineCardDetailsInvalid` | The card number or expiry date is incorrect. | Ask the customer to retry with the correct details. |
 | `SoftDeclineCardExpired` | The card has expired. | Ask the customer to use a different card. |
 | `SoftDeclineCvcInvalid` | The CVC is incorrect. | Ask the customer to retry with the correct CVC. |
 | `SoftDeclineInsufficientFunds` | The card has insufficient funds. | Ask the customer to use a different payment method. |
 | `SoftDeclineInvalidPinAttemptsExceeded` | Too many incorrect PIN attempts. | Ask the customer to use a different card or payment method. |
 | `SoftDeclinePinInvalid` | The PIN entered is incorrect. | Ask the customer to retry with the correct PIN. |
 | `SoftDeclinePinRequired` | A PIN is required for this card. | Ask the customer to insert their card and enter their PIN. |
-| `SoftDeclineRejectedByCardIssuer` | The card was declined by the issuer for an unspecified reason. Possible causes include velocity limits or issuer unavailability. | Retry the payment. If still declined, ask the customer to contact their card issuer. |
-| `SoftDeclineSwanTechnicalErrorOccurred` | A technical error occurred during processing. Possible causes include an incorrect address, invalid amount, or processing failure. | Retry the payment. If it still fails, try again later. |
+| `SoftDeclineRejectedByCardIssuer` | The card was declined by the issuer. Possible causes include velocity limits or issuer downtime. | Retry the payment. If still declined, ask the customer to contact their issuer. |
+| `SoftDeclineSwanTechnicalErrorOccurred` | A technical error occurred while processing. Possible causes include an incorrect address, invalid amount, or processing failure. | Retry the payment. If it still fails, try again later. |
 | `SwanTechnicalErrorOccurred` | A technical error occurred on Swan's side. | Retry the payment. If the issue persists, contact Swan Support. |
 
 ## Chargebacks and disputes {#chargebacks}
 
 Cardholders might request a chargeback, which opens a dispute.
-Merchants can automatically view the dispute; the merchant payment object status and balances are updated to reflect the dispute.
-However, it's not possible to act on these disputes directly using Swan's APIs or dashboards.
+Merchants can view the dispute right away. The payment object status and balances update to reflect it.
+However, it's not possible to act on disputes directly using Swan's APIs or dashboards.
 
 To respond to disputes, ask your merchant to [submit a request](https://supportform.swan.io/) to the Swan Support team.
 

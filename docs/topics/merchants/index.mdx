@@ -257,6 +257,26 @@ For security and risk management, Swan may apply a **payment amount limit** to s
 This limit defines the maximum amount a user can spend in one card transaction. 
 If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` error.
 
+### Statement display {#statement-display}
+
+How your merchant's name appears on the payer's bank statement depends on the payment method.
+
+#### Card payments {#statement-display-cards}
+
+For card transactions, the payer's bank statement displays **`SW*[MerchantName]`**, where `MerchantName` is the merchant's name from their profile.
+
+The content of the `label` field may also appear on the statement, depending on the payer's bank.
+Choose the `label` value carefully, as the payer might see it.
+
+#### SEPA Direct Debit {#statement-display-sdd}
+
+For SEPA Direct Debit, the name displayed on the debtor's statement depends on the **SEPA Creditor Identifier** (SCI) used.
+
+| SCI option | Statement displays | Notes |
+| --- | --- | --- |
+| Swan's SCI | **Swan** | Default option. |
+| Merchant's own SCI | **Merchant's name** | Requires [updating the merchant payment method](./online/sdd/guide-update.mdx) via the API. French merchants can request an SCI from Swan Support. |
+
 ### Versions {#methods-versions-statuses}
 
 Swan creates a **new version** of your payment method **every time an update is approved**.

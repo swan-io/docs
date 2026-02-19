@@ -1,0 +1,70 @@
+---
+title: Query account closure information
+description: Get closure reason codes and closure dates from the API
+---
+
+# Query account closure information
+
+Retrieve closure reason codes and closure dates for accounts with the status `Closing` or `Closed` using the API.
+
+## Query structure {#query}
+
+When an account has the status `Closing` or `Closed`, the `statusInfo` field returns either `AccountClosingStatus` or `AccountClosedStatus`.
+Both types include a `reasonInfo` object with the closure reason `type`.
+
+- `AccountClosingStatus` includes `closingAt`: the date the account entered the `Closing` status.
+- `AccountClosedStatus` includes both `closingAt` and `closedAt`: the dates the account entered each status.
+
+Refer to the [closure reason codes](./index.mdx#closure-reason-codes) for a full list of possible values.
+
+## Example query {#example-query}
+
+<a href="https://explorer.swan.io?tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4-14} showLineNumbers
+query GetClosureInfo {
+  account(accountId: "$YOUR_ACCOUNT_ID") {
+    statusInfo {
+      status
+      ... on AccountClosingStatus {
+        reasonInfo {
+          ... on CloseAccountReason {
+            type
+          }
+        }
+        closingAt
+      }
+      ... on AccountClosedStatus {
+        reasonInfo {
+          ... on CloseAccountReason {
+            type
+          }
+        }
+        closingAt
+        closedAt
+      }
+    }
+  }
+}
+```
+
+## Example payload {#payload}
+
+The following example shows a response for an account closed because the account holder requested it.
+
+```json {4-8} showLineNumbers
+{
+  "data": {
+    "account": {
+      "statusInfo": {
+        "status": "Closed",
+        "reasonInfo": {
+          "type": "RequestedByHolder"
+        },
+        "closingAt": "2026-01-15T10:30:00.000Z",
+        "closedAt": "2026-03-16T10:30:00.000Z"
+      }
+    }
+  }
+}
+```

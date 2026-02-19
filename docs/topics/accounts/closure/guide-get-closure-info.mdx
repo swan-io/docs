@@ -7,19 +7,21 @@ description: Get closure reason codes and closure dates from the API
 
 Retrieve closure reason codes and closure dates for accounts with the status `Closing` or `Closed` using the API.
 
-## Query structure {#query}
-
 When an account has the status `Closing` or `Closed`, the `statusInfo` field returns either `AccountClosingStatus` or `AccountClosedStatus`.
 Both types include a `reasonInfo` object with the closure reason `type`.
-
-- `AccountClosingStatus` includes `closingAt`: the date the account entered the `Closing` status.
-- `AccountClosedStatus` includes both `closingAt` and `closedAt`: the dates the account entered each status.
+`AccountClosingStatus` includes `closingAt`, while `AccountClosedStatus` includes both `closingAt` and `closedAt`.
 
 Refer to the [closure reason codes](./index.mdx#closure-reason-codes) for a full list of possible values.
 
-## Example query {#example-query}
+## Guide {#guide}
 
-Use the following query to retrieve closure information for a specific account.
+1. Call the `account` query.
+1. Add the account ID.
+1. Add `statusInfo` with `AccountClosingStatus` or `AccountClosedStatus` to retrieve the closure reason and dates.
+
+## Query {#query}
+
+Retrieve closure information for a specific account.
 
 <a href="https://explorer.swan.io?tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -50,7 +52,7 @@ query GetClosureInfo {
 }
 ```
 
-## Example payload {#payload}
+## Payload {#payload}
 
 The following example shows a response for an account closed because the account holder requested it.
 

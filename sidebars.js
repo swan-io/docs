@@ -683,7 +683,7 @@ module.exports = {
       items: [
         {
           type: "category",
-          label: "Tools overview",
+          label: "Testing tools",
           link: { type: "doc", id: "developers/tools/index" },
           collapsed: true,
           items: [
@@ -691,10 +691,10 @@ module.exports = {
             "developers/tools/testing-api",
             "developers/tools/event-simulator",
             "developers/tools/sandbox-users",
-            "developers/tools/mcp-servers",
             "developers/tools/postman-collection",
           ],
         },
+        "developers/tools/mcp-servers",
         "developers/tools/guide-test-tools",
       ],
     },

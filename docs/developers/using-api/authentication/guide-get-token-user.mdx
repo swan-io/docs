@@ -132,7 +132,7 @@ curl -v -X POST <https://oauth.swan.io/oauth2/token> \\
      -d "code=$YOUR_AUTHORIZATION_CODE" \\
      -d "client_id=$YOUR_CLIENT_ID" \\
      -d "client_secret=$YOUR_CLIENT_SECRET" \\
-     -d "redirect_uri=$YOUR_REGISTRATED_URI" \\
+     -d "redirect_uri=$YOUR_REGISTERED_URI" \\
      -d "grant_type=authorization_code"
 ```
 
@@ -189,14 +189,14 @@ Consider using [impersonation](/developers/using-api/authentication/guide-impers
 :::
 
 When your user access token expires, you can use the refresh token provided in the cURL response to extend the usage of your user access token.
-Please note that while they don't expire, **refresh tokens are single-use**.
+While they don't expire, **refresh tokens are single-use**.
 
 To refresh your user access token, **send a cURL request** to the same endpoint as step 3 with the following information:
 
 1. The **refresh token** you received in step 4 (line 2).
 1. Your **client ID** and **secret** from your Swan Dashboard, retrieved in step 1 (lines 3-4).
 
-```curl title="Request user access token" showLineNumbers
+```curl title="Refresh user access token" showLineNumbers
 curl -v -X POST <https://oauth.swan.io/oauth2/token> \\
      -d "refresh_token=$YOUR_REFRESH_TOKEN" \\
      -d "client_id=$YOUR_CLIENT_ID" \\

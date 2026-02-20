@@ -26,7 +26,7 @@ If a user's mobile phone number previously belonged to someone else, and the num
 
 :::info Sandbox users
 When testing your integration, you'll need [Sandbox users](../../developers/tools/sandbox-users.mdx).
-Sandbox users make it possible to simulate the different situations you may encounter with your real users in your Live environment, as long as they're logging in with the **same phone number**.
+Sandbox users make it possible to simulate the different situations you may encounter with your real users in your Live environment. Sandbox and Live users share the **same phone number**.
 :::
 
 ## Signing up {#signup}
@@ -41,7 +41,7 @@ Your user:
     - If you include their number when [creating their sign-up link](../../developers/using-api/authentication/guide-get-token-user.mdx#url-parameters-optional), they won't need to enter it again.
 1. **Confirms their phone number**. How they confirm depends on whether they opened the sign-up link from a computer or their mobile device:
     1. **Computer**: Swan sends your user a text message with a 6-digit verification code. The user enters this code on their computer to confirm their phone number.
-    1. **Mobile device**: Swan sends your user a text message with a verification code.
+    1. **Mobile device**: Swan sends your user a text message with a 6-digit verification code.
 1. **Enters their personal information**: first name, last name, and birthdate. This information must match the information that appears on their identity document.
     - The user skips this step if you included this information when [creating their sign-up link](../../developers/using-api/authentication/guide-get-token-user.mdx#url-parameters-optional).
 1. **Sets a 6-digit passcode**. Users must remember their passcode. Swan can request it anytime the user needs to consent to a sensitive operation.
@@ -62,7 +62,7 @@ Your user:
 1. **Reviews and confirms all provided information**: personal, birth, and residency. Users can modify their information before confirming.
 1. [**Completes identification**](./identifications/index.mdx), where Swan verifies their identity. This step **can be performed later**, though it's recommended to complete it as soon as possible. When using the API, you must trigger this step.
 1. *(Optional)* **Sets up biometrics**, if desired and available on their mobile device. Biometrics typically include face or fingerprint authentication.
-1. Redirected to your redirect URL.
+1. Gets redirected to your redirect URL.
 
 :::note Identification rejection
 If a user's identification fails, they receive a text message after completing sign-up with the **reason for the failure**. They must follow the link provided to retry. 
@@ -207,7 +207,7 @@ import DeactivateRequirements from './overview/_deactivate-reqs.mdx';
 <DeactivateRequirements />
 
 If all conditions are met, the user can be deactivated.
-When a user is deactivated, all user access tokens and their associated refresh tokens associated with the deactivated user are revoked can no longer be used.
+When a user is deactivated, all user access tokens and refresh tokens associated with the deactivated user are revoked and can no longer be used.
 
 If conditions aren't met, there are three possible rejection reasons:
 

@@ -15,29 +15,29 @@ Request the in-person card payment method so your merchants can accept card paym
 
 Call the `requestMerchantPaymentMethods` mutation.
 
-{/* TODO: Verify exact PaymentMethodInput shape for InPersonCard with engineering. The paymentMethods input likely uses InPersonCard as the method type, but the exact field structure needs confirmation. */}
-
 ```graphql
 mutation RequestInPersonCardMethod {
   requestMerchantPaymentMethods(
     input: {
       merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
-      paymentMethods: [
-        {
-          type: InPersonCard
-        }
-      ]
+      inPersonCard: {
+        activate: true
+      }
     }
   ) {
     ... on RequestMerchantPaymentMethodsSuccessPayload {
-      __typename
-      merchantPaymentMethods {
-        id
-        methodName
-        statusInfo {
-          status
+      merchantProfile {
+        merchantPaymentMethods {
+          ... on InPersonCardMerchantPaymentMethod {
+            id
+            methodId
+            statusInfo {
+              status
+            }
+            updatedAt
+            version
+          }
         }
-        version
       }
     }
     ... on ForbiddenRejection {
@@ -64,6 +64,7 @@ After the review, the status updates to either `Enabled` or `Rejected`.
 | Status | Explanation |
 | --- | --- |
 | `PendingReview` | Payment method submitted and waiting for Swan's review. |
+| `WaitingForInformation` | Swan needs more information. Refer to [provide missing information](../../../topics/merchants/guide-missing-information.mdx) to learn what to submit. |
 | `Enabled` | Payment method approved. The merchant can accept in-person card payments. |
 | `Suspended` | Swan suspended the payment method due to detected risk. |
 | `Disabled` | Payment method deactivated. |

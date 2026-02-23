@@ -11,30 +11,59 @@ Create payment intents so your merchants can accept card payments from customers
 - A **merchant profile** with the status **Enabled**.
 - An **in-person card payment method** with the status **Enabled**. If you don't have one yet, [request the payment method](./guide-request-method.mdx) first.
 - A project access token, or a user access token with **Can manage members** rights.
+- The [Stripe Terminal SDK](https://docs.stripe.com/terminal/payments/setup-sdk) integrated in your terminal app.
 
-## Step 1: Create a payment intent {#create-intent}
+## Step 1: Get a connection token {#connection-token}
 
-Call the `createInPersonPaymentIntent` mutation.
+Before the terminal app can discover and connect to a reader, it needs a connection token from Stripe.
+
+Call the `requestTerminalConnectionToken` mutation from your server.
+Then, pass the returned `connectionToken` to the `StripeTerminalProvider` in your terminal app.
+
+```graphql
+mutation GetConnectionToken {
+  requestTerminalConnectionToken(
+    input: {
+      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
+    }
+  ) {
+    ... on RequestInPersonTerminalConnectionTokenSuccessPayload {
+      connectionToken
+    }
+  }
+}
+```
+
+:::info Token lifecycle
+Connection tokens are short-lived.
+Your app should request a new token each time the Stripe SDK needs one, typically by providing a token fetch function to the `StripeTerminalProvider`.
+:::
+
+## Step 2: Create a payment intent {#create-intent}
+
+Call the `createInPersonPaymentIntent` mutation to create a payment intent.
+The mutation returns a `secret` (Stripe's client secret) that you'll use in the next step with the Stripe SDK.
 
 ```graphql
 mutation CreateInPersonPayment {
   createInPersonPaymentIntent(
     input: {
+      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
       amount: { value: "50", currency: "EUR" }
       label: "Payment for order #1234"
       externalReference: "order-1234"
     }
   ) {
     ... on CreateInPersonPaymentIntentSuccessPayload {
-      __typename
-      inPersonPaymentIntent {
-        id
-        statusInfo {
-          status
-        }
+      paymentIntent {
+        secret
       }
     }
     ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on AmountTooSmallRejection {
       __typename
       message
     }
@@ -46,59 +75,54 @@ mutation CreateInPersonPayment {
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `amount` | `AmountInput` | ✅ | Amount for the payment intent. |
+| `merchantProfileId` | `ID` | ✅ | ID of the merchant profile accepting the payment. |
+| `amount` | `AmountInput` | ✅ | Amount for the payment intent. Minimum: 0.50€. |
 | `label` | `String` | No | Label shown on the merchant's bank statement. |
 | `externalReference` | `String` | No | Reference to match the payment with your external system (for example, an order ID). |
-| `paymentMethodIdentifier` | `String` | No | Payment method identifier. |
-| `redirectUrl` | `String` | No | URL to redirect to after payment. |
+| `reference` | `String` | No | Payment reference. |
+| `idempotencyKey` | `String` | No | Unique key to prevent duplicate payment creation. |
 
-## Step 2: Process the payment {#process-payment}
+## Step 3: Process the payment with Stripe SDK {#process-payment}
 
-After creating the payment intent, the merchant uses their terminal app to process the payment.
-The payment intent moves through several statuses as it progresses.
+After creating the payment intent, use the Stripe Terminal SDK in your terminal app to collect and confirm the payment.
+This step happens entirely on the device.
 
-## Payment intent statuses {#statuses}
+:::tip
+For detailed SDK integration guidance, refer to the [Stripe Terminal: Collect card payment](https://docs.stripe.com/terminal/payments/collect-card-payment) documentation.
+:::
+
+### 3.1: Retrieve the payment intent {#retrieve-intent}
+
+Use the `secret` returned in step 2 to retrieve the payment intent with the Stripe SDK's `retrievePaymentIntent` method.
+
+### 3.2: Collect the payment method {#collect-method}
+
+Call the Stripe SDK's `collectPaymentMethod` method.
+This activates the device's NFC reader and prompts the customer to tap their card.
+
+### 3.3: Confirm the payment intent {#confirm-intent}
+
+Call the Stripe SDK's `confirmPaymentIntent` method to finalize the payment.
+The payment is captured automatically.
+
+## Merchant payment statuses {#statuses}
+
+After processing, the merchant payment object reflects the payment's lifecycle.
+Refer to the [payment object statuses](./index.mdx#payment-statuses) for the full list.
+
+These are the key statuses after a payment is processed:
 
 | Status | Explanation |
 | --- | --- |
-| `Created` | Payment intent created and ready to be processed by the terminal app. |
-| `Initiated` | Payment initiated on the terminal. |
-| `ConsentPending` | Waiting for the customer to consent (for example, entering their PIN). |
-| `PaymentPending` | Payment is being processed. |
-| `Completed` | Payment processed successfully. |
-| `Rejected` | Payment rejected. A `reason` field provides details. |
-| `Canceled` | Payment canceled. A `reason` field provides details. |
-| `Expired` | Payment intent expired before processing. |
+| `Captured` | Payment authorized and captured successfully. Funds will be [settled](./index.mdx#settlement) to the merchant's account. |
+| `Rejected` | Payment declined by the issuer or by Swan. Refer to [rejection reasons](./index.mdx#rejected) for details. |
+| `Disputed` | Customer disputed the payment for some or all of the amount. |
+| `Refunded` | Payment reversed by the merchant for some or all of the amount. |
 
-## Step 3: Confirm the payment {#confirm-payment}
+## After the payment {#after-payment}
 
-After the payment is completed, the merchant payment object is updated.
-The underlying transactions are created as `Upcoming`.
-When [settlement](./index.mdx#settlement) arrives, the transactions update to `Settled`.
-
-You can query the payment intent status at any time:
-
-```graphql
-query GetInPersonPaymentIntent {
-  inPersonPaymentIntent(id: "$YOUR_PAYMENT_INTENT_ID") {
-    id
-    statusInfo {
-      status
-      ... on InPersonPaymentIntentCompletedStatusInfo {
-        completedAt
-      }
-      ... on InPersonPaymentIntentRejectedStatusInfo {
-        rejectedAt
-        reason
-      }
-      ... on InPersonPaymentIntentCanceledStatusInfo {
-        canceledAt
-        reason
-      }
-    }
-  }
-}
-```
+After the payment is captured, the merchant payment object is updated and underlying transactions are created.
+Refer to the [card transaction types](./index.mdx#transaction-types) section to understand how transactions are created and settled.
 
 import InPersonCardRefundLimitation from '../partials/_in-person-card-refund-limitation.mdx';
 

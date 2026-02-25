@@ -21,12 +21,18 @@ This guide explains how to send partner-branded email notifications when invitin
 
 Call the `sendAccountMembershipInviteNotification` mutation with the `accountMembershipId` of the membership for which you want to send the invitation.
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gUmVzZW5kSW52aXRhdGlvbiB7CiAgc2VuZEFjY291bnRNZW1iZXJzaGlwSW52aXRlTm90aWZpY2F0aW9uKAogICAgaW5wdXQ6IHsgYWNjb3VudE1lbWJlcnNoaXBJZDogIiRZT1VSX0FDQ09VTlRfTUVNQkVSU0hJUF9JRCIgfQogICkgewogICAgLi4uIG9uIFNlbmRBY2NvdW50TWVtYmVyc2hpcEludml0ZU5vdGlmaWNhdGlvblN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBub3RpZmljYXRpb25SZXF1ZXN0SWQKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwU3RhdHVzTm90RWxpZ2libGVSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTWF4aW11bURhaWx5SW52aXRhdGlvbnNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFVzZXJOb3RBbGxvd2VkVG9NYW5hZ2VBY2NvdW50TWVtYmVyc2hpcFJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBVc2VyTm90QWxsb3dlZFRvU2VuZEFjY291bnRNZW1iZXJzaGlwSW52aXRhdGlvblJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D" className="explorer-badge">Open in API Explorer</a>
+You can optionally include a `redirectUrl` parameter.
+When the end user completes the OAuth flow, Swan redirects them to your redirect URL with an [authorization code and state](../../../developers/using-api/authentication/guide-get-token-user.mdx#code-receive).
+If you include a `redirectUrl`, it must be registered in your **Dashboard**.
+If you don't include one, the user is redirected to Swan's Web Banking.
 
-```graphql {3} showLineNumbers
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gUmVzZW5kSW52aXRhdGlvbiB7CiAgc2VuZEFjY291bnRNZW1iZXJzaGlwSW52aXRlTm90aWZpY2F0aW9uKAogICAgIyByZWRpcmVjdFVybCBpcyBvcHRpb25hbDsgaWYgcHJvdmlkZWQsIGl0IG11c3QgYmUgcmVnaXN0ZXJlZCBpbiB5b3VyIERhc2hib2FyZAogICAgaW5wdXQ6IHsgYWNjb3VudE1lbWJlcnNoaXBJZDogIiRZT1VSX0FDQ09VTlRfTUVNQkVSU0hJUF9JRCIsIHJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIiB9CiAgKSB7CiAgICAuLi4gb24gU2VuZEFjY291bnRNZW1iZXJzaGlwSW52aXRlTm90aWZpY2F0aW9uU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG5vdGlmaWNhdGlvblJlcXVlc3RJZAogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwTm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBTdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtRGFpbHlJbnZpdGF0aW9uc1JlYWNoZWRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVXNlck5vdEFsbG93ZWRUb01hbmFnZUFjY291bnRNZW1iZXJzaGlwUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFVzZXJOb3RBbGxvd2VkVG9TZW5kQWNjb3VudE1lbWJlcnNoaXBJbnZpdGF0aW9uUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRNZW1iZXJzaGlwQ3VzdG9tSW52aXRhdGlvbkNhbm5vdEJlQ3JlYXRlZFJlamVjdGlvbiB7CiAgICAgIHByb2plY3RJZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4} showLineNumbers
 mutation ResendInvitation {
   sendAccountMembershipInviteNotification(
-    input: { accountMembershipId: "$YOUR_ACCOUNT_MEMBERSHIP_ID" }
+    # redirectUrl is optional; if provided, it must be registered in your Dashboard
+    input: { accountMembershipId: "$YOUR_ACCOUNT_MEMBERSHIP_ID", redirectUrl: "$YOUR_REDIRECT_URL" }
   ) {
     ... on SendAccountMembershipInviteNotificationSuccessPayload {
       __typename
@@ -46,6 +52,10 @@ mutation ResendInvitation {
       message
     }
     ... on UserNotAllowedToSendAccountMembershipInvitationRejection {
+      message
+    }
+    ... on AccountMembershipCustomInvitationCannotBeCreatedRejection {
+      projectId
       message
     }
     ... on ForbiddenRejection {
@@ -92,6 +102,7 @@ The mutation can return several rejection reasons if the request can't be comple
 |---|---|
 | `AccountMembershipNotFoundRejection` | The account membership ID doesn't exist. |
 | `AccountMembershipStatusNotEligibleRejection` | The account membership status must be `InvitationSent` to send an invitation notification. |
+| `AccountMembershipCustomInvitationCannotBeCreatedRejection` | The invitation link can't be created for this account membership. |
 | `MaximumDailyInvitationsReachedRejection` | You've reached the maximum of five invitation emails per day for this membership. |
 | `UserNotAllowedToManageAccountMembershipRejection` | The authenticated user doesn't have the `canManageAccountMembership` permission. |
 | `UserNotAllowedToSendAccountMembershipInvitationRejection` | The user's account membership status must be `Enabled` to send invitations. |

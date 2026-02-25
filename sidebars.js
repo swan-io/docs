@@ -504,7 +504,6 @@ module.exports = {
           items: [
             "topics/users/consent/guide-configure-notifications",
             "topics/users/consent/guide-create-multiconsent",
-            "topics/users/consent/guide-cancel",
             "topics/users/consent/guide-implement-s2s",
             "topics/users/consent/guide-integrate-sca",
           ],
@@ -788,7 +787,9 @@ module.exports = {
           link: { type: "doc", id: "preview/in-person/cards/index" },
           collapsed: true,
           items: [
-            // Guide pages will be added here in Step 2
+            "preview/in-person/cards/guide-accept",
+            "preview/in-person/cards/guide-request-method",
+            "preview/in-person/cards/guide-create-payments",
           ],
         },
         {

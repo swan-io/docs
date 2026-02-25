@@ -16,16 +16,16 @@ Refer to the [closure reason codes](./index.mdx#closure-reason-codes) for a full
 ## Guide {#guide}
 
 1. Call the `account` query.
-1. Add the account ID.
-1. Add `statusInfo` with `AccountClosingStatus` or `AccountClosedStatus` to retrieve the closure reason and dates.
+1. Add the account ID (line 2).
+1. Add `statusInfo` with `AccountClosingStatus` or `AccountClosedStatus` to retrieve the closure reason and dates (lines 4-21).
 
 ## Query {#query}
 
 Retrieve closure information for a specific account.
 
-<a href="https://explorer.swan.io?tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0Q2xvc3VyZUluZm8gewogIGFjY291bnQoYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIpIHsKICAgIHN0YXR1c0luZm8gewogICAgICBzdGF0dXMKICAgICAgLi4uIG9uIEFjY291bnRDbG9zaW5nU3RhdHVzIHsKICAgICAgICByZWFzb25JbmZvIHsKICAgICAgICAgIC4uLiBvbiBDbG9zZUFjY291bnRSZWFzb24gewogICAgICAgICAgICB0eXBlCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIGNsb3NpbmdBdAogICAgICB9CiAgICAgIC4uLiBvbiBBY2NvdW50Q2xvc2VkU3RhdHVzIHsKICAgICAgICByZWFzb25JbmZvIHsKICAgICAgICAgIC4uLiBvbiBDbG9zZUFjY291bnRSZWFzb24gewogICAgICAgICAgICB0eXBlCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIGNsb3NpbmdBdAogICAgICAgIGNsb3NlZEF0CiAgICAgIH0KICAgIH0KICB9Cn0%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-14} showLineNumbers
+```graphql {2,3,5,13} showLineNumbers
 query GetClosureInfo {
   account(accountId: "$YOUR_ACCOUNT_ID") {
     statusInfo {
@@ -54,9 +54,10 @@ query GetClosureInfo {
 
 ## Payload {#payload}
 
-The following example shows a response for an account closed because the account holder requested it.
+The following example shows an account with the `Closed` status.
+The `reasonInfo` object confirms the closure was `RequestedByHolder`.
 
-```json {4-10} showLineNumbers
+```json {5-8} showLineNumbers
 {
   "data": {
     "account": {
@@ -72,3 +73,6 @@ The following example shows a response for an account closed because the account
   }
 }
 ```
+
+The reason code depends on the situation.
+Refer to the [closure reason codes](./index.mdx#closure-reason-codes) for a complete list.

@@ -1,0 +1,47 @@
+---
+title: 26 February 2026
+type: release
+---
+
+## New features
+
+📩 Following the [December 18 postponement](/changelog/18-december-2025/#important-update), the new white-labelled email notifications will be activated in Production Live starting **March 12**.
+They're now available for testing in Production Sandbox, so you can assess the impact on your KYC operations if you have automations in place.
+
+Our new white-labelled email notifications:
+- Your account terms and conditions
+- First transfer
+- Request supporting documents
+- Request supporting documents reminders
+- Your account is opened
+- Join your banking space
+
+## Improvements
+
+🔐 The sign-in flow for Web Banking on desktop was updated on **February 18**.
+Users now receive a 6-digit verification code by SMS, and enter both the code and their passcode on desktop, instead of clicking a link and entering their passcode on mobile.
+This update improves security by making it harder for unauthorized users to access accounts.
+
+🔑 We've added [idempotency](/developers/using-api/idempotency) to our Internal Direct Debit and SEPA Direct Debit mutations, so you can more safely accept payments from these payment methods.
+
+## API updates
+
+### Upcoming breaking changes
+
+⚠️ Starting **April 2**, the following [`CloseAccountReasonType`](https://api-reference.swan.io/enums/close-account-reason-type/) values will be deprecated to provide more granular reason codes for account opening refusals, capital deposit cancellations, and retroactive account closures:
+
+- `PartnerReason`: use `RequestedByHolder` instead.
+- `Inactivity`: use `DormantAccount` instead.
+- `CapitalDepositReason`: use any of the new specific reason codes instead.
+
+### Reminders
+
+🌍 On **March 31**, `accountId` becomes mandatory in [`internationalBeneficiaryDynamicForms`](https://api-reference.swan.io/queries/international-beneficiary-dynamic-forms/) and [`internationalCreditTransferTransactionDetailsDynamicForm`](https://api-reference.swan.io/queries/international-credit-transfer-transaction-details-dynamic-form/). It's available now as optional; update your integration before this date.
+
+📆 On **April 1**, the following fields will be removed from [`accountStatement`](https://api-reference.swan.io/queries/account-statement/), [`Account.statements`](https://api-reference.swan.io/objects/account/), and [`generateAccountStatement`](https://api-reference.swan.io/mutations/generate-account-statement/):
+
+- `fees`: replaced by `feeCredits` and `feeDebits`.
+- `status`: replaced by `statusInfo`.
+- `url` in `type`: moved to `statusInfo`.
+
+👉 Check all reminders of already-announced upcoming breaking changes on [docs.swan.io/changelog](/changelog).

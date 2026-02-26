@@ -16,9 +16,10 @@ title: Initiate a transaction
 
 1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions.
 1. Call the `initiateSepaDirectDebitMerchantPayment` mutation.
-1. Choose `mandateId` and add the payment mandate ID (line 4) from the [declare a payment mandate](./guide-declare.mdx) guide.
-1. Include the amount `value` and `currency` (line 5).
-1. Recommended: include your merchant's name in the `label` field (line 6).
+1. Add an `idempotencyKey` to prevent duplicate payments (line 4). Refer to the [idempotency](/developers/using-api/idempotency/) guide for more information.
+1. Choose `mandateId` and add the payment mandate ID (line 5) from the [declare a payment mandate](./guide-declare.mdx) guide.
+1. Include the amount `value` and `currency` (line 6).
+1. Recommended: include your merchant's name in the `label` field (line 7).
 1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
 
 ## Mutation {#mutation}
@@ -32,12 +33,13 @@ If the date is left empty, the transaction will be executed as soon as possible.
 If the date indicated is a non-business day, the transaction will be executed on the next business day.
 :::
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVTZGQgewogIGluaXRpYXRlU2VwYURpcmVjdERlYml0TWVyY2hhbnRQYXltZW50KAogICAgaW5wdXQ6IHsKICAgICAgbWFuZGF0ZUlkOiAiJFlPVVJfTUFOREFURV9JRCIKICAgICAgYW1vdW50OiB7IHZhbHVlOiAiNzUiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICBsYWJlbDogIllvdXIgTWVyY2hhbnQncyBOYW1lIgogICAgICByZXF1ZXN0ZWRFeGVjdXRpb25BdDogIjIwMjQtMDQtMTJUMTY6Mjg6MjIuODY3WiIKICAgIH0KICApIHsKICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEluaXRpYXRlU2VwYURpcmVjdERlYml0TWVyY2hhbnRQYXltZW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lcmNoYW50UGF5bWVudCB7CiAgICAgICAgaWQKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVTZGQgewogIGluaXRpYXRlU2VwYURpcmVjdERlYml0TWVyY2hhbnRQYXltZW50KAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIG1hbmRhdGVJZDogIiRZT1VSX01BTkRBVEVfSUQiCiAgICAgIGFtb3VudDogeyB2YWx1ZTogIjc1IiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgbGFiZWw6ICJZb3VyIE1lcmNoYW50J3MgTmFtZSIKICAgICAgcmVxdWVzdGVkRXhlY3V0aW9uQXQ6ICIyMDI0LTA0LTEyVDE2OjI4OjIyLjg2N1oiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gTm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJZGVtcG90ZW5jeUNvbmZsaWN0UmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW5pdGlhdGVTZXBhRGlyZWN0RGViaXRNZXJjaGFudFBheW1lbnRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVyY2hhbnRQYXltZW50IHsKICAgICAgICBpZAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4,5,6} showLineNumbers
+```graphql {4,5,6,7} showLineNumbers
 mutation InitiateSdd {
   initiateSepaDirectDebitMerchantPayment(
     input: {
+      idempotencyKey: "$YOUR_IDEMPOTENCY_KEY"
       mandateId: "$YOUR_MANDATE_ID"
       amount: { value: "75", currency: "EUR" }
       label: "Your Merchant's Name"
@@ -57,6 +59,10 @@ mutation InitiateSdd {
       message
     }
     ... on ValidationRejection {
+      __typename
+      message
+    }
+    ... on IdempotencyConflictRejection {
       __typename
       message
     }

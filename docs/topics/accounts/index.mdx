@@ -89,12 +89,21 @@ Swan accounts have different capabilities determined by the combination of these
 | `Unlimited` + `PaymentService` | <Yes /> Account holder verification status is `Verified`.<br /><Yes /> Payments can be made from the account.<br /><Yes /> The account's main IBAN is displayed.<br /><Yes /> All accounts functions are possible. |
 
 :::info Restrictions on incoming transfers for limited accounts
-Limited accounts can only receive incoming SEPA Credit Transfers of €50 or less, and the total balance can't exceed €150.
-Any transfer that exceeds these limits is automatically rejected.
+
+`Limited` accounts are subject to the following restrictions:
+- Each incoming SEPA Credit Transfer must be **€50 or less**.
+- A `Limited` account can't receive more than €150 in SEPA Credit Transfers over its lifetime.
+
+The €150 limit applies to the cumulative sum received, not the current account balance.
+Swan fees don't count toward this limit. For example, if a user receives €150 and is charged a €2 Swan fee, their balance will be €148. 
+Even though the fee reduced their balance, the €150 received counts towards their limit. 
+Swan will automatically reject any further transfers sent to the account.
+
 These restrictions apply to both SEPA Credit Transfers (instant and regular).
 Incoming International Credit Transfers are automatically rejected regardless of amount.
 
-These restrictions primarily impact first transfers during the account holder verification process when accounts are in `Limited` status.
+Accounts are in `Limited` status before they are verified. 
+These restrictions primarily impact first transfers during the account holder verification process. 
 :::
 
 ## Balances {#balances}

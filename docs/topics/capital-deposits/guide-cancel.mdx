@@ -15,15 +15,15 @@ import CancelCase from './partials/_cancel-case.mdx';
 ## Guide {#steps}
 
 1. Call the `cancelCapitalDepositCase` mutation.
-1. Add the capital deposit case ID.
-1. Add the success payload and any information you'd like to receive.
+1. Add the capital deposit case ID (line 2).
+1. Add the success payload and any information you'd like to receive (lines 3-9).
 1. Add rejections (not shown).
 
 ## Mutation {#mutation}
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsQ2FzZSB7CiAgY2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlKGlucHV0OiB7IGlkOiAiJENBUElUQUxfREVQT1NJVF9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNhcGl0YWxEZXBvc2l0Q2FzZSB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FwaXRhbERlcG9zaXRDYXNlQ2FuTm90QmVGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5Ob3RCZUNhbmNlbGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2,3,6-8} showLineNumbers
+```graphql {2,3} showLineNumbers
 mutation CancelCase {
   cancelCapitalDepositCase(input: { id: "$CAPITAL_DEPOSIT_CASE_ID" }) {
     ... on CancelCapitalDepositCaseSuccessPayload {
@@ -41,9 +41,9 @@ mutation CancelCase {
 
 ## Payload {#payload}
 
+The payload confirms the capital deposit case status changed to `Canceled`.
 
-
-```graphql {6-8} showLineNumbers
+```json {6-7} showLineNumbers
 {
   "data": {
     "cancelCapitalDepositCase": {
@@ -57,3 +57,12 @@ mutation CancelCase {
   }
 }
 ```
+
+## What happens after cancellation {#after-cancellation}
+
+When you cancel a capital deposit case, any associated shareholder accounts are automatically closed.
+These accounts receive the [closure reason code](../accounts/closure/index.mdx#closure-reason-codes) `CapitalDepositWithdrawn`.
+
+:::info Completed capital deposits
+When a capital deposit is successfully completed, shareholder accounts are closed with the reason code `CapitalDepositCompleted`.
+:::

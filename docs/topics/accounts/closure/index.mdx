@@ -28,6 +28,7 @@ Your users must cancel all outgoing SEPA Direct Debits themselves, as Swan has n
 ## Account closure processes {#processes}
 
 The account closure process depends on who closes the account.
+Swan assigns a specific [closure reason code](#closure-reason-codes) to each closed account so you can understand why the closure occurred.
 
 ### Partner (you) {#closure-partner}
 
@@ -46,30 +47,29 @@ Follow the guide relevant to your situation:
 - [Request to close a **limited** account](./guide-close-limited.mdx)
 - [Request to close an **unlimited** account](./guide-close-unlimited.mdx)
 
-When you request account closure, the reason code is `ComplianceReason`.
+When you request account closure, the reason code is `RequestedByPartner`.
 
 ### Legal representative {#closure-legal-rep}
 
 An account's legal representative can request to close an account.
 You need to support them in this process by either sending them a non-expiring closure link or closing the account with the API.
-Links don't expire.
 
 Follow the guide relevant to your situation:
 
 - [Send a link to the legal representative to close the account](./guide-close-link.mdx)
 - [Use the API to close an account by legal representative request](./guide-close-api.mdx)
 
-Please note that only Swan can act on `Suspended` accounts.
+Only Swan can act on `Suspended` accounts.
 Legal representatives can't close accounts with the status `Suspended`.
 
-When the legal representative requests account closure, the reason code is `PartnerReason`.
+When the legal representative requests account closure, the reason code is `RequestedByHolder`.
 
 ### Account holder {#closure-account-holder}
 
 An account holder or legal representative can request to close an account by contacting Swan Support directly.
-Send your users the [Swan Support Center](https://support.swan.io/hc/en-150/articles/14642306196765-Account-closure-process)  article explaining the process to initiate account closure.
+Send your users the [Swan Support Center](https://support.swan.io/hc/en-150/articles/14642306196765-Account-closure-process) article explaining the process to initiate account closure.
 
-When they contact Swan Support to request account closure, the reason code is `ComplianceReason`.
+When they contact Swan Support to request account closure, the reason code is `RequestedByHolder`.
 
 ### Swan {#closure-swan}
 
@@ -80,18 +80,18 @@ Swan reserves the right to close accounts, and might decide to close an account 
 1. The onboarding, identification, or Know Your Customer (KYC) process wasn't completed.
 1. The Partner (you) is no longer working with Swan.
 
-When closing accounts, Swan is required by law to provide a  **two-month notice** period.
+When closing accounts, Swan is required by law to provide a **two-month notice** period.
 More specifically, Swan waits 60 days after notifying the account holder to change the account status to `Closing`.
 This provides the account holder with enough time to open an account at another financial institution before losing access to their Swan account.
 
 Swan **can close accounts immediately** if the closure is due to fraud or a third-party request.
-When Swan closes an account, the reason code is `ComplianceReason`.
+The reason code depends on the situation. Refer to the [closure reason codes](/topics/accounts/closure/#closure-reason-codes) for a complete list.
 
 ### Third party {#closure-third-party}
 
 Swan can receive requests from third parties to close accounts.
 For example, **liquidators** can request account closure if the account holder's company is being liquidated.
-Additionally, **notaries** can request account closure in the case of the account holder's death.
+**Notaries** can also request account closure following the account holder's death.
 
 Before accepting requests from third parties, Swan performs the following actions:
 
@@ -102,7 +102,63 @@ Before accepting requests from third parties, Swan performs the following action
     - Negative balance: Swan requests the third party transfer funds so the balance reaches zero.
 
 When the account balance reaches zero, Swan changes the account status to `Closed` immediately for legitimate third-party requests.
-The reason code for this account closure is `ComplianceReason`.
+The reason code depends on the situation (for example, `DeathClosure` for a deceased account holder). Refer to the [closure reason codes](#closure-reason-codes) for a complete list.
+
+## Closure reason codes {#closure-reason-codes}
+
+Swan provides specific closure reason codes to help you understand why an account was closed.
+You can view the closure reason code for a closed account by going to **Dashboard** > **Data** > **Accounts** and selecting the account, or by [querying the account status with the API](./guide-get-closure-info.mdx).
+
+Closure reasons fall into different categories depending on who initiated the closure and the circumstances.
+
+:::info Deprecated reason codes
+Starting 2 April 2026, the following reason codes are deprecated and replaced with more granular codes:
+
+- `PartnerReason`: use `RequestedByPartner` instead.
+- `Inactivity`: use `DormantAccount` instead.
+- `CapitalDepositReason`: use `CapitalDepositCompleted`, `CapitalDepositWithdrawn`, or `CapitalDepositRefusedByNotary` instead.
+:::
+
+### General closure reasons {#general-reasons}
+
+| Reason code | Explanation |
+| --- | --- |
+| `RequestedByHolder` | Closure requested by the end user. |
+| `RequestedByPartner` | Closure requested by the Partner for any reason. |
+| `RemediationPlan` | Closure following a Partner remediation plan. |
+| `PartnerChurn` | Closure following a Partner churn. |
+| `DeathClosure` | Account holder is deceased. |
+| `DormantAccount` | Prolonged inactivity according to local regulatory definitions or internal policy. |
+| `Other` | Reason not covered by the current list. |
+
+### KYC, reKYC, and capital deposit closure reasons {#kyc-capital-deposit-reasons}
+
+| Reason code | Explanation |
+| --- | --- |
+| `KYCIssue` | Documents missing, incorrect, or no reply. |
+| `ForbiddenActivity` | Prohibited business sectors. |
+| `DuplicateOnboarding` | A second account was created by mistake. |
+| `DeniedCountryResidency` | High-risk UBO or resident. |
+| `RefusedIbanCountry` | The account holder was assigned the wrong IBAN country, or the IBAN country isn't allowed. |
+| `RefusedCompanyRegistrationCountry` | The company registration country isn't supported by Swan. |
+| `BusinessInactiveOrNotRegistered` | The company is inactive or not registered. |
+| `UnsupportedLegalForm` | The legal form can't be onboarded by Swan. |
+| `TCViolation` | Terms & Conditions violation. |
+| `ReKYCNoReply` | The account holder failed to reply to a reKYC request. |
+| `CapitalDepositCompleted` | Standard closure of a temporary capital deposit account after the company is registered. |
+| `CapitalDepositWithdrawn` | The capital deposit was withdrawn. |
+| `CapitalDepositRefusedByNotary` | The notary refused the capital deposit case. |
+
+### Compliance and regulatory closure reasons {#compliance-reasons}
+
+| Reason code | Explanation |
+| --- | --- |
+| `ComplianceReason` | Closure for compliance reasons. |
+| `RegulatoryRequirement` | Closure required by regulation. |
+
+:::note
+These are high-level categories. Swan can't provide additional details for compliance and regulatory closures.
+:::
 
 ## Email communications {#comms}
 
@@ -139,7 +195,7 @@ Other than immediate closure, you're notified first and can therefore notify you
         </table>
     </div>
   </TabItem>
-  <TabItem value="partner-user" label="👥 You & the end user" default>
+  <TabItem value="partner-user" label="👥 You & the end user">
     <div>
         <table>
             <tr>
@@ -161,7 +217,7 @@ Other than immediate closure, you're notified first and can therefore notify you
         </table>
     </div>
   </TabItem>
-  <TabItem value="user" label="👤 End user only" default>
+  <TabItem value="user" label="👤 End user only">
     <div>
         <table>
             <tr>
@@ -191,3 +247,4 @@ Other than immediate closure, you're notified first and can therefore notify you
 - [Use the API to close an account by legal representative request](./guide-close-api.mdx)
 - [Close a limited account](./guide-close-limited.mdx)
 - [Close an unlimited account](./guide-close-unlimited.mdx)
+- [Query account closure information](./guide-get-closure-info.mdx)

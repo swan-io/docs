@@ -18,7 +18,11 @@ Use the `generateCapitalDepositDocumentUploadUrl` mutation to generate an upload
 1. Add the `GenerateSupportingDocumentUploadUrlSuccessPayload` with the `uploadUrl`.
 1. Add other optional messages to the payload, either for validation or in case of rejection.
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gZ2VuZXJhdGVVcGxvYWRVcmwgewogIGdlbmVyYXRlQ2FwaXRhbERlcG9zaXREb2N1bWVudFVwbG9hZFVybCgKICAgIGlucHV0OiB7CiAgICAgIGRvY3VtZW50SWQ6ICIkWU9VUl9ET0NVTUVOVF9JRCIKICAgICAgY2FwaXRhbERlcG9zaXRDYXNlSWQ6ICIkWU9VUl9DQVBJVEFMREVQT1NJVENBU0VfSUQiCiAgICAgIGZpbGVuYW1lOiAiJEZJTEVfTkFNRSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBHZW5lcmF0ZUNhcGl0YWxEZXBvc2l0RG9jdW1lbnRVcGxvYWRVcmxTdWNjZXNzUGF5bG9hZCB7CiAgICAgIHVwbG9hZFVybAogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+:::info Filename format
+The `filename` must include a valid file extension: `.pdf`, `.png`, or `.jpg`.
+:::
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gZ2VuZXJhdGVVcGxvYWRVcmwgewogIGdlbmVyYXRlQ2FwaXRhbERlcG9zaXREb2N1bWVudFVwbG9hZFVybCgKICAgIGlucHV0OiB7CiAgICAgIGRvY3VtZW50SWQ6ICIkWU9VUl9ET0NVTUVOVF9JRCIKICAgICAgY2FwaXRhbERlcG9zaXRDYXNlSWQ6ICIkWU9VUl9DQVBJVEFMREVQT1NJVENBU0VfSUQiCiAgICAgIGZpbGVuYW1lOiAiQXJ0aWNsZXNfT2ZfSW5jb3Jwb3JhdGlvbi5wZGYiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gR2VuZXJhdGVDYXBpdGFsRGVwb3NpdERvY3VtZW50VXBsb2FkVXJsU3VjY2Vzc1BheWxvYWQgewogICAgICB1cGxvYWRVcmwKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {2,4-6,10} showLineNumbers
 mutation generateUploadUrl {
@@ -26,7 +30,7 @@ mutation generateUploadUrl {
     input: {
       documentId: "$YOUR_DOCUMENT_ID"
       capitalDepositCaseId: "$YOUR_CAPITALDEPOSITCASE_ID"
-      filename: "$FILE_NAME"
+      filename: "Articles_Of_Incorporation.pdf"
     }
   ) {
     ... on GenerateCapitalDepositDocumentUploadUrlSuccessPayload {
@@ -44,7 +48,7 @@ Retrieve the generated `uploadUrl` in the payload.
 The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
 :::
 
-```graphql {4} showLineNumbers
+```json {4} showLineNumbers
 {
   "data": {
     "generateCapitalDepositDocumentUploadUrl": {

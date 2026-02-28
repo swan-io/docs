@@ -131,7 +131,7 @@ Use **settings to manage your card product** and all virtual, physical, and digi
 | Name | You can name the card product for easy reference from your Dashboard. | Dashboard |
 | Allow physical cards | Decide whether physical cards are allowed to be issued for this card product. | Dashboard |
 | Suspend | Suspend this card product. Your users won't be able to add new cards with this card product. You'll need to contact Swan Support to reactivate the card product. | Dashboard |
-| `cardContractExpiryDate` | Date you'd like the card to expire.<br /><br />Leave it empty if you don't want to set an expiration date, in which case, cards are renewed automatically every three years. | API |
+| `cardContractExpiryDate` | Date you'd like the card to expire.<br /><br />Leave it empty if you don't want to set an expiration date, in which case, cards are renewed automatically every three years. The standard expiration period for all cards is 3 years from creation. | API |
 | `international` | Allow or disable payments outside of the account holder's country. | API |
 | `withdrawal` | Allow or disable cash withdrawals, such as at ATMs. | API |
 | `nonMainCurrencyTransactions` | Allow or disable transactions outside of the card's currency. | API |
@@ -152,6 +152,20 @@ Manage card settings on your **Dashboard** > **Settings** > **Cards**.
 You can (1) manage existing card products that are already validated, or (2) create a new standard card product.
 
 ![Screenshot of the Dashboard cards page with callouts on an existing card and create new option](../../images/topics/cards/cards-dashboard-settings.png)
+
+### Custom card expiry {#custom-expiry}
+
+You can customize the expiration date for virtual cards using the `cardContractExpiryDate` field.
+This setting is available in the following mutations:
+
+- [`addCard`](https://api-reference.swan.io/mutations/add-card/): add a single virtual card.
+- [`addCards`](https://api-reference.swan.io/mutations/add-cards/): add multiple virtual cards.
+- [`updateCard`](https://api-reference.swan.io/mutations/update-card/): update an existing card.
+- [`addSingleUseVirtualCard`](https://api-reference.swan.io/mutations/add-single-use-virtual-card/): add a single-use virtual card.
+
+:::warning One-off SUV cards
+For one-off single-use virtual cards with `SpendingLimitPeriod` set to `Always`, cards automatically expire 30 days after creation. This overrides any custom expiry date you set.
+:::
 
 ## Spending limits {#limits}
 

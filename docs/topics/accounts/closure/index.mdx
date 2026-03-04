@@ -111,13 +111,13 @@ You can view the closure reason code for a closed account by going to **Dashboar
 
 Closure reasons fall into different categories depending on who initiated the closure and the circumstances.
 
-:::info Deprecated reason codes
-Starting 2 April 2026, the following reason codes are deprecated and replaced with more granular codes:
+### Timeline for closure reason codes {#closure-reason-timeline}
 
-- `PartnerReason`: use `RequestedByPartner` instead.
-- `Inactivity`: use `DormantAccount` instead.
-- `CapitalDepositReason`: use `CapitalDepositCompleted`, `CapitalDepositWithdrawn`, or `CapitalDepositRefusedByNotary` instead.
-:::
+Before 2 April 2026, Swan used a limited set of four closure reason codes: `ComplianceReason`, `PartnerReason`, `Inactivity`, and `CapitalDepositReason`.
+Starting 2 April 2026, these codes are replaced with more granular codes that provide better transparency about why an account was closed.
+
+Existing accounts closed before 2 April 2026 keep their original reason codes.
+Refer to the [deprecated reason codes](#deprecated-reasons) for the full mapping.
 
 ### General closure reasons {#general-reasons}
 
@@ -140,13 +140,13 @@ Starting 2 April 2026, the following reason codes are deprecated and replaced wi
 | `DuplicateOnboarding` | A second account was created by mistake. |
 | `DeniedCountryResidency` | High-risk UBO or resident. |
 | `RefusedIbanCountry` | The account holder was assigned the wrong IBAN country, or the IBAN country isn't allowed. |
-| `RefusedCompanyRegistrationCountry` | The company registration country isn't supported by Swan. |
+| `CompanyRegistrationCountryNotSupported` | The company registration country isn't supported by Swan. |
 | `BusinessInactiveOrNotRegistered` | The company is inactive or not registered. |
 | `UnsupportedLegalForm` | The legal form can't be onboarded by Swan. |
 | `TCViolation` | Terms & Conditions violation. |
 | `ReKYCNoReply` | The account holder failed to reply to a reKYC request. |
 | `CapitalDepositCompleted` | Standard closure of a temporary capital deposit account after the company is registered. |
-| `CapitalDepositWithdrawn` | The capital deposit was withdrawn. |
+| `CapitalDepositCanceled` | The capital deposit was canceled. |
 | `CapitalDepositRefusedByNotary` | The notary refused the capital deposit case. |
 
 ### Compliance and regulatory closure reasons {#compliance-reasons}
@@ -157,8 +157,21 @@ Starting 2 April 2026, the following reason codes are deprecated and replaced wi
 | `RegulatoryRequirement` | Closure required by regulation. |
 
 :::note
-These are high-level categories. Swan can't provide additional details for compliance and regulatory closures.
+These are high-level categories for closures. In some cases, Swan uses these codes when we cannot share the specific closure reason with partners, such as in cases of fraud or risk. We cannot provide further details on compliance or regulatory closures.
 :::
+
+### Deprecated reason codes {#deprecated-reasons}
+
+The following reason codes are deprecated starting 2 April 2026.
+They will still appear on accounts closed before this date, but will no longer be assigned to new closures.
+
+| Deprecated code | Used for | Replaced by |
+| --- | --- | --- |
+| `PartnerReason` | Closure requested by the account holder or legal representative. | `RequestedByHolder` |
+| `Inactivity` | Prolonged account inactivity. | `DormantAccount` |
+| `CapitalDepositReason` | All capital deposit closures (cancellation, completion, or notary refusal). | Any code in [KYC, reKYC, and capital deposit closure reasons](#kyc-capital-deposit-reasons). |
+
+`ComplianceReason` is not deprecated and remains in use.
 
 ## Email communications {#comms}
 

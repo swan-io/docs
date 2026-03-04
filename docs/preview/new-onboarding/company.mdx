@@ -4,22 +4,287 @@ title: Company onboarding fields
 
 # Company onboarding fields
 
-Field reference for company account holder onboarding.
+Field reference for company account holder onboarding, including country-specific requirements, frontend and sign-up requirements, and available options.
 
-:::warning Work in progress
-Field requirements and validations are being finalized. This section will be updated before release.
-:::
+**Legend:** ✓ = required | — = not required | Cond. = conditionally required (see footnotes) | n/a = not applicable
 
-## Account
+## `accountInfo`
 
-| API v1 | API v2 |
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `country` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | n/a | n/a |
+| `name` | — | — | — | — | — | — | — | n/a |
+
+**Available options:**
+
+- `country`: `FRA`, `DEU`, `ESP`, `NLD`, `ITA`, `BEL`.
+
+## `accountAdmin`
+
+### Personal information
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `email` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
+| `firstName` | — | — | — | — | — | — | ✓ | ✓ |
+| `lastName` | — | — | — | — | — | — | ✓ | ✓ |
+| `nationality` | — | — | — | — | — | — | ✓ | ✓ |
+| `preferredLanguage` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
+| `taxIdentificationNumber` | — | — | — | — | — | — | — | — |
+| `typeOfRepresentation` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
+
+**Available options:**
+
+- `preferredLanguage`: `de`, `en`, `es`, `fi`, `fr`, `it`, `nl`, `pt`.
+- `typeOfRepresentation`: `LegalRepresentative`, `PowerOfAttorney`.
+
+### Address (`accountAdmin.address`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | — | — | — | — | — | — | ✓ | ✓ |
+| `addressLine2` | — | — | — | — | — | — | — | — |
+| `city` | — | — | — | — | — | — | ✓ | ✓ |
+| `country` | — | — | — | — | — | — | ✓ | ✓ |
+| `postalCode` | — | — | — | — | — | — | ✓ | ✓ |
+| `state` | — | — | — | — | — | — | — | — |
+
+### Birth information (`accountAdmin.birthInfo`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `birthDate` | — | — | — | — | — | — | ✓ | ✓ |
+| `city` | — | — | — | — | — | — | ✓ | ✓ |
+| `country` | — | — | — | — | — | — | ✓ | ✓ |
+| `postalCode` | — | — | — | — | — | — | ✓ | ✓ |
+
+### United States tax information (`accountAdmin.unitedStatesTaxInfo`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `isUnitedStatesPerson` | Cond.¹ | Cond.¹ | Cond.¹ | Cond.¹ | Cond.¹ | Cond.¹ | Cond.¹ | Cond.¹ |
+| `unitedStatesTaxIdentificationNumber` | Cond.² | Cond.² | Cond.² | Cond.² | Cond.² | Cond.² | Cond.² | Cond.² |
+
+¹ `isUnitedStatesPerson` is required if the `companyType` is `SelfEmployed`.
+
+² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+
+### User device information (`accountAdmin.userDeviceInfo`)
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | FR | DE | IT | NL | ES | BE |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `geoloc.lat` | — | — | — | — | — | — |
+| `geoloc.lng` | — | — | — | — | — | — |
+| `ip` | — | — | — | — | — | — |
+| `userAgent` | — | — | — | — | — | — |
+
+## `company`
+
+### Company details
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `name` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `registrationNumber` | Cond.³ | Cond.³ | Cond.³ | Cond.³ | Cond.³ | Cond.³ | Cond.³ |
+| `registrationDate` | — | — | — | — | — | — | — |
+| `legalFormCode` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `businessActivity` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `businessActivityDescription` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `monthlyPaymentVolume` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `regulatoryClassification` | — | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `forecastYearlyIncome` | — | — | — | — | — | — | — |
+| `headcount` | — | — | — | — | — | — | — |
+| `tradeName` | — | — | — | — | — | — | — |
+| `websites` | — | — | — | — | — | — | — |
+| `signupDate` | — | — | — | — | — | — | — |
+| `acquisitionChannel` | — | — | — | — | — | — | n/a |
+
+`acquisitionChannel` is hidden from end users. Provide it through your backend integration only.
+
+³ `registrationNumber` is required if `company.address.country` is not Germany.
+
+**Available options:**
+
+- `businessActivity`: `AccommodationAndFoodService`, `AdministrativeAndSupportServiceActivities`, `AgricultureForestryAndFishing`, `ArtsSportsAndRecreation`, `Construction`, `Education`, `ElectricityGasSteamAndAirConditioningSupply`, `ExtraterritorialOrganisationsAndBodies`, `FinancialAndInsuranceActivities`, `HouseholdEmployerAndOwnUseActivities`, `HumanHealthAndSocialWork`, `Manufacturing`, `MiningAndQuarrying`, `OtherServiceActivities`, `ProfessionalScientificAndTechnicalActivities`, `PublicAdministrationAndDefenceSocialSecurity`, `PublishingBroadcastingAndContentProductionAndDistribution`, `RealEstateActivities`, `TelecommunicationItAndInformationServices`, `TransportationAndStorage`, `WaterSupplySewerageWasteManagementAndRemediation`, `WholesaleAndRetailTrade`.
+- `monthlyPaymentVolume`: `LessThan10000`, `Between10000And50000`, `Between50000And100000`, `MoreThan100000`.
+- `regulatoryClassification`: `NonFinancialActive`, `NonFinancialPassive`, `FinancialInstitution`.
+- `forecastYearlyIncome`: `From0To500000`, `From500001To1000000`, `From1000001To5000000`, `MoreThan5000000`.
+- `headcount`: `Between1And10`, `Between11And50`, `Between51And250`, `MoreThan250`.
+- `acquisitionChannel`: `InboundOrganic`, `InboundReferral`, `OutboundSales`, `OutboundAccountingFirm`.
+
+### Tax information
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `taxIdentificationNumber` | Cond.⁴ | Cond.⁴ | Cond.⁴ | Cond.⁴ | Cond.⁴ | Cond.⁴ | — |
+| `vatNumber` | — | — | ✓ | — | — | — | — |
+
+⁴ `company.taxIdentificationNumber` is required if any of the following conditions are true:
+
+- `accountInfo.country` is Germany, Italy, or Spain.
+- `company.address.country` is different from `accountInfo.country`.
+
+### Address (`company.address`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `addressLine2` | — | — | — | — | — | — | — |
+| `city` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `country` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `postalCode` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `state` | — | — | — | — | — | — | — |
+
+### Related individuals (`company.relatedIndividuals`)
+
+The `relatedIndividuals` array is required for all countries. Each individual must have a `type` that determines which additional fields are required:
+
+- `LegalRepresentative`: the individual represents the company legally.
+- `UltimateBeneficialOwner`: the individual holds ownership or control over the company.
+- `LegalRepresentativeAndUltimateBeneficialOwner`: the individual serves both roles.
+
+**Available options:**
+
+- `type`: `UltimateBeneficialOwner`, `LegalRepresentative`, `LegalRepresentativeAndUltimateBeneficialOwner`.
+- `sex`: `Male`, `Female`, `Unknown`.
+
+#### Core fields
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `type` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `firstName` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `lastName` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `sex` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `nationality` | Cond.⁵ | Cond.⁵ | Cond.⁵ | Cond.⁵ | Cond.⁵ | Cond.⁵ | — |
+| `email` | — | — | — | — | — | — | — |
+| `preferredFirstName` | — | — | — | — | — | — | — |
+
+⁵ `nationality` is required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+#### Address (`relatedIndividuals[i].address`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | Cond.⁶ | — | ✓ | Cond.⁶ | ✓ | ✓ | — |
+| `addressLine2` | — | — | — | — | — | — | — |
+| `city` | Cond.⁶ | — | ✓ | Cond.⁶ | ✓ | ✓ | — |
+| `country` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `postalCode` | Cond.⁶ | — | ✓ | Cond.⁶ | ✓ | ✓ | — |
+| `state` | — | — | — | — | — | — | — |
+
+⁶ In France and the Netherlands, `addressLine1`, `city`, and `postalCode` are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+#### Birth information (`relatedIndividuals[i].birthInfo`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `birthDate` | ✓ | Cond.⁷ | ✓ | ✓ | ✓ | ✓ | — |
+| `city` | ✓ | Cond.⁷ | ✓ | ✓ | ✓ | ✓ | — |
+| `country` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `postalCode` | ✓ | Cond.⁷ | ✓ | ✓ | Cond.⁷ | ✓ | — |
+
+⁷ In Germany (for `birthDate`, `city`, `postalCode`) and Spain (for `postalCode` only), these fields are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+#### Tax information
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `taxIdentificationNumber` | Cond.⁸ | ✓ | ✓ | Cond.⁸ | Cond.⁸ | Cond.⁸ | — |
+
+⁸ `taxIdentificationNumber` is required if all of the following are true:
+
+- `type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+- One of the following:
+    - `company.regulatoryClassification` is `NonFinancialPassive` **and** `relatedIndividuals[i].address.country` is different from `accountInfo.country`.
+    - `accountInfo.country` is Germany or Italy.
+
+#### United States tax information (`relatedIndividuals[i].unitedStatesTaxInfo`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `isUnitedStatesPerson` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `unitedStatesTaxIdentificationNumber` | Cond.⁹ | Cond.⁹ | Cond.⁹ | Cond.⁹ | Cond.⁹ | Cond.⁹ | — |
+
+⁹ `unitedStatesTaxIdentificationNumber` is required if `relatedIndividuals[i].unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+
+#### Legal representative fields
+
+The `legalRepresentative` object is required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `legalRepresentative.roles` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+
+#### Ultimate Beneficial Owner fields
+
+The `ultimateBeneficialOwner` object is required if `type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `ultimateBeneficialOwner.qualificationType` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `ultimateBeneficialOwner.ownership.type` | Cond.¹⁰ | Cond.¹⁰ | Cond.¹⁰ | Cond.¹⁰ | Cond.¹⁰ | Cond.¹⁰ | — |
+| `ultimateBeneficialOwner.ownership.totalPercentage` | Cond.¹⁰ | Cond.¹⁰ | Cond.¹⁰ | Cond.¹⁰ | Cond.¹⁰ | Cond.¹⁰ | — |
+| `ultimateBeneficialOwner.controlTypes` | Cond.¹¹ | Cond.¹¹ | Cond.¹¹ | Cond.¹¹ | Cond.¹¹ | Cond.¹¹ | — |
+
+¹⁰ `ownership.type` and `ownership.totalPercentage` are required if `qualificationType` is `Ownership`.
+
+¹¹ `controlTypes` is required if `qualificationType` is `Control`.
+
+**Available options:**
+
+- `qualificationType`: `Ownership`, `Control`, `LegalRepresentative`.
+- `ownership.type`: `Direct`, `Indirect`, `DirectAndIndirect`.
+- `controlTypes`: `VotingRights`, `ControlViaTrustOrSimilar`, `RightToAppointOrRemoveBoard`, `ShareholderAgreementOrContract`, `StrategicOrManagerialInfluence`.
+
+#### Identity document information (Italy only)
+
+These fields are only required for Italian accounts (`accountInfo.country` = `ITA`).
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `ultimateBeneficialOwner.identityDocumentInfo.type` | — | — | ✓ | — | — | — | — |
+| `ultimateBeneficialOwner.identityDocumentInfo.number` | — | — | ✓ | — | — | — | — |
+| `ultimateBeneficialOwner.identityDocumentInfo.expiryDate` | — | — | ✓ | — | — | — | — |
+| `ultimateBeneficialOwner.identityDocumentInfo.issueDate` | — | — | ✓ | — | — | — | — |
+| `ultimateBeneficialOwner.identityDocumentInfo.issuingAuthority` | — | — | ✓ | — | — | — | — |
+
+### Related companies (`company.relatedCompanies`)
+
+Use this array when a company (not an individual) serves as a legal representative for the account holder company.
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `entityName` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `registrationCountry` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `registrationNumber` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `roles` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+## `oAuthRedirectParameters`
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | Description |
+|---|---|
+| `redirectUrl` | URL to redirect to after the OAuth flow. |
+| `state` | Opaque value passed through the OAuth flow. |
+
+## API mapping
+
+Use this table to map fields from the deprecated API to the new API.
+
+### Account
+
+| Deprecated field | New field |
 |---|---|
 | `accountCountry` | `accountInfo.country` |
 | `accountName` | `accountInfo.name` |
 
-## Account administrator
+### Account administrator
 
-| API v1 | API v2 |
+| Deprecated field | New field |
 |---|---|
 | `legalRepresentativePersonalAddress.addressLine1` | `accountAdmin.address.addressLine1` |
 | `legalRepresentativePersonalAddress.addressLine2` | `accountAdmin.address.addressLine2` |
@@ -27,27 +292,27 @@ Field requirements and validations are being finalized. This section will be upd
 | `legalRepresentativePersonalAddress.country` | `accountAdmin.address.country` |
 | `legalRepresentativePersonalAddress.postalCode` | `accountAdmin.address.postalCode` |
 | `legalRepresentativePersonalAddress.state` | `accountAdmin.address.state` |
-| - | `accountAdmin.birthInfo.birthDate` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.city` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.country` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.postalCode` <sup>(new)</sup> |
+| — | `accountAdmin.birthInfo.birthDate` <sup>(new)</sup> |
+| — | `accountAdmin.birthInfo.city` <sup>(new)</sup> |
+| — | `accountAdmin.birthInfo.country` <sup>(new)</sup> |
+| — | `accountAdmin.birthInfo.postalCode` <sup>(new)</sup> |
 | `email` | `accountAdmin.email` |
-| - | `accountAdmin.firstName` |
-| - | `accountAdmin.lastName` <sup>(new)</sup> |
-| - | `accountAdmin.nationality` <sup>(new)</sup> |
+| — | `accountAdmin.firstName` <sup>(new)</sup> |
+| — | `accountAdmin.lastName` <sup>(new)</sup> |
+| — | `accountAdmin.nationality` <sup>(new)</sup> |
 | `language` | `accountAdmin.preferredLanguage` |
-| - | `accountAdmin.taxIdentificationNumber` <sup>(new)</sup> |
+| — | `accountAdmin.taxIdentificationNumber` <sup>(new)</sup> |
 | `typeOfRepresentation` | `accountAdmin.typeOfRepresentation` |
-| - | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` <sup>(new)</sup> |
-| - | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.geoloc.lat` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.geoloc.lng` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.ip` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.userAgent` <sup>(new)</sup> |
+| — | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` <sup>(new)</sup> |
+| — | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` <sup>(new)</sup> |
+| — | `accountAdmin.userDeviceInfo.geoloc.lat` <sup>(new)</sup> |
+| — | `accountAdmin.userDeviceInfo.geoloc.lng` <sup>(new)</sup> |
+| — | `accountAdmin.userDeviceInfo.ip` <sup>(new)</sup> |
+| — | `accountAdmin.userDeviceInfo.userAgent` <sup>(new)</sup> |
 
-## Company
+### Company
 
-| API v1 | API v2 |
+| Deprecated field | New field |
 |---|---|
 | `residencyAddress.addressLine1` | `company.address.addressLine1` |
 | `residencyAddress.addressLine2` | `company.address.addressLine2` |
@@ -57,75 +322,49 @@ Field requirements and validations are being finalized. This section will be upd
 | `residencyAddress.state` | `company.address.state` |
 | `acquisitionChannel` | `company.acquisitionChannel` |
 | `businessActivityDescription` | `company.businessActivityDescription` |
-| - | `company.businessActivityCode` <sup>(new)</sup> |
+| — | `company.businessActivity` <sup>(new)</sup> |
+| — | `company.businessActivityCode` <sup>(new)</sup> |
 | `companyType` | `company.companyType` |
-| - | `company.forecastYearlyIncome` <sup>(new)</sup> |
-| - | `company.headcount` <sup>(new)</sup> |
-| - | `company.legalFormCode` <sup>(new)</sup> |
+| — | `company.forecastYearlyIncome` <sup>(new)</sup> |
+| — | `company.headcount` <sup>(new)</sup> |
+| — | `company.legalFormCode` <sup>(new)</sup> |
 | `monthlyPaymentVolume` | `company.monthlyPaymentVolume` |
 | `name` | `company.name` |
-| - | `company.registrationDate` <sup>(new)</sup> |
+| — | `company.registrationDate` <sup>(new)</sup> |
 | `registrationNumber` | `company.registrationNumber` |
-| - | `company.regulatoryClassification` <sup>(new)</sup> |
-| - | `company.signupDate` <sup>(new)</sup> |
+| — | `company.regulatoryClassification` <sup>(new)</sup> |
+| — | `company.signupDate` <sup>(new)</sup> |
 | `taxIdentificationNumber` | `company.taxIdentificationNumber` |
 | `tradeName` | `company.tradeName` |
 | `vatNumber` | `company.vatNumber` |
-| - | `company.websites` <sup>(new)</sup> |
+| — | `company.websites` <sup>(new)</sup> |
 
-### Legal representative information
+### Related individuals (replaces representatives and UBOs)
 
-| API v1 | API v2 |
+The new `company.relatedIndividuals` array replaces both `representatives` and `individualUltimateBeneficialOwners` from the deprecated API.
+
+| Deprecated field | New field |
 |---|---|
-| `representatives[i].residencyAddress.addressLine1` | `company.representatives[i].address.addressLine1` |
-| `representatives[i].residencyAddress.addressLine2` | `company.representatives[i].address.addressLine2` |
-| `representatives[i].residencyAddress.city` | `company.representatives[i].address.city` |
-| `representatives[i].residencyAddress.country` | `company.representatives[i].address.country` |
-| `representatives[i].residencyAddress.postalCode` | `company.representatives[i].address.postalCode` |
-| `representatives[i].residencyAddress.state` | `company.representatives[i].address.state` |
-| `representatives[i].birthDate` | `company.representatives[i].birthInfo.birthDate` |
-| `representatives[i].birthCity` | `company.representatives[i].birthInfo.city` |
-| `representatives[i].birthCountryCode` | `company.representatives[i].birthInfo.country` |
-| `representatives[i].birthCityPostalCode` | `company.representatives[i].birthInfo.postalCode` |
-| `representatives[i].entityName` | `company.representatives[i].entityName` |
-| `representatives[i].firstName` | `company.representatives[i].firstName` |
-| `representatives[i].lastName` | `company.representatives[i].lastName` |
-| `representatives[i].legalForm` | `company.representatives[i].legalForm` |
-| `representatives[i].nationality` | `company.representatives[i].nationality` |
-| `representatives[i].preferredFirstName` | `company.representatives[i].preferredFirstName` |
-| `representatives[i].registrationNumber` | `company.representatives[i].registrationNumber` |
-| `representatives[i].roles` | `company.representatives[i].roles` |
-| `representatives[i].gender` | `company.representatives[i].sex` |
-| `representatives[i].type` | `company.representatives[i].type` |
-| - | `company.representatives[i].email` <sup>(new)</sup> |
+| `representatives[i].firstName` | `company.relatedIndividuals[i].firstName` |
+| `representatives[i].lastName` | `company.relatedIndividuals[i].lastName` |
+| `representatives[i].gender` | `company.relatedIndividuals[i].sex` |
+| `representatives[i].nationality` | `company.relatedIndividuals[i].nationality` |
+| `representatives[i].type` | `company.relatedIndividuals[i].type` |
+| `representatives[i].roles` | `company.relatedIndividuals[i].legalRepresentative.roles` |
+| `representatives[i].preferredFirstName` | `company.relatedIndividuals[i].preferredFirstName` |
+| — | `company.relatedIndividuals[i].email` <sup>(new)</sup> |
+| `representatives[i].residencyAddress.*` | `company.relatedIndividuals[i].address.*` |
+| `representatives[i].birthDate` | `company.relatedIndividuals[i].birthInfo.birthDate` |
+| `representatives[i].birthCity` | `company.relatedIndividuals[i].birthInfo.city` |
+| `representatives[i].birthCountryCode` | `company.relatedIndividuals[i].birthInfo.country` |
+| `representatives[i].birthCityPostalCode` | `company.relatedIndividuals[i].birthInfo.postalCode` |
+| `individualUltimateBeneficialOwners[i].direct` | `company.relatedIndividuals[i].ultimateBeneficialOwner.ownership.type` |
+| `individualUltimateBeneficialOwners[i].indirect` | (see `ownership.type`) |
+| `individualUltimateBeneficialOwners[i].totalCapitalPercentage` | `company.relatedIndividuals[i].ultimateBeneficialOwner.ownership.totalPercentage` |
+| — | `company.relatedIndividuals[i].ultimateBeneficialOwner.qualificationType` <sup>(new)</sup> |
+| — | `company.relatedIndividuals[i].ultimateBeneficialOwner.controlTypes` <sup>(new)</sup> |
+| `individualUltimateBeneficialOwners[i].identityDocumentDetails.*` | `company.relatedIndividuals[i].ultimateBeneficialOwner.identityDocumentInfo.*` |
 
-### Ultimate Beneficial Owners
+### Related companies (new)
 
-| API v1 | API v2 |
-|---|---|
-| `individualUltimateBeneficialOwners[i].residencyAddress.addressLine1` | `company.ultimateBeneficialOwners[i].address.addressLine1` |
-| `individualUltimateBeneficialOwners[i].residencyAddress.addressLine2` | `company.ultimateBeneficialOwners[i].address.addressLine2` |
-| `individualUltimateBeneficialOwners[i].residencyAddress.city` | `company.ultimateBeneficialOwners[i].address.city` |
-| `individualUltimateBeneficialOwners[i].residencyAddress.country` | `company.ultimateBeneficialOwners[i].address.country` |
-| `individualUltimateBeneficialOwners[i].residencyAddress.postalCode` | `company.ultimateBeneficialOwners[i].address.postalCode` |
-| `individualUltimateBeneficialOwners[i].residencyAddress.state` | `company.ultimateBeneficialOwners[i].address.state` |
-| `individualUltimateBeneficialOwners[i].birthDate` | `company.ultimateBeneficialOwners[i].birthInfo.birthDate` |
-| `individualUltimateBeneficialOwners[i].birthCity` | `company.ultimateBeneficialOwners[i].birthInfo.city` |
-| `individualUltimateBeneficialOwners[i].birthCountryCode` | `company.ultimateBeneficialOwners[i].birthInfo.country` |
-| `individualUltimateBeneficialOwners[i].birthCityPostalCode` | `company.ultimateBeneficialOwners[i].birthInfo.postalCode` |
-| - | `company.ultimateBeneficialOwners[i].controlTypes` <sup>(new)</sup> |
-| `individualUltimateBeneficialOwners[i].firstName` | `company.ultimateBeneficialOwners[i].firstName` |
-| `individualUltimateBeneficialOwners[i].identityDocumentDetails.expiryDate` | `company.ultimateBeneficialOwners[i].identityDocumentDetails.expiryDate` |
-| `individualUltimateBeneficialOwners[i].identityDocumentDetails.issueDate` | `company.ultimateBeneficialOwners[i].identityDocumentDetails.issueDate` |
-| `individualUltimateBeneficialOwners[i].identityDocumentDetails.issuingAuthority` | `company.ultimateBeneficialOwners[i].identityDocumentDetails.issuingAuthority` |
-| `individualUltimateBeneficialOwners[i].identityDocumentDetails.number` | `company.ultimateBeneficialOwners[i].identityDocumentDetails.number` |
-| `individualUltimateBeneficialOwners[i].identityDocumentDetails.type` | `company.ultimateBeneficialOwners[i].identityDocumentDetails.type` |
-| `individualUltimateBeneficialOwners[i].lastName` | `company.ultimateBeneficialOwners[i].lastName` |
-| `individualUltimateBeneficialOwners[i].direct` | `company.ultimateBeneficialOwners[i].ownership.direct` |
-| `individualUltimateBeneficialOwners[i].indirect` | `company.ultimateBeneficialOwners[i].ownership.indirect` |
-| `individualUltimateBeneficialOwners[i].totalCapitalPercentage` | `company.ultimateBeneficialOwners[i].ownership.percentage` |
-| - | `company.ultimateBeneficialOwners[i].qualificationType` <sup>(new)</sup> |
-| `individualUltimateBeneficialOwners[i].gender` | `company.ultimateBeneficialOwners[i].sex` |
-| `individualUltimateBeneficialOwners[i].taxIdentificationNumber` | `company.ultimateBeneficialOwners[i].taxIdentificationNumber` |
-| - | `company.ultimateBeneficialOwners[i].unitedStatesTaxInfo.isUnitedStatesPerson` <sup>(new)</sup> |
-| - | `company.ultimateBeneficialOwners[i].unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` <sup>(new)</sup> |
+The `company.relatedCompanies` array is a new addition with no equivalent in the deprecated API.

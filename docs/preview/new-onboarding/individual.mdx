@@ -4,47 +4,152 @@ title: Individual onboarding fields
 
 # Individual onboarding fields
 
-Field reference for individual account holder onboarding.
+Field reference for individual account holder onboarding, including country-specific requirements, frontend and sign-up requirements, and available options.
 
-:::warning Work in progress
-Field requirements and validations are being finalized. This section will be updated before release.
-:::
+**Legend:** ✓ = required | — = not required | Cond. = conditionally required (see footnotes) | n/a = not applicable
 
-## Account
+## `accountInfo`
 
-| API v1 | API v2 |
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `country` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | n/a |
+| `name` | — | — | — | — | — | — | — | n/a |
+
+## `accountAdmin`
+
+### Personal information
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `email` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
+| `firstName` | — | — | — | — | — | — | ✓ | ✓ |
+| `lastName` | — | — | — | — | — | — | ✓ | ✓ |
+| `nationality` | — | — | — | — | — | — | ✓ | ✓ |
+| `preferredLanguage` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
+| `signupDate` | — | — | — | — | — | — | — | — |
+| `acquisitionChannel` | — | — | — | — | — | — | n/a | n/a |
+
+`acquisitionChannel` is hidden from end users. Provide it through your backend integration only.
+
+**Available options:**
+
+- `preferredLanguage`: `de`, `en`, `es`, `fi`, `fr`, `it`, `nl`, `pt`.
+- `acquisitionChannel`: `InboundOrganic`, `InboundReferral`, `OutboundSales`, `OutboundAccountingFirm`.
+
+### Address (`accountAdmin.address`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | — | — | — | — | — | — | ✓ | ✓ |
+| `addressLine2` | — | — | — | — | — | — | — | — |
+| `city` | — | — | — | — | — | — | ✓ | ✓ |
+| `country` | — | — | — | — | — | — | ✓ | ✓ |
+| `postalCode` | — | — | — | — | — | — | ✓ | ✓ |
+| `state` | — | — | — | — | — | — | — | — |
+
+### Birth information (`accountAdmin.birthInfo`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `birthDate` | — | — | — | — | — | — | ✓ | ✓ |
+| `city` | — | — | — | — | — | — | ✓ | ✓ |
+| `country` | — | — | — | — | — | — | ✓ | ✓ |
+| `postalCode` | — | — | — | — | — | — | ✓ | ✓ |
+
+### Financial information
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `employmentStatus` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
+| `monthlyIncome` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
+| `sourcesOfFunds` | — | — | — | — | — | — | — | — |
+
+**Available options:**
+
+- `employmentStatus`: `Craftsman`, `Employee`, `Entrepreneur`, `Farmer`, `Manager`, `Practitioner`, `Retiree`, `ShopOwner`, `Student`, `Unemployed`.
+- `monthlyIncome`: `LessThan500`, `Between500And1500`, `Between1500And3000`, `Between3000And4500`, `MoreThan4500`.
+- `sourcesOfFunds`: `BusinessActivity`, `CapitalGains`, `FamilyContributions`, `InheritanceOrGift`, `Other`, `PersonalWealth`, `RealEstateIncome`, `Salary`, `SaleOfAssets`, `SelfEmployment`.
+
+### Tax information
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `taxIdentificationNumber` | Cond.¹ | ✓ | ✓ | Cond.¹ | Cond.¹ | ✓ | Cond.¹ | Cond.¹ |
+
+¹ `taxIdentificationNumber` is required if any of the following conditions are true:
+
+- `accountAdmin.address.country` is different from `accountInfo.country`.
+- `accountAdmin.address.country` is Germany, Italy, or Belgium.
+- `accountInfo.country` is undefined.
+
+### United States tax information (`accountAdmin.unitedStatesTaxInfo`)
+
+| Field | FR | DE | IT | NL | ES | BE | Frontend | Sign-up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `isUnitedStatesPerson` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `unitedStatesTaxIdentificationNumber` | Cond.² | Cond.² | Cond.² | Cond.² | Cond.² | Cond.² | Cond.² | Cond.² |
+
+² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+
+### User device information (`accountAdmin.userDeviceInfo`)
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | FR | DE | IT | NL | ES | BE |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `geoloc.lat` | — | — | — | — | — | — |
+| `geoloc.lng` | — | — | — | — | — | — |
+| `ip` | — | — | — | — | — | — |
+| `userAgent` | — | — | — | — | — | — |
+
+## `oAuthRedirectParameters`
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | Description |
+|---|---|
+| `redirectUrl` | URL to redirect to after the OAuth flow. |
+| `state` | Opaque value passed through the OAuth flow. |
+
+## API mapping
+
+Use this table to map fields from the deprecated API to the new API.
+
+### Account
+
+| Deprecated field | New field |
 |---|---|
 | `accountCountry` | `accountInfo.country` |
 | `accountName` | `accountInfo.name` |
 
-## Account administrator
+### Account administrator
 
-| API v1 | API v2 |
+| Deprecated field | New field |
 |---|---|
-| - | `accountAdmin.acquisitionChannel` <sup>(new)</sup> |
+| — | `accountAdmin.acquisitionChannel` <sup>(new)</sup> |
 | `residencyAddress.addressLine1` | `accountAdmin.address.addressLine1` |
 | `residencyAddress.addressLine2` | `accountAdmin.address.addressLine2` |
 | `residencyAddress.city` | `accountAdmin.address.city` |
 | `residencyAddress.country` | `accountAdmin.address.country` |
 | `residencyAddress.postalCode` | `accountAdmin.address.postalCode` |
 | `residencyAddress.state` | `accountAdmin.address.state` |
-| - | `accountAdmin.birthInfo.birthDate` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.city` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.country` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.postalCode` <sup>(new)</sup> |
+| — | `accountAdmin.birthInfo.birthDate` <sup>(new)</sup> |
+| — | `accountAdmin.birthInfo.city` <sup>(new)</sup> |
+| — | `accountAdmin.birthInfo.country` <sup>(new)</sup> |
+| — | `accountAdmin.birthInfo.postalCode` <sup>(new)</sup> |
 | `email` | `accountAdmin.email` |
 | `employmentStatus` | `accountAdmin.employmentStatus` |
-| - | `accountAdmin.firstName` <sup>(new)</sup> |
-| - | `accountAdmin.lastName` <sup>(new)</sup> |
+| — | `accountAdmin.firstName` <sup>(new)</sup> |
+| — | `accountAdmin.lastName` <sup>(new)</sup> |
 | `monthlyIncome` | `accountAdmin.monthlyIncome` |
-| - | `accountAdmin.nationality` <sup>(new)</sup> |
+| — | `accountAdmin.nationality` <sup>(new)</sup> |
 | `language` | `accountAdmin.preferredLanguage` |
-| - | `accountAdmin.signupDate` <sup>(new)</sup> |
-| - | `accountAdmin.sourcesOfFunds` <sup>(new)</sup> |
+| — | `accountAdmin.signupDate` <sup>(new)</sup> |
+| — | `accountAdmin.sourcesOfFunds` <sup>(new)</sup> |
 | `taxIdentificationNumber` | `accountAdmin.taxIdentificationNumber` |
-| - | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` <sup>(new)</sup> |
-| - | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.geoloc.lat` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.geoloc.lng` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.ip` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.userAgent` <sup>(new)</sup> |
+| — | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` <sup>(new)</sup> |
+| — | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` <sup>(new)</sup> |
+| — | `accountAdmin.userDeviceInfo.geoloc.lat` <sup>(new)</sup> |
+| — | `accountAdmin.userDeviceInfo.geoloc.lng` <sup>(new)</sup> |
+| — | `accountAdmin.userDeviceInfo.ip` <sup>(new)</sup> |
+| — | `accountAdmin.userDeviceInfo.userAgent` <sup>(new)</sup> |

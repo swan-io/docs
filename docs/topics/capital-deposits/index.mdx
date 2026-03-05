@@ -71,8 +71,37 @@ flowchart TD
 | `WaitingForNotaryShareDepositCertificate` | **_Notary reviews_** _the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_. |
 | `WaitingForRegisterExtract` | The end-user uploads their register extract for notary review. |
 | `WaitingForNotaryTransfer` | **_Notary reviews_** _the register extract_. If the document is rejected by either Swan or the notary, the case will move back to `WaitingForRegisterExtract`. |
-| `Canceled` | The case was canceled before completion by either you or Swan. |
+| `Canceled` | The case was canceled before completion by either you or Swan. A [cancelation reason code](#cancelation-reason-codes) is available in the `CapitalDepositCaseCanceledStatusInfo` type. |
 | `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
+
+### Cancelation reason codes {#cancelation-reason-codes}
+
+When a capital deposit case has the status `Canceled`, Swan provides a reason code on the [`CapitalDepositCaseCanceledStatusInfo`](https://api-reference.swan.io/objects/capital-deposit-case-canceled-status-info) type explaining why.
+
+:::note Backward compatibility
+Capital deposit cases canceled before 2 April 2026 have a `null` cancelation reason at the capital deposit level.
+For those cases, refer to the account-level deprecated closure reason `CapitalDepositReason`.
+:::
+
+| Reason code | Explanation |
+| --- | --- |
+| `KYCIssue` | Documents missing, incorrect, or no reply. |
+| `ForbiddenActivity` | Prohibited business sectors. |
+| `DuplicateOnboarding` | A second account was created by mistake. |
+| `DeniedCountryResidency` | High-risk UBO or resident. |
+| `RefusedIbanCountry` | The account holder was assigned the wrong IBAN country, or the IBAN country isn't allowed. |
+| `CompanyRegistrationCountryNotSupported` | The company registration country isn't supported by Swan. |
+| `BusinessInactiveOrNotRegistered` | The company is inactive or not registered. |
+| `UnsupportedLegalForm` | The legal form can't be onboarded by Swan. |
+| `TCViolation` | Terms & Conditions violation. |
+| `ReKYCNoReply` | The account holder failed to reply to a reKYC request. |
+| `CapitalDepositCompleted` | Standard closure of a temporary capital deposit account after the company is registered. |
+| `CapitalDepositCanceled` | The capital deposit was withdrawn. |
+| `CapitalDepositRefusedByNotary` | The notary refused the capital deposit case. |
+| `ComplianceReason` | Cancelation for compliance reasons. |
+| `RegulatoryRequirement` | Cancelation required by regulation. |
+
+These reason codes are derived from the same list as [account closure reason codes](../accounts/closure/index.mdx#closure-reason-codes).
 
 ## Required documents {#documents}
 

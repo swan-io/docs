@@ -6,12 +6,12 @@ title: Consent
 
 ## Overview {#overview}
 
-Consent is built-in to Swan's offer, meaning you don't handle it yourself.
+Consent is built into Swan's offer, meaning you don't handle it yourself.
 In fact, you can't—it's part of Swan's [regulatory responsibility](../../../partnership/index.mdx#license) to manage consent.
 Additionally, **consent can't be deactivated**.
 
 Some operations at Swan are considered sensitive, and **sensitive operations always require user consent**.
-To initiate sensitive operations **using the API**, you need authenticate with an access token.
+To initiate sensitive operations **using the API**, you need to authenticate with an access token.
 You can either use a [user access token](../../../developers/using-api/authentication/index.mdx#tokens-user) in the name of the user wanting to make the payment, or with a [project access token](../../../developers/using-api/authentication/index.mdx#tokens-project) impersonating that user.
 Users must consent to granting a user access token.
 
@@ -33,8 +33,8 @@ If this could be helpful for your use case, please discuss delegating SCA with y
 Though there's much more happening technically, the user experience to consent to sensitive operations is straightforward and typically quick. 
 
 1. The user **opens the consent URL**.
-    1. **Computer**: they receive the consent link in a text message from Swan or a notification from you. The user opens the link and follows the instructions.
-    1. **Mobile device**: they're redirected to the correct page.
+    1. **Computer**: They receive the consent link in a text message from Swan or a notification from you. The user opens the link and follows the instructions.
+    1. **Mobile device**: They're redirected to the correct page.
 1. If the user **doesn't receive a text message**, they can either request the text message be sent again or consent by scanning a QR code.
 1. The user **verifies their identity** by entering their 6-digit passcode or using biometrics.
 1. The user is then redirected to your predefined `redirectUrl`.
@@ -50,7 +50,7 @@ Though there's much more happening technically, the user experience to consent t
 Text messages are valid for **15 minutes**, and consent links **time out 20 minutes after** being opened.
 :::
 
-If you refer to the [consent sequence diagrams](#consent-diagrams), this user experience occurs when the user opens the consent link and completes the consent request.
+In the [consent sequence diagrams](#consent-diagrams), this user experience occurs when the user opens the consent link and completes the consent request.
 Look for the arrow description `Uses page to consent to the operation`.
 
 ## List of sensitive operations {#sensitive}
@@ -156,12 +156,12 @@ If you have thousands of operations waiting for consent, requiring consent direc
 
 For example, you might consider using server-to-server consent to generate single-use virtual cards to pay merchants, perform batch payments, and refund transfers.
 
-Human interaction for SCA is always required, but Swan makes an exception for your own accounts.
+Human interaction is always required for SCA, but Swan makes an exception for your own accounts.
 If you want to implement it, you can use S2S consent to approve sensitive operations.
 Note that your implementation requires approval from Swan.
 
 Many [sensitive operations](#sensitive) are eligible for server-to-server consent.
-There are some operations that allow you to view highly sensitive information and therefore aren't eligible for server-to-server consent.
+Some operations allow you to view highly sensitive information and, therefore, aren't eligible for server-to-server consent.
 Review the list of [sensitive operations](#sensitive) to know which operations are eligible for server-to-server consent, marked with the symbol ⮂.
 
 Learn how to **implement server-to-server consent** in the [dedicated guide](./guide-implement-s2s.mdx).
@@ -231,11 +231,16 @@ flowchart LR
 | `Created` | A sensitive operation was initiated, triggering the creation of a consent request automatically. The user who needs to consent hasn't opened the consent URL yet.  |
 | `Started` | The user opened the consent URL but hasn't consented yet. |
 | `Accepted` | The user consented successfully. |
-| `Canceled` | Consent requests can be `Canceled` by you or your user as long as the consent has a non-final status. `Canceled` also applies to child consents when a preceding child consent `Failed`. |
+| `Canceled` | Consent requests can be `Canceled` by you or your user as long as the consent has a non-final status. `Canceled` also applies to child consents when a preceding child consent `Failed`. Canceling a parent multi-consent also cancels all its child consents. |
 | `CustomerRefused` | The user refused to consent to the sensitive operation. |
-| `Expired` | The user opened the consent URL, but didn't consent within the 20-minute validity window. This also applies if the user tries to consent but can't manage to complete a valid consent within the 20 minutes. |
+| `Expired` | The user opened the consent URL, but didn't consent within the 20-minute validity window. This also applies if the user tries to consent but can't manage to complete a valid consent within the 20 minutes. When a parent multi-consent expires, all its child consents also expire. |
 | `OperationCommitting`<br />*(multi-consent only)* | A multi-consent was executed, and one or more child consents are still in progress.<br /><br />**Next steps:**<ul><li>If consent is provided for all child consents, meaning all child consents have the status `Accepted`, the status of the multi-consent changes to `Accepted`.</li><li>If a single child consent has the status `Failed`, the multi-consent is also assigned the status `Failed`. </li></ul> |
 | `Failed` | The user successfully accepted the consent, but a technical error occurred during execution. As a result, the operation didn't complete, and the user must retry.<br /><br />For multi-consents, this status means a child consent `Failed`. Any child consents already `Accepted` remain valid, while unexecuted child consents are `Canceled`. |
+
+:::info Child consent restrictions
+You can't change the status of a child consent directly. 
+To update a child consent, you must update the parent [multi-consent](/topics/users/consent/#multi-consent). 
+:::
 
 ## Consent sequence diagrams {#consent-diagrams}
 

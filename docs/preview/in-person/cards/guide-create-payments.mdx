@@ -8,38 +8,12 @@ Create payment intents so your merchants can accept card payments from customers
 
 ## Prerequisites {#prerequisites}
 
+- The [Stripe Terminal SDK](./guide-setup.mdx) installed and the [device initialized](./guide-initialize.mdx).
 - A **merchant profile** with the status **Enabled**.
 - An **in-person card payment method** with the status **Enabled**. If you don't have one yet, [request the payment method](./guide-request-method.mdx) first.
 - A project access token, or a user access token with **Can manage members** rights.
-- The [Stripe Terminal SDK](https://docs.stripe.com/terminal/payments/setup-sdk) integrated in your terminal app.
 
-## Step 1: Get a connection token {#connection-token}
-
-Get a connection token from Stripe so the terminal app can discover and connect to a reader
-
-Call the `requestTerminalConnectionToken` mutation from your server.
-Then, pass the returned `connectionToken` to the `StripeTerminalProvider` in your terminal app.
-
-```graphql
-mutation GetConnectionToken {
-  requestTerminalConnectionToken(
-    input: {
-      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
-    }
-  ) {
-    ... on RequestInPersonTerminalConnectionTokenSuccessPayload {
-      connectionToken
-    }
-  }
-}
-```
-
-:::info Token lifecycle
-Connection tokens are short-lived.
-Your app should request a new token each time the Stripe SDK needs one, typically by providing a token fetch function to the `StripeTerminalProvider`.
-:::
-
-## Step 2: Create a payment intent {#create-intent}
+## Step 1: Create a payment intent {#create-intent}
 
 Call the `createInPersonPaymentIntent` mutation to create a payment intent.
 The mutation returns a `secret` (Stripe's client secret) that you'll use in the next step with the Stripe SDK.
@@ -71,36 +45,38 @@ mutation CreateInPersonPayment {
 }
 ```
 
-### Mutation input {#mutation-input}
+### Mutation fields {#mutation-input}
 
-| Field | Type | Required | Description |
+<FieldRequirementsLegend />
+
+| Field | Type | | Description |
 | --- | --- | --- | --- |
-| `merchantProfileId` | `ID` | ✅ | ID of the merchant profile accepting the payment. |
-| `amount` | `AmountInput` | ✅ | Amount for the payment intent. Minimum: €0.50. |
-| `label` | `String` | No | Label shown on the merchant's bank statement. |
-| `externalReference` | `String` | No | Reference to match the payment with your external system (for example, an order ID). |
-| `reference` | `String` | No | Payment reference. |
-| `idempotencyKey` | `String` | No | Unique key to prevent duplicate payment creation. |
+| `merchantProfileId` | `ID` | <Req /> | ID of the merchant profile accepting the payment. |
+| `amount` | `AmountInput` | <Req /> | Amount for the payment intent. Minimum: €0.50. |
+| `label` | `String` | <Opt /> | Label shown on the merchant's bank statement. |
+| `externalReference` | `String` | <Opt /> | Reference to match the payment with an external system, such as an order ID. |
+| `reference` | `String` | <Opt /> | Payment reference. |
+| `idempotencyKey` | `String` | <Opt /> | Unique key to prevent duplicate payment creation. |
 
-## Step 3: Process the payment with Stripe SDK {#process-payment}
+## Step 2: Process the payment with the Stripe SDK {#process-payment}
 
 After creating the payment intent, use the Stripe Terminal SDK in your terminal app to collect and confirm the payment.
-This step happens entirely on the device.
+This step runs entirely on the device.
 
 :::tip
-For detailed SDK integration guidance, refer to the [Stripe Terminal: Collect card payment](https://docs.stripe.com/terminal/payments/collect-card-payment) documentation.
+For full SDK integration guidance, refer to [Stripe Terminal: Collect card payment](https://docs.stripe.com/terminal/payments/collect-card-payment).
 :::
 
-### 3.1: Retrieve the payment intent {#retrieve-intent}
+### 2.1: Retrieve the payment intent {#retrieve-intent}
 
-Use the `secret` returned in step 2 to retrieve the payment intent with the Stripe SDK's `retrievePaymentIntent` method.
+Use the `secret` from step 1 to retrieve the payment intent with the Stripe SDK's `retrievePaymentIntent` method.
 
-### 3.2: Collect the payment method {#collect-method}
+### 2.2: Collect the payment method {#collect-method}
 
 Call the Stripe SDK's `collectPaymentMethod` method.
 This activates the device's NFC reader and prompts the customer to tap their card.
 
-### 3.3: Confirm the payment intent {#confirm-intent}
+### 2.3: Confirm the payment intent {#confirm-intent}
 
 Call the Stripe SDK's `confirmPaymentIntent` method to finalize the payment.
 The payment is captured automatically.
@@ -110,11 +86,9 @@ The payment is captured automatically.
 After processing, the merchant payment object reflects the payment's lifecycle.
 Refer to the [payment object statuses](./index.mdx#payment-statuses) for the full list.
 
-These are the key statuses after a payment is processed:
-
 | Status | Explanation |
 | --- | --- |
-| `Captured` | Payment authorized and captured successfully. Funds will be [settled](./index.mdx#settlement) to the merchant's account. |
+| `Captured` | Payment authorized and captured. Funds will be [settled](./index.mdx#settlement) to the merchant's account. |
 | `Rejected` | Payment declined by the issuer or by Swan. Refer to [rejection reasons](./index.mdx#rejected) for details. |
 | `Disputed` | Customer disputed the payment for some or all of the amount. |
 | `Refunded` | Payment reversed by the merchant for some or all of the amount. |

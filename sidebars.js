@@ -788,7 +788,9 @@ module.exports = {
           collapsed: true,
           items: [
             "preview/in-person/cards/guide-accept",
+            "preview/in-person/cards/guide-setup",
             "preview/in-person/cards/guide-request-method",
+            "preview/in-person/cards/guide-initialize",
             "preview/in-person/cards/guide-create-payments",
           ],
         },

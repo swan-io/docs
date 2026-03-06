@@ -63,23 +63,174 @@ mutation CreateInPersonPayment {
 After creating the payment intent, use the Stripe Terminal SDK in your terminal app to collect and confirm the payment.
 This step runs entirely on the device.
 
-:::tip
-For full SDK integration guidance, refer to [Stripe Terminal: Collect card payment](https://docs.stripe.com/terminal/payments/collect-card-payment).
-:::
-
 ### 2.1: Retrieve the payment intent {#retrieve-intent}
 
-Use the `secret` from step 1 to retrieve the payment intent with the Stripe SDK's `retrievePaymentIntent` method.
+Use the `secret` from step 1 to retrieve the payment intent with the Stripe SDK.
+
+<Tabs groupId="platform">
+  <TabItem value="react-native" label="React Native">
+
+```tsx
+const secret = "$PAYMENT_INTENT_SECRET"; // from step 1
+const { paymentIntent, error } = await retrievePaymentIntent(secret);
+if (error) {
+  // Handle error
+  return;
+}
+```
+
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+
+```swift
+let secret = "$PAYMENT_INTENT_SECRET" // from step 1
+Terminal.shared.retrievePaymentIntent(clientSecret: secret) { retrieveResult, retrieveError in
+  if let error = retrieveError {
+    print("retrievePaymentIntent failed: \(error)")
+  } else if let paymentIntent = retrieveResult {
+    // Proceed to collect payment method
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="android" label="Android">
+
+```kotlin
+val secret = "$PAYMENT_INTENT_SECRET" // from step 1
+Terminal.getInstance().retrievePaymentIntent(
+  secret,
+  object : PaymentIntentCallback {
+    override fun onSuccess(paymentIntent: PaymentIntent) {
+      // Proceed to collect payment method
+    }
+    override fun onFailure(e: TerminalException) {
+      // Handle error
+    }
+  }
+)
+```
+
+  </TabItem>
+</Tabs>
 
 ### 2.2: Collect the payment method {#collect-method}
 
-Call the Stripe SDK's `collectPaymentMethod` method.
+Call `collectPaymentMethod` to show the Tap to Pay screen.
 This activates the device's NFC reader and prompts the customer to tap their card.
+
+<Tabs groupId="platform">
+  <TabItem value="react-native" label="React Native">
+
+```tsx
+const { paymentIntent, error } = await collectPaymentMethod({
+  paymentIntent: paymentIntent,
+  enableCustomerCancellation: true,
+});
+if (error) {
+  // Handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+
+```swift
+let collectConfig = try CollectConfigurationBuilder()
+  .setEnableCustomerCancellation(true)
+  .build()
+
+self.collectCancelable = Terminal.shared.collectPaymentMethod(
+  paymentIntent: paymentIntent,
+  collectConfig: collectConfig
+) { collectResult, collectError in
+  if let error = collectError {
+    print("collectPaymentMethod failed: \(error)")
+  } else if let paymentIntent = collectResult {
+    // Proceed to confirm
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="android" label="Android">
+
+```kotlin
+val cancelable = Terminal.getInstance().collectPaymentMethod(
+  paymentIntent,
+  object : PaymentIntentCallback {
+    override fun onSuccess(paymentIntent: PaymentIntent) {
+      // Proceed to confirm
+    }
+    override fun onFailure(e: TerminalException) {
+      // Handle error
+    }
+  },
+  CollectConfiguration.Builder()
+    .setEnableCustomerCancellation(true)
+    .build()
+)
+```
+
+  </TabItem>
+</Tabs>
 
 ### 2.3: Confirm the payment intent {#confirm-intent}
 
-Call the Stripe SDK's `confirmPaymentIntent` method to finalize the payment.
-The payment is captured automatically.
+Call `confirmPaymentIntent` to finalize the payment.
+The payment is authorized and captured automatically.
+
+:::tip Retrying a failed capture
+If capture fails and you want to offer a retry (for example, with a different card), reuse the same payment intent.
+Repeat step 2.2, then attempt to confirm again.
+:::
+
+<Tabs groupId="platform">
+  <TabItem value="react-native" label="React Native">
+
+```tsx
+const { paymentIntent, error } = await confirmPaymentIntent({
+  paymentIntent: paymentIntent,
+});
+if (error) {
+  // Handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+
+```swift
+self.confirmCancelable = Terminal.shared.confirmPaymentIntent(
+  paymentIntent
+) { confirmResult, confirmError in
+  if let error = confirmError {
+    print("confirmPaymentIntent failed: \(error)")
+  } else if let confirmedPaymentIntent = confirmResult {
+    print("confirmPaymentIntent succeeded")
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="android" label="Android">
+
+```kotlin
+val cancelable = Terminal.getInstance().confirmPaymentIntent(
+  paymentIntent,
+  object : PaymentIntentCallback {
+    override fun onSuccess(paymentIntent: PaymentIntent) {
+      // Payment confirmed
+    }
+    override fun onFailure(e: TerminalException) {
+      // Handle error
+    }
+  }
+)
+```
+
+  </TabItem>
+</Tabs>
 
 ## Merchant payment statuses {#statuses}
 

@@ -17,8 +17,8 @@ Prepare your development environment before building your in-person card payment
 Skip this step if you're building for Android only.
 :::
 
-To develop Tap to Pay on iPhone, you need a Tap to Pay on iPhone entitlement from Apple.
-This applies even if you're developing with React Native.
+To develop Tap to Pay on iPhone, you need the Tap to Pay on iPhone entitlement from Apple.
+It applies even if you're developing with React Native.
 
 1. Sign in to your Apple Developer account as the Account Holder.
 1. Submit a request using [Apple's entitlement request form](https://developer.apple.com/contact/request/tap-to-pay-on-iphone/).
@@ -31,7 +31,7 @@ This applies even if you're developing with React Native.
 1. After submitting, Apple sends a confirmation email. Follow Apple's guide to add the Tap to Pay capability to your App ID, download the provisioning profile, and configure the entitlements file.
 
 :::caution Save your confirmation email
-The entitlement received allows development and internal testing only.
+This entitlement covers development and internal testing only.
 Before publishing to the App Store or TestFlight, reply to this email to request the production entitlement, then resubmit the form.
 :::
 
@@ -41,8 +41,8 @@ Swan uses Stripe as its provider for in-person card payments.
 Install the Stripe Terminal SDK in your project.
 
 :::note Stripe docs reference
-Follow the steps in this guide when installing the SDK.
-Steps 3 and 4 in [Stripe's documentation](https://docs.stripe.com/terminal/payments/setup-sdk) differ for Swan integrations — refer to this guide instead.
+Follow this guide to install the SDK.
+Steps 3 and 4 in [Stripe's documentation](https://docs.stripe.com/terminal/payments/setup-sdk) differ for Swan integrations.
 :::
 
 <Tabs groupId="platform">
@@ -159,9 +159,8 @@ compileOptions {
 
 ## Step 3: Request location permissions {#permissions}
 
-The Stripe Terminal SDK requires location access when running in the foreground.
-It uses this to determine where payments are made and reduce fraud risks.
-The SDK won't allow payments without this access.
+The Stripe Terminal SDK requires foreground location access to determine where payments are made and reduce fraud risks.
+Payments won't start without it.
 
 :::tip UX best practice
 Before requesting location access, explain to users why you need it.
@@ -174,7 +173,7 @@ A brief in-app message before the system prompt improves acceptance rates.
 Location permission configuration differs by target OS and whether you use React Native CLI or Expo.
 
 Follow [Step 2 (Configure your app)](https://docs.stripe.com/terminal/payments/setup-reader/tap-to-pay?terminal-sdk-platform=react-native#configure-your-app) in Stripe's guide.
-Do not continue past that step — the remaining steps differ for Swan integrations.
+Do not continue past that step. The remaining steps differ for Swan integrations.
 
   </TabItem>
   <TabItem value="ios" label="iOS">
@@ -222,7 +221,7 @@ override fun onRequestPermissionsResult(
     && grantResults.isNotEmpty()
     && grantResults[0] != PackageManager.PERMISSION_GRANTED
   ) {
-    // Location permission denied — the SDK won't allow payments without it.
+    // Location permission denied. The SDK won't allow payments without it.
   }
 }
 ```

@@ -17,10 +17,10 @@ Initiate a funding request with the API.
 
 1. Call the `initiateFundingRequest` mutation.
 1. Add an `idempotencyKey` to prevent duplicate funding requests (line 4). Refer to the [idempotency guide](/developers/using-api/idempotency) for more information.
-1. Add your `fundingSourceId` and `consentRedirectUrl`.
-1. Add the `amount` to send the account, and its `currency`.
+1. Add your `fundingSourceId` (line 5) and `consentRedirectUrl` (line 6).
+1. Add the `amount` to send the account, and its `currency` (line 7).
 1. Optionally, add a `label`, `reference`, and any other information you'd like.
-1. Add the `InitiateFundingRequestSuccessPayload` success payload.
+1. Add the `InitiateFundingRequestSuccessPayload` success payload (line 10).
 1. Add rejections that are helpful for you (not all shown).
 
 :::info Consent
@@ -32,7 +32,7 @@ Consent is provided through the payment mandate.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVSZXF1ZXN0IHsKICBpbml0aWF0ZUZ1bmRpbmdSZXF1ZXN0KAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGZ1bmRpbmdTb3VyY2VJZDogIiRZT1VSX0ZVTkRJTkdfU09VUkNFX0lEIgogICAgICBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiCiAgICAgIGFtb3VudDogeyB2YWx1ZTogIjEwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVGdW5kaW5nUmVxdWVzdFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgICAuLi4gb24gUGF5bWVudEluaXRpYXRlZCB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgICAuLi4gb24gRnVuZGluZ0xpbWl0RXhjZWVkZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQcm9qZWN0RnVuZGluZ0xpbWl0RXhjZWVkZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBHbG9iYWxGdW5kaW5nTGltaXRFeGNlZWRlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZ1bmRpbmdTb3VyY2VXcm9uZ1N0YXR1c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY3VycmVudFN0YXR1cwogICAgICBleHBlY3RlZFN0YXR1cwogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRnVuZGluZ1NvdXJjZU5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEluc3VmZmljaWVudEZ1bmRzUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW5zdGFudEZ1bmRpbmdMaW1pdEV4Y2VlZGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gUHJvamVjdEluc3RhbnRGdW5kaW5nTGltaXRFeGNlZWRlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEdsb2JhbEluc3RhbnRGdW5kaW5nTGltaXRFeGNlZWRlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRWZXJpZmljYXRpb25Xcm9uZ1N0YXR1c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIElkZW1wb3RlbmN5Q29uZmxpY3RSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-7} showLineNumbers
+```graphql {4-7,10} showLineNumbers
 mutation InitiateRequest {
   initiateFundingRequest(
     input: {
@@ -65,11 +65,11 @@ mutation InitiateRequest {
 
 ## Payload {#payload}
 
-The payload shows the account funding payment status `Initiated`.
+The payload shows the account funding payment status `Initiated` (line 8).
 
 On your transaction history, you'll see a SEPA Direct Debit transaction with the status `Upcoming`.
 
-```json {7} showLineNumbers
+```json {8} showLineNumbers
 {
   "data": {
     "initiateFundingRequest": {

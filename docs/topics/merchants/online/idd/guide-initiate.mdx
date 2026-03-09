@@ -18,8 +18,9 @@ title: Initiate a transaction
 1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions.
 1. Call the `initiateMerchantPaymentCollection` mutation.
 1. Add an `idempotencyKey` to prevent duplicate payments (line 4). Refer to the [idempotency guide](/developers/using-api/idempotency) for more information.
-1. Include the amount `value` and `currency`.
-1. Choose `internalDirectDebit` (line 6), and add the payment mandate ID (line 7) that was declared on the creditor's account using the [declare a payment mandate](./guide-declare.mdx) guide.
+1. Include the amount `value` and `currency` (line 5).
+1. Choose `internalDirectDebit` (line 6), and add the payment `mandateId` (line 7) using the [declare a payment mandate](./guide-declare.mdx) guide.
+1. Add the `InitiateMerchantPaymentCollectionSuccessPayload` success payload (line 11).
 1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
 
 ## Mutation {#mutation}
@@ -33,9 +34,9 @@ If the date is left empty, the transaction will be executed as soon as possible.
 If the date indicated is a non-business day, the transaction will be executed on the next business day.
 :::
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVJZGQgewogIGluaXRpYXRlTWVyY2hhbnRQYXltZW50Q29sbGVjdGlvbigKICAgIGlucHV0OiB7CiAgICAgIGlkZW1wb3RlbmN5S2V5OiAiJFlPVVJfSURFTVBPVEVOQ1lfS0VZIgogICAgICBhbW91bnQ6IHsgdmFsdWU6ICI1MCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIGludGVybmFsRGlyZWN0RGViaXQ6IHsgbWFuZGF0ZUlkOiAiJFlPVVJfTUFOREFURV9JRCIgfQogICAgfQogICkgewogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBwYXRoCiAgICAgICAgbWVzc2FnZQogICAgICAgIGNvZGUKICAgICAgfQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJZGVtcG90ZW5jeUNvbmZsaWN0UmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW5pdGlhdGVNZXJjaGFudFBheW1lbnRDb2xsZWN0aW9uU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lcmNoYW50UGF5bWVudENvbGxlY3Rpb24gewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gSW5pdGlhdGVJZGQgewogIGluaXRpYXRlTWVyY2hhbnRQYXltZW50Q29sbGVjdGlvbigKICAgIGlucHV0OiB7CiAgICAgIGlkZW1wb3RlbmN5S2V5OiAiJFlPVVJfSURFTVBPVEVOQ1lfS0VZIgogICAgICBhbW91bnQ6IHsgdmFsdWU6ICI1MCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgIGludGVybmFsRGlyZWN0RGViaXQ6IHsgbWFuZGF0ZUlkOiAiJFlPVVJfTUFOREFURV9JRCIgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlTWVyY2hhbnRQYXltZW50Q29sbGVjdGlvblN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXJjaGFudFBheW1lbnRDb2xsZWN0aW9uIHsKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIHBhdGgKICAgICAgICBtZXNzYWdlCiAgICAgICAgY29kZQogICAgICB9CiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIElkZW1wb3RlbmN5Q29uZmxpY3RSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-7} showLineNumbers
+```graphql {4-7,11} showLineNumbers
 mutation InitiateIdd {
   initiateMerchantPaymentCollection(
     input: {
@@ -46,6 +47,15 @@ mutation InitiateIdd {
       }
     }
   ) {
+    ... on InitiateMerchantPaymentCollectionSuccessPayload {
+      __typename
+      merchantPaymentCollection {
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
     ... on ValidationRejection {
       __typename
       message
@@ -70,15 +80,6 @@ mutation InitiateIdd {
     ... on IdempotencyConflictRejection {
       __typename
       message
-    }
-    ... on InitiateMerchantPaymentCollectionSuccessPayload {
-      __typename
-      merchantPaymentCollection {
-        id
-        statusInfo {
-          status
-        }
-      }
     }
   }
 }

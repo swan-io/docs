@@ -7,7 +7,7 @@ title: Company onboarding fields
 Field reference for company account holder onboarding, including country-specific requirements and available options.
 
 :::caution Supporting documents
-All supporting documents requested during onboarding must be provided to finalize the onboarding.
+All requested supporting documents must be submitted to complete onboarding.
 :::
 
 <FieldRequirementsLegend />
@@ -19,7 +19,7 @@ All supporting documents requested during onboarding must be provided to finaliz
 | `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `name` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-**Available options:**
+**Available options**
 
 - `country`: `FRA`, `DEU`, `ESP`, `NLD`, `ITA`, `BEL`.
 
@@ -41,7 +41,7 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 | `taxIdentificationNumber` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `typeOfRepresentation` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 
-**Available options:**
+**Available options**
 
 - `preferredLanguage`: `de`, `en`, `es`, `fi`, `fr`, `it`, `nl`, `pt`.
 - `typeOfRepresentation`: `LegalRepresentative`, `PowerOfAttorney`.
@@ -90,7 +90,7 @@ These fields are hidden from end users. Provide them through your backend integr
 
 ## `company`
 
-### Company details
+### Registration and business activity
 
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -113,9 +113,12 @@ These fields are hidden from end users. Provide them through your backend integr
 
 ³ `registrationNumber` is required if `company.address.country` is not Germany.
 
-**Available options:**
+**Available options**
 
-- `businessActivity`: `AccommodationAndFoodService`, `AdministrativeAndSupportServiceActivities`, `AgricultureForestryAndFishing`, `ArtsSportsAndRecreation`, `Construction`, `Education`, `ElectricityGasSteamAndAirConditioningSupply`, `ExtraterritorialOrganisationsAndBodies`, `FinancialAndInsuranceActivities`, `HouseholdEmployerAndOwnUseActivities`, `HumanHealthAndSocialWork`, `Manufacturing`, `MiningAndQuarrying`, `OtherServiceActivities`, `ProfessionalScientificAndTechnicalActivities`, `PublicAdministrationAndDefenceSocialSecurity`, `PublishingBroadcastingAndContentProductionAndDistribution`, `RealEstateActivities`, `TelecommunicationItAndInformationServices`, `TransportationAndStorage`, `WaterSupplySewerageWasteManagementAndRemediation`, `WholesaleAndRetailTrade`.
+**`businessActivity`**
+
+`AccommodationAndFoodService`, `AdministrativeAndSupportServiceActivities`, `AgricultureForestryAndFishing`, `ArtsSportsAndRecreation`, `Construction`, `Education`, `ElectricityGasSteamAndAirConditioningSupply`, `ExtraterritorialOrganisationsAndBodies`, `FinancialAndInsuranceActivities`, `HouseholdEmployerAndOwnUseActivities`, `HumanHealthAndSocialWork`, `Manufacturing`, `MiningAndQuarrying`, `OtherServiceActivities`, `ProfessionalScientificAndTechnicalActivities`, `PublicAdministrationAndDefenceSocialSecurity`, `PublishingBroadcastingAndContentProductionAndDistribution`, `RealEstateActivities`, `TelecommunicationItAndInformationServices`, `TransportationAndStorage`, `WaterSupplySewerageWasteManagementAndRemediation`, `WholesaleAndRetailTrade`.
+
 - `monthlyPaymentVolume`: `LessThan10000`, `Between10000And50000`, `Between50000And100000`, `MoreThan100000`.
 - `regulatoryClassification`: `NonFinancialActive`, `NonFinancialPassive`, `FinancialInstitution`.
 - `forecastYearlyIncome`: `From0To500000`, `From500001To1000000`, `From1000001To5000000`, `MoreThan5000000`.
@@ -151,7 +154,7 @@ Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query
 
 ### Related individuals (`company.relatedIndividuals`)
 
-The `relatedIndividuals` array is required for all countries. At least one Legal Representative and one Ultimate Beneficial Owner are required to finalize a company onboarding. The same individual can fulfill both roles depending on the `type`.
+The `relatedIndividuals` array is required for all countries. At least one Legal Representative and one Ultimate Beneficial Owner (UBO) are required to finalize a company onboarding. The same individual can fulfill both roles depending on the `type`.
 
 Each individual must have a `type` that determines which additional fields are required:
 
@@ -173,7 +176,7 @@ Each individual must have a `type` that determines which additional fields are r
 
 ⁵ `nationality` is required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 
-**Available options:**
+**Available options**
 
 - `type`: `UltimateBeneficialOwner`, `LegalRepresentative`, `LegalRepresentativeAndUltimateBeneficialOwner`.
 - `sex`: `Male`, `Female`, `Unknown`.
@@ -232,7 +235,7 @@ The `legalRepresentative` object is required if `type` is `LegalRepresentative` 
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `legalRepresentative.roles` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 
-#### Ultimate Beneficial Owner fields
+#### UBO fields
 
 The `ultimateBeneficialOwner` object is required if `type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 
@@ -247,7 +250,7 @@ The `ultimateBeneficialOwner` object is required if `type` is `UltimateBeneficia
 
 ¹¹ `controlTypes` is required if `qualificationType` is `Control`.
 
-**Available options:**
+**Available options**
 
 - `qualificationType`: `Ownership`, `Control`, `LegalRepresentative`.
 - `ownership.type`: `Direct`, `Indirect`, `DirectAndIndirect`.
@@ -285,9 +288,9 @@ These fields are hidden from end users. Provide them through your backend integr
 | `redirectUrl` | URL to redirect to after the OAuth flow. |
 | `state` | Opaque value passed through the OAuth flow. |
 
-## Swan-hosted onboarding
+## Web Banking
 
-If you use Swan's hosted onboarding, the following fields are collected during the onboarding and sign-up flows.
+If you use Swan's Web Banking, the following fields are collected during the onboarding and sign-up flows.
 
 - `accountAdmin.firstName`, `lastName`, `nationality`.
 - `accountAdmin.address`: `addressLine1`, `city`, `country`, `postalCode`.
@@ -315,23 +318,23 @@ Use this table to map fields from the deprecated API to the new API.
 | `legalRepresentativePersonalAddress.country` | `accountAdmin.address.country` |
 | `legalRepresentativePersonalAddress.postalCode` | `accountAdmin.address.postalCode` |
 | `legalRepresentativePersonalAddress.state` | `accountAdmin.address.state` |
-| - | `accountAdmin.birthInfo.birthDate` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.city` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.country` <sup>(new)</sup> |
-| - | `accountAdmin.birthInfo.postalCode` <sup>(new)</sup> |
+| - | `accountAdmin.birthInfo.birthDate` |
+| - | `accountAdmin.birthInfo.city` |
+| - | `accountAdmin.birthInfo.country` |
+| - | `accountAdmin.birthInfo.postalCode` |
 | `email` | `accountAdmin.email` |
-| - | `accountAdmin.firstName` <sup>(new)</sup> |
-| - | `accountAdmin.lastName` <sup>(new)</sup> |
-| - | `accountAdmin.nationality` <sup>(new)</sup> |
+| - | `accountAdmin.firstName` |
+| - | `accountAdmin.lastName` |
+| - | `accountAdmin.nationality` |
 | `language` | `accountAdmin.preferredLanguage` |
-| - | `accountAdmin.taxIdentificationNumber` <sup>(new)</sup> |
+| - | `accountAdmin.taxIdentificationNumber` |
 | `typeOfRepresentation` | `accountAdmin.typeOfRepresentation` |
-| - | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` <sup>(new)</sup> |
-| - | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.geoloc.lat` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.geoloc.lng` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.ip` <sup>(new)</sup> |
-| - | `accountAdmin.userDeviceInfo.userAgent` <sup>(new)</sup> |
+| - | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` |
+| - | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` |
+| - | `accountAdmin.userDeviceInfo.geoloc.lat` |
+| - | `accountAdmin.userDeviceInfo.geoloc.lng` |
+| - | `accountAdmin.userDeviceInfo.ip` |
+| - | `accountAdmin.userDeviceInfo.userAgent` |
 
 ### Company
 
@@ -345,22 +348,22 @@ Use this table to map fields from the deprecated API to the new API.
 | `residencyAddress.state` | `company.address.state` |
 | `acquisitionChannel` | `company.acquisitionChannel` |
 | `businessActivityDescription` | `company.businessActivityDescription` |
-| - | `company.businessActivity` <sup>(new)</sup> |
-| - | `company.businessActivityCode` <sup>(new)</sup> |
+| - | `company.businessActivity` |
+| - | `company.businessActivityCode` |
 | `companyType` | `company.companyType` |
-| - | `company.forecastYearlyIncome` <sup>(new)</sup> |
-| - | `company.headcount` <sup>(new)</sup> |
-| - | `company.legalFormCode` <sup>(new)</sup> |
+| - | `company.forecastYearlyIncome` |
+| - | `company.headcount` |
+| - | `company.legalFormCode` |
 | `monthlyPaymentVolume` | `company.monthlyPaymentVolume` |
 | `name` | `company.name` |
-| - | `company.registrationDate` <sup>(new)</sup> |
+| - | `company.registrationDate` |
 | `registrationNumber` | `company.registrationNumber` |
-| - | `company.regulatoryClassification` <sup>(new)</sup> |
-| - | `company.signupDate` <sup>(new)</sup> |
+| - | `company.regulatoryClassification` |
+| - | `company.signupDate` |
 | `taxIdentificationNumber` | `company.taxIdentificationNumber` |
 | `tradeName` | `company.tradeName` |
 | `vatNumber` | `company.vatNumber` |
-| - | `company.websites` <sup>(new)</sup> |
+| - | `company.websites` |
 
 ### Related individuals (replaces representatives and UBOs)
 
@@ -375,7 +378,7 @@ The new `company.relatedIndividuals` array replaces both `representatives` and `
 | `representatives[i].type` | `company.relatedIndividuals[i].type` |
 | `representatives[i].roles` | `company.relatedIndividuals[i].legalRepresentative.roles` |
 | `representatives[i].preferredFirstName` | `company.relatedIndividuals[i].preferredFirstName` |
-| - | `company.relatedIndividuals[i].email` <sup>(new)</sup> |
+| - | `company.relatedIndividuals[i].email` |
 | `representatives[i].residencyAddress.*` | `company.relatedIndividuals[i].address.*` |
 | `representatives[i].birthDate` | `company.relatedIndividuals[i].birthInfo.birthDate` |
 | `representatives[i].birthCity` | `company.relatedIndividuals[i].birthInfo.city` |
@@ -384,8 +387,8 @@ The new `company.relatedIndividuals` array replaces both `representatives` and `
 | `individualUltimateBeneficialOwners[i].direct` | `company.relatedIndividuals[i].ultimateBeneficialOwner.ownership.type` |
 | `individualUltimateBeneficialOwners[i].indirect` | (see `ownership.type`) |
 | `individualUltimateBeneficialOwners[i].totalCapitalPercentage` | `company.relatedIndividuals[i].ultimateBeneficialOwner.ownership.totalPercentage` |
-| - | `company.relatedIndividuals[i].ultimateBeneficialOwner.qualificationType` <sup>(new)</sup> |
-| - | `company.relatedIndividuals[i].ultimateBeneficialOwner.controlTypes` <sup>(new)</sup> |
+| - | `company.relatedIndividuals[i].ultimateBeneficialOwner.qualificationType` |
+| - | `company.relatedIndividuals[i].ultimateBeneficialOwner.controlTypes` |
 | `individualUltimateBeneficialOwners[i].identityDocumentDetails.*` | `company.relatedIndividuals[i].ultimateBeneficialOwner.identityDocumentInfo.*` |
 
 ### Related companies (new)

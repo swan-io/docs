@@ -6,6 +6,10 @@ title: Company onboarding fields
 
 Field reference for company account holder onboarding, including country-specific requirements and available options.
 
+:::caution Supporting documents
+All supporting documents requested during onboarding are mandatory for an onboarding to be valid and finalized.
+:::
+
 <FieldRequirementsLegend />
 
 ## `accountInfo`
@@ -20,6 +24,10 @@ Field reference for company account holder onboarding, including country-specifi
 - `country`: `FRA`, `DEU`, `ESP`, `NLD`, `ITA`, `BEL`.
 
 ## `accountAdmin`
+
+:::info Account admin fields and sign-up
+Although many `accountAdmin` fields are optional during onboarding, they are required when the user signs up. We recommend collecting and sending this information before the end of the onboarding flow.
+:::
 
 ### Personal information
 
@@ -93,7 +101,7 @@ These fields are hidden from end users. Provide them through your backend integr
 | `businessActivity` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `businessActivityDescription` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `monthlyPaymentVolume` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `regulatoryClassification` | <Opt /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `regulatoryClassification` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `forecastYearlyIncome` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `headcount` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `tradeName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
@@ -113,6 +121,10 @@ These fields are hidden from end users. Provide them through your backend integr
 - `forecastYearlyIncome`: `From0To500000`, `From500001To1000000`, `From1000001To5000000`, `MoreThan5000000`.
 - `headcount`: `Between1And10`, `Between11And50`, `Between51And250`, `MoreThan250`.
 - `acquisitionChannel`: `InboundOrganic`, `InboundReferral`, `OutboundSales`, `OutboundAccountingFirm`.
+
+:::tip Legal forms
+Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query to retrieve all legal forms for a given country, translated based on the `Accept-Language` header. Each legal form includes a `code` you can use as the `legalFormCode` value. If the requested language is unavailable, the query falls back to the country's default language.
+:::
 
 ### Tax information
 
@@ -139,16 +151,13 @@ These fields are hidden from end users. Provide them through your backend integr
 
 ### Related individuals (`company.relatedIndividuals`)
 
-The `relatedIndividuals` array is required for all countries. Each individual must have a `type` that determines which additional fields are required:
+The `relatedIndividuals` array is required for all countries. At least one Legal Representative and one Ultimate Beneficial Owner must be provided for a company onboarding to be valid and finalized. The same individual can fulfill both roles depending on the `type`.
+
+Each individual must have a `type` that determines which additional fields are required:
 
 - `LegalRepresentative`: the individual represents the company legally.
 - `UltimateBeneficialOwner`: the individual holds ownership or control over the company.
 - `LegalRepresentativeAndUltimateBeneficialOwner`: the individual serves both roles.
-
-**Available options:**
-
-- `type`: `UltimateBeneficialOwner`, `LegalRepresentative`, `LegalRepresentativeAndUltimateBeneficialOwner`.
-- `sex`: `Male`, `Female`, `Unknown`.
 
 #### Core fields
 
@@ -163,6 +172,11 @@ The `relatedIndividuals` array is required for all countries. Each individual mu
 | `preferredFirstName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
 ⁵ `nationality` is required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+**Available options:**
+
+- `type`: `UltimateBeneficialOwner`, `LegalRepresentative`, `LegalRepresentativeAndUltimateBeneficialOwner`.
+- `sex`: `Male`, `Female`, `Unknown`.
 
 #### Address (`relatedIndividuals[i].address`)
 
@@ -271,9 +285,9 @@ These fields are hidden from end users. Provide them through your backend integr
 | `redirectUrl` | URL to redirect to after the OAuth flow. |
 | `state` | Opaque value passed through the OAuth flow. |
 
-## Web Banking
+## Swan-hosted onboarding
 
-If you use Swan's Web Banking UI, the following fields are collected during the onboarding and sign-up flows. You don't need to supply them via API.
+If you use Swan's hosted onboarding, the following fields are collected during the onboarding and sign-up flows.
 
 - `accountAdmin.firstName`, `lastName`, `nationality`.
 - `accountAdmin.address`: `addressLine1`, `city`, `country`, `postalCode`.

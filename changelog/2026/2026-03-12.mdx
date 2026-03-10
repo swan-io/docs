@@ -5,19 +5,19 @@ type: release
 
 ## New features
 
-🧭 The new [Onboarding API](/topics/onboarding/) is now live in beta, built to strengthen risk assessment and regulatory compliance through improved data collection. It also delivers a better developer experience with cleaner mutations and queries, structured inputs, and typed responses. The documentation has been fully updated to reflect all new validations.
+🧭 The new [Onboarding API](/topics/onboarding/) is now live in beta. It improves data collection for better risk assessment and regulatory compliance, and delivers a cleaner developer experience with structured inputs, typed responses, and updated mutations and queries. Documentation is fully updated to reflect all new validations.
 
 ## Improvements
 
-🔎 Added an optional `reason` string field to `CapitalDepositDocumentRefusedStatusInfo`, providing a free-text explanation when a capital deposit document is refused. You can now view the exact refusal explanation from your dashboard instead of relying solely on the generic `reasonCode` description.
+🔎 [`CapitalDepositDocumentRefusedStatusInfo`](/topics/capital-deposits/) now includes an optional `reason` string field with a free-text explanation of why a document was refused. You can view the exact explanation in your dashboard, alongside the existing `reasonCode` value.
 
-🔍 Account holders can now be filtered by their KYC verification requirements, both in the Dashboard and via the API. Supported filters include `FirstTransferRequired`, `SupportingDocumentsRequired`, `UboDetailsRequired`, `LegalRepresentativeDetailsRequired`, `OrganizationDetailsRequired`, `TaxIdRequired`, and `Other`.
+🔍 [Account holders](/topics/onboarding/account-holders/) can now be filtered by their KYC verification requirements, both in the Dashboard and via the API. Supported filters include `FirstTransferRequired`, `SupportingDocumentsRequired`, `UboDetailsRequired`, `LegalRepresentativeDetailsRequired`, `OrganizationDetailsRequired`, `TaxIdRequired`, and `Other`.
 
 ## API updates
 
 ### Reminders
 
-⚠️ Starting **April 2**, the four [`CloseAccountReasonType`](https://api-reference.swan.io/enums/close-account-reason-type/) values used for account opening refusals, capital deposit cancellations, and retroactive account closures are replaced with more granular codes that provide better transparency about why an account was closed: `ComplianceReason`, `PartnerReason`, `Inactivity`, and `CapitalDepositReason`.
+⚠️ Starting **April 2**, four [`CloseAccountReasonType`](https://api-reference.swan.io/enums/close-account-reason-type/) values are replaced with more granular codes. The deprecated values are `ComplianceReason`, `PartnerReason`, `Inactivity`, and `CapitalDepositReason` — previously used for account opening refusals, capital deposit cancellations, and retroactive account closures.
 
 Accounts closed before **April 2** keep their original reason codes. Refer to the [deprecated reason codes](/changelog/26-february-2026/#upcoming-breaking-changes) for the full mapping.
 
@@ -25,11 +25,11 @@ Accounts closed before **April 2** keep their original reason codes. Refer to th
 
 ## Coming up
 
-🏛️ In April, we're launching a new Partner-branded Re-KYC portal, enabling account administrators to complete periodic KYC reviews through an intuitive, multilingual interface with pre-filled data and automated email reminders.
+🏛️ In April, we're launching a new Partner-branded Re-KYC portal. It enables account administrators to complete periodic KYC reviews through a multilingual interface with pre-filled data and automated email reminders.
 
-💻 A new desktop sign-up flow for Web Banking is coming soon. Authentication and personal information will be completed on desktop: users receive a 6-digit OTP code by SMS, enter the code, create a passcode, then enter personal information before switching to mobile to complete identification. This keeps authentication on a single device, adding a critical layer of friction against phishing and social engineering fraud. No changes are required on your side.
+💻 A new desktop sign-up flow for Web Banking is coming soon. Authentication and personal information will be completed on desktop: users receive a 6-digit OTP code by SMS, enter the code, create a passcode, then enter personal information before switching to mobile to complete identification. This keeps authentication on a single device, reducing exposure to phishing and social engineering attacks. No changes are required on your side.
 
-👀 Starting **April 2**, Swan adds a cancelation reason code on `CapitalDepositCaseCanceledStatusInfo` when the case status is `Canceled`. You can also subscribe to the `CapitalDepositCaseEvent.Canceled` webhook to receive notifications when a capital deposit case is canceled.
+👀 Starting **April 2**, [`CapitalDepositCaseCanceledStatusInfo`](/topics/capital-deposits/) gains a cancelation reason code when the case status is `Canceled`. You can also subscribe to the `CapitalDepositCaseEvent.Canceled` webhook to receive notifications when a capital deposit case is canceled.
 
 Capital deposit cases canceled before **April 2** have a `null` cancelation reason at the capital deposit level; for those cases, refer to the account-level deprecated closure reason `CapitalDepositReason`.
 

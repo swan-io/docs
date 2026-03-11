@@ -16,14 +16,14 @@ import CancelCase from './partials/_cancel-case.mdx';
 
 1. Call the `cancelCapitalDepositCase` mutation.
 1. Add the capital deposit case ID (line 2).
-1. Add the success payload and any information you'd like to receive (lines 3-9).
+1. Add the success payload and any information you'd like to receive (line 3).
 1. Add rejections (not shown).
 
 ## Mutation {#mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsQ2FzZSB7CiAgY2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlKGlucHV0OiB7IGlkOiAiJENBUElUQUxfREVQT1NJVF9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNhcGl0YWxEZXBvc2l0Q2FzZSB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FwaXRhbERlcG9zaXRDYXNlQ2FuTm90QmVGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5Ob3RCZUNhbmNlbGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsQ2FzZSB7CiAgY2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlKGlucHV0OiB7IGlkOiAiJENBUElUQUxfREVQT1NJVF9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNhcGl0YWxEZXBvc2l0Q2FzZSB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5jZWxlZFN0YXR1c0luZm8gewogICAgICAgICAgICByZWFzb25Db2RlCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2,3} showLineNumbers
+```graphql {2,3,7-9} showLineNumbers
 mutation CancelCase {
   cancelCapitalDepositCase(input: { id: "$CAPITAL_DEPOSIT_CASE_ID" }) {
     ... on CancelCapitalDepositCaseSuccessPayload {
@@ -31,6 +31,9 @@ mutation CancelCase {
       capitalDepositCase {
         statusInfo {
           status
+          ... on CapitalDepositCaseCanceledStatusInfo {
+            reasonCode
+          }
         }
       }
     }
@@ -41,16 +44,17 @@ mutation CancelCase {
 
 ## Payload {#payload}
 
-The payload confirms the capital deposit case status changed to `Canceled`.
+The payload confirms the capital deposit case status changed to `Canceled` and returns the reason code.
 
-```json {6-7} showLineNumbers
+```json {8} showLineNumbers
 {
   "data": {
     "cancelCapitalDepositCase": {
       "__typename": "CancelCapitalDepositCaseSuccessPayload",
       "capitalDepositCase": {
         "statusInfo": {
-          "status": "Canceled"
+          "status": "Canceled",
+          "reasonCode": "KYCIssue"
         }
       }
     }
@@ -60,11 +64,12 @@ The payload confirms the capital deposit case status changed to `Canceled`.
 
 ## What happens after cancellation {#after-cancellation}
 
-When you cancel a capital deposit case, any associated shareholder accounts are automatically closed.
+When you cancel a capital deposit case, all associated accounts are automatically closed: shareholder accounts and the future company account.
 Starting 2 April 2026, these accounts receive the [closure reason code](../accounts/closure/index.mdx#closure-reason-codes) `CapitalDepositCanceled`.
 Before this date, the closure reason code is `CapitalDepositReason`.
 
 Starting 2 April 2026, you can subscribe to the [`CapitalDepositCaseEvent.Canceled` webhook](../../developers/using-api/webhooks#events-capital-deposits) to receive notifications when a capital deposit case is canceled.
+The [cancelation reason code](./index.mdx#cancelation-reason-codes) is also available directly on the capital deposit case, in the `CapitalDepositCaseCanceledStatusInfo` type.
 
 :::info Completed capital deposits
 When a capital deposit is successfully completed, shareholder accounts are closed with the reason code `CapitalDepositCompleted`.

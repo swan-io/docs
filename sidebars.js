@@ -239,11 +239,11 @@ module.exports = {
         },
         {
           type: "category",
-          label: "Card insurance",
-          link: { type: "doc", id: "topics/cards/card-insurance/index" },
+          label: "Card packages",
+          link: { type: "doc", id: "topics/cards/card-packages/index" },
           collapsed: true,
           items: [
-            "topics/cards/card-insurance/guide-insurance-integration",
+            "topics/cards/card-packages/guide-packages-integration",
           ],
         },
         {

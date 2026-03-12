@@ -1,52 +1,38 @@
 ---
-title: Configure Card packages package
+title: Configure a  card package
 ---
 
-:::caution No coverage for existing cards
-Card packages is currently in private beta.
-:::
+When creating a new card product in the Dashboard, your first step is selecting and configuring the card package. 
+This selection determines the features, pricing, and capabilities of the card available to your users. 
 
-This guide explains how to configure insurance on card products, issue cards with insurance, support Card packages claims.
+This guide explains how to configure card packages on card products.
 
-## 1. Configure insurance on card products
+## Create a card package card {#create}
 
-When creating a card product, link it to a Card packages object by setting the [`defaultInsurancePackage`](https://api-reference.swan.io/objects/card-packages-configuration/#cardinsuranceconfigurationdefaultinsurancepackagecardinsurancepackage). 
-This package is automatically applied when a card is issued.
+1. Go to **Dashboard** > **Settings** > **Cards**.
+1. Select **+ New card product**.
 
-The `availableInsurancePackages` field lists all eligible insurance packages for the card product.
+![Screenshot of the Dashboard modal to add a new card product](../../../images/topics/cards/configure-card-package.png)
 
-By default, new card products include three packages: **Basic**, **Essential**, and **Premium**. For pre-existing card products, contact your PIM (Product Integration Manager) to add the `availableInsurancePackages` and set your `defaultInsurancePackage`.
-
-## 2. Card product review and validation
-
-After configuring your insurance settings, your PIM will review and validate the card product before it can be used.
+3. Select a card package: choose between **Standard**, **Essential**, or **Premium**. 
+Select **No package** for to offer a card with basic features (no insurance and our standard spending limits and foreign exchange fees).
 
 :::caution
-To issue cards with insurance, it's mandatory to display the [standard marketing and legal mentions](https://docs.google.com/presentation/d/159nE02OtxcZ_uVQIpX8H7fLVC9VubPAf/edit?slide=id.g33c8ca1d644_0_302#slide=id.g33c8ca1d644_0_302) regarding the insurance coverage package within your app or website. Swan includes this information in the Terms and Conditions.
+This choice is permanent. You can't modify the package level once the card product is created.
 :::
 
-## 3. Card packages subscription
+4. Name your new card product.
+5. If you'd like to allow physical cards, toggle **Allow physical cards** to on.
+6. Click **Create**.
 
-Swan automatically creates a [Card packages subscription](/topics/cards/card-packages/#insurance) when a new card is issued, if the following conditions are met:
+## Configure your card package design {#configure-design}
 
-- The cardholder's account membership is `Enabled`.
-- The account holder is `Verified`.
+1. If you'd like to edit your card design, select **+ Create new design**.
+1. Choose your card style: Black, Silver or Custom.
+1. Choose your logo size.
+1. Upload your logo.
+1. Submit fo review. 
 
-## 4. Support insurance claims 
+## Card package review and validation
 
-Include a link to the insurance provider's claims portal in your Web banking app so users can file claims independently.
-
-The `claimsUrl` available in the card query leads to the insurance provider's claims portal. 
-Use this query to retrieve the `claimsUrl` for a cardholder to access the claims interface:
-
-<a href="https://explorer.swan.io?query=cXVlcnkgR2V0Q2xhaW1zUG9ydGFsVXJsIHsKICBjYXJkKGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiKSB7CiAgICBpbnN1cmFuY2VTdWJzY3JpcHRpb24gewogICAgICBjbGFpbXNVcmwKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API explorer</a>
-
-
-```graphql
-query GetClaimsPortalUrl {
-  card(cardId: "$YOUR_CARD_ID") {
-    insuranceSubscription {
-      claimsUrl
-    }
-  }
-}
+After configuring your card package, we will review and validate it before it can be used.

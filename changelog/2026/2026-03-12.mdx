@@ -1,0 +1,42 @@
+---
+title: 12 March 2026
+type: release
+---
+
+## New features
+
+🧭 The new [Onboarding API](/preview/new-onboarding/) is now live in beta. It improves data collection for better risk assessment and regulatory compliance, and delivers a cleaner developer experience with structured inputs, typed responses, and updated mutations and queries. Documentation is updated to reflect all new validations.
+
+## Improvements
+
+🔎 [`CapitalDepositDocumentRefusedStatusInfo`](/topics/capital-deposits/) now includes an optional `reason` string field with a free-text explanation of why a document was refused. You can view the exact explanation on your Dashboard, alongside the existing `reasonCode` value.
+
+🔍 [Account holders](/topics/onboarding/account-holders/) can now be [filtered](https://api-reference.swan.io/inputs/account-holder-filter-input/) by their Know Your Customer (KYC) [verification requirements](https://api-reference.swan.io/enums/verification-requirement-type/), both in the Dashboard and through the API. Supported filters include `FirstTransferRequired`, `SupportingDocumentsRequired`, `UboDetailsRequired`, `LegalRepresentativeDetailsRequired`, `OrganizationDetailsRequired`, `TaxIdRequired`, and `Other`.
+
+👀 Starting **April 2**, [`CapitalDepositCaseCanceledStatusInfo`](/topics/capital-deposits/) gains a cancellation reason code when the case status is `Canceled`. You can also subscribe to the `CapitalDepositCaseEvent.Canceled` webhook to receive notifications when a capital deposit case is canceled.
+
+Capital deposit cases canceled before **April 2** have a `null` cancellation reason at the capital deposit level; for those cases, refer to the account-level deprecated closure reason `CapitalDepositReason`.
+
+## API updates
+
+⚠️ Starting **April 2**, four [`CloseAccountReasonType`](https://api-reference.swan.io/enums/close-account-reason-type/) values are replaced with more granular codes. The deprecated values are `ComplianceReason`, `PartnerReason`, `Inactivity`, and `CapitalDepositReason`, previously used for account opening refusals, capital deposit cancellations, and retroactive account closures.
+
+Accounts closed before **April 2** keep their original reason codes. Refer to the [deprecated reason codes](/changelog/26-february-2026/#upcoming-breaking-changes) for the full mapping.
+
+### Reminders
+
+📩 Our new white-labelled email notifications are now live in Production Live. If you have automations in place, check your KYC operations now in Production Sandbox. Affected notifications:
+
+- Your account terms and conditions
+- First transfer
+- Request supporting documents
+- Request supporting documents reminders
+- Your account is opened
+- Join your banking space
+
+
+## Coming up
+
+🏛️ In April, we’re rolling out a new white‑labelled portal for periodic KYC reviews (“re‑KYC”). It lets account admins confirm or update customer details in a multilingual interface, with pre-filled information and automated email reminders.
+
+💻 A new desktop sign-up flow for Web Banking is coming soon. Authentication and personal information will be completed on desktop: users receive a 6-digit verification code by SMS, enter the code, create a passcode, then enter personal information before switching to mobile to complete identification. This keeps authentication on a single device, reducing exposure to phishing and social engineering attacks. No changes are required on your side.

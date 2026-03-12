@@ -792,6 +792,14 @@ module.exports = {
             "preview/in-person/cards/guide-create-payments",
           ],
         },
+      ],
+    },
+    {
+      type: "category",
+      label: "Beta",
+      collapsible: false,
+      collapsed: false,
+      items: [
         {
           type: "category",
           label: "Account onboarding enhancements",
@@ -802,14 +810,6 @@ module.exports = {
             "preview/new-onboarding/company",
           ],
         },
-      ],
-    },
-    {
-      type: "category",
-      label: "Beta",
-      collapsible: false,
-      collapsed: false,
-      items: [
         {
           type: "category",
           label: "Card insurance",

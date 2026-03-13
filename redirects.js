@@ -455,6 +455,14 @@ module.exports = [
     to: '/topics/accounts/ibans/#local',
   },
   {
+    from: '/preview/card-insurance/',
+    to: '/topics/cards/card-packages',
+  },
+  {
+    from: '/preview/card-insurance/guide-insurance-integration',
+    to: '/topics/cards/card-packages/guide-packages-integration',
+  },
+  {
     from: '/preview/belgian-ibans/belgian-ibans',
     to: '/topics/accounts/ibans/#local',
   },

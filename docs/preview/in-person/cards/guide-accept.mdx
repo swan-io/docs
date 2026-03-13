@@ -9,28 +9,45 @@ This section only applies to **merchants** accepting card payments.
 Visit the [card payments section](../../../topics/payments/cards/index.mdx) for information about payments made with cards *from* a Swan account.
 :::
 
-## Step 1: Request a merchant profile {#step-1}
+## Step 1: Set up the development environment {#step-1}
+
+Install the Stripe Terminal SDK and configure your app with the required Apple entitlements and permissions.
+
+→ [Set up the development environment](./guide-setup.mdx)
+
+## Step 2: Request a merchant profile {#step-2}
 
 Before accepting in-person card payments, you need a merchant profile.
 
+:::caution Early access: manual profile setup
+During this phase, Swan manually sets up merchant profiles with the Stripe connection.
+After requesting a profile, contact your Product Integration Manager with your merchant profile ID.
+They will confirm when setup is complete and provide your `$LOCATION_ID`.
+In a future release, the location ID will be available as `mainLocationId` on the `InPersonCardMerchantPaymentMethod` object.
+Swan can configure up to 10 profiles per partner during early access.
+:::
+
 → [Request a merchant profile](../../../topics/merchants/profiles/guide-request.mdx)
 
-You can also update merchant profiles if needed.
+## Step 3: Request the payment method {#step-3}
 
-→ [Update a merchant profile](../../../topics/merchants/profiles/guide-update.mdx)
-
-## Step 2: Request the payment method {#step-2}
+Request the in-person card payment method to enable your merchants to accept card payments.
 
 → [Request the in-person card payment method](./guide-request-method.mdx)
 
-## Step 3: Create in-person card payments {#step-3}
+## Step 4: Initialize the device {#step-4}
 
-Call the API to create payment intents.
-This lets merchants accept card payments from customers using their terminal app.
+Set up the connection token provider and connect your device to the Stripe Terminal reader.
+
+→ [Initialize the device for payments](./guide-initialize.mdx)
+
+## Step 5: Create in-person card payments {#step-5}
+
+Call the API to create payment intents and use the Stripe SDK to process payments.
 
 → [Create in-person card payments](./guide-create-payments.mdx)
 
-## Step 4: Issue a refund {#step-4}
+## Step 6: Issue a refund {#step-6}
 
 import InPersonCardRefundLimitation from '../partials/_in-person-card-refund-limitation.mdx';
 

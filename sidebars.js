@@ -792,6 +792,7 @@ module.exports = {
             "preview/in-person/cards/guide-request-method",
             "preview/in-person/cards/guide-initialize",
             "preview/in-person/cards/guide-create-payments",
+            "preview/in-person/cards/sandbox",
           ],
         },
         {

@@ -15,14 +15,24 @@ This section only applies to **merchants** accepting card payments.
 Visit the [card payments section](../../../topics/payments/cards/index.mdx) for information about payments made with cards *from* a Swan account.
 :::
 
-## Merchant card payments {#merchant-card-payments}
+## In-person card merchant payments {#merchant-card-payments}
 
-Merchant card payments include **one or more transactions**.
+In-person card merchant payments include **one or more transactions**.
 For example, one payment might include a capture and a refund, for a total of two transactions.
 
 These transactions are grouped in the **merchant payment object**.
 We suggest using this object in your integration to help merchants match orders, invoices, and sales to the correct payment.
 This makes it easier to track payments and resolve issues.
+
+## Terms of service {#terms-of-service}
+
+When your users request access to in-person card payments, they must accept the terms of service for the product.
+
+Include a checkbox in your activation flow with the following recommended wording:
+
+> By clicking "Next", you accept the Swan Terms and Conditions and the [PARTNER NAME]'s partnership conditions.
+
+Replace `[PARTNER NAME]` with your company name.
 
 ## Card transaction types {#transaction-types}
 
@@ -150,31 +160,6 @@ However, it's not possible to act on disputes directly using Swan's APIs or dash
 
 To respond to disputes, ask your merchant to [submit a request](https://supportform.swan.io/) to the Swan Support team.
 
-## Known issues {#known-issues}
-
-:::caution Early access
-The following issues have been identified and are not yet resolved.
-This section will be removed once they are fixed.
-:::
-
-**`MerchantPayment.Created` webhook not triggered** (issue 1881)
-
-When a payment succeeds or fails, the `MerchantPayment.Created` webhook is not sent.
-
-Workaround: use other webhooks to track merchant payments. For successful payments, `MerchantPayment.Authorized` and `MerchantPayment.Captured` are both triggered. For failures, use `MerchantPayment.Rejected`.
-
-**Gateway timeout on invalid payment amount** (issue 1835)
-
-Calling `createInPersonPaymentIntent` with an invalid amount (such as an empty string or `"1,5"`) returns a gateway timeout instead of a `ValidationRejection`.
-
-Workaround: validate the amount value before passing it to the mutation.
-
-**Incorrect refund balance on rejected payments** (issue 1759)
-
-When a merchant payment is `Rejected`, the full payment amount appears on the `availableToRefund` balance even though refunds aren't supported for rejected payments.
-
-Workaround: treat the `availableToRefund` balance as `0` for rejected payments.
-
 ## Guides {#guides}
 
 - [Accept in-person card payments](./guide-accept.mdx)
@@ -182,7 +167,4 @@ Workaround: treat the `availableToRefund` balance as `0` for rejected payments.
 - [Request in-person card payment method](./guide-request-method.mdx)
 - [Initialize the device for payments](./guide-initialize.mdx)
 - [Create in-person card payments](./guide-create-payments.mdx)
-
-:::note Sandbox coming soon
-Testing scenarios for in-person card payments are in development.
-:::
+- [Sandbox](./sandbox.mdx)

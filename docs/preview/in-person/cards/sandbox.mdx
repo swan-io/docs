@@ -1,0 +1,145 @@
+---
+title: Sandbox
+---
+
+# Sandbox: In-person card payments
+
+When testing your integration, use the Partner Testing API to simulate in-person card payment events.
+
+## Prerequisites {#prerequisites}
+
+- Merchant profile status: **Enabled**.
+- In-person card payment method status: **Enabled**.
+- [Simulate updating the statuses](../../../topics/merchants/sandbox.mdx) for your merchant profile and payment method if needed.
+
+## Simulate enabling the payment method {#enable-method}
+
+Use the existing `simulateMerchantPaymentMethodRequestOutcome` mutation to enable your in-person card payment method.
+
+```graphql
+mutation EnableInPersonCardMethod {
+  simulateMerchantPaymentMethodRequestOutcome(
+    input: {
+      merchantPaymentMethodId: "$YOUR_PAYMENT_METHOD_ID"
+      merchantPaymentMethodStatus: Enabled
+    }
+  ) {
+    __typename
+    ... on Rejection {
+      message
+    }
+  }
+}
+```
+
+## Simulate a payment authorization {#authorize}
+
+To simulate a card payment, first [create a payment intent](./guide-create-payments.mdx#create-intent) using the main API, then call `simulateIncomingInPersonCardAuthorization` in the Testing API with the `secret` from the payment intent.
+
+When the simulation runs, Swan creates the merchant payment and underlying transactions as if a real card was tapped.
+
+### Simulate a successful payment {#authorize-success}
+
+```graphql
+mutation SimulateInPersonAuthorization {
+  simulateIncomingInPersonCardAuthorization(
+    input: {
+      paymentIntentSecret: "$YOUR_PAYMENT_INTENT_SECRET"
+      authorization: {
+        status: authorized
+      }
+      cardDetails: {
+        InPersonCardDetailsScheme: visa
+      }
+    }
+  ) {
+    ... on SimulateIncomingInPersonCardAuthorizationSuccessPayload {
+      paymentIntentId
+    }
+  }
+}
+```
+
+### Simulate a rejected payment {#authorize-reject}
+
+```graphql
+mutation SimulateInPersonRejection {
+  simulateIncomingInPersonCardAuthorization(
+    input: {
+      paymentIntentSecret: "$YOUR_PAYMENT_INTENT_SECRET"
+      authorization: {
+        status: rejected
+        rejectionReason: SoftDeclineInsufficientFunds
+      }
+      cardDetails: {
+        InPersonCardDetailsScheme: visa
+      }
+    }
+  ) {
+    ... on SimulateIncomingInPersonCardAuthorizationSuccessPayload {
+      paymentIntentId
+    }
+  }
+}
+```
+
+### Available test scenarios {#test-scenarios}
+
+| Card scheme | Authorized | Rejected |
+| --- | --- | --- |
+| `visa` | <Yes /> | <Yes /> |
+| `mastercard` | <Yes /> | <No /> |
+| `cartesBancaires` | <Yes /> | <No /> |
+| `americanExpress` | <Yes /> | <No /> |
+| `discover` | <Yes /> | <No /> |
+
+Available rejection reasons (Visa only): `SoftDeclineInsufficientFunds`, `RejectedByCardIssuer`, `SoftDeclineRejectedByCardIssuer`.
+
+:::info Finding the merchant payment
+The simulation returns a `paymentIntentId`, not a merchant payment ID.
+To find the associated merchant payment, use the `externalReference` or `reference` you set when creating the payment intent.
+:::
+
+## Simulate settlement {#settlement}
+
+After simulating a successful authorization, transactions are created as `Upcoming`.
+Use `simulateIncomingInPersonCardSettlement` to simulate the settlement process.
+
+The simulation creates a `Booked` credit transfer for the total amount and moves all included transactions to `Settled`.
+Each settled transaction is linked to the credit transfer through the `settlementTransactionId` field.
+
+```graphql
+mutation SimulateInPersonSettlement {
+  simulateIncomingInPersonCardSettlement(
+    input: {
+      merchantPaymentIds: [
+        "$YOUR_MERCHANT_PAYMENT_ID_1"
+        "$YOUR_MERCHANT_PAYMENT_ID_2"
+      ]
+    }
+  ) {
+    ... on SimulateIncomingInPersonCardSettlementSuccessPayload {
+      merchantPayments {
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
+  }
+}
+```
+
+## Not yet available {#not-available}
+
+Simulations for the following scenarios are not available yet:
+
+- Chargebacks and disputes.
+- Refunds.
+
+These will be added in a future release.
+
+## Test cards {#test-cards}
+
+In-person card payments use Stripe's test card numbers for Sandbox testing.
+Refer to [Stripe's testing documentation](https://docs.stripe.com/testing) for the full list of available test cards.

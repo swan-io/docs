@@ -243,7 +243,7 @@ module.exports = {
           link: { type: "doc", id: "topics/cards/card-packages/index" },
           collapsed: true,
           items: [
-            "topics/cards/card-packages/guide-packages-integration",
+            "topics/cards/card-packages/guide-product-configuration",
             "topics/cards/card-packages/guide-get-card-package-level",
           ],
         },

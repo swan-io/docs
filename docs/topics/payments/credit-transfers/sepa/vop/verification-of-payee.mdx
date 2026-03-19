@@ -64,13 +64,15 @@ sequenceDiagram
     participant EU as End-user
     participant P as Partner
     participant S as Swan
+    participant Bene as Beneficiary's bank
 
     EU->>P: Enters beneficiary details
-    P->>S: VoP Triggers
-    S->>S: Generates VoP result
-    S-->>P: Verification results<br/>(Custom integration)
-    P-->>EU: Displays VoP results/warnings<br/>(Custom integration)
-    S-->>EU: Displays VoP results/warnings<br/>(Default integration)
+    P->>S: VoP triggers
+    S->>+Bene: Sends VoP request (IBAN + name)
+    Bene-->>-S: Returns verification result
+    S-->>P: Relays result<br/>(Custom integration)
+    P-->>EU: Displays VoP result/warnings<br/>(Custom integration)
+    S-->>EU: Displays VoP result/warnings<br/>(Default integration)
 
     Note over EU: Reviews the results
 
@@ -106,6 +108,12 @@ sequenceDiagram
 Following the [European Payments Council (EPC)'s recommended matching rules](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2024-10/EPC288-23%20v1.0%20EPC%20Recommendations%20for%20the%20Matching%20Processes%20under%20the%20VOP%20Scheme%20Rulebook_0.pdf), the name is the first and last name of a natural person (individual), or the legal or commercial name of a legal person (company).
 
 ### VoP results {#vop-results}
+
+:::caution Swan relays results: it doesn't determine them
+VoP results are determined solely by the **beneficiary's bank** (the creditor's PSP). Swan sends the verification request and displays the result exactly as received. Swan has no influence over the outcome and cannot modify or override it.
+
+If a result seems unexpected, the beneficiary's bank made that determination based on their own matching logic.
+:::
 
 The beneficiary's bank can return one of four verification results. **All results must be displayed to the end-user**. Swan will systematically display the VoP result and warning on the SCA consent screen.
 

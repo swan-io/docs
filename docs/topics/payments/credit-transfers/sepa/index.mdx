@@ -105,6 +105,38 @@ These restrictions primarily affect first transfers during account holder verifi
 
 Learn more about [limited account restrictions](../../../onboarding/account-holders/index.mdx#limited-account-restrictions).
 
+### Sequence number {#sequence-number}
+
+Swan assigns a `sequenceNumber` to every **Booked** transaction.
+The number increments by 1 with each new transaction that affects the account's booked balance, providing a reliable chronological record you can use to detect gaps or out-of-order processing.
+
+:::note Migration in progress
+`sequenceNumber` is populated for all newly Booked transactions.
+Backfilling historical transactions is in progress; older transactions may not yet have a value.
+:::
+
+Retrieve `sequenceNumber` from `statusInfo` using the `BookedTransactionStatusInfo` fragment:
+
+```graphql
+query GetTransactionSequenceNumber {
+  transaction(id: "$YOUR_TRANSACTION_ID") {
+    statusInfo {
+      ... on BookedTransactionStatusInfo {
+        balanceAfter {
+          sequenceNumber
+          amount {
+            value
+            currency
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+The `sequenceNumber` field is only populated when the transaction status is **Booked**; it returns `null` for all other statuses.
+
 ## Instant SEPA Credit Transfers {#instant}
 
 The speedy version of SEPA Credit Transfers, Instant SEPA Credit Transfers have three key characteristics:
@@ -127,10 +159,10 @@ There are three possible modes.
 | Mode | Description |
 | --- | --- |
 | `InstantWithoutFallback` | When an Instant SEPA Credit Transfer is rejected, the transaction is rejected and your user must initiate a new transaction themselves.<br /><br />In choosing `WithoutFallback`, you'll **abandon the transfer** if it can't be instant. |
-| `InstantWithFallback` | When an Instant SEPA Credit Transfer is rejected, the transfer is **reinitiated automatically** as a **regular** SEPA Credit Transfer instead, with few exceptions. ∗<br /><br />When a transfer falls back, two transactions appear on the transaction history. ∗∗  |
+| `InstantWithFallback` | When an Instant SEPA Credit Transfer is rejected, the transfer is reinitiated automatically as a regular SEPA Credit Transfer instead, with few exceptions. ∗<br /><br />When a transfer falls back, two transactions appear on the transaction history. ∗∗ |
 | `Regular` | Use a regular, non-instant SEPA Credit Transfer from the beginning, which can take up to two business days to arrive (it's usually quicker, though). |
 
-∗ If the recipient's account can't be found, the account is closed, or the account holder is deceased, a regular transfer won't be initiated.
+∗ *If the recipient's account can't be found, the account is closed, or the account holder is deceased, a regular transfer won't be initiated.*
 
 ∗∗ When an instant transfer falls back to a regular transfer, you'll see two transactions on your transaction history by default: a rejected `SepaInstantCreditTransferOut` and a new `SepaCreditTransferOut`.
 When calling the `transactions` query, use the filter `includeRejectedWithFallback=false` so your users won't see the rejected instant transfer on their transaction history.

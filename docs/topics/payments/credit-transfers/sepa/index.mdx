@@ -108,14 +108,16 @@ Learn more about [limited account restrictions](../../../onboarding/account-hold
 ### Sequence number {#sequence-number}
 
 Swan assigns a `sequenceNumber` to every **Booked** transaction.
-The number increments by 1 with each new transaction that affects the account's booked balance, providing a reliable chronological record you can use to detect gaps or out-of-order processing.
+The number increments by 1 with each new booked transaction, giving you a reliable way to order transactions and spot any gaps.
 
 :::note Migration in progress
 `sequenceNumber` is populated for all newly Booked transactions.
-Backfilling historical transactions is in progress; older transactions may not yet have a value.
+Backfilling older transactions is in progress, so historical transactions may not yet have a value.
 :::
 
-Retrieve `sequenceNumber` from `statusInfo` using the `BookedTransactionStatusInfo` fragment:
+The `sequenceNumber` field is only present when the transaction status is **Booked**. It returns `null` for all other statuses.
+
+To get `sequenceNumber`, query `statusInfo` with the `BookedTransactionStatusInfo` fragment:
 
 ```graphql
 query GetTransactionSequenceNumber {
@@ -134,8 +136,6 @@ query GetTransactionSequenceNumber {
   }
 }
 ```
-
-The `sequenceNumber` field is only populated when the transaction status is **Booked**; it returns `null` for all other statuses.
 
 ## Instant SEPA Credit Transfers {#instant}
 

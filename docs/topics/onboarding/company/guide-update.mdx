@@ -24,13 +24,13 @@ To test updating a company onboarding, **change the language**.
 1. Enter the onboarding ID retrieved in step 1.
 1. Check the box for `language`, then enter the language code of your choosing (example: `fr` or `es`). 
 1. Add desired messages to the success payload, either for validation or in case of rejection.
-    * **Recommendation**: Inside the `UpdateCompanyOnboardingSuccessPayload` option, add `onboardingState` and `statusInfo` > `status` to confirm the onboarding is still ongoing and valid after making the update.
+    * **Recommendation**: Inside the `UpdateCompanyOnboardingSuccessPayload` option, add `statusInfo` > `status` to confirm the onboarding is still ongoing and valid after making the update.
 
 ## Mutation {#mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQ29tcGFueU9uYm9hcmRpbmcgewogIHVwZGF0ZUNvbXBhbnlPbmJvYXJkaW5nKAogICAgaW5wdXQ6IHsKICAgICAgb25ib2FyZGluZ0lkOiAiJE9OQk9BUkRJTkdfSUQiCiAgICAgIGxhbmd1YWdlOiAiZnIiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFVwZGF0ZUNvbXBhbnlPbmJvYXJkaW5nU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG9uYm9hcmRpbmcgewogICAgICAgIGxhbmd1YWdlCiAgICAgICAgb25ib2FyZGluZ1N0YXRlCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgfQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBtZXNzYWdlCiAgICAgIH0KICAgIH0KICB9Cn0%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQ29tcGFueU9uYm9hcmRpbmcgewogIHVwZGF0ZUNvbXBhbnlPbmJvYXJkaW5nKAogICAgaW5wdXQ6IHsKICAgICAgb25ib2FyZGluZ0lkOiAiJE9OQk9BUkRJTkdfSUQiCiAgICAgIGxhbmd1YWdlOiAiZnIiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFVwZGF0ZUNvbXBhbnlPbmJvYXJkaW5nU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG9uYm9hcmRpbmcgewogICAgICAgIGxhbmd1YWdlCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgbWVzc2FnZQogICAgICB9CiAgICB9CiAgfQp9&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-5,18-21} showLineNumbers
+```graphql {4-5,18-22} showLineNumbers
 mutation UpdateCompanyOnboarding {
   updateCompanyOnboarding(
     input: {
@@ -50,7 +50,6 @@ mutation UpdateCompanyOnboarding {
       __typename
       onboarding {
         language
-        onboardingState
         statusInfo {
           status
         }
@@ -76,9 +75,9 @@ mutation UpdateCompanyOnboarding {
       "__typename": "UpdateCompanyOnboardingSuccessPayload",
       "onboarding": {
         "language": "fr",
-        "onboardingState": "Ongoing",
         "statusInfo": {
           "status": "Valid"
+        }
       }
     }
   }

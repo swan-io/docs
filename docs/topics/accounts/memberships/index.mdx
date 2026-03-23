@@ -241,17 +241,17 @@ Certain account membership fields must follow specific validation patterns.
 The `restrictedTo.firstName` and `restrictedTo.lastName` fields must match the following validation pattern:
 
 ```regex
-/^(?:[A-Za-zÀ-ÖÙ-öù-ƿǄ-ʯʹ-ʽΈ-ΊΎ-ΡΣ-ҁҊ-Ֆա-ևႠ-Ⴥა-ჺᄀ-፜፩-ᎏᵫ-ᶚḀ-῾ⴀ-ⴥ⺀-⿕ぁ-ゖゝ-ㇿ㋿-鿯鿿-ꒌꙀ-ꙮꚀ-ꚙꜦ-ꞇꞍ-ꞿꥠ-ꥼＡ-Ｚａ-ｚ]| |'|-|Ά|Ό|,)*$/
+/^[\p{L}]+(?:[-'\s][\p{L}]+)*'?$/u
 ```
 
 This pattern accepts the following characters:
 
-- Unicode letters from various scripts, including Latin, Cyrillic, Greek, Armenian, Georgian, Korean, Japanese, and Chinese.
+- Any Unicode letter (`\p{L}`), covering Latin, Cyrillic, Greek, Armenian, Georgian, Korean, Japanese, Chinese, and more.
 - Spaces.
 - Apostrophes (`'`).
 - Hyphens (`-`).
-- Commas (`,`).
-- Special Greek characters (`Ά`, `Ό`).
+
+Names must start with a letter. Separators (hyphen, apostrophe, and space) must be followed by at least one letter and can't appear at the start or consecutively. Names may optionally end with an apostrophe.
 
 :::info Aligned with user creation
 These validation rules are the same as those applied when [creating users](../../users/index.mdx).

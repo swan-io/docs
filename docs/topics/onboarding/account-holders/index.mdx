@@ -248,13 +248,13 @@ When a Swan KYC analyst determines that a first transfer is needed for verificat
 
 **Trigger**: Manual request by a Swan KYC analyst after the user completes identification but before the account holder verification status changes to `Verified`.
 
-**Configuration**: Swan can configure this notification on your behalf based on your preferred communication flow. Contact us to discuss your preference. The available options include sending notifications directly to the end customer, to you as the partner, copying both parties, or using the API to manage communications yourself.
+**Configuration**: Swan can configure this notification on your behalf based on your preferred communication flow. Contact us to discuss your preference. The available options include sending notifications directly to the end user, to you as the partner, copying both parties, or using the API to manage communications yourself.
 
 **Template**:
 
 | Configuration | Template |
 |---|---|
-| End customer | Uses your project logo and accent color. Includes the account's IBAN and BIC to help users complete the transfer. |
+| End user | Uses your project logo and accent color. Includes the account's IBAN and BIC to help users complete the transfer. |
 | Partner | Uses Swan branding. Includes data to help with your KYC process: Account Holder ID, Account Holder name, account IBAN, account BIC, account admin email, and account admin language. |
 | Both parties | Uses your project logo and accent color. Includes the account's IBAN and BIC to help users complete the transfer. |
 
@@ -274,7 +274,7 @@ This notification informs the user that supporting documents are required and pr
 
 | Configuration | Template |
 |---|---|
-| End customer | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
+| End user | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
 | Partner | Uses Swan branding. Includes data to help with your KYC process: account holder ID, account holder name, account admin email, and account admin language. |
 | Both parties | Uses your project logo and accent color. Includes the account number to help users contact your support team. |
 
@@ -284,17 +284,17 @@ The email includes a call-to-action button that redirects users to an onboarding
 
 To help ensure users provide the necessary documents, Swan automatically sends reminder emails at regular intervals.
 
-**Trigger**: Automatic reminders are sent when a Swan KYC analyst has requested additional supporting documents and your notification settings allow end customer communication.
+**Trigger**: Automatic reminders are sent when a Swan KYC analyst has requested additional supporting documents and your notification settings allow end user communication.
 
 Reminders are sent after 2, 4, 7, 14, and 21 days as long as the supporting document collection status remains `WaitingForDocument`.
 
-**Configuration**: Reminders are only sent when your document collection settings are configured to communicate with the end customer (either directly or copied to you as the Partner). No reminders are sent when communications are Partner-only or managed via API.
+**Configuration**: Reminders are only sent when your document collection settings are configured to communicate with the end user (either directly or copied to you as the Partner). No reminders are sent when communications are Partner-only or managed via API.
 
 **Template**:
 
 | Configuration | Template |
 |---|---|
-| End customer | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
+| End user | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
 | Partner | Uses Swan branding. Includes data to help with your KYC process: Account holder ID, account holder name, account admin email, and account admin language. |
 | Both parties | Uses your project logo and accent color. Includes the account number to help users contact your support team. |
 
@@ -304,13 +304,13 @@ When the verification process is complete and the account is ready for full use,
 
 **Trigger**: Automatic when the account holder verification status changes to `Verified` and the account payment status changes to `Unlimited`, meaning the user can use all available funds.
 
-**Configuration**: Swan can configure this notification on your behalf. Contact us to discuss your preferences. The available communication options include sending to the end customer, to you as the partner, or managing via API.
+**Configuration**: Swan can configure this notification on your behalf. Contact us to discuss your preferences. The available communication options include sending to the end user, to you as the partner, or managing via API.
 
 **Template**:
 
 | Configuration | Template |
 |---|---|
-| End customer | Uses your project logo and accent color. Includes the account's IBAN and BIC so users can start using their account. |
+| End user | Uses your project logo and accent color. Includes the account's IBAN and BIC so users can start using their account. |
 | Partner | Uses Swan branding. Includes data to help with your KYC process: account Holder ID, Account Holder name, account IBAN, account BIC, account admin email, and account admin language. |
 
 ## Periodic re-verification {#re-verification}
@@ -321,18 +321,16 @@ If an account holder is required to complete periodic re-verification, it applie
 Periodic re-verification is a mandatory process occuring every 1, 3, or 5 years, or whenever significant changes are detected in an account holder's profile. 
 
 :::warning Account suspension
-Failure to complete the re-verification process within a **90-day window** will result in the **automatic suspension** of the account. All associated IBANs, cards, and payment capabilities will be restricted until the verification is complete.
+Users must complete re-verification **within 90 days**. If they do not, we will automatically suspend their account and restrict all related IBANs, cards, and payment capabilities until verification is complete.
 :::
 
 ### Completing re-verification in the portal {#re-verification-portal}
 
 Swan provides a no-code, partner-branded portal to handle the re-verification process. No API integration is required on your side.
 
-Make sure your [branding settings](/topics/projects/guide-activate/#step-8-configure-your-branding-in-live) are up to date (logo and accent color) in **Dashboard** > **Settings** > **Branding**.
+Make sure your [branding settings](/topics/projects/guide-activate/#step-8-configure-your-branding-in-live) (logo and accent color) are up to date in your **Dashboard** > **Settings** > **Branding**.
 
 #### Re-verification steps {#re-verification-portal-steps}
-
-The re-verification process follows a structured path from initial notification to validation. 
 
 The legal representative (account admin):
 
@@ -340,29 +338,38 @@ The legal representative (account admin):
 1. Opens the link and provides consent to access the portal.
 1. Reviews the pre-filled information.
 1. Confirms the information is correct, or updates it if anything has changed.
-1. Uploads supporting documents if requested.
-1. Submits the re-verification request.
-1. Receives a confirmation of submission email, then waits for the outcome of the KYC analysts review. 
-    - Successful re-verification status: `Verified`.
-1. Follow-up requests. 
-    - If more information or supporting documents are needed, Swan sends a follow-up request. The portal reopens only for the missing items.
+1. Uploads [supporting documents](/topics/accounts/documents/#required-documents) if required.
+1. Submits the re-verification request and receives a confirmation email. 
 
-:::info Communication preferences
-We send the initial form and all follow-ups based on your [communication preferences](/topics/onboarding/account-holders/#notifications). 
-We recommend setting them to Swan to end customer (Partner in CC). You can choose a unique email address for re-verification emails. 
-:::
+The KYC analyst reviews the submission.
+If more information or supporting documents are needed, they send a follow-up request with a new link. 
+The portal reopens for the missing items only.
+
+After Swan validates the review, the account holder re-verification status changes to `Verified`.
 
 ### Re-verification timeline and reminders {#re-verification-timeline}
 
-The periodic re-verification process has a strict **90-day window**. This starts when the initial notification is sent to your user.
+The  **90-day window** for the periodic re-verification process starts after the initial notification is sent to your user.
+
+:::tip Update your communication preferences
+We send the initial form and all follow-ups based on your [communication preferences](/topics/onboarding/account-holders/#notifications). 
+We recommend having Swan email your end users directly, with you copied (CC'd). Create a ticket outlining your communication preferences for re-verification. 
+You can also specify a unique email address.
+:::
 
 | Milestone | Timeline | What happens |
 | :--- | :--- | :--- |
-| **Start of Re-KYC** | **Day 0** | Swan sends an email to the legal representative with a unique portal link. |
-| **First reminder** | **Month 1** | Your user receives a reminder if they haven't completed the portal flow. |
-| **Second reminder** | **Month 2** | Your user receives a second reminder if they haven't completed the portal flow. |
-| **Final reminder** | **Last Week** | Your user receives a final reminder one week before the deadline. |
-| **Re-verification deadline** | **Day 90+** | Swan suspends all of the account holder's accounts. Your users can't send or receive payments, including SCT, SDD, or card payments. |
+| **Start of Re-KYC** | Day 0 | Swan sends an email to the legal representative with a unique portal link. |
+| **First reminder** | Month 1 | Your user receives a reminder if they haven't completed the portal flow. |
+| **Second reminder** | Month 2 | Your user receives a second reminder if they haven't completed the portal flow. |
+| **Final reminder** | Last week | Your user receives a final reminder one week before the deadline. |
+| **Re-verification deadline** | Day 90 | Swan suspends all of the account holder's accounts. |
+
+:::note Steps after suspension
+- The user can still complete re-verification after suspension using the latest portal link Swan emailed them.
+- After they complete the flow, you or the user must submit a support request so a KYC analyst can review the case and lift the suspension.
+- Swan may close the account if it remains suspended for too long without completing re-verification.
+:::
 
 ## Guides {#guides}
 

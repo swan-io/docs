@@ -1,0 +1,107 @@
+---
+title: Individual account onboarding
+---
+
+# Individual account onboarding
+
+import IndividualOnboardingDefinition from '../../definitions/_onboarding-individual.mdx';
+
+> <IndividualOnboardingDefinition />
+
+## Process overview {#overview}
+
+import OnboardingOverview from '../partials/_overview.mdx';
+
+<OnboardingOverview accountType="an individual" />
+
+## Individual onboarding form {#onboarding-form}
+
+Through the individual onboarding form, Swan collects the following information:
+
+1. User's **email address**.
+1. User's **country of residence** and **residence address**.
+1. Basic details about the **user's employment** and **financial situation**. This information allows Swan to perform two essential tasks:
+    * During onboarding, Swan completes an identity analysis (Know Your Customer, or KYC).
+    * For the lifetime of the account, Swan monitors for fraud.
+1. User [**signs up**](../../users/index.mdx#signup) for Swan.
+
+## Identification recommendations {#identification-recommendations}
+
+Swan must verify the identity of every user.
+Swan supports multiple [**identification processes**](../../users/identifications/index.mdx#levels-processes), and some require a [**first transfer**](../account-holders/index.mdx#first-transfer).
+For individual onboarding, the following levels are recommended based on the account country.
+
+| Account country | Recommended level<br/>for individuals | Other supported levels |
+|---|---|---|
+| 🇫🇷 France | **<Yes /> PVID** | *Expert + first transfer<br/>QES* |
+| 🇧🇪 Belgium | **<Yes /> QES** | *Expert + first transfer* |
+| 🇩🇪 Germany | **<Yes /> QES + first transfer** | *none* |
+| 🇮🇹 Italy | **<Yes /> QES** | *Expert + first transfer* |
+| 🇳🇱 Netherlands | **<Yes /> Expert** | *QES<br/>PVID* |
+| 🇪🇸 Spain | **<Yes /> QES** | *Expert + first transfer<br/>PVID + first transfer* |
+
+## Country requirements for individual accounts {#country-reqs}
+
+import CountryReqs from '../partials/_country-reqs.mdx';
+
+<CountryReqs thisAccountType="individual" thatAccountType="company" />
+
+For individual accounts, use the `onboardIndividualAccountHolder` mutation to collect the following information according to your desired account country.
+
+<FieldRequirementsLegend />
+
+| API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+|`accountCountry`| <Req /><br/>(`FRA`) | <Req /><br/>(`BEL`) | <Req /><br/>(`DEU`) | <Req /><br/>(`ITA`) | <Req /><br/>(`NLD`) | <Req /><br/>(`ESP`) |
+|`accountName`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`acquisitionChannel`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`email`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`employmentStatus`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`language`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`monthlyIncome`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`oAuthRedirectParameters`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`residencyAddress.addressLine1`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`residencyAddress.addressLine2`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`residencyAddress.city`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`residencyAddress.country`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`residencyAddress.postalCode`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`residencyAddress.state`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`taxIdentificationNumber`|<Opt />|<Opt />| <Cnd /> ∗ | <Req /> |<Opt />|<Opt />|
+
+∗ *If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
+Otherwise, the account will be suspended.*
+
+### Acquisition channel {#acquisition-channel}
+
+Use the optional `acquisitionChannel` field to indicate how the account holder was acquired.
+
+| Value | Description |
+|-------|-------------|
+| `InboundOrganic` | Account holders who signed up directly, such as through your website. |
+| `InboundReferral` | Account holders acquired through referrals from existing users or partners. |
+| `OutboundSales` | Account holders acquired through direct sales efforts. |
+| `OutboundAccountingFirm` | Account holders acquired through accounting firm partnerships. |
+
+Choose the value that best reflects your acquisition channel for each account holder.
+
+## User flow diagrams {#diagrams}
+
+## Individual account onboarding
+
+<details>
+  <summary>End-user perspective of an individual account onboarding</summary>
+  <div>
+    <iframe
+      src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F7K15ufXZK7Zgan770kkTmq%2FUser-flow-diagrams%3Ftype%3Ddesign%26node-id%3D1%253A1806%26mode%3Ddesign%26t%3DaDVSURjSnOITsBKl-1"
+      allowFullScreen
+      style={{ width: "100%", height: 400 }}
+    ></iframe>
+  </div>
+</details>
+
+## Guides {#guides}
+
+Use the following guides to start and complete the individual onboarding process.
+
+* [Create an individual onboarding link](./guide-create.mdx)
+* [Update an individual onboarding](./guide-update.mdx)

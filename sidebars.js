@@ -244,7 +244,7 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/cards/card-packages/guide-product-configuration",
-            "topics/cards/card-packages/guide-get-card-package-level",
+            "topics/cards/card-packages/guide-get-card-package-tier",
           ],
         },
         {

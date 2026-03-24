@@ -1,0 +1,34 @@
+---
+title: 26 March 2026
+type: release
+---
+
+## New features
+
+📅 Card spending limits can now be configured with calendar-based periods in addition to rolling periods. Calendar-based limits reset on a fixed schedule instead of a rolling window, making it easier for finance teams to align card budgets with their accounting periods. Configure calendar limits using the new `mode` field in [`SpendingLimitInput`](https://api-reference.swan.io/inputs/spending-limit-input/) with options for daily, weekly, or monthly recurrence.
+
+🖼️ A new no-code onboarding interface is now live in beta and available from your Dashboard. It delivers a cleaner and more consistent onboarding experience, improves data collection for better risk assessment and regulatory compliance, and removes the need to build and maintain the interface yourself.
+
+## Improvements
+
+🧭 Dashboard Insights data is updated across the **Overview**, **Credit Transfers**, **All Transactions**, and **Cards** tabs:
+
+- **Overview:** Account metrics now use account holder logic for a more accurate count of distinct businesses you serve. Card contracts are now counted from the enablement date rather than the creation date. Starting **April 2**, churned account holder data will also reflect the new account closure reasons.
+- **All Transactions:** Transaction metrics now use account holder logic.
+
+## API updates
+
+### Reminders
+
+👀 Starting **April 2**, Swan provides more granular closure reason codes to help you understand why an account was closed. The new reasons are visible via the API and on your Dashboard:
+
+- Three [`CloseAccountReasonType`](https://api-reference.swan.io/enums/close-account-reason-type/) values are replaced with more granular codes. The deprecated values are `PartnerReason`, `Inactivity`, and `CapitalDepositReason`, previously used for account opening refusals, capital deposit cancellations, and account closures.
+- Accounts closed before **April 2** keep their original reason codes. Refer to the [deprecated reason codes](/changelog/26-february-2026/#upcoming-breaking-changes) for the full mapping.
+
+👀 Starting **April 2**, [`CapitalDepositCaseCanceledStatusInfo`](/topics/capital-deposits/) gains a cancellation reason code when the case status is `Canceled`. You can also subscribe to the `CapitalDepositCaseEvent.Canceled` webhook to receive notifications when a capital deposit case is canceled.
+
+Capital deposit cases canceled before **April 2** have a `null` cancellation reason at the capital deposit level; for those cases, refer to the account-level deprecated closure reason `CapitalDepositReason`.
+
+## Coming up
+
+Check out [Swan's public roadmap](https://www.swan.io/roadmap) to see what's in the works. 🚀

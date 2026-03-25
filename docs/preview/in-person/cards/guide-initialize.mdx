@@ -4,8 +4,8 @@ title: Initialize the device for payments
 
 # Initialize the device for payments
 
-Connect your device to the Stripe Terminal reader before accepting payments.
-This involves setting up a connection token provider and running the reader discovery flow.
+Connect your device to the Stripe Terminal reader to start accepting in-person card payments.
+This process involves setting up a connection token provider and running the reader discovery flow.
 
 ## Prerequisites {#prerequisites}
 
@@ -52,7 +52,7 @@ mutation GetConnectionToken {
 
 :::caution Early access only
 If you receive a `ForbiddenRejection` with the message `Coming Soon`, your project doesn't have the required feature flag.
-Contact your Product Integration Manager or the Swan team to request access.
+Contact your Swan point of contact to request access.
 :::
 
 ### Wire up the provider {#wire-provider}
@@ -83,7 +83,7 @@ function Root() {
 }
 ```
 
-Then call `initialize` from a component nested inside `StripeTerminalProvider`:
+Then call `initialize` from a component nested inside `StripeTerminalProvider`.
 
 ```tsx
 function App() {
@@ -104,7 +104,7 @@ Call `initialize` from a component nested inside `StripeTerminalProvider`, not f
   </TabItem>
   <TabItem value="ios" label="iOS">
 
-Implement the `ConnectionTokenProvider` protocol with a single `fetchConnectionToken` method:
+Implement the `ConnectionTokenProvider` protocol with a single `fetchConnectionToken` method.
 
 ```swift
 import StripeTerminal
@@ -120,7 +120,7 @@ class SampleTokenProvider: ConnectionTokenProvider {
 }
 ```
 
-Initialize the terminal once in your `AppDelegate`, before first use:
+Initialize the terminal once in your `AppDelegate`, before first use.
 
 ```swift
 import UIKit
@@ -141,7 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   </TabItem>
   <TabItem value="android" label="Android">
 
-Implement the `ConnectionTokenProvider` interface with a single `fetchConnectionToken` method:
+Implement the `ConnectionTokenProvider` interface with a single `fetchConnectionToken` method.
 
 ```kotlin
 class SampleTokenProvider : ConnectionTokenProvider {
@@ -170,7 +170,7 @@ class StripeTerminalApplication : Application() {
 }
 ```
 
-Then initialize the terminal with your token provider and a `TerminalListener`:
+Then, initialize the terminal with your token provider and a `TerminalListener`.
 
 ```kotlin
 val listener = object : TerminalListener {
@@ -396,7 +396,7 @@ Prompt the user to accept and retry.
 
 Merchant profile configuration is done manually during early access.
 If `requestTerminalConnectionToken` is called before a profile is fully configured, the mutation returns an `InternalErrorRejection`.
-Contact your Product Integration Manager with your merchant profile ID so they can complete the configuration.
+Contact your point of contact at Swan and provide your merchant profile ID to complete the configuration.
 
 ## Next steps {#next-steps}
 

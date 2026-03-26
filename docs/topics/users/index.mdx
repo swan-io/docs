@@ -26,7 +26,7 @@ If a user's mobile phone number previously belonged to someone else, and the num
 
 :::info Sandbox users
 When testing your integration, you'll need [Sandbox users](../../developers/tools/sandbox-users.mdx).
-Sandbox users make it possible to simulate the different situations you may encounter with your real users in your Live environment, as long as they're logging in with the **same phone number**.
+Sandbox users make it possible to simulate the different situations you may encounter with your real users in your Live environment. Sandbox and Live users share the **same phone number**.
 :::
 
 ## Signing up {#signup}
@@ -39,9 +39,9 @@ Your user:
 1. Opens their sign-up link.
 1. **Enters their phone number**.
     - If you include their number when [creating their sign-up link](../../developers/using-api/authentication/guide-get-token-user.mdx#url-parameters-optional), they won't need to enter it again.
-1. **Confirms their phone number**, after which they continue the sign-up process on their mobile device. How they confirm this step depends on whether they opened the sign-up link from a computer or their mobile device:
-    1. **Computer**: Swan sends your user a text message with a link to open on their mobile device.
-    1. **Mobile device**: Swan sends your user a text message with a verification code. 
+1. **Confirms their phone number**. How they confirm depends on whether they opened the sign-up link from a computer or their mobile device:
+    1. **Desktop**: Swan sends your user a text message with a verification code. The user enters this code on their computer to confirm their phone number.
+    1. **Mobile device**: Swan sends your user a text message with a verification code.
 1. **Enters their personal information**: first name, last name, and birthdate. This information must match the information that appears on their identity document.
     - The user skips this step if you included this information when [creating their sign-up link](../../developers/using-api/authentication/guide-get-token-user.mdx#url-parameters-optional).
 1. **Sets a 6-digit passcode**. Users must remember their passcode. Swan can request it anytime the user needs to consent to a sensitive operation.
@@ -62,7 +62,7 @@ Your user:
 1. **Reviews and confirms all provided information**: personal, birth, and residency. Users can modify their information before confirming.
 1. [**Completes identification**](./identifications/index.mdx), where Swan verifies their identity. This step **can be performed later**, though it's recommended to complete it as soon as possible. When using the API, you must trigger this step.
 1. *(Optional)* **Sets up biometrics**, if desired and available on their mobile device. Biometrics typically include face or fingerprint authentication.
-1. Redirected to your redirect URL.
+1. Gets redirected to your redirect URL.
 
 :::note Identification rejection
 If a user's identification fails, they receive a text message after completing sign-up with the **reason for the failure**. They must follow the link provided to retry. 
@@ -81,20 +81,20 @@ flowchart TB
     ComputerEntry([User sign-up started on computer with<br/>an OAuth 2.0 link]) -.-> EntersMobileNumber
 
     EntersMobileNumber -- User on mobile --> ConfirmsMobileNumberMobile([Confirms mobile number])
-    EntersMobileNumber -- User on computer --> ReceivesLink([Receives text message with<br/>link to open on mobile device])
+    EntersMobileNumber -- User on computer --> ReceivesOTP([Receives verification code in text message])
 
     ConfirmsMobileNumberMobile --> ReceivesCode([Receives verification code in text message])
     ReceivesCode --> EntersCode([Enters verification code])
     EntersCode --> QueryParams{Are query parameters filled?}
     
-    ReceivesLink --> OpensLink([Opens link to verify number])
-    OpensLink --> QueryParams
+    ReceivesOTP --> EntersOTP([Enters verification code on computer])
+    EntersOTP --> QueryParams
 
     QueryParams -- No --> EntersPI([Enters personal information])
     QueryParams -- Yes --> UserStartedComputer{User started sign-up on computer?}
 
     EntersPI --> UserStartedComputer
-    UserStartedComputer -- Yes --> ConfirmsNumber([Confirms number a second time])
+    UserStartedComputer -- Yes --> ConfirmsNumber([Confirms number on computer])
     ConfirmsNumber --> ChoosesPasscode([Chooses 6-digit passcode])
     UserStartedComputer -- No --> ChoosesPasscode
 
@@ -125,8 +125,8 @@ flowchart TB
     style ConfirmsMobileNumberMobile fill:#D4D3D5,stroke:#514F59
     style ReceivesCode fill:#D4D3D5,stroke:#514F59
     style EntersCode fill:#D4D3D5,stroke:#514F59
-    style ReceivesLink fill:#D4D3D5,stroke:#514F59
-    style OpensLink fill:#D4D3D5,stroke:#514F59
+    style ReceivesOTP fill:#D4D3D5,stroke:#514F59
+    style EntersOTP fill:#D4D3D5,stroke:#514F59
     style ConfirmsNumber fill:#D4D3D5,stroke:#514F59
     style EntersPI fill:#D4D3D5,stroke:#514F59
     style ChoosesPasscode fill:#D4D3D5,stroke:#514F59
@@ -162,16 +162,17 @@ How they get to their account depends on your [integration](../get-started/choos
 
 After [signing up](#signup), logging into Swan is quick.
 
-Your user **re-enters their mobile number** (every time, for security reasons), then either completes **biometric** authentication or enters the 6-digit **passcode** they chose when signing up.
+Your user **re-enters their mobile number** (every time, for security reasons), then authenticates.
+How authentication works depends on the device:
 
-Whether **biometrics function correctly** depends on your user's device.
-If your user configured biometrics and is logging in (or consenting to a sensitive operation) from that same device, biometrics should work as expected.
-However, if they access Swan from a new mobile device, they must enter their passcode.
-Then, if desired, they can configure biometrics on the new device.
+- **Desktop**: Swan sends your user a text message with a verification code. The user enters this code on their computer, then enters the 6-digit **passcode** they chose when signing up.
+- **Mobile**: Swan sends your user a text message with a verification code. The user enters this code, then either completes **biometric** authentication or enters their 6-digit **passcode**.
 
-Additionally, biometrics might be **deactivated** if Swan's API detects that the mobile device's **operating system isn't up to date**.
-In this case, the user enters their passcode to authenticate.
-Before trying to reconfigure biometrics, they need to update the software on their mobile device.
+:::info Biometrics
+Biometrics are only available on mobile devices.
+If your user accesses Swan from a new mobile device, they must enter their passcode.
+They can then configure biometrics on the new device if desired.
+:::
 
 <details>
   <summary>End-user perspective of logging into Swan</summary>
@@ -199,7 +200,7 @@ import DeactivateRequirements from './overview/_deactivate-reqs.mdx';
 <DeactivateRequirements />
 
 If all conditions are met, the user can be deactivated.
-When a user is deactivated, all user access tokens and their associated refresh tokens associated with the deactivated user are revoked can no longer be used.
+When a user is deactivated, all user access tokens and refresh tokens associated with the deactivated user are revoked and can no longer be used.
 
 If conditions aren't met, there are three possible rejection reasons:
 

@@ -23,7 +23,7 @@ Refer to the [card payments section](../../topics/payments/cards/index.mdx) for 
 1. Make your payment control process [**idempotent**](#idempotent) for each transaction.
 1. Choose **accept** as your [**default response**](#configure) in case of a timeout for a better user experience.
 1. **Consider [capture types](#flow-capture)** as you configure your payment control.
-1. You **can't reject** transactions based on digital wallet provider, as per your and Swan's agreement with Mastercard. Swan shares the `digitalCardWalletProvider` in the [`POST` request](#swan-request).
+1. You **can't reject** transactions based on the digital wallet provider, as per your and Swan's agreement with Mastercard. Swan shares the `digitalCardWalletProvider` in the [`POST` request](#swan-request).
 
 ## Schema file {#schema}
 
@@ -50,7 +50,7 @@ You can test your updated file with the [Swagger Editor](https://editor-next.swa
     - **Both you and Swan say yes**: <Yes /> Transaction accepted.
     - **Both you and Swan say no**: <No /> Transaction rejected.
     - **Either you or Swan says no**: <No /> Transaction rejected.
-1. Based on the response from you and Swan, Mastercard allows the transaction or rejects it at the merchant's point of sale.
+1. Based on your and Swan's response, Mastercard either allows or rejects the transaction at the merchant's point of sale.
 
 :::caution Mastercard rejections 
 Though rare, it's possible that Mastercard rejects a transaction even if you and Swan both accept it.
@@ -70,7 +70,7 @@ Though 99% of all captures are standard, you can plan for the various capture ty
 Consider the **fluctuating nature of currency exchange** in your payment control configuration.
 
 Rather than assuming a static exchange rate of 1 USD being equivalent to 1 EUR, assume 1 USD to be 1.1 EUR.
-This might result in an account's spending limit being reached more quickly, but it can help prevent over capture and therefore a negative balance.
+This might result in an account's spending limit being reached more quickly, but it can help prevent overcapture and therefore a negative balance.
 
 Alternatively, you can advise account holders to maintain a buffer of around 10% in their accounts, especially if they make frequent payments in currencies other than euros.
 :::
@@ -100,8 +100,8 @@ Enter your information and click **Save**.
 
 - **Enabled**: Only enabled payment control endpoints can be used and updated.
 - **Endpoint URL**: Enter your endpoint (mandatory), using either `http` or `https`.
-- **Default response**: In case of a timeout, choose whether you **accept** or **reject** the transaction by default. Swan suggests choosing **accept** for a better cardholder experience.
-- **Timeout**: Timeout is up to 10 seconds (10000 milliseconds) in Sandbox. In Live, it's 1.5 seconds (1500 milliseconds) and not configurable.
+- **Default response**: In case of a timeout, choose whether you **accept** or **reject** the transaction. Swan suggests choosing **accept** for a better cardholder experience.
+- **Timeout**: Up to 10 seconds (10000 milliseconds) in Sandbox. In Live, it's 1.5 seconds (1500 milliseconds) and not configurable.
 - **Secret**: Generate a secret. Make sure to add it to your `x-swan-secret` header.
 - **€0 authorizations**: Merchants can enable this to use zero-amount authorizations to check a card's validity. This is disabled by default.
 - **Credit authorizations**: Enable credit authorization forwarding for refund-related transactions (identified by `operationType: "Credit"`). This is disabled by default.
@@ -174,6 +174,10 @@ In case of a timeout, or if your endpoint wasn't reachable, Swan applies your [d
     "partialAuthorizationAmountValue": 10 //optional, refer to partial authorization options
 }
 ```
+
+:::info `partialAuthorizationAmountValue` field details
+The `partialAuthorizationAmountValue` field is a decimal. Always provide the value in EUR (Swan's account currency), even if the cardholder paid in another currency, such as USD.
+:::
 
 ### Partial authorization options {#partner-response-partial}
 

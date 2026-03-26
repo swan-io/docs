@@ -14,7 +14,7 @@ Whenever you issue a new card, a virtual card number is **created and enabled in
 The virtual card must exist before a physical card can be printed or a virtual card added to a digital wallet.
 
 A virtual card represents the card contract for all associated cards.
-After adding a virtual card, you can update that card, view sensitive card information, and cancel or deactivate the card.
+After adding a virtual card, you can update it, view its sensitive information, and cancel or deactivate it.
 If you deactivate a virtual card, all physical and digital cards attached to it are also deactivated.
 
 ## Adding virtual cards with the API {#mutations}
@@ -32,7 +32,7 @@ You can use one of several mutations to add virtual cards with the API.
 
 ## Card number & PIN {#number-pin}
 
-Each virtual card has a unique card number, different even from a physical card added at the same time.
+Each virtual card has a unique card number, different from a physical card added at the same time.
 **Virtual cards don't have a PIN** (Personal Identification Number).
 
 Swan makes the virtual card's number, CVC, and expiry date available in Web Banking.
@@ -47,15 +47,19 @@ import VirtualPhysicalCardNumbers from '../partials/_card-numbers.mdx';
 
 ## Single-use virtual cards {#suv}
 
-Single-use virtual (SUV) cards can either be used once or for one dedicated merchant.
+Single-use virtual (SUV) cards can either be used once or for a single dedicated merchant.
 Therefore, you can consider SUV card use like this: they're for (a) one time, or (b) one place.
 
 Because of their very limited scope, users can **avoid [3-D Secure (3DS) consent](../../payments/cards/index.mdx#3ds)** when paying with SUV cards.
 SUV cards can be either **one-off** or **recurring**.
 
+:::warning
+SUV cards can't be added to Apple Wallet or Google Wallet.
+:::
+
 ### One-off {#suv-one-off}
 
-One-off SUV cards, in theory, work one time for one transaction.
+In theory, one-off SUV cards work only once, for a single transaction.
 It's not that straightforward, however, because some merchants send multiple authorizations for a single debit.
 Pre-authorization is a good example, as the merchant pre-authorizes an amount, and then a separate transaction is created for the actual debit.
 
@@ -73,24 +77,24 @@ Swan automatically sets the `cardContractExpiryDate` to 30 days from creation wh
 
 ### Recurring {#suv-recurring}
 
-You can think of recurring SUV cards as single *merchant* virtual cards.
+You can think of recurring SUV cards as *single-merchant* virtual cards.
 The `AccountHolderSpendingLimit.period` is **not** `Always`.
 
 When the cardholder uses a recurring SUV card for the first time, Swan restricts the card to the merchant ID that triggered the authorization.
 
-If the card is used with the same merchant, the merchant ID matches and the transaction can go through.
-However, if the cardholder tries to use the card elsewhere, the transaction is rejected because the merchant IDs don't match.
+If the cardholder uses the card with the same merchant, the merchant IDs match, and the transaction goes through.
+However, if they use the card elsewhere, the merchant IDs don't match, and the transaction is rejected.
 
 #### Disabling a recurring SUV cardholder's membership
 
-When the cardholder of a recurring SUV card's account membership is disabled, the card is automatically reassigned to the account's legal representative and remains active, ensuring their expenses are not interrupted.
+When the account membership of a recurring SUV cardholder is disabled, the card is automatically reassigned to the account's legal representative and remains active, ensuring expenses aren't interrupted.
 
 This automatic reassignment maintains business continuity while preserving proper account control.
 
 ## Cancellation of virtual cards {#cancel}
 
 Canceling a virtual card is an **irreversible action** that immediately and permanently invalidates the card.
-Cancellation impacts the entire card contract, which includes the virtual card and any associated physical and digital cards.
+Cancellation impacts the entire card contract, including the virtual card and any associated physical and digital cards.
 **Consent isn't required** to cancel cards.
 When cancellation is complete, you're no longer billed for the card.
 

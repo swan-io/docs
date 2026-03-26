@@ -152,6 +152,7 @@ module.exports = {
             "topics/accounts/closure/guide-close-api",
             "topics/accounts/closure/guide-close-limited",
             "topics/accounts/closure/guide-close-unlimited",
+            "topics/accounts/closure/guide-get-closure-info",
           ],
         },
         {
@@ -682,7 +683,7 @@ module.exports = {
       items: [
         {
           type: "category",
-          label: "Tools overview",
+          label: "Testing tools",
           link: { type: "doc", id: "developers/tools/index" },
           collapsed: true,
           items: [
@@ -690,10 +691,10 @@ module.exports = {
             "developers/tools/testing-api",
             "developers/tools/event-simulator",
             "developers/tools/sandbox-users",
-            "developers/tools/mcp-servers",
             "developers/tools/postman-collection",
           ],
         },
+        "developers/tools/mcp-servers",
         "developers/tools/guide-test-tools",
       ],
     },
@@ -782,12 +783,13 @@ module.exports = {
       items: [
         {
           type: "category",
-          label: "Account onboarding enhancements",
-          link: { type: "doc", id: "preview/new-onboarding/index" },
+          label: "In-person cards",
+          link: { type: "doc", id: "preview/in-person/cards/index" },
           collapsed: true,
           items: [
-            "preview/new-onboarding/individual",
-            "preview/new-onboarding/company",
+            "preview/in-person/cards/guide-accept",
+            "preview/in-person/cards/guide-request-method",
+            "preview/in-person/cards/guide-create-payments",
           ],
         },
       ],
@@ -798,6 +800,16 @@ module.exports = {
       collapsible: false,
       collapsed: false,
       items: [
+        {
+          type: "category",
+          label: "Account onboarding enhancements",
+          link: { type: "doc", id: "preview/new-onboarding/index" },
+          collapsed: true,
+          items: [
+            "preview/new-onboarding/individual",
+            "preview/new-onboarding/company",
+          ],
+        },
         {
           type: "category",
           label: "Card insurance",

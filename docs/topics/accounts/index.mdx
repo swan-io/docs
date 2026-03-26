@@ -85,8 +85,26 @@ Swan accounts have different capabilities determined by the combination of these
 | Level + Type | Capabilities |
 | --- | --- |
 | `Limited` + `EMoney` | <Yes /> The account can be used for certain actions, such as inviting account members and adding virtual cards.<br /><br /><No /> Account holder verification isn't complete.<br /><No /> The account's main IBAN isn't displayed.<br /><No /> Payments can't be made from the account. |
-| `Limited` + `PaymentService` | <Yes /> The account's main IBAN is displayed.<br /><Yes /> Money can be added to the account.<br /><br /><No /> Account holder verification isn't complete.<br /><No /> Payments can't be made from the account. |
+| `Limited` + `PaymentService` | <Yes /> The account's main IBAN is displayed.<br /><Yes /> Money can be added to the account.<br /><br /><No /> Account holder verification isn't complete.<br /><No /> Payments can't be made from the account.<br /><No /> Incoming SEPA Credit Transfers exceeding €50 are automatically rejected.<br /><No /> Maximum cumulative balance is €150.<br /><No /> Incoming International Credit Transfers are automatically rejected regardless of amount. |
 | `Unlimited` + `PaymentService` | <Yes /> Account holder verification status is `Verified`.<br /><Yes /> Payments can be made from the account.<br /><Yes /> The account's main IBAN is displayed.<br /><Yes /> All accounts functions are possible. |
+
+:::info Restrictions on incoming transfers for limited accounts
+
+`Limited` accounts are subject to the following restrictions:
+- Each incoming SEPA Credit Transfer must be **€50 or less**.
+- A `Limited` account can't receive more than €150 in SEPA Credit Transfers over its lifetime.
+
+The €150 limit applies to the cumulative sum received, not the current account balance.
+Swan fees don't count toward this limit. For example, if a user receives €150 and is charged a €2 Swan fee, their balance will be €148. 
+Even though the fee reduced their balance, the €150 received counts towards their limit. 
+Swan will automatically reject any further transfers sent to the account.
+
+These restrictions apply to both SEPA Credit Transfers (instant and regular).
+Incoming International Credit Transfers are automatically rejected regardless of amount.
+
+Accounts are in `Limited` status before they are verified. 
+These restrictions primarily impact first transfers during the account holder verification process. 
+:::
 
 ## Balances {#balances}
 
@@ -107,18 +125,18 @@ There are four different account balances.
 
 This example involves the balances `Booked`, `Pending`, and `Available`.
 
-1. An account has a `Booked` balance of 142€.
-1. There is a `Pending` outgoing transfer request for 42€ that is still being processed. Therefore, the `Available` balance is 100€ (142€ - 42€ = 100€).
-1. This account doesn't have a sufficient balance to send an outgoing payment of more than its 100€ `Available` balance. Therefore, the payment is **rejected**.
+1. An account has a `Booked` balance of €142.
+1. There is a `Pending` outgoing transfer request for €42 that is still being processed. Therefore, the `Available` balance is €100 (€142 - €42 = €100).
+1. This account doesn't have a sufficient balance to send an outgoing payment of more than its €100 `Available` balance. Therefore, the payment is **rejected**.
 
 <h3 id="example-rolling-reserve">Example: Rolling reserve</h3>
 
 This example involves the balances `Booked`, `Reserved`, and `Available`.
 
-1. A merchant's account has a `Booked` balance of 200€ thanks to [accepting a customer's payment](../merchants/online/sdd/index.mdx) through SEPA Direct Debit.
-1. For this example, the rolling reserve is 15% over 15 business days (exact rolling reserve amounts can change based on your contract with Swan). Therefore, the `Reserved` balance is 30€ for 15 days.
-1. The `Available` balance from this transaction is 170€ for the duration of the rolling reserve period (200€ - 30€ = 170€).
-1. After 15 days, the `Reserved` balance is released and the full `Available` balance is 200€.
+1. A merchant's account has a `Booked` balance of €200 thanks to [accepting a customer's payment](../merchants/online/sdd/index.mdx) through SEPA Direct Debit.
+1. For this example, the rolling reserve is 15% over 15 business days (exact rolling reserve amounts can change based on your contract with Swan). Therefore, the `Reserved` balance is €30 for 15 days.
+1. The `Available` balance from this transaction is €170 for the duration of the rolling reserve period (€200 - €30 = €170).
+1. After 15 days, the `Reserved` balance is released and the full `Available` balance is €200.
 
 ## Transactions {#transactions}
 

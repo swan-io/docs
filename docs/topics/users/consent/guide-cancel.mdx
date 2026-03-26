@@ -1,0 +1,67 @@
+---
+title: Cancel a consent
+---
+
+# Cancel a consent
+
+Cancel a pending consent request before it's completed.
+Consents can be canceled by you or your user as long as the consent has a non-final status.
+
+## Prerequisites
+
+- You need a project or user access token.
+- The consent must have one of these non-final statuses:
+    - `Created`: Consent request created but URL not opened.
+    - `Started`: URL opened but consent not yet provided.
+    - `OperationCommitting`: For [multi-consents](./guide-create-multiconsent.mdx), when execution is in progress.
+
+## Guide
+
+1. Call the `cancelConsent` mutation.
+1. Add your consent ID.
+1. Add the success payload and rejections.
+
+## Mutation
+
+🔎 [Open the mutation in API Explorer](https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsQ29uc2VudCB7CiAgY2FuY2VsQ29uc2VudChpbnB1dDogeyBjb25zZW50SWQ6ICIkWU9VUl9DT05TRU5UX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsQ29uc2VudFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBpZAogICAgICAgIHN0YXR1cwogICAgICB9CiAgICB9CiAgICAuLi4gb24gQ29uc2VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50SWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE5vdFJlYWNoYWJsZUNvbnNlbnRTdGF0dXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGN1cnJlbnRTdGF0dXMKICAgICAgdW5yZWFjaGFibGVTdGF0dXMKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQ%3D%3D&tab=api)
+
+```graphql title="Mutation" showLineNumbers
+mutation CancelConsent {
+  cancelConsent(input: { consentId: "$YOUR_CONSENT_ID" }) {
+    ... on CancelConsentSuccessPayload {
+      __typename
+      consent {
+        id
+        status
+      }
+    }
+    ... on ConsentNotFoundRejection {
+      __typename
+      consentId
+      message
+    }
+    ... on NotReachableConsentStatusRejection {
+      __typename
+      currentStatus
+      unreachableStatus
+      message
+    }
+  }
+}
+```
+
+## Payload
+
+```json title="Payload" showLineNumbers
+{
+  "data": {
+    "cancelConsent": {
+      "__typename": "CancelConsentSuccessPayload",
+      "consent": {
+        "id": "$YOUR_CONSENT_ID",
+        "status": "Canceled"
+      }
+    }
+  }
+}
+```

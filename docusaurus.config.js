@@ -124,13 +124,7 @@ module.exports = {
     },
   },
   themes: ["@docusaurus/theme-mermaid"],
-  scripts: [
-    {
-      src: "https://app.outverse.com/widgetverse/swan.js",
-      async: true,
-      defer: true,
-    },
-  ],
+  scripts: [],
   presets: [
     [
       "@docusaurus/preset-classic",

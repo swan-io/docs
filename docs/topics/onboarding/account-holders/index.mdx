@@ -20,7 +20,7 @@ However, regulations require **Swan to verify all of your account holders**, and
 
 Therefore, Swan verifies each user before the account holder and account objects are created in your Swan project.
 This verification, often referred to as Know Your Customer (**KYC**) or Know Your Business (**KYB**), is **mandatory**.
-This is an ongoing regulatory requirement, not a one-time onboarding event. Swan performs periodic re-verification to keep account holder information up to date.
+This is an ongoing regulatory requirement, not a one-time onboarding event. Swan periodically performs verification renewals to keep account holder information up to date.
 
 :::caution Verification responsibility
 One benefit of working with Swan is that Swan is responsible for this process.
@@ -313,63 +313,55 @@ When the verification process is complete and the account is ready for full use,
 | End user | Uses your project logo and accent color. Includes the account's IBAN and BIC so users can start using their account. |
 | Partner | Uses Swan branding. Includes data to help with your KYC process: account Holder ID, Account Holder name, account IBAN, account BIC, account admin email, and account admin language. |
 
-## Periodic re-verification {#re-verification}
+## Verification renewal {#verification-renewal}
 
-To comply with ACPR standards, Swan must periodically verify the information we have for every account holder. 
-If an account holder is required to complete periodic re-verification, it applies across all accounts held by that account holder.
+To comply with ACPR standards, Swan periodically verifies account holder information.
+Verification renewal applies to all accounts held by the account holder.
 
-Periodic re-verification is a mandatory process occuring every 1, 3, or 5 years, or whenever significant changes are detected in an account holder's profile. 
+It is a mandatory process that happens every 1, 3, or 5 years, or when we detect changes in an account holder's profile.
 
 :::warning Account suspension
-Users must complete re-verification **within 90 days**. If they don't, we will automatically suspend their account and restrict all related IBANs, cards, and payment capabilities until verification is complete.
+Users must confirm their account holder information within **90 days**. If they don't, we automatically suspend their account and restrict all related IBANs, cards, and payment capabilities until they complete verification.
 :::
 
-### Completing re-verification in the portal {#re-verification-portal}
+### Completing verification renewal in the portal {#verification-renewal-portal}
 
-Swan provides a no-code, partner-branded portal to handle the re-verification process. No API integration is required on your side.
+Swan provides a no-code, partner-branded portal to handle the verification renewal process. You don't need to integrate with an API. 
 
 Make sure your [branding settings](/topics/projects/guide-activate/#step-8-configure-your-branding-in-live) (logo and accent color) are up to date in your **Dashboard** > **Settings** > **Branding**.
 
-#### Re-verification steps {#re-verification-portal-steps}
+#### Verification renewal steps {#verification-renewal-portal-steps}
 
 The legal representative (account admin):
 
-1. Receives the [initial notification email](/topics/onboarding/account-holders/#re-verification-timeline) with a unique portal link.
+1. Receives the [initial notification email](/topics/onboarding/account-holders/#verification-renewal-timeline) with a unique portal link.
 1. Opens the link and provides consent to access the portal.
 1. Reviews the pre-filled information.
 1. Confirms the information is correct, or updates it if anything has changed.
 1. Uploads [supporting documents](/topics/accounts/documents/#required-documents) if required.
-1. Submits the re-verification request and receives a confirmation email. 
+1. Submits the form and receives a confirmation email.
 
 The KYC analyst reviews the submission.
 If more information or supporting documents are needed, they send a follow-up request with a new link. 
 The portal reopens for the missing items only.
 
-After Swan validates the review, the account holder's [`VerificationRenewalStatus`](https://api-reference.swan.io/enums/verification-renewal-status/) status changes to `Completed`. The account holders banking verification status isn't impacted by verification renewal. 
+After Swan validates the review, the account holder's [`VerificationRenewalStatus`](https://api-reference.swan.io/enums/verification-renewal-status/) changes to `Completed`. Verification renewal doesn't impact the account holder's banking verification status.
 
-### Re-verification timeline and reminders {#re-verification-timeline}
-
-The  **90-day window** for the periodic re-verification process starts after the initial notification is sent to your user.
+### Verification renewal timeline and communication {#verification-renewal-timeline}
 
 :::tip Update your communication preferences
 We send the initial form and all follow-ups based on your [communication preferences](/topics/onboarding/account-holders/#notifications). 
-We recommend having Swan email your end users directly, with you copied (CC'd). Create a ticket outlining your communication preferences for re-verification. 
-You can also specify a unique email address.
+We recommend that Swan emails your end users directly and copies you (CC). You can also specify a unique email address. 
+Create a ticket that outlines your communication preferences for verification renewal.
 :::
 
-| Milestone | Timeline | What happens |
-| :--- | :--- | :--- |
-| **Start of Re-KYC** | Day 0 | Swan sends an email to the legal representative with a unique portal link. |
-| **First reminder** | Day 30 | Your user receives a reminder if they haven't completed the portal flow. |
-| **Second reminder** | Day 60 | Your user receives a second reminder if they haven't completed the portal flow. |
-| **Final reminder** | Last week | Your user receives a final reminder one week before the deadline. |
-| **Re-verification deadline** | Day 90 | Swan suspends all of the account holder's accounts. |
+We start the **90-day** period when we send your user the first email notification. 
+At the 90-day deadline, Swan suspends all of the account holder's accounts if they haven't confirmed their details. 
+To lift the suspension, the user can complete the process using the last portal link Swan emailed them. 
+Afterwards, either you or the user must submit a support request for a review. 
+Swan may close the account if it stays suspended for too long.
 
-:::note Steps after suspension
-- The user can still complete re-verification after suspension using the latest portal link Swan emailed them.
-- After they complete the flow, you or the user must submit a support request so a KYC analyst can review the case and lift the suspension.
-- Swan may close the account if it remains suspended for too long without completing re-verification.
-:::
+Share [Swan's Support Center article](https://support.swan.io/hc/en-150/articles/34836242879517-Draft-Confirm-your-details-again#h_01KM37Q6G1K2ZEN7ESEHTBBDM1) to show them the full timeline and the reminders we send.
 
 ## Guides {#guides}
 

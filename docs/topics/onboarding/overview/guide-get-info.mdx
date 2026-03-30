@@ -4,10 +4,10 @@ title: Get information about an onboarding
 
 # Get information about an onboarding
 
-Use the `onboardings` query to get information about your onboardings, allowing you to monitor progress or share information with your end user.
+Use the `accountHolderOnboardings` query to get information about your onboardings, allowing you to monitor progress or share information with your end user.
 
-Queries are highly customizable, so use the `onboardings` query to retrieve any information that will help you follow along with your users.
-You can also use it retrieve onboarding IDs.
+Queries are highly customizable, so use the `accountHolderOnboardings` query to retrieve any information that will help you follow along with your users.
+You can also use it to retrieve onboarding IDs.
 
 After getting information about an onboarding, you might want to **update that onboarding** if it is still ongoing.
 Refer to the guides to update an [individual](../individual/guide-update.mdx) or [company](../company/guide-update.mdx) onboarding.
@@ -17,41 +17,71 @@ To monitor onboarding progress, you must have at least one existing onboarding, 
 The onboarding can have [any status](../index.mdx#statuses).
 :::
 
+:::tip Deprecated queries
+The previous `onboardings` query is deprecated but still functional. Use `accountHolderOnboardings` for all new integrations.
+The previous `onboarding` query (single) is replaced by `accountHolderOnboarding`. The previous `onboardingInfo` query (public) is replaced by `publicAccountHolderOnboarding`.
+:::
+
 ## Guide
 
-1. Call the `onboardings` query.
+1. Call the `accountHolderOnboardings` query.
 1. Add all the query options you'd like to monitor.
-    * For this exercise, add: `createdAt`, `email`, `info` > `type`, `onboardingUrl`, `statusInfo` > `status`, `id`, and `totalCount`.
+    * For this exercise, add: `createdAt`, `email`, `onboardingUrl`, `statusInfo` > `status`, `id`, and `totalCount`.
     * To `statusInfo` > `status`, add a **rejection** as well: `OnboardingInvalidStatusInfo` with `errors`, `field`, and `status`.
 1. You can only get information for up to **100 onboardings** at a time. Add [pagination](../../../developers/using-api/pagination.mdx) to tailor your response to the information you need.
 
 ## Query
 
-<a href="https://explorer.swan.io?query=cXVlcnkgTW9uaXRvck9uYm9hcmRpbmcgewogIG9uYm9hcmRpbmdzIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgZW1haWwKICAgICAgICBpbmZvIHsKICAgICAgICAgIHR5cGUKICAgICAgICB9CiAgICAgICAgb25ib2FyZGluZ1VybAogICAgICAgIG9uYm9hcmRpbmdTdGF0ZQogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgICAuLi4gb24gT25ib2FyZGluZ0ludmFsaWRTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBlcnJvcnMgewogICAgICAgICAgICAgIGZpZWxkCiAgICAgICAgICAgICAgZXJyb3JzCiAgICAgICAgICAgIH0KICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIGlkCiAgICAgIH0KICAgIH0KICAgIHRvdGFsQ291bnQKICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgTW9uaXRvck9uYm9hcmRpbmcgewogIGFjY291bnRIb2xkZXJPbmJvYXJkaW5ncyhmaXJzdDogMTApIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgLi4uIG9uIEluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgICBvbmJvYXJkaW5nVXJsCiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIC4uLiBvbiBPbmJvYXJkaW5nSW52YWxpZFN0YXR1c0luZm8gewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBlcnJvcnMgewogICAgICAgICAgICAgICAgZmllbGQKICAgICAgICAgICAgICAgIGVycm9ycwogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgICAgYWNjb3VudEFkbWluIHsKICAgICAgICAgICAgZW1haWwKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgLi4uIG9uIENvbXBhbnlBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgICBvbmJvYXJkaW5nVXJsCiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIC4uLiBvbiBPbmJvYXJkaW5nSW52YWxpZFN0YXR1c0luZm8gewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBlcnJvcnMgewogICAgICAgICAgICAgICAgZmllbGQKICAgICAgICAgICAgICAgIGVycm9ycwogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgICAgYWNjb3VudEFkbWluIHsKICAgICAgICAgICAgZW1haWwKICAgICAgICAgIH0KICAgICAgICAgIGNvbXBhbnkgewogICAgICAgICAgICBuYW1lCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICB0b3RhbENvdW50CiAgfQp9Cg==&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+The response returns an `AccountHolderOnboarding` union. Use inline fragments to access type-specific fields for `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`.
 
 ```graphql {} showLineNumbers
 query MonitorOnboarding {
-  onboardings {
+  accountHolderOnboardings(first: 10) {
     edges {
       node {
-        createdAt
-        email
-        info {
-          type
-        }
-        onboardingUrl
-        statusInfo {
-          status
-          ... on OnboardingInvalidStatusInfo {
-            __typename
-            errors {
-              field
-              errors
-            }
+        ... on IndividualAccountHolderOnboarding {
+          id
+          createdAt
+          onboardingUrl
+          statusInfo {
             status
+            ... on OnboardingInvalidStatusInfo {
+              __typename
+              errors {
+                field
+                errors
+              }
+              status
+            }
+          }
+          accountAdmin {
+            email
           }
         }
-        id
+        ... on CompanyAccountHolderOnboarding {
+          id
+          createdAt
+          onboardingUrl
+          statusInfo {
+            status
+            ... on OnboardingInvalidStatusInfo {
+              __typename
+              errors {
+                field
+                errors
+              }
+              status
+            }
+          }
+          accountAdmin {
+            email
+          }
+          company {
+            name
+          }
+        }
       }
     }
     totalCount
@@ -61,66 +91,53 @@ query MonitorOnboarding {
 
 ## Payload
 
-Review the sample payload with two `Ongoing` onboardings, one `Invalid` and one `Valid`, as well as one `Completed` onboarding with the status `Finalized`.
+Review the sample payload with two onboardings: one `Invalid` company onboarding and one `Valid` individual onboarding.
 
 ```json {} showLineNumbers
 {
   "data": {
-    "onboardings": {
+    "accountHolderOnboardings": {
       "edges": [
         {
           "node": {
+            "id": "$ONBOARDING_ID",
             "createdAt": "2023-06-20T14:10:39.286Z",
-            "email": "alberto.moreno@mimarca.io",
-            "info": {
-              "type": "Company"
-            },
             "onboardingUrl": "https://api.banking.swan.io/projects/$PROJECT_ID/onboardings/$ONBOARDING_ID?lang=es",
             "statusInfo": {
               "status": "Invalid",
               "__typename": "OnboardingInvalidStatusInfo",
               "errors": [
                 {
-                  "field": "individualUltimateBeneficialOwners[0].birthDate",
+                  "field": "company.relatedIndividuals[0].birthInfo.birthDate",
                   "errors": [
                     "Missing"
                   ]
                 }
               ]
             },
-            "id": "$ONBOARDING_ID"
+            "accountAdmin": {
+              "email": "alberto.moreno@mimarca.io"
+            },
+            "company": {
+              "name": "MiMarca"
+            }
           }
         },
         {
           "node": {
+            "id": "$ONBOARDING_ID",
             "createdAt": "2023-06-20T14:00:20.207Z",
-            "email": "sofia.ramos@mybrand.io",
-            "info": {
-              "type": "Individual"
-            },
             "onboardingUrl": "https://api.banking.swan.io/projects/$PROJECT_ID/onboardings/$ONBOARDING_ID?lang=en",
             "statusInfo": {
               "status": "Valid"
             },
-            "id": "$ONBOARDING_ID",
+            "accountAdmin": {
+              "email": "sofia.ramos@mybrand.io"
+            }
           }
-        },
-        {
-          "node": {
-            "createdAt": "2023-08-01T09:01:17.050Z",
-            "email": "malika.ngomao@mybrand.io",
-            "info": {
-              "type": "Individual"
-            },
-            "onboardingUrl": "https://api.banking.swan.io/projects/$PROJECT_ID/onboardings/$ONBOARDING_ID?lang=fr",
-            "statusInfo": {
-              "status": "Finalized"
-            },
-            "id": "$ONBOARDING_ID",
-          }
-        },
+        }
       ],
-      "totalCount": 3
+      "totalCount": 2
     }
   }
 }

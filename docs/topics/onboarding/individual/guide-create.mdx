@@ -16,33 +16,42 @@ import PublicOnboardingLinks from '../_public-onboarding-links.mdx';
 
 Create a unique individual onboarding link for each user with the API.
 
-1. Call the `onboardIndividualAccountHolder` mutation.
+1. Call the `createIndividualAccountHolderOnboarding` mutation.
 1. Enter information for all required API fields for the account country, as noted in [country requirements for individual accounts](./index.mdx#country-reqs).
-1. Include optional fields as needed for your use case (such as `accountName` or `oAuthRedirectParameters`).
+1. Include optional fields as needed for your use case (such as `accountInfo.name` or `oAuthRedirectParameters`).
 1. Add optional messages to the success payload, either for validation or in case of rejection.
+
+:::tip Deprecated mutation
+The previous `onboardIndividualAccountHolder` mutation is deprecated but still functional.
+Use `createIndividualAccountHolderOnboarding` for all new integrations.
+:::
 
 ### Mutation {#mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmcgewogIG9uYm9hcmRJbmRpdmlkdWFsQWNjb3VudEhvbGRlcigKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRDb3VudHJ5OiBGUkEKICAgICAgZW1haWw6ICJtYWxpa2EubmdvbWFvQG15YnJhbmQuaW8iCiAgICAgIGVtcGxveW1lbnRTdGF0dXM6IEVtcGxveWVlCiAgICAgIGxhbmd1YWdlOiAiZnIiCiAgICAgIG1vbnRobHlJbmNvbWU6IEJldHdlZW4zMDAwQW5kNDUwMAogICAgICByZXNpZGVuY3lBZGRyZXNzOiB7CiAgICAgICAgYWRkcmVzc0xpbmUxOiAiMTIzIGF2ZW51ZSBkZSBQYXJpcyIKICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDAiCiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBPbmJvYXJkSW5kaXZpZHVhbEFjY291bnRIb2xkZXJTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgb25ib2FyZGluZyB7CiAgICAgICAgaWQKICAgICAgICBvbmJvYXJkaW5nU3RhdGUKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmcgewogIGNyZWF0ZUluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZygKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJbmZvOiB7CiAgICAgICAgY291bnRyeTogRlJBCiAgICAgIH0KICAgICAgYWNjb3VudEFkbWluOiB7CiAgICAgICAgZW1haWw6ICJtYWxpa2EubmdvbWFvQG15YnJhbmQuaW8iCiAgICAgICAgZW1wbG95bWVudFN0YXR1czogRW1wbG95ZWUKICAgICAgICBwcmVmZXJyZWRMYW5ndWFnZTogZnIKICAgICAgICBtb250aGx5SW5jb21lOiBCZXR3ZWVuMzAwMEFuZDQ1MDAKICAgICAgICBhZGRyZXNzOiB7CiAgICAgICAgICBhZGRyZXNzTGluZTE6ICIxMjMgYXZlbnVlIGRlIFBhcmlzIgogICAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICAgIHBvc3RhbENvZGU6ICI3NTAwMCIKICAgICAgICB9CiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBDcmVhdGVJbmRpdmlkdWFsQWNjb3VudEhvbGRlck9uYm9hcmRpbmdTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgb25ib2FyZGluZyB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQoK&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-13,17,26,30} showLineNumbers
+```graphql {4-20,24} showLineNumbers
 mutation CreateIndividualOnboarding {
-  onboardIndividualAccountHolder(
+  createIndividualAccountHolderOnboarding(
     input: {
-      accountCountry: FRA
-      email: "malika.ngomao@mybrand.io"
-      employmentStatus: Employee
-      language: "fr"
-      monthlyIncome: Between3000And4500
-      residencyAddress: {
-        addressLine1: "123 avenue de Paris"
-        city: "Paris"
-        country: "FRA"
-        postalCode: "75000"
+      accountInfo: {
+        country: FRA
+      }
+      accountAdmin: {
+        email: "malika.ngomao@mybrand.io"
+        employmentStatus: Employee
+        preferredLanguage: fr
+        monthlyIncome: Between3000And4500
+        address: {
+          addressLine1: "123 avenue de Paris"
+          city: "Paris"
+          country: "FRA"
+          postalCode: "75000"
+        }
       }
     }
   ) {
-    ... on OnboardIndividualAccountHolderSuccessPayload {
+    ... on CreateIndividualAccountHolderOnboardingSuccessPayload {
       __typename
       onboarding {
         id
@@ -50,14 +59,6 @@ mutation CreateIndividualOnboarding {
           status
         }
       }
-    }
-    ... on ForbiddenRejection {
-      __typename
-      message
-    }
-    ... on ValidationRejection {
-      __typename
-      message
     }
   }
 }
@@ -70,8 +71,8 @@ If you added validation or rejection messages, you'll see information such as th
 ```json {6,8} showLineNumbers
 {
   "data": {
-    "onboardIndividualAccountHolder": {
-      "__typename": "OnboardIndividualAccountHolderSuccessPayload",
+    "createIndividualAccountHolderOnboarding": {
+      "__typename": "CreateIndividualAccountHolderOnboardingSuccessPayload",
       "onboarding": {
         "id": "ae06faf6-13b2-4e9e-891b-e78ecd5ca0e4",
         "statusInfo": {

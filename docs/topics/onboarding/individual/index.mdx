@@ -46,43 +46,53 @@ import CountryReqs from '../partials/_country-reqs.mdx';
 
 <CountryReqs thisAccountType="individual" thatAccountType="company" />
 
-For individual accounts, use the `onboardIndividualAccountHolder` mutation to collect the following information according to your desired account country.
+For individual accounts, use the `createIndividualAccountHolderOnboarding` mutation to collect the following information according to your desired account country.
+
+:::tip Deprecated mutation
+The previous `onboardIndividualAccountHolder` mutation is deprecated but still functional.
+Use `createIndividualAccountHolderOnboarding` for all new integrations.
+:::
+
+:::note Field reference
+For a complete list of fields including descriptions and validation rules, refer to the [individual onboarding field reference](./fields.mdx).
+:::
 
 <FieldRequirementsLegend />
 
 | API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-|`accountCountry`| <Req /><br/>(`FRA`) | <Req /><br/>(`BEL`) | <Req /><br/>(`DEU`) | <Req /><br/>(`ITA`) | <Req /><br/>(`NLD`) | <Req /><br/>(`ESP`) |
-|`accountName`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`acquisitionChannel`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`email`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`employmentStatus`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`language`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`monthlyIncome`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountInfo.country`| <Req /><br/>(`FRA`) | <Req /><br/>(`BEL`) | <Req /><br/>(`DEU`) | <Req /><br/>(`ITA`) | <Req /><br/>(`NLD`) | <Req /><br/>(`ESP`) |
+|`accountInfo.name`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.email`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountAdmin.preferredLanguage`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountAdmin.firstName`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.lastName`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.nationality`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.employmentStatus`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountAdmin.monthlyIncome`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountAdmin.address.addressLine1`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountAdmin.address.addressLine2`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.address.city`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountAdmin.address.country`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountAdmin.address.postalCode`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+|`accountAdmin.address.state`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.taxIdentificationNumber`|<Opt />|<Opt />| <Cnd /> ∗ | <Req /> |<Opt />|<Opt />|
+|`accountAdmin.acquisitionChannel`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.signupDate`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.sourcesOfFunds`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.birthInfo.birthDate`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.birthInfo.city`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.birthInfo.country`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.birthInfo.postalCode`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.userDeviceInfo.ip`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.userDeviceInfo.userAgent`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
+|`accountAdmin.userDeviceInfo.geoloc`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
 |`oAuthRedirectParameters`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`residencyAddress.addressLine1`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`residencyAddress.addressLine2`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`residencyAddress.city`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`residencyAddress.country`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`residencyAddress.postalCode`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`residencyAddress.state`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`taxIdentificationNumber`|<Opt />|<Opt />| <Cnd /> ∗ | <Req /> |<Opt />|<Opt />|
 
-∗ *If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
+∗ *If the `accountInfo.country` is Germany, the account holder has 90 days to provide their tax identification number when opening an account.
 Otherwise, the account will be suspended.*
-
-### Acquisition channel {#acquisition-channel}
-
-Use the optional `acquisitionChannel` field to indicate how the account holder was acquired.
-
-| Value | Description |
-|-------|-------------|
-| `InboundOrganic` | Account holders who signed up directly, such as through your website. |
-| `InboundReferral` | Account holders acquired through referrals from existing users or partners. |
-| `OutboundSales` | Account holders acquired through direct sales efforts. |
-| `OutboundAccountingFirm` | Account holders acquired through accounting firm partnerships. |
-
-Choose the value that best reflects your acquisition channel for each account holder.
 
 ## User flow diagrams {#diagrams}
 
@@ -105,3 +115,4 @@ Use the following guides to start and complete the individual onboarding process
 
 * [Create an individual onboarding link](./guide-create.mdx)
 * [Update an individual onboarding](./guide-update.mdx)
+* [Individual onboarding field reference](./fields.mdx)

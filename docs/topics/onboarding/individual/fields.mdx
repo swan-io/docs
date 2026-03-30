@@ -1,0 +1,178 @@
+---
+title: Individual onboarding fields
+---
+
+# Individual onboarding fields
+
+Field reference for individual account holder onboarding, including country-specific requirements and available options.
+For GraphQL types and validation constraints, refer to [`CreateIndividualAccountHolderOnboardingInput`](https://api-reference.swan.io/inputs/create-individual-account-holder-onboarding-input/) in the API reference.
+
+:::caution Supporting documents
+All requested supporting documents must be submitted to complete onboarding.
+:::
+
+<FieldRequirementsLegend />
+
+## `accountInfo`
+
+| Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `name` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+## `accountAdmin`
+
+:::info Account admin fields and sign-up
+Although many `accountAdmin` fields are optional during onboarding, they are required when the user signs up. We recommend collecting and sending this information before the end of the onboarding flow.
+:::
+
+### Personal information
+
+| Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `email` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `firstName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `lastName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `nationality` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `preferredLanguage` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `signupDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `acquisitionChannel` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+`acquisitionChannel` is hidden from end users. Provide it through your backend integration only.
+
+**Available options**
+
+- `preferredLanguage`: `de`, `en`, `es`, `fi`, `fr`, `it`, `nl`, `pt`.
+- `acquisitionChannel`: `InboundOrganic`, `InboundReferral`, `OutboundSales`, `OutboundAccountingFirm`.
+
+### Address (`accountAdmin.address`)
+
+| Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+### Birth information (`accountAdmin.birthInfo`)
+
+| Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `birthDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+### Financial information
+
+| Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `employmentStatus` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `monthlyIncome` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `sourcesOfFunds` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+**Available options**
+
+**`employmentStatus`**
+
+`Craftsman`, `Employee`, `Entrepreneur`, `Farmer`, `Manager`, `Practitioner`, `Retiree`, `ShopOwner`, `Student`, `Unemployed`.
+
+- `monthlyIncome`: `LessThan500`, `Between500And1500`, `Between1500And3000`, `Between3000And4500`, `MoreThan4500`.
+
+**`sourcesOfFunds`**
+
+`BusinessActivity`, `CapitalGains`, `FamilyContributions`, `InheritanceOrGift`, `Other`, `PersonalWealth`, `RealEstateIncome`, `Salary`, `SaleOfAssets`, `SelfEmployment`.
+
+### Tax information
+
+| Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <Req /> |
+
+¹ `taxIdentificationNumber` is required if any of the following conditions are true:
+
+- `accountAdmin.address.country` is different from `accountInfo.country`.
+- `accountAdmin.address.country` is Germany, Italy, or Belgium.
+
+### United States tax information (`accountAdmin.unitedStatesTaxInfo`)
+
+| Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `isUnitedStatesPerson` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
+
+² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+
+### User device information (`accountAdmin.userDeviceInfo`)
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `geoloc.lat` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `geoloc.lng` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `ip` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `userAgent` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+## `oAuthRedirectParameters`
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | Description |
+|---|---|
+| `redirectUrl` | URL to redirect to after the OAuth flow. |
+| `state` | Opaque value passed through the OAuth flow. |
+
+## Web Banking
+
+If you use Swan's Web Banking, the following fields are collected during the onboarding and sign-up flows.
+
+- `accountAdmin.firstName`, `lastName`, `nationality`.
+- `accountAdmin.address`: `addressLine1`, `city`, `country`, `postalCode`.
+- `accountAdmin.birthInfo`: `birthDate`, `city`, `country`, `postalCode`.
+- `accountAdmin.unitedStatesTaxInfo`.
+
+## API mapping
+
+Use this table to map fields from the deprecated API to the new API.
+
+### Account
+
+| Deprecated field | New field |
+|---|---|
+| `accountCountry` | `accountInfo.country` |
+| `accountName` | `accountInfo.name` |
+
+### Account administrator
+
+| Deprecated field | New field |
+|---|---|
+| - | `accountAdmin.acquisitionChannel` |
+| `residencyAddress.addressLine1` | `accountAdmin.address.addressLine1` |
+| `residencyAddress.addressLine2` | `accountAdmin.address.addressLine2` |
+| `residencyAddress.city` | `accountAdmin.address.city` |
+| `residencyAddress.country` | `accountAdmin.address.country` |
+| `residencyAddress.postalCode` | `accountAdmin.address.postalCode` |
+| `residencyAddress.state` | `accountAdmin.address.state` |
+| - | `accountAdmin.birthInfo.birthDate` |
+| - | `accountAdmin.birthInfo.city` |
+| - | `accountAdmin.birthInfo.country` |
+| - | `accountAdmin.birthInfo.postalCode` |
+| `email` | `accountAdmin.email` |
+| `employmentStatus` | `accountAdmin.employmentStatus` |
+| - | `accountAdmin.firstName` |
+| - | `accountAdmin.lastName` |
+| `monthlyIncome` | `accountAdmin.monthlyIncome` |
+| - | `accountAdmin.nationality` |
+| `language` | `accountAdmin.preferredLanguage` |
+| - | `accountAdmin.signupDate` |
+| - | `accountAdmin.sourcesOfFunds` |
+| `taxIdentificationNumber` | `accountAdmin.taxIdentificationNumber` |
+| - | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` |
+| - | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` |
+| - | `accountAdmin.userDeviceInfo.geoloc.lat` |
+| - | `accountAdmin.userDeviceInfo.geoloc.lng` |
+| - | `accountAdmin.userDeviceInfo.ip` |
+| - | `accountAdmin.userDeviceInfo.userAgent` |

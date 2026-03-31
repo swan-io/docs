@@ -239,6 +239,16 @@ module.exports = {
         },
         {
           type: "category",
+          label: "Card packages",
+          link: { type: "doc", id: "topics/cards/card-packages/index" },
+          collapsed: true,
+          items: [
+            "topics/cards/card-packages/guide-product-configuration",
+            "topics/cards/card-packages/guide-get-card-package-tier",
+          ],
+        },
+        {
+          type: "category",
           label: "Virtual cards",
           link: { type: "doc", id: "topics/cards/virtual/index" },
           collapsed: true,
@@ -811,15 +821,6 @@ module.exports = {
           items: [
             "preview/new-onboarding/individual",
             "preview/new-onboarding/company",
-          ],
-        },
-        {
-          type: "category",
-          label: "Card insurance",
-          link: { type: "doc", id: "preview/card-insurance/card-insurance" },
-          collapsed: true,
-          items: [
-            "preview/card-insurance/guide-insurance-integration",
           ],
         },
       ],

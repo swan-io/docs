@@ -55,13 +55,14 @@ Look for the arrow description `Uses page to consent to the operation`.
 
 ## List of sensitive operations {#sensitive}
 
-The following mutations concern sensitive operations and require consent.
+The following mutations are sensitive operations and typically require consent. Some may not, depending on context (for example, `suspendAccountMembership`).
 All links lead to the mutation's API Reference page.
 Mutations marked with the symbol ⮂ are eligible for [server-to-server consent](#s2s).
 
 <h3 id="sensitive-accounts">Accounts & onboarding</h3>
 
 - [`closeAccount`](https://api-reference.swan.io/mutations/close-account/)
+- [`openAccount`](https://api-reference.swan.io/mutations/open-account/) ⮂
 - [`finalizeOnboarding`](https://api-reference.swan.io/mutations/finalize-onboarding/) ⮂
 - [`updateAccountSettings`](https://api-reference.swan.io/mutations/update-account-settings/) ⮂
 
@@ -152,51 +153,50 @@ If you use Swan's Web Banking interface, Swan sends a text message to your users
 ## Server-to-server consent {#s2s}
 
 If you have thousands of operations waiting for consent, requiring consent directly from the user could become a blocker.
-**Server-to-server (S2S) consent bypasses direct user intervention**, making bulk actions that your integrations might require easier to execute.
-
+Server-to-server (S2S) consent bypasses direct user intervention, making bulk actions that your integrations might require easier to execute.
 For example, you might consider using server-to-server consent to generate single-use virtual cards to pay merchants, perform batch payments, and refund transfers.
 
 Human interaction is always required for SCA, but Swan makes an exception for your own accounts.
 If you want to implement it, you can use S2S consent to approve sensitive operations.
 Note that your implementation requires approval from Swan.
 
-Many [sensitive operations](#sensitive) are eligible for server-to-server consent.
+Many sensitive operations are eligible for server-to-server consent.
 Some operations allow you to view highly sensitive information and, therefore, aren't eligible for server-to-server consent.
-Review the list of [sensitive operations](#sensitive) to know which operations are eligible for server-to-server consent, marked with the symbol ⮂.
+Review the [list of sensitive operations](#sensitive) to know which operations are eligible for server-to-server consent, marked with the symbol ⮂.
 
 Learn how to **implement server-to-server consent** in the [dedicated guide](./guide-implement-s2s.mdx).
 
-### Key cryptography {#s2s-cryptography}
+### Key cryptography {#s2s-crypto}
 
 Server-to-server consent relies on key cryptography respecting a specific algorithm.
 Swan won't accept keys that don't respect this algorithm.
-The model involves a pair of keys, public and private.
 
+The model involves a pair of keys, public and private.
 Keys must respect the following algorithm:
 
 - ECDSA with reputed strong curve (such as p-256)
-- Key type must be exported in **JWK**
+- Key type must be exported in JWK
 
-You'll [install the public key](./guide-implement-s2s.mdx#install-public) on your Dashboard, and it will be used to verify the server signature for all S2S operations.
+You'll install the public key on your Dashboard, and it will be used to verify the server signature for all S2S operations.
 You're required to keep the corresponding private key secure on your side.
 
-import ReplacePublicKey from './_s2s-replace-key.mdx';
+:::caution Replace keys
+Swan strongly advises you to replace your key pair every two years.
+:::
 
-<ReplacePublicKey />
+### Role of projects and legal reps {#s2s-projects}
 
-### Role of projects and legal reps {#s2s-project-legal-rep}
-
-For security and regulatory purposes, server-to-server consent is **bound to a project**, more specifically to the **project's [legal representative](../../../glossary.mdx#legal-representative)**.
+For security and regulatory purposes, server-to-server consent is bound to a project, more specifically to the project's legal representative.
 You can't apply S2S consent configured in one project to operations in another project.
 Instead, implement S2S consent in both projects independently.
 
 The keys, both public and private, are attributed to the project's legal representative.
 Only the legal representative can perform operations with server-to-server consent.
-With consent, you can also [impersonate the legal representative](../../../developers/using-api/authentication/index.mdx#tokens-project-impersonate) with a project access token.
+With consent, you can also impersonate the legal representative with a project access token.
 
-Any operation required to [set up or modify S2S consent](./guide-implement-s2s.mdx) (such as installing the public key or adding IP addresses) must be consented to by the legal representative using [Strong Customer Authentication](./index.mdx#sca).
+Any operation required to set up or modify S2S consent (such as installing the public key or adding IP addresses) must be consented to by the legal representative using Strong Customer Authentication.
 
-## Consent statuses {#statuses}
+## Consent statuses {#consent-statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%

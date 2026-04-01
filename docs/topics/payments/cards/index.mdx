@@ -272,14 +272,15 @@ At Swan, you might encounter various capture types, including those described in
 | **Late capture** | The merchant captures a transaction after the authorization expires. This is a type of forced capture. | The merchant captures a €35 transaction 12 days after the transaction was made. The transaction authorization expired, but the merchant captures the  €35 anyway. |
 | **Partial capture** | The merchant only captures a portion of the authorized amount. | A customer purchases €400 worth of goods online, but some items are on back order. The merchant only captures €300, the amount for the goods they actually shipped to the customer. The €100 remains in `Pending`. |
 
-### Examples {#examples}
+## Examples {#examples}
 
 Some merchants don't follow the classic authorization and debit payment flow.
 Discover alternative payment flows that work for different use cases.
+
 These are examples, not rules; merchants control their own flows and can make changes at any time.
 
 <Tabs>
-<TabItem value="taxi" label={<span title="Taxi">🚗</span>} default>
+<TabItem value="taxi" label={<span title="Taxi">🚗</span>}>
 
 **Taxi** | Authorization + partial debit clearing
 
@@ -289,13 +290,11 @@ Consider a cardholder using a taxi app:
 
 1. The cardholder orders a taxi on the app.
 1. The merchant requests an authorization of €50 to verify that the cardholder can cover the cost of the trip.
-1. About 1-3 days after the trip:
-    - The taxi company debits the account €37,50, creating a second transaction with the status `Booked`.
-    - The remainder of the total authorized amount after the `Booked` transaction is €12,50.
+1. About 1-3 days after the trip: The taxi company debits the account €37,50, creating a second transaction with the status `Booked`. The remainder of the total authorized amount after the `Booked` transaction is €12,50.
 1. 10 days after the trip, the remaining authorization amount is released.
 
 <a href={require("../../../images/topics/payments/cards/auth-example-taxi.png").default} target="_blank">
-<img src={require("../../../images/topics/payments/cards/auth-example-taxi.png").default} alt="Authorization and partial debit example using taxi app" />
+<img src={require("../../../images/topics/payments/cards/auth-example-taxi.png").default} alt="Authorization and partial debit example using a taxi app" />
 </a>
 
 </TabItem>
@@ -456,8 +455,17 @@ PSD2 governs all payments in Europe and mandates Strong Customer Authentication 
 **Most European merchants use 3DS for all transactions**, with a few exceptions.
 If a payment *should* require 3DS and doesn't (which probably means the merchant doesn't have the correct configuration), Swan rejects the operation.
 
-:::note 3DS exception
+:::note 3DS exception for recurring payments
 In the case of recurring payments, such as subscriptions and automatic top-up, the merchant is only required to use 3DS during setup and **not for subsequent recurring payments**.
+
+This exception applies to **fixed-amount** recurring payments, where the amount stays the same for every subsequent payment.
+
+For **variable-amount** recurring payments, where the amount can differ between payments, 3DS authentication **is required again** whenever the amount differs from the initially authenticated amount.
+:::
+
+:::tip Avoid repeated 3DS with single-use virtual cards
+To avoid repeated 3DS challenges for variable-amount recurring payments, consider using [single-use virtual cards (SUVC)](../../cards/virtual/index.mdx).
+Each SUVC requires consent only at creation, making subsequent recurring payments more seamless.
 :::
 
 ### 3DS consent flow {#3ds-consent}

@@ -20,10 +20,11 @@ However, regulations require **Swan to verify all of your account holders**, and
 
 Therefore, Swan verifies each user before the account holder and account objects are created in your Swan project.
 This verification, often referred to as Know Your Customer (**KYC**) or Know Your Business (**KYB**), is **mandatory**.
+This is an ongoing regulatory requirement, not a one-time onboarding event. Swan periodically performs verification renewals to keep account holder information up to date.
 
 :::caution Verification responsibility
 One benefit of working with Swan is that Swan is responsible for this process.
-However, if it is vital that you perform KYC and KYB processes yourself, please [send Swan a detailed explanation](https://partner-support.swan.io/hc/en-gb/requests).
+However, if it's vital that you perform KYC and KYB processes yourself, please [send Swan a detailed explanation](https://partner-support.swan.io/hc/en-gb/requests).
 :::
 
 ### One account holder, multiple accounts {#verifying-account-holders-multi-account}
@@ -243,13 +244,13 @@ When a Swan KYC analyst determines that a first transfer is needed for verificat
 
 **Trigger**: Manual request by a Swan KYC analyst after the user completes identification but before the account holder verification status changes to `Verified`.
 
-**Configuration**: Swan can configure this notification on your behalf based on your preferred communication flow. Contact us to discuss your preference. The available options include sending notifications directly to the end customer, to you as the partner, copying both parties, or using the API to manage communications yourself.
+**Configuration**: Swan can configure this notification on your behalf based on your preferred communication flow. Contact us to discuss your preference. The available options include sending notifications directly to the end user, to you as the partner, copying both parties, or using the API to manage communications yourself.
 
 **Template**:
 
 | Configuration | Template |
 |---|---|
-| End customer | Uses your project logo and accent color. Includes the account's IBAN and BIC to help users complete the transfer. |
+| End user | Uses your project logo and accent color. Includes the account's IBAN and BIC to help users complete the transfer. |
 | Partner | Uses Swan branding. Includes data to help with your KYC process: Account Holder ID, Account Holder name, account IBAN, account BIC, account admin email, and account admin language. |
 | Both parties | Uses your project logo and accent color. Includes the account's IBAN and BIC to help users complete the transfer. |
 
@@ -269,7 +270,7 @@ This notification informs the user that supporting documents are required and pr
 
 | Configuration | Template |
 |---|---|
-| End customer | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
+| End user | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
 | Partner | Uses Swan branding. Includes data to help with your KYC process: account holder ID, account holder name, account admin email, and account admin language. |
 | Both parties | Uses your project logo and accent color. Includes the account number to help users contact your support team. |
 
@@ -279,17 +280,17 @@ The email includes a call-to-action button that redirects users to an onboarding
 
 To help ensure users provide the necessary documents, Swan automatically sends reminder emails at regular intervals.
 
-**Trigger**: Automatic reminders are sent when a Swan KYC analyst has requested additional supporting documents and your notification settings allow end customer communication.
+**Trigger**: Automatic reminders are sent when a Swan KYC analyst has requested additional supporting documents and your notification settings allow end user communication.
 
 Reminders are sent after 2, 4, 7, 14, and 21 days as long as the supporting document collection status remains `WaitingForDocument`.
 
-**Configuration**: Reminders are only sent when your document collection settings are configured to communicate with the end customer (either directly or copied to you as the Partner). No reminders are sent when communications are Partner-only or managed via API.
+**Configuration**: Reminders are only sent when your document collection settings are configured to communicate with the end user (either directly or copied to you as the Partner). No reminders are sent when communications are Partner-only or managed via API.
 
 **Template**:
 
 | Configuration | Template |
 |---|---|
-| End customer | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
+| End user | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
 | Partner | Uses Swan branding. Includes data to help with your KYC process: Account holder ID, account holder name, account admin email, and account admin language. |
 | Both parties | Uses your project logo and accent color. Includes the account number to help users contact your support team. |
 
@@ -299,14 +300,64 @@ When the verification process is complete and the account is ready for full use,
 
 **Trigger**: Automatic when the account holder verification status changes to `Verified` and the account payment status changes to `Unlimited`, meaning the user can use all available funds.
 
-**Configuration**: Swan can configure this notification on your behalf. Contact us to discuss your preferences. The available communication options include sending to the end customer, to you as the partner, or managing via API.
+**Configuration**: Swan can configure this notification on your behalf. Contact us to discuss your preferences. The available communication options include sending to the end user, to you as the partner, or managing via API.
 
 **Template**:
 
 | Configuration | Template |
 |---|---|
-| End customer | Uses your project logo and accent color. Includes the account's IBAN and BIC so users can start using their account. |
-| Partner | Uses Swan branding. Includes data to help with your KYC process: account Holder ID, Account Holder name, account IBAN, account BIC, account admin email, and account admin language. |
+| End user | Uses your project logo and accent color. Includes the account's IBAN and BIC so users can start using their account. |
+| Partner | Uses Swan branding. Includes data to help with your KYC process: Account Holder ID, Account Holder name, account IBAN, account BIC, account admin email, and account admin language. |
+
+## Verification renewal (Re-KYC) {#verification-renewal}
+
+As required by financial regulations, Swan periodically verifies account holder information.
+Verification renewal applies to all accounts held by the account holder.
+
+It is a mandatory process that happens every 1, 3, or 5 years, or when we detect changes in an account holder's profile.
+
+:::warning Account suspension
+Users must confirm their account holder information within **90 days**. If they don't, we automatically suspend their accounts and restrict all related IBANs, cards, and payment capabilities until they complete verification.
+:::
+
+### Completing verification renewal in the portal {#verification-renewal-portal}
+
+Swan provides a no-code, partner-branded portal to handle the verification renewal process. You don't need to integrate with an API. 
+
+Make sure your [branding settings](/topics/projects/guide-activate/#step-8-configure-your-branding-in-live) (logo and accent color) are up to date in your **Dashboard** > **Settings** > **Branding**.
+
+#### Verification renewal steps {#verification-renewal-portal-steps}
+
+The legal representative (account admin):
+
+1. Receives the [initial notification email](/topics/onboarding/account-holders/#verification-renewal-timeline) with a unique portal link.
+1. Opens the link and provides consent to access the portal.
+1. Reviews the pre-filled information.
+1. Confirms the information is correct, or updates it if anything has changed.
+1. Uploads [supporting documents](/topics/accounts/documents/#required-documents) if required.
+1. Submits the form and receives a confirmation email.
+
+The KYC analyst reviews the submission.
+If more information is needed, the KYC analyst sends a follow-up request with a new portal link.
+The portal reopens for the missing items only.
+
+After Swan validates the review, the account holder's [`VerificationRenewalStatus`](https://api-reference.swan.io/enums/verification-renewal-status/) changes to `Completed`. Verification renewal doesn't impact the account holder's banking verification status.
+
+### Verification renewal timeline and communication {#verification-renewal-timeline}
+
+:::tip Update your communication preferences
+We send the initial form and all follow-ups based on your [communication preferences](/topics/onboarding/account-holders/#notifications). 
+We recommend that Swan emails your end users directly and copies you (CC). You can also specify a unique email address. 
+Create a [support ticket](https://partner-support.swan.io/hc/fr/requests/new) that outlines your communication preferences for verification renewal.
+:::
+
+We start the **90-day** period when we send the account holder the first notification.
+At the 90-day deadline, Swan suspends all of the account holder's accounts if they haven't completed verification renewal.
+To lift the suspension, the user can complete the process using the last portal link Swan emailed them. 
+Afterwards, either you or the user must submit a support request for a review. 
+The KYC analyst will review the suspension reason and the updated information.
+
+Share [Swan's Support Center article](https://support.swan.io/hc/en-150/articles/26326687003549-Confirm-personal-details-again) to show them the full timeline and the reminders we send.
 
 ## Guides {#guides}
 

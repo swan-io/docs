@@ -100,98 +100,14 @@ import CountryReqs from '../partials/_country-reqs.mdx';
 
 <CountryReqs thisAccountType="company" thatAccountType="individual" />
 
-For company accounts, use the `createCompanyAccountHolderOnboarding` mutation to collect the following information according to your desired account country.
+For company accounts, use the `createCompanyAccountHolderOnboarding` mutation.
 
 :::note Deprecated mutation
 The previous `onboardCompanyAccountHolder` mutation is deprecated but still functional.
 Use `createCompanyAccountHolderOnboarding` for all new integrations.
 :::
 
-:::note Field reference
-For a complete list of fields including descriptions, validation rules, and conditional requirements, refer to the [company onboarding field reference](./fields.mdx).
-:::
-
-This section covers three objects in the mutation input: `accountInfo`, `accountAdmin`, and `company` (which includes `relatedIndividuals` and `relatedCompanies`).
-
-<FieldRequirementsLegend />
-
-### `accountInfo` {#country-reqs-account-info}
-
-| API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-|`accountInfo.country`| <Req /><br />(`FRA`) | <Req /><br />(`BEL`) | <Req /><br />(`DEU`) | <Req /><br />(`ITA`) | <Req /><br />(`NLD`) | <Req /><br />(`ESP`) |
-|`accountInfo.name`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-
-### `accountAdmin` {#country-reqs-account-admin}
-
-| API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-|`accountAdmin.email`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`accountAdmin.preferredLanguage`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`accountAdmin.typeOfRepresentation`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`accountAdmin.firstName`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`accountAdmin.lastName`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`accountAdmin.nationality`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`accountAdmin.taxIdentificationNumber`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`accountAdmin.address.*`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`accountAdmin.birthInfo.*`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`accountAdmin.unitedStatesTaxInfo.*`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`accountAdmin.userDeviceInfo.*`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-
-### `company` {#country-reqs-company}
-
-| API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-|`company.name`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.legalFormCode`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.businessActivity`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.businessActivityDescription`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.regulatoryClassification`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.monthlyPaymentVolume`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.registrationNumber`| <Cnd /> ∗ | <Cnd /> ∗ | <Cnd /> ∗ | <Cnd /> ∗ | <Cnd /> ∗ | <Cnd /> ∗ |
-|`company.address.addressLine1`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.address.city`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.address.country`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.address.postalCode`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`company.taxIdentificationNumber`| <Opt /> | <Opt /> | <Cnd /> ∗∗ | <Cnd /> ∗∗ | <Opt /> | <Cnd /> ∗∗ |
-|`company.vatNumber`| <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
-|`company.forecastYearlyIncome`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`company.headcount`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`company.websites`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`company.signupDate`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`company.tradeName`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-|`company.acquisitionChannel`| <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-
-> ∗ *`registrationNumber` is required if `company.address.country` is not Germany.*
->
-> ∗∗ *`taxIdentificationNumber` is required if `accountInfo.country` is Germany, Italy, or Spain, or if `company.address.country` is different from `accountInfo.country`.*
-
-### `company.relatedIndividuals` {#country-reqs-related-individuals}
-
-At least one Legal Representative and one UBO are required to finalize a company onboarding.
-Refer to the [company onboarding field reference](./fields.mdx) for the full list of fields and conditional requirements per country.
-
-<FieldRequirementsLegend />
-
-| API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-|`relatedIndividuals[i].type`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`relatedIndividuals[i].firstName`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`relatedIndividuals[i].lastName`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`relatedIndividuals[i].sex`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`relatedIndividuals[i].birthInfo.*`| <Req /> | <Req /> | <Cnd /> | <Req /> | <Req /> | <Req /> |
-|`relatedIndividuals[i].address.country`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-
-### `company.relatedCompanies` {#country-reqs-related-companies}
-
-Use this array when a legal entity serves as a representative for the account holder company.
-
-| API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-|`relatedCompanies[i].entityName`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`relatedCompanies[i].registrationCountry`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`relatedCompanies[i].registrationNumber`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`relatedCompanies[i].roles`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+At least one Legal Representative and one UBO are required to finalize a company onboarding. For a complete list of fields, country-specific requirements, and conditional rules, refer to the [company onboarding field reference](./fields.mdx).
 
 ## User flow diagrams {#diagrams}
 

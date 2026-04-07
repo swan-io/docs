@@ -65,13 +65,15 @@ The payload confirms the capital deposit case status changed to `Canceled` and r
 ## What happens after cancellation {#after-cancellation}
 
 When you cancel a capital deposit case, all associated accounts are automatically closed: shareholder accounts and the future company account.
-Starting 2 April 2026, these accounts receive the [closure reason code](../accounts/closure/index.mdx#closure-reason-codes) `CapitalDepositWithdrawn`.
-Before this date, the closure reason code is `CapitalDepositReason`.
+These accounts receive the [closure reason code](../accounts/closure/index.mdx#closure-reason-codes) `CapitalDepositWithdrawn`.
 
-Starting 2 April 2026, you can subscribe to the [`CapitalDepositCaseEvent.Canceled` webhook](../../developers/using-api/webhooks#events-capital-deposits) to receive notifications when a capital deposit case is canceled.
+You can subscribe to the [`CapitalDepositCaseEvent.Canceled` webhook](../../developers/using-api/webhooks#events-capital-deposits) to receive notifications when a capital deposit case is canceled.
 The [cancelation reason code](./index.mdx#cancelation-reason-codes) is also available directly on the capital deposit case, in the `CapitalDepositCaseCanceledStatusInfo` type.
 
 :::info Completed capital deposits
 When a capital deposit is successfully completed, shareholder accounts are closed with the reason code `CapitalDepositCompleted`.
-Before 2 April 2026, the closure reason code is `CapitalDepositReason`.
+:::
+
+:::note Backward compatibility
+Capital deposit cases and accounts affected before 2 April 2026 may still show the deprecated closure reason code `CapitalDepositReason`.
 :::

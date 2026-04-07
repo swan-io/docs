@@ -12,7 +12,7 @@ This process involves setting up a connection token provider and running the rea
 You need all of the following to initialize your device.
 
 - The [Stripe Terminal SDK](./guide-setup.mdx) installed in your app.
-- A **merchant profile** with the status **Enabled**. If you don't have one yet, [request a merchant profile](../../../topics/merchants/profiles/guide-request.mdx) first.
+- A **merchant profile** with the status **Enabled**. If you don't have one yet, [request a merchant profile](../../profiles/guide-request.mdx) first.
 - An **in-person card payment method** with the status **Enabled**. If you don't have one yet, [request the payment method](./guide-request-method.mdx) first.
 - A project access token or a user access token with **Can manage memberships** rights.
 
@@ -51,11 +51,6 @@ mutation GetConnectionToken {
   }
 }
 ```
-
-:::caution Early access only
-If you receive a `ForbiddenRejection` with the message `Coming Soon`, your project doesn't have the required feature flag.
-Contact your Swan point of contact to request access.
-:::
 
 ### Wire up the provider {#wire-provider}
 
@@ -211,7 +206,6 @@ On iOS, the first time a user connects to a reader, Apple's Terms and Conditions
   <TabItem value="react-native" label="React Native">
 
 Use `discoverReaders` to find available readers, then `connectReader` to connect.
-Set `simulated: true` during development.
 
 ```tsx
 export default function MainScreen() {
@@ -244,7 +238,7 @@ export default function MainScreen() {
     if (!hasConnectedReader) {
       discoverReaders({
         discoveryMethod: "tapToPay",
-        simulated: true, // set to false for production
+        simulated: false,
       }).then(({ error }) => {
         if (error != null) {
           Alert.alert(error.code, error.message);
@@ -275,7 +269,7 @@ class DiscoverReadersViewController: UIViewController, DiscoveryDelegate {
 
   func discoverReaders() throws {
     let config = try TapToPayDiscoveryConfigurationBuilder()
-      .setSimulated(true) // set to false for production
+      .setSimulated(false)
       .build()
 
     self.discoverCancelable = Terminal.shared.discoverReaders(
@@ -293,7 +287,6 @@ class DiscoverReadersViewController: UIViewController, DiscoveryDelegate {
 
     let connectionConfig = try? TapToPayConnectionConfigurationBuilder
       .init(locationId: "$LOCATION_ID")
-      // For simulated readers, use tapToPayReader.locationId instead
       .delegate(tapToPayReaderDelegate)
       .build()
 
@@ -312,14 +305,13 @@ class DiscoverReadersViewController: UIViewController, DiscoveryDelegate {
   <TabItem value="android" label="Android">
 
 Create a `TapToPayDiscoveryConfiguration` and pass it to `discoverReaders`.
-Set `isSimulated = true` during development.
 
 ```kotlin
 val discoverCancelable: Cancelable? = null
 val tapToPayReaderListener: TapToPayReaderListener? = null
 
 fun onDiscoverReaders() {
-  val config = TapToPayDiscoveryConfiguration(isSimulated = true) // set to false for production
+  val config = TapToPayDiscoveryConfiguration(isSimulated = false)
 
   discoverCancelable = Terminal.getInstance().discoverReaders(
     config,
@@ -331,7 +323,6 @@ fun onDiscoverReaders() {
 
         val connectionConfig = TapToPayConnectionConfiguration(
           "$LOCATION_ID",
-          // For simulated readers, use tapToPayReader.location?.id instead
           autoReconnectOnUnexpectedDisconnect = true,
           tapToPayReaderListener
         )
@@ -392,12 +383,6 @@ To reset acceptance for testing:
 
 If the user closes the Terms and Conditions screen without accepting, the connection fails with `tapToPayReaderTOSAcceptanceFailed`.
 Prompt the user to accept and retry.
-
-### `InternalErrorRejection` when requesting a connection token {#internal-error}
-
-Merchant profile configuration is done manually during early access.
-If `requestTerminalConnectionToken` is called before a profile is fully configured, the mutation returns an `InternalErrorRejection`.
-Contact your point of contact at Swan and provide your merchant profile ID to complete the configuration.
 
 ## Next steps {#next-steps}
 

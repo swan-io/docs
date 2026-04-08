@@ -113,6 +113,7 @@ module.exports = {
             "topics/accounts/memberships/guide-suspend-resume",
             "topics/accounts/memberships/guide-disable",
             "topics/accounts/memberships/guide-export",
+            "topics/accounts/memberships/admin-change",
           ],
         },
         {

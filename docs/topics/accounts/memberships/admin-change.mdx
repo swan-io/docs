@@ -15,16 +15,73 @@ Account administrator changes are only available for **company** account holders
 
 An account administrator change applies to **all accounts** belonging to the same account holder. There can only be one ongoing change per account holder at a time.
 
-The process works as follows:
+The form used to submit the request is **unauthenticated**, meaning the requester doesn't need to be an existing account member. This allows third parties, such as a company secretary, to submit the request.
 
-1. You contact Swan's support team to initiate the request. Swan creates the account administrator change and generates a **form URL**. Partners can't generate this URL themselves. All requests go through a support ticket to keep all exchanges in one place.
-1. Swan shares the form URL with you to forward to the requester, who fills in the new administrator's details and uploads the required supporting documents.
-1. After submission, Swan's KYC team reviews the request.
-1. If everything is in order, the KYC team invites the new administrator to the accounts.
-1. The new administrator accepts the invitation and verifies their identity.
-1. Swan promotes the new administrator as the legal representative on all of the account holder's accounts.
+## Process {#process}
 
-The form is **unauthenticated**, meaning the requester doesn't need to be an existing account member. This allows third parties, such as a company secretary, to submit the request.
+### Step 1: Initiate the request {#initiate}
+
+Contact Swan's support team via a **support ticket** with the account holder information (IBAN or account holder name).
+
+- This process is not yet self-service in the Dashboard. All requests go through Swan support to keep all exchanges in a single Zendesk ticket.
+- Swan processes the request, creates the account administrator change, and generates a **form URL**.
+- Swan shares the form URL with you (the partner) to forward to the requester. Partners can't generate this URL themselves.
+- The form URL is valid for **7 calendar days**. After expiry, the status moves to `Expired`, the supporting document collection is `Canceled`, and a new request must be initiated.
+
+### Step 2: Submit the request form {#submit-form}
+
+The requester opens the form URL and submits the following information:
+
+- Requester details (if the requester is different from the new administrator).
+- New account administrator details.
+- Reason for the change.
+- Required [supporting documents](#documents).
+
+The form is unauthenticated, so it can be filled by any third party (for example, a company secretary or an outgoing legal representative who no longer has account access).
+
+### Step 3: Swan reviews the request {#review}
+
+After submission, the status moves to `Pending`. Swan's KYC team reviews the submitted documents.
+
+- If additional information is needed, the status moves to `WaitingForInformation`. Swan generates a new dedicated document upload URL and shares it with you via the support ticket. The original form URL can no longer be used at this stage.
+- After the additional documents are uploaded, the status returns to `Pending` and the review resumes.
+
+### Step 4: New administrator receives an invitation {#invitation}
+
+After documents are validated, Swan invites the new administrator to join all accounts belonging to the account holder. The invitation grants full permissions: `canViewAccount`, `canInitiatePayments`, `canManageAccountMemberships`, `canManageBeneficiaries`, and `canManageCards` (all `true`).
+
+After accepting the invitation, the new administrator is automatically directed to Swan's identity verification flow. No manual link sharing is needed.
+
+:::tip Invitation not received?
+If the new administrator doesn't receive the invitation, you can resend it using the `sendAccountMembershipInviteNotification` mutation (up to 5 times per day, status must be `InvitationSent`), or contact Swan support via the support ticket.
+:::
+
+### Step 5: New administrator is promoted {#promotion}
+
+Before promotion, the new administrator must have the required identification level for their IBAN country.
+
+| IBAN country | Required identification level |
+| --- | --- |
+| France, Belgium, Italy, Netherlands, Spain | Expert |
+| Germany | QES (Qualified Electronic Signature) |
+
+How identification is handled depends on the new administrator's current level:
+
+- **No prior identification:** The new administrator is guided through the appropriate identification process automatically after accepting the invitation.
+- **Lower identification level than required:** Swan support reaches out with a link to complete the appropriate process. The status remains `InvitationSent` until the required level is achieved.
+- **Already has the required level:** The process proceeds immediately to promotion.
+
+Once the account membership is `Enabled` on all accounts, Swan promotes the new administrator as the account administrator. The status moves to `Verified` and the supporting document collection moves to `Approved`.
+
+### Step 6: Clean up account access {#clean-up}
+
+The previous administrator is **not** automatically removed or downgraded. Their membership and permissions remain unchanged.
+
+The new administrator should review the previous administrator's access and decide how to proceed:
+
+- [Disable the membership](./guide-disable.mdx) entirely.
+- Keep the membership with full permissions.
+- [Update the membership](./guide-update.mdx) to a limited role.
 
 ## Eligibility
 
@@ -87,7 +144,7 @@ When submitting the form, the requester selects a reason for the change. The rea
 | `AppointedByBoardDecision` | The new administrator was appointed by a board decision. |
 | `Other` | Other reason. |
 
-## Required supporting documents
+## Required supporting documents {#documents}
 
 The required documents depend on the account holder's company type, whether the requester is the new administrator, and whether the new administrator is the company's legal representative.
 
@@ -116,6 +173,27 @@ The person filling out the form (the **requester**) can be the same person as th
 
 - **Requester is the new administrator:** The requester provides the new administrator's details directly. No additional requester information is needed.
 - **Requester is different from the new administrator:** The requester provides both their own details and the new administrator's details.
+
+## Canceling a request {#cancel}
+
+Account administrator change requests can't be canceled directly via the API or Dashboard. You have two options:
+
+- **Wait for expiry:** If the status is still `Ongoing`, the form URL expires automatically after 7 calendar days.
+- **Contact Swan support:** If the status is `Pending` or `WaitingForInformation`, contact Swan support via the support ticket to request a refusal.
+
+After expiry or refusal, a new request can be initiated.
+
+## Limitations {#limitations}
+
+| Limitation | Description |
+| --- | --- |
+| Account holder type | Only company account holders are eligible. |
+| Concurrent requests | Only one active account administrator change per account holder at a time. |
+| Form expiry | Form URL expires after 7 calendar days. |
+| Scope | The change applies to all accounts under the same account holder. |
+| Initiation | No self-service yet. Must be requested via a Swan support ticket. |
+| Country-specific fields | Residency address and tax identification number are not collected in the form for DE, NL, and IT accounts. Partners must collect them separately. |
+| Identity verification level | QES required for DE accounts. Expert required for FR, BE, IT, NL, and ES accounts. |
 
 ## API reference
 

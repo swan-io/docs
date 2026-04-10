@@ -163,7 +163,7 @@ module.exports = [
   { from: "/concept/iban/local-ibans", to: "/topics/accounts/ibans/#local" },
   {
     from: "/concept/merchants-accepting-payments/french-checks-for-merchants",
-    to: "/topics/merchants/online/checks/",
+    to: "/topics/merchants/in-person/checks/",
   },
   {
     from: "/concept/merchants-accepting-payments/internal-direct-debit-for-merchants",
@@ -196,7 +196,7 @@ module.exports = [
   },
   {
     from: "/guide/accept-payments-merchants/accept-payments-with-french-checks",
-    to: "/topics/merchants/online/checks/guide-checks",
+    to: "/topics/merchants/in-person/checks/guide-checks",
   },
   {
     from: "/guide/accept-payments-merchants/accept-payments-with-internal-direct-debit",
@@ -424,7 +424,7 @@ module.exports = [
   },
   {
     from: "/topics/merchants/checks",
-    to: "/topics/merchants/online/checks/",
+    to: "/topics/merchants/in-person/checks/",
   },
   {
     from: "/partnership/document-center",
@@ -489,5 +489,55 @@ module.exports = [
   {
     from: '/preview/vop/incoming-vop-requests',
     to: '/topics/payments/credit-transfers/sepa/vop/incoming-vop-requests',
+  },
+  // In-person cards: preview → production
+  {
+    from: '/preview/in-person/cards',
+    to: '/topics/merchants/in-person/cards',
+  },
+  {
+    from: '/preview/in-person/cards/guide-accept',
+    to: '/topics/merchants/in-person/cards/guide-accept',
+  },
+  {
+    from: '/preview/in-person/cards/guide-setup',
+    to: '/topics/merchants/in-person/cards/guide-setup',
+  },
+  {
+    from: '/preview/in-person/cards/guide-request-method',
+    to: '/topics/merchants/in-person/cards/guide-request-method',
+  },
+  {
+    from: '/preview/in-person/cards/guide-initialize',
+    to: '/topics/merchants/in-person/cards/guide-initialize',
+  },
+  {
+    from: '/preview/in-person/cards/guide-create-payments',
+    to: '/topics/merchants/in-person/cards/guide-create-payments',
+  },
+  {
+    from: '/preview/in-person/cards/sandbox',
+    to: '/topics/merchants/in-person/cards/sandbox',
+  },
+  // French checks: online → in-person
+  {
+    from: '/topics/merchants/online/checks',
+    to: '/topics/merchants/in-person/checks/',
+  },
+  {
+    from: '/topics/merchants/online/checks/guide-checks',
+    to: '/topics/merchants/in-person/checks/guide-checks',
+  },
+  {
+    from: '/topics/merchants/online/checks/guide-request',
+    to: '/topics/merchants/in-person/checks/guide-request',
+  },
+  {
+    from: '/topics/merchants/online/checks/guide-initiate',
+    to: '/topics/merchants/in-person/checks/guide-initiate',
+  },
+  {
+    from: '/topics/merchants/online/checks/sandbox',
+    to: '/topics/merchants/in-person/checks/sandbox',
   },
 ];

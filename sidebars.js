@@ -115,6 +115,7 @@ module.exports = {
             "topics/accounts/memberships/guide-suspend-resume",
             "topics/accounts/memberships/guide-disable",
             "topics/accounts/memberships/guide-export",
+            "topics/accounts/memberships/admin-change",
           ],
         },
         {
@@ -241,6 +242,16 @@ module.exports = {
         },
         {
           type: "category",
+          label: "Card packages",
+          link: { type: "doc", id: "topics/cards/card-packages/index" },
+          collapsed: true,
+          items: [
+            "topics/cards/card-packages/guide-product-configuration",
+            "topics/cards/card-packages/guide-get-card-package-tier",
+          ],
+        },
+        {
+          type: "category",
           label: "Virtual cards",
           link: { type: "doc", id: "topics/cards/virtual/index" },
           collapsed: true,
@@ -345,16 +356,30 @@ module.exports = {
                 "topics/merchants/online/idd/sandbox",
               ],
             },
+          ],
+        },
+        {
+          type: "category",
+          label: "Accepting in-person payments",
+          link: { type: "doc", id: "topics/merchants/in-person/cards/index" },
+          collapsed: true,
+          items: [
+            "topics/merchants/in-person/cards/guide-setup",
+            "topics/merchants/in-person/cards/guide-request-method",
+            "topics/merchants/in-person/cards/guide-accept",
+            "topics/merchants/in-person/cards/guide-initialize",
+            "topics/merchants/in-person/cards/guide-create-payments",
+            "topics/merchants/in-person/cards/sandbox",
             {
               type: "category",
               label: "French checks",
-              link: { type: "doc", id: "topics/merchants/online/checks/index" },
+              link: { type: "doc", id: "topics/merchants/in-person/checks/index" },
               collapsed: true,
               items: [
-                "topics/merchants/online/checks/guide-checks",
-                "topics/merchants/online/checks/guide-request",
-                "topics/merchants/online/checks/guide-initiate",
-                "topics/merchants/online/checks/sandbox",
+                "topics/merchants/in-person/checks/guide-checks",
+                "topics/merchants/in-person/checks/guide-request",
+                "topics/merchants/in-person/checks/guide-initiate",
+                "topics/merchants/in-person/checks/sandbox",
               ],
             },
           ],
@@ -782,19 +807,8 @@ module.exports = {
       label: "Preview",
       collapsible: false,
       collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "In-person cards",
-          link: { type: "doc", id: "preview/in-person/cards/index" },
-          collapsed: true,
-          items: [
-            "preview/in-person/cards/guide-accept",
-            "preview/in-person/cards/guide-request-method",
-            "preview/in-person/cards/guide-create-payments",
-          ],
-        },
-      ],
+      link: { type: "doc", id: "preview/index" },
+      items: [],
     },
     {
       type: "category",
@@ -810,15 +824,6 @@ module.exports = {
           items: [
             "preview/new-onboarding/individual",
             "preview/new-onboarding/company",
-          ],
-        },
-        {
-          type: "category",
-          label: "Card insurance",
-          link: { type: "doc", id: "preview/card-insurance/card-insurance" },
-          collapsed: true,
-          items: [
-            "preview/card-insurance/guide-insurance-integration",
           ],
         },
       ],

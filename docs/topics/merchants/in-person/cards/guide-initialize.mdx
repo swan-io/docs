@@ -1,0 +1,389 @@
+---
+title: Initialize the device for payments
+---
+
+# Initialize the device for payments
+
+Connect your device to the Stripe Terminal reader to start accepting in-person card payments.
+This process involves setting up a connection token provider and running the reader discovery flow.
+
+## Prerequisites {#prerequisites}
+
+You need all of the following to initialize your device.
+
+- The [Stripe Terminal SDK](./guide-setup.mdx) installed in your app.
+- A **merchant profile** with the status **Enabled**. If you don't have one yet, [request a merchant profile](../../profiles/guide-request.mdx) first.
+- An **in-person card payment method** with the status **Enabled**. If you don't have one yet, [request the payment method](./guide-request-method.mdx) first.
+- A project access token or a user access token with **Can manage memberships** rights.
+
+## Step 1: Implement a connection token provider {#token-provider}
+
+The Stripe Terminal SDK requires a connection token to connect to the reader.
+You obtain this token from Swan's API using the `requestTerminalConnectionToken` mutation.
+The SDK handles token refresh automatically. Do not cache the token yourself.
+
+### Get a connection token from Swan {#get-token}
+
+Call `requestTerminalConnectionToken` from your server and pass the returned `connectionToken` to your provider.
+
+```graphql
+mutation GetConnectionToken {
+  requestTerminalConnectionToken(
+    input: {
+      merchantProfileId: "$YOUR_MERCHANT_PROFILE_ID"
+    }
+  ) {
+    ... on RequestTerminalConnectionTokenSuccessPayload {
+      connectionToken
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on NotFoundRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+### Wire up the provider {#wire-provider}
+
+<Tabs groupId="platform">
+  <TabItem value="react-native" label="React Native">
+
+Pass your `tokenProvider` function as a prop to `StripeTerminalProvider`.
+The function must return a connection token fetched from Swan's API.
+
+```tsx
+import { StripeTerminalProvider } from '@stripe/stripe-terminal-react-native';
+
+const fetchTokenProvider = async () => {
+  const connectionToken = "$YOUR_CONNECTION_TOKEN"; // fetch from Swan's API
+  return connectionToken;
+};
+
+function Root() {
+  return (
+    <StripeTerminalProvider
+      logLevel="verbose"
+      tokenProvider={fetchTokenProvider}
+    >
+      <App />
+    </StripeTerminalProvider>
+  );
+}
+```
+
+Then call `initialize` from a component nested inside `StripeTerminalProvider`.
+
+```tsx
+function App() {
+  const { initialize } = useStripeTerminal();
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  return <View />;
+}
+```
+
+:::note
+Call `initialize` from a component nested inside `StripeTerminalProvider`, not from the component that contains the provider itself.
+:::
+
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+
+Implement the `ConnectionTokenProvider` protocol with a single `fetchConnectionToken` method.
+
+```swift
+import StripeTerminal
+
+class SampleTokenProvider: ConnectionTokenProvider {
+  static let shared = SampleTokenProvider()
+
+  func fetchConnectionToken(_ completion: @escaping ConnectionTokenCompletionBlock) {
+    let connectionToken = "$YOUR_CONNECTION_TOKEN" // fetch from Swan's API
+    completion(connectionToken, nil)
+    // On error: completion(nil, error)
+  }
+}
+```
+
+Initialize the terminal once in your `AppDelegate`, before first use.
+
+```swift
+import UIKit
+import StripeTerminal
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+    Terminal.setTokenProvider(SampleTokenProvider.shared)
+    return true
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="android" label="Android">
+
+Implement the `ConnectionTokenProvider` interface with a single `fetchConnectionToken` method.
+
+```kotlin
+class SampleTokenProvider : ConnectionTokenProvider {
+  override fun fetchConnectionToken(callback: ConnectionTokenCallback) {
+    try {
+      val connectionToken = "$YOUR_CONNECTION_TOKEN" // fetch from Swan's API
+      callback.onSuccess(connectionToken)
+    } catch (e: Exception) {
+      callback.onFailure(
+        ConnectionTokenException("Failed to fetch connection token", e)
+      )
+    }
+  }
+}
+```
+
+Tap to Pay on Android runs in a dedicated process. Check `TapToPay.isInTapToPayProcess()` to skip initialization when running in that process.
+
+```kotlin
+class StripeTerminalApplication : Application() {
+  override fun onCreate() {
+    super.onCreate()
+    if (TapToPay.isInTapToPayProcess()) return
+    TerminalApplicationDelegate.onCreate(this)
+  }
+}
+```
+
+Then, initialize the terminal with your token provider and a `TerminalListener`.
+
+```kotlin
+val listener = object : TerminalListener {
+  override fun onConnectionStatusChange(status: ConnectionStatus) {
+    println("Connection status: $status")
+  }
+  override fun onPaymentStatusChange(status: PaymentStatus) {
+    println("Payment status: $status")
+  }
+}
+
+val tokenProvider = SampleTokenProvider()
+
+if (!Terminal.isInitialized()) {
+  Terminal.initTerminal(applicationContext, LogLevel.VERBOSE, tokenProvider, listener)
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## Step 2: Discover and connect to the reader {#connect-reader}
+
+With the token provider configured, discover the device's reader and connect to it.
+
+:::note Debug mode
+The Stripe Terminal SDK blocks reader connections in debug builds as a security measure.
+Use a simulated reader for development (see code examples below).
+:::
+
+:::info iOS Terms and Conditions
+On iOS, the first time a user connects to a reader, Apple's Terms and Conditions screen appears automatically. The user must accept to continue. This is handled by the SDK.
+:::
+
+<Tabs groupId="platform">
+  <TabItem value="react-native" label="React Native">
+
+Use `discoverReaders` to find available readers, then `connectReader` to connect.
+
+```tsx
+export default function MainScreen() {
+  const [status, setStatus] = useState<Reader.ConnectionStatus>("notConnected");
+  const { discoverReaders, connectReader, connectedReader, cancelDiscovering } =
+    useStripeTerminal({
+      onDidChangeConnectionStatus: setStatus,
+      onUpdateDiscoveredReaders: async (readers: Reader.Type[]) => {
+        const tapToPayReader = readers.find(
+          (reader) => reader.deviceType === "tapToPay"
+        );
+        if (tapToPayReader != null) {
+          const { error } = await connectReader(
+            {
+              reader: tapToPayReader,
+              locationId: "$LOCATION_ID",
+            },
+            "tapToPay"
+          );
+          if (error != null) {
+            Alert.alert(error.code, error.message);
+          }
+        }
+      },
+    });
+
+  const hasConnectedReader = connectedReader != null;
+
+  useEffect(() => {
+    if (!hasConnectedReader) {
+      discoverReaders({
+        discoveryMethod: "tapToPay",
+        simulated: false,
+      }).then(({ error }) => {
+        if (error != null) {
+          Alert.alert(error.code, error.message);
+        }
+      });
+      return () => {
+        cancelDiscovering();
+      };
+    }
+  }, [hasConnectedReader, discoverReaders, cancelDiscovering]);
+
+  return <Text>{status}</Text>;
+}
+```
+
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+
+Create a `TapToPayDiscoveryConfigurationBuilder` and pass it to `discoverReaders`.
+When a reader is found, connect to it using `connectReader`.
+
+```swift
+import StripeTerminal
+
+class DiscoverReadersViewController: UIViewController, DiscoveryDelegate {
+  var discoverCancelable: Cancelable?
+  var tapToPayReaderDelegate: TapToPayReaderDelegate?
+
+  func discoverReaders() throws {
+    let config = try TapToPayDiscoveryConfigurationBuilder()
+      .setSimulated(false)
+      .build()
+
+    self.discoverCancelable = Terminal.shared.discoverReaders(
+      config,
+      delegate: self
+    ) { error in
+      if let error = error {
+        print("discoverReaders failed: \(error)")
+      }
+    }
+  }
+
+  func terminal(_ terminal: Terminal, didUpdateDiscoveredReaders readers: [Reader]) {
+    guard let tapToPayReader = readers.first(where: { $0.deviceType == .tapToPay }) else { return }
+
+    let connectionConfig = try? TapToPayConnectionConfigurationBuilder
+      .init(locationId: "$LOCATION_ID")
+      .delegate(tapToPayReaderDelegate)
+      .build()
+
+    Terminal.shared.connectReader(tapToPayReader, connectionConfig: connectionConfig!) { reader, error in
+      if let reader = reader {
+        print("Connected to reader: \(reader)")
+      } else if let error = error {
+        print("connectReader failed: \(error)")
+      }
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="android" label="Android">
+
+Create a `TapToPayDiscoveryConfiguration` and pass it to `discoverReaders`.
+
+```kotlin
+val discoverCancelable: Cancelable? = null
+val tapToPayReaderListener: TapToPayReaderListener? = null
+
+fun onDiscoverReaders() {
+  val config = TapToPayDiscoveryConfiguration(isSimulated = false)
+
+  discoverCancelable = Terminal.getInstance().discoverReaders(
+    config,
+    object : DiscoveryListener {
+      override fun onUpdateDiscoveredReaders(readers: List<Reader>) {
+        val tapToPayReader = readers.first {
+          it.deviceType == DeviceType.TAP_TO_PAY_DEVICE
+        }
+
+        val connectionConfig = TapToPayConnectionConfiguration(
+          "$LOCATION_ID",
+          autoReconnectOnUnexpectedDisconnect = true,
+          tapToPayReaderListener
+        )
+
+        Terminal.getInstance().connectReader(
+          tapToPayReader,
+          connectionConfig,
+          object : ReaderCallback {
+            override fun onSuccess(reader: Reader) { /* connected */ }
+            override fun onFailure(e: TerminalException) { /* handle error */ }
+          }
+        )
+      }
+    },
+    object : Callback {
+      override fun onSuccess() { /* discovery started */ }
+      override fun onFailure(e: TerminalException) { /* handle error */ }
+    }
+  )
+}
+
+override fun onStop() {
+  super.onStop()
+  // Cancel discovery if the user leaves without selecting a reader.
+  discoverCancelable?.cancel(object : Callback {
+    override fun onSuccess() {}
+    override fun onFailure(e: TerminalException) {}
+  })
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::info Location ID
+The `$LOCATION_ID` is the `mainLocationId` field on your `InPersonCardMerchantPaymentMethod` object.
+Query it after your payment method is **Enabled**.
+:::
+
+## Troubleshooting {#troubleshooting}
+
+### Firewall or restricted network {#firewall}
+
+If your app runs behind a firewall, configure it to allow access to the hosts required by Tap to Pay on iPhone.
+Refer to the [Tap to Pay section of Apple's network configuration guide](https://support.apple.com/en-us/101555).
+
+### Reset Apple Terms and Conditions acceptance {#reset-tac}
+
+The first time a user connects to a reader on iOS, Apple's Terms and Conditions screen appears automatically.
+Once accepted, it won't appear again for that user.
+
+To reset acceptance for testing:
+
+1. Go to [Apple Business Register for Tap to Pay on iPhone](https://register.apple.com/tap-to-pay-on-iphone/).
+1. Sign in with the Apple ID used to accept the Terms and Conditions.
+1. From the list of Merchant IDs, select **Remove** and confirm to unlink the Apple ID.
+1. The Terms and Conditions screen appears again on the next connection attempt.
+
+If the user closes the Terms and Conditions screen without accepting, the connection fails with `tapToPayReaderTOSAcceptanceFailed`.
+Prompt the user to accept and retry.
+
+## Next steps {#next-steps}
+
+→ [Create in-person card payments](./guide-create-payments.mdx)

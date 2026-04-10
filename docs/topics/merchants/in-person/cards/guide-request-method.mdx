@@ -8,7 +8,7 @@ Request the in-person card payment method so your merchants can accept card paym
 
 ## Prerequisites {#prerequisites}
 
-- A **merchant profile** with the status **Enabled**. If you don't have one yet, [request a merchant profile](../../../topics/merchants/profiles/guide-request.mdx) first.
+- A **merchant profile** with the status **Enabled**. If you don't have one yet, [request a merchant profile](../../profiles/guide-request.mdx) first.
 - A project access token or a user access token with **Can manage members** rights.
 
 ## Request the payment method {#request}
@@ -31,6 +31,7 @@ mutation RequestInPersonCardMethod {
           ... on InPersonCardMerchantPaymentMethod {
             id
             methodId
+            mainLocationId
             statusInfo {
               status
             }
@@ -44,7 +45,7 @@ mutation RequestInPersonCardMethod {
       __typename
       message
     }
-    ... on MerchantProfileNotReadyRejection {
+    ... on InvalidPaymentMethodRequestRejection {
       __typename
       message
     }
@@ -64,12 +65,12 @@ After the review, the status updates to either `Enabled` or `Rejected`.
 | Status | Explanation |
 | --- | --- |
 | `PendingReview` | Payment method submitted and waiting for Swan's review. |
-| `WaitingForInformation` | Swan needs more information. Refer to [provide missing information](../../../topics/merchants/guide-missing-information.mdx) to learn what to submit. |
+| `WaitingForInformation` | Swan needs more information. Refer to [provide missing information](../../guide-missing-information.mdx) to learn what to submit. |
 | `Enabled` | Payment method approved. The merchant can accept in-person card payments. |
 | `Suspended` | Swan suspended the payment method due to detected risk. |
 | `Disabled` | Payment method deactivated. |
 | `Rejected` | Payment method rejected. The decision is final. The merchant must submit a new request. |
 
 :::tip
-Subscribe to merchant webhooks to monitor changes in payment method status. Review the full list of [merchant webhooks](../../../topics/merchants/index.mdx) or subscribe to them from your **Dashboard** > **Developers** > **Webhooks**.
+Subscribe to merchant webhooks to monitor changes in payment method status. Review the full list of [merchant webhooks](../../index.mdx) or subscribe to them from your **Dashboard** > **Developers** > **Webhooks**.
 :::

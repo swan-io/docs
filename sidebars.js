@@ -361,15 +361,23 @@ module.exports = {
         {
           type: "category",
           label: "Accepting in-person payments",
-          link: { type: "doc", id: "topics/merchants/in-person/cards/index" },
+          link: { type: "doc", id: "topics/merchants/in-person/index" },
           collapsed: true,
           items: [
-            "topics/merchants/in-person/cards/guide-setup",
-            "topics/merchants/in-person/cards/guide-request-method",
-            "topics/merchants/in-person/cards/guide-accept",
-            "topics/merchants/in-person/cards/guide-initialize",
-            "topics/merchants/in-person/cards/guide-create-payments",
-            "topics/merchants/in-person/cards/sandbox",
+            {
+              type: "category",
+              label: "In-person cards",
+              link: { type: "doc", id: "topics/merchants/in-person/cards/index" },
+              collapsed: true,
+              items: [
+                "topics/merchants/in-person/cards/guide-setup",
+                "topics/merchants/in-person/cards/guide-request-method",
+                "topics/merchants/in-person/cards/guide-accept",
+                "topics/merchants/in-person/cards/guide-initialize",
+                "topics/merchants/in-person/cards/guide-create-payments",
+                "topics/merchants/in-person/cards/sandbox",
+              ],
+            },
             {
               type: "category",
               label: "French checks",

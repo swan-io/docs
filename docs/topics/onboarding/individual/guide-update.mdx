@@ -6,59 +6,60 @@ title: Update an individual onboarding
 
 Update individual onboardings using the API.
 
+import DeprecationTimeline from '../partials/_deprecated-mutation-timeline.mdx';
 import UpdateOnboardingPrereqs from '../partials/_prereqs-update.mdx';
 
 <UpdateOnboardingPrereqs />
 
 ## Guide {#api-guide}
 
-To test updating an individual onboarding, **add an account name**.
+Update an individual onboarding by **adding an account name**.
 
 1. First, [retrieve the ID](../overview/guide-get-info) for the onboarding you need to update.
-1. Call the `updateIndividualOnboarding` mutation.
+1. Call the `updateIndividualAccountHolderOnboarding` mutation.
 1. Enter the onboarding ID retrieved in step 1.
-1. Check the box for `accountName`, then add an account name (example: MyBrand).
+1. Add the `accountInfo.name` field with an account name (example: Personal account).
 1. Add desired messages to the success payload, either for validation or in case of rejection.
+
+:::note Deprecated mutation
+The previous `updateIndividualOnboarding` mutation is deprecated.
+<DeprecationTimeline />
+Use `updateIndividualAccountHolderOnboarding` for all new integrations.
+:::
 
 ## Mutation {#mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmcgewogIHVwZGF0ZUluZGl2aWR1YWxPbmJvYXJkaW5nKAogICAgaW5wdXQ6IHsKICAgICAgb25ib2FyZGluZ0lkOiAiJE9OQk9BUkRJTkdfSUQiLAogICAgICBhY2NvdW50TmFtZTogIlBlcnNvbmFsIGFjY291bnQiIH0KICApIHsKICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVXBkYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmdTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgb25ib2FyZGluZyB7CiAgICAgICAgYWNjb3VudE5hbWUKICAgICAgICBvbmJvYXJkaW5nU3RhdGUKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBtZXNzYWdlCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmcgewogIHVwZGF0ZUluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZygKICAgIGlucHV0OiB7CiAgICAgIG9uYm9hcmRpbmdJZDogIiRPTkJPQVJESU5HX0lEIgogICAgICBhY2NvdW50SW5mbzogewogICAgICAgIG5hbWU6ICJQZXJzb25hbCBhY2NvdW50IgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlSW5kaXZpZHVhbEFjY291bnRIb2xkZXJPbmJvYXJkaW5nU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG9uYm9hcmRpbmcgewogICAgICAgIGFjY291bnRJbmZvIHsKICAgICAgICAgIG5hbWUKICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBPbmJvYXJkaW5nTm90Rm91bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgICAuLi4gb24gT25ib2FyZGluZ0FscmVhZHlGaW5hbGl6ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgfQp9Cg==&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-5,18-21} showLineNumbers
+```graphql {4-7,11-14} showLineNumbers
 mutation UpdateIndividualOnboarding {
-  updateIndividualOnboarding(
+  updateIndividualAccountHolderOnboarding(
     input: {
       onboardingId: "$ONBOARDING_ID"
-      accountName: "Personal account"
+      accountInfo: {
+        name: "Personal account"
+      }
     }
   ) {
-    ... on ForbiddenRejection {
-      __typename
-      message
-    }
-    ... on InternalErrorRejection {
-      __typename
-      message
-    }
-    ... on UpdateIndividualOnboardingSuccessPayload {
+    ... on UpdateIndividualAccountHolderOnboardingSuccessPayload {
       __typename
       onboarding {
-        accountName
+        accountInfo {
+          name
+        }
         statusInfo {
           status
         }
       }
     }
-    ... on ValidationRejection {
+    ... on OnboardingNotFoundRejection {
       __typename
-      message
-      fields {
-        message
-      }
+    }
+    ... on OnboardingAlreadyFinalizedRejection {
+      __typename
     }
   }
 }
-
 ```
 
 ## Payload {#payload}
@@ -66,12 +67,15 @@ mutation UpdateIndividualOnboarding {
 ```json {6-8} showLineNumbers
 {
   "data": {
-    "updateIndividualOnboarding": {
-      "__typename": "UpdateIndividualOnboardingSuccessPayload",
+    "updateIndividualAccountHolderOnboarding": {
+      "__typename": "UpdateIndividualAccountHolderOnboardingSuccessPayload",
       "onboarding": {
-        "accountName": "MyBrand",
+        "accountInfo": {
+          "name": "Personal account"
+        },
         "statusInfo": {
           "status": "Valid"
+        }
       }
     }
   }

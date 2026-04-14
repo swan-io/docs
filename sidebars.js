@@ -46,6 +46,7 @@ module.exports = {
           items: [
             "topics/onboarding/individual/guide-create",
             "topics/onboarding/individual/guide-update",
+            "topics/onboarding/individual/fields",
           ],
         },
         {
@@ -56,6 +57,7 @@ module.exports = {
           items: [
             "topics/onboarding/company/guide-create",
             "topics/onboarding/company/guide-update",
+            "topics/onboarding/company/fields",
           ],
         },
         {

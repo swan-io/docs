@@ -4,6 +4,7 @@ title: Individual account onboarding
 
 # Individual account onboarding
 
+import DeprecationTimeline from '../partials/_deprecated-mutation-timeline.mdx';
 import IndividualOnboardingDefinition from '../../definitions/_onboarding-individual.mdx';
 
 > <IndividualOnboardingDefinition />
@@ -28,7 +29,7 @@ Through the individual onboarding form, Swan collects the following information:
 ## Identification recommendations {#identification-recommendations}
 
 Swan must verify the identity of every user.
-Swan supports multiple [**identification processes**](../../users/identifications/index.mdx#levels-processes), and some require a [**first transfer**](../account-holders/index.mdx#first-transfer).
+Swan supports multiple [identification processes](../../users/identifications/index.mdx#levels-processes), and some require a [first transfer](../account-holders/index.mdx#first-transfer).
 For individual onboarding, the following levels are recommended based on the account country.
 
 | Account country | Recommended level<br/>for individuals | Other supported levels |
@@ -46,47 +47,17 @@ import CountryReqs from '../partials/_country-reqs.mdx';
 
 <CountryReqs thisAccountType="individual" thatAccountType="company" />
 
-For individual accounts, use the `onboardIndividualAccountHolder` mutation to collect the following information according to your desired account country.
+For individual accounts, use the `createIndividualAccountHolderOnboarding` mutation.
 
-<FieldRequirementsLegend />
+:::note Deprecated mutation
+The previous `onboardIndividualAccountHolder` mutation is deprecated.
+<DeprecationTimeline />
+Use `createIndividualAccountHolderOnboarding` for all new integrations.
+:::
 
-| API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-|`accountCountry`| <Req /><br/>(`FRA`) | <Req /><br/>(`BEL`) | <Req /><br/>(`DEU`) | <Req /><br/>(`ITA`) | <Req /><br/>(`NLD`) | <Req /><br/>(`ESP`) |
-|`accountName`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`acquisitionChannel`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`email`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`employmentStatus`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`language`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`monthlyIncome`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`oAuthRedirectParameters`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`residencyAddress.addressLine1`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`residencyAddress.addressLine2`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`residencyAddress.city`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`residencyAddress.country`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`residencyAddress.postalCode`| <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-|`residencyAddress.state`|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|<Opt />|
-|`taxIdentificationNumber`|<Opt />|<Opt />| <Cnd /> ∗ | <Req /> |<Opt />|<Opt />|
-
-∗ *If the `accountCountry` is Germany, the account holder has 90 days to provide their Tax ID Number when opening an account.
-Otherwise, the account will be suspended.*
-
-### Acquisition channel {#acquisition-channel}
-
-Use the optional `acquisitionChannel` field to indicate how the account holder was acquired.
-
-| Value | Description |
-|-------|-------------|
-| `InboundOrganic` | Account holders who signed up directly, such as through your website. |
-| `InboundReferral` | Account holders acquired through referrals from existing users or partners. |
-| `OutboundSales` | Account holders acquired through direct sales efforts. |
-| `OutboundAccountingFirm` | Account holders acquired through accounting firm partnerships. |
-
-Choose the value that best reflects your acquisition channel for each account holder.
+For a complete list of fields, country-specific requirements, and conditional rules, refer to the [individual onboarding field reference](./fields.mdx).
 
 ## User flow diagrams {#diagrams}
-
-## Individual account onboarding
 
 <details>
   <summary>End-user perspective of an individual account onboarding</summary>
@@ -105,3 +76,4 @@ Use the following guides to start and complete the individual onboarding process
 
 * [Create an individual onboarding link](./guide-create.mdx)
 * [Update an individual onboarding](./guide-update.mdx)
+* [Individual onboarding field reference](./fields.mdx)

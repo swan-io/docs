@@ -2,6 +2,8 @@
 title: Finalize an onboarding
 ---
 
+import DeprecationTimeline from '../partials/_deprecated-mutation-timeline.mdx';
+
 # Finalize an onboarding
 
 You can finalize onboardings in several ways:
@@ -24,40 +26,57 @@ If you need to update an onboarding before finalizing it, follow the guides for 
 Finalize an onboarding using the API.
 
 1. First, [retrieve the ID](../overview/guide-get-info) for the onboarding you're finalizing.
-1. Call the `finalizeOnboarding` mutation.
+1. Call the `finalizeAccountHolderOnboarding` mutation.
 1. Enter the onboarding ID retrieved in step 1.
 1. Add optional messages to the success payload, either for validation or in case of rejection.
 1. Confirm you're using the user access token to run the mutation.
 
+:::note Deprecated mutation
+The previous `finalizeOnboarding` mutation is deprecated.
+<DeprecationTimeline />
+Use `finalizeAccountHolderOnboarding` for all new integrations.
+:::
+
 ## Mutation
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gZmluYWxpemVPbmJvYXJkaW5nIHsKICBmaW5hbGl6ZU9uYm9hcmRpbmcoaW5wdXQ6IHsgb25ib2FyZGluZ0lkOiAiJE9OQk9BUkRJTkdfSUQiIH0pIHsKICAgIC4uLiBvbiBGaW5hbGl6ZU9uYm9hcmRpbmdTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgb25ib2FyZGluZyB7CiAgICAgICAgYWNjb3VudCB7CiAgICAgICAgICBpZAogICAgICAgICAgaG9sZGVyIHsKICAgICAgICAgICAgaWQKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBPbmJvYXJkaW5nTm90Q29tcGxldGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRmluYWxpemVPbmJvYXJkaW5nIHsKICBmaW5hbGl6ZUFjY291bnRIb2xkZXJPbmJvYXJkaW5nKGlucHV0OiB7IG9uYm9hcmRpbmdJZDogIiRPTkJPQVJESU5HX0lEIiB9KSB7CiAgICAuLi4gb24gRmluYWxpemVBY2NvdW50SG9sZGVyT25ib2FyZGluZ1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBvbmJvYXJkaW5nIHsKICAgICAgICAuLi4gb24gSW5kaXZpZHVhbEFjY291bnRIb2xkZXJPbmJvYXJkaW5nIHsKICAgICAgICAgIGlkCiAgICAgICAgICBhY2NvdW50IHsKICAgICAgICAgICAgaWQKICAgICAgICAgIH0KICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgLi4uIG9uIENvbXBhbnlBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgYWNjb3VudCB7CiAgICAgICAgICAgIGlkCiAgICAgICAgICB9CiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gT25ib2FyZGluZ05vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIE9uYm9hcmRpbmdBbHJlYWR5RmluYWxpemVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIE9uYm9hcmRpbmdOb3RSZWFkeUZvckZpbmFsaXphdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-Notice the request to include the account ID and account holder ID, as well as the onboarding status, in the success payload.
+Notice the request to include the account ID, as well as the onboarding status, in the success payload. The response is an `AccountHolderOnboarding` union — use inline fragments to select fields for `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`.
 
-```graphql {2,6-9,13} showLineNumbers
-mutation finalizeOnboarding {
-  finalizeOnboarding(input: { onboardingId: "$ONBOARDING_ID" }) {
-    ... on FinalizeOnboardingSuccessPayload {
+```graphql {2,6-13,15-22} showLineNumbers
+mutation FinalizeOnboarding {
+  finalizeAccountHolderOnboarding(input: { onboardingId: "$ONBOARDING_ID" }) {
+    ... on FinalizeAccountHolderOnboardingSuccessPayload {
       __typename
       onboarding {
-        account {
+        ... on IndividualAccountHolderOnboarding {
           id
-          holder {
+          account {
             id
           }
+          statusInfo {
+            status
+          }
         }
-        statusInfo {
-          status
+        ... on CompanyAccountHolderOnboarding {
+          id
+          account {
+            id
+          }
+          statusInfo {
+            status
+          }
         }
       }
     }
-    ... on OnboardingNotCompletedRejection {
+    ... on OnboardingNotFoundRejection {
       __typename
     }
-    ... on ValidationRejection {
+    ... on OnboardingAlreadyFinalizedRejection {
       __typename
-      message
+    }
+    ... on OnboardingNotReadyForFinalizationRejection {
+      __typename
     }
   }
 }
@@ -65,19 +84,17 @@ mutation finalizeOnboarding {
 
 ## Payload
 
-Notice the ID for the newly-created account and account holder, as well as the onboarding status `Finalized`.
+Notice the ID for the newly-created account and the onboarding status `Finalized`. Both union types return the same field structure; the example below shows an individual onboarding.
 
-```json {4,7,9,13} showLineNumbers
+```json {4,8,10,14} showLineNumbers
 {
   "data": {
-    "finalizeOnboarding": {
-      "__typename": "FinalizeOnboardingSuccessPayload",
+    "finalizeAccountHolderOnboarding": {
+      "__typename": "FinalizeAccountHolderOnboardingSuccessPayload",
       "onboarding": {
+        "id": "$ONBOARDING_ID",
         "account": {
-          "id": "$NEW_ACCOUNT_ID",
-          "holder": {
-            "id": "$NEW_ACCOUNT_HOLDER_ID"
-          }
+          "id": "$NEW_ACCOUNT_ID"
         },
         "statusInfo": {
           "status": "Finalized"

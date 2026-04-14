@@ -822,6 +822,34 @@ module.exports = {
           items: [
             "preview/new-onboarding/individual",
             "preview/new-onboarding/company",
+            {
+              type: "category",
+              label: "Legacy reference (deprecated)",
+              link: { type: "doc", id: "preview/new-onboarding/legacy-onboarding/index" },
+              collapsed: true,
+              items: [
+                {
+                  type: "category",
+                  label: "Individual",
+                  link: { type: "doc", id: "preview/new-onboarding/legacy-onboarding/individual/index" },
+                  collapsed: true,
+                  items: [
+                    "preview/new-onboarding/legacy-onboarding/individual/guide-create",
+                    "preview/new-onboarding/legacy-onboarding/individual/guide-update",
+                  ],
+                },
+                {
+                  type: "category",
+                  label: "Company",
+                  link: { type: "doc", id: "preview/new-onboarding/legacy-onboarding/company/index" },
+                  collapsed: true,
+                  items: [
+                    "preview/new-onboarding/legacy-onboarding/company/guide-create",
+                    "preview/new-onboarding/legacy-onboarding/company/guide-update",
+                  ],
+                },
+              ],
+            },
           ],
         },
       ],

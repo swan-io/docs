@@ -5,6 +5,7 @@ title: Company account onboarding
 
 # Company account onboarding
 
+import DeprecationTimeline from '../partials/_deprecated-mutation-timeline.mdx';
 import CompanyOnboardingDefinition from '../../definitions/_onboarding-company.mdx';
 
 > <CompanyOnboardingDefinition />
@@ -29,7 +30,7 @@ Company onboarding information can be submitted **with the API** or through **Sw
 
 | Method | Details |
 | --- | --- |
-| Onboarding form | The onboarding form collects:<br /><br /><ol><li>User's **email address**.</li><li>Legal information about the organization, including the **company name**, **registration number**, **VAT number** (optional), and **address**, as well as details about the organization's **activity** and **expected monthly volume**.</li><li>Information about the company's **related individuals** (ultimate beneficial owners and legal representatives).</li><li>Information about the company's **related companies** (legal entity representatives, if applicable).</li><li>**Required documents** to verify your organization. You might not see this step in your onboarding process.</li><li>User [**signs up**](../../users/index.mdx#signup) for Swan.</li></ol>You can also customize this form to better meet your needs. Review Swan's [open source documentation](https://swan-io.github.io/swan-partner-frontend/specs/onboarding/company/), then ask your PIM (Product Integration Manager) for more information. |
+| Onboarding form | The onboarding form collects:<br /><br /><ol><li>User's **email address**.</li><li>Legal information about the organization, including the **company name**, **registration number**, **VAT number** (optional), and **address**, as well as details about the organization's **activity** and **expected monthly volume**.</li><li>Information about the company's **related individuals** (ultimate beneficial owners (UBOs) and legal representatives).</li><li>Information about the company's **related companies** (legal entity representatives, if applicable).</li><li>**Required documents** to verify your organization. You might not see this step in your onboarding process.</li><li>User [**signs up**](../../users/index.mdx#signup) for Swan.</li></ol>You can also customize this form to better meet your needs. Review Swan's [open source documentation](https://swan-io.github.io/swan-partner-frontend/specs/onboarding/company/), then ask your PIM (Product Integration Manager) for more information. |
 | API | The API collects the same information as the onboarding form. Review the requirements explained on this page thoroughly, then follow the guide to [create a company onboarding link](./guide-create.mdx). |
 
 ### Expected monthly volume {#monthly-volume}
@@ -54,7 +55,7 @@ The new API uses the `company.relatedIndividuals` array to represent all individ
 - `LegalRepresentativeAndUltimateBeneficialOwner`: the individual serves both roles.
 
 :::caution Finalization requirements
-At least one **legal representative** and one **Ultimate Beneficial Owner** (UBO) are required to finalize a company onboarding.
+At least one **legal representative** and one **UBO** are required to finalize a company onboarding.
 The same individual can fulfill both roles by using the `LegalRepresentativeAndUltimateBeneficialOwner` type.
 :::
 
@@ -68,10 +69,10 @@ The `legalFormCode` field is required for all company onboardings. Use the `lega
 
 ### Retrieving data automatically {#retrieve-data}
 
-For companies located in France, you can use the `companyInfoRegistryData` query to retrieve data from the **National Business Register (RNE)** using the company's registration number.
+For companies located in France, use the `companyInfoRegistryData` query to retrieve data from the **National Business Register (RNE)** using the company's registration number. Pass the results to the create or update mutation to pre-fill company fields.
 
 :::caution No auto-population
-The new API does **not** auto-populate fields. You must explicitly call `companyInfoRegistryData` and pass the results to the `createCompanyAccountHolderOnboarding` or `updateCompanyAccountHolderOnboarding` mutation.
+The new API does **not** auto-populate fields. You must call `companyInfoRegistryData` and pass the results to the `createCompanyAccountHolderOnboarding` or `updateCompanyAccountHolderOnboarding` mutation to pre-fill company fields.
 :::
 
 ## Identification recommendations {#identification-recommendations}
@@ -103,7 +104,8 @@ import CountryReqs from '../partials/_country-reqs.mdx';
 For company accounts, use the `createCompanyAccountHolderOnboarding` mutation.
 
 :::note Deprecated mutation
-The previous `onboardCompanyAccountHolder` mutation is deprecated and will be removed in December 2026.
+The previous `onboardCompanyAccountHolder` mutation is deprecated.
+<DeprecationTimeline />
 Use `createCompanyAccountHolderOnboarding` for all new integrations.
 :::
 

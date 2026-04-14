@@ -13,8 +13,7 @@ All requested supporting documents must be submitted to complete onboarding.
 
 <FieldRequirementsLegend />
 
-## Account information
-`accountInfo`
+## Account information (`accountInfo`)
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -25,8 +24,7 @@ All requested supporting documents must be submitted to complete onboarding.
 
 - `country`: `FRA`, `DEU`, `ESP`, `NLD`, `ITA`, `BEL`.
 
-## Account administrator
-`accountAdmin`
+## Account administrator (`accountAdmin`)
 
 :::info Account admin fields and sign-up
 Although many `accountAdmin` fields are optional during onboarding, they are required when the user signs up. We recommend collecting and sending this information before the end of the onboarding flow.
@@ -91,8 +89,7 @@ These fields are hidden from end users. Provide them through your backend integr
 | `ip` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `userAgent` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-## Company
-`company`
+## Company (`company`)
 
 ### Registration and business activity
 
@@ -172,13 +169,13 @@ Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query
 
 ### Related individuals (`company.relatedIndividuals`)
 
-The `relatedIndividuals` array is required for all countries. At least one legal representative and one Ultimate Beneficial Owner (UBO) are required to finalize a company onboarding. The same individual can fulfill both roles depending on the `type`.
+The `relatedIndividuals` array is required for all countries. At least one `LegalRepresentative` and one `UltimateBeneficialOwner` are required to finalize a company onboarding. A single individual can fulfill both roles by setting `type` to `LegalRepresentativeAndUltimateBeneficialOwner`.
 
 Each individual must have a `type` that determines which additional fields are required:
 
 - `LegalRepresentative`: the individual represents the company legally.
 - `UltimateBeneficialOwner`: the individual holds ownership or control over the company.
-- `LegalRepresentativeAndUltimateBeneficialOwner`: the individual serves both roles.
+- `LegalRepresentativeAndUltimateBeneficialOwner`: the individual both represents the company legally and holds ownership or control.
 
 #### Personal information
 
@@ -221,7 +218,7 @@ Each individual must have a `type` that determines which additional fields are r
 | `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `postalCode` | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> |
 
-⁷ In Germany (for `birthDate`, `city`, `postalCode`) and Spain (for `postalCode` only), these fields are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+⁷ In Germany (for `birthDate`, `city`, `postalCode`) and Spain (for `postalCode` only), these fields are required if `relatedIndividuals[i].type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 
 #### Tax information
 
@@ -229,12 +226,10 @@ Each individual must have a `type` that determines which additional fields are r
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> |
 
-⁸ `taxIdentificationNumber` is required if all of the following are true:
+⁸ `taxIdentificationNumber` is required if `relatedIndividuals[i].type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner` and at least one of the following is true:
 
-- `type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner`.
-- One of the following:
-    - `company.regulatoryClassification` is `NonFinancialPassive` **and** `relatedIndividuals[i].address.country` is different from `accountInfo.country`.
-    - `accountInfo.country` is Germany or Italy.
+- `accountInfo.country` is Germany or Italy.
+- `company.regulatoryClassification` is `NonFinancialPassive` **and** `relatedIndividuals[i].address.country` is different from `accountInfo.country`.
 
 #### United States tax information (`relatedIndividuals[i].unitedStatesTaxInfo`)
 
@@ -297,8 +292,7 @@ Use this array when a company (not an individual) serves as a legal representati
 | `registrationNumber` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `roles` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 
-## OAuth redirect parameters
-`oAuthRedirectParameters`
+## OAuth redirect parameters (`oAuthRedirectParameters`)
 
 These fields are hidden from end users. Provide them through your backend integration only.
 

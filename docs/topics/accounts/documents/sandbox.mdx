@@ -100,18 +100,31 @@ Get the ID for the supporting document collection using either the **user's onbo
 <Tabs>
 <TabItem value="onboardingId" label="Onboarding ID">
 
-<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0Q29sbGVjdGlvbklkIHsKICBvbmJvYXJkaW5nKGlkOiAiJE9OQk9BUkRJTkdfSUQiKSB7CiAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uIHsKICAgICAgaWQKICAgICAgcmVxdWlyZWRTdXBwb3J0aW5nRG9jdW1lbnRQdXJwb3NlcyB7CiAgICAgICAgbmFtZQogICAgICB9CiAgICAgIHN0YXR1c0luZm8gewogICAgICAgIHN0YXR1cwogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0Q29sbGVjdGlvbklkIHsKICBhY2NvdW50SG9sZGVyT25ib2FyZGluZyhpZDogIiRVU0VSX09OQk9BUkRJTkdfSUQiKSB7CiAgICAuLi4gb24gSW5kaXZpZHVhbEFjY291bnRIb2xkZXJPbmJvYXJkaW5nIHsKICAgICAgc3VwcG9ydGluZ0RvY3VtZW50Q29sbGVjdGlvbiB7CiAgICAgICAgaWQKICAgICAgICByZXF1aXJlZFN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2VzIHsKICAgICAgICAgIG5hbWUKICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBDb21wYW55QWNjb3VudEhvbGRlck9uYm9hcmRpbmcgewogICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uIHsKICAgICAgICBpZAogICAgICAgIHJlcXVpcmVkU3VwcG9ydGluZ0RvY3VtZW50UHVycG9zZXMgewogICAgICAgICAgbmFtZQogICAgICAgIH0KICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {2} showLineNumbers
 query getCollectionId {
-  onboarding(id: "$USER_ONBOARDING_ID") {
-    supportingDocumentCollection {
-      id
-      requiredSupportingDocumentPurposes {
-        name
+  accountHolderOnboarding(id: "$USER_ONBOARDING_ID") {
+    ... on IndividualAccountHolderOnboarding {
+      supportingDocumentCollection {
+        id
+        requiredSupportingDocumentPurposes {
+          name
+        }
+        statusInfo {
+          status
+        }
       }
-      statusInfo {
-        status
+    }
+    ... on CompanyAccountHolderOnboarding {
+      supportingDocumentCollection {
+        id
+        requiredSupportingDocumentPurposes {
+          name
+        }
+        statusInfo {
+          status
+        }
       }
     }
   }
@@ -151,16 +164,28 @@ Get the ID for the supporting document using either the **user's onboarding ID**
 <Tabs>
 <TabItem value="onboardingId" label="Onboarding ID">
 
-<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0RG9jdW1lbnRJZCB7CiAgb25ib2FyZGluZyhpZDogIiRVU0VSX09OQk9BUkRJTkdfSUQiKSB7CiAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uIHsKICAgICAgc3VwcG9ydGluZ0RvY3VtZW50cyB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0RG9jdW1lbnRJZCB7CiAgYWNjb3VudEhvbGRlck9uYm9hcmRpbmcoaWQ6ICIkVVNFUl9PTkJPQVJESU5HX0lEIikgewogICAgLi4uIG9uIEluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb24gewogICAgICAgIHN1cHBvcnRpbmdEb2N1bWVudHMgewogICAgICAgICAgaWQKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBDb21wYW55QWNjb3VudEhvbGRlck9uYm9hcmRpbmcgewogICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uIHsKICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRzIHsKICAgICAgICAgIGlkCiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {2} showLineNumbers
 query getDocumentId {
-  onboarding(id: "$USER_ONBOARDING_ID") {
-    supportingDocumentCollection {
-      supportingDocuments {
-        id
-        statusInfo {
-          status
+  accountHolderOnboarding(id: "$USER_ONBOARDING_ID") {
+    ... on IndividualAccountHolderOnboarding {
+      supportingDocumentCollection {
+        supportingDocuments {
+          id
+          statusInfo {
+            status
+          }
+        }
+      }
+    }
+    ... on CompanyAccountHolderOnboarding {
+      supportingDocumentCollection {
+        supportingDocuments {
+          id
+          statusInfo {
+            status
+          }
         }
       }
     }

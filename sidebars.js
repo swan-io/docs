@@ -32,7 +32,7 @@ module.exports = {
           link: { type: "doc", id: "topics/onboarding/index" },
           collapsed: true,
           items: [
-            "topics/onboarding/guide-migrate",
+            "topics/onboarding/overview/guide-migrate",
             "topics/onboarding/overview/guide-get-info",
             "topics/onboarding/overview/guide-get-list",
             "topics/onboarding/overview/guide-export",

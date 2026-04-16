@@ -34,7 +34,7 @@ Use the Dashboard to review information about a transaction document.
 1. Call the `transaction` query.
 1. Enter the transaction ID retrieved in step 1 (line 2).
 1. Include [`purposeDetails`](/topics/accounts/documents/#document-purposes-types) under `requiredSupportingDocumentPurposes` to see what's needed if the purpose is `Other` (line 14).
-1. Add all other objects you need to review (for example `SupportingDocumentStatusInfo`) (lines 16-19).
+1. Add all other objects you need to review. For example, `SupportingDocumentRefusedStatusInfo` (lines 16-19) to get refusal details. 
 
 #### Query {#transaction-api-query}
 
@@ -143,8 +143,10 @@ You can use either the user's onboarding ID or, if their onboarding is `Finalize
 1. Enter the onboarding ID retrieved in step 1 (line 2).
 1. Include [`purposeDetails`](/topics/accounts/documents/#document-purposes-types) under `requiredSupportingDocumentPurposes` to see what's needed if the purpose is `Other` (line 7).
 1. Add all other objects you need to review.
-    - Example: add `supportingDocumentPurpose` to know which supporting document is required (line 10), as well as the `supportingDocuments` > `statusInfo` > `status` (lines 13-14) to retrieve the document's status.
-    - Example: add `supportingDocuments` > `statusInfo` > `status` (lines 13-14) to get information about why a document was `Refused` (lines 15).
+    - Example: add `supportingDocumentPurpose` to know which supporting document is required (line 10).
+    - 
+    - Example: add `supportingDocuments` > `statusInfo` > `status` (lines 13-14) to retrieve the document's status.
+    - Example: add `supportingDocuments` > `statusInfo` > `status` (lines 13-14) to get information about why a document was `Refused` (line 15).
 
 :::info Account holder ID
 This guide uses the onboarding ID.
@@ -187,10 +189,9 @@ query getOnboardingCollectionInfo {
 
 #### Payload: `Validated` {#onboarding-api-payload-validated}
 
-In this example, the required document purpose is `Other` (line 8)
+In this example, the required document purpose is `Other` (line 8).
 [`purposeDetails`](/topics/accounts/documents/#document-purposes-types) is "Most recent business income tax return (aangifte inkomstenbelasting)" (line 9).
 The document was received, reviewed, and `Validated` (line 18).
-
 
 ```json {8,9,18} showLineNumbers
 {
@@ -222,7 +223,7 @@ The document was received, reviewed, and `Validated` (line 18).
 
 #### Payload: `Refused` {#onboarding-api-payload-refused}
 
-In this example, the required document purpose is `UBODeclaration` (line 8). The document was `Refused` (line 18) because it was an `InvalidDocument` (line 22).
+In this example, the required document purpose is `UBODeclaration` (line 8). The document was `Refused` (line 18) with reason code `InvalidDocument` (line 22).
 [`purposeDetails`](/topics/accounts/documents/#document-purposes-types) is `null` here because this is a standard purpose (line 9).
 
 ```json {8,9,18,22} showLineNumbers

@@ -8,7 +8,7 @@ Swan's current onboarding API replaces the previous one with cleaner naming, str
 This guide walks you through migrating your integration.
 
 :::info Deprecation timeline
-Previous onboarding mutations and queries are deprecated and will be removed in **December 2026**.
+Previous onboarding mutations and queries are deprecated and will be removed at the **end of September 2026**.
 Migrate to the current API before this date to avoid disruption.
 :::
 
@@ -32,7 +32,7 @@ For a complete field-by-field comparison between the previous and current APIs, 
 - [Company onboarding fields](/topics/onboarding/company/fields)
 
 These pages include API mapping tables that show each previous field alongside its current equivalent.
-The mapping tables will be available until the previous mutations are retired in December 2026.
+The mapping tables will be available until the previous mutations are retired at the end of September 2026.
 
 ## Coexistence
 
@@ -100,7 +100,7 @@ The current API returns typed responses instead of the generic `Onboarding` type
 
 - Individual mutations return `IndividualAccountHolderOnboarding`.
 - Company mutations return `CompanyAccountHolderOnboarding`.
-- The `finalizeAccountHolderOnboarding` mutation returns an `AccountHolderOnboarding` union type.
+- The `finalizeAccountHolderOnboarding` mutation returns a `FinalizeAccountHolderOnboardingPayload`. On success, the payload contains a `FinalizeAccountHolderOnboardingSuccessPayload` with an `onboarding` field of type `AccountHolderOnboarding` (union).
 
 Update your response parsing to handle the new type names and field structure.
 
@@ -128,7 +128,7 @@ In-progress onboardings created with the previous API are not affected by the mi
 - They don't need to be recreated with the current API.
 - Once finalized, any future onboardings should use the current API.
 
-After the previous mutations are removed in December 2026, all in-progress onboardings using the previous API must already be finalized.
+After the previous mutations are removed at the end of September 2026, all in-progress onboardings using the previous API must already be finalized.
 Plan your migration timeline to ensure no onboardings are left in an incomplete state.
 
 ## Deprecation timeline
@@ -137,7 +137,7 @@ Plan your migration timeline to ensure no onboardings are left in an incomplete 
 |---|---|
 | March 2026 | Current onboarding API available in beta. |
 | April 2026 | Documentation updated. Previous mutations marked as deprecated across all guide pages. |
-| December 2026 | Previous mutations and queries removed. |
+| September 2026 | Previous mutations and queries removed. |
 
 ## Testing checklist {#testing-checklist}
 

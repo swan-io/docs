@@ -32,14 +32,15 @@ Use the Dashboard to review information about a transaction document.
 
 1. First, [retrieve the required transaction ID](../../payments/overview/guide-get-transaction-id.mdx).
 1. Call the `transaction` query.
-1. Enter the transaction ID retrieved in step 1.
-1. Add all objects you need to review.
+1. Enter the transaction ID retrieved in step 1 (line 2).
+1. Include [`purposeDetails`](/topics/accounts/documents/#document-purposes-types) under `requiredSupportingDocumentPurposes` to see what's needed if the purpose is `Other` (line 14).
+1. Add all other objects you need to review. For example, `SupportingDocumentRefusedStatusInfo` (lines 16-19) to get refusal details. 
 
 #### Query {#transaction-api-query}
 
-<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0VHJhbnNhY3Rpb25Db2xsZWN0aW9uSW5mbyB7CiAgdHJhbnNhY3Rpb24oaWQ6ICIkVFJBTlNBQ1RJT05fSUQiKSB7CiAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICBpZAogICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9ucyB7CiAgICAgICAgZWRnZXMgewogICAgICAgICAgbm9kZSB7CiAgICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICAgIGlkCiAgICAgICAgICAgIHJlcXVpcmVkU3VwcG9ydGluZ0RvY3VtZW50UHVycG9zZXMgewogICAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0VHJhbnNhY3Rpb25Db2xsZWN0aW9uSW5mbyB7CiAgdHJhbnNhY3Rpb24oaWQ6ICIkVFJBTlNBQ1RJT05fSUQiKSB7CiAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICBpZAogICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9ucyB7CiAgICAgICAgZWRnZXMgewogICAgICAgICAgbm9kZSB7CiAgICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICAgIGlkCiAgICAgICAgICAgIHJlcXVpcmVkU3VwcG9ydGluZ0RvY3VtZW50UHVycG9zZXMgewogICAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgICBwdXJwb3NlRGV0YWlscwogICAgICAgICAgICB9CiAgICAgICAgICAgIHN1cHBvcnRpbmdEb2N1bWVudHMgewogICAgICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgICAuLi4gb24gU3VwcG9ydGluZ0RvY3VtZW50UmVmdXNlZFN0YXR1c0luZm8gewogICAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICAgIHJlYXNvbkNvZGUKICAgICAgICAgICAgICAgICAgcmVhc29uCiAgICAgICAgICAgICAgICAgIHJlZnVzZWRBdAogICAgICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgICAgICAgZmlsZW5hbWUKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2-3,5,11-13,15-18,20} showLineNumbers
+```graphql {2-3,5,12-14,16-19,21} showLineNumbers
 query getTransactionCollectionInfo {
   transaction(id: "$TRANSACTION_ID") {
     ... on SEPACreditTransferTransaction {
@@ -53,6 +54,7 @@ query getTransactionCollectionInfo {
             id
             requiredSupportingDocumentPurposes {
               name
+              purposeDetails
             }
             supportingDocuments {
               statusInfo {
@@ -76,16 +78,16 @@ query getTransactionCollectionInfo {
 ```
 #### Payload {#transactions-api-payload}
 
-In this example, notice the collection status `WaitingForDocument` (line 11).
-Swan needs documented proof of the gambling or prize winnings (line 16).
+In this example, the collection status is `WaitingForDocument` (line 10).
+The required document purpose is `ProofOfOriginOfFunds` (line 15).
+[`purposeDetails`](/topics/accounts/documents/#document-purposes-types) is `null` here because this is a standard purpose (line 16).
 
-```json {11,16} showLineNumbers
+```json {10,15,16} showLineNumbers 
 {
   "data": {
     "transaction": {
       "id": "$TRANSACTION_ID",
       "supportingDocumentCollections": {
-        "totalCount": 1,
         "edges": [
           {
             "node": {
@@ -95,7 +97,15 @@ Swan needs documented proof of the gambling or prize winnings (line 16).
               "id": "$COLLECTION_ID",
               "requiredSupportingDocumentPurposes": [
                 {
-                  "name": "GamblingPrizeWinnings"
+                  "name": "ProofOfOriginOfFunds",
+                  "purposeDetails": null
+                }
+              ],
+              "supportingDocuments": [
+                {
+                  "statusInfo": {
+                    "status": "WaitingForUpload"
+                  }
                 }
               ]
             }
@@ -130,10 +140,12 @@ You can use either the user's onboarding ID or, if their onboarding is `Finalize
 
 1. First, retrieve the required onboarding ID, either [with the API](../../onboarding/overview/guide-get-info.mdx) or from your **Dashboard** > **Data** > **Onboardings**.
 1. Call the `accountHolderOnboarding` query.
-1. Enter the onboarding ID retrieved in step 1.
-1. Add all objects you need to review.
-    - Example: add `supportingDocumentPurpose` to know which supporting document is required (line 7), as well as `supportingDocuments` > `statusInfo` (lines 10-12) to retrieve the document's status.
-    - Example: add `supportingDocuments` > `statusInfo` (lines 10-12) to get information about why a document was `Refused` (line 16).
+1. Enter the onboarding ID retrieved in step 1 (line 2).
+1. Include [`purposeDetails`](/topics/accounts/documents/#document-purposes-types) under `requiredSupportingDocumentPurposes` to see what's needed if the purpose is `Other` (line 8).
+1. Add all other objects you need to review.
+    - Example: add `supportingDocumentPurpose` to know which supporting document is required (line 11).
+    - Example: add `supportingDocuments` > `statusInfo` > `status` (lines 14-15) to retrieve the document's status.
+    - Example: add `supportingDocuments` > `statusInfo` > `status` (lines 14-15) to get information about why a document was `Refused` (line 16).
 
 :::info Account holder ID
 This guide uses the onboarding ID.
@@ -142,14 +154,18 @@ If the onboarding is `Finalized`, use the account holder ID to [call the `accoun
 
 #### Query {#onboarding-api-query}
 
-<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0T25ib2FyZGluZ0NvbGxlY3Rpb25JbmZvIHsKICBhY2NvdW50SG9sZGVyT25ib2FyZGluZyhpZDogIiRPTkJPQVJESU5HX0lEIikgewogICAgLi4uIG9uIEluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb24gewogICAgICAgIGlkCiAgICAgICAgc3VwcG9ydGluZ0RvY3VtZW50cyB7CiAgICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRQdXJwb3NlCiAgICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRUeXBlCiAgICAgICAgICB1cGRhdGVkQXQKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgLi4uIG9uIFN1cHBvcnRpbmdEb2N1bWVudFJlZnVzZWRTdGF0dXNJbmZvIHsKICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgZmlsZW5hbWUKICAgICAgICAgICAgICByZWFzb24KICAgICAgICAgICAgICByZWFzb25Db2RlCiAgICAgICAgICAgICAgcmVmdXNlZEF0CiAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBDb21wYW55QWNjb3VudEhvbGRlck9uYm9hcmRpbmcgewogICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uIHsKICAgICAgICBpZAogICAgICAgIHN1cHBvcnRpbmdEb2N1bWVudHMgewogICAgICAgICAgc3VwcG9ydGluZ0RvY3VtZW50UHVycG9zZQogICAgICAgICAgc3VwcG9ydGluZ0RvY3VtZW50VHlwZQogICAgICAgICAgdXBkYXRlZEF0CiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIC4uLiBvbiBTdXBwb3J0aW5nRG9jdW1lbnRSZWZ1c2VkU3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgIGZpbGVuYW1lCiAgICAgICAgICAgICAgcmVhc29uCiAgICAgICAgICAgICAgcmVhc29uQ29kZQogICAgICAgICAgICAgIHJlZnVzZWRBdAogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0T25ib2FyZGluZ0NvbGxlY3Rpb25JbmZvIHsKICBhY2NvdW50SG9sZGVyT25ib2FyZGluZyhpZDogIiRPTkJPQVJESU5HX0lEIikgewogICAgLi4uIG9uIEluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb24gewogICAgICAgIGlkCiAgICAgICAgcmVxdWlyZWRTdXBwb3J0aW5nRG9jdW1lbnRQdXJwb3NlcyB7CiAgICAgICAgICBuYW1lCiAgICAgICAgICBwdXJwb3NlRGV0YWlscwogICAgICAgIH0KICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRzIHsKICAgICAgICAgIHN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2UKICAgICAgICAgIHN1cHBvcnRpbmdEb2N1bWVudFR5cGUKICAgICAgICAgIHVwZGF0ZWRBdAogICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAuLi4gb24gU3VwcG9ydGluZ0RvY3VtZW50UmVmdXNlZFN0YXR1c0luZm8gewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBmaWxlbmFtZQogICAgICAgICAgICAgIHJlYXNvbgogICAgICAgICAgICAgIHJlYXNvbkNvZGUKICAgICAgICAgICAgICByZWZ1c2VkQXQKICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIENvbXBhbnlBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgIHN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb24gewogICAgICAgIGlkCiAgICAgICAgcmVxdWlyZWRTdXBwb3J0aW5nRG9jdW1lbnRQdXJwb3NlcyB7CiAgICAgICAgICBuYW1lCiAgICAgICAgICBwdXJwb3NlRGV0YWlscwogICAgICAgIH0KICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRzIHsKICAgICAgICAgIHN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2UKICAgICAgICAgIHN1cHBvcnRpbmdEb2N1bWVudFR5cGUKICAgICAgICAgIHVwZGF0ZWRBdAogICAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAuLi4gb24gU3VwcG9ydGluZ0RvY3VtZW50UmVmdXNlZFN0YXR1c0luZm8gewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBmaWxlbmFtZQogICAgICAgICAgICAgIHJlYXNvbgogICAgICAgICAgICAgIHJlYXNvbkNvZGUKICAgICAgICAgICAgICByZWZ1c2VkQXQKICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2,7,10-12,16} showLineNumbers
+```graphql {2,6-8,11,14-16} showLineNumbers
 query getOnboardingCollectionInfo {
   accountHolderOnboarding(id: "$ONBOARDING_ID") {
     ... on IndividualAccountHolderOnboarding {
       supportingDocumentCollection {
         id
+        requiredSupportingDocumentPurposes {
+          name
+          purposeDetails
+        }
         supportingDocuments {
           supportingDocumentPurpose
           supportingDocumentType
@@ -171,6 +187,10 @@ query getOnboardingCollectionInfo {
     ... on CompanyAccountHolderOnboarding {
       supportingDocumentCollection {
         id
+        requiredSupportingDocumentPurposes {
+          name
+          purposeDetails
+        }
         supportingDocuments {
           supportingDocumentPurpose
           supportingDocumentType
@@ -195,22 +215,30 @@ query getOnboardingCollectionInfo {
 
 #### Payload: `Validated` {#onboarding-api-payload-validated}
 
-In this example, the required document was received, reviewed, and `Validated`.
+In this example, the required document purpose is `Other` (line 8).
+[`purposeDetails`](/topics/accounts/documents/#document-purposes-types) is "Most recent business income tax return (aangifte inkomstenbelasting)" (line 9).
+The document was received, reviewed, and `Validated` (line 18).
 
-```json {9} showLineNumbers
+```json {8,9,18} showLineNumbers
 {
   "data": {
     "accountHolderOnboarding": {
       "supportingDocumentCollection": {
         "id": "$COLLECTION_ID",
+        "requiredSupportingDocumentPurposes": [
+          {
+            "name": "Other",
+            "purposeDetails": "Most recent business income tax return (aangifte inkomstenbelasting)"
+          }
+        ],
         "supportingDocuments": [
           {
+            "supportingDocumentPurpose": "Other",
+            "supportingDocumentType": null,
+            "updatedAt": "2026-04-16T08:37:47.625Z",
             "statusInfo": {
               "status": "Validated"
-            },
-            "supportingDocumentPurpose": "GeneralAssemblyMinutes",
-            "supportingDocumentType": "MeetingMinutes",
-            "updatedAt": "2024-04-04T14:42:10.492Z"
+            }
           }
         ]
       }
@@ -221,26 +249,33 @@ In this example, the required document was received, reviewed, and `Validated`.
 
 #### Payload: `Refused` {#onboarding-api-payload-refused}
 
-In this example, the required document was `Refused` due to `CompanyNameMismatch`.
+In this example, the required document purpose is `UBODeclaration` (line 8). The document was `Refused` (line 18) with reason code `InvalidDocument` (line 22).
+[`purposeDetails`](/topics/accounts/documents/#document-purposes-types) is `null` here because this is a standard purpose (line 9).
 
-```json {12,16} showLineNumbers
+```json {8,9,18,22} showLineNumbers
 {
   "data": {
     "accountHolderOnboarding": {
       "supportingDocumentCollection": {
         "id": "$COLLECTION_ID",
+        "requiredSupportingDocumentPurposes": [
+          {
+            "name": "UBODeclaration",
+            "purposeDetails": null
+          }
+        ],
         "supportingDocuments": [
           {
             "supportingDocumentPurpose": "UBODeclaration",
-            "supportingDocumentType": null,
-            "updatedAt": "2025-01-09T14:45:14.216Z",
+            "supportingDocumentType": "UBODeclaration",
+            "updatedAt": "2026-04-14T15:16:48.507Z",
             "statusInfo": {
               "status": "Refused",
               "__typename": "SupportingDocumentRefusedStatusInfo",
               "filename": "file_name.pdf",
               "reason": "",
-              "reasonCode": "CompanyNameMismatch",
-              "refusedAt": "2025-01-09T14:45:14.214Z"
+              "reasonCode": "InvalidDocument",
+              "refusedAt": "2026-04-14T15:16:48.507Z"
             }
           }
         ]

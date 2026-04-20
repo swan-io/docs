@@ -382,8 +382,9 @@ Swan evaluates both checkpoints at **midnight UTC**. There is no grace period.
 ### Suspended physical cards {#renew-suspended}
 
 The renewal process for a suspended physical card depends on **when the card is resumed**, compared to two renewal checkpoints.
-- **10 weeks before the last day of the expiry month**: eligible cards move to `ToRenew`. If the card is `Suspended` at this checkpoint, it doesn't move to `ToRenew`, so it doesn't enter the renewal flow.
-- **8 weeks before the last day of the expiry month**: cards in `ToRenew` move to `Renewed`. Swan then creates and ships the new card. If the card is `Suspended` at this checkpoint, it doesn't move to `Renewed`.
+Swan evaluates both checkpoints at midnight UTC, calculated from the last day of the card's expiry month.
+- **10 weeks before expiry**: eligible cards move to `ToRenew`. If the card is `Suspended` at this checkpoint, it doesn't move to `ToRenew`, so it doesn't enter the renewal flow.
+- **8 weeks before expiry**: cards in `ToRenew` move to `Renewed`. Swan then creates and ships the new card. If the card is `Suspended` at this checkpoint, it doesn't move to `Renewed`.
 
 :::warning Renewal status requirement
 If a physical card isn't in `ToRenew` by the 8-week checkpoint (midnight UTC), Swan won't issue a new card. 
@@ -407,12 +408,12 @@ You must resume the new card before it can be `Activated`.
 
 Sofia Ramos has a physical card with an expiry date of `10/26`. The **reference date** is 31 October 2026 (the last day of the expiry month).
 
-What happens at each checkpoint
+What happens at each checkpoint:
 
-1. T-10W checkpoint (22 August 2026, midnight UTC)
+1. 10-week checkpoint (22 August 2026, midnight UTC)
 - If the card is `Activated` or `ToActivate`, it moves to `ToRenew`.
 - If the card is `Suspended`, it stays `Suspended` and doesn't enter the renewal flow.
-2. T-8W checkpoint (5 September 2026, midnight UTC)
+2. 8-week checkpoint (5 September 2026, midnight UTC)
 - If the card is `ToRenew`, it moves to `Renewed`. Swan creates the new card and starts shipping.
 - If the card is `Suspended`, it stays `Suspended` and doesn't renew. The card is canceled when it expires.
 

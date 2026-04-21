@@ -371,7 +371,7 @@ flowchart LR
 | Card renewal status | Explanation |
 |---|---|
 | `ToRenew` | Triggered **10 weeks before the last day of the card's expiry month**, at midnight Coordinated Universal Time (UTC). This status schedules the renewal. You can stop the process by [canceling](./guide-cancel.mdx) the card, which permanently ends the renewal, or by [suspending](#renew-suspended) it, which temporarily pauses the process. The card won't be renewed if it remains `Suspended` past 8 weeks. |
-| `Renewed` | Triggered automatically **8 weeks before the last day of the expiry month**, at midnight UTC. At this point, the new card is created and queued for printing. No updates to the delivery address can be made after this status is triggered. Once the status changes to Renewed, the previous card's information is automatically available in the `previousPhysicalCards` field, even if the new card hasn't yet arrived or expired. |
+| `Renewed` | Triggered automatically **8 weeks before the last day of the expiry month**, at midnight UTC. At this point, the new card is created and queued for printing. No updates to the delivery address can be made after this status is triggered. You can query the new `Renewed` card's details (expiry date, masked number, identifier) via `statusInfo.newPhysicalCard` on `PhysicalCardRenewedStatusInfo`. |
 
 :::info Reference date for renewal checkpoints
 Swan calculates the 10-week and 8-week checkpoints from the **last day of the card's expiry month**, not from the date printed on the card. 

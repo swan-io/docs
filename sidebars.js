@@ -831,8 +831,6 @@ module.exports = {
           link: { type: "doc", id: "preview/new-onboarding/index" },
           collapsed: true,
           items: [
-            "preview/new-onboarding/individual",
-            "preview/new-onboarding/company",
             {
               type: "category",
               label: "Legacy reference (deprecated)",

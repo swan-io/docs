@@ -370,21 +370,32 @@ flowchart LR
 
 | Card renewal status | Explanation |
 |---|---|
-| `ToRenew` | Status triggered 10 weeks before expiry to schedule a renewal. The process can be stopped either by [canceling](./guide-cancel.mdx) the card, which permanently ends the renewal, or by [suspending](#renew-suspended) it, which temporarily pauses the process. The card will not be renewed if it remains suspended past 8-weeks. |
-| `Renewed` | Status triggered automatically 8 weeks before the card's expiry date. No updates to the delivery address can be made after this status is triggered. |
+| `ToRenew` | Triggered **10 weeks before the last day of the card's expiry month**, at midnight Coordinated Universal Time (UTC). This status schedules the renewal. You can stop the process by [canceling](./guide-cancel.mdx) the card, which permanently ends the renewal, or by [suspending](#renew-suspended) it, which temporarily pauses the process. The card won't be renewed if it remains `Suspended` past 8 weeks. |
+| `Renewed` | Triggered automatically **8 weeks before the last day of the expiry month**, at midnight UTC. At this point, the new card is created and queued for printing. No updates to the delivery address can be made after this status is triggered. Once the status changes to Renewed, the previous card's information is automatically available in the `previousPhysicalCards` field, even if the new card hasn't yet arrived or expired. |
+
+:::info Reference date for renewal checkpoints
+Swan calculates the 10-week and 8-week checkpoints from the **last day of the card's expiry month**, not from the date printed on the card. 
+For example, if a card's expiry date is `10/26`, Swan uses **31 October 2026** as the reference date.
+Swan evaluates both checkpoints at **midnight UTC**. There is no grace period.
+:::
 
 ### Suspended physical cards {#renew-suspended}
 
-The renewal process for a suspended physical card depends on when the card is **resumed**. Two key changes occur at **10 weeks** and **8 weeks** before expiry:
-- At **10 weeks** before expiry, eligible cards move to the `ToRenew` status.
-- Between **10 and 8 weeks** before expiry, there's a 2-week window to [update the shipping address](/topics/cards/physical/guide-renew).
-- At **8 weeks** before expiry, if the card is still in `ToRenew`, it moves to `Renewed`, and the new card is created and shipped.
+The renewal process for a suspended physical card depends on **when the card is resumed**, compared to two renewal checkpoints.
+Swan evaluates both checkpoints at midnight UTC, calculated from the last day of the card's expiry month.
+- **10 weeks before expiry**: eligible cards move to `ToRenew`. If the card is `Suspended` at this checkpoint, it doesn't move to `ToRenew`, so it doesn't enter the renewal flow.
+- **8 weeks before expiry**: cards in `ToRenew` move to `Renewed`. Swan then creates and ships the new card. If the card is `Suspended` at this checkpoint, it doesn't move to `Renewed`.
+
+Between these two checkpoints, you have a 2-week window to [update the delivery address](/topics/cards/physical/guide-renew).
+
 
 :::warning Renewal status requirement
-If a physical card isn't in `ToRenew` by the 8-week mark, a new card will not be issued and the existing card will be canceled at expiry.
+If a physical card isn't in `ToRenew` by the 8-week checkpoint (midnight UTC), Swan won't issue a new card. 
+The existing card is canceled when it expires.
+There's no way to manually trigger the renewal after this deadline passes.
 :::
 
-| Scenario | Physical card status at 10 weeks | Physical card status at 8 weeks | Physical card status at expiry date |
+| Scenario | Physical card status at 10 weeks | Physical card status at 8 weeks | Physical card status at expiry |
 |---|---|---|---|
 | Suspended and resumed more than **10 weeks** before expiry | `ToRenew` | `Renewed` | `Renewed` |
 | Suspended and not resumed more than **10 weeks** before expiry | `Suspended` | `Suspended` | `Canceled` |
@@ -395,6 +406,25 @@ If a physical card isn't in `ToRenew` by the 8-week mark, a new card will not be
 If a card is already in `Renewed` and is then `Suspended`, **both the existing and new card** will be `Suspended`. 
 This doesn't affect the shipping of the new card, it will still be sent. 
 You must resume the new card before it can be `Activated`.
+
+#### Example scenario
+
+Sofia Ramos has a physical card with an expiry date of `10/26`. The **reference date** is 31 October 2026 (the last day of the expiry month).
+
+What happens at each checkpoint:
+
+1. 10-week checkpoint (22 August 2026, midnight UTC).
+- If the card is `Activated` or `ToActivate`, it moves to `ToRenew`.
+- If the card is `Suspended`, it stays `Suspended` and doesn't enter the renewal flow.
+2. 8-week checkpoint (5 September 2026, midnight UTC).
+- If the card is `ToRenew`, it moves to `Renewed`. Swan creates the new card and starts shipping.
+- If the card is `Suspended`, it stays `Suspended` and doesn't renew. The card is canceled when it expires.
+
+**Delivery**: The new card ships between 11-15 September 2026.
+
+:::tip
+Subscribe to the `Card.Updated` [webhook](../../../developers/using-api/webhooks/#events-cards) to get notified when the card moves to `ToRenew`, giving you time to verify the delivery address with your cardholder.
+:::
 
 ### Activating the new card {#renew-activate}
 

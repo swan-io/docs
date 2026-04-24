@@ -13,7 +13,7 @@ All requested supporting documents must be submitted to complete onboarding.
 
 <FieldRequirementsLegend />
 
-## Account information (`accountInfo`)
+## Account information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -24,13 +24,13 @@ All requested supporting documents must be submitted to complete onboarding.
 
 - `country`: `FRA`, `DEU`, `ESP`, `NLD`, `ITA`, `BEL`.
 
-## Account administrator (`accountAdmin`)
+## Account administrator
 
 :::info Account admin fields and sign-up
 Although many `accountAdmin` fields are optional during onboarding, they are required when the user signs up. We recommend collecting and sending this information before the end of the onboarding flow.
 :::
 
-### Personal information
+### Administrator personal information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -47,7 +47,7 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 - `preferredLanguage`: `de`, `en`, `es`, `fi`, `fr`, `it`, `nl`, `pt`.
 - `typeOfRepresentation`: `LegalRepresentative`, `PowerOfAttorney`.
 
-### Address (`accountAdmin.address`)
+### Administrator address
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -58,7 +58,7 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 | `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-### Birth information (`accountAdmin.birthInfo`)
+### Administrator birth information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -67,7 +67,7 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 | `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-### United States tax information (`accountAdmin.unitedStatesTaxInfo`)
+### Administrator US tax information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -78,7 +78,7 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 
 ² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
 
-### User device information (`accountAdmin.userDeviceInfo`)
+### User device information
 
 These fields are hidden from end users. Provide them through your backend integration only.
 
@@ -89,7 +89,7 @@ These fields are hidden from end users. Provide them through your backend integr
 | `ip` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `userAgent` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-## Company (`company`)
+## Company
 
 ### Registration and business activity
 
@@ -144,7 +144,7 @@ These fields are hidden from end users. Provide them through your backend integr
 Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query to retrieve all legal forms for a given country, translated based on the `Accept-Language` header. Each legal form includes a `code` you can use as the `legalFormCode` value. If the requested language is unavailable, the query falls back to the country's default language.
 :::
 
-### Tax information
+### Company tax information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -156,7 +156,7 @@ Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query
 - `accountInfo.country` is Germany, Italy, or Spain.
 - `company.address.country` is different from `accountInfo.country`.
 
-### Address (`company.address`)
+### Company address
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -167,7 +167,7 @@ Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query
 | `postalCode` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-### Related individuals (`company.relatedIndividuals`)
+### Related individuals
 
 The `relatedIndividuals` array is required for all countries. At least one `LegalRepresentative` and one `UltimateBeneficialOwner` are required to finalize a company onboarding. A single individual can fulfill both roles by setting `type` to `LegalRepresentativeAndUltimateBeneficialOwner`.
 
@@ -177,7 +177,7 @@ Each individual must have a `type` that determines which additional fields are r
 - `UltimateBeneficialOwner`: the individual holds ownership or control over the company.
 - `LegalRepresentativeAndUltimateBeneficialOwner`: the individual both represents the company legally and holds ownership or control.
 
-#### Personal information
+#### Individual personal information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -196,7 +196,7 @@ Each individual must have a `type` that determines which additional fields are r
 - `type`: `UltimateBeneficialOwner`, `LegalRepresentative`, `LegalRepresentativeAndUltimateBeneficialOwner`.
 - `sex`: `Male`, `Female`, `Unknown`.
 
-#### Address (`relatedIndividuals[i].address`)
+#### Individual address
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -209,7 +209,7 @@ Each individual must have a `type` that determines which additional fields are r
 
 ⁶ In France and the Netherlands, `addressLine1`, `city`, and `postalCode` are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 
-#### Birth information (`relatedIndividuals[i].birthInfo`)
+#### Individual birth information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -220,7 +220,7 @@ Each individual must have a `type` that determines which additional fields are r
 
 ⁷ In Germany (for `birthDate`, `city`, `postalCode`) and Spain (for `postalCode` only), these fields are required if `relatedIndividuals[i].type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 
-#### Tax information
+#### Individual tax information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -231,7 +231,7 @@ Each individual must have a `type` that determines which additional fields are r
 - `accountInfo.country` is Germany or Italy.
 - `company.regulatoryClassification` is `NonFinancialPassive` **and** `relatedIndividuals[i].address.country` is different from `accountInfo.country`.
 
-#### United States tax information (`relatedIndividuals[i].unitedStatesTaxInfo`)
+#### Individual US tax information
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -281,7 +281,7 @@ These fields are only required for Italian accounts (`accountInfo.country` = `IT
 | `ultimateBeneficialOwner.identityDocumentInfo.issueDate` | <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
 | `ultimateBeneficialOwner.identityDocumentInfo.issuingAuthority` | <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
 
-### Related companies (`company.relatedCompanies`)
+### Related companies
 
 Use this array when a company (not an individual) serves as a legal representative for the account holder company.
 
@@ -292,7 +292,7 @@ Use this array when a company (not an individual) serves as a legal representati
 | `registrationNumber` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `roles` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 
-## OAuth redirect parameters (`oAuthRedirectParameters`)
+## OAuth redirect parameters
 
 These fields are hidden from end users. Provide them through your backend integration only.
 

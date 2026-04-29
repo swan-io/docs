@@ -118,7 +118,10 @@ import TransactionStatuses from '../partials/_transaction-statuses.mdx';
 ### Sequence number {#sequence-number}
 
 Swan assigns a `sequenceNumber` to every `Booked` transaction.
-The number increments by 1 with each new booked transaction per account, providing a reliable way to order transactions and detect gaps.
+This number is tied to **balance movements** on the account: each time a movement is applied to the account booked balance, the counter increments.
+Since one booked transaction triggers one balance movement, the `sequenceNumber` effectively increases with each new booked transaction.
+
+This provides a reliable way to **order transactions chronologically**.
 
 `sequenceNumber` is also used to order `Booked` transactions on [account statements](../accounts/index.mdx#account-statements).
 

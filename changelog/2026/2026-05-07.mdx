@@ -5,13 +5,24 @@ type: release
 
 ## Improvements
 
-🧭 Starting **June 4, 2026**, [Standing Orders](/topics/payments/credit-transfers/sepa/guide-schedule-so/) execute on their `lastExecutionDate` value. For example, a Standing Order with `lastExecutionDate` set to January 10 now runs on January 10 itself.
+🧭 Starting **June 4**, [Standing Orders](/topics/payments/credit-transfers/sepa/guide-schedule-so/) execute on their `lastExecutionDate` value. For example, a Standing Order with `lastExecutionDate` set to January 10 now runs on January 10 itself.
+
+🛡️ Starting **May 25**, Single Device Authentication rolls out gradually to all OAuth2 flows. The clickable SMS link is replaced by a 6-digit OTP code across all partner integrations, [matching the approach already live on Swan's web banking](/changelog/26-february-2026/#improvements). This closes a remaining authentication fraud vector for partners using their own `client_id`.
+
+For your end users signing in or signing up from desktop:
+
+- They receive a 6-digit OTP code by SMS, replacing the previous clickable link.
+- They enter the code on desktop to complete the flow.
+
+For [identification](/topics/users/identifications/), two text messages are sent: one with a redirection link, and one to trigger identification on mobile.
+
+No code changes are required, but please update your support documentation, guides, and flow screenshots accordingly.
 
 ## API updates
 
 ### Upcoming breaking changes
 
-⚠️ On **June 4, 2026**, `Card`-named types and fields used for [accepting online card payments](/topics/merchants/online/cards/) are removed. The new `OnlineCard`-named equivalents are already in the schema; update your queries and mutations before this date.
+⚠️ On **June 4**, `Card`-named types and fields used for [accepting online card payments](/topics/merchants/online/cards/) are removed. The new `OnlineCard`-named equivalents are already in the schema; update your queries and mutations before this date.
 
 This rename clarifies the distinction between online card acceptance and in-person card acceptance (terminals, Tap to Pay). It only affects partners accepting payments through [merchant profiles](/topics/merchants/profiles/guide-request/). Card issuing is unchanged.
 

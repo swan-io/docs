@@ -11,7 +11,7 @@ type: release
 
 For your end users signing in or signing up from desktop:
 
-- They receive a 6-digit OTP code by SMS, replacing the previous clickable link.
+- They receive a 6-digit verification code by SMS, replacing the previous clickable link.
 - They enter the code on desktop to complete the flow.
 
 For [identification](/topics/users/identifications/), two text messages are sent: one with a redirection link, and one to trigger identification on mobile.
@@ -22,19 +22,19 @@ No code changes are required, but please update your support documentation, guid
 
 ### Upcoming breaking changes
 
-⚠️ On **June 4**, we're removing `Card`-named types and fields used for [accepting online card payments](/topics/merchants/online/cards/). The new `OnlineCard`-named equivalents are already in the schema; update your queries and mutations before this date.
+⚠️ On **June 4**, Swan renames `Card`-prefixed merchant types and mutations to `OnlineCard` equivalents for [accepting online card payments](/topics/merchants/online/cards/). The deprecated names are removed on this date; update your queries and mutations before then.
 
 This rename clarifies the distinction between online card acceptance and in-person card acceptance (terminals, Tap to Pay). It only affects partners accepting payments through [merchant profiles](/topics/merchants/profiles/guide-request/). Card issuing is unchanged.
 
 **Queries:**
 
-- [`CardMerchantPaymentMethod`](https://api-reference.swan.io/objects/card-merchant-payment-method/) is deprecated; use [`OnlineCardMerchantPaymentMethod`](https://api-reference.swan.io/objects/online-card-merchant-payment-method/) instead. This affects all queries that resolve `CardMerchantPaymentMethod` from `MerchantProfile.merchantPaymentMethods` or [`MerchantPaymentMethod`](https://api-reference.swan.io/interfaces/merchant-payment-method/).
-- [`CardTransaction`](https://api-reference.swan.io/objects/card-transaction/) is deprecated; use [`OnlineCardTransaction`](https://api-reference.swan.io/objects/online-card-transaction/) instead. The [`PaymentProduct`](https://api-reference.swan.io/enums/payment-product/) enum gains a new `OnlineCard` value.
-- [`CardMerchantPayment`](https://api-reference.swan.io/objects/card-merchant-payment/) is deprecated; use [`OnlineCardMerchantPayment`](https://api-reference.swan.io/objects/online-card-merchant-payment/) instead.
+- [`CardMerchantPaymentMethod`](https://api-reference.swan.io/objects/card-merchant-payment-method/) → [`OnlineCardMerchantPaymentMethod`](https://api-reference.swan.io/objects/online-card-merchant-payment-method/). Affects all queries that resolve `CardMerchantPaymentMethod` from `MerchantProfile.merchantPaymentMethods` or [`MerchantPaymentMethod`](https://api-reference.swan.io/interfaces/merchant-payment-method/).
+- [`CardTransaction`](https://api-reference.swan.io/objects/card-transaction/) → [`OnlineCardTransaction`](https://api-reference.swan.io/objects/online-card-transaction/). The [`PaymentProduct`](https://api-reference.swan.io/enums/payment-product/) enum gains a new `OnlineCard` value.
+- [`CardMerchantPayment`](https://api-reference.swan.io/objects/card-merchant-payment/) → [`OnlineCardMerchantPayment`](https://api-reference.swan.io/objects/online-card-merchant-payment/).
 
 **Mutations and simulations:**
 
 - [`requestMerchantPaymentMethods`](https://api-reference.swan.io/mutations/request-merchant-payment-methods/) now requires `OnlineCard` instead of `Card`.
 - `simulateMerchantPaymentMethodRequestOutcome` now requires the `OnlineCardMerchantPaymentMethod` typename.
-- `simulateIncomingCardAuthorization` is deprecated; use `simulateIncomingOnlineCardAuthorization` instead.
-- `simulateIncomingCardBooking` is deprecated; use `simulateIncomingOnlineCardBooking` instead.
+- `simulateIncomingCardAuthorization` → `simulateIncomingOnlineCardAuthorization`.
+- `simulateIncomingCardBooking` → `simulateIncomingOnlineCardBooking`.

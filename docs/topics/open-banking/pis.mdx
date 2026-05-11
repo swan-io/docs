@@ -1,0 +1,53 @@
+---
+title: Payment Initiation Service (PIS)
+---
+
+# Payment Initiation Service (PIS)
+
+import PisDefinition from '../definitions/_pis.mdx';
+
+> <PisDefinition />
+
+PIS allows Third-Party Providers (TPPs) to initiate payments directly from Swan accounts on behalf of users.
+
+## What TPPs can initiate {#supported}
+
+- SEPA Credit Transfers (regular and instant).
+- Bulk payments.
+
+## What is not yet supported {#unsupported}
+
+- Standing orders and recurring payments.
+- International Credit Transfers.
+
+## PIS flow {#flow}
+
+The diagram below shows the full PIS sequence, from the moment the user initiates a payment in their software application to the final confirmation message.
+
+```mermaid
+sequenceDiagram
+autonumber
+participant U as User
+participant SA as Software application
+participant TPP as TPP
+participant SE as Salt Edge
+participant S as Swan
+    U->>SA: Initiates payment
+    SA->>TPP: Sends payment initiation request
+    TPP->>SE: Forwards request
+    SE->>S: PSD2 Connector creates PaymentSession
+    S-->>U: Redirects to Swan consent application
+    U->>S: Completes OAuth consent (SCA)
+    U->>S: Selects Swan account to use as debtor account
+    S->>S: Initiates credit transfer pending consent
+    U->>S: Reviews payment details
+    U->>S: Confirms payment with payment consent (SCA)
+    S->>S: Executes the transfer
+    S-->>SE: Sends status update via webhook
+    SE-->>TPP: Forwards status update
+    TPP-->>SA: Notifies software application, which displays confirmation to the user
+```
+
+### References {#references}
+
+- [Salt Edge PIS docs](https://priora.saltedge.com/docs/aspsp/v2/swan/pis).

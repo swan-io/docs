@@ -27,25 +27,25 @@ The diagram below shows the full PIS sequence, from the moment the user initiate
 ```mermaid
 sequenceDiagram
 autonumber
-participant U as User
-participant SA as Software application
-participant TPP as TPP
-participant SE as Salt Edge
-participant S as Swan
-    U->>SA: Initiates payment
-    SA->>TPP: Sends payment initiation request
-    TPP->>SE: Forwards request
-    SE->>S: PSD2 Connector creates PaymentSession
-    S-->>U: Redirects to Swan consent application
-    U->>S: Completes OAuth consent (SCA)
-    U->>S: Selects Swan account to use as debtor account
-    S->>S: Initiates credit transfer pending consent
-    U->>S: Reviews payment details
-    U->>S: Confirms payment with payment consent (SCA)
-    S->>S: Executes the transfer
-    S-->>SE: Sends status update via webhook
-    SE-->>TPP: Forwards status update
-    TPP-->>SA: Notifies software application, which displays confirmation to the user
+participant User
+participant SoftwareApp as Software application
+participant TPP
+participant SaltEdge as Salt Edge
+participant Swan
+    User->>SoftwareApp: Initiates payment
+    SoftwareApp->>TPP: Sends payment initiation request
+    TPP->>SaltEdge: Forwards request
+    SaltEdge->>Swan: PSD2 Connector creates PaymentSession
+    Swan-->>User: Redirects to Swan consent application
+    User->>Swan: Completes OAuth consent (SCA)
+    User->>Swan: Selects Swan account to use as debtor account
+    Swan->>Swan: Initiates credit transfer pending consent
+    User->>Swan: Reviews payment details
+    User->>Swan: Confirms payment with payment consent (SCA)
+    Swan->>Swan: Executes the transfer
+    Swan-->>SaltEdge: Sends status update via webhook
+    SaltEdge-->>TPP: Forwards status update
+    TPP-->>SoftwareApp: Notifies software application, which displays confirmation to the user
 ```
 
 ### References {#references}

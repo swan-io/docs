@@ -118,16 +118,18 @@ import TransactionStatuses from '../partials/_transaction-statuses.mdx';
 ### Sequence number {#sequence-number}
 
 Swan assigns a `sequenceNumber` to every `Booked` transaction.
-This number is tied to **balance movements** on the account: each time a movement is applied to the account booked balance, the counter increments.
-Since one booked transaction triggers one balance movement, the `sequenceNumber` effectively increases with each new booked transaction.
-
-This provides a reliable way to **order transactions chronologically**.
+The number increments by 1 with each new booked transaction, giving you a reliable way to order transactions and spot any gaps.
 
 `sequenceNumber` is also used to order `Booked` transactions on [account statements](../accounts/index.mdx#account-statements).
 
 `sequenceNumber` is available in `BookedTransactionStatusInfo.balanceAfter` when you [query](https://explorer.swan.io/?query=cXVlcnkgR2V0VHJhbnNhY3Rpb25TZXF1ZW5jZU51bWJlciB7CiAgdHJhbnNhY3Rpb24oaWQ6ICIkWU9VUl9UUkFOU0FDVElPTl9JRCIpIHsKICAgIHN0YXR1c0luZm8gewogICAgICAuLi4gb24gQm9va2VkVHJhbnNhY3Rpb25TdGF0dXNJbmZvIHsKICAgICAgICBiYWxhbmNlQWZ0ZXIgewogICAgICAgICAgc2VxdWVuY2VOdW1iZXIKICAgICAgICAgIGFtb3VudCB7CiAgICAgICAgICAgIHZhbHVlCiAgICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api) `statusInfo`.
 
 `sequenceNumber` returns `null` for all transaction statuses other than `Booked`.
+
+:::note Migration in progress
+`sequenceNumber` is populated for all newly Booked transactions.
+Backfilling older transactions is in progress, so historical transactions may not yet have a value.
+:::
 
 ### Transaction supporting documents {#transactions-supporting-documents}
 

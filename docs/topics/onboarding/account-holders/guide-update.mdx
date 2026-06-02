@@ -125,27 +125,18 @@ A successful response returns `UpdateAccountHolderSuccessPayload` with the updat
 Individual account holders have a `taxIdentificationNumber` but no VAT number.
 :::
 
+## Country requirements
+
+Which countries require `vatNumber` and `taxIdentificationNumber` is determined at onboarding, and depends on the account holder's country and type.
+For company account holders, `vatNumber` is required only for Italy at onboarding, and is optional elsewhere.
+For the full per-country rules, see the [company onboarding fields](../company/fields.mdx) and [individual onboarding fields](../individual/fields.mdx) pages.
+
 ## Rejections
 
 | Rejection | Cause | Solution |
 | --- | --- | --- |
 | `AccountHolderNotFoundRejection` | No account holder matches the `accountHolderId` you passed. | Check the ID from step 1 and confirm it belongs to your project. |
-| `ValidationRejection` | One or more input values are invalid, such as a malformed VAT number. | Read the `fields` array in the response to find the invalid field, then correct it. |
-
-## Webhook
-
-Swan emits the [`AccountHolder.Updated`](../../../developers/using-api/webhooks.mdx#events-account-holders) event for changes to an account holder.
-Webhook notifications use the following shape:
-
-```json
-{
-  "eventType": "AccountHolder.Updated",
-  "eventId": "$YOUR_EVENT_ID",
-  "eventDate": "2026-06-01T09:35:46.673Z",
-  "projectId": "$YOUR_PROJECT_ID",
-  "resourceId": "$YOUR_ACCOUNT_HOLDER_ID"
-}
-```
+| `ValidationRejection` | One or more input values are invalid, such as a malformed VAT number. | Read the `fields` array in the response. Each entry has `code`, `message`, and `path` identifying the specific validation error. Correct the flagged field and retry. |
 
 ## Related guides
 

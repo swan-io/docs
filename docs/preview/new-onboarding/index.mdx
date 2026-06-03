@@ -4,15 +4,19 @@ title: Account onboarding enhancements
 
 # Account onboarding enhancements
 
-Redesigned onboarding mutations and queries with cleaner naming, typed responses, and improved data collection for enhanced risk assessment and regulatory compliance.
+The redesigned onboarding API is live. All guides under **Topics > Onboarding** use the new mutations, and the field reference pages are the canonical source for country-specific requirements and available options.
+
+:::caution Deprecation timeline
+The previous onboarding mutations and queries are removed at the end of September 2026. Migrate before then to avoid disruption.
+:::
 
 ## Overview
 
-We are introducing a redesigned onboarding API that replaces the existing mutations and queries. The new API provides improved developer experience through consistent naming conventions, structured input types, and typed responses.
+The redesigned onboarding API replaces the previous mutations and queries. It uses consistent naming conventions, structured input types, and typed responses.
 
 ### What's changing
 
-| Aspect | Current API | New API |
+| Aspect | Deprecated API | New API |
 |---|---|---|
 | **Naming** | Mixed patterns (`onboardIndividualAccountHolder`, `unauthenticatedOnboardPublic...`). | Consistent pattern (`createIndividualAccountHolderOnboarding`, `createPublicIndividualAccountHolderOnboarding`). |
 | **Input structure** | Flat input with all fields at root level. | Nested structure with `accountInfo`, `accountAdmin`, and `company` objects. |
@@ -77,7 +81,7 @@ Call the `createCompanyAccountHolderOnboarding` mutation with a project access t
 The input uses a nested structure with three required objects:
 
 - `accountInfo`: Account-level details (`country`, `name`).
-- `accountAdmin`: Personal information of the person opening the account (`email`, `firstName`, `lastName`, `typeOfRepresentation`, etc.). This may or may not be the company's Legal Representative.
+- `accountAdmin`: Personal information of the person opening the account (`email`, `firstName`, `lastName`, `typeOfRepresentation`, etc.). This may or may not be the company's legal representative.
 - `company`: Company details (`registrationNumber`, `name`, `legalForm`, `ultimateBeneficialOwners`, `representatives`, etc.).
 
 ```graphql
@@ -177,12 +181,12 @@ query GetCompanyRegistryData {
 
 ## Field reference
 
-The following pages provide complete field mappings, requirements, and validations from the deprecated API to the new API:
+For country-specific requirements and available options, see:
 
-- [Individual onboarding fields](./individual)
-- [Company onboarding fields](./company)
+- [Individual onboarding fields](/topics/onboarding/individual/fields).
+- [Company onboarding fields](/topics/onboarding/company/fields).
 
-Field requirements vary by country. French company onboardings support pre-fill via the `companyInfoRegistryData` query for company, representative, and UBO fields.
+French company onboardings support pre-fill via the `companyInfoRegistryData` query for company, representative, and UBO fields.
 
 ## Response types
 

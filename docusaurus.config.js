@@ -39,34 +39,20 @@ module.exports = {
         width: 130,
       },
       items: [
-        {
-          type: "doc",
-          position: "left",
-          docId: "index",
-          label: "Documentation",
-        },
-        {
-          type: "doc",
-          position: "left",
-          docId: "partnership/index",
-          label: "Partnership",
-        },
-        {
-          type: "doc",
-          position: "left",
-          docId: "developers/index",
-          label: "Developers",
-        },
-        {
-          to: "https://api-reference.swan.io",
-          label: "API Reference",
-          position: "left",
-          target: "_self",
-        },
+        { type: "doc", docId: "get-started/index", position: "left", label: "Get started" },
+        { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
+        { type: "doc", docId: "accounts/index", position: "left", label: "Accounts" },
+        { type: "doc", docId: "cards/index", position: "left", label: "Cards" },
+        { type: "doc", docId: "payments/index", position: "left", label: "Payments" },
+        { type: "doc", docId: "users/index", position: "left", label: "Users" },
+        { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
+        { type: "doc", docId: "dev-tools/index", position: "left", label: "Dev Tools" },
+        { to: "https://api-reference.swan.io", position: "right", label: "API reference", target: "_self" },
+        { href: "https://support.swan.io/hc/en-150", position: "right", label: "Support" },
         {
           position: "right",
           href: "https://explorer.swan.io/",
-          label: "API Explorer", 
+          label: "API Explorer",
           className: "swan-api-explorer"
         },
         {

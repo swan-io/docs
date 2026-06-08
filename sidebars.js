@@ -1,4 +1,7 @@
+const ia = require("./sidebars.ia.js");
+
 module.exports = {
+  ...ia,
   docSidebar: [
     {
       type: "category",

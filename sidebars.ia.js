@@ -11,7 +11,7 @@ const cat = (label, items, opts = {}) => ({
   items,
 });
 const top = (label, items, link) =>
-  cat(label, items, { collapsible: false, collapsed: false, link });
+  cat(label, items, { collapsible: true, collapsed: false, link });
 const doc = (id, label) => ({ type: "doc", id, label });
 
 module.exports = {

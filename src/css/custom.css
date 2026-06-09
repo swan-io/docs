@@ -90,7 +90,7 @@ body {
 }
 
 .navbar__item {
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .menu__link {
@@ -177,13 +177,35 @@ pre {
   font-weight: 400 !important;
 }
 
-.menu__list-item-collapsible > .menu__link:not(.menu__link--sublist) {
-  font-size: 0.8em;
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  font-size: 0.95em;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: inherit;
-  opacity: 0.5;
+  opacity: 0.65;
   font-weight: 500;
-  padding-left: 35px;
+  padding-left: 8px;
+}
+/* Level-1 section-title caret: flow inline before the text so the two read as
+   one unit (no absolute overlap). order:-1 puts it ahead of the label. */
+.theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link--sublist-caret::after {
+  position: static;
+  order: -1;
+  margin-left: 0;
+  min-width: 0;
+  padding: 0;
+  transform: rotate(180deg);
+}
+.theme-doc-sidebar-item-category-level-1.menu__list-item--collapsed
+  > .menu__list-item-collapsible
+  > .menu__link--sublist-caret::after {
+  transform: rotate(90deg);
 }
 
 .menu__link {
@@ -212,7 +234,7 @@ pre {
   background-color: transparent;
 }
 
-.menu__list-item-collapsible > .menu__link:not(.menu__link--sublist):hover {
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link:hover {
   background: none !important;
   color: inherit;
 }
@@ -248,7 +270,7 @@ pre {
   }
 
   .navbar__item {
-    font-size: 13px;
+    font-size: 14px;
   }
 }
 
@@ -308,7 +330,7 @@ pre {
   font-weight: 600;
 }
 
-.navbar__link.swan-api-explorer,
+.swan-api-nav,
 .swan-unified-nav {
   padding: 0.5rem 1rem;
   background: var(--ifm-color-emphasis-100);
@@ -318,7 +340,7 @@ pre {
   transition: all 0.65s ease;
 }
 
-.navbar__link.swan-api-explorer:hover,
+.swan-api-nav:hover,
 .swan-unified-nav:hover {
   background: none;
   border-color: var(--ifm-color-emphasis-400);
@@ -423,3 +445,115 @@ pre {
   margin: 0 0.25rem;
   user-select: none;
 }
+/* DOC-1814 — shared hover tooltip (always on, since most buttons are icon-only) */
+.swan-tip { position: relative; }
+.swan-tip__label {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: var(--ifm-color-emphasis-900);
+  color: var(--ifm-color-emphasis-0);
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 10;
+}
+.swan-tip--right .swan-tip__label { left: auto; right: 0; transform: none; }
+.swan-tip:hover .swan-tip__label { opacity: 1; }
+
+/* DOC-1814 — right-cluster pills (API + Changelog/Preview) */
+.swan-api-nav,
+.swan-unified-nav {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  padding: 0;
+  overflow: visible;
+}
+.swan-api-nav a,
+.swan-unified-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 100%;
+  padding: 0 0.6rem;
+  font-size: 0.8rem;
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+.swan-api-nav a:hover,
+.swan-unified-nav a:hover { opacity: 0.8; }
+.swan-api-nav a::after,
+.swan-unified-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--ifm-color-emphasis-400);
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+.swan-api-nav a:hover::after,
+.swan-unified-nav a:hover::after { transform: scaleX(1); }
+.swan-api-nav a svg,
+.swan-unified-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+/* icon-only segments collapse to a square matching the pill height */
+.swan-icon-btn { width: 2.5rem; padding: 0; }
+.swan-api-nav .separator,
+.swan-unified-nav .separator {
+  width: 1px;
+  height: 1.25rem;
+  background: var(--ifm-color-emphasis-200);
+  flex-shrink: 0;
+}
+
+/* DOC-1814 — Support icon button */
+.swan-support {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: 0.25rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-700);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.swan-support:hover {
+  background: none;
+  border-color: var(--ifm-color-emphasis-400);
+  color: var(--ifm-navbar-link-hover-color);
+}
+.swan-support svg { width: 18px; height: 18px; }
+
+/* DOC-1814 — match DocSearch button to the pill height */
+.navbar .DocSearch-Button {
+  height: 2.5rem;
+  margin-left: 0.25rem;
+  padding: 0 0.65rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-color-emphasis-100);
+}
+.navbar .DocSearch-Button:hover {
+  background: none;
+  border-color: var(--ifm-color-emphasis-400);
+  box-shadow: none;
+}
+.navbar .DocSearch-Button .DocSearch-Button-Placeholder { font-size: 0.8rem; }

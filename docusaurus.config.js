@@ -70,22 +70,29 @@ module.exports = {
           { label: "Using the API", to: "/dev-tools/using-api/authentication" },
           { label: "GraphQL", to: "/dev-tools/graphql/" },
         ]},
-        { to: "https://api-reference.swan.io", position: "right", label: "API reference", target: "_self" },
-        { href: "https://support.swan.io/hc/en-150", position: "right", label: "Support" },
         {
+          type: "html",
           position: "right",
-          href: "https://explorer.swan.io/",
-          label: "API Explorer",
-          className: "swan-api-explorer"
+          value: `<div class="swan-api-nav">
+            <a class="swan-tip" href="https://api-reference.swan.io" target="_blank" rel="noopener noreferrer" aria-label="API reference"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="swan-btn-label">API</span><span class="swan-tip__label" aria-hidden="true">API Reference</span></a>
+            <div class="separator"></div>
+            <a class="swan-tip swan-icon-btn" href="https://explorer.swan.io/" target="_blank" rel="noopener noreferrer" aria-label="API Explorer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg><span class="swan-tip__label" aria-hidden="true">Explorer</span></a>
+          </div>`
         },
         {
           type: "html",
-          position: "right", 
+          position: "right",
           value: `<div class="swan-unified-nav">
-            <a href="/changelog">Changelog</a>
+            <a class="swan-tip swan-icon-btn" href="/changelog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span class="swan-tip__label" aria-hidden="true">Changelog</span></a>
             <div class="separator"></div>
-            <a href="/preview">Preview</a>
+            <a class="swan-tip swan-icon-btn" href="/preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="swan-tip__label" aria-hidden="true">Preview</span></a>
           </div>`
+        },
+        { type: "search", position: "right" },
+        {
+          type: "html",
+          position: "right",
+          value: `<a class="swan-support swan-tip swan-tip--right" href="https://support.swan.io/hc/en-150" aria-label="Support"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg><span class="swan-tip__label" aria-hidden="true">Support</span></a>`
         }
       ],
     },

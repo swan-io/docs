@@ -1,0 +1,156 @@
+/* DOC-1814 — IA shell layout primitives.
+   Layout lifted from the staged mockup; all type and colour pulled from
+   Infima --ifm-* variables (which derive from Lake), so light/dark follow for free.
+   No hardcoded hex, no imported display fonts. */
+
+:root {
+  --ia-ink: var(--ifm-color-emphasis-900);
+  --ia-ink-2: var(--ifm-color-emphasis-700);
+  --ia-ink-3: var(--ifm-color-emphasis-600);
+  --ia-line: var(--ifm-color-emphasis-200);
+  --ia-line-2: var(--ifm-color-emphasis-100);
+  --ia-surface: var(--ifm-card-background-color, var(--ifm-background-surface-color));
+  --ia-primary: var(--ifm-color-primary);
+  --ia-primary-soft: color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
+  --ia-dev: var(--ifm-color-primary);
+  --ia-dev-soft: color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
+  --ia-ops: var(--ifm-color-emphasis-700);
+  --ia-ops-soft: color-mix(in srgb, var(--ifm-color-emphasis-700) 12%, transparent);
+  --ia-radius: 4px;
+}
+
+/* Kicker / section-label badge */
+.ia-kicker {
+  display: inline-block;
+  padding: 0.15em 0.6em;
+  border: 1px solid var(--ia-ink-2);
+  border-radius: 2px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ia-ink-2);
+}
+
+/* Get started — paths grid */
+.ia-paths-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+.ia-path-card {
+  display: block; padding: 1.1rem 1.25rem;
+  border: 1px solid var(--ia-line); border-radius: var(--ia-radius);
+  background: var(--ia-surface); color: inherit; text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ia-path-card:hover { border-color: var(--ia-ink-3); box-shadow: 0 1px 4px rgba(0,0,0,0.05); text-decoration: none; }
+.ia-path-card--emphasis { border-color: var(--ia-primary); background: var(--ia-primary-soft); }
+.ia-path-card__marker {
+  display: block; font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ia-ink-3);
+}
+.ia-path-card--emphasis .ia-path-card__marker { color: var(--ia-primary); }
+.ia-path-card__title {
+  display: block; font-family: var(--ifm-heading-font-family); font-weight: 600;
+  font-size: 1.25rem; margin: 0.25rem 0 0.35rem; color: var(--ifm-heading-color);
+}
+.ia-path-card__desc { display: block; color: var(--ia-ink-2); font-size: 0.95rem; line-height: 1.45; margin-bottom: 0.6rem; }
+.ia-path-card__meta { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; color: var(--ia-ink-3); letter-spacing: 0.03em; }
+
+/* Get started — partnership map */
+.ia-partnership-map { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.9rem; align-items: stretch; }
+.ia-map-side {
+  display: flex; flex-direction: column; padding: 1rem 1.1rem;
+  border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface);
+}
+.ia-map-side--decision { background: var(--ia-primary-soft); border-color: var(--ia-primary); }
+.ia-map-side__header { padding-bottom: 0.6rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--ia-line-2); }
+.ia-map-side__label { display: block; font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1.05rem; color: var(--ifm-heading-color); }
+.ia-map-side--decision .ia-map-side__label { color: var(--ia-primary); }
+.ia-map-side__where { display: block; font-size: 0.85rem; color: var(--ia-ink-3); margin-top: 0.1rem; }
+.ia-map-item { font-size: 0.9rem; color: var(--ia-ink-2); padding: 0.35rem 0; border-bottom: 1px solid var(--ia-line-2); line-height: 1.5; }
+.ia-map-item:last-child { border-bottom: none; }
+.ia-map-item__route { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.78rem; color: var(--ia-ink-3); letter-spacing: 0.02em; margin-bottom: 0.1rem; }
+.ia-map-count { font-family: var(--ifm-font-family-monospace); font-size: 0.78rem; color: var(--ia-ink-3); letter-spacing: 0.04em; text-transform: uppercase; padding-top: 0.5rem; margin-top: 0.5rem; border-top: 1px solid var(--ia-line-2); }
+.ia-map-side--decision .ia-map-count { color: var(--ia-primary); }
+.ia-map-arrow { align-self: center; font-size: 1.4rem; color: var(--ia-ink-3); padding: 0 0.25rem; }
+
+/* Section landing — concept diagram (SVG authored in the page) */
+.ia-concept-diagram { margin: 1rem auto 0.5rem; max-width: 880px; }
+.ia-concept-diagram svg { width: 100%; height: auto; display: block; }
+.ia-concept-node { cursor: pointer; transition: filter 0.2s ease; }
+.ia-concept-node rect { fill: var(--ia-surface); stroke: var(--ia-line); stroke-width: 1.5; transition: stroke 0.2s, fill 0.2s; }
+.ia-concept-node:hover rect { stroke: var(--ia-primary); stroke-width: 2; fill: var(--ia-primary-soft); }
+.ia-concept-node--center rect { fill: var(--ia-primary-soft); stroke: var(--ia-primary); stroke-width: 2.5; }
+.ia-concept-node__label { fill: var(--ifm-heading-color); font-family: var(--ifm-heading-font-family); font-weight: 600; }
+.ia-concept-node--center .ia-concept-node__label,
+.ia-concept-node:hover .ia-concept-node__label { fill: var(--ia-primary); }
+.ia-concept-node__sub { fill: var(--ia-ink-3); font-family: var(--ifm-font-family-monospace); }
+.ia-concept-line { stroke: var(--ia-line); stroke-width: 1.5; fill: none; }
+
+/* Section landing — path columns */
+.ia-path-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.ia-path-column { padding: 1.1rem 1.25rem; border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface); }
+.ia-path-column__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--ia-line-2); }
+.ia-path-column__sub { font-size: 0.9rem; color: var(--ia-ink-3); }
+.ia-audience-tag { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
+.ia-audience-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.ia-audience-tag--dev { color: var(--ia-dev); background: var(--ia-dev-soft); }
+.ia-audience-tag--ops { color: var(--ia-ops); background: var(--ia-ops-soft); }
+.ia-path-steps { list-style: none; counter-reset: step; padding: 0; margin: 0; }
+.ia-path-steps li { counter-increment: step; display: grid; grid-template-columns: 22px 1fr; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid var(--ia-line-2); }
+.ia-path-steps li:last-child { border-bottom: none; }
+.ia-path-steps li::before { content: counter(step); font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; color: var(--ia-ink-3); padding-top: 0.1rem; }
+.ia-step__type { font-family: var(--ifm-font-family-monospace); font-size: 0.72rem; color: var(--ia-ink-3); letter-spacing: 0.02em; text-transform: uppercase; margin-right: 0.4rem; }
+.ia-step__name { color: var(--ia-ink-2); font-weight: 600; }
+.ia-step__desc { color: var(--ia-ink-3); font-size: 0.85rem; line-height: 1.4; }
+
+/* Section landing — related products */
+.ia-related-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+.ia-related-card { display: block; padding: 0.9rem 1rem; border: 1px solid var(--ia-line); border-radius: 3px; background: var(--ia-surface); color: inherit; text-decoration: none; }
+.ia-related-card:hover { border-color: var(--ia-ink-3); text-decoration: none; }
+.ia-related-card__title { display: block; font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1.05rem; margin-bottom: 0.1rem; color: var(--ifm-heading-color); }
+.ia-related-card p { margin: 0; color: var(--ia-ink-3); font-size: 0.9rem; line-height: 1.4; }
+
+/* Parent task — path picker */
+.ia-path-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin: 0.5rem 0 2rem; }
+.ia-path-option { display: block; padding: 1.35rem; border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface); color: inherit; text-decoration: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.ia-path-option:hover { border-color: var(--ia-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.05); text-decoration: none; }
+.ia-path-option__name { display: block; font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1.25rem; margin: 0.6rem 0 0.35rem; color: var(--ifm-heading-color); }
+.ia-path-option__desc { display: block; color: var(--ia-ink-2); margin-bottom: 0.6rem; }
+.ia-path-option__meta { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.85rem; color: var(--ia-ink-3); }
+.ia-shared-list { padding-left: 1.25rem; color: var(--ia-ink-2); }
+
+/* Path-specific guide — screenshot placeholders */
+.ia-screenshot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.25rem 0 1.5rem; }
+.ia-screenshot { margin: 0; }
+.ia-screenshot__image { aspect-ratio: 16 / 10; background: var(--ia-primary-soft); border: 1.5px dashed var(--ia-primary); border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--ia-primary); }
+.ia-screenshot__label { font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; letter-spacing: 0.02em; text-transform: uppercase; }
+.ia-screenshot figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ia-ink-2); line-height: 1.5; }
+
+/* Audience meta box (styles ready; right-rail placement needs a swizzle) */
+.ia-audience-meta { padding: 0.85rem 1rem; border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface); font-size: 0.9rem; }
+.ia-audience-meta__section { padding-bottom: 0.7rem; margin-bottom: 0.7rem; border-bottom: 1px solid var(--ia-line-2); }
+.ia-audience-meta__section:last-child { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
+.ia-meta-label { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ia-ink-3); margin-bottom: 0.35rem; font-weight: 600; }
+.ia-counterpart-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.6rem; border: 1px dashed var(--ia-line); border-radius: 3px; color: var(--ia-ink-2); text-decoration: none; margin-top: 0.5rem; }
+.ia-counterpart-link:hover { border-color: var(--ia-ink-3); border-style: solid; text-decoration: none; }
+.ia-related-link { display: block; padding: 0.15rem 0; color: var(--ia-ink-2); font-size: 0.9rem; text-decoration: none; }
+.ia-related-link:hover { color: var(--ia-ink); text-decoration: none; }
+.ia-related-link__type { font-family: var(--ifm-font-family-monospace); font-size: 0.72rem; color: var(--ia-ink-3); margin-right: 0.25rem; }
+
+/* Collapse grids on narrow viewports */
+@media (max-width: 996px) {
+  .ia-paths-grid,
+  .ia-partnership-map,
+  .ia-path-columns,
+  .ia-related-grid,
+  .ia-path-picker,
+  .ia-screenshot-row { grid-template-columns: 1fr; }
+  .ia-map-arrow { transform: rotate(90deg); }
+}
+
+/* Lede, map list fill, concept-node sizes */
+.ia-lede { font-size: 1.2rem; line-height: 1.6; color: var(--ia-ink-2); max-width: 40rem; margin: 0 0 1.5rem; }
+.ia-map-list { flex: 1; }
+.ia-step__meta { display: flex; align-items: baseline; flex-wrap: wrap; }
+.ia-concept-node__label { font-size: 22px; }
+.ia-concept-node--center .ia-concept-node__label { font-size: 34px; }
+.ia-concept-node__sub { font-size: 13px; }

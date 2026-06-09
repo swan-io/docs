@@ -41,12 +41,35 @@ module.exports = {
       items: [
         { type: "doc", docId: "get-started/index", position: "left", label: "Get started" },
         { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
-        { type: "doc", docId: "accounts/index", position: "left", label: "Accounts" },
-        { type: "doc", docId: "cards/index", position: "left", label: "Cards" },
-        { type: "doc", docId: "payments/index", position: "left", label: "Payments" },
-        { type: "doc", docId: "users/index", position: "left", label: "Users" },
+        { type: "custom-sectionDropdown", position: "left", label: "Accounts", to: "/accounts", items: [
+          { label: "Onboarding", to: "/accounts/guides/onboarding/" },
+          { label: "Memberships", to: "/accounts/concepts/memberships" },
+          { label: "IBANs", to: "/accounts/concepts/ibans" },
+          { label: "Funding", to: "/accounts/concepts/funding" },
+          { label: "Closure", to: "/accounts/concepts/closure" },
+        ]},
+        { type: "custom-sectionDropdown", position: "left", label: "Cards", to: "/cards", items: [
+          { label: "Virtual cards", to: "/cards/concepts/virtual" },
+          { label: "Physical cards", to: "/cards/concepts/physical" },
+          { label: "Digital cards", to: "/cards/concepts/digital" },
+          { label: "Card design", to: "/cards/concepts/design" },
+        ]},
+        { type: "custom-sectionDropdown", position: "left", label: "Payments", to: "/payments", items: [
+          { label: "Credit transfers", to: "/payments/concepts/credit-transfers" },
+          { label: "Direct debit", to: "/payments/concepts/direct-debit" },
+          { label: "Card payments", to: "/payments/concepts/cards" },
+          { label: "Merchants", to: "/payments/guides/merchants/" },
+        ]},
+        { type: "custom-sectionDropdown", position: "left", label: "Users", to: "/users", items: [
+          { label: "Consent", to: "/users/concepts/consent" },
+          { label: "Identifications", to: "/users/concepts/identifications" },
+        ]},
         { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
-        { type: "doc", docId: "dev-tools/index", position: "left", label: "Dev Tools" },
+        { type: "custom-sectionDropdown", position: "left", label: "Dev Tools", to: "/dev-tools", items: [
+          { label: "Tools", to: "/dev-tools/tools/api-explorer" },
+          { label: "Using the API", to: "/dev-tools/using-api/authentication" },
+          { label: "GraphQL", to: "/dev-tools/graphql/" },
+        ]},
         { to: "https://api-reference.swan.io", position: "right", label: "API reference", target: "_self" },
         { href: "https://support.swan.io/hc/en-150", position: "right", label: "Support" },
         {

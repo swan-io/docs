@@ -177,74 +177,54 @@ pre {
   font-weight: 400 !important;
 }
 
-.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
-  font-size: 0.95em;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: inherit;
-  opacity: 0.65;
-  font-weight: 500;
-  padding-left: 8px;
-}
-/* Level-1 section-title caret: flow inline before the text so the two read as
-   one unit (no absolute overlap). order:-1 puts it ahead of the label. */
-.theme-doc-sidebar-item-category-level-1
-  > .menu__list-item-collapsible
-  > .menu__link--sublist-caret::after {
-  position: static;
-  order: -1;
-  margin-left: 0;
-  min-width: 0;
-  padding: 0;
-  transform: rotate(180deg);
-}
-.theme-doc-sidebar-item-category-level-1.menu__list-item--collapsed
-  > .menu__list-item-collapsible
-  > .menu__link--sublist-caret::after {
-  transform: rotate(90deg);
-}
-
-.menu__link {
-  padding-left: 35px;
-}
-
+/* ----- Sidebar tree: one caret system + uniform indentation -----
+   Docusaurus emits two different caret markups: a standalone .menu__caret
+   button for categories with an explicit link, and an ::after pseudo for
+   categories without one. Pin BOTH to the same spot at the left of the row so
+   every category aligns no matter which markup it gets. Each nesting level
+   then adds one uniform step, and level-1 sits at the root (leftmost). */
 .menu__caret,
 .menu__list-item--collapsed .menu__link--sublist::after,
-.menu__link--sublist-caret:after {
+.menu__link--sublist-caret::after {
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
   padding: 6px 8px;
 }
-
 .menu__list-item--collapsed .menu__link--sublist::after {
   transform: translateY(-50%) rotate(90deg);
 }
-
-.menu__link--sublist-caret:after {
+.menu__link--sublist-caret::after {
   transform: translateY(-50%) rotate(180deg);
 }
-
 .menu__caret:hover {
   background-color: transparent;
 }
 
+/* Text clears the caret; leaves align under the label above them. */
+.menu__link {
+  padding-left: 35px;
+}
+
+/* One uniform indent step per nesting level. */
+.menu__list .menu__list,
+.menu__list .menu__list .menu__list {
+  padding-left: 16px !important;
+}
+
+/* Level-1 section titles keep the uppercase label treatment. */
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+  font-size: 0.95em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: inherit;
+  opacity: 0.65;
+  font-weight: 500;
+}
 .theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link:hover {
   background: none !important;
   color: inherit;
-}
-
-.menu__list .menu__list {
-  padding-left: 0 !important;
-}
-
-.menu__list .menu__list .menu__list {
-  padding-left: 10px !important;
 }
 
 .theme-doc-sidebar-item-category-level-1 {

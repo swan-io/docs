@@ -61,7 +61,7 @@ const FeatureList = [
   },
   {
     title: "Developers",
-    url: "/developers",
+    url: "/dev-tools",
     svg: (
       <svg
         className={styles.svg}

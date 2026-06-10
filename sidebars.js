@@ -10,17 +10,6 @@ module.exports = {
       collapsed: false,
       items: [
         "index",
-        {
-          type: "category",
-          label: "Get started with Swan",
-          collapsed: true,
-          items: [
-            "topics/get-started/step-by-step",
-            "topics/get-started/choose-integration",
-            "topics/get-started/quickstart",
-          ],
-        },
-        "glossary",
       ],
     },
     {
@@ -486,21 +475,6 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Projects",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Projects overview",
-          link: { type: "doc", id: "topics/projects/index" },
-          collapsed: true,
-          items: ["topics/projects/guide-activate"],
-        },
-      ],
-    },
-    {
-      type: "category",
       label: "Users",
       collapsible: false,
       collapsed: false,
@@ -593,123 +567,6 @@ module.exports = {
             "partnership/document-center/identity/qes",
           ],
         },
-      ],
-    },
-  ],
-  developersSidebar: [
-    {
-      type: "category",
-      label: "Overview",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        "developers/index",
-        "developers/graphql",
-        {
-          type: "link",
-          label: "API Explorer",
-          href: "https://explorer.swan.io/",
-        },
-        {
-          type: "link",
-          label: "API Reference",
-          href: "https://api-reference.swan.io/",
-          customProps: {
-            target: "_self",
-          },
-        },
-      ],
-    },
-    {
-      type: "category",
-      label: "Tools",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Testing tools",
-          link: { type: "doc", id: "developers/tools/index" },
-          collapsed: true,
-          items: [
-            "developers/tools/api-explorer",
-            "developers/tools/testing-api",
-            "developers/tools/event-simulator",
-            "developers/tools/sandbox-users",
-            "developers/tools/postman-collection",
-          ],
-        },
-        "developers/tools/mcp-servers",
-        "developers/tools/guide-test-tools",
-      ],
-    },
-    {
-      type: "category",
-      label: "Using the API",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Authentication",
-          link: {
-            type: "doc",
-            id: "developers/using-api/authentication/index",
-          },
-          collapsed: true,
-          items: [
-            "developers/using-api/authentication/guide-get-token-user",
-            "developers/using-api/authentication/guide-get-token-project",
-            "developers/using-api/authentication/guide-impersonate",
-          ],
-        },
-        "developers/using-api/errors-rejections",
-        "developers/using-api/pagination",
-        "developers/using-api/payment-control",
-        "developers/using-api/webhooks",
-        "developers/using-api/idempotency",
-      ],
-    },
-    {
-      type: "category",
-      label: "Open Source",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "link",
-          label: "Swan Banking Frontend",
-          href: "https://swan-io.github.io/swan-partner-frontend/",
-        },
-      ],
-    },
-    {
-      type: "category",
-      label: "Resources",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "link",
-          label: "Status page",
-          href: "https://status.swan.io/",
-        },
-        {
-          type: "link",
-          label: "Trust Center",
-          href: "https://trust.swan.io/",
-        },
-        {
-          type: "link",
-          label: "Support Center",
-          href: "https://support.swan.io/hc/en-150",
-        },
-        {
-          type: "link",
-          label: "Roadmap",
-          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22",
-        },
-        "developers/contact",
       ],
     },
   ],

@@ -1,5 +1,129 @@
 ---
-title: "Overview"
+title: Developer tools
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Developer tools
+
+Swan's GraphQL API, the tools to test your integration, and the conventions for calling the API.
+
+## In this section {#in-this-section}
+
+- **Tools** — [API Explorer](/dev-tools/tools/api-explorer) · [Testing the API](/dev-tools/tools/testing-api) · [Event simulator](/dev-tools/tools/event-simulator) · [Sandbox users](/dev-tools/tools/sandbox-users) · [Postman collection](/dev-tools/tools/postman-collection) · [Test tools guide](/dev-tools/tools/test-tools-guide)
+- **Using the API** — [Authentication](/dev-tools/using-api/authentication) · [Errors & rejections](/dev-tools/using-api/errors-rejections) · [Idempotency](/dev-tools/using-api/idempotency) · [Pagination](/dev-tools/using-api/pagination) · [Payment control](/dev-tools/using-api/payment-control) · [Webhooks](/dev-tools/using-api/webhooks)
+- **GraphQL** — [About GraphQL](/dev-tools/graphql)
+
+## Overview {#overview}
+
+Swan uses a **GraphQL API**, explained in more detail on [About GraphQL](/dev-tools/graphql).
+
+With Swan's API, you can request data and perform actions on your accounts, cards, transactions, and more.
+In this communication process, the API consumer asks Swan to execute operations and Swan responds.
+
+This sequence diagram shows the most basic interactions between Swan's API, your users, and you.
+Note that the flow changes when [webhooks](/dev-tools/using-api/webhooks) are involved.
+
+```mermaid
+sequenceDiagram
+participant U as User
+participant P as Partner (You)
+participant S as Swan
+    U ->> P: Asks to execute operation
+    P ->> S: Calls mutation or query
+    S ->> P: Returns data
+    P ->> U: Displays data
+```
+
+## Environments {#environments}
+
+Swan hosts two environments: **Live** and **Sandbox**.
+They are completely separate with different endpoints.
+This means that access tokens, user credentials, URLs, and more, won't work between environments.
+[Projects are also environment-dependent](/get-started/set-up-swan/create-project#environments).
+
+In short, **test in Sandbox, build in Live**—and remember, you can't move anything between the two.
+
+## Calling the API {#call-api}
+
+### Endpoints {#endpoints}
+
+| Name | Endpoint |
+| --- | --- |
+| Server OAuth 2.0 | https://oauth.swan.io/oauth2 |
+| Sandbox | https://api.swan.io/sandbox-partner/graphql |
+| Sandbox (Testing API) | https://api.swan.io/sandbox-partner-admin/graphql |
+| Live | https://api.swan.io/live-partner/graphql |
+
+### Rate limiting {#rate-limits}
+
+Swan imposes rate limits on the endpoints to protect the API.
+
+The default limit for each IP is **2,000 requests every 5 minutes**.
+If you send over 2,000 requests for a single endpoint, the API returns an `HTTP 429 Too Many Requests` error.
+This limit applies to all endpoints.
+
+If you need to increase the rate limits for your use case, please use our Partner Support Request form available on your Dashboard.
+
+
+### Sandbox operation limits {#operation-limits}
+
+To keep the Sandbox secure, Swan enforces the following limits per operation:
+
+- **Complexity**: 1,000 fields per operation
+- **Depth**: 15 nested fields per operation
+- **Concurrency**: 5 top-level fields per operation (top-level fields are often referred to as queries and mutations)
+
+If your operation exceeds any of these limits, the API returns an `HTTP 400 Bad Request` error.
+Call the API again, making sure the complexity, depth, and concurrency of your operation respect the maximum limits.
+
+### Backend communication {#backend}
+
+Swan is designed to communicate between the Swan backend and yours.
+For security reasons, Swan doesn't allow API calls originating from a frontend application; all calls must come from the backend.
+
+If you try to call the API from the frontend, you'll get a Cross-Origin Resource Sharing (CORS) error.
+
+### Using cURL {#curl}
+
+You can test the Swan API using cURL or any other HTTP client.
+
+The following example is a query to get the IDs and IBANs of all the accounts in your project.
+Replace `$YOUR_ACCESS_TOKEN` with a valid [user or project access token](/dev-tools/using-api/authentication) before sending your request.
+
+```curl title="Request" showLineNumbers
+curl -X POST https://api.swan.io/sandbox-partner/graphql \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer $YOUR_ACCESS_TOKEN' \
+-d '{"query":"query MyQuery{ accounts { edges { node { id IBAN } } } }"}'
+```
+
+```json title="Response" {4} showLineNumbers
+{
+    "data": {
+        "accounts": {
+            "edges": [
+                {
+                    "node": {
+                        "id": "$YOUR_ID",
+                        "IBAN": "$YOUR_IBAN"
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+## Time-to-live {#ttl}
+
+Swan's Partner Dashboard and the Web Banking user interface each have a time-to-live (TTL) after which the session is discontinued automatically.
+
+- **Dashboard**: 72 hours; sessions refresh every time you call the API.
+- **Web Banking**: 5 minutes; session tokens refresh as long as the page stays open.
+
+## Troubleshooting {#troubleshooting}
+
+If you experience an issue or a bug working with Swan's API, complete the following steps:
+
+1. **Check the [status page](https://status.swan.io/)** to see if there's planned maintenance or an outage that could impact services.
+1. **Search the documentation** with keywords about your specific problem. It could be an expected behavior or something else explained in the docs.
+1. Otherwise, please use our Partner Support Request form available on your Dashboard.

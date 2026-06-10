@@ -1,5 +1,35 @@
 // redirects from original doc pathnames
 module.exports = [
+  // DOC-1814 cutover — batch 3B: developers -> dev-tools
+  { from: "/developers", to: "/dev-tools" },
+  { from: "/developers/contact", to: "/get-started" },
+  { from: "/developers/graphql", to: "/dev-tools/graphql" },
+  { from: "/developers/tools", to: "/dev-tools" },
+  { from: "/developers/tools/api-explorer", to: "/dev-tools/tools/api-explorer" },
+  { from: "/developers/tools/event-simulator", to: "/dev-tools/tools/event-simulator" },
+  { from: "/developers/tools/guide-test-tools", to: "/dev-tools/tools/test-tools-guide" },
+  { from: "/developers/tools/mcp-servers", to: "/dev-tools/tools/mcp-servers" },
+  { from: "/developers/tools/postman-collection", to: "/dev-tools/tools/postman-collection" },
+  { from: "/developers/tools/sandbox-users", to: "/dev-tools/tools/sandbox-users" },
+  { from: "/developers/tools/testing-api", to: "/dev-tools/tools/testing-api" },
+  { from: "/developers/using-api/authentication", to: "/dev-tools/using-api/authentication" },
+  { from: "/developers/using-api/authentication/guide-get-token-project", to: "/dev-tools/using-api/authentication#get-token-project" },
+  { from: "/developers/using-api/authentication/guide-get-token-user", to: "/dev-tools/using-api/authentication#get-token-user" },
+  { from: "/developers/using-api/authentication/guide-impersonate", to: "/dev-tools/using-api/authentication#impersonate" },
+  { from: "/developers/using-api/errors-rejections", to: "/dev-tools/using-api/errors-rejections" },
+  { from: "/developers/using-api/idempotency", to: "/dev-tools/using-api/idempotency" },
+  { from: "/developers/using-api/pagination", to: "/dev-tools/using-api/pagination" },
+  { from: "/developers/using-api/payment-control", to: "/dev-tools/using-api/payment-control" },
+  { from: "/developers/using-api/webhooks", to: "/dev-tools/using-api/webhooks" },
+  // end batch 3B
+  // DOC-1814 cutover — batch 3A: get-started/set-up-swan
+  { from: "/glossary", to: "/get-started/set-up-swan/glossary" },
+  { from: "/topics/get-started/choose-integration", to: "/get-started/set-up-swan/choose-integration" },
+  { from: "/topics/get-started/quickstart", to: "/get-started/set-up-swan/quickstart" },
+  { from: "/topics/get-started/step-by-step", to: "/get-started/set-up-swan/step-by-step" },
+  { from: "/topics/projects", to: "/get-started/set-up-swan/create-project" },
+  { from: "/topics/projects/guide-activate", to: "/get-started/set-up-swan/create-project" },
+  // end batch 3A
   // DOC-1814 cutover — batch 2: partnership → become-a-partner
   { from: "/partnership", to: "/get-started/become-a-partner" },
   { from: "/partnership/overview/country-coverage", to: "/get-started/become-a-partner/country-coverage" },
@@ -36,21 +66,21 @@ module.exports = [
     from: "/topics/merchants/profiles/guide-add",
     to: "/topics/merchants/profiles/guide-request/",
   },
-  { from: "/api/api-explorer", to: "/developers/tools/api-explorer" },
-  { from: "/api/authentication", to: "/developers/using-api/authentication/" },
+  { from: "/api/api-explorer", to: "/dev-tools/tools/api-explorer" },
+  { from: "/api/authentication", to: "/dev-tools/using-api/authentication" },
   { from: "/api/consent", to: "/topics/users/consent/" },
-  { from: "/api/endpoints", to: "/developers/#endpoints" },
-  { from: "/api/errors", to: "/developers/using-api/errors-rejections" },
-  { from: "/api/event-simulator", to: "/developers/tools/event-simulator" },
-  { from: "/api/overview", to: "/developers/" },
-  { from: "/api/pagination", to: "/developers/using-api/pagination" },
-  { from: "/api/payment-control", to: "/developers/using-api/payment-control" },
+  { from: "/api/endpoints", to: "/dev-tools#endpoints" },
+  { from: "/api/errors", to: "/dev-tools/using-api/errors-rejections" },
+  { from: "/api/event-simulator", to: "/dev-tools/tools/event-simulator" },
+  { from: "/api/overview", to: "/dev-tools" },
+  { from: "/api/pagination", to: "/dev-tools/using-api/pagination" },
+  { from: "/api/payment-control", to: "/dev-tools/using-api/payment-control" },
   {
     from: "/api/sample-implementation",
-    to: "/developers/tools/postman-collection",
+    to: "/dev-tools/tools/postman-collection",
   },
-  { from: "/api/testing-api", to: "/developers/tools/testing-api" },
-  { from: "/api/webhook", to: "/developers/using-api/webhooks" },
+  { from: "/api/testing-api", to: "/dev-tools/tools/testing-api" },
+  { from: "/api/webhook", to: "/dev-tools/using-api/webhooks" },
   { from: "/concept/account", to: "/topics/accounts/" },
   { from: "/concept/account-funding", to: "/topics/accounts/funding/" },
   {
@@ -62,14 +92,14 @@ module.exports = [
   { from: "/concept/card", to: "/topics/cards/" },
   { from: "/concept/iban", to: "/topics/accounts/ibans/" },
   { from: "/concept/merchants-accepting-payments", to: "/topics/merchants/" },
-  { from: "/concept/overview", to: "/glossary" },
+  { from: "/concept/overview", to: "/get-started/set-up-swan/glossary" },
   { from: "/concept/payment", to: "/topics/payments/" },
-  { from: "/concept/projects", to: "/topics/projects/" },
+  { from: "/concept/projects", to: "/get-started/set-up-swan/create-project" },
   { from: "/concept/user", to: "/topics/users/" },
   { from: "/guide/accept-payments-merchants", to: "/topics/merchants/" },
   {
     from: "/guide/choose-integration",
-    to: "/topics/get-started/choose-integration",
+    to: "/get-started/set-up-swan/choose-integration",
   },
   { from: "/guide/control-card-usage", to: "/topics/payments/cards/sandbox" },
   {
@@ -85,9 +115,9 @@ module.exports = [
   { from: "/guide/issue-cards", to: "/topics/cards/overview/guide-issue" },
   { from: "/guide/make-a-transaction", to: "/topics/payments/" },
   { from: "/guide/manage-accounts-and-ibans", to: "/topics/accounts/ibans/" },
-  { from: "/guide/quickstart", to: "/topics/get-started/step-by-step" },
-  { from: "/guide/use-our-api", to: "/developers/" },
-  { from: "/guide/use-our-webhooks", to: "/developers/using-api/webhooks" },
+  { from: "/guide/quickstart", to: "/get-started/set-up-swan/step-by-step" },
+  { from: "/guide/use-our-api", to: "/dev-tools" },
+  { from: "/guide/use-our-webhooks", to: "/dev-tools/using-api/webhooks" },
   { from: "/help/changelog", to: "/changelog/" },
   { from: "/help/contact-us", to: "/topics/contact" },
   {
@@ -105,7 +135,7 @@ module.exports = [
   },
   {
     from: "/regulatory/go-live-process",
-    to: "/topics/projects/guide-activate",
+    to: "/get-started/set-up-swan/create-project",
   },
   { from: "/regulatory/partnership-with-swan", to: "/get-started/become-a-partner" },
   {
@@ -134,11 +164,11 @@ module.exports = [
   { from: "/user-flow-diagrams/sign-up", to: "/topics/users/#login" },
   {
     from: "/api/authentication/project-access-token",
-    to: "/developers/using-api/authentication/#tokens-project",
+    to: "/dev-tools/using-api/authentication#tokens-project",
   },
   {
     from: "/api/authentication/user-access-token",
-    to: "/developers/using-api/authentication/#tokens-user",
+    to: "/dev-tools/using-api/authentication#tokens-user",
   },
   {
     from: "/api/consent/integrate-strong-customer-authentication-sca",
@@ -244,7 +274,7 @@ module.exports = [
   },
   { from: "/help/faq/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/help/faq/accounts", to: "/topics/accounts/" },
-  { from: "/help/faq/api", to: "/developers/" },
+  { from: "/help/faq/api", to: "/dev-tools" },
   { from: "/help/faq/cards", to: "/topics/cards/" },
   { from: "/help/faq/consent", to: "/topics/users/consent/" },
   {
@@ -307,11 +337,11 @@ module.exports = [
   },
   {
     from: "/help/faq/api/i-encountered-a-bug-while-using-the-api-what-should-i-do",
-    to: "/developers/#troubleshooting",
+    to: "/dev-tools#troubleshooting",
   },
   {
     from: "/help/faq/api/i-get-a-cors-error-when-using-the-api-what-can-i-do",
-    to: "/developers/#backend",
+    to: "/dev-tools#backend",
   },
   {
     from: "/help/faq/api/i-get-an-error-500-at-the-end-of-onboarding.-why",
@@ -319,15 +349,15 @@ module.exports = [
   },
   {
     from: "/help/faq/api/to-enter-the-list-of-uri-redirects-can-i-use-a-domain-instead-of-an-absolute-uri",
-    to: "/developers/using-api/authentication/#tokens-user-uri",
+    to: "/dev-tools/using-api/authentication#tokens-user-uri",
   },
   {
     from: "/help/faq/api/when-i-request-a-list-via-the-api-is-the-number-of-results-limited",
-    to: "/developers/using-api/pagination#elements",
+    to: "/dev-tools/using-api/pagination#elements",
   },
   {
     from: "/help/faq/api/why-isnt-the-api-working-in-the-live-environment-when-it-worked-great-in-sandbox",
-    to: "/developers/#environments",
+    to: "/dev-tools#environments",
   },
   {
     from: "/help/faq/cards/after-uploading-my-logo-i-see-a-black-or-white-rectangle-instead-of-my-logo",
@@ -388,7 +418,7 @@ module.exports = [
   },
   {
     from: "/help/faq/consent/can-i-disable-consent",
-    to: "/developers/tools/sandbox-users#settings",
+    to: "/dev-tools/tools/sandbox-users#settings",
   },
   {
     from: "/help/faq/consent/can-i-handle-consent",

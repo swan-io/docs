@@ -1,5 +1,37 @@
 // redirects from original doc pathnames
 module.exports = [
+  // DOC-1814 cutover — batch 2: partnership → become-a-partner
+  { from: "/partnership", to: "/get-started/become-a-partner" },
+  { from: "/partnership/overview/country-coverage", to: "/get-started/become-a-partner/country-coverage" },
+  { from: "/partnership/overview/guide-orias", to: "/get-started/become-a-partner/orias-registration" },
+  { from: "/partnership/overview/rules-regulations", to: "/get-started/become-a-partner/brand-communication" },
+  { from: "/partnership/protections/data", to: "/get-started/become-a-partner/protections/data-protection" },
+  { from: "/partnership/protections/financial", to: "/get-started/become-a-partner/protections/financial-protections" },
+  { from: "/partnership/protections/report-vulnerability", to: "/get-started/become-a-partner/protections#vulnerability-disclosure" },
+  { from: "/partnership/protections/fraud", to: "/get-started/become-a-partner/protections/fraud-obligations" },
+  { from: "/partnership/protections/fraud/types", to: "/get-started/become-a-partner/protections/fraud-obligations#types" },
+  { from: "/partnership/contact", to: "/get-started" },
+  { from: "/partnership/document-center/company-registration", to: "/accounts/reference/country-requirements" },
+  { from: "/partnership/document-center/company-registration/france", to: "/accounts/reference/country-requirements#france" },
+  { from: "/partnership/document-center/company-registration/germany", to: "/accounts/reference/country-requirements#germany" },
+  { from: "/partnership/document-center/company-registration/italy", to: "/accounts/reference/country-requirements#italy" },
+  { from: "/partnership/document-center/company-registration/spain", to: "/accounts/reference/country-requirements#spain" },
+  { from: "/partnership/document-center/company-registration/netherlands", to: "/accounts/reference/country-requirements#netherlands" },
+  { from: "/partnership/document-center/company-registration/belgium", to: "/accounts/reference/country-requirements#belgium" },
+  { from: "/partnership/document-center/proof-address", to: "/accounts/reference/proof-of-address" },
+  // end batch 2
+  // DOC-1814 cutover — batch 1: accounts/memberships
+  { from: "/topics/accounts/memberships", to: "/accounts/concepts/memberships" },
+  { from: "/topics/accounts/memberships/admin-change", to: "/accounts/guides/memberships/change-admin" },
+  { from: "/topics/accounts/memberships/guide-add-multiple", to: "/accounts/guides/memberships/add-multiple" },
+  { from: "/topics/accounts/memberships/guide-add-one", to: "/accounts/guides/memberships/add-one" },
+  { from: "/topics/accounts/memberships/guide-disable", to: "/accounts/guides/memberships/disable" },
+  { from: "/topics/accounts/memberships/guide-export", to: "/accounts/guides/memberships/export" },
+  { from: "/topics/accounts/memberships/guide-fix-binding-error", to: "/accounts/guides/memberships/fix-binding-error" },
+  { from: "/topics/accounts/memberships/guide-resend-invitation", to: "/accounts/guides/memberships/resend-invitation" },
+  { from: "/topics/accounts/memberships/guide-suspend-resume", to: "/accounts/guides/memberships/suspend-resume" },
+  { from: "/topics/accounts/memberships/guide-update", to: "/accounts/guides/memberships/update" },
+  // end batch 1
   {
     from: "/topics/merchants/profiles/guide-add",
     to: "/topics/merchants/profiles/guide-request/",
@@ -25,7 +57,7 @@ module.exports = [
     from: "/concept/account-holder",
     to: "/topics/onboarding/account-holders/",
   },
-  { from: "/concept/account-membership", to: "/topics/accounts/memberships/" },
+  { from: "/concept/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/concept/capital-deposit", to: "/topics/capital-deposits/" },
   { from: "/concept/card", to: "/topics/cards/" },
   { from: "/concept/iban", to: "/topics/accounts/ibans/" },
@@ -48,7 +80,7 @@ module.exports = [
   { from: "/guide/fund-an-account", to: "/topics/accounts/funding/" },
   {
     from: "/guide/give-access-to-your-account",
-    to: "/topics/accounts/memberships/",
+    to: "/accounts/concepts/memberships", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   },
   { from: "/guide/issue-cards", to: "/topics/cards/overview/guide-issue" },
   { from: "/guide/make-a-transaction", to: "/topics/payments/" },
@@ -60,12 +92,12 @@ module.exports = [
   { from: "/help/contact-us", to: "/topics/contact" },
   {
     from: "/help/countries-coverage",
-    to: "/partnership/overview/country-coverage",
+    to: "/get-started/become-a-partner/country-coverage",
   },
   { from: "/help/faq", to: "/" },
   {
     from: "/help/vulnerability-disclosure",
-    to: "/partnership/overview/protections#vulnerability-disclosure",
+    to: "/get-started/become-a-partner/protections#vulnerability-disclosure",
   },
   {
     from: "/regulatory/build-a-compliant-billing-offer",
@@ -75,16 +107,16 @@ module.exports = [
     from: "/regulatory/go-live-process",
     to: "/topics/projects/guide-activate",
   },
-  { from: "/regulatory/partnership-with-swan", to: "/partnership/" },
+  { from: "/regulatory/partnership-with-swan", to: "/get-started/become-a-partner" },
   {
     from: "/regulatory/registration-process",
-    to: "/partnership/overview/guide-orias",
+    to: "/get-started/become-a-partner/orias-registration",
   },
   {
     from: "/regulatory/required-kyb-documents-for-company-accounts",
-    to: "/partnership/document-center/company-registration/",
+    to: "/accounts/reference/country-requirements",
   },
-  { from: "/regulatory/status-options", to: "/partnership/#legal-status" },
+  { from: "/regulatory/status-options", to: "/get-started/become-a-partner/licence-regulatory-status#legal-status" },
   {
     from: "/user-flow-diagrams/consent",
     to: "/topics/users/consent/#consent-diagrams-end-user",
@@ -210,7 +242,7 @@ module.exports = [
     from: "/guide/fund-an-account/sdd-b2b",
     to: "/topics/accounts/funding/#methods-dd",
   },
-  { from: "/help/faq/account-membership", to: "/topics/accounts/memberships/" },
+  { from: "/help/faq/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/help/faq/accounts", to: "/topics/accounts/" },
   { from: "/help/faq/api", to: "/developers/" },
   { from: "/help/faq/cards", to: "/topics/cards/" },
@@ -243,7 +275,7 @@ module.exports = [
   },
   {
     from: "/help/faq/account-membership/do-i-need-to-consent-every-single-time-a-new-membership-is-created",
-    to: "/topics/accounts/memberships/#permissions-none",
+    to: "/accounts/reference/membership-permissions#permissions-none", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/#permissions-none)
   },
   {
     from: "/help/faq/accounts/can-i-create-my-own-account-statement",
@@ -251,15 +283,15 @@ module.exports = [
   },
   {
     from: "/help/faq/accounts/how-can-i-add-account-members-to-an-account",
-    to: "/topics/accounts/memberships/guide-add-one",
+    to: "/accounts/guides/memberships/add-one", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/guide-add-one)
   },
   {
     from: "/help/faq/accounts/how-is-my-users-money-guaranteed",
-    to: "/partnership/overview/protections",
+    to: "/get-started/become-a-partner/protections/financial-protections",
   },
   {
     from: "/help/faq/accounts/is-my-company-responsible-if-something-happens-with-a-swan-account",
-    to: "/partnership/overview/protections#protecting-funds",
+    to: "/get-started/become-a-partner/protections/financial-protections",
   },
   {
     from: "/help/faq/accounts/which-currencies-are-available",
@@ -372,7 +404,7 @@ module.exports = [
   },
   {
     from: "/help/faq/kyc-and-verification-process/which-types-of-businesses-does-swan-restrict",
-    to: "/partnership/overview/rules-regulations#restricted-businesses",
+    to: "/get-started/become-a-partner/licence-regulatory-status#restricted-businesses",
   },
   {
     from: "/help/faq/kyc-and-verification-process/why-do-my-users-need-to-go-through-kyc",
@@ -428,7 +460,7 @@ module.exports = [
   },
   {
     from: "/partnership/document-center",
-    to: "/partnership/document-center/company-registration/",
+    to: "/accounts/reference/country-requirements",
   },
   {
     from: "/topics/onboarding/documents",
@@ -448,7 +480,7 @@ module.exports = [
   },
   {
     from: "/partnership/overview/protections",
-    to: "/partnership/protections/financial/",
+    to: "/get-started/become-a-partner/protections/financial-protections",
   },
   {
     from: '/preview/belgian-ibans',
@@ -468,7 +500,7 @@ module.exports = [
   },
   {
     from: '/preview/belgian-ibans/partnership_document-center_company-registration_belgium',
-    to: '/partnership/document-center/company-registration/belgium',
+    to: '/accounts/reference/country-requirements#belgium',
   },
   {
     from: '/preview/verification-of-payee',

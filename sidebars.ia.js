@@ -126,6 +126,7 @@ module.exports = {
     ]),
     top("Reference", [
       doc("accounts/reference/membership-permissions", "Membership permissions"),
+      doc("accounts/reference/membership-fields", "Membership fields"),
       doc("accounts/reference/multiple-accounts-requirements", "Multiple-accounts requirements"),
       doc("accounts/reference/country-requirements", "Country requirements"),
       doc("accounts/reference/proof-of-address", "Proof of address"),
@@ -184,6 +185,7 @@ module.exports = {
     top("Concepts", [
       doc("payments/concepts/transactions", "Transactions"),
       doc("payments/concepts/credit-transfers", "Credit transfers"),
+      doc("payments/concepts/verification-of-payee", "Verification of payee (VoP)"),
       doc("payments/concepts/direct-debit", "Direct debit"),
       doc("payments/concepts/cards", "Card payments"),
       doc("payments/concepts/merchants", "Merchants"),
@@ -198,6 +200,7 @@ module.exports = {
           doc("payments/guides/credit-transfers/sepa/schedule-so", "Schedule a standing order"),
           doc("payments/guides/credit-transfers/sepa/cancel-so", "Cancel a standing order"),
           doc("payments/guides/credit-transfers/sepa/verify-beneficiary", "Verify a beneficiary (VoP)"),
+          doc("payments/guides/credit-transfers/sepa/incoming-vop-requests", "Incoming VoP requests"),
         ]),
         cat("International", [
           doc("payments/guides/credit-transfers/international/quote", "Get a quote"),

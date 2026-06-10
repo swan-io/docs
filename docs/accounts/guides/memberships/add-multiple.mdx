@@ -1,5 +1,179 @@
 ---
-title: "Add multiple members"
+title: Add multiple memberships
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Add multiple memberships
+
+<span className="ia-audience-tag ia-audience-tag--dev">Developer</span>
+
+Add multiple account memberships with the API.
+You can add up to **200 memberships** in a single API call.
+
+import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
+
+<PrerequisiteAddMembers />
+
+## Step 1: Add account memberships {#api-add}
+
+1. Call the `addAccountMemberships` mutation.
+1. Add the account ID of the account where you're inviting members (line 4).
+1. Add your `consentRedirectUrl` (line 5).
+    - Required: if any member receives any permissions (the API returns a validation rejection if omitted).
+    - Optional: if all members have view-only access or no permissions.
+1. Add one invited account member block for each invitee (lines 7-21).
+1. In each `restrictedTo` object (lines 9-14), add information about the invited account members.
+    - If you're only granting `canViewAccount` permissions, or you're [not granting any permissions](/accounts/reference/membership-permissions#permissions-none), the invited account member's `birthDate` isn't required.
+    - Include a `+` in front of the phone number.
+1. Choose `true` for the permissions you'd like to grant to the invited account member.
+1. Choose the [account membership language](/accounts/concepts/memberships#language) (line 20). If no language is chosen, the membership inherits the [account language](/topics/accounts/#language).
+1. Add the success payload, including any information you'd like to review (line 51).
+1. Add the consent URL to the success payload (line 59): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add rejections (not shown).
+
+:::note Can Manage Cards
+The `CanManageCards` permissions is technically optional.
+However, it's recommended to choose true or false for this permission anyway.
+If you don't include the `CanManageCards` permission in your API call, it inherits the same value as `canManageAccountMembership`.
+:::
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQWRkTXVsdGlwbGVNZW1iZXJzIHsKICBhZGRBY2NvdW50TWVtYmVyc2hpcHMoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFJFRElSRUNUX1VSTCIKICAgICAgbWVtYmVyc2hpcHM6IFsKICAgICAgICB7CiAgICAgICAgICBlbWFpbDogImFsYmVydG9AbXlicmFuZC5pbyIKICAgICAgICAgIHJlc3RyaWN0ZWRUbzogewogICAgICAgICAgICBmaXJzdE5hbWU6ICJBbGJlcnRvIgogICAgICAgICAgICBsYXN0TmFtZTogIlJvbWVubyIKICAgICAgICAgICAgcGhvbmVOdW1iZXI6ICIrMzM2MDAwMDAwMDAiCiAgICAgICAgICAgIGJpcnRoRGF0ZTogInl5eXktbW0tZGQiCiAgICAgICAgICB9CiAgICAgICAgICBjYW5WaWV3QWNjb3VudDogdHJ1ZQogICAgICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogZmFsc2UKICAgICAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUFjY291bnRNZW1iZXJzaGlwOiBmYWxzZQogICAgICAgICAgY2FuTWFuYWdlQ2FyZHM6IGZhbHNlCiAgICAgICAgICBsYW5ndWFnZTogZXMKICAgICAgICB9CiAgICAgICAgewogICAgICAgICAgZW1haWw6ICJzb2ZpYUBteWJyYW5kLmlvIgogICAgICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgICAgIGZpcnN0TmFtZTogIlNvZmlhIgogICAgICAgICAgICBsYXN0TmFtZTogIlJhbWlyZXoiCiAgICAgICAgICAgIHBob25lTnVtYmVyOiAiKzMzNjAwMDAwMDAwIgogICAgICAgICAgICBiaXJ0aERhdGU6ICJ5eXl5LW1tLWRkIgogICAgICAgICAgfQogICAgICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUJlbmVmaWNpYXJpZXM6IHRydWUKICAgICAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgICAgIGNhbk1hbmFnZUFjY291bnRNZW1iZXJzaGlwOiB0cnVlCiAgICAgICAgICBjYW5NYW5hZ2VDYXJkczogZmFsc2UKICAgICAgICAgIGxhbmd1YWdlOiBlcwogICAgICAgIH0KICAgICAgICB7CiAgICAgICAgICBlbWFpbDogInJhZUBteWJyYW5kLmlvIgogICAgICAgICAgcmVzdHJpY3RlZFRvOiB7CiAgICAgICAgICAgIGZpcnN0TmFtZTogIlJhZSIKICAgICAgICAgICAgbGFzdE5hbWU6ICJTY2htaWR0IgogICAgICAgICAgICBwaG9uZU51bWJlcjogIiszMzYwMDAwMDAwMCIKICAgICAgICAgICAgYmlydGhEYXRlOiAieXl5eS1tbS1kZCIKICAgICAgICAgIH0KICAgICAgICAgIGNhblZpZXdBY2NvdW50OiB0cnVlCiAgICAgICAgICBjYW5NYW5hZ2VCZW5lZmljaWFyaWVzOiB0cnVlCiAgICAgICAgICBjYW5Jbml0aWF0ZVBheW1lbnRzOiB0cnVlCiAgICAgICAgICBjYW5NYW5hZ2VBY2NvdW50TWVtYmVyc2hpcDogdHJ1ZQogICAgICAgICAgY2FuTWFuYWdlQ2FyZHM6IHRydWUKICAgICAgICAgIGxhbmd1YWdlOiBkZQogICAgICAgIH0KICAgICAgXQogICAgfQogICkgewogICAgLi4uIG9uIEFkZEFjY291bnRNZW1iZXJzaGlwc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBhY2NvdW50TWVtYmVyc2hpcHMgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBDb25zZW50UGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBCYWRBY2NvdW50U3RhdHVzUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludmFsaWRQaG9uZU51bWJlclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFBlcm1pc3Npb25DYW5ub3RCZUdyYW50ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBUb29NYW55SXRlbXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4,5,7-21,55,63} showLineNumbers
+mutation AddMultipleMembers {
+  addAccountMemberships(
+    input: {
+      accountId: "$ACCOUNT_ID"
+      consentRedirectUrl: "$REDIRECT_URL"
+      memberships: [
+        {
+          email: "alberto@mybrand.io"
+          restrictedTo: {
+            firstName: "Alberto"
+            lastName: "Romeno"
+            phoneNumber: "+33600000000"
+            birthDate: "yyyy-mm-dd"
+          }
+          canViewAccount: true
+          canManageBeneficiaries: false
+          canInitiatePayments: true
+          canManageAccountMembership: false
+          canManageCards: false
+          language: es
+        }
+        {
+          email: "sofia@mybrand.io"
+          restrictedTo: {
+            firstName: "Sofia"
+            lastName: "Ramirez"
+            phoneNumber: "+33600000000"
+            birthDate: "yyyy-mm-dd"
+          }
+          canViewAccount: true
+          canManageBeneficiaries: true
+          canInitiatePayments: true
+          canManageAccountMembership: true
+          canManageCards: false
+          language: es
+        }
+        {
+          email: "rae@mybrand.io"
+          restrictedTo: {
+            firstName: "Rae"
+            lastName: "Schmidt"
+            phoneNumber: "+33600000000"
+            birthDate: "yyyy-mm-dd"
+          }
+          canViewAccount: true
+          canManageBeneficiaries: true
+          canInitiatePayments: true
+          canManageAccountMembership: true
+          canManageCards: true
+          language: de
+        }
+      ]
+    }
+  ) {
+    ... on AddAccountMembershipsSuccessPayload {
+      __typename
+      accountMemberships {
+        id
+        statusInfo {
+          ... on AccountMembershipConsentPendingStatusInfo {
+            __typename
+            consent {
+              consentUrl
+            }
+            status
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+## Step 2: Get consent to add member {#get-consent}
+
+The account holder, legal representative of the account, or account member with `canManageAccountMembership` permissions consents to adding all of the invited account members with a single consent process.
+
+1. Get the `consentUrl`, included in the payload (lines 11).
+    - All consent URLs are the same when adding members in bulk.
+    - Remember, the payload only provides the `consentUrl` if you added it in step 1.8.
+1. Send the `consentUrl` to the account holder, the account's legal representative, or the account member with `canManageAccountMembership` permissions.
+1. As soon as consent is provided, they're redirected to your `consentRedirectUrl` defined in the initial API call, which fetches an OAuth 2.0 authorization code and a user access token.
+1. **Store** the invited account member's new `accountMembershipId`. You'll need it to bind the membership.
+
+```json {7,11,13,17,27} showLineNumbers
+{
+  "data": {
+    "addAccountMemberships": {
+      "__typename": "AddAccountMembershipsSuccessPayload",
+      "accountMemberships": [
+        {
+          "id": "$ACCOUNT_MEMBERSHIP_ID_ALBERTO",
+          "statusInfo": {
+            "__typename": "AccountMembershipConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+            },
+            "status": "ConsentPending"
+          }
+        },
+        {
+          "id": "$ACCOUNT_MEMBERSHIP_ID_SOFIA",
+          "statusInfo": {
+            "__typename": "AccountMembershipConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+            },
+            "status": "ConsentPending"
+          }
+        },
+        {
+          "id": "$ACCOUNT_MEMBERSHIP_ID_RAE",
+          "statusInfo": {
+            "__typename": "AccountMembershipConsentPendingStatusInfo",
+            "consent": {
+              "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
+            },
+            "status": "ConsentPending"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+## Step 3: Bind the invited account member {#bind-member}
+
+import AddMemberBind from './partials/_add-member-bind.mdx';
+
+<AddMemberBind />
+
+## Related
+
+- [Account memberships](/accounts/concepts/memberships#invite) — the invitation model and membership statuses.
+- [Membership permissions](/accounts/reference/membership-permissions) · [Membership fields](/accounts/reference/membership-fields) — what to grant and which fields each country requires.
+- [Add one member](/accounts/guides/memberships/add-one) · [Update member](/accounts/guides/memberships/update)

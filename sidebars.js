@@ -107,23 +107,6 @@ module.exports = {
         },
         {
           type: "category",
-          label: "Account memberships",
-          link: { type: "doc", id: "topics/accounts/memberships/index" },
-          collapsed: true,
-          items: [
-            "topics/accounts/memberships/guide-add-one",
-            "topics/accounts/memberships/guide-add-multiple",
-            "topics/accounts/memberships/guide-resend-invitation",
-            "topics/accounts/memberships/guide-fix-binding-error",
-            "topics/accounts/memberships/guide-update",
-            "topics/accounts/memberships/guide-suspend-resume",
-            "topics/accounts/memberships/guide-disable",
-            "topics/accounts/memberships/guide-export",
-            "topics/accounts/memberships/admin-change",
-          ],
-        },
-        {
-          type: "category",
           label: "Supporting documents",
           link: { type: "doc", id: "topics/accounts/documents/index" },
           collapsed: true,
@@ -590,63 +573,15 @@ module.exports = {
       ],
     },
   ],
+  // DOC-1814 batch 2: partnership migrated to get-started/become-a-partner (+ accounts/users reference).
+  // Remnant only — identity documents are deferred to the users batch.
   partnershipSidebar: [
-    {
-      type: "category",
-      label: "Overview",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Partnership with Swan",
-          link: { type: "doc", id: "partnership/index" },
-          collapsed: true,
-          items: ["partnership/overview/guide-orias"],
-        },
-        "partnership/overview/rules-regulations",
-        "partnership/overview/country-coverage",
-      ],
-    },
-    {
-      type: "category",
-      label: "Protections",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        "partnership/protections/financial",
-        {
-          type: "category",
-          label: "Fraud protection",
-          link: { type: "doc", id: "partnership/protections/fraud/index" },
-          collapsed: true,
-          items: ["partnership/protections/fraud/types"],
-        },
-        "partnership/protections/data",
-        "partnership/protections/report-vulnerability",
-      ],
-    },
     {
       type: "category",
       label: "Document center",
       collapsible: false,
       collapsed: false,
       items: [
-        {
-          type: "category",
-          label: "Proof of company registration",
-          link: { type: "doc", id: "partnership/document-center/company-registration/index" },
-          collapsed: true,
-          items: [
-            "partnership/document-center/company-registration/france",
-            "partnership/document-center/company-registration/belgium",
-            "partnership/document-center/company-registration/netherlands",
-            "partnership/document-center/company-registration/germany",
-            "partnership/document-center/company-registration/italy",
-            "partnership/document-center/company-registration/spain",
-          ],
-        },
-        "partnership/document-center/proof-address/index",
         {
           type: "category",
           label: "Identity documents",
@@ -658,35 +593,6 @@ module.exports = {
             "partnership/document-center/identity/qes",
           ],
         },
-      ],
-    },
-    {
-      type: "category",
-      label: "Resources",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "link",
-          label: "Status page",
-          href: "https://status.swan.io/",
-        },
-        {
-          type: "link",
-          label: "Trust Center",
-          href: "https://trust.swan.io/",
-        },
-        {
-          type: "link",
-          label: "Support Center",
-          href: "https://support.swan.io/hc/en-150",
-        },
-        {
-          type: "link",
-          label: "Roadmap",
-          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22",
-        },
-        "partnership/contact",
       ],
     },
   ],

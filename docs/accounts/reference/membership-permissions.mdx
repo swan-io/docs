@@ -1,5 +1,122 @@
 ---
-title: "Membership permissions"
+title: Membership permissions
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Membership permissions
+
+Account members can be assigned **different rights to an account**, allowing access to only the desired actions and information.
+These rights are referred to as **permissions** in the Swan API and Web Banking interface.
+
+This reference details every account membership permission, how permissions are granted, and how the `canManageCards` and `canManageAccountMembership` permissions interact.
+For the conceptual overview of account memberships, see [Memberships](/accounts/concepts/memberships).
+
+## Permissions {#permissions}
+
+Swan doesn't offer role-base access control (RBAC).
+Instead, you choose exactly what each account member can see and do on a member-by-member basis.
+
+| Permission | Account member can... |
+| --- | --- |
+| `canViewAccount` | View the account and some information about the account, including but not limited to: main and virtual [IBANs](/topics/accounts/ibans/), [trusted beneficiaries](/topics/payments/credit-transfers/#beneficiaries), [payment mandates](/topics/payments/direct-debit/#mandates), and [transactions and transaction details](/topics/payments/#transactions).<br /><br />Cardholders with the `canViewAccount` permission can view their own transaction history, even if they have no other permissions. |
+| `canManageBeneficiaries` | Add or remove [beneficiaries](/topics/payments/credit-transfers/#beneficiaries), and save beneficiaries as trusted. |
+| `canInitiatePayments` | [Initiate (send) credit transfers](/topics/payments/credit-transfers/) to trusted beneficiaries. |
+| `canManageAccountMembership` | Add, update, suspend, resume, and disable account memberships, and view the list of account members. |
+| `canManageCards` | View, add, and update their own cards and [cards for account memberships](/topics/cards/#cards-account-memberships) they manage. |
+
+## Granting permissions {#permissions-grant}
+
+In order to grant permissions to other account members, the account member must have the permission `canManageAccountMembership`.
+They can only grant permissions they already have.
+
+For example, if an account member doesn't have the `canManageCards` permission, they can't grant it to another account member.
+If they try to grant the `canManageCards` permission anyway, the API returns a `PermissionCannotBeGrantedRejection` error.
+
+## Managing cards {#permissions-cards}
+
+Whether your **account members can manage cards** and **for whom** depends on both `canManageAccountMembership` and `canManageCards` permissions.
+Please note that cardholders without the `canViewAccount` permission can view their own transaction history, even if they have no other permissions.
+
+<SupportStatusLegend />
+
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th><code>canManageCards</code> = true</th>
+      <th><code>canManageCards</code> = false</th>
+      <th><code>canManageCards</code> = not provided</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{backgroundColor: '#E0D9F0'}}>
+      <td colspan="4" style={{textAlign: 'center'}}><strong>canManageAccountMembership = true</strong></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for self</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for others*</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>View own cards only</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}>-</td>
+    </tr>
+    <tr>
+      <td>Print physical card from existing virtual</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}>-</td>
+    </tr>
+    <tr style={{backgroundColor: '#E0D9F0'}}>
+      <td colspan="4" style={{textAlign: 'center'}}><strong>canManageAccountMembership = false</strong></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for self</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+    </tr>
+    <tr>
+      <td>View, add, update cards for others*</td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+      <td style={{textAlign: 'center'}}><Unsupported /></td>
+    </tr>
+    <tr>
+      <td>View own cards only</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+    <tr>
+      <td>Print physical card from existing virtual</td>
+      <td style={{textAlign: 'center'}}>-</td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+      <td style={{textAlign: 'center'}}><Supported /></td>
+    </tr>
+  </tbody>
+</table>
+
+\* *others* → other account members
+
+## No permissions {#permissions-none}
+
+You can add account members without granting them any membership permissions.
+For example, if you want to give a user a card associated with the account, but you don't want them to view account information or perform any actions for the account, you'd add an account membership with no permissions.
+
+In this case, all membership permission booleans are `false`.
+This type of invitation doesn't require consent from the account holder and skips the status `InvitationSent`.
+
+## Related
+
+- [Memberships](/accounts/concepts/memberships) — conceptual overview, statuses, and language.
+- [Membership fields](/accounts/reference/membership-fields) — required fields per IBAN country and validation rules.
+- [Add one member](/accounts/guides/memberships/add-one) · [Update a membership](/accounts/guides/memberships/update) — guides that set permissions.

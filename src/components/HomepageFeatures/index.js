@@ -36,7 +36,7 @@ const FeatureList = [
   },
   {
     title: "Partnership",
-    url: "/partnership",
+    url: "/get-started/become-a-partner",
     svg: (
       <svg
         className={styles.svg}

@@ -88,6 +88,7 @@ module.exports = {
             <a class="swan-tip swan-icon-btn" href="/preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="swan-tip__label" aria-hidden="true">Preview</span></a>
           </div>`
         },
+        { type: "html", position: "right", value: `<span class="swan-navsep" aria-hidden="true"></span>` },
         { type: "search", position: "right" },
         {
           type: "html",

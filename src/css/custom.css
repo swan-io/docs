@@ -396,18 +396,19 @@ pre {
 .swan-tip:hover .swan-tip__label { opacity: 1; }
 
 /* DOC-1814 — segmented nav pills (API ref|Explorer · Changelog|Preview).
-   A filled "segmented control": a soft track at rest, with the hovered segment
-   lifting to the surface colour + a hairline shadow. Clearly visible, yet a
-   distinct pattern from the solid bordered search + Support utility buttons.
-   All colour from --ifm-* tokens (Lake-compliant). */
+   Neutral, outlined buttons — the outline (like the utility buttons') sets them
+   apart from the plain-text IA nav — marked as primary by Swan-purple icons.
+   Each is a segmented control: the hovered segment lifts to the surface colour
+   + a hairline shadow. All colour from --ifm-* tokens (Lake-compliant). */
 .swan-api-nav,
 .swan-unified-nav {
   display: flex;
   align-items: center;
   height: 2.5rem;
-  padding: 3px;
-  border-radius: 10px;
-  background: var(--ifm-color-emphasis-200);
+  padding: 2px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-color-emphasis-100);
 }
 .swan-unified-nav { margin-left: 0.4rem; }
 .swan-api-nav a,
@@ -418,7 +419,7 @@ pre {
   gap: 6px;
   height: 100%;
   padding: 0 0.7rem;
-  border-radius: 7px;
+  border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--ifm-color-emphasis-800);
@@ -431,8 +432,14 @@ pre {
   color: var(--ifm-color-primary);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
+/* Swan-purple icons mark these as primary nav (labels stay neutral) */
 .swan-api-nav a svg,
-.swan-unified-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.swan-unified-nav a svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--ifm-color-primary);
+}
 /* icon-only segments are square */
 .swan-icon-btn { width: 2.25rem; padding: 0; }
 .swan-api-nav .separator,
@@ -444,23 +451,14 @@ pre {
   flex-shrink: 0;
 }
 
-/* DOC-1814 — section divider between the nav pills and the search/Support utilities */
-.swan-navsep {
-  align-self: center;
-  width: 1px;
-  height: 1.5rem;
-  margin: 0 0.9rem;
-  background: var(--ifm-color-emphasis-300);
-}
-
 /* DOC-1814 — Docusaurus wraps each navbar item in its own padded container
    (.navbar__item for type:html, .navbarSearchContainer for type:search), each
    adding ~0.75rem of horizontal padding. Neutralise it for the right-cluster
    items so the controls touch as intended — in particular so search + Support
-   join seamlessly into one pill. */
+   join seamlessly into one pill. (The .navbar__sep dot keeps its wrapper so it
+   spaces like the IA dots in the top nav.) */
 .navbar__item:has(> .swan-api-nav),
 .navbar__item:has(> .swan-unified-nav),
-.navbar__item:has(> .swan-navsep),
 .navbar__item:has(> .swan-support),
 .navbar [class*="navbarSearchContainer"] {
   padding: 0;

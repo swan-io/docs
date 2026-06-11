@@ -51,6 +51,7 @@ module.exports = {
   accountsSidebar: [
     doc("accounts/index", "Overview"),
     top("Concepts", [
+      doc("accounts/concepts/account", "Account"),
       doc("accounts/concepts/memberships", "Memberships"),
       doc("accounts/concepts/multiple-accounts", "Multiple accounts"),
       doc("accounts/concepts/ibans", "IBANs"),
@@ -129,6 +130,9 @@ module.exports = {
       doc("accounts/reference/membership-fields", "Membership fields"),
       doc("accounts/reference/multiple-accounts-requirements", "Multiple-accounts requirements"),
       doc("accounts/reference/country-requirements", "Country requirements"),
+      doc("accounts/reference/company-onboarding-fields", "Company onboarding fields"),
+      doc("accounts/reference/individual-onboarding-fields", "Individual onboarding fields"),
+      doc("accounts/reference/capital-deposit-reference", "Capital deposit reference"),
       doc("accounts/reference/proof-of-address", "Proof of address"),
       doc("accounts/reference/sandbox-billing", "Sandbox: billing"),
       doc("accounts/reference/sandbox-documents", "Sandbox: documents"),

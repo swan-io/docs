@@ -1,5 +1,155 @@
 ---
-title: "Billing"
+title: Billing
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Billing
+
+<p className="ia-lede">Understand how Swan charges banking fees, which fees you can customize, how usage-based metrics are billed, and when invoices are generated.</p>
+
+## Overview {#overview}
+
+Swan **charges banking fees** directly for each account as defined in the Terms and Conditions.
+Swan deducts banking fees in almost real-time directly from the Swan account.
+For each fee charged to the account, a transaction is created automatically that is included on the monthly account statement.
+
+**Billing begins automatically** when an account is created, for both company and individual accounts.
+For all accounts created before March 2023, the billing module was activated on 1 March 2023.
+
+To help you and your users keep track of fees, Swan **generates a dedicated invoice** automatically for all Swan company account holders, generated at the same time as the [monthly account statement](/accounts/concepts/account#account-statements).
+The invoice lists all banking fees charged during the **monthly billing period**, which **begins** on the **first of each month**.
+
+## Swan fees {#fees-swan}
+
+Swan charges different banking and merchant fees.
+When the Swan API detects transactions with associated banking fees, the fees are scheduled automatically, except fees related to **payment incidents**.
+
+There are two dedicated transaction types for fees:
+`FeesOut` indicates a fee *debited from* a Swan account, while `FeesIn` indicates a fee *credited to* a Swan account.
+
+On a fee's expected execution date, Swan checks the [account's `Available` balance](/accounts/concepts/account#balances) to see if it's sufficient to cover the fee.
+
+| `Available` balance | Events |
+| --- | --- |
+| <Yes /> **Sufficient** to cover fee | Swan executes the fee transaction. The status changes to `Booked`. |
+| <No /> **Not sufficient** to cover fee | Swan doesn't execute the fee transaction. Instead, the status changes to `Pending`.<br /><br />Each time funds arrive in the account, Swan checks if the `Available` balance is sufficient to cover the fee. As soon as the `Available` balance is sufficient, Swan executes the fee transaction. |
+
+:::info Payment incident fees
+Fees related to **payment incidents** (for example, direct debit rejections due to an insufficient balance), are deducted 14 days after being communicated.
+The `FeesOut` transaction appears instantly on the transaction history with the status `Upcoming`.
+The transaction is booked automatically 14 days later.
+:::
+
+### Standard fees {#fees-swan-standard}
+
+Fee amounts are not listed because they can vary by contract.
+Please check your Terms and Conditions for your precise fees.
+
+| Fee | Billed with Value Added Tax (VAT) | Booked |
+| --- | :---: | --- |
+| Cash withdrawals from cash machines (ATM) in euros | <Yes /> Yes | Immediately |
+| Cash withdrawals from cash machines (ATM) *not* in euros | <Yes /> Yes | Immediately |
+| Payment for goods and services in stores or remotely *not* denominated and carried out in euros | <Yes /> Yes | Immediately |
+| Rejection of an outgoing direct debit due to an insufficient balance | <No /> No | 14 days after disclosure of the charges on the account |
+| Improper use of the account<br /><br />*Attempted or actual actions that are against the law or contrary to this account agreement* | <Yes /> Yes | Immediately |
+| Handling legal or administrative garnishments, third party debt orders | <No /> No | 14 days after disclosure of the charges on the account |
+| Preparation of a circularization letter for a legal entity holder | <Yes /> Yes | Immediately |
+| Preparation of a letter certifying the existence of an account with Swan | <Yes /> Yes | Immediately |
+| Handling fees for management of an unauthorised overdraft | <No /> No | 14 days after disclosure of the charges on the account |
+| Adding funds to the account by bank card | <Yes /> Yes | Immediately |
+| Call to Customer Service | <No /> No | n/a |
+| SEPA Direct Debit merchant fees for transactions up to €200 | <Yes /> Yes | Immediately |
+| SEPA Direct Debit merchant fees for transactions over €200 | <Yes /> Yes | Immediately |
+| Returned merchant SEPA Direct Debit transactions | <Yes /> Yes | Immediately |
+
+## Charging custom fees {#fees-custom}
+
+Swan **shares revenue** from fees with Partners.
+However, the **fees you can charge are strictly regulated**.
+
+You can customize banking fees and some other types of fees for your project.
+In customizing your fees, you might choose to either (1) absorb some of the fees yourself, or (2) charge your users markup on top of Swan's fees.
+Allowing for markup is Swan's way of sharing fee revenue with you.
+
+Every time you **change your list of fees**, Swan automatically updates the financial conditions in your Swan Terms and Conditions and sends them to all current users.
+There is a two-month waiting period before the changes automatically take effect for your current users.
+New users follow the updated Terms and Conditions from the start.
+
+Refer to the guide [build a compliant billing offer](/accounts/guides/billing/compliant-billing) to learn what you can and can't charge, and how to customize your offer.
+
+To learn more, please discuss billing offers with your Account Manager.
+
+## Usage-based billing metrics {#billing-metrics}
+
+In addition to fixed fees, some Swan features have usage-based fees. You're charged based on actual usage during each billing period.
+
+The following table lists each billable metric and the event that triggers billing.
+
+| **Category** | **Metric** | **Billing trigger** |
+| --- | --- | --- |
+| **Accounts** | Account subscriptions | Accounts with `Verified` status that are `Opened` and not in `Closing` or `Closed` status on the 1st of each month. Billing begins when the payment level status reaches `Unlimited`. The first and closing months are billed in full. |
+| | Account member subscriptions | All additional `Enabled` members for an account (excluding the legal representative). |
+| | Account opening fee | Account holders who started verification during the billing period (`Pending` banking verification status).|
+| | Additional account fee | A monthly fee is charged for opening the initial account; this covers the opening of any additional accounts associated with it.|
+| **Capital deposit** | Share deposit certificates | Number of capital deposit cases completed during the billing period. |
+| **Cards** | Apple Pay card subscriptions | Number of cards successfully added as Apple Pay digital cards during the billing period. |
+| | Apple Pay transaction fee | An additional fee for transactions made using Apple Pay. |
+| | Card subscriptions | Virtual cards `Enabled` at least one day during the billing period. |
+| | Card transactions | Number of card-out booked transactions (including Apple Pay). |
+| | Card products | Number of card products `Enabled` for a project. Monthly fees still apply to `Suspended` card products that have at least one `Enabled` card. |
+| | Foreign exchange (FX) fees | Transactions for goods and services (in-store or online) purchased in non-euro currencies.  |
+| | Physical cards printing & shipping | Number of cards shipped during the billing period.  |
+| | Single-use virtual (SUV) cards | Number of SUV cards created during the billing period. |
+| **SEPA** | SEPA transactions | Number of transactions booked during the billing period (Instant SCT, SCT, SDD Core, SDD B2B). |
+| | SEPA volume | Total amount of transactions booked during the billing period (Instant SCT, SCT, SDD Core, SDD B2B). |
+| **Text messages** | Text messages | Number of Strong Customer Authentication (SCA) related text messages sent during the billing period. |
+
+
+## Invoices {#invoices}
+
+Swan **generates a dedicated invoice** automatically for all **company** account holders, generated at the same time as the [monthly account statement](/accounts/concepts/account#account-statements).
+The invoice lists all banking fees charged during the **monthly billing period**, which begins on the first of each month.
+
+If a **fee is refunded** and the corresponding invoice was already generated, Swan generates a refund note for the refunded amount.
+Access refund notes the same way you access invoices.
+If **no banking fees were charged** during the billing period, Swan doesn't generate an invoice.
+
+Invoices are generated in the [account language](/accounts/concepts/account#language), and labels for each fee transaction are also in the account language.
+You or your user can change the account language; doing so impacts new invoices and fees, but won't change existing fee labels or previously generated invoices.
+
+Subscribe to the `AccountInvoice.Generated` [webhook](/dev-tools/using-api/webhooks) to receive a notification each time an invoice is generated.
+You can also access company account invoices with the API, from your Dashboard, or on Swan's Web Banking interface.
+
+:::info individual accounts
+Monthly invoices *aren't* generated for **individual** accounts.
+
+Instead, fees are included on the standard [monthly account statement](/accounts/concepts/account#account-statements).
+An **annual fee statement** is provided automatically once a year, at the end of January's account statement.
+
+Individual account holders can also review fee transactions in their transaction history.
+If you're not using Swan's Web Banking interface, make sure to include fees in your implementation of the [transaction history](https://swan-io.github.io/swan-partner-frontend/specs/banking/history).
+:::
+
+### VAT number {#invoices-vat}
+
+Optionally, provide your account holder's Value Added Tax, or VAT, number.
+If provided, Swan adds the VAT number to the invoice.
+
+You can provide the VAT number several ways:
+
+- When [creating the onboarding link](/accounts/guides/onboarding/company#create) for the new company account
+- When [updating a company onboarding](/accounts/guides/onboarding/company#update)
+- When [updating an account holder](https://explorer.swan.io?query=bXV0YXRpb24gQWRkVmF0TnVtYmVyIHsKICB1cGRhdGVBY2NvdW50SG9sZGVyKAogICAgaW5wdXQ6IHsKICAgICAgYWNjb3VudEhvbGRlcklkOiAiJFlPVVJfQUNDT1VOVF9IT0xERVJfSUQiCiAgICAgIHZhdE51bWJlcjogIiRBQ0NPVU5UX0hPTERFUl9WQVQiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlQWNjb3VudEhvbGRlclN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBhY2NvdW50SG9sZGVyIHsKICAgICAgICB1cGRhdGVkRGF0ZQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlck5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api) using the `updateAccountHolder` mutation
+
+:::note European companies outside of France
+If you provide a valid VAT number for a company registered in a European country other than France, Swan automatically applies the **reverse charge mechanism**.
+With the reverse charge mechanism, **VAT isn't added** and **must be paid by the end user** in accordance with article 283-2 of the French General Tax Code.
+:::
+
+## Related
+
+- [Build a compliant billing offer](/accounts/guides/billing/compliant-billing)
+- [Get list of invoices](/accounts/guides/billing/get-list)
+- [Get invoice details](/accounts/guides/billing/get-details)
+- [Sandbox: billing](/accounts/reference/sandbox-billing)
+- [Account funding](/accounts/concepts/funding)
+- [Supporting documents](/accounts/concepts/documents)

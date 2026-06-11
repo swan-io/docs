@@ -1,18 +1,20 @@
 # DOC-1814 Phase 0 — IA migration map rebase report
 
-Canonical stub routes: **187** · source rows: **246** · overrides applied: **37**
+Canonical stub routes: **210** · source rows: **246** · overrides applied: **48**
 
 ## Resolution counts
 
 | resolution | rows |
 |---|---|
-| exact | 110 |
-| fold | 60 |
+| exact | 109 |
+| fold | 50 |
 | fuzzy | 14 |
+| override:carve-onboarding-fields-ref | 2 |
+| override:finalize-account-landing | 1 |
 | override:fold-section-overview | 1 |
 | override:hub-judgment-at-migration | 2 |
 | override:hub-merge | 2 |
-| override:hub-split-3-close-guides | 1 |
+| override:hub-split-feeds-close-link | 1 |
 | override:hub-split-feeds-requirements-ref | 1 |
 | override:ia-collapse-ct-landing | 2 |
 | override:ia-collapse-identity | 3 |
@@ -21,7 +23,7 @@ Canonical stub routes: **187** · source rows: **246** · overrides applied: **3
 | override:new-vop-concept | 1 |
 | override:new-vop-guide | 1 |
 | override:no-contact-page | 3 |
-| override:preserve-live-redirect-specificity | 1 |
+| override:preserve-live-redirect-specificity | 9 |
 | override:rename-account-operations | 2 |
 | override:rename-flat-sandbox | 5 |
 | override:rename-granular-home | 2 |
@@ -35,35 +37,53 @@ Canonical stub routes: **187** · source rows: **246** · overrides applied: **3
 
 _none_
 
-## Net-new stubs — ZERO inbound after rebase (26)
+## Net-new stubs — ZERO inbound after rebase (41)
 Real net-new pages: present in the tree, no legacy source routes to them.
 
-- **accounts/guides/** (8)
+- **accounts/guides/** (17)
+  - `/accounts/guides/closure/partials/_partner-close-account`
   - `/accounts/guides/memberships/export/from-the-dashboard`
   - `/accounts/guides/memberships/export/using-the-api`
   - `/accounts/guides/memberships/partials/_add-member-bind`
   - `/accounts/guides/memberships/partials/_add-member-prereq`
   - `/accounts/guides/memberships/partials/_update-prereqs`
   - `/accounts/guides/memberships/partials/_user-binding-error-list`
-  - `/accounts/guides/onboarding/capital-deposits/create-case`
-  - `/accounts/guides/onboarding/capital-deposits/upload-documents`
-- **accounts/reference/** (2)
+  - `/accounts/guides/onboarding/capital-deposits/partials/_cancel-case`
+  - `/accounts/guides/onboarding/capital-deposits/partials/_update-company-prereqs`
+  - `/accounts/guides/onboarding/capital-deposits/partials/_update-shareholder-prereqs`
+  - `/accounts/guides/onboarding/partials/_country-reqs`
+  - `/accounts/guides/onboarding/partials/_create-public-url`
+  - `/accounts/guides/onboarding/partials/_deprecated-mutation-timeline`
+  - `/accounts/guides/onboarding/partials/_overview`
+  - `/accounts/guides/onboarding/partials/_prereqs-create`
+  - `/accounts/guides/onboarding/partials/_prereqs-update`
+  - `/accounts/guides/onboarding/partials/_public-onboarding-links`
+- **accounts/index/** (1)
+  - `/accounts`
+- **accounts/reference/** (4)
+  - `/accounts/reference/capital-deposit-reference`
+  - `/accounts/reference/membership-fields`
   - `/accounts/reference/membership-permissions`
   - `/accounts/reference/multiple-accounts-requirements`
 - **cards/reference/** (1)
   - `/cards/reference/card-fraud-types`
-- **get-started/become-a-partner/** (6)
-  - `/get-started/become-a-partner/brand-communication`
+- **dev-tools/tools/** (1)
+  - `/dev-tools/tools/_testing-simulator`
+- **dev-tools/using-api/** (1)
+  - `/dev-tools/using-api/_use-uat-immediately`
+- **get-started/become-a-partner/** (4)
+  - `/get-started/become-a-partner/_partials/_report-fraud`
+  - `/get-started/become-a-partner/_partials/_trust-center`
   - `/get-started/become-a-partner/licence-regulatory-status`
-  - `/get-started/become-a-partner/orias-registration`
-  - `/get-started/become-a-partner/protections/data-protection`
-  - `/get-started/become-a-partner/protections/fraud-obligations`
   - `/get-started/become-a-partner/rates-billing`
 - **get-started/integration-by-segment/** (3)
   - `/get-started/integration-by-segment/accounting-platforms`
   - `/get-started/integration-by-segment/expense-management`
   - `/get-started/integration-by-segment/meal-cards`
-- **get-started/set-up-swan/** (3)
+- **get-started/set-up-swan/** (6)
+  - `/get-started/set-up-swan/_partials/_connect-mobile`
+  - `/get-started/set-up-swan/_partials/_create-project`
+  - `/get-started/set-up-swan/_partials/_swan-access`
   - `/get-started/set-up-swan/connect-mobile`
   - `/get-started/set-up-swan/data-model`
   - `/get-started/set-up-swan/swan-access`
@@ -84,12 +104,12 @@ _none_
 
 ## Merge sets — resolvedNewPath with >1 oldPath (27)
 
-- `/accounts/concepts/closure` ⇐ 2 sources
-  - `topics/accounts/closure/guide-close-api`
-  - `topics/accounts/closure/index`
 - `/accounts/concepts/multiple-accounts` ⇐ 2 sources
   - `topics/accounts/multiple-accounts/guide-multiple-accounts-integration`
   - `topics/accounts/multiple-accounts/index`
+- `/accounts/guides/closure/close-link` ⇐ 2 sources
+  - `topics/accounts/closure/guide-close-api`
+  - `topics/accounts/closure/guide-close-link`
 - `/accounts/guides/onboarding/account-holders` ⇐ 6 sources
   - `topics/onboarding/account-holders/guide-add-additional-account`
   - `topics/onboarding/account-holders/guide-export`
@@ -97,13 +117,10 @@ _none_
   - `topics/onboarding/account-holders/guide-request-first-transfer`
   - `topics/onboarding/account-holders/index`
   - `topics/onboarding/account-holders/sandbox`
-- `/accounts/guides/onboarding/capital-deposits` ⇐ 4 sources
+- `/accounts/guides/onboarding/capital-deposits` ⇐ 2 sources
   - `topics/capital-deposits/france/guide`
-  - `topics/capital-deposits/france/guide-create-case`
-  - `topics/capital-deposits/france/guide-upload-documents`
   - `topics/capital-deposits/index`
-- `/accounts/guides/onboarding/company` ⇐ 4 sources
-  - `topics/onboarding/company/fields`
+- `/accounts/guides/onboarding/company` ⇐ 3 sources
   - `topics/onboarding/company/guide-create`
   - `topics/onboarding/company/guide-update`
   - `topics/onboarding/company/index`
@@ -114,8 +131,7 @@ _none_
   - `topics/onboarding/overview/guide-get-info`
   - `topics/onboarding/overview/guide-get-list`
   - `topics/onboarding/overview/guide-migrate`
-- `/accounts/guides/onboarding/individual` ⇐ 4 sources
-  - `topics/onboarding/individual/fields`
+- `/accounts/guides/onboarding/individual` ⇐ 3 sources
   - `topics/onboarding/individual/guide-create`
   - `topics/onboarding/individual/guide-update`
   - `topics/onboarding/individual/index`
@@ -136,16 +152,12 @@ _none_
   - `developers/using-api/authentication/guide-get-token-user`
   - `developers/using-api/authentication/guide-impersonate`
   - `developers/using-api/authentication/index`
-- `/get-started/become-a-partner` ⇐ 3 sources
-  - `partnership/index`
-  - `partnership/overview/guide-orias`
-  - `partnership/overview/rules-regulations`
-- `/get-started/become-a-partner/protections` ⇐ 5 sources
-  - `partnership/protections/data`
+- `/get-started/become-a-partner/protections/financial-protections` ⇐ 2 sources
+  - `partnership/overview/protections`
   - `partnership/protections/financial`
+- `/get-started/become-a-partner/protections/fraud-obligations` ⇐ 2 sources
   - `partnership/protections/fraud/index`
   - `partnership/protections/fraud/types`
-  - `partnership/protections/report-vulnerability`
 - `/get-started` ⇐ 3 sources
   - `developers/contact`
   - `partnership/contact`
@@ -225,9 +237,216 @@ _none_
 
 ## Live ↔ generated "from" collisions
 
+- `/developers`
+  - live redirects.js → `/dev-tools`
+  - redirects.v2 → `/dev-tools`
+- `/developers/contact`
+  - live redirects.js → `/get-started`
+  - redirects.v2 → `/get-started`
+- `/developers/graphql`
+  - live redirects.js → `/dev-tools/graphql`
+  - redirects.v2 → `/dev-tools/graphql`
+- `/developers/tools`
+  - live redirects.js → `/dev-tools`
+  - redirects.v2 → `/dev-tools`
+- `/developers/tools/api-explorer`
+  - live redirects.js → `/dev-tools/tools/api-explorer`
+  - redirects.v2 → `/dev-tools/tools/api-explorer`
+- `/developers/tools/event-simulator`
+  - live redirects.js → `/dev-tools/tools/event-simulator`
+  - redirects.v2 → `/dev-tools/tools/event-simulator`
+- `/developers/tools/guide-test-tools`
+  - live redirects.js → `/dev-tools/tools/test-tools-guide`
+  - redirects.v2 → `/dev-tools/tools/test-tools-guide`
+- `/developers/tools/mcp-servers`
+  - live redirects.js → `/dev-tools/tools/mcp-servers`
+  - redirects.v2 → `/dev-tools/tools/mcp-servers`
+- `/developers/tools/postman-collection`
+  - live redirects.js → `/dev-tools/tools/postman-collection`
+  - redirects.v2 → `/dev-tools/tools/postman-collection`
+- `/developers/tools/sandbox-users`
+  - live redirects.js → `/dev-tools/tools/sandbox-users`
+  - redirects.v2 → `/dev-tools/tools/sandbox-users`
+- `/developers/tools/testing-api`
+  - live redirects.js → `/dev-tools/tools/testing-api`
+  - redirects.v2 → `/dev-tools/tools/testing-api`
+- `/developers/using-api/authentication`
+  - live redirects.js → `/dev-tools/using-api/authentication`
+  - redirects.v2 → `/dev-tools/using-api/authentication`
+- `/developers/using-api/authentication/guide-get-token-project`
+  - live redirects.js → `/dev-tools/using-api/authentication#get-token-project`
+  - redirects.v2 → `/dev-tools/using-api/authentication`
+- `/developers/using-api/authentication/guide-get-token-user`
+  - live redirects.js → `/dev-tools/using-api/authentication#get-token-user`
+  - redirects.v2 → `/dev-tools/using-api/authentication`
+- `/developers/using-api/authentication/guide-impersonate`
+  - live redirects.js → `/dev-tools/using-api/authentication#impersonate`
+  - redirects.v2 → `/dev-tools/using-api/authentication`
+- `/developers/using-api/errors-rejections`
+  - live redirects.js → `/dev-tools/using-api/errors-rejections`
+  - redirects.v2 → `/dev-tools/using-api/errors-rejections`
+- `/developers/using-api/idempotency`
+  - live redirects.js → `/dev-tools/using-api/idempotency`
+  - redirects.v2 → `/dev-tools/using-api/idempotency`
+- `/developers/using-api/pagination`
+  - live redirects.js → `/dev-tools/using-api/pagination`
+  - redirects.v2 → `/dev-tools/using-api/pagination`
+- `/developers/using-api/payment-control`
+  - live redirects.js → `/dev-tools/using-api/payment-control`
+  - redirects.v2 → `/dev-tools/using-api/payment-control`
+- `/developers/using-api/webhooks`
+  - live redirects.js → `/dev-tools/using-api/webhooks`
+  - redirects.v2 → `/dev-tools/using-api/webhooks`
+- `/glossary`
+  - live redirects.js → `/get-started/set-up-swan/glossary`
+  - redirects.v2 → `/get-started/set-up-swan/glossary`
+- `/partnership`
+  - live redirects.js → `/get-started/become-a-partner`
+  - redirects.v2 → `/get-started/become-a-partner`
+- `/partnership/contact`
+  - live redirects.js → `/get-started`
+  - redirects.v2 → `/get-started`
+- `/partnership/document-center/company-registration`
+  - live redirects.js → `/accounts/reference/country-requirements`
+  - redirects.v2 → `/accounts/reference/country-requirements`
+- `/partnership/document-center/company-registration/belgium`
+  - live redirects.js → `/accounts/reference/country-requirements#belgium`
+  - redirects.v2 → `/accounts/reference/country-requirements`
+- `/partnership/document-center/company-registration/france`
+  - live redirects.js → `/accounts/reference/country-requirements#france`
+  - redirects.v2 → `/accounts/reference/country-requirements`
+- `/partnership/document-center/company-registration/germany`
+  - live redirects.js → `/accounts/reference/country-requirements#germany`
+  - redirects.v2 → `/accounts/reference/country-requirements`
+- `/partnership/document-center/company-registration/italy`
+  - live redirects.js → `/accounts/reference/country-requirements#italy`
+  - redirects.v2 → `/accounts/reference/country-requirements`
+- `/partnership/document-center/company-registration/netherlands`
+  - live redirects.js → `/accounts/reference/country-requirements#netherlands`
+  - redirects.v2 → `/accounts/reference/country-requirements`
+- `/partnership/document-center/company-registration/spain`
+  - live redirects.js → `/accounts/reference/country-requirements#spain`
+  - redirects.v2 → `/accounts/reference/country-requirements`
+- `/partnership/document-center/proof-address`
+  - live redirects.js → `/accounts/reference/proof-of-address`
+  - redirects.v2 → `/accounts/reference/proof-of-address`
+- `/partnership/overview/country-coverage`
+  - live redirects.js → `/get-started/become-a-partner/country-coverage`
+  - redirects.v2 → `/get-started/become-a-partner/country-coverage`
+- `/partnership/overview/guide-orias`
+  - live redirects.js → `/get-started/become-a-partner/orias-registration`
+  - redirects.v2 → `/get-started/become-a-partner/orias-registration`
 - `/partnership/overview/protections`
-  - live redirects.js → `/partnership/protections/financial/`
+  - live redirects.js → `/get-started/become-a-partner/protections/financial-protections`
   - redirects.v2 → `/get-started/become-a-partner/protections/financial-protections`
+- `/partnership/overview/rules-regulations`
+  - live redirects.js → `/get-started/become-a-partner/brand-communication`
+  - redirects.v2 → `/get-started/become-a-partner/brand-communication`
+- `/partnership/protections/data`
+  - live redirects.js → `/get-started/become-a-partner/protections/data-protection`
+  - redirects.v2 → `/get-started/become-a-partner/protections/data-protection`
+- `/partnership/protections/financial`
+  - live redirects.js → `/get-started/become-a-partner/protections/financial-protections`
+  - redirects.v2 → `/get-started/become-a-partner/protections/financial-protections`
+- `/partnership/protections/fraud`
+  - live redirects.js → `/get-started/become-a-partner/protections/fraud-obligations`
+  - redirects.v2 → `/get-started/become-a-partner/protections/fraud-obligations`
+- `/partnership/protections/fraud/types`
+  - live redirects.js → `/get-started/become-a-partner/protections/fraud-obligations#types`
+  - redirects.v2 → `/get-started/become-a-partner/protections/fraud-obligations`
+- `/partnership/protections/report-vulnerability`
+  - live redirects.js → `/get-started/become-a-partner/protections#vulnerability-disclosure`
+  - redirects.v2 → `/get-started/become-a-partner/protections`
+- `/topics/accounts`
+  - live redirects.js → `/accounts/concepts/account`
+  - redirects.v2 → `/accounts/concepts/account`
+- `/topics/accounts/billing`
+  - live redirects.js → `/accounts/concepts/billing`
+  - redirects.v2 → `/accounts/concepts/billing`
+- `/topics/accounts/billing/guide-compliant-billing`
+  - live redirects.js → `/accounts/guides/billing/compliant-billing`
+  - redirects.v2 → `/accounts/guides/billing/compliant-billing`
+- `/topics/accounts/billing/guide-get-details`
+  - live redirects.js → `/accounts/guides/billing/get-details`
+  - redirects.v2 → `/accounts/guides/billing/get-details`
+- `/topics/accounts/billing/guide-get-list`
+  - live redirects.js → `/accounts/guides/billing/get-list`
+  - redirects.v2 → `/accounts/guides/billing/get-list`
+- `/topics/accounts/billing/sandbox`
+  - live redirects.js → `/accounts/reference/sandbox-billing`
+  - redirects.v2 → `/accounts/reference/sandbox-billing`
+- `/topics/accounts/closure`
+  - live redirects.js → `/accounts/concepts/closure`
+  - redirects.v2 → `/accounts/concepts/closure`
+- `/topics/accounts/closure/guide-close-api`
+  - live redirects.js → `/accounts/guides/closure/close-link#api`
+  - redirects.v2 → `/accounts/guides/closure/close-link`
+- `/topics/accounts/closure/guide-close-limited`
+  - live redirects.js → `/accounts/guides/closure/close-limited`
+  - redirects.v2 → `/accounts/guides/closure/close-limited`
+- `/topics/accounts/closure/guide-close-link`
+  - live redirects.js → `/accounts/guides/closure/close-link`
+  - redirects.v2 → `/accounts/guides/closure/close-link`
+- `/topics/accounts/closure/guide-close-unlimited`
+  - live redirects.js → `/accounts/guides/closure/close-unlimited`
+  - redirects.v2 → `/accounts/guides/closure/close-unlimited`
+- `/topics/accounts/closure/guide-get-closure-info`
+  - live redirects.js → `/accounts/guides/closure/get-closure-info`
+  - redirects.v2 → `/accounts/guides/closure/get-closure-info`
+- `/topics/accounts/documents`
+  - live redirects.js → `/accounts/concepts/documents`
+  - redirects.v2 → `/accounts/concepts/documents`
+- `/topics/accounts/documents/guide-delete`
+  - live redirects.js → `/accounts/guides/documents/delete`
+  - redirects.v2 → `/accounts/guides/documents/delete`
+- `/topics/accounts/documents/guide-get-info`
+  - live redirects.js → `/accounts/guides/documents/get-info`
+  - redirects.v2 → `/accounts/guides/documents/get-info`
+- `/topics/accounts/documents/guide-request-collection-review`
+  - live redirects.js → `/accounts/guides/documents/request-collection-review`
+  - redirects.v2 → `/accounts/guides/documents/request-collection-review`
+- `/topics/accounts/documents/guide-upload-onboarding`
+  - live redirects.js → `/accounts/guides/documents/upload-onboarding`
+  - redirects.v2 → `/accounts/guides/documents/upload-onboarding`
+- `/topics/accounts/documents/guide-upload-transaction`
+  - live redirects.js → `/accounts/guides/documents/upload-transaction`
+  - redirects.v2 → `/accounts/guides/documents/upload-transaction`
+- `/topics/accounts/documents/sandbox`
+  - live redirects.js → `/accounts/reference/sandbox-documents`
+  - redirects.v2 → `/accounts/reference/sandbox-documents`
+- `/topics/accounts/funding`
+  - live redirects.js → `/accounts/concepts/funding`
+  - redirects.v2 → `/accounts/concepts/funding`
+- `/topics/accounts/funding/guide-add-source`
+  - live redirects.js → `/accounts/guides/funding/add-source`
+  - redirects.v2 → `/accounts/guides/funding/add-source`
+- `/topics/accounts/funding/guide-cancel-source`
+  - live redirects.js → `/accounts/guides/funding/cancel-source`
+  - redirects.v2 → `/accounts/guides/funding/cancel-source`
+- `/topics/accounts/funding/guide-get-info`
+  - live redirects.js → `/accounts/guides/funding/get-info`
+  - redirects.v2 → `/accounts/guides/funding/get-info`
+- `/topics/accounts/funding/guide-initiate-request`
+  - live redirects.js → `/accounts/guides/funding/initiate-request`
+  - redirects.v2 → `/accounts/guides/funding/initiate-request`
+- `/topics/accounts/funding/sandbox`
+  - live redirects.js → `/accounts/reference/sandbox-funding`
+  - redirects.v2 → `/accounts/reference/sandbox-funding`
+- `/topics/accounts/ibans`
+  - live redirects.js → `/accounts/concepts/ibans`
+  - redirects.v2 → `/accounts/concepts/ibans`
+- `/topics/accounts/ibans/guide-add-virtual`
+  - live redirects.js → `/accounts/guides/ibans/add-virtual`
+  - redirects.v2 → `/accounts/guides/ibans/add-virtual`
+- `/topics/accounts/ibans/guide-cancel-virtual`
+  - live redirects.js → `/accounts/guides/ibans/cancel-virtual`
+  - redirects.v2 → `/accounts/guides/ibans/cancel-virtual`
+- `/topics/accounts/ibans/guide-get-info`
+  - live redirects.js → `/accounts/guides/ibans/get-info`
+  - redirects.v2 → `/accounts/guides/ibans/get-info`
+- `/topics/accounts/ibans/guide-validate`
+  - live redirects.js → `/accounts/guides/ibans/validate`
+  - redirects.v2 → `/accounts/guides/ibans/validate`
 - `/topics/accounts/memberships`
   - live redirects.js → `/accounts/concepts/memberships`
   - redirects.v2 → `/accounts/concepts/memberships`
@@ -258,12 +477,123 @@ _none_
 - `/topics/accounts/memberships/guide-update`
   - live redirects.js → `/accounts/guides/memberships/update`
   - redirects.v2 → `/accounts/guides/memberships/update`
+- `/topics/accounts/multiple-accounts`
+  - live redirects.js → `/accounts/concepts/multiple-accounts`
+  - redirects.v2 → `/accounts/concepts/multiple-accounts`
+- `/topics/accounts/multiple-accounts/guide-multiple-accounts-integration`
+  - live redirects.js → `/accounts/concepts/multiple-accounts#create`
+  - redirects.v2 → `/accounts/concepts/multiple-accounts`
+- `/topics/accounts/overview/guide-export`
+  - live redirects.js → `/accounts/guides/account-operations/export`
+  - redirects.v2 → `/accounts/guides/account-operations/export`
+- `/topics/accounts/overview/guide-generate-statement`
+  - live redirects.js → `/accounts/guides/account-operations/generate-statement`
+  - redirects.v2 → `/accounts/guides/account-operations/generate-statement`
+- `/topics/accounts/overview/guide-get-bank-details`
+  - live redirects.js → `/accounts/guides/account-operations/bank-details`
+  - redirects.v2 → `/accounts/guides/account-operations/bank-details`
+- `/topics/capital-deposits`
+  - live redirects.js → `/accounts/guides/onboarding/capital-deposits`
+  - redirects.v2 → `/accounts/guides/onboarding/capital-deposits`
+- `/topics/capital-deposits/france/guide`
+  - live redirects.js → `/accounts/guides/onboarding/capital-deposits#france`
+  - redirects.v2 → `/accounts/guides/onboarding/capital-deposits`
+- `/topics/capital-deposits/france/guide-create-case`
+  - live redirects.js → `/accounts/guides/onboarding/capital-deposits/create-case`
+  - redirects.v2 → `/accounts/guides/onboarding/capital-deposits/create-case`
+- `/topics/capital-deposits/france/guide-upload-documents`
+  - live redirects.js → `/accounts/guides/onboarding/capital-deposits/upload-documents`
+  - redirects.v2 → `/accounts/guides/onboarding/capital-deposits/upload-documents`
+- `/topics/capital-deposits/guide-cancel`
+  - live redirects.js → `/accounts/guides/onboarding/capital-deposits/cancel`
+  - redirects.v2 → `/accounts/guides/onboarding/capital-deposits/cancel`
+- `/topics/capital-deposits/guide-update-company`
+  - live redirects.js → `/accounts/guides/onboarding/capital-deposits/update-company`
+  - redirects.v2 → `/accounts/guides/onboarding/capital-deposits/update-company`
+- `/topics/capital-deposits/guide-update-shareholder-amount`
+  - live redirects.js → `/accounts/guides/onboarding/capital-deposits/update-shareholder-amount`
+  - redirects.v2 → `/accounts/guides/onboarding/capital-deposits/update-shareholder-amount`
 - `/topics/cards/physical/guide-renew`
   - live redirects.js → `/topics/cards/physical/#renew`
   - redirects.v2 → `/cards/guides/physical/renew`
+- `/topics/get-started/choose-integration`
+  - live redirects.js → `/get-started/set-up-swan/choose-integration`
+  - redirects.v2 → `/get-started/set-up-swan/choose-integration`
+- `/topics/get-started/quickstart`
+  - live redirects.js → `/get-started/set-up-swan/quickstart`
+  - redirects.v2 → `/get-started/set-up-swan/quickstart`
+- `/topics/get-started/step-by-step`
+  - live redirects.js → `/get-started/set-up-swan/step-by-step`
+  - redirects.v2 → `/get-started/set-up-swan/step-by-step`
+- `/topics/onboarding`
+  - live redirects.js → `/accounts/guides/onboarding`
+  - redirects.v2 → `/accounts/guides/onboarding`
+- `/topics/onboarding/account-holders`
+  - live redirects.js → `/accounts/guides/onboarding/account-holders`
+  - redirects.v2 → `/accounts/guides/onboarding/account-holders`
+- `/topics/onboarding/account-holders/guide-add-additional-account`
+  - live redirects.js → `/accounts/guides/onboarding/account-holders#add-additional-account`
+  - redirects.v2 → `/accounts/guides/onboarding/account-holders`
+- `/topics/onboarding/account-holders/guide-export`
+  - live redirects.js → `/accounts/guides/onboarding/account-holders#export`
+  - redirects.v2 → `/accounts/guides/onboarding/account-holders`
+- `/topics/onboarding/account-holders/guide-get-status`
+  - live redirects.js → `/accounts/guides/onboarding/account-holders#get-status`
+  - redirects.v2 → `/accounts/guides/onboarding/account-holders`
+- `/topics/onboarding/account-holders/guide-request-first-transfer`
+  - live redirects.js → `/accounts/guides/onboarding/account-holders#request-first-transfer`
+  - redirects.v2 → `/accounts/guides/onboarding/account-holders`
+- `/topics/onboarding/account-holders/sandbox`
+  - live redirects.js → `/accounts/guides/onboarding/account-holders#sandbox`
+  - redirects.v2 → `/accounts/guides/onboarding/account-holders`
+- `/topics/onboarding/company`
+  - live redirects.js → `/accounts/guides/onboarding/company`
+  - redirects.v2 → `/accounts/guides/onboarding/company`
+- `/topics/onboarding/company/fields`
+  - live redirects.js → `/accounts/reference/company-onboarding-fields#fields`
+  - redirects.v2 → `/accounts/reference/company-onboarding-fields`
+- `/topics/onboarding/company/guide-create`
+  - live redirects.js → `/accounts/guides/onboarding/company#create`
+  - redirects.v2 → `/accounts/guides/onboarding/company`
+- `/topics/onboarding/company/guide-update`
+  - live redirects.js → `/accounts/guides/onboarding/company#update`
+  - redirects.v2 → `/accounts/guides/onboarding/company`
+- `/topics/onboarding/individual`
+  - live redirects.js → `/accounts/guides/onboarding/individual`
+  - redirects.v2 → `/accounts/guides/onboarding/individual`
+- `/topics/onboarding/individual/fields`
+  - live redirects.js → `/accounts/reference/individual-onboarding-fields#fields`
+  - redirects.v2 → `/accounts/reference/individual-onboarding-fields`
+- `/topics/onboarding/individual/guide-create`
+  - live redirects.js → `/accounts/guides/onboarding/individual#create`
+  - redirects.v2 → `/accounts/guides/onboarding/individual`
+- `/topics/onboarding/individual/guide-update`
+  - live redirects.js → `/accounts/guides/onboarding/individual#update`
+  - redirects.v2 → `/accounts/guides/onboarding/individual`
+- `/topics/onboarding/overview/guide-export`
+  - live redirects.js → `/accounts/guides/onboarding#export-onboarding-data`
+  - redirects.v2 → `/accounts/guides/onboarding`
+- `/topics/onboarding/overview/guide-finalize`
+  - live redirects.js → `/accounts/guides/onboarding#finalize`
+  - redirects.v2 → `/accounts/guides/onboarding`
+- `/topics/onboarding/overview/guide-get-info`
+  - live redirects.js → `/accounts/guides/onboarding#get-info`
+  - redirects.v2 → `/accounts/guides/onboarding`
+- `/topics/onboarding/overview/guide-get-list`
+  - live redirects.js → `/accounts/guides/onboarding#get-list`
+  - redirects.v2 → `/accounts/guides/onboarding`
+- `/topics/onboarding/overview/guide-migrate`
+  - live redirects.js → `/accounts/guides/onboarding#migrate`
+  - redirects.v2 → `/accounts/guides/onboarding`
+- `/topics/projects`
+  - live redirects.js → `/get-started/set-up-swan/create-project`
+  - redirects.v2 → `/get-started/set-up-swan/create-project`
+- `/topics/projects/guide-activate`
+  - live redirects.js → `/get-started/set-up-swan/create-project`
+  - redirects.v2 → `/get-started/set-up-swan/create-project`
 
 ## Chain rewrites
-168 live alias(es) whose target is now a v2 source — repointed to final route in `redirects.chain-rewrites.generated.js`.
+90 live alias(es) whose target is now a v2 source — repointed to final route in `redirects.chain-rewrites.generated.js`.
 
 ## Fuzzy resolutions still in effect (14) — review before flip
 

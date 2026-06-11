@@ -1,8 +1,10 @@
 ---
-title: Accounts overview
+title: "Account"
 ---
 
-# Accounts
+# Account
+
+<p className="ia-lede">The Swan account model: country, language, type and level, balances, transactions, documents, and statuses.</p>
 
 Use Swan accounts to receive and initiate payments, as well as deposit money.
 All money moves through accounts, so if you're using Swan, you're using an account.
@@ -24,7 +26,7 @@ All IBANs associated with this account have the prefix `FR`.
 
 Swan offers the following account countries:
 
-import AccountCountryList from '../partials/_account-countries.mdx';
+import AccountCountryList from '../../topics/partials/_account-countries.mdx';
 
 <AccountCountryList />
 
@@ -57,11 +59,11 @@ If account members choose a different preferred language than the account holder
 
 Several account languages are available:
 
-import Languages from '../partials/_available-languages.mdx';
+import Languages from '../../topics/partials/_available-languages.mdx';
 
 <Languages />
 
-import FinnishLimitations from '../partials/_finnish.mdx';
+import FinnishLimitations from '../../topics/partials/_finnish.mdx';
 
 :::info Finnish (`fi`)
 <FinnishLimitations />
@@ -77,7 +79,7 @@ There are two possible values for each:
 
 Accounts start with the level `Limited` and the account type `EMoney`.
 The level changes from `Limited` to `Unlimited` when the [account holder verification status](/accounts/guides/onboarding/account-holders#verification-process-statuses) changes to `Verified`.
-The account type changes from `EMoney` to `PaymentService` when the [account's main IBAN](./ibans/index.mdx#main) is available to the account holder.
+The account type changes from `EMoney` to `PaymentService` when the [account's main IBAN](/accounts/concepts/ibans#main) is available to the account holder.
 Accounts with the level `Unlimited` and the account type `PaymentService` are fully functional accounts.
 
 Swan accounts have different capabilities determined by the combination of these values.
@@ -110,7 +112,7 @@ These restrictions primarily impact first transfers during the account holder ve
 
 Accounts at Swan are designed for credit balances only.
 Swan account balances can **never go below zero**, meaning Swan rejects outgoing payments if the account's `Available` balance isn't sufficient to cover the total payment amount.
-The only exception is the automatic [billing of banking fees](./billing/index.mdx#fees-swan-standard).
+The only exception is the automatic [billing of banking fees](/accounts/concepts/billing#fees-swan-standard).
 
 There are four different account balances.
 
@@ -133,7 +135,7 @@ This example involves the balances `Booked`, `Pending`, and `Available`.
 
 This example involves the balances `Booked`, `Reserved`, and `Available`.
 
-1. A merchant's account has a `Booked` balance of €200 thanks to [accepting a customer's payment](../merchants/online/sdd/index.mdx) through SEPA Direct Debit.
+1. A merchant's account has a `Booked` balance of €200 thanks to [accepting a customer's payment](/topics/merchants/online/sdd/) through SEPA Direct Debit.
 1. For this example, the rolling reserve is 15% over 15 business days (exact rolling reserve amounts can change based on your contract with Swan). Therefore, the `Reserved` balance is €30 for 15 days.
 1. The `Available` balance from this transaction is €170 for the duration of the rolling reserve period (€200 - €30 = €170).
 1. After 15 days, the `Reserved` balance is released and the full `Available` balance is €200.
@@ -144,9 +146,9 @@ An account is essentially a list of transactions, and transactions directly impa
 
 There are six possible statuses for Swan transactions.
 Each payment method uses a **different combination** of these statuses with specific flows.
-Refer to the schemas for [credit transfers](../payments/credit-transfers/index.mdx#statuses), [direct debits](../payments/direct-debit/index.mdx#statuses), and [cards](../payments/cards/index.mdx#statuses) for more information about statuses for that payment method.
+Refer to the schemas for [credit transfers](/topics/payments/credit-transfers/#statuses), [direct debits](/topics/payments/direct-debit/#statuses), and [cards](/topics/payments/cards/#statuses) for more information about statuses for that payment method.
 
-import TransactionStatuses from '../partials/_transaction-statuses.mdx';
+import TransactionStatuses from '../../topics/partials/_transaction-statuses.mdx';
 
 <TransactionStatuses />
 
@@ -155,7 +157,7 @@ import TransactionStatuses from '../partials/_transaction-statuses.mdx';
 ### Account statements {#account-statements}
 
 Each month, Swan **generates account statements** automatically for **all Swan accounts** using Coordinated Universal Time +1 (UTC +1).
-Statements include all `Booked` transactions from the previous month, ordered by [`sequenceNumber`](../payments/index.mdx#sequence-number).
+Statements include all `Booked` transactions from the previous month, ordered by [`sequenceNumber`](/topics/payments/#sequence-number).
 
 Access account statements with the API by calling the `account` query and adding the `statement` object.
 They're also available from your **Dashboard** > **Data** > **Accounts**, and, if you're using it, Swan's Web Banking interface.
@@ -170,7 +172,7 @@ All account statements have a `period` attribute.
 
 #### Generating statements {#statements-generate}
 
-You can [generate account statements](./overview/guide-generate-statement.mdx) for a period of up to **three months** with the `generateAccountStatement` mutation.
+You can [generate account statements](/accounts/guides/account-operations/generate-statement) for a period of up to **three months** with the `generateAccountStatement` mutation.
 These statements always have `period` = `Custom`.
 
 If you generate two statements with identical parameters (`language`, `openingDate`, `closingDate`), Swan only generates one statement.
@@ -198,7 +200,7 @@ You might need to **get your custom statements approved**. Please work with your
 
 ### Bank details document {#bank-details}
 
-You can [get a PDF with your bank details](./overview/guide-get-bank-details.mdx) using the API and from Swan's interfaces.
+You can [get a PDF with your bank details](/accounts/guides/account-operations/bank-details) using the API and from Swan's interfaces.
 Bank details are available for main and virtual IBANs.
 In French, this document is called a **RIB**, or a *relevé d'identité bancaire*.
 
@@ -218,7 +220,7 @@ Bank details documents include:
 1. Disclaimer: "In partnership with Swan".
 :::info Swan partnership disclaimer
 The Swan partnership disclaimer is required because [Swan assumes responsibility](/get-started/become-a-partner/licence-regulatory-status#license) for all sensitive banking operations.
-It's similar to the [statement printed on physical cards](../cards/design/index.mdx#standard) indicating that cards are issued by Swan.
+It's similar to the [statement printed on physical cards](/topics/cards/design/#standard) indicating that cards are issued by Swan.
 :::
 
 6. Title of the document.
@@ -229,11 +231,11 @@ It's similar to the [statement printed on physical cards](../cards/design/index.
 
 ### Transaction statements {#transaction-statements}
 
-import TransactionStatements from '../partials/_transaction-statements.mdx';
+import TransactionStatements from '../../topics/partials/_transaction-statements.mdx';
 
 <TransactionStatements />
 
-Refer to the [transactions section](../payments/index.mdx#transactions-statements) for more information.
+Refer to the [transactions section](/topics/payments/#transactions-statements) for more information.
 
 ## Account statuses {#statuses}
 
@@ -277,8 +279,10 @@ As long as the `Booked` balance doesn't equal zero:
 If funds remain in a `Closing` account **after 10 years**, Swan transfers the funds to France's *Caisse des dépôts et consignations* (Deposits and Consignments Fund).
 :::
 
-## Guides {#guides}
+## Related
 
-- [Generate an account statement](./overview/guide-generate-statement.mdx)
-- [Get bank details PDF](./overview/guide-get-bank-details.mdx)
-- [Get information about an account](./ibans/guide-get-info.mdx) (in IBAN section)
+- [Account onboarding](/accounts/guides/onboarding)
+- [Generate a statement](/accounts/guides/account-operations/generate-statement)
+- [Get bank details](/accounts/guides/account-operations/bank-details)
+- [IBANs](/accounts/concepts/ibans)
+- [Billing](/accounts/concepts/billing)

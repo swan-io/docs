@@ -42,11 +42,15 @@ module.exports = {
         { type: "doc", docId: "get-started/index", position: "left", label: "Get started" },
         { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
         { type: "custom-sectionDropdown", position: "left", label: "Accounts", to: "/accounts", items: [
-          { label: "Onboarding", to: "/accounts/guides/onboarding/" },
+          { label: "Onboarding guides", to: "/accounts/guides/onboarding/" },
+          { label: "Account", to: "/accounts/concepts/account" },
           { label: "Memberships", to: "/accounts/concepts/memberships" },
+          { label: "Multiple accounts", to: "/accounts/concepts/multiple-accounts" },
           { label: "IBANs", to: "/accounts/concepts/ibans" },
-          { label: "Funding", to: "/accounts/concepts/funding" },
+          { label: "Billing", to: "/accounts/concepts/billing" },
           { label: "Closure", to: "/accounts/concepts/closure" },
+          { label: "Documents", to: "/accounts/concepts/documents" },
+          { label: "Funding", to: "/accounts/concepts/funding" },
         ]},
         { type: "custom-sectionDropdown", position: "left", label: "Cards", to: "/cards", items: [
           { label: "Virtual cards", to: "/cards/concepts/virtual" },

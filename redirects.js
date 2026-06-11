@@ -81,8 +81,8 @@ module.exports = [
   },
   { from: "/api/testing-api", to: "/dev-tools/tools/testing-api" },
   { from: "/api/webhook", to: "/dev-tools/using-api/webhooks" },
-  { from: "/concept/account", to: "/topics/accounts/" },
-  { from: "/concept/account-funding", to: "/topics/accounts/funding/" },
+  { from: "/concept/account", to: "/accounts/concepts/account" }, // DOC-1814: chain-rewrite (was /topics/accounts/)
+  { from: "/concept/account-funding", to: "/accounts/concepts/funding" },
   {
     from: "/concept/account-holder",
     to: "/accounts/guides/onboarding/account-holders",
@@ -90,7 +90,7 @@ module.exports = [
   { from: "/concept/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/concept/capital-deposit", to: "/accounts/guides/onboarding/capital-deposits" },
   { from: "/concept/card", to: "/topics/cards/" },
-  { from: "/concept/iban", to: "/topics/accounts/ibans/" },
+  { from: "/concept/iban", to: "/accounts/concepts/ibans" },
   { from: "/concept/merchants-accepting-payments", to: "/topics/merchants/" },
   { from: "/concept/overview", to: "/get-started/set-up-swan/glossary" },
   { from: "/concept/payment", to: "/topics/payments/" },
@@ -107,14 +107,14 @@ module.exports = [
     to: "/accounts/guides/onboarding/capital-deposits#france",
   },
   { from: "/guide/create-a-new-account", to: "/accounts/guides/onboarding#links" },
-  { from: "/guide/fund-an-account", to: "/topics/accounts/funding/" },
+  { from: "/guide/fund-an-account", to: "/accounts/concepts/funding" },
   {
     from: "/guide/give-access-to-your-account",
     to: "/accounts/concepts/memberships", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   },
   { from: "/guide/issue-cards", to: "/topics/cards/overview/guide-issue" },
   { from: "/guide/make-a-transaction", to: "/topics/payments/" },
-  { from: "/guide/manage-accounts-and-ibans", to: "/topics/accounts/ibans/" },
+  { from: "/guide/manage-accounts-and-ibans", to: "/accounts/concepts/ibans" },
   { from: "/guide/quickstart", to: "/get-started/set-up-swan/step-by-step" },
   { from: "/guide/use-our-api", to: "/dev-tools" },
   { from: "/guide/use-our-webhooks", to: "/dev-tools/using-api/webhooks" },
@@ -131,7 +131,7 @@ module.exports = [
   },
   {
     from: "/regulatory/build-a-compliant-billing-offer",
-    to: "/topics/accounts/billing/guide-compliant-billing",
+    to: "/accounts/guides/billing/compliant-billing",
   },
   {
     from: "/regulatory/go-live-process",
@@ -192,15 +192,15 @@ module.exports = [
   },
   {
     from: "/concept/account-funding/funding-source",
-    to: "/topics/accounts/funding/#sources",
+    to: "/accounts/concepts/funding#sources",
   },
   {
     from: "/concept/account-funding/payment-mandate",
-    to: "/topics/accounts/funding/#mandates",
+    to: "/accounts/concepts/funding#mandates",
   },
   {
     from: "/concept/account-funding/rolling-reserve",
-    to: "/topics/accounts/funding/#rolling-reserve",
+    to: "/accounts/concepts/funding#rolling-reserve",
   },
   {
     from: "/concept/account-holder/country-requirements",
@@ -209,20 +209,20 @@ module.exports = [
   { from: "/concept/account-holder/onboarding", to: "/accounts/guides/onboarding" },
   {
     from: "/concept/account-holder/supporting-documents",
-    to: "/topics/accounts/documents/",
+    to: "/accounts/concepts/documents",
   },
-  { from: "/concept/account/balances", to: "/topics/accounts/#balances" },
-  { from: "/concept/account/billing", to: "/topics/accounts/billing/" },
+  { from: "/concept/account/balances", to: "/accounts/concepts/account#balances" }, // DOC-1814: chain-rewrite (was /topics/accounts/#balances)
+  { from: "/concept/account/billing", to: "/accounts/concepts/billing" },
   {
     from: "/concept/account/transactions",
-    to: "/topics/accounts/#transactions",
+    to: "/accounts/concepts/account#transactions", // DOC-1814: chain-rewrite (was /topics/accounts/#transactions)
   },
-  { from: "/concept/iban/iban-issuing", to: "/topics/accounts/ibans/#main" },
+  { from: "/concept/iban/iban-issuing", to: "/accounts/concepts/ibans#main" },
   {
     from: "/concept/iban/iban-validation",
-    to: "/topics/accounts/ibans/guide-validate",
+    to: "/accounts/guides/ibans/validate",
   },
-  { from: "/concept/iban/local-ibans", to: "/topics/accounts/ibans/#local" },
+  { from: "/concept/iban/local-ibans", to: "/accounts/concepts/ibans#local" },
   {
     from: "/concept/merchants-accepting-payments/french-checks-for-merchants",
     to: "/topics/merchants/in-person/checks/",
@@ -270,10 +270,10 @@ module.exports = [
   },
   {
     from: "/guide/fund-an-account/sdd-b2b",
-    to: "/topics/accounts/funding/#methods-dd",
+    to: "/accounts/concepts/funding#methods-dd",
   },
   { from: "/help/faq/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
-  { from: "/help/faq/accounts", to: "/topics/accounts/" },
+  { from: "/help/faq/accounts", to: "/accounts/concepts/account" }, // DOC-1814: chain-rewrite (was /topics/accounts/)
   { from: "/help/faq/api", to: "/dev-tools" },
   { from: "/help/faq/cards", to: "/topics/cards/" },
   { from: "/help/faq/consent", to: "/topics/users/consent/" },
@@ -309,7 +309,7 @@ module.exports = [
   },
   {
     from: "/help/faq/accounts/can-i-create-my-own-account-statement",
-    to: "/topics/accounts/overview/guide-generate-statement",
+    to: "/accounts/guides/account-operations/generate-statement",
   },
   {
     from: "/help/faq/accounts/how-can-i-add-account-members-to-an-account",
@@ -325,7 +325,7 @@ module.exports = [
   },
   {
     from: "/help/faq/accounts/which-currencies-are-available",
-    to: "/topics/accounts/",
+    to: "/accounts/concepts/account", // DOC-1814: chain-rewrite (was /topics/accounts/)
   },
   {
     from: "/help/faq/api/can-i-use-the-same-onboarding-url-i-generated-with-the-api-several-times",
@@ -474,7 +474,7 @@ module.exports = [
   },
   {
     from: "/topics/accounts/overview/guide-close",
-    to: "/topics/accounts/closure",
+    to: "/accounts/concepts/closure",
   },
   {
     from: "/topics/merchants/sdd",
@@ -494,7 +494,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/documents",
-    to: "/topics/accounts/documents/",
+    to: "/accounts/concepts/documents",
   },
   {
     from: "/topics/onboarding/documents/guide-get-list",
@@ -502,11 +502,11 @@ module.exports = [
   },
   {
     from: "/topics/accounts/documents/guide-upload",
-    to: "/topics/accounts/documents/guide-upload-onboarding",
+    to: "/accounts/guides/documents/upload-onboarding",
   },
   {
     from: "/topics/accounts/funding/guide-cancel-request",
-    to: "/topics/accounts/funding/",
+    to: "/accounts/concepts/funding",
   },
   {
     from: "/partnership/overview/protections",
@@ -514,7 +514,7 @@ module.exports = [
   },
   {
     from: '/preview/belgian-ibans',
-    to: '/topics/accounts/ibans/#local',
+    to: '/accounts/concepts/ibans#local',
   },
   {
     from: '/preview/card-insurance/',
@@ -526,7 +526,7 @@ module.exports = [
   },
   {
     from: '/preview/belgian-ibans/belgian-ibans',
-    to: '/topics/accounts/ibans/#local',
+    to: '/accounts/concepts/ibans#local',
   },
   {
     from: '/preview/belgian-ibans/partnership_document-center_company-registration_belgium',
@@ -636,7 +636,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/company/fields",
-    to: "/accounts/guides/onboarding/company#fields",
+    to: "/accounts/reference/company-onboarding-fields#fields",
   },
   {
     from: "/topics/onboarding/company/guide-create",
@@ -652,7 +652,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/individual/fields",
-    to: "/accounts/guides/onboarding/individual#fields",
+    to: "/accounts/reference/individual-onboarding-fields#fields",
   },
   {
     from: "/topics/onboarding/individual/guide-create",
@@ -709,5 +709,145 @@ module.exports = [
   {
     from: "/topics/capital-deposits/guide-update-shareholder-amount",
     to: "/accounts/guides/onboarding/capital-deposits/update-shareholder-amount",
+  },
+  {
+    from: "/topics/accounts",
+    to: "/accounts/concepts/account",
+  },
+  {
+    from: "/topics/accounts/closure",
+    to: "/accounts/concepts/closure",
+  },
+  {
+    from: "/topics/accounts/closure/guide-close-api",
+    to: "/accounts/guides/closure/close-link#api",
+  },
+  {
+    from: "/topics/accounts/closure/guide-close-limited",
+    to: "/accounts/guides/closure/close-limited",
+  },
+  {
+    from: "/topics/accounts/closure/guide-close-link",
+    to: "/accounts/guides/closure/close-link",
+  },
+  {
+    from: "/topics/accounts/closure/guide-close-unlimited",
+    to: "/accounts/guides/closure/close-unlimited",
+  },
+  {
+    from: "/topics/accounts/closure/guide-get-closure-info",
+    to: "/accounts/guides/closure/get-closure-info",
+  },
+  {
+    from: "/topics/accounts/ibans",
+    to: "/accounts/concepts/ibans",
+  },
+  {
+    from: "/topics/accounts/ibans/guide-add-virtual",
+    to: "/accounts/guides/ibans/add-virtual",
+  },
+  {
+    from: "/topics/accounts/ibans/guide-cancel-virtual",
+    to: "/accounts/guides/ibans/cancel-virtual",
+  },
+  {
+    from: "/topics/accounts/ibans/guide-get-info",
+    to: "/accounts/guides/ibans/get-info",
+  },
+  {
+    from: "/topics/accounts/ibans/guide-validate",
+    to: "/accounts/guides/ibans/validate",
+  },
+  {
+    from: "/topics/accounts/multiple-accounts",
+    to: "/accounts/concepts/multiple-accounts",
+  },
+  {
+    from: "/topics/accounts/multiple-accounts/guide-multiple-accounts-integration",
+    to: "/accounts/concepts/multiple-accounts#create",
+  },
+  {
+    from: "/topics/accounts/overview/guide-export",
+    to: "/accounts/guides/account-operations/export",
+  },
+  {
+    from: "/topics/accounts/overview/guide-generate-statement",
+    to: "/accounts/guides/account-operations/generate-statement",
+  },
+  {
+    from: "/topics/accounts/overview/guide-get-bank-details",
+    to: "/accounts/guides/account-operations/bank-details",
+  },
+  {
+    from: "/topics/accounts/funding",
+    to: "/accounts/concepts/funding",
+  },
+  {
+    from: "/topics/accounts/funding/guide-add-source",
+    to: "/accounts/guides/funding/add-source",
+  },
+  {
+    from: "/topics/accounts/funding/guide-cancel-source",
+    to: "/accounts/guides/funding/cancel-source",
+  },
+  {
+    from: "/topics/accounts/funding/guide-get-info",
+    to: "/accounts/guides/funding/get-info",
+  },
+  {
+    from: "/topics/accounts/funding/guide-initiate-request",
+    to: "/accounts/guides/funding/initiate-request",
+  },
+  {
+    from: "/topics/accounts/funding/sandbox",
+    to: "/accounts/reference/sandbox-funding",
+  },
+  {
+    from: "/topics/accounts/billing",
+    to: "/accounts/concepts/billing",
+  },
+  {
+    from: "/topics/accounts/billing/guide-compliant-billing",
+    to: "/accounts/guides/billing/compliant-billing",
+  },
+  {
+    from: "/topics/accounts/billing/guide-get-details",
+    to: "/accounts/guides/billing/get-details",
+  },
+  {
+    from: "/topics/accounts/billing/guide-get-list",
+    to: "/accounts/guides/billing/get-list",
+  },
+  {
+    from: "/topics/accounts/billing/sandbox",
+    to: "/accounts/reference/sandbox-billing",
+  },
+  {
+    from: "/topics/accounts/documents",
+    to: "/accounts/concepts/documents",
+  },
+  {
+    from: "/topics/accounts/documents/guide-delete",
+    to: "/accounts/guides/documents/delete",
+  },
+  {
+    from: "/topics/accounts/documents/guide-get-info",
+    to: "/accounts/guides/documents/get-info",
+  },
+  {
+    from: "/topics/accounts/documents/guide-request-collection-review",
+    to: "/accounts/guides/documents/request-collection-review",
+  },
+  {
+    from: "/topics/accounts/documents/guide-upload-onboarding",
+    to: "/accounts/guides/documents/upload-onboarding",
+  },
+  {
+    from: "/topics/accounts/documents/guide-upload-transaction",
+    to: "/accounts/guides/documents/upload-transaction",
+  },
+  {
+    from: "/topics/accounts/documents/sandbox",
+    to: "/accounts/reference/sandbox-documents",
   },
 ];

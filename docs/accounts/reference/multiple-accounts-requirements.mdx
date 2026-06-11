@@ -1,5 +1,133 @@
 ---
-title: "Multiple-accounts requirements"
+title: "Multiple accounts requirements"
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Multiple accounts requirements
+
+<p className="ia-lede">Reference for who can create additional accounts, the account holder criteria, rejection reasons, and the account creation limit for the Multiple Accounts feature.</p>
+
+## Requirements {#requirements}
+
+### Legal representative requirements {#legal-rep-requirements}
+
+Only the [legal representative](/accounts/guides/onboarding/company#related-individuals) (account admin) of the first account can create additional accounts. 
+All accounts under the same account holder automatically share the **same** legal representative. This ensures the same person manages all accounts under the same account holder.
+
+Requests to change the legal representative follow the standard process, and apply across all accounts under the same account holder.
+
+### Account holder requirements {#account-holder-requirements}
+
+The following criteria must be met by the account holder:
+
+| **Requirement** | **Value** |
+| --- | --- |
+| `accountHolder.verificationStatus` | `Verified` |
+| `accountHolder.status` | `Enabled` |
+| `accountHolder.type` | `Company` |
+| `accountHolder.account.status` | `Opened` |
+
+:::caution Suspended account restriction
+If one or more of the account holder's accounts have a `Suspended` status, the account holder can't open additional accounts. This security measure prevents bypassing account restrictions through new account creation.
+:::
+
+## Rejections {#rejections}
+
+Multiple account creations can be rejected for the following reasons:
+
+| Rejection reason | Description |
+| --- | --- |
+| `AccountHolderNotFoundRejection` | The provided account holder ID doesn't match an existing `AccountHolder`. |
+| `ForbiddenRejection` | The project isn't allowed to create multiple accounts, or the wrong context is used. |
+| `AccountMembershipNotEligibleRejection` | The user isn't eligible to create the account. They must be the account legal representative. |
+| `AccountHolderTypeNotEligibleRejection` | The account holder type must be `Company`. |
+| `AccountHolderStatusNotEligibleRejection` | The account holder status must be `Enabled`. |
+| `AccountHolderVerificationStatusNotEligibleRejection` | The account holder must have a `Verified` KYC status. |
+| `AccountHolderAccountsTypeNotEligibleRejection` | All associated accounts must be `EndCustomer` or `CapitalDepositMainAccount`. |
+| `AccountHolderAccountsStatusNotEligibleRejection` | No active accounts available. All associated accounts are `Closed`, `Closing`, or `Suspended`. |
+| `AccountHolderAccountsSuspendedStatusNotEligibleRejection` | One or more accounts are `Suspended` for compliance reasons. Account creation is blocked. |
+| `AccountHolderAccountsCreationLimitRejection` | The maximum number of accounts created has been reached (all account statuses count toward the limit). Check project settings for the Multiple Accounts feature. |
+| `AccountHolderProjectSettingNotEligibleRejection` | Account creation is disabled in project settings. |
+
+## Account creation limit {#account-creation-limit}
+
+By default, users are limited to one account until the Multiple Accounts feature is activated. 
+
+After the feature is activated, users may be granted a maximum number of accounts, which is defined during the compliance review and documented in a welcome letter. 
+
+Users are restricted from creating new accounts after reaching the maximum limit.
+
+Call the `projectInfo` query to check your account creation limit.
+
+This limit prevents fraud patterns involving successive opening and closing of accounts to bypass account creation limits.
+
+:::info Account status 
+All account statuses, including `Suspended`, `Closing`, or `Closed`, count towards the maximum limit.
+:::
+
+## Check your account creation limit {#check-limit}
+
+1. Call the `projectInfo` query (line 2).
+1. Select `multipleAccountsSettings` (line 3).
+1. Add `accountCreationLimit` and `canOpenAccount` to check your account creation limit (lines 4-5).
+
+### Query {#query-account-creation-limit}
+
+<a href="https://explorer.swan.io?query=cXVlcnkgQWNjb3VudENyZWF0aW9uTGltaXQgewogIHByb2plY3RJbmZvIHsKICAgIG11bHRpcGxlQWNjb3VudHNTZXR0aW5ncyB7CiAgICAgIGFjY291bnRDcmVhdGlvbkxpbWl0CiAgICAgIGNhbk9wZW5BY2NvdW50CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2-5} showLineNumbers
+query AccountCreationLimit {
+  projectInfo {
+    multipleAccountsSettings {
+      accountCreationLimit
+      canOpenAccount
+    }
+  }
+}
+```
+### Payloads
+
+The `multipleAccountsSettings` query returns a payload that indicates the current status of the Multiple Accounts feature for an account holder.
+
+**Example one: Multiple Accounts is active**
+
+This payload shows the response when Multiple Accounts has **not** been **activated**.
+
+- `accountCreationLimit`: `1` indicates that only the initial account can be created (line 5).
+- `canOpenAccount`: `false` confirms that additional accounts cannot be created (line 6).
+
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "multipleAccountsSettings": {
+        "accountCreationLimit": 1,
+        "canOpenAccount": false
+      }
+    }
+  }
+}
+```
+
+**Example two: Multiple Accounts is active**
+
+This payload shows the response when Multiple Accounts has been **activated**.
+
+- `accountCreationLimit`: `6` shows that a maximum of six accounts can be created (line 5).
+- `canOpenAccount`: `true` confirms that additional accounts can be opened (line 6).
+
+```json {5,6} showLineNumbers
+{
+  "data": {
+    "projectInfo": {
+      "multipleAccountsSettings": {
+        "accountCreationLimit": 6,
+        "canOpenAccount": true
+      }
+    }
+  }
+}
+```
+
+## Related
+
+[Multiple accounts](/accounts/concepts/multiple-accounts)

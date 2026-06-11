@@ -85,10 +85,10 @@ module.exports = [
   { from: "/concept/account-funding", to: "/topics/accounts/funding/" },
   {
     from: "/concept/account-holder",
-    to: "/topics/onboarding/account-holders/",
+    to: "/accounts/guides/onboarding/account-holders",
   },
   { from: "/concept/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
-  { from: "/concept/capital-deposit", to: "/topics/capital-deposits/" },
+  { from: "/concept/capital-deposit", to: "/accounts/guides/onboarding/capital-deposits" },
   { from: "/concept/card", to: "/topics/cards/" },
   { from: "/concept/iban", to: "/topics/accounts/ibans/" },
   { from: "/concept/merchants-accepting-payments", to: "/topics/merchants/" },
@@ -104,9 +104,9 @@ module.exports = [
   { from: "/guide/control-card-usage", to: "/topics/payments/cards/sandbox" },
   {
     from: "/guide/create-a-capital-deposit",
-    to: "/topics/capital-deposits/france/guide",
+    to: "/accounts/guides/onboarding/capital-deposits#france",
   },
-  { from: "/guide/create-a-new-account", to: "/topics/onboarding/#links" },
+  { from: "/guide/create-a-new-account", to: "/accounts/guides/onboarding#links" },
   { from: "/guide/fund-an-account", to: "/topics/accounts/funding/" },
   {
     from: "/guide/give-access-to-your-account",
@@ -157,7 +157,7 @@ module.exports = [
   },
   {
     from: "/user-flow-diagrams/onboardings",
-    to: "/topics/onboarding/company/#diagrams",
+    to: "/accounts/guides/onboarding/company#diagrams",
   },
   { from: "/user-flow-diagrams/passcode-reset", to: "/topics/users/#login" },
   { from: "/user-flow-diagrams/sign-in", to: "/topics/users/#signup" },
@@ -204,9 +204,9 @@ module.exports = [
   },
   {
     from: "/concept/account-holder/country-requirements",
-    to: "/topics/onboarding/#country-reqs",
+    to: "/accounts/guides/onboarding#country-reqs",
   },
-  { from: "/concept/account-holder/onboarding", to: "/topics/onboarding/" },
+  { from: "/concept/account-holder/onboarding", to: "/accounts/guides/onboarding" },
   {
     from: "/concept/account-holder/supporting-documents",
     to: "/topics/accounts/documents/",
@@ -279,9 +279,9 @@ module.exports = [
   { from: "/help/faq/consent", to: "/topics/users/consent/" },
   {
     from: "/help/faq/kyc-and-verification-process",
-    to: "/topics/onboarding/account-holders/",
+    to: "/accounts/guides/onboarding/account-holders",
   },
-  { from: "/help/faq/onboarding", to: "/topics/onboarding/" },
+  { from: "/help/faq/onboarding", to: "/accounts/guides/onboarding" },
   { from: "/help/faq/sepa-transactions", to: "/topics/payments/#sepa" },
   {
     from: "/concept/payment/international-credit-transfers/get-a-quote",
@@ -329,11 +329,11 @@ module.exports = [
   },
   {
     from: "/help/faq/api/can-i-use-the-same-onboarding-url-i-generated-with-the-api-several-times",
-    to: "/topics/onboarding/#links",
+    to: "/accounts/guides/onboarding#links",
   },
   {
     from: "/help/faq/api/how-can-i-use-the-state-field-during-the-onboarding",
-    to: "/topics/onboarding/#links",
+    to: "/accounts/guides/onboarding#links",
   },
   {
     from: "/help/faq/api/i-encountered-a-bug-while-using-the-api-what-should-i-do",
@@ -345,7 +345,7 @@ module.exports = [
   },
   {
     from: "/help/faq/api/i-get-an-error-500-at-the-end-of-onboarding.-why",
-    to: "/topics/onboarding/#links",
+    to: "/accounts/guides/onboarding#links",
   },
   {
     from: "/help/faq/api/to-enter-the-list-of-uri-redirects-can-i-use-a-domain-instead-of-an-absolute-uri",
@@ -498,7 +498,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/documents/guide-get-list",
-    to: "/topics/onboarding/overview/guide-get-list",
+    to: "/accounts/guides/onboarding#get-list",
   },
   {
     from: "/topics/accounts/documents/guide-upload",
@@ -601,5 +601,113 @@ module.exports = [
   {
     from: '/topics/merchants/online/checks/sandbox',
     to: '/topics/merchants/in-person/checks/sandbox',
+  },
+  {
+    from: "/topics/onboarding",
+    to: "/accounts/guides/onboarding",
+  },
+  {
+    from: "/topics/onboarding/account-holders",
+    to: "/accounts/guides/onboarding/account-holders",
+  },
+  {
+    from: "/topics/onboarding/account-holders/guide-add-additional-account",
+    to: "/accounts/guides/onboarding/account-holders#add-additional-account",
+  },
+  {
+    from: "/topics/onboarding/account-holders/guide-get-status",
+    to: "/accounts/guides/onboarding/account-holders#get-status",
+  },
+  {
+    from: "/topics/onboarding/account-holders/guide-request-first-transfer",
+    to: "/accounts/guides/onboarding/account-holders#request-first-transfer",
+  },
+  {
+    from: "/topics/onboarding/account-holders/guide-export",
+    to: "/accounts/guides/onboarding/account-holders#export",
+  },
+  {
+    from: "/topics/onboarding/account-holders/sandbox",
+    to: "/accounts/guides/onboarding/account-holders#sandbox",
+  },
+  {
+    from: "/topics/onboarding/company",
+    to: "/accounts/guides/onboarding/company",
+  },
+  {
+    from: "/topics/onboarding/company/fields",
+    to: "/accounts/guides/onboarding/company#fields",
+  },
+  {
+    from: "/topics/onboarding/company/guide-create",
+    to: "/accounts/guides/onboarding/company#create",
+  },
+  {
+    from: "/topics/onboarding/company/guide-update",
+    to: "/accounts/guides/onboarding/company#update",
+  },
+  {
+    from: "/topics/onboarding/individual",
+    to: "/accounts/guides/onboarding/individual",
+  },
+  {
+    from: "/topics/onboarding/individual/fields",
+    to: "/accounts/guides/onboarding/individual#fields",
+  },
+  {
+    from: "/topics/onboarding/individual/guide-create",
+    to: "/accounts/guides/onboarding/individual#create",
+  },
+  {
+    from: "/topics/onboarding/individual/guide-update",
+    to: "/accounts/guides/onboarding/individual#update",
+  },
+  {
+    from: "/topics/onboarding/overview/guide-migrate",
+    to: "/accounts/guides/onboarding#migrate",
+  },
+  {
+    from: "/topics/onboarding/overview/guide-get-info",
+    to: "/accounts/guides/onboarding#get-info",
+  },
+  {
+    from: "/topics/onboarding/overview/guide-get-list",
+    to: "/accounts/guides/onboarding#get-list",
+  },
+  {
+    from: "/topics/onboarding/overview/guide-export",
+    to: "/accounts/guides/onboarding#export-onboarding-data",
+  },
+  {
+    from: "/topics/onboarding/overview/guide-finalize",
+    to: "/accounts/guides/onboarding#finalize",
+  },
+  {
+    from: "/topics/capital-deposits",
+    to: "/accounts/guides/onboarding/capital-deposits",
+  },
+  {
+    from: "/topics/capital-deposits/france/guide",
+    to: "/accounts/guides/onboarding/capital-deposits#france",
+  },
+  {
+    from: "/topics/capital-deposits/france/guide-create-case",
+    to: "/accounts/guides/onboarding/capital-deposits/create-case",
+  },
+  {
+    from: "/topics/capital-deposits/france/guide-upload-documents",
+    to: "/accounts/guides/onboarding/capital-deposits/upload-documents",
+  },
+  {
+    from: "/topics/capital-deposits/guide-cancel",
+    to: "/accounts/guides/onboarding/capital-deposits/cancel",
+  },
+  {
+    from: "/topics/capital-deposits/guide-update-company",
+    to: "/accounts/guides/onboarding/capital-deposits/update-company",
+  },
+  {
+    from: "/topics/capital-deposits/guide-update-shareholder-amount",
+    to: "/accounts/guides/onboarding/capital-deposits/update-shareholder-amount",
   },
 ];

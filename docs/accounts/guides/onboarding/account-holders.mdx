@@ -2,4 +2,589 @@
 title: "Account holders"
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Account holders
+
+import AccountHolderDefinition from '../../../topics/definitions/_account-holder.mdx';
+
+<p className="ia-lede">Account holders are the verified individuals or companies that result from onboarding, once Swan completes KYC/KYB verification, and they're required for funds to be held in a Swan account.</p>
+
+> <AccountHolderDefinition />
+
+Account holders can be **individuals** or **companies** (considered *legal entities*), and account holders can have as many Swan accounts as they need.
+In order for funds to be stored in a Swan account, they must be associated with an account holder.
+
+As a result of the onboarding process, **users become account holders**.
+
+## Overview {#overview}
+
+As a Partner and project owner, you choose who can have Swan accounts within your project.
+However, regulations require **Swan to verify all of your account holders**, and to keep track of them for the lifetime of the account.
+
+Therefore, Swan verifies each user before the account holder and account objects are created in your Swan project.
+This verification, often referred to as Know Your Customer (**KYC**) or Know Your Business (**KYB**), is **mandatory**.
+This is an ongoing regulatory requirement, not a one-time onboarding event. Swan periodically performs verification renewals to keep account holder information up to date.
+
+:::caution Verification responsibility
+One benefit of working with Swan is that Swan is responsible for this process.
+However, if it's vital that you perform KYC and KYB processes yourself, please [send Swan a detailed explanation](https://partner-support.swan.io/hc/en-gb/requests).
+:::
+
+### One account holder, multiple accounts {#verifying-account-holders-multi-account}
+
+For **individual accounts**, you can open multiple accounts for the same account holder.
+They'll complete a shorter onboarding process for each new account because they don't need to complete account holder verification again.
+Follow the guide to [add additional individual accounts](/accounts/guides/onboarding/account-holders#add-additional-account) for an existing account holder.
+
+**Companies** can open [multiple accounts](/topics/accounts/multiple-accounts/) linked to a single account holder and registration number. No new verification is needed when creating additional accounts. 
+A new onboarding is required if you want to open an account with:
+- An IBAN from a different country.
+- A different company's registration number.
+- A different establishment (a branch of the same company at a new address).
+
+Follow the guide to [add additional company accounts](/topics/accounts/multiple-accounts/guide-multiple-accounts-integration) for an existing account holder.
+
+## Account holder verification process {#verification-process}
+
+The verification process for a new account holder is thorough, and Swan provides a streamlined process through which each account holder proves they're who they claim to be.
+
+Account holders can access their account immediately after creation.
+However, while account holder verification is in progress, there are [limitations on the account](/topics/accounts/#account-type-level).
+IBANs might be issued before limitations are removed from the account.
+
+The account holder verification process can include the following elements:
+
+1. **Onboarding**: Process is finalized for either an [**individual**](/accounts/guides/onboarding/individual) or a [**company**](/accounts/guides/onboarding/company), which creates a user, an account holder, an account, and an account membership linking the user to the account.
+1. [**Identification**](/topics/users/identifications/): User that opened the [individual](/accounts/guides/onboarding/individual#identification-recommendations) or [company](/accounts/guides/onboarding/company#identification-recommendations) account completes identification with an ID document and a picture or video.
+1. [**First transfer**](#first-transfer): Users may need to send a first transfer to their new Swan account.
+1. [**Document collection**](/topics/accounts/documents/): Swan collects required documents.
+1. **Clarification**: Swan might contact the user to clarify details from onboarding, identification, or document collection.
+1. **Review**: Swan reviews all provided elements.
+
+After Swan **validates the review**, the account holder is verified and their account receives its primary IBAN.
+
+### Statuses {#verification-process-statuses}
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    VR((Verification<br/>requested)) -.-> NS[NotStarted]
+    NS -.-> P[Pending]
+    P <-.-> W[WaitingForInformation]
+    P -...-> V[Verified]
+    W -.-> V[Verified]
+    W -.-> RF[Refused]
+    P -.-> RF[Refused]
+    subgraph F[Final status]
+        V
+        RF
+    end
+    style VR fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+```
+
+| Account holder verification status | Explanation |
+|---|---|
+| `NotStarted` | Verification process hasn't started yet. The account holder's legal representative needs to complete [identification](/topics/users/identifications/) before starting account holder verification. |
+| `Pending` | Swan is reviewing the account holder's information before activating or refusing the account. |
+| `WaitingForInformation` | Swan is waiting for information from the account holder, such as a [first transfer](#first-transfer), [supporting documents](/topics/accounts/documents/), or something else. |
+| `Verified` | Swan verified the account holder and the process is complete |
+| `Refused` | Swan won't onboard this account holder |
+
+### Waiting for information status {#waiting-for-info}
+
+If the account holder verification status is `WaitingForInformation`, the account holder must meet one or more of the following requirements.
+[Call the API](/accounts/guides/onboarding/account-holders#get-status) to learn which requirement they're missing.
+
+| Requirement | Explanation |
+| --- | --- |
+| `FirstTransfer` <br /> `Required` | Account holder needs to send a [first transfer](#first-transfer) to their Swan account. |
+| `LegalRepresentative` <br /> `DetailsRequired` | More information is required about the account's legal representative, or about the account member acting as the legal representative with Power of Attorney. |
+| `Organization` <br /> `DetailsRequired` | More information is required about the organization. |
+| `SupportingDocuments` <br /> `Required` | Provide the requested [supporting documents](/topics/accounts/documents/). |
+| `TaxId` <br /> `Required` | Provide the Tax ID for both the account holder and the organization. |
+| `UboDetails` <br /> `Required` | More information is required about the organization's ultimate beneficial owner or owners (UBO). |
+| `Other` | Swan contacts your account holder directly about additional requirements. |
+
+### First transfer {#first-transfer}
+
+:::tip Prerequisites
+Before a user can make their first transfer, the following conditions must be met:
+
+- Onboarding status: `Finalized`  
+  The user's onboarding is complete, and all required supporting documents have been uploaded.
+
+- Identification status: `Valid`  
+  The user's identification was successfully completed.
+:::
+
+import FirstTransfer from '../../../topics/partials/_first-transfer.mdx';
+
+<FirstTransfer />
+
+Not all users are required to send a first transfer to be `Verified`.
+Swan asks some users to send a first transfer as an additional verification measure.
+Additionally, if your users complete certain [identification processes](/topics/users/identifications/#processes-recommendations) in certain countries, a first transfer might be required by law.
+Review the [guide to request a first transfer](/accounts/guides/onboarding/account-holders#request-first-transfer) for communication options.
+
+:::caution 🇩🇪 Germany
+A first transfer is always required for self-employed and individual accounts for which the **[account country](/topics/accounts/#account-country)** is **Germany**, regardless of registration or residency.
+:::
+
+Users must send first transfers from an account in their name.
+Not all third-party payment platforms or online banks are accepted for first transfers.
+Share this [Support Center article](https://support.swan.io/hc/en-150/articles/17774309993501-First-transfer-request) with your users. 
+It explains why a first transfer may be requested, and the possible outcomes.
+
+Users can send any amount in the first transfer.
+While there is technically no deadline for sending the transfer, the user's [account is `Limited`](/topics/accounts/#account-type-level) until the transfer is validated.
+
+#### First transfer and account holder verification status {#first-transfer-waiting}
+
+A first transfer request is made when the account holder verification status is `Pending`.
+After Swan makes the request, the account holder verification status changes to `WaitingForInformation`.
+
+After the user sends their transfer, the account holder verification status changes to `Pending` while Swan checks the transfer source.
+Note that if the account used to send the first transfer is located outside of the European Economic Area (EEA), it may be subject to additional review.
+
+#### First transfer outcomes {#first-transfer-outcomes}
+
+| **Outcome** | **Description** | **Account holder verification status update** |
+|---|---|---|
+| Account holder is verified | The first transfer source was accepted, and we approved the account holder. | `Verified` |
+| Account holder is refused | The first transfer source wasn't accepted, and we didn't approve the account holder. | `Refused` |
+| Additional transfer requested | The first transfer came from an unaccepted source. We asked the user to send another transfer from a different account in their name. | `WaitingForInformation` |
+| Additional documents requested | We received the first transfer and asked the user for [supporting documents](/topics/accounts/documents/). | `WaitingForInformation` |
+
+:::info Additional transfer or documents
+After the additional transfer or documents are received, the account holder verification status changes from `WaitingForInformation` to `Pending` while Swan reviews them. Depending on the outcome, the status changes to either `Verified` or `Refused`. 
+:::
+
+### Limited account transfer restrictions {#limited-account-restrictions}
+
+Limited accounts are subject to incoming transfer restrictions to ensure regulatory compliance.
+
+#### Transfer amount restrictions {#transfer-amount-restrictions}
+
+- Any incoming SEPA Credit Transfer (instant or regular) exceeding €50 received on a limited account is automatically rejected.
+- Any incoming International Credit Transfer, regardless of its amount, received on a limited account is automatically rejected.
+
+#### Balance restrictions {#balance-restrictions}
+
+A limited account can't receive more than €150 in SEPA Credit Transfers over its lifetime. 
+This means the cumulative sum of all incoming SEPA Credit Transfers can't exceed €150. 
+Swan will reject an incoming transfer that would cause this balance to exceed €150.
+
+#### Impact of fees
+
+Swan fees don't count toward the €150 limit. 
+For example, if a user receives a €150 SEPA Credit Transfer and is charged a €2 Swan fee, their balance will be €148. 
+Even though the fee reduced their balance, the €150 received counts towards their limit. 
+Swan will automatically reject any further transfers sent to the account.
+
+#### Impact on first transfers {#impact-first-transfers}
+
+These restrictions primarily impact the first incoming transfer made while the account holder is completing verification.
+During the verification, the account remains in `Limited` status, and any first transfer exceeding the limits is automatically rejected.
+
+Users sending their first transfer should use a SEPA Credit Transfer and ensure the amount is €50 or less and won't cause the account balance to exceed €150.
+
+Learn more about [requesting a first transfer](/accounts/guides/onboarding/account-holders#request-first-transfer) and [account limitations and capabilities](/topics/accounts/#account-type-level).
+
+## Sequence diagram {#verification-process-diagram}
+
+This diagram **details a common flow** of how Swan, the account holder, and you interact during verification.
+Note that the flow includes alternate scenarios (A or B) where the path is determined by your integration choices. Your final integration might flow differently.
+
+```mermaid
+sequenceDiagram autoNumber
+participant P as Partner
+participant U as User
+participant S as Swan
+    P ->> S: Creates onboarding link
+    S ->> P: Returns onboarding object
+    P ->> U: Sends onboarding link
+    U -->> S: Completes onboarding
+    S ->> U: Sends text message inviting the account<br/>holder to complete identification
+    U ->> S: Provides identification provider<br/>with required elements
+    S ->> S: Verifies identification
+
+    note over P,S: If a first transfer is required, the process splits into one of two scenarios:
+    alt SCENARIO A: Partner notifies user about first transfer
+        S ->> P: Sends email notifying about required first transfer
+        P ->> U: Requests first transfer
+        U ->> S: Sends first transfer
+    else SCENARIO B: Swan requests first transfer from user
+        S ->> U: Sends email requesting first transfer
+        U ->> S: Sends first transfer
+    end
+    S ->> S: Swan reviews first transfer
+
+    note over P,S: If supporting documents are required, the process splits into one of two scenarios:
+    alt SCENARIO A: Partner provides documents
+        S ->> P: Sends webhook about missing supporting documents
+        P ->> U: Requests documents
+        U ->> P: Provides documents
+        P ->>S: Uploads documents with the API
+    else SCENARIO B: Account holder provides documents
+        S ->> U: Sends email requesting supporting documents
+        U ->> S: Uploads documents to banking interface
+    end
+    S ->> S: Swan reviews identity<br/>verification and documents
+```
+
+## Notifications {#notifications}
+
+import NotificationBranding from '../../../topics/partials/_notification-branding.mdx';
+
+Swan sends email notifications to users during the account holder verification process.
+
+<NotificationBranding />
+
+### First transfer notification {#notification-first-transfer}
+
+When a Swan KYC analyst determines that a first transfer is needed for verification, they can manually request it from the user. This notification isn't sent to every user; it's sent only when Swan identifies it as a necessary verification step.
+
+**Trigger**: Manual request by a Swan KYC analyst after the user completes identification but before the account holder verification status changes to `Verified`.
+
+**Configuration**: Swan can configure this notification on your behalf based on your preferred communication flow. Contact us to discuss your preference. The available options include sending notifications directly to the end user, to you as the partner, copying both parties, or using the API to manage communications yourself.
+
+**Template**:
+
+| Configuration | Template |
+|---|---|
+| End user | Uses your project logo and accent color. Includes the account's IBAN and BIC to help users complete the transfer. |
+| Partner | Uses Swan branding. Includes data to help with your KYC process: Account Holder ID, Account Holder name, account IBAN, account BIC, account admin email, and account admin language. |
+| Both parties | Uses your project logo and accent color. Includes the account's IBAN and BIC to help users complete the transfer. |
+
+### Supporting documents notifications {#notification-documents}
+
+When Swan's KYC team needs additional supporting documents to complete the verification process, they can request them from the user through email notifications.
+
+#### Request supporting documents {#notification-documents-request}
+
+This notification informs the user that supporting documents are required and provides a link to upload them.
+
+**Trigger**: Manual request by a Swan KYC analyst when additional supporting documents are needed for an onboarding-related document collection.
+
+**Configuration**: Swan can configure this notification on your behalf. Contact your Account Manager to discuss your preferences. The available communication options are the same as for the first transfer notification.
+
+**Template**:
+
+| Configuration | Template |
+|---|---|
+| End user | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
+| Partner | Uses Swan branding. Includes data to help with your KYC process: account holder ID, account holder name, account admin email, and account admin language. |
+| Both parties | Uses your project logo and accent color. Includes the account number to help users contact your support team. |
+
+The email includes a call-to-action button that redirects users to an onboarding page where they can upload the requested documents. Even if documents have already been requested for a given collection, triggering this action sends a new email.
+
+#### Request supporting documents reminders {#notification-documents-reminders}
+
+To help ensure users provide the necessary documents, Swan automatically sends reminder emails at regular intervals.
+
+**Trigger**: Automatic reminders are sent when a Swan KYC analyst has requested additional supporting documents and your notification settings allow end user communication.
+
+Reminders are sent after 2, 4, 7, 14, and 21 days as long as the supporting document collection status remains `WaitingForDocument`.
+
+**Configuration**: Reminders are only sent when your document collection settings are configured to communicate with the end user (either directly or copied to you as the Partner). No reminders are sent when communications are Partner-only or managed via API.
+
+**Template**:
+
+| Configuration | Template |
+|---|---|
+| End user | Uses your project logo and accent color. Includes the account number so users can reference it when contacting your support team. |
+| Partner | Uses Swan branding. Includes data to help with your KYC process: Account holder ID, account holder name, account admin email, and account admin language. |
+| Both parties | Uses your project logo and accent color. Includes the account number to help users contact your support team. |
+
+### Account opened notification {#notification-account-opened}
+
+When the verification process is complete and the account is ready for full use, Swan automatically notifies the user.
+
+**Trigger**: Automatic when the account holder verification status changes to `Verified` and the account payment status changes to `Unlimited`, meaning the user can use all available funds.
+
+**Configuration**: Swan can configure this notification on your behalf. Contact us to discuss your preferences. The available communication options include sending to the end user, to you as the partner, or managing via API.
+
+**Template**:
+
+| Configuration | Template |
+|---|---|
+| End user | Uses your project logo and accent color. Includes the account's IBAN and BIC so users can start using their account. |
+| Partner | Uses Swan branding. Includes data to help with your KYC process: Account Holder ID, Account Holder name, account IBAN, account BIC, account admin email, and account admin language. |
+
+## Verification renewal (Re-KYC) {#verification-renewal}
+
+As required by financial regulations, Swan periodically verifies account holder information.
+Verification renewal applies to all accounts held by the account holder.
+
+It is a mandatory process that happens every 1, 3, or 5 years, or when we detect changes in an account holder's profile.
+
+:::warning Account suspension
+Users must confirm their account holder information within **90 days**. If they don't, we automatically suspend their accounts and restrict all related IBANs, cards, and payment capabilities until they complete verification.
+:::
+
+### Completing verification renewal in the portal {#verification-renewal-portal}
+
+Swan provides a no-code, partner-branded portal to handle the verification renewal process. You don't need to integrate with an API. 
+
+Make sure your [branding settings](/get-started/set-up-swan/create-project#step-8-configure-your-branding-in-live) (logo and accent color) are up to date in your **Dashboard** > **Settings** > **Branding**.
+
+#### Verification renewal steps {#verification-renewal-portal-steps}
+
+The legal representative (account admin):
+
+1. Receives the [initial notification email](/accounts/guides/onboarding/account-holders#verification-renewal-timeline) with a unique portal link.
+1. Opens the link and provides consent to access the portal.
+1. Reviews the pre-filled information.
+1. Confirms the information is correct, or updates it if anything has changed.
+1. Uploads [supporting documents](/topics/accounts/documents/#required-documents) if required.
+1. Submits the form and receives a confirmation email.
+
+The KYC analyst reviews the submission.
+If more information is needed, the KYC analyst sends a follow-up request with a new portal link.
+The portal reopens for the missing items only.
+
+After Swan validates the review, the account holder's [`VerificationRenewalStatus`](https://api-reference.swan.io/enums/verification-renewal-status/) changes to `Completed`. Verification renewal doesn't impact the account holder's banking verification status.
+
+### Verification renewal timeline and communication {#verification-renewal-timeline}
+
+:::tip Update your communication preferences
+We send the initial form and all follow-ups based on your [communication preferences](/accounts/guides/onboarding/account-holders#notifications). 
+We recommend that Swan emails your end users directly and copies you (CC). You can also specify a unique email address. 
+Create a [support ticket](https://partner-support.swan.io/hc/fr/requests/new) that outlines your communication preferences for verification renewal.
+:::
+
+We start the **90-day** period when we send the account holder the first notification.
+At the 90-day deadline, Swan suspends all of the account holder's accounts if they haven't completed verification renewal.
+To lift the suspension, the user can complete the process using the last portal link Swan emailed them. 
+Afterwards, either you or the user must submit a support request for a review. 
+The KYC analyst will review the suspension reason and the updated information.
+
+Share [Swan's Support Center article](https://support.swan.io/hc/en-150/articles/26326687003549-Confirm-personal-details-again) to show them the full timeline and the reminders we send.
+
+## Add an account for an existing account holder {#add-additional-account}
+
+If an account holder already exists, you can add another **individual account** for that account holder.
+
+The account holder still needs to be "officially" verified by Swan, but verification is quick as Swan already knows the account holder.
+
+:::tip Prerequisites
+The account holder must be `Verified` with an `Open` account.
+:::
+
+1. [Call the `OnboardIndividualAccountHolder` mutation](/accounts/guides/onboarding/individual#create), using the same information as the account holder's existing Swan account.
+1. Finalize the onboarding with the new onboarding ID and the user access token.
+The account holder doesn't need to do anything.
+1. You'll get new `accountId` immediately with the status `Pending`.
+1. Swan will verify the account.
+Since Swan already knows the account holder, verification is quicker than for a new account holder.
+
+## Get account holder verification status {#get-status}
+
+Call the  `accountHolder`  query get an account holder's verification status.
+Add `verificationStatusInfo` to provide more details about specific statuses.
+This guide provides more details about an account holder verification with the status `WaitingForInformation`.
+
+### Guide
+
+1. First, [retrieve the required `accountHolderId`](/accounts/guides/onboarding/account-holders#simulate-status-update-get-id).
+1. Call the `accountHolder` query.
+1. Enter the `accountHolderId` retrieved in step 1.
+1. Add the `verificationStatusInfo` object.
+1. Add the `AccountHolderWaitingForInformationVerificationStatusInfo` union to get information about the `WaitingForInformation` status for this account holder verification.
+1. Add `verificationRequirements` > `id` and `type`.
+
+:::info `verificationRequirements`
+Review possible `verificationRequirements` on the [account holder homepage](/accounts/guides/onboarding/account-holders#waiting-for-info).
+:::
+
+### Query
+
+<a href="https://explorer.swan.io?query=cXVlcnkgV2FpdGluZ0ZvckluZm9TdGF0dXMgewogIGFjY291bnRIb2xkZXIoaWQ6ICIkQUNDT1VOVF9IT0xERVJfSUQiKSB7CiAgICB2ZXJpZmljYXRpb25TdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyV2FpdGluZ0ZvckluZm9ybWF0aW9uVmVyaWZpY2F0aW9uU3RhdHVzSW5mbyB7CiAgICAgICAgX190eXBlbmFtZQogICAgICAgIHdhaXRpbmdGb3JJbmZvcm1hdGlvbkF0CiAgICAgICAgc3RhdHVzCiAgICAgICAgdmVyaWZpY2F0aW9uUmVxdWlyZW1lbnRzIHsKICAgICAgICAgIGlkCiAgICAgICAgICB0eXBlCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2-3,5,9-11} showLineNumbers
+query WaitingForInfoStatus {
+  accountHolder(id: "$ACCOUNT_HOLDER_ID") {
+    verificationStatusInfo {
+      status
+      ... on AccountHolderWaitingForInformationVerificationStatusInfo {
+        __typename
+        waitingForInformationAt
+        status
+        verificationRequirements {
+          id
+          type
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload
+
+Note the two verification requirements needed from this account holder (lines 11, 15).
+
+```json {5,11,15} showLineNumbers
+{
+  "data": {
+    "accountHolder": {
+      "verificationStatusInfo": {
+        "status": "WaitingForInformation",
+        "__typename": "AccountHolderWaitingForInformationVerificationStatusInfo",
+        "waitingForInformationAt": "2024-10-29T13:56:38.972Z",
+        "verificationRequirements": [
+          {
+            "id": "$VERIFICATION_REQUIREMENT_ID_1",
+            "type": "FirstTransferRequired"
+          },
+          {
+            "id": "$VERIFICATION_REQUIREMENT_ID_2",
+            "type": "LegalRepresentativeDetailsRequired"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+## Request a first transfer {#request-first-transfer}
+
+import FirstTransferRequest from '../../../topics/partials/_first-transfer.mdx';
+
+<FirstTransferRequest />
+
+Swan can either email your or your users to request the first transfer.
+Share your preference with your Account Manager.
+
+:::tip Prerequisite
+Thoroughly review [first transfer](/accounts/guides/onboarding/account-holders#first-transfer) requirements.
+:::
+
+:::warning Limited account transfer restrictions
+When sending a first transfer to a limited account, users should send a SEPA Credit Transfer of €50 or less that won't cause the balance to exceed €150.
+
+This is due to the following restrictions that apply while the account remains in `Limited` status:
+
+- SEPA Credit Transfers exceeding €50 are automatically rejected.
+- SEPA Credit Transfers that would cause the account balance to exceed €150 are automatically rejected.
+- International Credit Transfers, regardless of their amount, are automatically rejected.
+
+Learn more about [limited account transfer restrictions](/accounts/guides/onboarding/account-holders#limited-account-restrictions).
+:::
+
+### Option 1: Swan emails your user {#guide-swan}
+
+1. Swan emails your user, requesting a first transfer.
+1. Swan provides users with their Swan IBAN and BIC via email. We also inform users about account restrictions: transfers must be €50 or less, and the balance cannot exceed €150.
+1. Your user sends a first transfer to their Swan account.
+1. Swan verifies the transfer source.
+1. Swan [updates the account holder verification status](/accounts/guides/onboarding/account-holders#first-transfer-waiting) accordingly.
+
+### Option 2: You email your user {#guide-partner}
+
+1. Swan emails you to request a first transfer from your user.
+1. You email your user, requesting a first transfer. Make sure to:
+    - Include the user's Swan IBAN and BIC in the email.
+    - Inform the user that transfers from third-party platforms like Lydia or PayPal aren't accepted.
+    - Inform the user that while their account is limited, transfers must be €50 or less, and the balance cannot exceed €150.
+1. Your user sends a first transfer to their Swan account.
+1. Swan verifies the transfer source.
+1. Swan [updates the account holder verification status](/accounts/guides/onboarding/account-holders#first-transfer-waiting) accordingly.
+
+## Export account holder data {#export}
+
+You can export the account holder data available on the Dashboard, either from your Dashboard or with the API.
+Review the next steps to understand what happens after finalizing your export.
+
+### Dashboard
+
+1. On your Dashboard, go to **Data** > **Account holders**.
+1. Click the **download icon** to trigger a `.csv` export.
+1. A modal appears. Click **Export data** to finalize the request.
+
+![Screenshot of Swan Dashboard account holders page with a callout download icon to trigger an export](../../../images/topics/onboarding/account-holders-export.png)
+
+### API
+
+1. Call the `exportAccountHolderData` mutation.
+1. Add your `email`. A link to download the `.csv` export is sent to the email address you provide.
+1. Add the success payload and rejections.
+
+#### Mutation
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0QWNjb3VudEhvbGRlcnMgewogIGV4cG9ydEFjY291bnRIb2xkZXJEYXRhKGlucHV0OiB7IGVtYWlsOiAiJFlPVVJfRU1BSUxfQUREUkVTUyIgfSkgewogICAgLi4uIG9uIEV4cG9ydERhdGFTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZXhwb3J0SWQKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtU2ltdWx0YW5lb3VzRXhwb3J0c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE1heGltdW1EYWlseUV4cG9ydHNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,5} showLineNumbers
+mutation ExportAccountHolders {
+  exportAccountHolderData(input: { email: "$YOUR_EMAIL_ADDRESS" }) {
+    ... on ExportDataSuccessPayload {
+      __typename
+      exportId
+    }
+    ... on MaximumSimultaneousExportsRejection {
+      __typename
+      message
+    }
+    ... on MaximumDailyExportsReachedRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+#### Payload
+
+The payload returns the export ID.
+
+```json {5} showLineNumbers
+{
+  "data": {
+    "exportAccountHolderData": {
+      "__typename": "ExportDataSuccessPayload",
+      "exportId": "$EXPORT_ID"
+    }
+  }
+}
+```
+
+### Next steps
+
+import ExportNextSteps from '../../../topics/partials/_export-next-steps.mdx';
+
+<ExportNextSteps />
+
+## Sandbox {#sandbox}
+
+### Simulate updating an account holder’s verification status {#simulate-status-update}
+
+#### Step 1: Get the account holder ID {#simulate-status-update-get-id}
+
+Use the Dashboard to get the account holder ID.
+
+You could also use the `accountHolders` query.
+However, since you can only simulate updating one account holder status at a time, and *from your Dashboard*, it's simpler to get the ID from the Dashboard.
+
+1. On your Dashboard, go to **Data** > **Account holders**.
+1. Locate the account holder you need.
+1. Click to copy their account holder ID.
+
+![Screenshot of Swan Dashboard account holders page with a callout of the account holder ID](../../../images/topics/onboarding/account-holder-id.png)
+
+#### Step 2: Update the status {#simulate-status-update-make-update}
+
+With the account holder ID, use the Event Simulator to change the [account holder verification status](/accounts/guides/onboarding/account-holders#verification-process-statuses) to any available status.
+
+1. On your Dashboard, go to **Developers** > **Event Simulator**.
+1. Open **Account holders**, then go to the **Update verification status** tab.
+1. Enter the account holder ID into the **Account holder ID** field.
+1. From the dropdown, choose the status you'd like to simulate.
+1. Click **Simulate**.
+
+![Simulate changing an account holder's verification status with the Event Simulator](../../../images/topics/onboarding/sandbox-account-holder-verif-status.png)
+
+## Related
+
+- [Account onboarding](/accounts/guides/onboarding) — the onboarding hub.
+- [Individual onboarding](/accounts/guides/onboarding/individual) · [Company onboarding](/accounts/guides/onboarding/company)
+- [Country requirements](/accounts/reference/country-requirements) · [Proof of address](/accounts/reference/proof-of-address) — documents these processes consume.

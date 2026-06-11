@@ -14,62 +14,6 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Account onboarding",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Account onboarding overview",
-          link: { type: "doc", id: "topics/onboarding/index" },
-          collapsed: true,
-          items: [
-            "topics/onboarding/overview/guide-migrate",
-            "topics/onboarding/overview/guide-get-info",
-            "topics/onboarding/overview/guide-get-list",
-            "topics/onboarding/overview/guide-export",
-            "topics/onboarding/overview/guide-finalize",
-          ],
-        },
-        {
-          type: "category",
-          label: "Individual accounts",
-          link: { type: "doc", id: "topics/onboarding/individual/index" },
-          collapsed: true,
-          items: [
-            "topics/onboarding/individual/guide-create",
-            "topics/onboarding/individual/guide-update",
-            "topics/onboarding/individual/fields",
-          ],
-        },
-        {
-          type: "category",
-          label: "Company accounts",
-          link: { type: "doc", id: "topics/onboarding/company/index" },
-          collapsed: true,
-          items: [
-            "topics/onboarding/company/guide-create",
-            "topics/onboarding/company/guide-update",
-            "topics/onboarding/company/fields",
-          ],
-        },
-        {
-          type: "category",
-          label: "Account holders",
-          link: { type: "doc", id: "topics/onboarding/account-holders/index" },
-          collapsed: true,
-          items: [
-            "topics/onboarding/account-holders/guide-add-additional-account",
-            "topics/onboarding/account-holders/guide-get-status",
-            "topics/onboarding/account-holders/guide-request-first-transfer",
-            "topics/onboarding/account-holders/guide-export",
-            "topics/onboarding/account-holders/sandbox",
-          ],
-        },
-      ],
-    },
-    {
-      type: "category",
       label: "Accounts",
       collapsible: false,
       collapsed: false,
@@ -156,35 +100,6 @@ module.exports = {
             "topics/accounts/ibans/guide-add-virtual",
             "topics/accounts/ibans/guide-cancel-virtual",
             "topics/accounts/ibans/guide-get-info",
-          ],
-        },
-      ],
-    },
-    {
-      type: "category",
-      label: "Capital deposits",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "category",
-          label: "Capital deposits",
-          link: { type: "doc", id: "topics/capital-deposits/index" },
-          collapsed: true,
-          items: [
-            "topics/capital-deposits/guide-update-shareholder-amount",
-            "topics/capital-deposits/guide-update-company",
-            "topics/capital-deposits/guide-cancel",
-          ],
-        },
-        {
-          type: "category",
-          label: "🇫🇷 France",
-          link: { type: "doc", id: "topics/capital-deposits/france/guide" },
-          collapsed: true,
-          items: [
-            "topics/capital-deposits/france/guide-create-case",
-            "topics/capital-deposits/france/guide-upload-documents",
           ],
         },
       ],

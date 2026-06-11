@@ -2,4 +2,448 @@
 title: "Individual onboarding"
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Individual onboarding
+
+<span className="ia-audience-tag ia-audience-tag--dev">Developer</span>
+
+<p className="ia-lede">Onboard individual account holders by creating and updating individual onboarding links.</p>
+
+import IndividualOnboardingDefinition from '../../../topics/definitions/_onboarding-individual.mdx';
+
+> <IndividualOnboardingDefinition />
+
+import DeprecationTimeline from './partials/_deprecated-mutation-timeline.mdx';
+
+## Process overview {#overview}
+
+import OnboardingOverview from './partials/_overview.mdx';
+
+<OnboardingOverview accountType="an individual" />
+
+## Individual onboarding form {#onboarding-form}
+
+Through the individual onboarding form, Swan collects the following information:
+
+1. User's **email address**.
+1. User's **country of residence** and **residence address**.
+1. Basic details about the **user's employment** and **financial situation**. This information allows Swan to perform two essential tasks:
+    * During onboarding, Swan completes an identity analysis (Know Your Customer, or KYC).
+    * For the lifetime of the account, Swan monitors for fraud.
+1. User [**signs up**](/topics/users/#signup) for Swan.
+
+## Identification recommendations {#identification-recommendations}
+
+Swan must verify the identity of every user.
+Swan supports multiple [identification processes](/topics/users/identifications/#levels-processes), and some require a [first transfer](/accounts/guides/onboarding/account-holders#first-transfer).
+For individual onboarding, the following levels are recommended based on the account country.
+
+| Account country | Recommended level<br/>for individuals | Other supported levels |
+|---|---|---|
+| 🇫🇷 France | **<Yes /> PVID** | *Expert + first transfer<br/>QES* |
+| 🇧🇪 Belgium | **<Yes /> QES** | *Expert + first transfer* |
+| 🇩🇪 Germany | **<Yes /> QES + first transfer** | *none* |
+| 🇮🇹 Italy | **<Yes /> QES** | *Expert + first transfer* |
+| 🇳🇱 Netherlands | **<Yes /> Expert** | *QES<br/>PVID* |
+| 🇪🇸 Spain | **<Yes /> QES** | *Expert + first transfer<br/>PVID + first transfer* |
+
+## Country requirements for individual accounts {#country-reqs}
+
+import CountryReqs from './partials/_country-reqs.mdx';
+
+<CountryReqs thisAccountType="individual" thatAccountType="company" />
+
+For individual accounts, use the `createIndividualAccountHolderOnboarding` mutation.
+
+:::note Deprecated mutation
+The previous `onboardIndividualAccountHolder` mutation is deprecated.
+<DeprecationTimeline />
+Use `createIndividualAccountHolderOnboarding` for all new integrations.
+:::
+
+For a complete list of fields, country-specific requirements, and conditional rules, refer to the [individual onboarding field reference](#fields).
+
+## User flow diagrams {#diagrams}
+
+<details>
+  <summary>End-user perspective of an individual account onboarding</summary>
+  <div>
+    <iframe
+      src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F7K15ufXZK7Zgan770kkTmq%2FUser-flow-diagrams%3Ftype%3Ddesign%26node-id%3D1%253A1806%26mode%3Ddesign%26t%3DaDVSURjSnOITsBKl-1"
+      allowFullScreen
+      style={{ width: "100%", height: 400 }}
+    ></iframe>
+  </div>
+</details>
+
+## Field requirements {#fields}
+
+Use this reference to determine which fields are required, optional, or conditional for each country when creating an individual onboarding.
+For GraphQL types and validation constraints, refer to [`CreateIndividualAccountHolderOnboardingInput`](https://api-reference.swan.io/inputs/create-individual-account-holder-onboarding-input/) in the API reference.
+
+:::caution Supporting documents
+All requested supporting documents must be submitted to complete onboarding.
+:::
+
+<FieldRequirementsLegend />
+
+### Account information
+
+**Related field:** `accountInfo`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `name` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+**Available options**
+
+- `country`: `FRA`, `DEU`, `ESP`, `NLD`, `ITA`, `BEL`.
+
+### Account administrator
+
+**Related field:** `accountAdmin`
+
+:::info Account admin fields and sign-up
+Although many `accountAdmin` fields are optional during onboarding, they are required when the user signs up. We recommend collecting and sending this information before the end of the onboarding flow.
+:::
+
+#### Personal information
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `email` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `firstName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `lastName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `nationality` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `preferredLanguage` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `signupDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `acquisitionChannel` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+`acquisitionChannel` is hidden from end users. Provide it through your backend integration only.
+
+**Available options**
+
+- `preferredLanguage`: `de`, `en`, `es`, `fi`, `fr`, `it`, `nl`, `pt`.
+- `acquisitionChannel`: `InboundOrganic`, `InboundReferral`, `OutboundSales`, `OutboundAccountingFirm`.
+
+#### Address
+
+**Related field:** `accountAdmin.address`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+#### Birth information
+
+**Related field:** `accountAdmin.birthInfo`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `birthDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+#### Financial information
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `employmentStatus` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `monthlyIncome` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `sourcesOfFunds` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+**Available options**
+
+**`employmentStatus`**
+
+`Craftsman`, `Employee`, `Entrepreneur`, `Farmer`, `Manager`, `Practitioner`, `Retiree`, `ShopOwner`, `Student`, `Unemployed`.
+
+**`monthlyIncome`**
+
+`LessThan500`, `Between500And1500`, `Between1500And3000`, `Between3000And4500`, `MoreThan4500`.
+
+**`sourcesOfFunds`**
+
+`BusinessActivity`, `CapitalGains`, `FamilyContributions`, `InheritanceOrGift`, `Other`, `PersonalWealth`, `RealEstateIncome`, `Salary`, `SaleOfAssets`, `SelfEmployment`.
+
+#### Tax information
+
+**Related field:** `accountAdmin.taxIdentificationNumber`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <Req /> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> |
+
+¹ `taxIdentificationNumber` is required if any of the following conditions are true:
+
+- `accountAdmin.address.country` is different from `accountInfo.country`.
+- `accountAdmin.address.country` is Germany, Italy, or Belgium.
+
+#### US tax information
+
+**Related field:** `accountAdmin.unitedStatesTaxInfo`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `isUnitedStatesPerson` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
+
+² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+
+#### User device information
+
+**Related field:** `accountAdmin.userDeviceInfo`
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `geoloc.lat` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `geoloc.lng` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `ip` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `userAgent` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+### OAuth redirect parameters
+
+**Related field:** `oAuthRedirectParameters`
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | Description |
+|---|---|
+| `redirectUrl` | URL to redirect to after the OAuth flow. |
+| `state` | Opaque value passed through the OAuth flow. |
+
+### No-code Web Banking
+
+If you use Swan's no-code Web Banking, the following fields are collected during the onboarding and sign-up flows.
+
+- `accountAdmin.firstName`, `lastName`, `nationality`.
+- `accountAdmin.address`: `addressLine1`, `city`, `country`, `postalCode`.
+- `accountAdmin.birthInfo`: `birthDate`, `city`, `country`, `postalCode`.
+- `accountAdmin.unitedStatesTaxInfo`.
+
+### API mapping
+
+Use this table to map fields from the deprecated API to the new API.
+
+#### Account
+
+| Deprecated field | New field |
+|---|---|
+| `accountCountry` | `accountInfo.country` |
+| `accountName` | `accountInfo.name` |
+
+#### Account administrator
+
+| Deprecated field | New field |
+|---|---|
+| - | `accountAdmin.acquisitionChannel` |
+| `residencyAddress.addressLine1` | `accountAdmin.address.addressLine1` |
+| `residencyAddress.addressLine2` | `accountAdmin.address.addressLine2` |
+| `residencyAddress.city` | `accountAdmin.address.city` |
+| `residencyAddress.country` | `accountAdmin.address.country` |
+| `residencyAddress.postalCode` | `accountAdmin.address.postalCode` |
+| `residencyAddress.state` | `accountAdmin.address.state` |
+| - | `accountAdmin.birthInfo.birthDate` |
+| - | `accountAdmin.birthInfo.city` |
+| - | `accountAdmin.birthInfo.country` |
+| - | `accountAdmin.birthInfo.postalCode` |
+| `email` | `accountAdmin.email` |
+| `employmentStatus` | `accountAdmin.employmentStatus` |
+| - | `accountAdmin.firstName` |
+| - | `accountAdmin.lastName` |
+| `monthlyIncome` | `accountAdmin.monthlyIncome` |
+| - | `accountAdmin.nationality` |
+| `language` | `accountAdmin.preferredLanguage` |
+| - | `accountAdmin.signupDate` |
+| - | `accountAdmin.sourcesOfFunds` |
+| `taxIdentificationNumber` | `accountAdmin.taxIdentificationNumber` |
+| - | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` |
+| - | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` |
+| - | `accountAdmin.userDeviceInfo.geoloc.lat` |
+| - | `accountAdmin.userDeviceInfo.geoloc.lng` |
+| - | `accountAdmin.userDeviceInfo.ip` |
+| - | `accountAdmin.userDeviceInfo.userAgent` |
+
+## Create an individual onboarding link {#create}
+
+import CreateOnboardingPrereqs from './partials/_prereqs-create.mdx';
+
+<CreateOnboardingPrereqs onboardingType="individual" />
+
+import PublicOnboardingLinks from './partials/_public-onboarding-links.mdx';
+
+<PublicOnboardingLinks />
+
+### Unique links using the API
+
+Create a unique individual onboarding link for each user with the API.
+
+1. Call the `createIndividualAccountHolderOnboarding` mutation.
+1. Enter information for all required API fields for the account country, as noted in [country requirements for individual accounts](#country-reqs).
+1. Include optional fields as needed for your use case (such as `accountInfo.name` or `oAuthRedirectParameters`).
+1. Add optional messages to the success payload, either for validation or in case of rejection.
+
+:::note Deprecated mutation
+The previous [`onboardIndividualAccountHolder`](https://api-reference.swan.io/mutations/onboard-individual-account-holder/) mutation is deprecated.
+<DeprecationTimeline />
+Use `createIndividualAccountHolderOnboarding` for all new integrations.
+:::
+
+#### Mutation
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmcgewogIGNyZWF0ZUluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZygKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJbmZvOiB7CiAgICAgICAgY291bnRyeTogRlJBCiAgICAgIH0KICAgICAgYWNjb3VudEFkbWluOiB7CiAgICAgICAgZW1haWw6ICJtYWxpa2EubmdvbWFvQG15YnJhbmQuaW8iCiAgICAgICAgZW1wbG95bWVudFN0YXR1czogRW1wbG95ZWUKICAgICAgICBwcmVmZXJyZWRMYW5ndWFnZTogZnIKICAgICAgICBtb250aGx5SW5jb21lOiBCZXR3ZWVuMzAwMEFuZDQ1MDAKICAgICAgICBhZGRyZXNzOiB7CiAgICAgICAgICBhZGRyZXNzTGluZTE6ICIxMjMgYXZlbnVlIGRlIFBhcmlzIgogICAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICAgIHBvc3RhbENvZGU6ICI3NTAwMCIKICAgICAgICB9CiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBDcmVhdGVJbmRpdmlkdWFsQWNjb3VudEhvbGRlck9uYm9hcmRpbmdTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgb25ib2FyZGluZyB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQoK&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4-20,24} showLineNumbers
+mutation CreateIndividualOnboarding {
+  createIndividualAccountHolderOnboarding(
+    input: {
+      accountInfo: {
+        country: FRA
+      }
+      accountAdmin: {
+        email: "malika.ngomao@mybrand.io"
+        employmentStatus: Employee
+        preferredLanguage: fr
+        monthlyIncome: Between3000And4500
+        address: {
+          addressLine1: "123 avenue de Paris"
+          city: "Paris"
+          country: "FRA"
+          postalCode: "75000"
+        }
+      }
+    }
+  ) {
+    ... on CreateIndividualAccountHolderOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
+  }
+}
+```
+
+#### Payload
+
+If you added validation or rejection messages, you'll see information such as the `onboardingId` as well as the current status `Valid` in the success payload.
+
+```json {6,8} showLineNumbers
+{
+  "data": {
+    "createIndividualAccountHolderOnboarding": {
+      "__typename": "CreateIndividualAccountHolderOnboardingSuccessPayload",
+      "onboarding": {
+        "id": "ae06faf6-13b2-4e9e-891b-e78ecd5ca0e4",
+        "statusInfo": {
+          "status": "Valid"
+        }
+      }
+    }
+  }
+}
+```
+
+### Public link using the Dashboard
+
+import PublicOnboardingUrl from './partials/_create-public-url.mdx';
+
+<PublicOnboardingUrl />
+
+![Screenshot of Swan Dashboard onboarding page with a callout of the onboarding ID](../../../images/topics/onboarding/onboarding-dashboard-url-indv.png)
+
+## Update an individual onboarding {#update}
+
+Update individual onboardings using the API.
+
+import UpdateOnboardingPrereqs from './partials/_prereqs-update.mdx';
+
+<UpdateOnboardingPrereqs />
+
+### Guide
+
+Update an individual onboarding by **adding an account name**.
+
+1. First, [retrieve the ID](/accounts/guides/onboarding/#get-info) for the onboarding you need to update.
+1. Call the `updateIndividualAccountHolderOnboarding` mutation.
+1. Enter the onboarding ID retrieved in step 1.
+1. Add the `accountInfo.name` field with an account name (example: Personal account).
+1. Add desired messages to the success payload, either for validation or in case of rejection.
+
+:::note Deprecated mutation
+The previous `updateIndividualOnboarding` mutation is deprecated.
+<DeprecationTimeline />
+Use `updateIndividualAccountHolderOnboarding` for all new integrations.
+:::
+
+### Mutation
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmcgewogIHVwZGF0ZUluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZygKICAgIGlucHV0OiB7CiAgICAgIG9uYm9hcmRpbmdJZDogIiRPTkJPQVJESU5HX0lEIgogICAgICBhY2NvdW50SW5mbzogewogICAgICAgIG5hbWU6ICJQZXJzb25hbCBhY2NvdW50IgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlSW5kaXZpZHVhbEFjY291bnRIb2xkZXJPbmJvYXJkaW5nU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG9uYm9hcmRpbmcgewogICAgICAgIGFjY291bnRJbmZvIHsKICAgICAgICAgIG5hbWUKICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBPbmJvYXJkaW5nTm90Rm91bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgICAuLi4gb24gT25ib2FyZGluZ0FscmVhZHlGaW5hbGl6ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgfQp9Cg==&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4-7,11-14} showLineNumbers
+mutation UpdateIndividualOnboarding {
+  updateIndividualAccountHolderOnboarding(
+    input: {
+      onboardingId: "$ONBOARDING_ID"
+      accountInfo: {
+        name: "Personal account"
+      }
+    }
+  ) {
+    ... on UpdateIndividualAccountHolderOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        accountInfo {
+          name
+        }
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on OnboardingNotFoundRejection {
+      __typename
+    }
+    ... on OnboardingAlreadyFinalizedRejection {
+      __typename
+    }
+  }
+}
+```
+
+### Payload
+
+```json {6-8} showLineNumbers
+{
+  "data": {
+    "updateIndividualAccountHolderOnboarding": {
+      "__typename": "UpdateIndividualAccountHolderOnboardingSuccessPayload",
+      "onboarding": {
+        "accountInfo": {
+          "name": "Personal account"
+        },
+        "statusInfo": {
+          "status": "Valid"
+        }
+      }
+    }
+  }
+}
+```
+
+## Related
+
+- [Account onboarding](/accounts/guides/onboarding) · [Company onboarding](/accounts/guides/onboarding/company)
+- [Account holders](/accounts/guides/onboarding/account-holders) — verification after finalization.
+- [Country requirements](/accounts/reference/country-requirements) · [Proof of address](/accounts/reference/proof-of-address)

@@ -169,6 +169,7 @@ module.exports = {
     ],
   ],
   plugins: [
+    require.resolve("./plugins/ia-rail-meta"),
     "docusaurus-plugin-matomo",
     [
       "@docusaurus/plugin-client-redirects",

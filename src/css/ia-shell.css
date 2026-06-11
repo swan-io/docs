@@ -154,3 +154,81 @@
 .ia-concept-node__label { font-size: 22px; }
 .ia-concept-node--center .ia-concept-node__label { font-size: 34px; }
 .ia-concept-node__sub { font-size: 13px; }
+
+/* ===== IA desktop rail (DOC-1814 §A step 1) =====
+   Pins audience + counterpart + the stock TOC + related as one sticky column.
+   Chips reuse the existing .ia-audience-tag look; rail chrome uses --ifm-* only. */
+.ia-rail {
+  position: sticky;
+  top: calc(var(--ifm-navbar-height) + 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+/* Neutralize the stock TOC's own sticky so the four blocks pin together. */
+.ia-rail .theme-doc-toc-desktop {
+  position: static;
+  top: auto;
+  max-height: none;
+}
+.ia-rail__block { font-size: 0.85rem; }
+.ia-rail__label {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ifm-color-emphasis-600);
+}
+.ia-rail__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ia-rail__link { display: inline-block; line-height: 1.4; }
+.ia-rail__list { list-style: none; margin: 0; padding: 0; }
+.ia-rail__list li { margin-bottom: 0.5rem; }
+.ia-rail__list li:last-child { margin-bottom: 0; }
+.ia-rail__type {
+  display: inline-block;
+  margin-right: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-code-border-radius);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ifm-color-emphasis-700);
+  vertical-align: middle;
+}
+
+/* ===== IA mobile chrome (DOC-1814 §A step 2) =====
+   Compact strip above the title (audience + counterpart) and the Related block
+   after the content, shown only below the 997px theme breakpoint; the desktop
+   rail owns >= 997px. Reuses the .ia-rail__* element styles; --ifm-* only. */
+.ia-rail-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  margin: 0 0 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+.ia-rail-strip .ia-rail__block { font-size: 0.85rem; }
+.ia-rail-strip .ia-rail__label { display: inline; margin: 0 0.4rem 0 0; }
+.ia-rail-strip .ia-rail__counterpart {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+.ia-rail-end {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* The desktop rail (>= 997px) carries this chrome; hide the mobile forms there. */
+@media (min-width: 997px) {
+  .ia-rail-strip,
+  .ia-rail-end {
+    display: none;
+  }
+}

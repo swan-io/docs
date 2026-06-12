@@ -1,0 +1,169 @@
+---
+title: Pagination
+---
+
+# Pagination
+
+import PaginationDefinition from '../../topics/definitions/_pagination.mdx';
+
+<PaginationDefinition />
+
+Pagination in Swan's API follows the [GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm) from Relay.
+Consider reading Relay's specifications for a full explanation.
+
+## Elements {#elements}
+
+An `element` is a single item in your list.
+You can always add the optional `totalCount` object, or the total number of elements in your list.
+By default, the Swan API returns a **list of 20 elements at a time**.
+
+## Connections {#connections}
+
+Connections are GraphQL objects that must have `edges` and `pageInfo`.
+They can also have other optional fields.
+
+### Edges {#connections-edges}
+
+Edges are *edge types*, and are GraphQL objects.
+
+The `edges` field returns a list defined by the edge type with the following required fields:
+
+- `node`: returns a scalar, enum, object, interface, union, or a non-null wrapper around one of those types; can't return a list
+- `cursor`: returns a type that serializes as a string (example: custom scalar that serializes as a string)
+
+### PageInfo {#connections-pageinfo}
+
+The `pageInfo` field returns a non-null `pageInfo` object with the following required fields:
+
+- `hasPreviousPage`, `hasNextPage`: non-null Booleans (must be true or false)
+- `startCursor`, `endCursor`: opaque strings, can be null
+
+## Arguments {#arguments}
+
+When a field returns a connection type, it must also return a forward pagination argument.
+These arguments define the edges required for all connections.
+
+Note that `after` requires an **index**, which is a unique reference to a specific element in string form.
+Specifically, the index is a [cursor type](https://relay.dev/graphql/connections.htm#sec-Cursor).
+
+- `first`: takes a non-negative integer `n` and loads only the *first* `n` elements from your list (maximum: 100)
+- `before`: loads all elements occurring *before* the provided index
+
+## Examples {#examples}
+
+Take the `accountMembership` query as an example.
+
+### Example 1: Use `first` argument {#example-first}
+
+Imagine you want to retrieve the most recent account to which you became an account member.
+
+Use the forward argument `first` and the positive integer `1`.
+Submit the query as follows.
+
+Note the returned account number (line 24) and the cursor or index (line 27).
+
+<a href="https://explorer.swan.io?query=cXVlcnkgRmlyc3RNZW1iZXJzaGlwIHsKICBhY2NvdW50TWVtYmVyc2hpcHMoZmlyc3Q6IDEpIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgYWNjb3VudCB7CiAgICAgICAgICBudW1iZXIKICAgICAgICB9CiAgICAgIH0KICAgICAgY3Vyc29yCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql title="MembershipsFirst1" {2,24,27} showLineNumbers
+query FirstMembership {
+  accountMemberships(first: 1) {
+		edges {
+      node {
+        account {
+          number
+        }
+      }
+      cursor
+    }
+  }
+}
+
+
+# Payload
+
+{
+  "data": {
+    "accountMemberships": {
+      "edges": [
+        {
+          "node": {
+            "account": {
+              "number": "15102197881"
+            }
+          },
+          "cursor": "MmNlMzk2OT=="
+        }
+      ]
+    }
+  }
+}
+```
+
+### Example 2: Use index cursor {#example-index}
+
+Add the index to list the 10 account memberships from before the indexed membership.
+This query would return a long list, so the payload isn't included here.
+
+<a href="https://explorer.swan.io?query=cXVlcnkgVGVuQmVmb3JlIHsKICBhY2NvdW50TWVtYmVyc2hpcHMoZmlyc3Q6IDEwLCBiZWZvcmU6ICJNbU5sTXprMk9UPT0iKSB7CiAgICBlZGdlcyB7CiAgICAgIG5vZGUgewogICAgICAgIGFjY291bnQgewogICAgICAgICAgbnVtYmVyCiAgICAgICAgfQogICAgICB9CiAgICAgIGN1cnNvcgogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql title="MembershipsIndex" {2,23,26} showLineNumbers
+query TenBefore {
+  accountMemberships(first: 10, before: "MmNlMzk2OT==") {
+    edges {
+      node {
+        account {
+          number
+        }
+      }
+      cursor
+    }
+  }
+}
+```
+
+### Example 3: Use `pageInfo` field {#example-pageinfo}
+
+Add `pageInfo` to know if there are more pages of account memberships.
+
+<a href="https://explorer.swan.io?query=cXVlcnkgUGFnZUluZm8gewogIGFjY291bnRNZW1iZXJzaGlwcyhmaXJzdDogMikgewogICAgdG90YWxDb3VudAogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICBhY2NvdW50IHsKICAgICAgICAgIG51bWJlcgogICAgICAgIH0KICAgICAgfQogICAgICBjdXJzb3IKICAgIH0KICAgIHBhZ2VJbmZvIHsKICAgICAgZW5kQ3Vyc29yCiAgICAgIGhhc05leHRQYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql title="MembershipsPageInfo" {2-3,12-14,24,28-30} showLineNumbers
+query PageInfo {
+  accountMemberships(first: 2) {
+    totalCount
+    edges {
+      node {
+        account {
+          number
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+
+# Payload
+
+{
+  "data": {
+    "accountMemberships": {
+      "totalCount": 8,
+      "edges": [
+        {...} # list of account memberships
+      ],
+      "pageInfo": {
+        "endCursor": $OPAQUE_STRING,
+        "hasNextPage": true
+      }
+    }
+  }
+}
+```
+
+## Related
+
+- [Errors & rejections](/dev-tools/using-api/errors-rejections) · [Idempotency](/dev-tools/using-api/idempotency)

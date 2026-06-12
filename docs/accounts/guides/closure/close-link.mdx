@@ -1,0 +1,107 @@
+---
+title: Send a link to close an account
+audience:
+  - ops
+related:
+  - /accounts/concepts/closure
+  - /accounts/guides/closure/get-closure-info
+---
+
+# Send a link to close an account
+
+Send the account's <Term id="legal-representative">legal representative</Term> a Dashboard link so they can complete account closure themselves.
+
+If the account's [legal representative](/get-started/set-up-swan/glossary#legal-representative) requests account closure, send them a link to complete the process.
+
+:::caution Suspended accounts
+Only Swan can act on `Suspended` accounts.
+If the [status](/accounts/concepts/account/statuses) is `Suspended`, you can't send a link to close the account.
+:::
+
+## Step 1: Send link to legal representative {#send-link}
+
+1. Go to your **Dashboard** > **Data** > **Accounts**.
+1. Locate the account closure link in the **Close account** tile.
+1. **Click-to-copy** the link.
+1. Send the link to the account's legal representative.
+
+:::note Tracking closure
+Keep track of the account closure process on **Dashboard** > **Data** > **Accounts**.
+Consider subscribing to the `Account.Closing` and `Account.Closed` [webhooks](/dev-tools/using-api/webhooks#events-accounts) to be notified when the [account status](/accounts/concepts/account/statuses) changes.
+:::
+
+## Step 2: Legal representative completes process {#complete-process}
+
+The account's legal representative opens the link you provide, then logs into their banking app.
+They choose a reason for account closure, then consent to closing the account with [Strong Customer Authentication](/topics/users/consent/#sca).
+
+To complete the account closure process, the balance must be zero.
+The following table explains the actions required to reach a zero balance.
+
+| Balance | Action |
+| --- | --- |
+| ➕ Positive | Transfer the funds **out of** the account with a SEPA Credit Transfer. |
+| ➖ Negative | Swan works with your end users to reach a zero balance. |
+
+:::tip Timeline
+After consenting to account closure and reaching a zero balance, the account is closed **within 30 days**.
+:::
+
+## Close with the API {#api}
+
+If the account's [legal representative](/get-started/set-up-swan/glossary#legal-representative) requests account closure, start the process **with the API**.
+
+:::caution Suspended accounts
+Only Swan can act on `Suspended` accounts.
+If the [status](/accounts/concepts/account/statuses) is `Suspended`, you can't use the API to close the account.
+:::
+
+### Guide
+
+1. Call the `closeAccount` mutation with the legal representative's [user access token](/dev-tools/using-api/authentication#tokens-user).
+1. The API returns a `consentUrl`.
+1. Send the `consentUrl` to the account's legal representative so they can complete [Strong Customer Authentication](/topics/users/consent/#sca).
+1. As soon as the legal representative consents, the account status changes to `Closing`.
+
+:::note Account statuses
+Refer to the [account statuses](/accounts/concepts/account/statuses) section for an overview of what happens while an account is `Closing`.
+:::
+
+### Mutation
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gY2xvc2VBY2NvdW50IHsKICBjbG9zZUFjY291bnQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIgogICAgICByZWFzb246IHsgdHlwZTogQ2xvc2luZ1JlcXVlc3RlZCB9CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBDbG9zZUFjY291bnRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEJhZEFjY291bnRTdGF0dXNSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql title="Mutation" {4-6,12} showLineNumbers
+mutation closeAccount {
+  closeAccount(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      reason: { type: ClosingRequested }
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on CloseAccountSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+  }
+}
+
+```
+
+### Payload
+
+```graphql title="Payload" {6} showLineNumbers
+{
+  "data": {
+    "closeAccount": {
+      "__typename": "CloseAccountSuccessPayload",
+      "consent": {
+        "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+      }
+    }
+  }
+}
+```

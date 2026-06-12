@@ -1,0 +1,37 @@
+---
+title: Settlement and cancellation
+related:
+  - /accounts/concepts/funding
+  - /accounts/guides/funding/initiate-request
+---
+
+import DayTimeStandard from '../../../topics/partials/_day-time.mdx';
+
+# Settlement and cancellation
+
+## Settlement date and booked time {#settlement}
+
+**SEPA Direct Debit** transactions are **booked at 20:00 Central European [Summer] Time (CET/CEST)** on the settlement date if no rejection or cancellation has been issued or received.
+Note that settlements dates exclude weekends and SEPA holidays.
+
+| Transaction initiated | Booked |
+| --- | --- |
+| Before 10:30 Central European [Summer] Time (CET/CEST)    | Next business day at 20:00 Central European [Summer] Time (CET/CEST) |
+| After 10:30 Central European [Summer] Time (CET/CEST)     | Within two business days at 20:00 Central European [Summer] Time (CET/CEST) |
+
+<DayTimeStandard />
+
+## Scheduling funding requests {#scheduling}
+
+If you use `requestedExecutionAt` when initiating your funding requests, you can schedule them up to one year in advance.
+Your scheduled requests must be for at least two business days in the future.
+
+## Canceling transactions {#canceling}
+
+<Term id="account-holder">Account holders</Term> and eligible account members can cancel SEPA Direct Debit funding transactions using the [`cancelTransaction`](https://api-reference.swan.io/mutations/cancel-transaction/) mutation. 
+
+To understand if a transaction is cancelable, check the `isCancelable` field of the transaction. This field returns `true` if the transaction can still be canceled, and `false` if the cancellation window has passed. 
+
+Only the full amount can be canceled. Transactions can only be canceled until the last business day before settlement, at around **10:00 Central European [Summer] Time (CET/CEST)**.
+
+After this cutoff time, the transaction can't be canceled and will proceed to settlement.

@@ -1,0 +1,48 @@
+---
+title: Account type and level
+related:
+  - /accounts/concepts/account
+  - /accounts/concepts/ibans
+  - /accounts/concepts/account-holders
+---
+
+# Account type and level
+
+Swan accounts are defined by a payment **level** and payment **account type**.
+There are two possible values for each:
+
+- [`PaymentLevel`](https://api-reference.swan.io/enums/payment-level) → `Limited` and `Unlimited`
+- [`PaymentAccountType`](https://api-reference.swan.io/enums/payment-account-type/) → `EMoney` and `PaymentService`
+
+Accounts start with the level `Limited` and the account type `EMoney`.
+The level changes from `Limited` to `Unlimited` when the [account holder verification status](/accounts/concepts/account-holders/verification#verification-process-statuses) changes to `Verified`.
+The account type changes from `EMoney` to `PaymentService` when the [account's main IBAN](/accounts/concepts/ibans/main) is available to the <Term id="account-holder">account holder</Term>.
+Accounts with the level `Unlimited` and the account type `PaymentService` are fully functional accounts.
+
+## Capabilities {#capabilities}
+
+Swan accounts have different capabilities determined by the combination of these values.
+
+| Level + Type | Capabilities |
+| --- | --- |
+| `Limited` + `EMoney` | <Yes /> The account can be used for certain actions, such as inviting account members and adding virtual cards.<br /><br /><No /> Account holder verification isn't complete.<br /><No /> The account's main IBAN isn't displayed.<br /><No /> Payments can't be made from the account. |
+| `Limited` + `PaymentService` | <Yes /> The account's main IBAN is displayed.<br /><Yes /> Money can be added to the account.<br /><br /><No /> Account holder verification isn't complete.<br /><No /> Payments can't be made from the account.<br /><No /> Incoming SEPA Credit Transfers exceeding €50 are automatically rejected.<br /><No /> Maximum cumulative balance is €150.<br /><No /> Incoming International Credit Transfers are automatically rejected regardless of amount. |
+| `Unlimited` + `PaymentService` | <Yes /> Account holder verification status is `Verified`.<br /><Yes /> Payments can be made from the account.<br /><Yes /> The account's main IBAN is displayed.<br /><Yes /> All accounts functions are possible. |
+
+:::info Restrictions on incoming transfers for limited accounts
+
+`Limited` accounts are subject to the following restrictions:
+- Each incoming SEPA Credit Transfer must be **€50 or less**.
+- A `Limited` account can't receive more than €150 in SEPA Credit Transfers over its lifetime.
+
+The €150 limit applies to the cumulative sum received, not the current account balance.
+Swan fees don't count toward this limit. For example, if a user receives €150 and is charged a €2 Swan fee, their balance will be €148. 
+Even though the fee reduced their balance, the €150 received counts towards their limit. 
+Swan will automatically reject any further transfers sent to the account.
+
+These restrictions apply to both SEPA Credit Transfers (instant and regular).
+Incoming International Credit Transfers are automatically rejected regardless of amount.
+
+Accounts are in `Limited` status before they are verified. 
+These restrictions primarily impact first transfers during the account holder verification process. 
+:::

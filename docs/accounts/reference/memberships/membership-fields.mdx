@@ -1,0 +1,101 @@
+---
+title: Membership fields
+related:
+  - /accounts/reference/memberships/membership-permissions
+  - /accounts/concepts/memberships
+---
+
+# Membership fields
+
+Field-level requirements and validation rules for account membership data. Use this alongside the [membership permissions reference](/accounts/reference/memberships/membership-permissions); for the model and lifecycle, see [Account memberships](/accounts/concepts/memberships).
+
+## Country requirements for account memberships {#country-req}
+
+To invite an account member, you must provide specific account membership fields.
+
+**Requirements vary depending on the IBAN country**. Swan automatically sets these requirements based on the member's permissions, `accountCountry`, and `residencyAddress.country`.
+
+<FieldRequirementsLegend />
+
+| API field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇮🇹<br/>Italy |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `accountID` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canInitiatePayments` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageAccountMembership` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageBeneficiaries` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `canManageCards` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `canViewAccount` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `consentRedirectUrl` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `email` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `language` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `residencyAddress.addressLine1` | <Opt /> | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `residencyAddress.city` | <Opt /> | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.country` | <Opt /> | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.postalCode` | <Opt /> | <Opt /> | <Cnd /> | <Cnd /> | <Opt /> | <Req /> |
+| `residencyAddress.state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `restrictedTo.firstName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `restrictedTo.lastName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `restrictedTo.phoneNumber` | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> |
+| `restrictedTo.birthDate` | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> | <Cnd /> |
+| `taxIdentificationNumber` | <Opt /> | <Opt /> | <Cnd /> | <Opt /> | <Opt /> | <Cnd /> |
+|  | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇮🇹<br/>Italy |
+
+### Detailed optional and conditional requirements
+
+#### Birthdate
+The `restrictedTo.birthDate` field is **required** if **any** of the following account membership permissions are set to `true`:
+- `canManageBeneficiaries`
+- `canInitiatePayments`
+- `canManageAccountMembership`
+- `canManageCards`
+
+#### Membership permissions
+
+If no value is provided for `canManageCards`, it defaults to the value of `canManageAccountMembership`.
+
+#### Phone number
+The `restrictedTo.phoneNumber` field is **required** if **any** of the following account membership permissions are set to `true`:
+  - `canManageBeneficiaries`
+  - `canInitiatePayments`
+  - `canManageAccountMembership`
+
+#### Residency address fields
+The `addressLine1`, `city`, `country`, and `postalCode` fields are **required** regardless of `residencyAddress.country`, in the following cases:
+
+- The `accountCountry` is 🇮🇹 Italy.
+- The `accountCountry` is 🇩🇪 Germany or 🇳🇱 Netherlands, and **one or both** of the following account membership permissions are set to `true`: 
+  - `canViewAccount`
+  - `canInitiatePayments`
+
+#### Tax identification number
+The `taxIdentificationNumber` field is **required** in the following cases:
+- If both `accountCountry` **and** `residencyAddress.country` are 🇮🇹 Italy, and the account membership has the `canInitiatePayments` permission set to `true`.
+- If both `accountCountry` **and** `residencyAddress.country` are 🇩🇪 Germany, and **one or both** of the following account membership permissions are set to `true`:
+  - ` canViewAccount`
+  - `canInitiatePayments`
+
+## Validation rules {#validation}
+
+Certain account membership fields must follow specific validation patterns.
+
+### First name and last name {#validation-names}
+
+The `restrictedTo.firstName` and `restrictedTo.lastName` fields must match the following validation pattern:
+
+```regex
+/^[\p{L}]+(?:[-'\s][\p{L}]+)*'?$/u
+```
+
+This pattern accepts the following characters:
+
+- Any Unicode letter (`\p{L}`), covering Latin, Cyrillic, Greek, Armenian, Georgian, Korean, Japanese, Chinese, and more.
+- Spaces.
+- Apostrophes (`'`).
+- Hyphens (`-`).
+
+Names must start with a letter. Separators (hyphen, apostrophe, and space) must be followed by at least one letter and can't appear consecutively. Names may optionally end with an apostrophe.
+
+:::info Aligned with user creation
+These validation rules are the same as those applied when [creating users](/topics/users/).
+:::

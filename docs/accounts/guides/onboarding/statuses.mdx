@@ -1,0 +1,58 @@
+---
+title: Statuses
+related:
+  - /accounts/guides/onboarding
+  - /accounts/guides/onboarding/manage-onboardings
+  - /accounts/concepts/account-holders
+---
+
+# Statuses
+
+```flowmap
+{
+  "mode": "graph",
+  "layout": "lifecycle",
+  "nodes": [
+    { "id": "invalid", "title": "Ongoing (Invalid)", "desc": "Missing or incorrect required info." },
+    { "id": "valid", "title": "Ongoing (Valid)", "desc": "All required info present." },
+    { "id": "finalized", "title": "Finalized", "desc": "Onboarding complete." }
+  ],
+  "edges": [
+    { "from": "invalid", "to": "valid" },
+    { "from": "valid", "to": "finalized" }
+  ]
+}
+```
+
+| Status | Explanation |
+|---|---|
+| `Ongoing (Invalid)` | <ul><li>This is the first status assigned to an onboarding when **using the frontend**.</li><li>If using the **API**, this is the first status if **not all required information** is included with your mutation.</li><li>Status might change to `Invalid` if required information is removed or if some information is incorrect.</li></ul>**Next step**: Submit or update required information to advance to `Ongoing (Valid)` (both you and the end user can submit or update information) |
+| `Ongoing (Valid)` | <ul><li>This is the first status assigned to an onboarding if **using the API** and you **included all required information** with your mutation.</li><li>Status changes to `Valid` when missing required information is submitted or if incorrect information is updated.</li></ul>**Next step**: User completes form, clicks "Finalize," and provides consent to complete the onboarding process |
+| `Finalized` | Onboarding completed |
+
+## API sequence diagram {#diagram}
+
+Review this sequence diagram that depicts the onboarding flow with the API.
+
+```mermaid
+sequenceDiagram
+participant S as Swan
+participant P as Partner
+participant U as User
+    alt Partner decision
+        P ->> P: Determines need for Swan account
+    else User request
+    activate U
+        U ->> P: Requests Swan account and<br/>provides required information
+    end
+    P ->> S: Creates onboarding ID
+    S -->> P: Returns onboarding ID
+    P ->> U: Sends authentication link (OAuth 2.0)
+    U ->> S: Logs in
+    S -->> P: Redirects user to partner interface
+    deactivate U
+    P ->> S: Requests user access token
+    S -->> P: Returns user access token
+    P ->> S: Finalizes onboarding with user access token
+    S -->> P: Confirms account holder and account creation
+```

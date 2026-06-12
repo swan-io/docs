@@ -1,0 +1,77 @@
+---
+title: Upload documents
+audience:
+  - dev
+related:
+  - /accounts/guides/onboarding/capital-deposits
+  - /accounts/guides/onboarding/capital-deposits/create-case
+---
+
+# Upload required documents
+
+Generate an upload URL and send the <Term id="supporting-documents">supporting documents</Term> required to complete a France capital deposit case.
+
+:::caution Multi-step process
+This page explains how to upload documents for steps 4 and 8 of a **multi-step process**.
+Refer to the [France guide](/accounts/guides/onboarding/capital-deposits/#france) for the whole process.
+:::
+
+## Step 1: Generate upload URL  {#generate-url}
+
+Use the `generateCapitalDepositDocumentUploadUrl` mutation to generate an upload URL.
+
+1. Call the `generateCapitalDepositDocumentUploadUrl` mutation.
+1. Enter all required information: `documentId`,`capitalDepositCaseId`, and `filename`.
+1. Add the `GenerateSupportingDocumentUploadUrlSuccessPayload` with the `uploadUrl`.
+1. Add other optional messages to the payload, either for validation or in case of rejection.
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gZ2VuZXJhdGVVcGxvYWRVcmwgewogIGdlbmVyYXRlQ2FwaXRhbERlcG9zaXREb2N1bWVudFVwbG9hZFVybCgKICAgIGlucHV0OiB7CiAgICAgIGRvY3VtZW50SWQ6ICIkWU9VUl9ET0NVTUVOVF9JRCIKICAgICAgY2FwaXRhbERlcG9zaXRDYXNlSWQ6ICIkWU9VUl9DQVBJVEFMREVQT1NJVENBU0VfSUQiCiAgICAgIGZpbGVuYW1lOiAiJEZJTEVfTkFNRSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBHZW5lcmF0ZUNhcGl0YWxEZXBvc2l0RG9jdW1lbnRVcGxvYWRVcmxTdWNjZXNzUGF5bG9hZCB7CiAgICAgIHVwbG9hZFVybAogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,4-6,10} showLineNumbers
+mutation generateUploadUrl {
+  generateCapitalDepositDocumentUploadUrl(
+    input: {
+      documentId: "$YOUR_DOCUMENT_ID"
+      capitalDepositCaseId: "$YOUR_CAPITALDEPOSITCASE_ID"
+      filename: "$FILE_NAME"
+    }
+  ) {
+    ... on GenerateCapitalDepositDocumentUploadUrlSuccessPayload {
+      uploadUrl
+    }
+  }
+}
+```
+
+## Step 2: Retrieve generated URL from payload {#retrieve-url}
+
+Retrieve the generated `uploadUrl` in the payload.
+
+:::caution Upload URL expires
+The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
+:::
+
+```graphql {4} showLineNumbers
+{
+  "data": {
+    "generateCapitalDepositDocumentUploadUrl": {
+      "uploadUrl": "$YOUR_UPLOAD_URL"
+    }
+  }
+}
+```
+
+## Step 3: Send HTTP PUT request {#send-http-request}
+
+Send an HTTP PUT request to the `uploadUrl` with a `Content-Type: multipart/form-data` header.
+
+**Supported formats**: `.pdf`, `.png`, `.jpg`
+
+```curl showLineNumbers
+curl --upload-file $YOUR_FILE https://$UPLOAD_URL
+```
+
+## Step 4: Repeat {#repeat-steps}
+
+Repeat steps 1-3 to upload additional documents, as needed.
+You can also change the documents you already uploaded as long as the [document status](/accounts/reference/onboarding/capital-deposit-reference#documents-statuses) remains `Uploaded`.

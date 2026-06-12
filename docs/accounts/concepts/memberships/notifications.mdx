@@ -1,0 +1,34 @@
+---
+title: Notifications
+related:
+  - /accounts/concepts/memberships
+  - /accounts/guides/memberships/resend-invitation
+---
+
+# Notifications {#notifications}
+
+Swan sends email notifications to users when account memberships are managed.
+
+The sender for all notifications is `do-not-reply@swan.io`.
+Notifications are branded with your logo and accent colors configured in your **Dashboard** under **Settings** > **Branding**.
+
+## Join your banking space {#notification-invitation}
+
+When you invite someone to become an account member, Swan sends them an email invitation with a link to accept the membership.
+
+**Trigger**: The invitation email is sent when you create a new account membership with the status `InvitationSent`. Depending on your integration approach, this happens automatically through Swan's Web Banking interface or requires an additional API call when using the API.
+
+**Configuration**: The invitation notification is sent based on your integration setup:
+
+- **Swan Web Banking**: Invitations are sent automatically when using Swan's no-code Web Banking interface, unless the `canAddNewMembers` web banking setting is disabled in your **Dashboard**.
+- **Swan Web Banking forked**: If you've forked Swan's no-code Web Banking frontend, invitations are sent automatically.
+
+:::caution Forked Web Banking migration
+If you forked Swan's Web Banking before the migration to partner-branded notifications on Thursday, March 12, 2026, you must update your forked Web Banking to continue relying on Swan to send the invitation notification by email.
+:::
+
+- **API integration**: When using the API directly, call the `sendAccountMembershipInviteNotification` mutation to send invitation notifications. Learn more in the [guide to resend membership invitation notifications](/accounts/guides/memberships/resend-invitation).
+
+The email is sent to the account member's email address in their preferred language (or the account's default language if not set).
+
+If an invited member doesn't receive their invitation, you can resend it up to five times per day using the same mutation, as long as the membership status remains `InvitationSent`.

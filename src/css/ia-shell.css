@@ -400,13 +400,18 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
    React <ContentTypeIcon> span and the sidebar ::before alike.
    ============================================================ */
 .ia-type-icon {
-  display: inline-block; width: 1em; height: 1em; flex: none;
-  vertical-align: -0.15em; background-color: currentColor;
+  display: inline-block; position: relative; width: 1em; height: 1em; flex: none;
+  vertical-align: -0.15em; --ia-tip-delay: 0.32s; /* page tooltip */
+}
+/* glyph painted via ::before, leaving ::after free for the tooltip bubble */
+.ia-type-icon::before {
+  content: ""; display: block; width: 100%; height: 100%;
+  background-color: currentColor;
   -webkit-mask: no-repeat center / contain; mask: no-repeat center / contain;
 }
-.ia-type-icon--concept { -webkit-mask-image: url('/img/type-concept.svg'); mask-image: url('/img/type-concept.svg'); }
-.ia-type-icon--guide   { -webkit-mask-image: url('/img/type-guide.svg');   mask-image: url('/img/type-guide.svg'); }
-.ia-type-icon--ref     { -webkit-mask-image: url('/img/type-ref.svg');     mask-image: url('/img/type-ref.svg'); }
+.ia-type-icon--concept::before { -webkit-mask-image: url('/img/type-concept.svg'); mask-image: url('/img/type-concept.svg'); }
+.ia-type-icon--guide::before   { -webkit-mask-image: url('/img/type-guide.svg');   mask-image: url('/img/type-guide.svg'); }
+.ia-type-icon--ref::before     { -webkit-mask-image: url('/img/type-ref.svg');     mask-image: url('/img/type-ref.svg'); }
 
 /* rail "Related" type badge: icon sits before the label */
 .ia-rail__type { display: inline-flex; align-items: center; gap: .3em; }
@@ -415,7 +420,8 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
 .ia-rail__title .ia-type-icon { margin-right: .4em; }
 
 /* page H1 title marker — inherits heading color (no accent), nudged up off the baseline */
-.ia-h1-type { width: .78em; height: .78em; margin-right: .38em; vertical-align: 0.0008em; }
+.ia-h1-type { width: .78em; height: .78em; margin-right: .38em; vertical-align: 0.0016em; cursor: help; border-bottom: 1px dashed var(--ia-line); }
+.ia-h1-type:hover { border-bottom-color: var(--ia-ink-3); }
 
 /* sidebar markers on the TOP-SECTION headers (Concepts / Guides / Reference) */
 .ia-type-concept > .menu__list-item-collapsible > .menu__link::before,
@@ -440,3 +446,29 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
   display: block; font-size: 0.72rem; color: var(--ia-ink-3);
   letter-spacing: 0.02em; margin-bottom: 0.35em;
 }
+
+/* Lightweight tooltip (replaces native `title` so we control the show delay).
+   Used by content-type icons (page, 0.32s) and typed sidebar sections (0.64s). */
+[data-ia-tip] { position: relative; }
+[data-ia-tip]::after {
+  content: attr(data-ia-tip);
+  position: absolute; top: calc(100% + 6px); left: 0;
+  z-index: 60; width: max-content; max-width: 240px;
+  padding: 0.4em 0.6em; border-radius: 6px;
+  background: var(--ifm-color-emphasis-800); color: var(--ifm-background-color);
+  font: 400 0.75rem/1.35 var(--ifm-font-family-base);
+  text-transform: none; letter-spacing: normal; text-align: left;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  opacity: 0; transform: translateY(-3px); pointer-events: none;
+  transition: opacity 0.07s ease, transform 0.07s ease; transition-delay: 0s;
+  white-space: normal;
+}
+[data-ia-tip]:hover::after,
+[data-ia-tip]:focus-visible::after {
+  opacity: 1; transform: translateY(0);
+  transition-delay: var(--ia-tip-delay, 0.32s);
+}
+/* typed sidebar section headers — slower reveal */
+.ia-type-concept > .menu__list-item-collapsible > .menu__link,
+.ia-type-guide > .menu__list-item-collapsible > .menu__link,
+.ia-type-ref > .menu__list-item-collapsible > .menu__link { --ia-tip-delay: 0.64s; }

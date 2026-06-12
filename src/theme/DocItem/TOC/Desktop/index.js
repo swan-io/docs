@@ -20,28 +20,25 @@ export default function TOCDesktopWrapper(props) {
   const sourcePage = metadata.permalink || metadata.unversionedId || metadata.id;
   const hasToc = Array.isArray(toc) && toc.length > 0;
   const pageTitle = contentTitle || metadata.title || frontMatter.title;
+  const scrollToTop = (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   return (
     <div className="ia-rail">
-      {frontMatter.audience && (
-        <div className="ia-rail__group">
+      {(pageTitle || frontMatter.audience) && (
+        <header className="ia-rail__head">
+          {pageTitle && (
+            <a href={metadata.permalink} className="ia-rail__title" onClick={scrollToTop}>
+              {pageTitle}
+            </a>
+          )}
           <Audience value={frontMatter.audience} sourcePage={sourcePage} />
-        </div>
+        </header>
       )}
       {hasToc ? (
         <div className="ia-rail__toc">
           <p className="ia-rail__label">On this page</p>
-          {pageTitle && (
-            <a
-              href={metadata.permalink}
-              className="ia-rail__toc-top"
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            >
-              {pageTitle}
-            </a>
-          )}
           <OriginalTOCDesktop {...props} />
         </div>
       ) : (

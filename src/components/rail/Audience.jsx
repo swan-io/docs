@@ -8,7 +8,7 @@ export default function Audience({ value, sourcePage }) {
 
   return (
     <div className="ia-rail__block ia-rail__audience">
-      <p className="ia-rail__label">For</p>
+      <p className="ia-rail__label">Audience:</p>
       <div className="ia-rail__chips">
         {values.map((v) => {
           const label = AUDIENCE_LABELS[v];

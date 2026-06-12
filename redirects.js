@@ -50,6 +50,8 @@ module.exports = [
   { from: "/partnership/document-center/company-registration/belgium", to: "/accounts/reference/onboarding/country-requirements/belgium" },
   { from: "/partnership/document-center/proof-address", to: "/accounts/reference/onboarding/proof-of-address" },
   // end batch 2
+  // DOC-1814 — account-holders relocated from guides/onboarding to concepts
+  { from: "/accounts/guides/onboarding/account-holders", to: "/accounts/concepts/account-holders" },
   // DOC-1814 cutover — batch 1: accounts/memberships
   { from: "/topics/accounts/memberships", to: "/accounts/concepts/memberships" },
   { from: "/topics/accounts/memberships/admin-change", to: "/accounts/guides/memberships/change-admin" },
@@ -85,7 +87,7 @@ module.exports = [
   { from: "/concept/account-funding", to: "/accounts/concepts/funding" },
   {
     from: "/concept/account-holder",
-    to: "/accounts/guides/onboarding/account-holders",
+    to: "/accounts/concepts/account-holders",
   },
   { from: "/concept/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/concept/capital-deposit", to: "/accounts/guides/onboarding/capital-deposits" },
@@ -279,7 +281,7 @@ module.exports = [
   { from: "/help/faq/consent", to: "/topics/users/consent/" },
   {
     from: "/help/faq/kyc-and-verification-process",
-    to: "/accounts/guides/onboarding/account-holders",
+    to: "/accounts/concepts/account-holders",
   },
   { from: "/help/faq/onboarding", to: "/accounts/guides/onboarding" },
   { from: "/help/faq/sepa-transactions", to: "/topics/payments/#sepa" },
@@ -608,7 +610,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/account-holders",
-    to: "/accounts/guides/onboarding/account-holders",
+    to: "/accounts/concepts/account-holders",
   },
   {
     from: "/topics/onboarding/account-holders/guide-add-additional-account",

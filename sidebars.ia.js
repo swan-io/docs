@@ -61,6 +61,11 @@ module.exports = {
         doc("accounts/concepts/account/documents", "Account documents"),
         doc("accounts/concepts/account/statuses", "Account statuses"),
       ], { link: "accounts/concepts/account/index" }),
+      cat("Account holders", [
+        doc("accounts/concepts/account-holders/verification", "Verification"),
+        doc("accounts/concepts/account-holders/first-transfer", "First transfer"),
+        doc("accounts/concepts/account-holders/notifications", "Notifications"),
+      ], { link: "accounts/concepts/account-holders/index" }),
       cat("Memberships", [
         doc("accounts/concepts/memberships/inviting", "Inviting members"),
         doc("accounts/concepts/memberships/permissions", "Permissions"),
@@ -115,7 +120,6 @@ module.exports = {
           doc("accounts/guides/onboarding/individual/create", "Create a link"),
           doc("accounts/guides/onboarding/individual/update", "Update"),
         ], { link: "accounts/guides/onboarding/individual/index" }),
-        doc("accounts/guides/onboarding/account-holders", "Account holders"),
         doc("accounts/guides/onboarding/account-holder-tasks", "Account holder tasks"),
         doc("accounts/guides/onboarding/verification-renewal", "Verification renewal"),
         doc("accounts/guides/onboarding/requirements", "Requirements"),

@@ -100,7 +100,7 @@ module.exports = {
         doc("accounts/concepts/funding/rolling-reserve", "Rolling reserve"),
         doc("accounts/concepts/funding/settlement", "Settlement and cancellation"),
       ], { link: "accounts/concepts/funding/index" }),
-    ]),
+    ], "accounts/concepts/index"),
     top("Guides", [
       cat("Onboarding", [
         doc("accounts/guides/onboarding/index", "Overview"),
@@ -174,7 +174,7 @@ module.exports = {
         doc("accounts/guides/billing/get-list", "Get billing list"),
         doc("accounts/guides/billing/compliant-billing", "Compliant billing"),
       ], { link: "accounts/guides/billing/index" }),
-    ]),
+    ], "accounts/guides/index"),
     top("Reference", [
       cat("Onboarding", [
         cat("Country requirements", [

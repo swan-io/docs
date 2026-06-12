@@ -14,6 +14,7 @@ import {
   SupportStatusLegend
 } from '@site/src/components/FieldRequirements';
 import FlowMap from '@site/src/components/FlowMap';
+import Term from '@site/src/components/Term';
 
 export default {
   // Re-use the default mapping
@@ -31,4 +32,5 @@ export default {
   Tabs,
   TabItem,
   FlowMap,
+  Term,
 };

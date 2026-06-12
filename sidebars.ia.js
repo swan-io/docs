@@ -105,8 +105,16 @@ module.exports = {
     top("Guides", [
       cat("Onboarding", [
         doc("accounts/guides/onboarding/index", "Overview"),
-        doc("accounts/guides/onboarding/company", "Company onboarding"),
-        doc("accounts/guides/onboarding/individual", "Individual onboarding"),
+        cat("Company onboarding", [
+          doc("accounts/guides/onboarding/company/requirements", "Requirements and fields"),
+          doc("accounts/guides/onboarding/company/create", "Create a link"),
+          doc("accounts/guides/onboarding/company/update", "Update"),
+        ], { link: "accounts/guides/onboarding/company/index" }),
+        cat("Individual onboarding", [
+          doc("accounts/guides/onboarding/individual/requirements", "Requirements and fields"),
+          doc("accounts/guides/onboarding/individual/create", "Create a link"),
+          doc("accounts/guides/onboarding/individual/update", "Update"),
+        ], { link: "accounts/guides/onboarding/individual/index" }),
         doc("accounts/guides/onboarding/account-holders", "Account holders"),
         doc("accounts/guides/onboarding/account-holder-tasks", "Account holder tasks"),
         doc("accounts/guides/onboarding/verification-renewal", "Verification renewal"),

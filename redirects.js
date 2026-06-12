@@ -157,7 +157,7 @@ module.exports = [
   },
   {
     from: "/user-flow-diagrams/onboardings",
-    to: "/accounts/guides/onboarding/company#diagrams",
+    to: "/accounts/guides/onboarding/company/requirements#diagrams",
   },
   { from: "/user-flow-diagrams/passcode-reset", to: "/topics/users/#login" },
   { from: "/user-flow-diagrams/sign-in", to: "/topics/users/#signup" },
@@ -640,11 +640,11 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/company/guide-create",
-    to: "/accounts/guides/onboarding/company#create",
+    to: "/accounts/guides/onboarding/company/create",
   },
   {
     from: "/topics/onboarding/company/guide-update",
-    to: "/accounts/guides/onboarding/company#update",
+    to: "/accounts/guides/onboarding/company/update",
   },
   {
     from: "/topics/onboarding/individual",
@@ -656,11 +656,11 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/individual/guide-create",
-    to: "/accounts/guides/onboarding/individual#create",
+    to: "/accounts/guides/onboarding/individual/create",
   },
   {
     from: "/topics/onboarding/individual/guide-update",
-    to: "/accounts/guides/onboarding/individual#update",
+    to: "/accounts/guides/onboarding/individual/update",
   },
   {
     from: "/topics/onboarding/overview/guide-migrate",

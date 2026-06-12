@@ -8,7 +8,7 @@ const LABELS = { Concept: 'Concept', Guide: 'Guide', Ref: 'Reference' };
 // Hover tooltip explaining each content type (shown via native title; the page-title
 // marker also gets a dashed underline + help cursor as the hover affordance).
 export const DESCRIPTIONS = {
-  Concept: 'Concept. Explains how something works. Understanding is always the first building block.',
+  Concept: 'Concept. Explains how something works.',
   Guide: 'Guide. Step-by-step instructions to reach a goal.',
   Ref: 'Reference. Look up exact details: fields, parameters, and specs.',
 };

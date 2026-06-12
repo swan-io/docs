@@ -514,6 +514,7 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
   left: 100%;
   margin-left: 0.15rem;
   min-width: 12rem;
+  /* see ::before below — bridges the gap so hover survives diagonal travel */
   list-style: none;
   padding: 0.5rem;
   background-color: var(--ifm-dropdown-background-color);
@@ -532,6 +533,17 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
   visibility: visible;
   pointer-events: all;
   transform: translateX(0);
+}
+/* Transparent bridge over the parent→submenu gap (incl. the 0.15rem margin and
+   the panel's right padding). Keeps the cursor inside the hoverable subtree
+   during diagonal travel, so the flyout doesn't close mid-move. */
+.ia-flyout__menu::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.6rem;
+  width: 0.6rem;
 }
 .ia-flyout__menu .dropdown__link {
   white-space: nowrap;

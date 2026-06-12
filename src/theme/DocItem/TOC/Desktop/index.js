@@ -18,19 +18,13 @@ export default function TOCDesktopWrapper(props) {
   }
 
   const sourcePage = metadata.permalink || metadata.unversionedId || metadata.id;
-  const hasGroup = frontMatter.audience || frontMatter.counterpart;
   const hasToc = Array.isArray(toc) && toc.length > 0;
   const pageTitle = contentTitle || metadata.title || frontMatter.title;
   return (
     <div className="ia-rail">
-      {hasGroup && (
+      {frontMatter.audience && (
         <div className="ia-rail__group">
           <Audience value={frontMatter.audience} sourcePage={sourcePage} />
-          <Counterpart
-            route={frontMatter.counterpart}
-            label={frontMatter.counterpart_label}
-            sourcePage={sourcePage}
-          />
         </div>
       )}
       {hasToc ? (
@@ -53,7 +47,16 @@ export default function TOCDesktopWrapper(props) {
       ) : (
         <OriginalTOCDesktop {...props} />
       )}
-      <Related routes={frontMatter.related} sourcePage={sourcePage} />
+      {(frontMatter.counterpart || frontMatter.related) && (
+        <div className="ia-rail__group">
+          <Counterpart
+            route={frontMatter.counterpart}
+            label={frontMatter.counterpart_label}
+            sourcePage={sourcePage}
+          />
+          <Related routes={frontMatter.related} sourcePage={sourcePage} />
+        </div>
+      )}
     </div>
   );
 }

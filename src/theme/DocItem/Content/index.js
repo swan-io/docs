@@ -19,22 +19,21 @@ export default function ContentWrapper(props) {
   }
 
   const sourcePage = metadata.permalink || metadata.unversionedId || metadata.id;
-  const hasStrip = frontMatter.audience || frontMatter.counterpart;
   return (
     <>
-      {hasStrip && (
+      {frontMatter.audience && (
         <div className="ia-rail-strip">
           <Audience value={frontMatter.audience} sourcePage={sourcePage} />
+        </div>
+      )}
+      <OriginalContent {...props} />
+      {(frontMatter.counterpart || frontMatter.related) && (
+        <div className="ia-rail-end">
           <Counterpart
             route={frontMatter.counterpart}
             label={frontMatter.counterpart_label}
             sourcePage={sourcePage}
           />
-        </div>
-      )}
-      <OriginalContent {...props} />
-      {frontMatter.related && (
-        <div className="ia-rail-end">
           <Related routes={frontMatter.related} sourcePage={sourcePage} />
         </div>
       )}

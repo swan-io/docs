@@ -203,17 +203,16 @@
 }
 
 /* Styled containers so the chrome reads as distinct cards, not part of the TOC.
-   The audience + counterpart group and the related block each sit in a bordered
-   surface; the stock TOC between them stays plain. Desktop rail only. */
-.ia-rail .ia-rail__group,
-.ia-rail .ia-rail__related {
+   The audience badge (top) and the counterpart + related group (bottom) each sit
+   in a bordered surface; the stock TOC between them stays plain. Desktop rail only. */
+.ia-rail .ia-rail__group {
   padding: 0.9rem 1rem;
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: var(--ifm-global-radius);
   background: var(--ifm-card-background-color);
 }
-/* Divider between the audience pill and the counterpart inside the group. */
-.ia-rail .ia-rail__group .ia-rail__counterpart {
+/* Divider between stacked blocks inside a group (e.g. counterpart / related). */
+.ia-rail .ia-rail__group .ia-rail__block + .ia-rail__block {
   margin-top: 0.85rem;
   padding-top: 0.85rem;
   border-top: 1px solid var(--ifm-color-emphasis-200);
@@ -257,7 +256,7 @@
 }
 
 /* ===== IA mobile chrome (DOC-1814 §A step 2) =====
-   Compact strip above the title (audience + counterpart) and the Related block
+   Compact audience strip above the title, and the counterpart + related block
    after the content, shown only below the 997px theme breakpoint; the desktop
    rail owns >= 997px. Reuses the .ia-rail__* element styles; --ifm-* only. */
 .ia-rail-strip {
@@ -271,15 +270,14 @@
 }
 .ia-rail-strip .ia-rail__block { font-size: 0.85rem; }
 .ia-rail-strip .ia-rail__label { display: inline; margin: 0 0.4rem 0 0; }
-.ia-rail-strip .ia-rail__counterpart {
-  display: flex;
-  align-items: baseline;
-  gap: 0.3rem;
-}
 .ia-rail-end {
   margin-top: 2.5rem;
   padding-top: 1rem;
   border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+/* Space the counterpart and related blocks in the mobile end region. */
+.ia-rail-end .ia-rail__block + .ia-rail__block {
+  margin-top: 1.25rem;
 }
 
 /* The desktop rail (>= 997px) carries this chrome; hide the mobile forms there. */

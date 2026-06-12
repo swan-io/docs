@@ -450,6 +450,12 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
 /* Lightweight tooltip (replaces native `title` so we control the show delay).
    Used by content-type icons and typed sidebar sections — 0.32s reveal. */
 [data-ia-tip] { position: relative; }
+/* Lift the hovered host above following siblings so its tooltip (a positioned
+   descendant) isn't painted over by later sidebar items in the DOM. */
+[data-ia-tip]:hover,
+[data-ia-tip]:focus-within {
+  z-index: 61;
+}
 [data-ia-tip]::after {
   content: attr(data-ia-tip);
   position: absolute; top: calc(100% + 6px); left: 0;

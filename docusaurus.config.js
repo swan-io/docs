@@ -36,7 +36,7 @@ module.exports = {
       logo: {
         alt: "Swan",
         src: "img/logo-swan.svg",
-        width: 130,
+        width: 152,
       },
       items: [
         { type: "doc", docId: "get-started/index", position: "left", label: "Get started" },

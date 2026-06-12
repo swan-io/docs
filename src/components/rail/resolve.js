@@ -25,14 +25,6 @@ export function resolveRoute(map, route) {
 
 export const AUDIENCE_LABELS = { dev: "Developers", ops: "Operators" };
 
-// Human label for an audience frontmatter value (array or scalar), or null.
-export function audienceText(audience) {
-  if (!audience) return null;
-  const arr = Array.isArray(audience) ? audience : [audience];
-  const labels = arr.map((v) => AUDIENCE_LABELS[v]).filter(Boolean);
-  return labels.length ? labels.join(" · ") : null;
-}
-
 // Type chip derived from the route's section segment.
 export function typeChip(route) {
   if (route.includes("/concepts/")) return "Concept";

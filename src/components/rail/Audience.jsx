@@ -1,7 +1,5 @@
 import React from "react";
-import { failOrWarn } from "./resolve";
-
-const LABELS = { dev: "Developers", ops: "Partner ops" };
+import { AUDIENCE_LABELS, failOrWarn } from "./resolve";
 
 export default function Audience({ value, sourcePage }) {
   if (!value) return null;
@@ -10,9 +8,10 @@ export default function Audience({ value, sourcePage }) {
 
   return (
     <div className="ia-rail__block ia-rail__audience">
+      <p className="ia-rail__label">For</p>
       <div className="ia-rail__chips">
         {values.map((v) => {
-          const label = LABELS[v];
+          const label = AUDIENCE_LABELS[v];
           if (!label) {
             failOrWarn(sourcePage, "audience", v, "is not a known audience value");
             return (

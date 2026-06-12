@@ -18,14 +18,19 @@ export default function TOCDesktopWrapper(props) {
   }
 
   const sourcePage = metadata.permalink || metadata.unversionedId || metadata.id;
+  const hasGroup = frontMatter.audience || frontMatter.counterpart;
   return (
     <div className="ia-rail">
-      <Audience value={frontMatter.audience} sourcePage={sourcePage} />
-      <Counterpart
-        route={frontMatter.counterpart}
-        label={frontMatter.counterpart_label}
-        sourcePage={sourcePage}
-      />
+      {hasGroup && (
+        <div className="ia-rail__group">
+          <Audience value={frontMatter.audience} sourcePage={sourcePage} />
+          <Counterpart
+            route={frontMatter.counterpart}
+            label={frontMatter.counterpart_label}
+            sourcePage={sourcePage}
+          />
+        </div>
+      )}
       <OriginalTOCDesktop {...props} />
       <Related routes={frontMatter.related} sourcePage={sourcePage} />
     </div>

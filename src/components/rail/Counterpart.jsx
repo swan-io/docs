@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "@docusaurus/Link";
-import { useRouteMap, resolveRoute, failOrWarn } from "./resolve";
+import { useRouteMap, resolveRoute, audienceText, failOrWarn } from "./resolve";
 
 export default function Counterpart({ route, label, sourcePage }) {
   if (!route) return null;
@@ -12,19 +12,21 @@ export default function Counterpart({ route, label, sourcePage }) {
     return (
       <div className="ia-rail__block ia-rail__counterpart">
         <p className="ia-rail__label">Also available</p>
-        <Link to={route} className="ia-rail__link">
-          {route}
+        <Link to={route} className="ia-rail__card">
+          <span className="ia-rail__card-title">{route}</span>
         </Link>
       </div>
     );
   }
 
   const text = label || resolved.meta.title || route;
+  const sub = audienceText(resolved.meta.audience);
   return (
     <div className="ia-rail__block ia-rail__counterpart">
       <p className="ia-rail__label">Also available</p>
-      <Link to={route} className="ia-rail__link">
-        {text}
+      <Link to={route} className="ia-rail__card">
+        <span className="ia-rail__card-title">{text}</span>
+        {sub && <span className="ia-rail__card-sub">{sub}</span>}
       </Link>
     </div>
   );

@@ -8,10 +8,11 @@ const cat = (label, items, opts = {}) => ({
   collapsible: opts.collapsible ?? true,
   collapsed: opts.collapsed ?? true,
   ...(opts.link ? { link: { type: "doc", id: opts.link } } : {}),
+  ...(opts.className ? { className: opts.className } : {}),
   items,
 });
-const top = (label, items, link) =>
-  cat(label, items, { collapsible: true, collapsed: false, link });
+const top = (label, items, link, className) =>
+  cat(label, items, { collapsible: true, collapsed: false, link, className });
 const doc = (id, label) => ({ type: "doc", id, label });
 
 module.exports = {
@@ -100,7 +101,7 @@ module.exports = {
         doc("accounts/concepts/funding/rolling-reserve", "Rolling reserve"),
         doc("accounts/concepts/funding/settlement", "Settlement and cancellation"),
       ], { link: "accounts/concepts/funding/index" }),
-    ], "accounts/concepts/index"),
+    ], "accounts/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Onboarding", [
         doc("accounts/guides/onboarding/index", "Overview"),
@@ -174,7 +175,7 @@ module.exports = {
         doc("accounts/guides/billing/get-list", "Get billing list"),
         doc("accounts/guides/billing/compliant-billing", "Compliant billing"),
       ], { link: "accounts/guides/billing/index" }),
-    ], "accounts/guides/index"),
+    ], "accounts/guides/index", "ia-type-guide"),
     top("Reference", [
       cat("Onboarding", [
         cat("Country requirements", [
@@ -203,7 +204,7 @@ module.exports = {
         doc("accounts/reference/sandbox/sandbox-documents", "Sandbox: documents"),
         doc("accounts/reference/sandbox/sandbox-funding", "Sandbox: funding"),
       ], { link: "accounts/reference/sandbox/index" }),
-    ], "accounts/reference/index"),
+    ], "accounts/reference/index", "ia-type-ref"),
   ],
 
   cardsSidebar: [

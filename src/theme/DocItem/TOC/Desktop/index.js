@@ -4,6 +4,8 @@ import { useDoc } from "@docusaurus/theme-common/internal";
 import Audience from "@site/src/components/rail/Audience";
 import Counterpart from "@site/src/components/rail/Counterpart";
 import Related from "@site/src/components/rail/Related";
+import ContentTypeIcon from "@site/src/components/ContentTypeIcon";
+import { typeChip } from "@site/src/components/rail/resolve";
 
 // Hand-written wrapper (not swizzled — `yarn swizzle` is interactive). Renders the
 // custom rail blocks around the original desktop TOC for pages that opt in. Pages
@@ -30,6 +32,7 @@ export default function TOCDesktopWrapper(props) {
         <header className="ia-rail__head">
           {pageTitle && (
             <a href={metadata.permalink} className="ia-rail__title" onClick={scrollToTop}>
+              <ContentTypeIcon type={typeChip(sourcePage)} className="ia-title-type" />
               {pageTitle}
             </a>
           )}

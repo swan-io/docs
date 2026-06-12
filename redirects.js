@@ -42,12 +42,12 @@ module.exports = [
   { from: "/partnership/protections/fraud/types", to: "/get-started/become-a-partner/protections/fraud-obligations#types" },
   { from: "/partnership/contact", to: "/get-started" },
   { from: "/partnership/document-center/company-registration", to: "/accounts/reference/country-requirements" },
-  { from: "/partnership/document-center/company-registration/france", to: "/accounts/reference/country-requirements#france" },
-  { from: "/partnership/document-center/company-registration/germany", to: "/accounts/reference/country-requirements#germany" },
-  { from: "/partnership/document-center/company-registration/italy", to: "/accounts/reference/country-requirements#italy" },
-  { from: "/partnership/document-center/company-registration/spain", to: "/accounts/reference/country-requirements#spain" },
-  { from: "/partnership/document-center/company-registration/netherlands", to: "/accounts/reference/country-requirements#netherlands" },
-  { from: "/partnership/document-center/company-registration/belgium", to: "/accounts/reference/country-requirements#belgium" },
+  { from: "/partnership/document-center/company-registration/france", to: "/accounts/reference/country-requirements/france" },
+  { from: "/partnership/document-center/company-registration/germany", to: "/accounts/reference/country-requirements/germany" },
+  { from: "/partnership/document-center/company-registration/italy", to: "/accounts/reference/country-requirements/italy" },
+  { from: "/partnership/document-center/company-registration/spain", to: "/accounts/reference/country-requirements/spain" },
+  { from: "/partnership/document-center/company-registration/netherlands", to: "/accounts/reference/country-requirements/netherlands" },
+  { from: "/partnership/document-center/company-registration/belgium", to: "/accounts/reference/country-requirements/belgium" },
   { from: "/partnership/document-center/proof-address", to: "/accounts/reference/proof-of-address" },
   // end batch 2
   // DOC-1814 cutover — batch 1: accounts/memberships
@@ -211,11 +211,11 @@ module.exports = [
     from: "/concept/account-holder/supporting-documents",
     to: "/accounts/concepts/documents",
   },
-  { from: "/concept/account/balances", to: "/accounts/concepts/account#balances" }, // DOC-1814: chain-rewrite (was /topics/accounts/#balances)
+  { from: "/concept/account/balances", to: "/accounts/concepts/account/balances" }, // DOC-1814: chain-rewrite (was /topics/accounts/#balances)
   { from: "/concept/account/billing", to: "/accounts/concepts/billing" },
   {
     from: "/concept/account/transactions",
-    to: "/accounts/concepts/account#transactions", // DOC-1814: chain-rewrite (was /topics/accounts/#transactions)
+    to: "/accounts/concepts/account/transactions", // DOC-1814: chain-rewrite (was /topics/accounts/#transactions)
   },
   { from: "/concept/iban/iban-issuing", to: "/accounts/concepts/ibans#main" },
   {
@@ -498,7 +498,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/documents/guide-get-list",
-    to: "/accounts/guides/onboarding#get-list",
+    to: "/accounts/guides/onboarding/manage-onboardings#get-list",
   },
   {
     from: "/topics/accounts/documents/guide-upload",
@@ -530,7 +530,7 @@ module.exports = [
   },
   {
     from: '/preview/belgian-ibans/partnership_document-center_company-registration_belgium',
-    to: '/accounts/reference/country-requirements#belgium',
+    to: '/accounts/reference/country-requirements/belgium',
   },
   {
     from: '/preview/verification-of-payee',
@@ -612,23 +612,23 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/account-holders/guide-add-additional-account",
-    to: "/accounts/guides/onboarding/account-holders#add-additional-account",
+    to: "/accounts/guides/onboarding/account-holder-tasks#add-additional-account",
   },
   {
     from: "/topics/onboarding/account-holders/guide-get-status",
-    to: "/accounts/guides/onboarding/account-holders#get-status",
+    to: "/accounts/guides/onboarding/account-holder-tasks#get-status",
   },
   {
     from: "/topics/onboarding/account-holders/guide-request-first-transfer",
-    to: "/accounts/guides/onboarding/account-holders#request-first-transfer",
+    to: "/accounts/guides/onboarding/account-holder-tasks#request-first-transfer",
   },
   {
     from: "/topics/onboarding/account-holders/guide-export",
-    to: "/accounts/guides/onboarding/account-holders#export",
+    to: "/accounts/guides/onboarding/account-holder-tasks#export",
   },
   {
     from: "/topics/onboarding/account-holders/sandbox",
-    to: "/accounts/guides/onboarding/account-holders#sandbox",
+    to: "/accounts/guides/onboarding/account-holder-tasks#sandbox",
   },
   {
     from: "/topics/onboarding/company",
@@ -664,23 +664,23 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/overview/guide-migrate",
-    to: "/accounts/guides/onboarding#migrate",
+    to: "/accounts/guides/onboarding/migrate-api",
   },
   {
     from: "/topics/onboarding/overview/guide-get-info",
-    to: "/accounts/guides/onboarding#get-info",
+    to: "/accounts/guides/onboarding/manage-onboardings#get-info",
   },
   {
     from: "/topics/onboarding/overview/guide-get-list",
-    to: "/accounts/guides/onboarding#get-list",
+    to: "/accounts/guides/onboarding/manage-onboardings#get-list",
   },
   {
     from: "/topics/onboarding/overview/guide-export",
-    to: "/accounts/guides/onboarding#export-onboarding-data",
+    to: "/accounts/guides/onboarding/manage-onboardings#export-onboarding-data",
   },
   {
     from: "/topics/onboarding/overview/guide-finalize",
-    to: "/accounts/guides/onboarding#finalize",
+    to: "/accounts/guides/onboarding/manage-onboardings#finalize",
   },
   {
     from: "/topics/capital-deposits",
@@ -764,7 +764,7 @@ module.exports = [
   },
   {
     from: "/topics/accounts/multiple-accounts/guide-multiple-accounts-integration",
-    to: "/accounts/concepts/multiple-accounts#create",
+    to: "/accounts/guides/account-operations/create-additional-account",
   },
   {
     from: "/topics/accounts/overview/guide-export",

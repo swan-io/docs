@@ -1,5 +1,12 @@
 ---
 title: Billing
+related:
+  - /accounts/guides/billing/compliant-billing
+  - /accounts/guides/billing/get-list
+  - /accounts/guides/billing/get-details
+  - /accounts/reference/sandbox-billing
+  - /accounts/concepts/funding
+  - /accounts/concepts/documents
 ---
 
 # Billing
@@ -15,7 +22,7 @@ For each fee charged to the account, a transaction is created automatically that
 **Billing begins automatically** when an account is created, for both company and individual accounts.
 For all accounts created before March 2023, the billing module was activated on 1 March 2023.
 
-To help you and your users keep track of fees, Swan **generates a dedicated invoice** automatically for all Swan company account holders, generated at the same time as the [monthly account statement](/accounts/concepts/account#account-statements).
+To help you and your users keep track of fees, Swan **generates a dedicated invoice** automatically for all Swan company account holders, generated at the same time as the [monthly account statement](/accounts/concepts/account/documents#account-statements).
 The invoice lists all banking fees charged during the **monthly billing period**, which **begins** on the **first of each month**.
 
 ## Swan fees {#fees-swan}
@@ -26,7 +33,7 @@ When the Swan API detects transactions with associated banking fees, the fees ar
 There are two dedicated transaction types for fees:
 `FeesOut` indicates a fee *debited from* a Swan account, while `FeesIn` indicates a fee *credited to* a Swan account.
 
-On a fee's expected execution date, Swan checks the [account's `Available` balance](/accounts/concepts/account#balances) to see if it's sufficient to cover the fee.
+On a fee's expected execution date, Swan checks the [account's `Available` balance](/accounts/concepts/account/balances) to see if it's sufficient to cover the fee.
 
 | `Available` balance | Events |
 | --- | --- |
@@ -103,17 +110,16 @@ The following table lists each billable metric and the event that triggers billi
 | | SEPA volume | Total amount of transactions booked during the billing period (Instant SCT, SCT, SDD Core, SDD B2B). |
 | **Text messages** | Text messages | Number of Strong Customer Authentication (SCA) related text messages sent during the billing period. |
 
-
 ## Invoices {#invoices}
 
-Swan **generates a dedicated invoice** automatically for all **company** account holders, generated at the same time as the [monthly account statement](/accounts/concepts/account#account-statements).
+Swan **generates a dedicated invoice** automatically for all **company** account holders, generated at the same time as the [monthly account statement](/accounts/concepts/account/documents#account-statements).
 The invoice lists all banking fees charged during the **monthly billing period**, which begins on the first of each month.
 
 If a **fee is refunded** and the corresponding invoice was already generated, Swan generates a refund note for the refunded amount.
 Access refund notes the same way you access invoices.
 If **no banking fees were charged** during the billing period, Swan doesn't generate an invoice.
 
-Invoices are generated in the [account language](/accounts/concepts/account#language), and labels for each fee transaction are also in the account language.
+Invoices are generated in the [account language](/accounts/concepts/account/language), and labels for each fee transaction are also in the account language.
 You or your user can change the account language; doing so impacts new invoices and fees, but won't change existing fee labels or previously generated invoices.
 
 Subscribe to the `AccountInvoice.Generated` [webhook](/dev-tools/using-api/webhooks) to receive a notification each time an invoice is generated.
@@ -122,7 +128,7 @@ You can also access company account invoices with the API, from your Dashboard, 
 :::info individual accounts
 Monthly invoices *aren't* generated for **individual** accounts.
 
-Instead, fees are included on the standard [monthly account statement](/accounts/concepts/account#account-statements).
+Instead, fees are included on the standard [monthly account statement](/accounts/concepts/account/documents#account-statements).
 An **annual fee statement** is provided automatically once a year, at the end of January's account statement.
 
 Individual account holders can also review fee transactions in their transaction history.
@@ -144,12 +150,3 @@ You can provide the VAT number several ways:
 If you provide a valid VAT number for a company registered in a European country other than France, Swan automatically applies the **reverse charge mechanism**.
 With the reverse charge mechanism, **VAT isn't added** and **must be paid by the end user** in accordance with article 283-2 of the French General Tax Code.
 :::
-
-## Related
-
-- [Build a compliant billing offer](/accounts/guides/billing/compliant-billing)
-- [Get list of invoices](/accounts/guides/billing/get-list)
-- [Get invoice details](/accounts/guides/billing/get-details)
-- [Sandbox: billing](/accounts/reference/sandbox-billing)
-- [Account funding](/accounts/concepts/funding)
-- [Supporting documents](/accounts/concepts/documents)

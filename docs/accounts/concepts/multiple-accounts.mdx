@@ -1,5 +1,10 @@
 ---
-title: "Multiple accounts"
+title: Multiple accounts
+related:
+  - /accounts/reference/multiple-accounts-requirements
+  - /accounts/guides/account-operations/create-additional-account
+  - /accounts/guides/onboarding/company
+  - /accounts/concepts/memberships
 ---
 
 # Multiple accounts
@@ -78,7 +83,7 @@ Once the feature is activated, you can create additional accounts.
 
 1. Call the `openAccount` mutation.
 :::info Multiple accounts guide 
-Follow the [**step-by-step guide**](/accounts/concepts/multiple-accounts#create) to create multiple accounts.
+Follow the [**step-by-step guide**](/accounts/guides/account-operations/create-additional-account) to create multiple accounts.
 :::
     
 2. Collect the legal representative's confirmation in your banking app. A consent URL or Strong Customer Authentication (SCA) is not required.
@@ -144,134 +149,3 @@ Controlling this setting will give you greater flexibility to:
 
 1. **Restrict by pricing plan:** Restrict access to the Multiple Accounts feature by pricing plan. 
 1. **Differentiate by account limits:** Define how many additional accounts a user can create. For instance, one additional account for Basic plans and up to five for Premium plans.
-
-## Create additional accounts {#create}
-
-This guide explains how to create additional accounts linked to one account holder. 
-
-### Guide
-
-1. Call the `openAccount` mutation with a [user access token](/dev-tools/using-api/authentication#tokens-user).
-1. Add the `accountHolderId` (line 4).
-1. Add the `language` parameter (optional) to select the [account language](/accounts/concepts/account#language). If not specified, English (`en`) is used as the default language (line 5).
-1. Add a `name` parameter (optional) for the account. If not specified, "My account" is used as the default name (line 6).
-1. Use the `OpenAccountSuccessPayload` payload (line 9) to specify the information you'd like to receive about the additional account.
-1. Include error handling for all rejection types defined in the `OpenAccountPayload` union (lines 26-77).
-
-### Mutation
-
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlQWNjb3VudCB7CiAgb3BlbkFjY291bnQoCiAgICBpbnB1dDogewogICAgICBhY2NvdW50SG9sZGVySWQ6ICIkQUNDT1VOVF9IT0xERVJfSUQiCiAgICAgIGxhbmd1YWdlOiBlbgogICAgICBuYW1lOiAiVGF4ZXMiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gT3BlbkFjY291bnRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudCB7CiAgICAgICAgQklDCiAgICAgICAgSUJBTgogICAgICAgIGNvdW50cnkKICAgICAgICBjdXJyZW5jeQogICAgICAgIGlkCiAgICAgICAgbGFuZ3VhZ2UKICAgICAgICBuYW1lCiAgICAgICAgcGF5bWVudExldmVsCiAgICAgICAgcGF5bWVudEFjY291bnRUeXBlCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlck5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlclR5cGVOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJTdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJWZXJpZmljYXRpb25TdGF0dXNOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c1R5cGVOb3RFbGlnaWJsZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEFjY291bnRIb2xkZXJBY2NvdW50c1N0YXR1c05vdEVsaWdpYmxlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlckFjY291bnRzU3VzcGVuZGVkU3RhdHVzTm90RWxpZ2libGVSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcE5vdEVsaWdpYmxlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlclByb2plY3RTZXR0aW5nc05vdEVsaWdpYmxlUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudEhvbGRlckFjY291bnRzQ3JlYXRpb25MaW1pdFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFByb2plY3RTZXR0aW5nc05vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
-
-```graphql {2,4-6,9} showLineNumbers
-mutation CreateAccount {
-  openAccount(
-    input: {
-      accountHolderId: "$ACCOUNT_HOLDER_ID"
-      language: en
-      name: "Taxes"
-    }
-  ) {
-    ... on OpenAccountSuccessPayload {
-      __typename
-      account {
-        BIC
-        IBAN
-        country
-        currency
-        id
-        language
-        name
-        paymentLevel
-        paymentAccountType
-        statusInfo {
-          status
-        }
-      }
-    }
-    ... on InternalErrorRejection {
-      __typename
-      message
-    }
-    ... on ForbiddenRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderNotFoundRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderTypeNotEligibleRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderStatusNotEligibleRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderVerificationStatusNotEligibleRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderAccountsTypeNotEligibleRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderAccountsStatusNotEligibleRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderAccountsSuspendedStatusNotEligibleRejection {
-      __typename
-      message
-    }
-    ... on AccountMembershipNotEligibleRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderProjectSettingsNotEligibleRejection {
-      __typename
-      message
-    }
-    ... on AccountHolderAccountsCreationLimitRejection {
-      __typename
-      message
-    }
-    ... on ProjectSettingsNotFoundRejection {
-      __typename
-      message
-    }
-  }
-}
-```
-
-### Payload
-
-The mutation returns all of the requested information such as the account details, the `accountId` (line 10) and the account `status` (line 16).
-
-```json {10,16} showLineNumbers
-{
-  "data": {
-    "openAccount": {
-      "__typename": "OpenAccountSuccessPayload",
-      "account": {
-        "IBAN": "FR7699999001007663023512982",
-        "BIC": "SWNBFR22",
-        "currency": "EUR",
-        "country": "FRA",
-        "id": "9217e570-f785-4c88-be55-dc8b626ca8c7", 
-        "language": "en",
-        "name": "Taxes",
-        "paymentLevel": "Unlimited",
-        "paymentAccountType": "PaymentService",
-        "statusInfo": {
-          "status": "Opened"
-        }
-      }
-    }
-  }
-}
-```
-
-## Related
-
-[Multiple accounts requirements](/accounts/reference/multiple-accounts-requirements) · [Company onboarding](/accounts/guides/onboarding/company) · [Memberships](/accounts/concepts/memberships)

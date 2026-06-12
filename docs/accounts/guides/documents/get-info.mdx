@@ -43,7 +43,7 @@ Use the Dashboard to review information about a transaction document.
 1. First, [retrieve the required transaction ID](/topics/payments/overview/guide-get-transaction-id).
 1. Call the `transaction` query.
 1. Enter the transaction ID retrieved in step 1 (line 2).
-1. Include [`purposeDetails`](/accounts/concepts/documents#document-purposes-types) under `requiredSupportingDocumentPurposes` to see what's needed if the purpose is `Other` (line 14).
+1. Include [`purposeDetails`](/accounts/concepts/documents/purposes-and-types) under `requiredSupportingDocumentPurposes` to see what's needed if the purpose is `Other` (line 14).
 1. Add all other objects you need to review. For example, `SupportingDocumentRefusedStatusInfo` (lines 16-19) to get refusal details.
 
 #### Query {#transaction-api-query}
@@ -90,7 +90,7 @@ query getTransactionCollectionInfo {
 
 In this example, the collection status is `WaitingForDocument` (line 10).
 The required document purpose is `ProofOfOriginOfFunds` (line 15).
-[`purposeDetails`](/accounts/concepts/documents#document-purposes-types) is `null` here because this is a standard purpose (line 16).
+[`purposeDetails`](/accounts/concepts/documents/purposes-and-types) is `null` here because this is a standard purpose (line 16).
 
 ```json {10,15,16} showLineNumbers
 {
@@ -151,7 +151,7 @@ You can use either the user's onboarding ID or, if their onboarding is `Finalize
 1. First, retrieve the required onboarding ID, either [with the API](/accounts/guides/onboarding/manage-onboardings#get-info) or from your **Dashboard** > **Data** > **Onboardings**.
 1. Call the `accountHolderOnboarding` query.
 1. Enter the onboarding ID retrieved in step 1 (line 2).
-1. Include [`purposeDetails`](/accounts/concepts/documents#document-purposes-types) under `requiredSupportingDocumentPurposes` to see what's needed if the purpose is `Other` (line 8).
+1. Include [`purposeDetails`](/accounts/concepts/documents/purposes-and-types) under `requiredSupportingDocumentPurposes` to see what's needed if the purpose is `Other` (line 8).
 1. Add all other objects you need to review.
     - Example: add `supportingDocumentPurpose` to know which supporting document is required (line 11).
     - Example: add `supportingDocuments` > `statusInfo` > `status` (lines 14-15) to retrieve the document's status.
@@ -226,7 +226,7 @@ query getOnboardingCollectionInfo {
 #### Payload: `Validated` {#onboarding-api-payload-validated}
 
 In this example, the required document purpose is `Other` (line 8).
-[`purposeDetails`](/accounts/concepts/documents#document-purposes-types) is "Most recent business income tax return (aangifte inkomstenbelasting)" (line 9).
+[`purposeDetails`](/accounts/concepts/documents/purposes-and-types) is "Most recent business income tax return (aangifte inkomstenbelasting)" (line 9).
 The document was received, reviewed, and `Validated` (line 18).
 
 ```json {8,9,18} showLineNumbers
@@ -260,7 +260,7 @@ The document was received, reviewed, and `Validated` (line 18).
 #### Payload: `Refused` {#onboarding-api-payload-refused}
 
 In this example, the required document purpose is `UBODeclaration` (line 8). The document was `Refused` (line 18) with reason code `InvalidDocument` (line 22).
-[`purposeDetails`](/accounts/concepts/documents#document-purposes-types) is `null` here because this is a standard purpose (line 9).
+[`purposeDetails`](/accounts/concepts/documents/purposes-and-types) is `null` here because this is a standard purpose (line 9).
 
 ```json {8,9,18,22} showLineNumbers
 {

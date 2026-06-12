@@ -41,14 +41,14 @@ module.exports = [
   { from: "/partnership/protections/fraud", to: "/get-started/become-a-partner/protections/fraud-obligations" },
   { from: "/partnership/protections/fraud/types", to: "/get-started/become-a-partner/protections/fraud-obligations#types" },
   { from: "/partnership/contact", to: "/get-started" },
-  { from: "/partnership/document-center/company-registration", to: "/accounts/reference/country-requirements" },
-  { from: "/partnership/document-center/company-registration/france", to: "/accounts/reference/country-requirements/france" },
-  { from: "/partnership/document-center/company-registration/germany", to: "/accounts/reference/country-requirements/germany" },
-  { from: "/partnership/document-center/company-registration/italy", to: "/accounts/reference/country-requirements/italy" },
-  { from: "/partnership/document-center/company-registration/spain", to: "/accounts/reference/country-requirements/spain" },
-  { from: "/partnership/document-center/company-registration/netherlands", to: "/accounts/reference/country-requirements/netherlands" },
-  { from: "/partnership/document-center/company-registration/belgium", to: "/accounts/reference/country-requirements/belgium" },
-  { from: "/partnership/document-center/proof-address", to: "/accounts/reference/proof-of-address" },
+  { from: "/partnership/document-center/company-registration", to: "/accounts/reference/onboarding/country-requirements" },
+  { from: "/partnership/document-center/company-registration/france", to: "/accounts/reference/onboarding/country-requirements/france" },
+  { from: "/partnership/document-center/company-registration/germany", to: "/accounts/reference/onboarding/country-requirements/germany" },
+  { from: "/partnership/document-center/company-registration/italy", to: "/accounts/reference/onboarding/country-requirements/italy" },
+  { from: "/partnership/document-center/company-registration/spain", to: "/accounts/reference/onboarding/country-requirements/spain" },
+  { from: "/partnership/document-center/company-registration/netherlands", to: "/accounts/reference/onboarding/country-requirements/netherlands" },
+  { from: "/partnership/document-center/company-registration/belgium", to: "/accounts/reference/onboarding/country-requirements/belgium" },
+  { from: "/partnership/document-center/proof-address", to: "/accounts/reference/onboarding/proof-of-address" },
   // end batch 2
   // DOC-1814 cutover — batch 1: accounts/memberships
   { from: "/topics/accounts/memberships", to: "/accounts/concepts/memberships" },
@@ -144,7 +144,7 @@ module.exports = [
   },
   {
     from: "/regulatory/required-kyb-documents-for-company-accounts",
-    to: "/accounts/reference/country-requirements",
+    to: "/accounts/reference/onboarding/country-requirements",
   },
   { from: "/regulatory/status-options", to: "/get-started/become-a-partner/licence-regulatory-status#legal-status" },
   {
@@ -192,15 +192,15 @@ module.exports = [
   },
   {
     from: "/concept/account-funding/funding-source",
-    to: "/accounts/concepts/funding#sources",
+    to: "/accounts/concepts/funding/sources",
   },
   {
     from: "/concept/account-funding/payment-mandate",
-    to: "/accounts/concepts/funding#mandates",
+    to: "/accounts/concepts/funding/payment-mandates",
   },
   {
     from: "/concept/account-funding/rolling-reserve",
-    to: "/accounts/concepts/funding#rolling-reserve",
+    to: "/accounts/concepts/funding/rolling-reserve",
   },
   {
     from: "/concept/account-holder/country-requirements",
@@ -217,12 +217,12 @@ module.exports = [
     from: "/concept/account/transactions",
     to: "/accounts/concepts/account/transactions", // DOC-1814: chain-rewrite (was /topics/accounts/#transactions)
   },
-  { from: "/concept/iban/iban-issuing", to: "/accounts/concepts/ibans#main" },
+  { from: "/concept/iban/iban-issuing", to: "/accounts/concepts/ibans/main" },
   {
     from: "/concept/iban/iban-validation",
     to: "/accounts/guides/ibans/validate",
   },
-  { from: "/concept/iban/local-ibans", to: "/accounts/concepts/ibans#local" },
+  { from: "/concept/iban/local-ibans", to: "/accounts/concepts/ibans/local" },
   {
     from: "/concept/merchants-accepting-payments/french-checks-for-merchants",
     to: "/topics/merchants/in-person/checks/",
@@ -270,7 +270,7 @@ module.exports = [
   },
   {
     from: "/guide/fund-an-account/sdd-b2b",
-    to: "/accounts/concepts/funding#methods-dd",
+    to: "/accounts/concepts/funding/sources#methods-dd",
   },
   { from: "/help/faq/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/help/faq/accounts", to: "/accounts/concepts/account" }, // DOC-1814: chain-rewrite (was /topics/accounts/)
@@ -305,7 +305,7 @@ module.exports = [
   },
   {
     from: "/help/faq/account-membership/do-i-need-to-consent-every-single-time-a-new-membership-is-created",
-    to: "/accounts/reference/membership-permissions#permissions-none", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/#permissions-none)
+    to: "/accounts/reference/memberships/membership-permissions#permissions-none", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/#permissions-none)
   },
   {
     from: "/help/faq/accounts/can-i-create-my-own-account-statement",
@@ -490,7 +490,7 @@ module.exports = [
   },
   {
     from: "/partnership/document-center",
-    to: "/accounts/reference/country-requirements",
+    to: "/accounts/reference/onboarding/country-requirements",
   },
   {
     from: "/topics/onboarding/documents",
@@ -514,7 +514,7 @@ module.exports = [
   },
   {
     from: '/preview/belgian-ibans',
-    to: '/accounts/concepts/ibans#local',
+    to: '/accounts/concepts/ibans/local',
   },
   {
     from: '/preview/card-insurance/',
@@ -526,11 +526,11 @@ module.exports = [
   },
   {
     from: '/preview/belgian-ibans/belgian-ibans',
-    to: '/accounts/concepts/ibans#local',
+    to: '/accounts/concepts/ibans/local',
   },
   {
     from: '/preview/belgian-ibans/partnership_document-center_company-registration_belgium',
-    to: '/accounts/reference/country-requirements/belgium',
+    to: '/accounts/reference/onboarding/country-requirements/belgium',
   },
   {
     from: '/preview/verification-of-payee',
@@ -636,7 +636,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/company/fields",
-    to: "/accounts/reference/company-onboarding-fields#fields",
+    to: "/accounts/reference/onboarding/company-onboarding-fields#fields",
   },
   {
     from: "/topics/onboarding/company/guide-create",
@@ -652,7 +652,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/individual/fields",
-    to: "/accounts/reference/individual-onboarding-fields#fields",
+    to: "/accounts/reference/onboarding/individual-onboarding-fields#fields",
   },
   {
     from: "/topics/onboarding/individual/guide-create",
@@ -800,7 +800,7 @@ module.exports = [
   },
   {
     from: "/topics/accounts/funding/sandbox",
-    to: "/accounts/reference/sandbox-funding",
+    to: "/accounts/reference/sandbox/sandbox-funding",
   },
   {
     from: "/topics/accounts/billing",
@@ -820,7 +820,7 @@ module.exports = [
   },
   {
     from: "/topics/accounts/billing/sandbox",
-    to: "/accounts/reference/sandbox-billing",
+    to: "/accounts/reference/sandbox/sandbox-billing",
   },
   {
     from: "/topics/accounts/documents",
@@ -848,6 +848,19 @@ module.exports = [
   },
   {
     from: "/topics/accounts/documents/sandbox",
-    to: "/accounts/reference/sandbox-documents",
+    to: "/accounts/reference/sandbox/sandbox-documents",
   },
+  // DOC-1814: reference pages nested into topic subfolders
+  { from: "/accounts/reference/membership-permissions", to: "/accounts/reference/memberships/membership-permissions" },
+  { from: "/accounts/reference/membership-fields", to: "/accounts/reference/memberships/membership-fields" },
+  { from: "/accounts/reference/multiple-accounts-requirements", to: "/accounts/reference/accounts/multiple-accounts-requirements" },
+  { from: "/accounts/reference/country-requirements", to: "/accounts/reference/onboarding/country-requirements" },
+  { from: "/accounts/reference/company-onboarding-fields", to: "/accounts/reference/onboarding/company-onboarding-fields" },
+  { from: "/accounts/reference/company-onboarding-fields-api-mapping", to: "/accounts/reference/onboarding/company-onboarding-fields-api-mapping" },
+  { from: "/accounts/reference/individual-onboarding-fields", to: "/accounts/reference/onboarding/individual-onboarding-fields" },
+  { from: "/accounts/reference/capital-deposit-reference", to: "/accounts/reference/onboarding/capital-deposit-reference" },
+  { from: "/accounts/reference/proof-of-address", to: "/accounts/reference/onboarding/proof-of-address" },
+  { from: "/accounts/reference/sandbox-billing", to: "/accounts/reference/sandbox/sandbox-billing" },
+  { from: "/accounts/reference/sandbox-documents", to: "/accounts/reference/sandbox/sandbox-documents" },
+  { from: "/accounts/reference/sandbox-funding", to: "/accounts/reference/sandbox/sandbox-funding" },
 ];

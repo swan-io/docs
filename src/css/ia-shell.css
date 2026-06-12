@@ -304,3 +304,91 @@
     display: none;
   }
 }
+
+/* ============================================================
+   FlowMap — journey/diagram module (```flowmap fenced block)
+   Modes: lanes · pathway · graph(chain|lifecycle|spokes)
+   ============================================================ */
+.flowmap { margin: 1.4rem 0; }
+.flowmap__t { font-weight: 600; display: block; }
+.flowmap__d { font-size: 0.8rem; color: var(--ifm-color-emphasis-700); display: block; margin-top: 2px; }
+.flowmap__chip { margin-top: 6px; }
+.flowmap--error {
+  border: 1px solid var(--ifm-color-danger);
+  background: var(--ifm-color-danger-contrast-background, #fff5f5);
+  color: var(--ifm-color-danger-dark);
+  border-radius: 8px; padding: 10px 14px; font-size: 0.85rem;
+}
+
+/* --- lanes --- */
+.flowmap--lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flowmap-lane {
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 14px; padding: 14px;
+}
+.flowmap-lane__h {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 700; font-size: 0.8rem; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--ifm-color-primary); margin-bottom: 12px;
+}
+.flowmap-lane__n {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ifm-color-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex: none;
+}
+.flowmap-lcard {
+  display: block; background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200); border-radius: 10px;
+  padding: 10px 12px; margin-bottom: 9px; text-decoration: none; color: inherit;
+}
+.flowmap-lcard:last-child { margin-bottom: 0; }
+.flowmap-lcard:hover { border-color: var(--ifm-color-primary); text-decoration: none; }
+
+/* --- pathway --- */
+.flowmap--pathway { position: relative; margin-left: 8px; }
+.flowmap--pathway::before {
+  content: ""; position: absolute; left: 11px; top: 6px; bottom: 6px;
+  width: 2px; background: var(--ifm-color-emphasis-300);
+}
+.flowmap-prow { position: relative; padding: 0 0 16px 40px; }
+.flowmap-prow:last-child { padding-bottom: 0; }
+.flowmap-prow__dot {
+  position: absolute; left: 2px; top: 0; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ifm-background-surface-color); border: 2px solid var(--ifm-color-primary);
+  color: var(--ifm-color-primary); font-weight: 700; font-size: 0.72rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.flowmap-prow__t { font-weight: 600; }
+a.flowmap-prow__t:hover { color: var(--ifm-color-primary); }
+.flowmap-prow__d { font-size: 0.82rem; color: var(--ifm-color-emphasis-700); margin-top: 2px; }
+
+/* --- graph (chain / lifecycle / spokes) --- */
+.flowmap--graph { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.flowmap-node {
+  display: block; text-decoration: none; color: inherit;
+  border: 1.5px solid var(--ifm-color-primary); background: var(--ifm-color-primary-lightest);
+  border-radius: 12px; padding: 10px 14px; min-width: 110px;
+}
+a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
+.flowmap-arrow { color: var(--ifm-color-primary); font-size: 1.25rem; line-height: 1; }
+.flowmap--spokes { align-items: center; }
+.flowmap-spokegrid {
+  display: grid; grid-template-columns: repeat(2, minmax(120px, 1fr)); gap: 12px; flex: 1; min-width: 240px;
+}
+
+@media (max-width: 760px) {
+  .flowmap--lanes { grid-template-columns: 1fr; }
+  .flowmap--graph { flex-direction: column; align-items: stretch; }
+  .flowmap-arrow { transform: rotate(90deg); align-self: center; }
+  .flowmap-spokegrid { grid-template-columns: 1fr; }
+}
+
+/* --- grid (flat lookup set, e.g. reference) --- */
+.flowmap--grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.flowmap-gcard {
+  display: block; background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200); border-radius: 12px;
+  padding: 14px 16px; text-decoration: none; color: inherit;
+}
+.flowmap-gcard:hover { border-color: var(--ifm-color-primary); text-decoration: none; }

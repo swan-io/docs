@@ -8,18 +8,20 @@ related:
 
 # Statuses
 
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    OLC((Onboarding<br/>created)) -.-> OI[Ongoing Invalid]
-    OLC -.-> OV[Ongoing Valid]
-    OI -.-> OV
-    OV --> F[Finalized]
-    subgraph FS[Final status]
-        F
-    end
-    style OLC fill:#D4D3D5,stroke:#514F59
-    style FS fill:#fffdf4,stroke:#cca922
+```flowmap
+{
+  "mode": "graph",
+  "layout": "lifecycle",
+  "nodes": [
+    { "id": "invalid", "title": "Ongoing (Invalid)", "desc": "Missing or incorrect required info." },
+    { "id": "valid", "title": "Ongoing (Valid)", "desc": "All required info present." },
+    { "id": "finalized", "title": "Finalized", "desc": "Onboarding complete." }
+  ],
+  "edges": [
+    { "from": "invalid", "to": "valid" },
+    { "from": "valid", "to": "finalized" }
+  ]
+}
 ```
 
 | Status | Explanation |

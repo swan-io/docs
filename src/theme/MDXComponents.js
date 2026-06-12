@@ -10,9 +10,10 @@ import {
   Unsupported, 
   Yes, 
   No, 
-  FieldRequirementsLegend, 
-  SupportStatusLegend 
+  FieldRequirementsLegend,
+  SupportStatusLegend
 } from '@site/src/components/FieldRequirements';
+import FlowMap from '@site/src/components/FlowMap';
 
 export default {
   // Re-use the default mapping
@@ -29,4 +30,5 @@ export default {
   SupportStatusLegend,
   Tabs,
   TabItem,
+  FlowMap,
 };

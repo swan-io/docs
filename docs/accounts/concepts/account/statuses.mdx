@@ -11,27 +11,22 @@ Every Swan account moves through the following statuses over its lifetime.
 
 ## Status flow {#status-flow}
 
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    AC((Account<br/>created)) -.-> O[Opened]
-    O <-.-> S[Suspended]
-    S -.-> CL
-    O -.-> CL[Closing]
-    CL -.-> CD[Closed]
-    subgraph U[Can use account]
-        O
-    end
-    subgraph IR[Irreversible]
-        CL
-    end
-    subgraph F[Final status]
-        CD
-    end
-    style AC fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-    style IR fill:#f6ddcc,stroke:#c12236
-    style U fill:#dfedf2,stroke:#4d8296,stroke-width:3px
+```flowmap
+{
+  "mode": "graph",
+  "layout": "lifecycle",
+  "nodes": [
+    { "id": "opened", "title": "Opened", "desc": "Open and usable." },
+    { "id": "suspended", "title": "Suspended", "desc": "Temporarily unusable." },
+    { "id": "closing", "title": "Closing", "desc": "Irreversible wind-down." },
+    { "id": "closed", "title": "Closed", "desc": "Final; read-only for 1 year." }
+  ],
+  "edges": [
+    { "from": "opened", "to": "suspended", "dir": "both" },
+    { "from": "suspended", "to": "closing" },
+    { "from": "closing", "to": "closed" }
+  ]
+}
 ```
 
 ## Status definitions {#status-definitions}

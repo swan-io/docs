@@ -484,3 +484,55 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
   text-decoration: none;
   border-bottom-color: var(--ifm-color-emphasis-600);
 }
+
+/* Auto-derived section dropdowns (ia-nav plugin): compact root panel of
+   content-type groups, each opening a nested flyout of domains/pages.
+   The root <ul> reuses Infima's .dropdown__menu chrome; nested flyouts use a
+   distinct class so Infima's `.dropdown--hoverable:hover .dropdown__menu`
+   rule doesn't reveal every level at once. */
+.ia-nav-menu {
+  overflow: visible; /* don't clip the left:100% flyouts */
+  max-height: none;
+}
+.ia-flyout {
+  position: relative;
+}
+.ia-flyout__parent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.ia-flyout__caret {
+  color: var(--ifm-color-emphasis-500);
+  font-size: 1.1em;
+  line-height: 1;
+}
+.ia-flyout__menu {
+  position: absolute;
+  top: -0.5rem;
+  left: 100%;
+  margin-left: 0.15rem;
+  min-width: 12rem;
+  list-style: none;
+  padding: 0.5rem;
+  background-color: var(--ifm-dropdown-background-color);
+  border-radius: var(--ifm-global-radius);
+  box-shadow: var(--ifm-global-shadow-md);
+  z-index: var(--ifm-z-index-dropdown);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+}
+.ia-flyout:hover > .ia-flyout__menu,
+.ia-flyout:focus-within > .ia-flyout__menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  transform: translateX(0);
+}
+.ia-flyout__menu .dropdown__link {
+  white-space: nowrap;
+}

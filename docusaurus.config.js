@@ -41,33 +41,12 @@ module.exports = {
       items: [
         { type: "doc", docId: "get-started/index", position: "left", label: "Get started" },
         { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
-        { type: "custom-sectionDropdown", position: "left", label: "Accounts", to: "/accounts", items: [
-          { label: "Onboarding guides", to: "/accounts/guides/onboarding/" },
-          { label: "Account", to: "/accounts/concepts/account" },
-          { label: "Memberships", to: "/accounts/concepts/memberships" },
-          { label: "Multiple accounts", to: "/accounts/concepts/multiple-accounts" },
-          { label: "IBANs", to: "/accounts/concepts/ibans" },
-          { label: "Billing", to: "/accounts/concepts/billing" },
-          { label: "Closure", to: "/accounts/concepts/closure" },
-          { label: "Documents", to: "/accounts/concepts/documents" },
-          { label: "Funding", to: "/accounts/concepts/funding" },
-        ]},
-        { type: "custom-sectionDropdown", position: "left", label: "Cards", to: "/cards", items: [
-          { label: "Virtual cards", to: "/cards/concepts/virtual" },
-          { label: "Physical cards", to: "/cards/concepts/physical" },
-          { label: "Digital cards", to: "/cards/concepts/digital" },
-          { label: "Card design", to: "/cards/concepts/design" },
-        ]},
-        { type: "custom-sectionDropdown", position: "left", label: "Payments", to: "/payments", items: [
-          { label: "Credit transfers", to: "/payments/concepts/credit-transfers" },
-          { label: "Direct debit", to: "/payments/concepts/direct-debit" },
-          { label: "Card payments", to: "/payments/concepts/cards" },
-          { label: "Merchants", to: "/payments/guides/merchants/" },
-        ]},
-        { type: "custom-sectionDropdown", position: "left", label: "Users", to: "/users", items: [
-          { label: "Consent", to: "/users/concepts/consent" },
-          { label: "Identifications", to: "/users/concepts/identifications" },
-        ]},
+        // Accounts/Cards/Payments/Users dropdowns are auto-derived from
+        // sidebars.ia.js by the ia-nav plugin (no hand-maintained items here).
+        { type: "custom-sectionDropdown", position: "left", label: "Accounts", to: "/accounts" },
+        { type: "custom-sectionDropdown", position: "left", label: "Cards", to: "/cards" },
+        { type: "custom-sectionDropdown", position: "left", label: "Payments", to: "/payments" },
+        { type: "custom-sectionDropdown", position: "left", label: "Users", to: "/users" },
         { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
         { type: "custom-sectionDropdown", position: "left", label: "Dev Tools", to: "/dev-tools", items: [
           { label: "Tools", to: "/dev-tools/tools/api-explorer" },
@@ -171,6 +150,7 @@ module.exports = {
   plugins: [
     require.resolve("./plugins/ia-rail-meta"),
     require.resolve("./plugins/ia-glossary-terms"),
+    require.resolve("./plugins/ia-nav"),
     "docusaurus-plugin-matomo",
     [
       "@docusaurus/plugin-client-redirects",

@@ -10,7 +10,7 @@ import Related from "@site/src/components/rail/Related";
 // with `rail: false`, or with no rail frontmatter at all, fall through to the
 // original component bare — zero DOM difference.
 export default function TOCDesktopWrapper(props) {
-  const { frontMatter, metadata } = useDoc();
+  const { frontMatter, metadata, toc, contentTitle } = useDoc();
   const hasCustom = frontMatter.audience || frontMatter.counterpart || frontMatter.related;
 
   if (frontMatter.rail === false || !hasCustom) {
@@ -19,6 +19,8 @@ export default function TOCDesktopWrapper(props) {
 
   const sourcePage = metadata.permalink || metadata.unversionedId || metadata.id;
   const hasGroup = frontMatter.audience || frontMatter.counterpart;
+  const hasToc = Array.isArray(toc) && toc.length > 0;
+  const pageTitle = contentTitle || metadata.title || frontMatter.title;
   return (
     <div className="ia-rail">
       {hasGroup && (
@@ -31,7 +33,26 @@ export default function TOCDesktopWrapper(props) {
           />
         </div>
       )}
-      <OriginalTOCDesktop {...props} />
+      {hasToc ? (
+        <div className="ia-rail__toc">
+          <p className="ia-rail__label">On this page</p>
+          {pageTitle && (
+            <a
+              href={metadata.permalink}
+              className="ia-rail__toc-top"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            >
+              {pageTitle}
+            </a>
+          )}
+          <OriginalTOCDesktop {...props} />
+        </div>
+      ) : (
+        <OriginalTOCDesktop {...props} />
+      )}
       <Related routes={frontMatter.related} sourcePage={sourcePage} />
     </div>
   );

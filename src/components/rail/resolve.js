@@ -35,22 +35,18 @@ export function typeChip(route) {
   return null;
 }
 
-const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
-const SECTION_LABEL = { "dev-tools": "Dev tools", "get-started": "Get started" };
-
-// Fallback chip for related links that aren't Diátaxis content (cross-product
-// or cross-section pointers), so every Related item carries a label:
-//   product root (/cards)        → "Product"
-//   /dev-tools/* , /get-started/*→ section name
-//   legacy /topics/<area>/*      → that area
-//   otherwise                    → capitalized first segment
-export function areaLabel(route) {
+// Area kind for related links that aren't Diátaxis content (cross-product or
+// cross-section pointers), so every Related item carries an icon (see AreaIcon):
+//   /dev-tools/*            → "dev-tools"  (wrench)
+//   /get-started/*          → "get-started" (rocket)
+//   product root / topics/* / other → "product" (package)
+export function areaKind(route) {
   const r = String(route || "").split("#")[0].replace(/^\/+|\/+$/g, "");
   if (!r) return null;
   const seg = r.split("/");
-  if (seg.length === 1) return "Product";
-  if (seg[0] === "topics" && seg[1]) return cap(seg[1]);
-  return SECTION_LABEL[seg[0]] || cap(seg[0]);
+  if (seg[0] === "dev-tools") return "dev-tools";
+  if (seg[0] === "get-started") return "get-started";
+  return "product";
 }
 
 const IS_PROD = process.env.NODE_ENV === "production";

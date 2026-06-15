@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "@docusaurus/Link";
-import { useRouteMap, resolveRoute, typeChip, areaLabel, failOrWarn } from "./resolve";
+import { useRouteMap, resolveRoute, typeChip, areaKind, failOrWarn } from "./resolve";
 import ContentTypeIcon from "@site/src/components/ContentTypeIcon";
+import AreaIcon from "@site/src/components/AreaIcon";
 
 export default function Related({ routes, sourcePage }) {
   if (!routes || routes.length === 0) return null;
@@ -14,15 +15,12 @@ export default function Related({ routes, sourcePage }) {
         {routes.map((route) => {
           const resolved = resolveRoute(map, route);
           const chip = typeChip(route);
-          // Diátaxis content types show their icon; cross-area links (no icon)
-          // keep a small text tag (Product / Dev tools / …).
+          // Diátaxis content types show their type icon; cross-area links show an
+          // area icon (package / wrench / rocket). Either way: an icon + tooltip.
           const indicator = chip ? (
             <ContentTypeIcon type={chip} className="ia-rail__typeicon" />
           ) : (
-            (() => {
-              const label = areaLabel(route);
-              return label ? <span className="ia-rail__type">{label}</span> : null;
-            })()
+            <AreaIcon kind={areaKind(route)} className="ia-rail__typeicon" />
           );
           if (!resolved) {
             failOrWarn(sourcePage, "related", route, "does not resolve to a known route");

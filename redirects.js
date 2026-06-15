@@ -52,6 +52,10 @@ module.exports = [
   // end batch 2
   // DOC-1814 — account-holders relocated from guides/onboarding to concepts
   { from: "/accounts/guides/onboarding/account-holders", to: "/accounts/concepts/account-holders" },
+  // DOC-1814 — onboarding model pages relocated from guides to concepts
+  { from: "/accounts/guides/onboarding/statuses", to: "/accounts/concepts/onboarding/statuses" },
+  { from: "/accounts/guides/onboarding/notifications", to: "/accounts/concepts/onboarding/notifications" },
+  { from: "/accounts/guides/onboarding/verification-renewal", to: "/accounts/concepts/onboarding/verification-renewal" },
   // DOC-1814 cutover — batch 1: accounts/memberships
   { from: "/topics/accounts/memberships", to: "/accounts/concepts/memberships" },
   { from: "/topics/accounts/memberships/admin-change", to: "/accounts/guides/memberships/change-admin" },

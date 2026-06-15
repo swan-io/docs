@@ -52,13 +52,18 @@ module.exports = {
   accountsSidebar: [
     doc("accounts/index", "Overview"),
     top("Concepts", [
+      cat("Onboarding", [
+        doc("accounts/concepts/onboarding/statuses", "Statuses"),
+        doc("accounts/concepts/onboarding/notifications", "Notifications"),
+        doc("accounts/concepts/onboarding/verification-renewal", "Verification renewal"),
+      ], { link: "accounts/concepts/onboarding/index" }),
       cat("Account", [
         doc("accounts/concepts/account/country", "Account country"),
         doc("accounts/concepts/account/language", "Account language"),
         doc("accounts/concepts/account/type-and-level", "Account type and level"),
         doc("accounts/concepts/account/balances", "Balances"),
         doc("accounts/concepts/account/transactions", "Transactions"),
-        doc("accounts/concepts/account/documents", "Account documents"),
+        doc("accounts/concepts/account/documents", "Statements & bank details"),
         doc("accounts/concepts/account/statuses", "Account statuses"),
       ], { link: "accounts/concepts/account/index" }),
       cat("Account holders", [
@@ -121,10 +126,7 @@ module.exports = {
           doc("accounts/guides/onboarding/individual/update", "Update"),
         ], { link: "accounts/guides/onboarding/individual/index" }),
         doc("accounts/guides/onboarding/account-holder-tasks", "Account holder tasks"),
-        doc("accounts/guides/onboarding/verification-renewal", "Verification renewal"),
         doc("accounts/guides/onboarding/requirements", "Requirements"),
-        doc("accounts/guides/onboarding/statuses", "Statuses"),
-        doc("accounts/guides/onboarding/notifications", "Notifications"),
         doc("accounts/guides/onboarding/manage-onboardings", "Manage onboardings"),
         doc("accounts/guides/onboarding/migrate-api", "Migrate to the current API"),
         cat("Capital deposits", [
@@ -208,7 +210,7 @@ module.exports = {
         doc("accounts/reference/memberships/membership-permissions", "Membership permissions"),
         doc("accounts/reference/memberships/membership-fields", "Membership fields"),
       ], { link: "accounts/reference/memberships/index" }),
-      cat("Accounts", [
+      cat("Multiple accounts", [
         doc("accounts/reference/accounts/multiple-accounts-requirements", "Multiple-accounts requirements"),
       ], { link: "accounts/reference/accounts/index" }),
       cat("Sandbox", [

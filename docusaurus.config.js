@@ -40,6 +40,11 @@ module.exports = {
       },
       items: [
         { type: "doc", docId: "get-started/index", position: "left", label: "Get started" },
+        { type: "custom-sectionDropdown", position: "left", label: "Build", to: "/build", items: [
+          { label: "Tools", to: "/build/tools/api-explorer" },
+          { label: "Using the API", to: "/build/using-api/authentication" },
+          { label: "GraphQL", to: "/build/graphql/" },
+        ]},
         { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
         // Accounts/Cards/Payments/Users dropdowns are auto-derived from
         // sidebars.ia.js by the ia-nav plugin (no hand-maintained items here).
@@ -47,12 +52,6 @@ module.exports = {
         { type: "custom-sectionDropdown", position: "left", label: "Cards", to: "/cards" },
         { type: "custom-sectionDropdown", position: "left", label: "Payments", to: "/payments" },
         { type: "custom-sectionDropdown", position: "left", label: "Users", to: "/users" },
-        { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
-        { type: "custom-sectionDropdown", position: "left", label: "Dev Tools", to: "/dev-tools", items: [
-          { label: "Tools", to: "/dev-tools/tools/api-explorer" },
-          { label: "Using the API", to: "/dev-tools/using-api/authentication" },
-          { label: "GraphQL", to: "/dev-tools/graphql/" },
-        ]},
         {
           type: "html",
           position: "right",

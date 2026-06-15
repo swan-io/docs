@@ -1,27 +1,44 @@
 // redirects from original doc pathnames
 module.exports = [
-  // DOC-1814 cutover — batch 3B: developers -> dev-tools
-  { from: "/developers", to: "/dev-tools" },
+  // DOC-1814 cutover — batch 3B: developers -> build
+  { from: "/developers", to: "/build" },
   { from: "/developers/contact", to: "/get-started" },
-  { from: "/developers/graphql", to: "/dev-tools/graphql" },
-  { from: "/developers/tools", to: "/dev-tools" },
-  { from: "/developers/tools/api-explorer", to: "/dev-tools/tools/api-explorer" },
-  { from: "/developers/tools/event-simulator", to: "/dev-tools/tools/event-simulator" },
-  { from: "/developers/tools/guide-test-tools", to: "/dev-tools/tools/test-tools-guide" },
-  { from: "/developers/tools/mcp-servers", to: "/dev-tools/tools/mcp-servers" },
-  { from: "/developers/tools/postman-collection", to: "/dev-tools/tools/postman-collection" },
-  { from: "/developers/tools/sandbox-users", to: "/dev-tools/tools/sandbox-users" },
-  { from: "/developers/tools/testing-api", to: "/dev-tools/tools/testing-api" },
-  { from: "/developers/using-api/authentication", to: "/dev-tools/using-api/authentication" },
-  { from: "/developers/using-api/authentication/guide-get-token-project", to: "/dev-tools/using-api/authentication#get-token-project" },
-  { from: "/developers/using-api/authentication/guide-get-token-user", to: "/dev-tools/using-api/authentication#get-token-user" },
-  { from: "/developers/using-api/authentication/guide-impersonate", to: "/dev-tools/using-api/authentication#impersonate" },
-  { from: "/developers/using-api/errors-rejections", to: "/dev-tools/using-api/errors-rejections" },
-  { from: "/developers/using-api/idempotency", to: "/dev-tools/using-api/idempotency" },
-  { from: "/developers/using-api/pagination", to: "/dev-tools/using-api/pagination" },
-  { from: "/developers/using-api/payment-control", to: "/dev-tools/using-api/payment-control" },
-  { from: "/developers/using-api/webhooks", to: "/dev-tools/using-api/webhooks" },
+  { from: "/developers/graphql", to: "/build/graphql" },
+  { from: "/developers/tools", to: "/build" },
+  { from: "/developers/tools/api-explorer", to: "/build/tools/api-explorer" },
+  { from: "/developers/tools/event-simulator", to: "/build/tools/event-simulator" },
+  { from: "/developers/tools/guide-test-tools", to: "/build/tools/test-tools-guide" },
+  { from: "/developers/tools/mcp-servers", to: "/build/tools/mcp-servers" },
+  { from: "/developers/tools/postman-collection", to: "/build/tools/postman-collection" },
+  { from: "/developers/tools/sandbox-users", to: "/build/tools/sandbox-users" },
+  { from: "/developers/tools/testing-api", to: "/build/tools/testing-api" },
+  { from: "/developers/using-api/authentication", to: "/build/using-api/authentication" },
+  { from: "/developers/using-api/authentication/guide-get-token-project", to: "/build/using-api/authentication#get-token-project" },
+  { from: "/developers/using-api/authentication/guide-get-token-user", to: "/build/using-api/authentication#get-token-user" },
+  { from: "/developers/using-api/authentication/guide-impersonate", to: "/build/using-api/authentication#impersonate" },
+  { from: "/developers/using-api/errors-rejections", to: "/build/using-api/errors-rejections" },
+  { from: "/developers/using-api/idempotency", to: "/build/using-api/idempotency" },
+  { from: "/developers/using-api/pagination", to: "/build/using-api/pagination" },
+  { from: "/developers/using-api/payment-control", to: "/build/using-api/payment-control" },
+  { from: "/developers/using-api/webhooks", to: "/build/using-api/webhooks" },
   // end batch 3B
+  // DOC-1814 — "Dev Tools" section renamed to "Build" (/dev-tools -> /build)
+  { from: "/dev-tools", to: "/build" },
+  { from: "/dev-tools/graphql", to: "/build/graphql" },
+  { from: "/dev-tools/tools/api-explorer", to: "/build/tools/api-explorer" },
+  { from: "/dev-tools/tools/event-simulator", to: "/build/tools/event-simulator" },
+  { from: "/dev-tools/tools/mcp-servers", to: "/build/tools/mcp-servers" },
+  { from: "/dev-tools/tools/postman-collection", to: "/build/tools/postman-collection" },
+  { from: "/dev-tools/tools/sandbox-users", to: "/build/tools/sandbox-users" },
+  { from: "/dev-tools/tools/test-tools-guide", to: "/build/tools/test-tools-guide" },
+  { from: "/dev-tools/tools/testing-api", to: "/build/tools/testing-api" },
+  { from: "/dev-tools/using-api/authentication", to: "/build/using-api/authentication" },
+  { from: "/dev-tools/using-api/errors-rejections", to: "/build/using-api/errors-rejections" },
+  { from: "/dev-tools/using-api/idempotency", to: "/build/using-api/idempotency" },
+  { from: "/dev-tools/using-api/pagination", to: "/build/using-api/pagination" },
+  { from: "/dev-tools/using-api/payment-control", to: "/build/using-api/payment-control" },
+  { from: "/dev-tools/using-api/webhooks", to: "/build/using-api/webhooks" },
+  // end build rename
   // DOC-1814 cutover — batch 3A: get-started/set-up-swan
   { from: "/glossary", to: "/get-started/set-up-swan/glossary" },
   { from: "/topics/get-started/choose-integration", to: "/get-started/set-up-swan/choose-integration" },
@@ -72,21 +89,21 @@ module.exports = [
     from: "/topics/merchants/profiles/guide-add",
     to: "/topics/merchants/profiles/guide-request/",
   },
-  { from: "/api/api-explorer", to: "/dev-tools/tools/api-explorer" },
-  { from: "/api/authentication", to: "/dev-tools/using-api/authentication" },
+  { from: "/api/api-explorer", to: "/build/tools/api-explorer" },
+  { from: "/api/authentication", to: "/build/using-api/authentication" },
   { from: "/api/consent", to: "/topics/users/consent/" },
-  { from: "/api/endpoints", to: "/dev-tools#endpoints" },
-  { from: "/api/errors", to: "/dev-tools/using-api/errors-rejections" },
-  { from: "/api/event-simulator", to: "/dev-tools/tools/event-simulator" },
-  { from: "/api/overview", to: "/dev-tools" },
-  { from: "/api/pagination", to: "/dev-tools/using-api/pagination" },
-  { from: "/api/payment-control", to: "/dev-tools/using-api/payment-control" },
+  { from: "/api/endpoints", to: "/build#endpoints" },
+  { from: "/api/errors", to: "/build/using-api/errors-rejections" },
+  { from: "/api/event-simulator", to: "/build/tools/event-simulator" },
+  { from: "/api/overview", to: "/build" },
+  { from: "/api/pagination", to: "/build/using-api/pagination" },
+  { from: "/api/payment-control", to: "/build/using-api/payment-control" },
   {
     from: "/api/sample-implementation",
-    to: "/dev-tools/tools/postman-collection",
+    to: "/build/tools/postman-collection",
   },
-  { from: "/api/testing-api", to: "/dev-tools/tools/testing-api" },
-  { from: "/api/webhook", to: "/dev-tools/using-api/webhooks" },
+  { from: "/api/testing-api", to: "/build/tools/testing-api" },
+  { from: "/api/webhook", to: "/build/using-api/webhooks" },
   { from: "/concept/account", to: "/accounts/concepts/account" }, // DOC-1814: chain-rewrite (was /topics/accounts/)
   { from: "/concept/account-funding", to: "/accounts/concepts/funding" },
   {
@@ -122,8 +139,8 @@ module.exports = [
   { from: "/guide/make-a-transaction", to: "/topics/payments/" },
   { from: "/guide/manage-accounts-and-ibans", to: "/accounts/concepts/ibans" },
   { from: "/guide/quickstart", to: "/get-started/set-up-swan/step-by-step" },
-  { from: "/guide/use-our-api", to: "/dev-tools" },
-  { from: "/guide/use-our-webhooks", to: "/dev-tools/using-api/webhooks" },
+  { from: "/guide/use-our-api", to: "/build" },
+  { from: "/guide/use-our-webhooks", to: "/build/using-api/webhooks" },
   { from: "/help/changelog", to: "/changelog/" },
   { from: "/help/contact-us", to: "/topics/contact" },
   {
@@ -170,11 +187,11 @@ module.exports = [
   { from: "/user-flow-diagrams/sign-up", to: "/topics/users/#login" },
   {
     from: "/api/authentication/project-access-token",
-    to: "/dev-tools/using-api/authentication#tokens-project",
+    to: "/build/using-api/authentication#tokens-project",
   },
   {
     from: "/api/authentication/user-access-token",
-    to: "/dev-tools/using-api/authentication#tokens-user",
+    to: "/build/using-api/authentication#tokens-user",
   },
   {
     from: "/api/consent/integrate-strong-customer-authentication-sca",
@@ -280,7 +297,7 @@ module.exports = [
   },
   { from: "/help/faq/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/help/faq/accounts", to: "/accounts/concepts/account" }, // DOC-1814: chain-rewrite (was /topics/accounts/)
-  { from: "/help/faq/api", to: "/dev-tools" },
+  { from: "/help/faq/api", to: "/build" },
   { from: "/help/faq/cards", to: "/topics/cards/" },
   { from: "/help/faq/consent", to: "/topics/users/consent/" },
   {
@@ -343,11 +360,11 @@ module.exports = [
   },
   {
     from: "/help/faq/api/i-encountered-a-bug-while-using-the-api-what-should-i-do",
-    to: "/dev-tools#troubleshooting",
+    to: "/build#troubleshooting",
   },
   {
     from: "/help/faq/api/i-get-a-cors-error-when-using-the-api-what-can-i-do",
-    to: "/dev-tools#backend",
+    to: "/build#backend",
   },
   {
     from: "/help/faq/api/i-get-an-error-500-at-the-end-of-onboarding.-why",
@@ -355,15 +372,15 @@ module.exports = [
   },
   {
     from: "/help/faq/api/to-enter-the-list-of-uri-redirects-can-i-use-a-domain-instead-of-an-absolute-uri",
-    to: "/dev-tools/using-api/authentication#tokens-user-uri",
+    to: "/build/using-api/authentication#tokens-user-uri",
   },
   {
     from: "/help/faq/api/when-i-request-a-list-via-the-api-is-the-number-of-results-limited",
-    to: "/dev-tools/using-api/pagination#elements",
+    to: "/build/using-api/pagination#elements",
   },
   {
     from: "/help/faq/api/why-isnt-the-api-working-in-the-live-environment-when-it-worked-great-in-sandbox",
-    to: "/dev-tools#environments",
+    to: "/build#environments",
   },
   {
     from: "/help/faq/cards/after-uploading-my-logo-i-see-a-black-or-white-rectangle-instead-of-my-logo",
@@ -424,7 +441,7 @@ module.exports = [
   },
   {
     from: "/help/faq/consent/can-i-disable-consent",
-    to: "/dev-tools/tools/sandbox-users#settings",
+    to: "/build/tools/sandbox-users#settings",
   },
   {
     from: "/help/faq/consent/can-i-handle-consent",

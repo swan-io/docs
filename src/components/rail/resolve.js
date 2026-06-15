@@ -37,14 +37,14 @@ export function typeChip(route) {
 
 // Area kind for related links that aren't Diátaxis content (cross-product or
 // cross-section pointers), so every Related item carries an icon (see AreaIcon):
-//   /dev-tools/*            → "dev-tools"  (wrench)
+//   /build/*            → "build"  (wrench)
 //   /get-started/*          → "get-started" (rocket)
 //   product root / topics/* / other → "product" (package)
 export function areaKind(route) {
   const r = String(route || "").split("#")[0].replace(/^\/+|\/+$/g, "");
   if (!r) return null;
   const seg = r.split("/");
-  if (seg[0] === "dev-tools") return "dev-tools";
+  if (seg[0] === "build") return "build";
   if (seg[0] === "get-started") return "get-started";
   return "product";
 }

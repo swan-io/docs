@@ -41,7 +41,7 @@ function deriveSidebar(sb) {
   const overview = sb.find((x) => x.type === "doc");
   const root = overview ? idToRoute(overview.id) : null;
   // Top-level categories are the content-type groups (Concepts/Guides/Reference,
-  // or Tools/Using the API/GraphQL for dev-tools).
+  // or Tools/Using the API/GraphQL for build).
   const groups = sb
     .filter((x) => x.type === "category")
     .map(deriveItem)

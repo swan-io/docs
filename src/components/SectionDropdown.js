@@ -56,7 +56,7 @@ function MobileNodes({ nodes, level }) {
 
 export default function SectionDropdown({ to, label, items = [], position, mobile }) {
   // Auto-derived nested tree (from sidebars.ia.js via the ia-nav plugin) takes
-  // precedence. Items passed in config render the legacy flat list (e.g. Dev Tools).
+  // precedence. Items passed in config render the legacy flat list (e.g. Build).
   const { nav = {} } = usePluginData("ia-nav") || {};
   const tree = items.length ? null : nav[norm(to)];
 

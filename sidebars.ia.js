@@ -371,27 +371,27 @@ module.exports = {
     ]),
   ],
 
-  devToolsSidebar: [
-    doc("dev-tools/index", "Overview"),
+  buildSidebar: [
+    doc("build/index", "Overview"),
     top("Tools", [
-      doc("dev-tools/tools/api-explorer", "API Explorer"),
-      doc("dev-tools/tools/event-simulator", "Event simulator"),
-      doc("dev-tools/tools/postman-collection", "Postman collection"),
-      doc("dev-tools/tools/sandbox-users", "Sandbox users"),
-      doc("dev-tools/tools/testing-api", "Testing the API"),
-      doc("dev-tools/tools/mcp-servers", "MCP servers"),
-      doc("dev-tools/tools/test-tools-guide", "Test tools guide"),
+      doc("build/tools/api-explorer", "API Explorer"),
+      doc("build/tools/event-simulator", "Event simulator"),
+      doc("build/tools/postman-collection", "Postman collection"),
+      doc("build/tools/sandbox-users", "Sandbox users"),
+      doc("build/tools/testing-api", "Testing the API"),
+      doc("build/tools/mcp-servers", "MCP servers"),
+      doc("build/tools/test-tools-guide", "Test tools guide"),
     ]),
     top("Using the API", [
-      doc("dev-tools/using-api/authentication", "Authentication"),
-      doc("dev-tools/using-api/errors-rejections", "Errors & rejections"),
-      doc("dev-tools/using-api/idempotency", "Idempotency"),
-      doc("dev-tools/using-api/pagination", "Pagination"),
-      doc("dev-tools/using-api/payment-control", "Payment control"),
-      doc("dev-tools/using-api/webhooks", "Webhooks"),
+      doc("build/using-api/authentication", "Authentication"),
+      doc("build/using-api/errors-rejections", "Errors & rejections"),
+      doc("build/using-api/idempotency", "Idempotency"),
+      doc("build/using-api/pagination", "Pagination"),
+      doc("build/using-api/payment-control", "Payment control"),
+      doc("build/using-api/webhooks", "Webhooks"),
     ]),
     top("GraphQL", [
-      doc("dev-tools/graphql/index", "Overview"),
+      doc("build/graphql/index", "Overview"),
     ]),
   ],
 };

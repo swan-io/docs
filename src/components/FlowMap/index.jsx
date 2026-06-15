@@ -1,10 +1,12 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import ContentTypeIcon from '../ContentTypeIcon';
 
 /**
  * FlowMap — a single data-driven module for navigation hubs AND concept diagrams.
  * Authored inline as a ```flowmap fenced block (JSON spec), like ```mermaid.
- * Modes: lanes (lifecycle phases) · pathway (ordered sequence) · graph (chain/lifecycle/spokes).
+ * Modes: lanes (lifecycle phases) · pathway (ordered sequence) · graph (chain/lifecycle/spokes)
+ *        · tracks (side-by-side audience reading paths) · grid.
  */
 
 const AUDIENCE = { dev: 'Developers', ops: 'Operators' };
@@ -80,14 +82,40 @@ function Pathway({ items = [] }) {
         <div className="flowmap-prow" key={i}>
           <span className="flowmap-prow__dot">{i + 1}</span>
           <div className="flowmap-prow__body">
-            {it.to ? (
-              <Link to={it.to} className="flowmap-prow__t">{it.title}</Link>
-            ) : (
-              <span className="flowmap-prow__t">{it.title}</span>
-            )}
-            <AudienceChips audience={it.audience} />
+            <span className="flowmap-prow__head">
+              {it.type ? <ContentTypeIcon type={it.type} className="flowmap-prow__type" /> : null}
+              {it.to ? (
+                <Link to={it.to} className="flowmap-prow__t">{it.title}</Link>
+              ) : (
+                <span className="flowmap-prow__t">{it.title}</span>
+              )}
+              <AudienceChips audience={it.audience} />
+            </span>
             {it.desc ? <div className="flowmap-prow__d">{it.desc}</div> : null}
           </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// tracks — parallel reading paths shown side by side for comparison (e.g. per
+// audience). Each track is a colored column card containing a Pathway: the same
+// numbered rail + type-tagged, clickable steps, just laid out for comparison.
+function Tracks({ tracks = [] }) {
+  return (
+    <div className="ia-path-columns flowmap flowmap--tracks">
+      {tracks.map((track, i) => (
+        <div className="ia-path-column" key={i}>
+          <div className="ia-path-column__head">
+            {track.audience ? (
+              <span className={`ia-audience-tag ia-audience-tag--${track.audience}`}>{track.label}</span>
+            ) : (
+              <span className="ia-step__name">{track.label}</span>
+            )}
+            {track.sub ? <span className="ia-path-column__sub">{track.sub}</span> : null}
+          </div>
+          <Pathway items={track.items} />
         </div>
       ))}
     </div>
@@ -161,6 +189,8 @@ export default function FlowMap({ spec, children }) {
       return <Lanes {...data} />;
     case 'pathway':
       return <Pathway {...data} />;
+    case 'tracks':
+      return <Tracks {...data} />;
     case 'graph':
       return <Graph {...data} />;
     default:

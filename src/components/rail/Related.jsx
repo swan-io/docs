@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "@docusaurus/Link";
-import { useRouteMap, resolveRoute, typeChip, failOrWarn } from "./resolve";
+import { useRouteMap, resolveRoute, typeChip, areaLabel, failOrWarn } from "./resolve";
 import ContentTypeIcon from "@site/src/components/ContentTypeIcon";
 
 export default function Related({ routes, sourcePage }) {
@@ -14,14 +14,15 @@ export default function Related({ routes, sourcePage }) {
         {routes.map((route) => {
           const resolved = resolveRoute(map, route);
           const chip = typeChip(route);
+          const label = chip || areaLabel(route);
           if (!resolved) {
             failOrWarn(sourcePage, "related", route, "does not resolve to a known route");
             return (
               <li key={route}>
-                {chip && (
+                {label && (
                   <span className="ia-rail__type">
-                    <ContentTypeIcon type={chip} />
-                    {chip}
+                    {chip && <ContentTypeIcon type={chip} />}
+                    {label}
                   </span>
                 )}
                 <Link to={route} className="ia-rail__link">
@@ -32,7 +33,7 @@ export default function Related({ routes, sourcePage }) {
           }
           return (
             <li key={route}>
-              {chip && <span className="ia-rail__type">{chip}</span>}
+              {label && <span className="ia-rail__type">{label}</span>}
               <Link to={route} className="ia-rail__link">
                 {resolved.meta.title || route}
               </Link>

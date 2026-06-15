@@ -5,8 +5,8 @@ import React from 'react';
 // so the same asset powers this component AND the sidebar ::before icons.
 const LABELS = { Concept: 'Concept', Guide: 'Guide', Ref: 'Reference' };
 
-// Hover tooltip explaining each content type (shown via native title; the page-title
-// marker also gets a dashed underline + help cursor as the hover affordance).
+// Hover tooltip explaining each content type (custom [data-ia-tip] bubble + help
+// cursor as the hover affordance — used by the sidebar, rail, and page-title markers).
 export const DESCRIPTIONS = {
   Concept: 'Concept. Explains how something works.',
   Guide: 'Guide. Step-by-step instructions to reach a goal.',

@@ -1,0 +1,57 @@
+---
+title: Mutations
+---
+
+# Mutations {#graphql-mutations}
+
+There are entry points to a GraphQL API to make requests, which both take inputs.
+
+| Request type | Purpose | `REST` comparison |
+|---|---|---|
+| Mutations | Make a change | `PUT` or `POST` |
+| Queries | Fetch data from the remote API | `GET` |
+
+Each request starts with the keyword `query` or `mutation`, then specifies the field or fields you want to get back in the response.
+
+## Mutation example {#graphql-mutations-example}
+
+Consider the following example, which calls the mutation `updateAccount` to update the account's language.
+Note the `... on UpdateAccountSuccessPayload`, in which you can choose to return the account's language in the payload.
+Swan recommends adding validations systematically, as well as rejections.
+
+Note that this is a basic example.
+Consider the example of [requesting a merchant payment method](/topics/merchants/online/sdd/guide-request) to see more complexity.
+You can also explore all of Swan's mutations in API Explorer, [including this one](https://explorer.swan.io?query=bXV0YXRpb24gTXlNdXRhdGlvbiB7CiAgdXBkYXRlQWNjb3VudChpbnB1dDogeyBhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIiwgbGFuZ3VhZ2U6IGVuIH0pIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50U3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGFjY291bnQgewogICAgICAgIGxhbmd1YWdlCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api).
+
+```graphql title="Mutation" {3,5} showLineNumbers
+mutation ChangeLanguage {
+  updateAccount( #mutation name
+    input: { accountId: "$YOUR_ACCOUNT_ID", language: en } #input information
+  ) {
+    ... on UpdateAccountSuccessPayload { #validation
+      __typename
+      account {
+        language #returns account language in payload
+      }
+    }
+  }
+}
+
+```
+
+```json title="Payload" {4,6} showLineNumbers
+{
+  "data": {
+    "updateAccount": {
+      "__typename": "UpdateAccountSuccessPayload",
+      "account": {
+        "language": "en"
+      }
+    }
+  }
+}
+```
+
+## Related
+
+- [About GraphQL](/build/graphql) · [Queries](/build/graphql/queries) · [Types](/build/graphql/types)

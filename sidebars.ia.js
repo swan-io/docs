@@ -392,6 +392,10 @@ module.exports = {
     ]),
     top("GraphQL", [
       doc("build/graphql/index", "Overview"),
+      doc("build/graphql/schema", "Schema"),
+      doc("build/graphql/queries", "Queries"),
+      doc("build/graphql/mutations", "Mutations"),
+      doc("build/graphql/types", "Types"),
     ]),
   ],
 };

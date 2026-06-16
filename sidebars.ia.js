@@ -373,14 +373,14 @@ module.exports = {
 
   buildSidebar: [
     doc("build/index", "Overview"),
-    top("Tools", [
-      doc("build/tools/api-explorer", "API Explorer"),
-      doc("build/tools/event-simulator", "Event simulator"),
-      doc("build/tools/postman-collection", "Postman collection"),
-      doc("build/tools/sandbox-users", "Sandbox users"),
-      doc("build/tools/testing-api", "Testing the API"),
-      doc("build/tools/mcp-servers", "MCP servers"),
-      doc("build/tools/test-tools-guide", "Test tools guide"),
+    // Natural learning order: the API concept (GraphQL) → how to call it
+    // (Using the API) → the utilities that support development (Tools).
+    top("GraphQL", [
+      doc("build/graphql/index", "Overview"),
+      doc("build/graphql/schema", "Schema"),
+      doc("build/graphql/queries", "Queries"),
+      doc("build/graphql/mutations", "Mutations"),
+      doc("build/graphql/types", "Types"),
     ]),
     top("Using the API", [
       doc("build/using-api/authentication", "Authentication"),
@@ -390,12 +390,14 @@ module.exports = {
       doc("build/using-api/payment-control", "Payment control"),
       doc("build/using-api/webhooks", "Webhooks"),
     ]),
-    top("GraphQL", [
-      doc("build/graphql/index", "Overview"),
-      doc("build/graphql/schema", "Schema"),
-      doc("build/graphql/queries", "Queries"),
-      doc("build/graphql/mutations", "Mutations"),
-      doc("build/graphql/types", "Types"),
+    top("Tools", [
+      doc("build/tools/api-explorer", "API Explorer"),
+      doc("build/tools/event-simulator", "Event simulator"),
+      doc("build/tools/postman-collection", "Postman collection"),
+      doc("build/tools/sandbox-users", "Sandbox users"),
+      doc("build/tools/testing-api", "Testing the API"),
+      doc("build/tools/mcp-servers", "MCP servers"),
+      doc("build/tools/test-tools-guide", "Test tools guide"),
     ]),
   ],
 };

@@ -586,3 +586,98 @@ pre {
 .navbar .DocSearch-Button .DocSearch-Button-Placeholder { display: none; }
 .navbar .DocSearch-Button .DocSearch-Search-Icon { width: 18px; height: 18px; }
 .navbar .DocSearch-Button .DocSearch-Button-Keys { min-width: 0; }
+
+/* DOC-1814 — "Developers" dropdown (right cluster). The trigger matches the
+   utility buttons (outlined pill, Swan-purple lead icon). The panel is a
+   two-column menu: Documentation (the Build hierarchy, with hover flyouts like
+   the product nav) + Tools & references (the ex-standalone tool buttons). */
+.navbar__item.dropdown .navbar__link.dev-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 2.5rem;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.navbar__item.dropdown:hover > .navbar__link.dev-trigger,
+.navbar__item.dropdown .navbar__link.dev-trigger:hover {
+  background: var(--ifm-background-surface-color);
+  border-color: var(--ifm-color-emphasis-400);
+  color: var(--ifm-color-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.navbar__item.dropdown:has(> .dev-trigger) { padding: 0; }
+/* vertical rule between Developer resources and search — matches the divider to
+   the right of the logo (.navbar__brand::after): 1px, 30px tall, same tint, and
+   symmetric 20px gutters (the neighbours carry no horizontal margin). */
+.navbar__item:has(> .navbar__vr) { padding: 0; }
+.navbar__vr {
+  display: inline-block;
+  width: 1px;
+  height: 30px;
+  margin: 0 20px;
+  background: rgba(0, 0, 0, 0.1);
+}
+.dev-trigger__lead { display: inline-flex; }
+.dev-trigger__lead svg { width: 18px; height: 18px; color: var(--ifm-color-primary); }
+.dev-trigger__caret { font-size: 0.7rem; opacity: 0.55; }
+
+/* two-column panel — keeps Infima's positioning + show/hide transitions */
+.dev-panel.dropdown__menu {
+  display: flex;
+  gap: 8px;
+  width: 640px;
+  max-width: 92vw;
+  padding: 12px;
+}
+.dev-col { flex: 1; min-width: 0; padding: 4px 6px; }
+.dev-col + .dev-col { border-left: 1px solid var(--ifm-color-emphasis-200); }
+.dev-col__title {
+  margin: 4px 8px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ifm-color-emphasis-500);
+}
+.dev-list { list-style: none; margin: 0; padding: 0; }
+.dev-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  color: var(--ifm-color-emphasis-900);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.dev-row, .dev-row:hover { text-decoration: none; }
+.dev-row:hover,
+.dev-row--active { background: var(--ifm-color-emphasis-100); color: var(--ifm-color-primary); }
+.dev-row .ia-flyout__caret { margin-left: auto; color: var(--ifm-color-emphasis-500); }
+.dev-row--active .ia-flyout__caret,
+.dev-row:hover .ia-flyout__caret { color: var(--ifm-color-primary); }
+/* col 3 — detail list of the active group's pages */
+.dev-col--detail { background: rgba(98, 64, 181, 0.03); border-radius: 8px; }
+.dev-row--leaf { padding-left: 10px; font-weight: 400; color: var(--ifm-color-emphasis-800); }
+.dev-row__text { display: flex; flex-direction: column; min-width: 0; }
+.dev-row__desc { font-size: 11.5px; font-weight: 400; color: var(--ifm-color-emphasis-500); }
+.dev-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(98, 64, 181, 0.08);
+}
+.dev-ic svg { width: 15px; height: 15px; color: var(--ifm-color-primary); }

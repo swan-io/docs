@@ -40,11 +40,6 @@ module.exports = {
       },
       items: [
         { type: "doc", docId: "get-started/index", position: "left", label: "Get started" },
-        { type: "custom-sectionDropdown", position: "left", label: "Build", to: "/build", items: [
-          { label: "Tools", to: "/build/tools/api-explorer" },
-          { label: "Using the API", to: "/build/using-api/authentication" },
-          { label: "GraphQL", to: "/build/graphql/" },
-        ]},
         { type: "html", position: "left", value: "<span class=\"navbar__sep\" aria-hidden=\"true\">•</span>" },
         // Accounts/Cards/Payments/Users dropdowns are auto-derived from
         // sidebars.ia.js by the ia-nav plugin (no hand-maintained items here).
@@ -53,24 +48,22 @@ module.exports = {
         { type: "custom-sectionDropdown", position: "left", label: "Payments", to: "/payments" },
         { type: "custom-sectionDropdown", position: "left", label: "Users", to: "/users" },
         {
-          type: "html",
+          // DOC-1814 — "Developer resources" dropdown: bundles the developer
+          // resources (Documentation = the Build hierarchy, auto-derived from
+          // sidebars.ia.js; Tools & references = the live tools that used to be
+          // standalone buttons).
+          type: "custom-developersDropdown",
           position: "right",
-          value: `<div class="swan-api-nav">
-            <a class="swan-tip" href="https://api-reference.swan.io" target="_blank" rel="noopener noreferrer" aria-label="API reference"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="swan-btn-label">API</span><span class="swan-tip__label" aria-hidden="true">API Reference</span></a>
-            <div class="separator"></div>
-            <a class="swan-tip swan-icon-btn" href="https://explorer.swan.io/" target="_blank" rel="noopener noreferrer" aria-label="API Explorer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg><span class="swan-tip__label" aria-hidden="true">Explorer</span></a>
-          </div>`
+          label: "Developer resources",
+          to: "/build",
+          resources: [
+            { label: "API Reference", icon: "apiref", href: "https://api-reference.swan.io", desc: "Full GraphQL schema" },
+            { label: "API Explorer", icon: "explorer", href: "https://explorer.swan.io/", desc: "Run queries live" },
+            { label: "Changelog", icon: "changelog", to: "/changelog", desc: "What’s shipped" },
+            { label: "Preview", icon: "preview", to: "/preview", desc: "What’s next" },
+          ],
         },
-        {
-          type: "html",
-          position: "right",
-          value: `<div class="swan-unified-nav">
-            <a class="swan-tip swan-icon-btn" href="/changelog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span class="swan-tip__label" aria-hidden="true">Changelog</span></a>
-            <div class="separator"></div>
-            <a class="swan-tip swan-icon-btn" href="/preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="swan-tip__label" aria-hidden="true">Preview</span></a>
-          </div>`
-        },
-        { type: "html", position: "right", value: `<span class="navbar__sep" aria-hidden="true">•</span>` },
+        { type: "html", position: "right", value: `<span class="navbar__vr" aria-hidden="true"></span>` },
         { type: "search", position: "right" },
         {
           type: "html",

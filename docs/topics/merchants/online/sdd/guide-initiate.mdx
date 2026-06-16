@@ -19,8 +19,12 @@ title: Initiate a transaction
 1. Add an `idempotencyKey` to prevent duplicate payments (line 4). Refer to the [idempotency](/developers/using-api/idempotency/) guide for more information.
 1. Choose `mandateId` and add the payment mandate ID (line 5) from the [declare a payment mandate](./guide-declare.mdx) guide.
 1. Include the amount `value` and `currency` (line 6).
-1. Recommended: include your merchant's name in the `label` field (line 7).
+1. Recommended: include your merchant's name in the `label` field (line 7). The `label` can't exceed 140 characters.
 1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
+
+:::caution Label character limit
+The `label` field can't exceed 140 characters. If the value is too long, Swan rejects the payment. Make sure to validate the label length before calling the mutation.
+:::
 
 ## Mutation {#mutation}
 

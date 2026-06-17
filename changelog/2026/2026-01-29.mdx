@@ -26,12 +26,12 @@ The process happens in two stages:
 
 ### Upcoming breaking changes
 
-👮 Starting **February 5**, new rejections apply to the [`openAccount`](https://api-reference.swan.io/mutations/open-account/) mutation to prevent fraud patterns involving successive opening and closing of [multiple accounts](/topics/accounts/multiple-accounts/) to bypass the [account creation limit](/topics/accounts/multiple-accounts/#account-creation-limit):
+👮 Starting **February 5**, new rejections apply to the [`openAccount`](https://api-reference.swan.io/mutations/open-account/) mutation to prevent fraud patterns involving successive opening and closing of [multiple accounts](/accounts/concepts/multiple-accounts) to bypass the [account creation limit](/accounts/reference/accounts/multiple-accounts-requirements#account-creation-limit):
 
 - All accounts now count toward the maximum limit regardless of status (`Opened`, `Suspended`, `Closing`, or `Closed`). Previously, only `Opened` accounts counted. This change affects the existing `AccountHolderAccountsCreationLimitRejection`.
 - If one or more of the account holder's accounts is `Suspended`, Swan rejects opening multiple accounts with `AccountHolderAccountsSuspendedStatusNotEligibleRejection`.
 
-🚫 Starting **February 26**, the following rules apply to [limited accounts](/topics/accounts/#account-type-level):
+🚫 Starting **February 26**, the following rules apply to [limited accounts](/accounts/concepts/account/type-and-level):
 
 - Incoming SEPA Credit Transfers (instant or regular) exceeding **€50** are automatically rejected.
 - The maximum cumulative balance is **€150**.

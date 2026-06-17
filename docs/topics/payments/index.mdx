@@ -81,7 +81,7 @@ Additionally, since pull payments are initiated by the creditor and not the debt
 > <TransactionsDefinition />
 
 A single payment is a group  of **one** or **several transactions**.
-All transactions go through a **scoring service** to determine if the transaction is compliant and if the [account's `Available` balance](../accounts/index.mdx#balances) is sufficient to cover the transaction.
+All transactions go through a **scoring service** to determine if the transaction is compliant and if the [account's `Available` balance](/accounts/concepts/account/balances) is sufficient to cover the transaction.
 
 Transactions are created asynchronously after a payment is initiated.
 In the API, you'll work **primarily with transactions** when seeking information about payments.
@@ -105,7 +105,7 @@ Retrieve a transaction ID along with other transaction information by querying t
 ### Transaction statuses {#transactions-statuses}
 
 There are six possible statuses for Swan transactions: `Upcoming`, `Pending`, `Booked`, `Released`, `Canceled`, and `Rejected`.
-Transactions directly impact [account balances](../accounts/index.mdx#balances).
+Transactions directly impact [account balances](/accounts/concepts/account/balances).
 
 **Each payment method** uses a **different combination of these statuses** with specific flows.
 Refer to the schemas for [credit transfers](./credit-transfers/index.mdx#statuses), [direct debits](./direct-debit/index.mdx#statuses), and [cards](./cards/index.mdx#statuses) for more information about statuses for that payment method.
@@ -120,7 +120,7 @@ import TransactionStatuses from '../partials/_transaction-statuses.mdx';
 Swan assigns a `sequenceNumber` to every `Booked` transaction.
 The number increments by 1 with each new booked transaction, giving you a reliable way to order transactions and spot any gaps.
 
-`sequenceNumber` is also used to order `Booked` transactions on [account statements](../accounts/index.mdx#account-statements).
+`sequenceNumber` is also used to order `Booked` transactions on [account statements](/accounts/concepts/account/documents#account-statements).
 
 `sequenceNumber` is available in `BookedTransactionStatusInfo.balanceAfter` when you [query](https://explorer.swan.io/?query=cXVlcnkgR2V0VHJhbnNhY3Rpb25TZXF1ZW5jZU51bWJlciB7CiAgdHJhbnNhY3Rpb24oaWQ6ICIkWU9VUl9UUkFOU0FDVElPTl9JRCIpIHsKICAgIHN0YXR1c0luZm8gewogICAgICAuLi4gb24gQm9va2VkVHJhbnNhY3Rpb25TdGF0dXNJbmZvIHsKICAgICAgICBiYWxhbmNlQWZ0ZXIgewogICAgICAgICAgc2VxdWVuY2VOdW1iZXIKICAgICAgICAgIGFtb3VudCB7CiAgICAgICAgICAgIHZhbHVlCiAgICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api) `statusInfo`.
 
@@ -134,9 +134,9 @@ Backfilling older transactions is in progress, so historical transactions may no
 ### Transaction supporting documents {#transactions-supporting-documents}
 
 In certain cases, Swan requires supporting documents to justify transactions.
-Swan uses the [supporting documents feature](../accounts/documents/index.mdx) to manage the request and reception of these documents.
+Swan uses the [supporting documents feature](/accounts/concepts/documents) to manage the request and reception of these documents.
 
-You can [upload these documents proactively](../accounts/documents/guide-upload-transaction.mdx) when initiating transactions with the API.
+You can [upload these documents proactively](/accounts/guides/documents/upload-transaction) when initiating transactions with the API.
 
 ### Transaction confirmation statements {#transactions-statements}
 
@@ -158,7 +158,7 @@ Call the `transaction` or `transactions` query to confirm transaction statement 
 Add the `statementCanBeGenerated` boolean, as shown in the [guide to get transaction information](./overview/guide-get-transaction-info.mdx).
 :::
 
-After the statement is generated successfully with the API,  you receive a `TransactionStatement.Generated` [webhook notification](../../developers/using-api/webhooks.mdx#events-transactions).
+After the statement is generated successfully with the API,  you receive a `TransactionStatement.Generated` [webhook notification](/build/using-api/webhooks#events-transactions).
 When you receive the webhook notification, query the API to retrieve the URL to download the statement.
 You have **seven days** to download the statement before the link expires.
 

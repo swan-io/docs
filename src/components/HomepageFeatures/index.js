@@ -36,7 +36,7 @@ const FeatureList = [
   },
   {
     title: "Partnership",
-    url: "/partnership",
+    url: "/get-started/become-a-partner",
     svg: (
       <svg
         className={styles.svg}
@@ -60,8 +60,8 @@ const FeatureList = [
     ),
   },
   {
-    title: "Developers",
-    url: "/developers",
+    title: "Build",
+    url: "/build",
     svg: (
       <svg
         className={styles.svg}

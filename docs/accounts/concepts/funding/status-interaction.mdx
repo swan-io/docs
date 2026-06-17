@@ -1,0 +1,55 @@
+---
+title: Interaction between statuses
+audience:
+  - dev
+  - ops
+---
+
+# Interaction between statuses {#status-interaction}
+
+Account funding involves three distinct statuses: [funding sources](/accounts/concepts/funding/sources#funding-source-statuses), [payment mandates](/accounts/concepts/funding/payment-mandates#mandates-statuses), and [account verification](/accounts/concepts/funding/account-verification#account-verification-statuses).
+
+## Sequence diagram
+
+Review the following sequence diagram to understand how statuses interact with each other.
+Note one key action for the <Term id="account-holder">account holder</Term> or eligible account member: they **must declare the <Term id="payment-mandate">payment mandate</Term>** to their debtor institution ➎.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Swan
+    participant A as Account holder or member
+    participant D as Debtor institution
+    A-->>S: Adds account funding source
+    Note over S: Funding source status → `Pending`<br />Payment mandate status → `ConsentPending`<br />Account verification status → `PendingVerification`
+    S-->>A: Requests consent to adding the account funding source<br />and to the payment mandate
+    alt
+    rect rgb(253, 235, 219)
+    A--xS: Doesn't consent to payment mandate
+    Note over S: Funding source status remains `Pending`<br />Payment mandate status remains `ConsentPending`<br />Account verification remains `PendingVerification`
+    end
+    else
+    rect rgb(210 246 231)
+    A-->>S: Consents to payment mandate
+    Note over S: Funding source status → `Enabled`<br />Payment mandate status → `Enabled`<br />Account verification status remains `PendingVerification`
+    end
+    end
+    A-->>D: Declares payment mandate<br />to debtor institution (mandatory)
+    A-->>S: Initiates account funding request
+    S-->>D: Sends direct debit instruction
+    Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification remains `PendingVerification`
+    alt debtor didn't declare mandate to debtor institution in step ➎
+    rect rgb(253, 235, 219)
+        D--xS: Transaction is rejected or returned
+        S-->>A: Returns failed transaction message
+        Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status remains `PendingVerification`
+    end
+    else debtor declared mandate to debtor institution in step ➎
+        rect rgb(210 246 231)
+        D-->>S: Transaction is booked
+        Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status remains `PendingVerification`
+        end
+        S-->>S: Reserved balance is released
+        Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status → `Verified`
+    end
+```

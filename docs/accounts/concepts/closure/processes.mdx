@@ -1,0 +1,103 @@
+---
+title: Closure processes
+related:
+  - /accounts/concepts/closure
+  - /accounts/guides/closure/close-limited
+  - /accounts/guides/closure/close-unlimited
+  - /accounts/guides/closure/close-link
+audience:
+  - dev
+  - ops
+---
+
+# Closure processes
+
+## When the closure process begins {#closure-begins}
+
+When an account enters the `Closing` status, the following resources are **canceled instantly**:
+
+- All [cards](/topics/cards/).
+- All [standing orders](/topics/payments/credit-transfers/sepa/#standing-orders).
+- All [virtual IBANs](/accounts/concepts/ibans/virtual).
+
+Additionally, incoming SEPA Credit Transfers are automatically returned, <Term id="payment-mandates">payment mandates</Term> for incoming SEPA Direct Debits are canceled, and any attempted incoming SEPA Direct Debit is rejected.
+Your users must cancel all outgoing SEPA Direct Debits themselves, as Swan has no control over those payment mandates.
+
+## Account closure processes {#processes}
+
+The account closure process depends on who closes the account.
+Swan assigns a specific [closure reason code](/accounts/concepts/closure/reason-codes) to each closed account so you can understand why the closure occurred.
+
+### Partner (you) {#closure-partner}
+
+You can request to close accounts for your users if specific conditions are met:
+
+1. Your end user hasn't made payments to you for two consecutive months.
+1. Your end user's account is recognized as a duplicate.
+1. Your end user is no longer using your product.
+1. Your end user doesn't respond to your communication.
+
+The method you'll use to request to close the account depends on the [account's payment level](/accounts/concepts/account/type-and-level), which is either `Limited` or `Unlimited`.
+Find the payment level by going to your **Dashboard** > **Data** > **Accounts**, then clicking the account you're requesting to close.
+
+Follow the guide relevant to your situation:
+
+- [Request to close a **limited** account](/accounts/guides/closure/close-limited)
+- [Request to close an **unlimited** account](/accounts/guides/closure/close-unlimited)
+
+When you request account closure, the reason code is `RequestedByPartner`.
+
+### Legal representative {#closure-legal-rep}
+
+An account's <Term id="legal-representative">legal representative</Term> can request to close an account.
+You need to support them in this process by either sending them a non-expiring closure link or closing the account with the API.
+
+Follow the guide relevant to your situation:
+
+- [Send a link to the legal representative to close the account](/accounts/guides/closure/close-link)
+- [Use the API to close an account by legal representative request](/accounts/guides/closure/close-link#api)
+
+Only Swan can act on `Suspended` accounts.
+Legal representatives can't close accounts with the status `Suspended`.
+
+When the legal representative requests account closure, the reason code is `RequestedByHolder`.
+
+### Account holder {#closure-account-holder}
+
+An <Term id="account-holder">account holder</Term> or legal representative can request to close an account by contacting Swan Support directly.
+Send your users the [Swan Support Center](https://support.swan.io/hc/en-150/articles/14642306196765-Account-closure-process) article explaining the process to initiate account closure.
+
+When they contact Swan Support to request account closure, the reason code is `RequestedByHolder`.
+
+### Swan {#closure-swan}
+
+Swan reserves the right to close accounts, and might decide to close an account for the following reasons:
+
+1. The account holder's identity document looks fake, stolen, or altered; the device used to complete an identification is altered; or the applicant seems to have performed their identification against their will.
+1. Suspicion of other fraudulent activity or activities that aren't compliant with Swan's policies.
+1. The onboarding, identification, or Know Your Customer (KYC) process wasn't completed.
+1. The Partner (you) is no longer working with Swan.
+
+When closing accounts, Swan is required by law to provide a **two-month notice** period.
+More specifically, Swan waits 60 days after notifying the account holder to change the account status to `Closing`.
+This provides the account holder with enough time to open an account at another financial institution before losing access to their Swan account.
+
+Swan **can close accounts immediately** if the closure is due to fraud or a third-party request.
+The reason code depends on the situation. Refer to the [closure reason codes](/accounts/concepts/closure/reason-codes) for a complete list.
+
+### Third party {#closure-third-party}
+
+Swan can receive requests from third parties to close accounts.
+For example, **liquidators** can request account closure if the account holder's company is being liquidated.
+**Notaries** can also request account closure following the account holder's death.
+
+Before accepting requests from third parties, Swan performs the following actions:
+
+1. Swan confirms the request is **legitimate**. If the request is fraudulent, Swan doesn't comply.
+1. Swan **checks the account balance**.
+    - Zero balance: No action required.
+    - Positive balance: Swan requests bank details from the third party, then transfers the funds.
+    - Negative balance: Swan requests the third party transfer funds so the balance reaches zero.
+
+When the account balance reaches zero, Swan changes the account status to `Closed` immediately for legitimate third-party requests.
+The reason code depends on the situation (for example, `DeathClosure` for a deceased account holder). Refer to the [closure reason codes](/accounts/concepts/closure/reason-codes) for a complete list.

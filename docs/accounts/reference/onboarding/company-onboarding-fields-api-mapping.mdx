@@ -1,0 +1,111 @@
+---
+title: Company onboarding API mapping
+related:
+  - /accounts/reference/onboarding/company-onboarding-fields
+  - /accounts/guides/onboarding/migrate-api
+  - /accounts/guides/onboarding/company
+audience:
+  - dev
+  - ops
+---
+
+# Company onboarding API mapping
+
+<p className="ia-lede">Field-by-field mapping from the deprecated company onboarding API to the current one. Available until the previous mutations are retired at the end of September 2026.</p>
+
+Use this table to map fields from the deprecated API to the new API.
+For current field requirements, see [Company onboarding fields](/accounts/reference/onboarding/company-onboarding-fields).
+
+## Account
+
+| Deprecated field | New field |
+|---|---|
+| `accountCountry` | `accountInfo.country` |
+| `accountName` | `accountInfo.name` |
+
+## Account administrator
+
+| Deprecated field | New field |
+|---|---|
+| `legalRepresentativePersonalAddress.addressLine1` | `accountAdmin.address.addressLine1` |
+| `legalRepresentativePersonalAddress.addressLine2` | `accountAdmin.address.addressLine2` |
+| `legalRepresentativePersonalAddress.city` | `accountAdmin.address.city` |
+| `legalRepresentativePersonalAddress.country` | `accountAdmin.address.country` |
+| `legalRepresentativePersonalAddress.postalCode` | `accountAdmin.address.postalCode` |
+| `legalRepresentativePersonalAddress.state` | `accountAdmin.address.state` |
+| - | `accountAdmin.birthInfo.birthDate` |
+| - | `accountAdmin.birthInfo.city` |
+| - | `accountAdmin.birthInfo.country` |
+| - | `accountAdmin.birthInfo.postalCode` |
+| `email` | `accountAdmin.email` |
+| - | `accountAdmin.firstName` |
+| - | `accountAdmin.lastName` |
+| - | `accountAdmin.nationality` |
+| `language` | `accountAdmin.preferredLanguage` |
+| - | `accountAdmin.taxIdentificationNumber` |
+| `typeOfRepresentation` | `accountAdmin.typeOfRepresentation` |
+| - | `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` |
+| - | `accountAdmin.unitedStatesTaxInfo.unitedStatesTaxIdentificationNumber` |
+| - | `accountAdmin.userDeviceInfo.geoloc.lat` |
+| - | `accountAdmin.userDeviceInfo.geoloc.lng` |
+| - | `accountAdmin.userDeviceInfo.ip` |
+| - | `accountAdmin.userDeviceInfo.userAgent` |
+
+## Company
+
+| Deprecated field | New field |
+|---|---|
+| `residencyAddress.addressLine1` | `company.address.addressLine1` |
+| `residencyAddress.addressLine2` | `company.address.addressLine2` |
+| `residencyAddress.city` | `company.address.city` |
+| `residencyAddress.country` | `company.address.country` |
+| `residencyAddress.postalCode` | `company.address.postalCode` |
+| `residencyAddress.state` | `company.address.state` |
+| `acquisitionChannel` | `company.acquisitionChannel` |
+| `businessActivityDescription` | `company.businessActivityDescription` |
+| - | `company.businessActivity` |
+| - | `company.businessActivityCode` |
+| `companyType` | `company.companyType` |
+| - | `company.forecastYearlyIncome` |
+| - | `company.headcount` |
+| - | `company.legalFormCode` |
+| `monthlyPaymentVolume` | `company.monthlyPaymentVolume` |
+| `name` | `company.name` |
+| - | `company.registrationDate` |
+| `registrationNumber` | `company.registrationNumber` |
+| - | `company.regulatoryClassification` |
+| - | `company.signupDate` |
+| `taxIdentificationNumber` | `company.taxIdentificationNumber` |
+| `tradeName` | `company.tradeName` |
+| `vatNumber` | `company.vatNumber` |
+| - | `company.websites` |
+
+## Related individuals (replaces representatives and UBOs)
+
+The new `company.relatedIndividuals` array replaces both `representatives` and `individualUltimateBeneficialOwners` from the deprecated API.
+
+| Deprecated field | New field |
+|---|---|
+| `representatives[i].firstName` | `company.relatedIndividuals[i].firstName` |
+| `representatives[i].lastName` | `company.relatedIndividuals[i].lastName` |
+| `representatives[i].gender` | `company.relatedIndividuals[i].sex` |
+| `representatives[i].nationality` | `company.relatedIndividuals[i].nationality` |
+| `representatives[i].type` | `company.relatedIndividuals[i].type` |
+| `representatives[i].roles` | `company.relatedIndividuals[i].legalRepresentative.roles` |
+| `representatives[i].preferredFirstName` | `company.relatedIndividuals[i].preferredFirstName` |
+| - | `company.relatedIndividuals[i].email` |
+| `representatives[i].residencyAddress.*` | `company.relatedIndividuals[i].address.*` |
+| `representatives[i].birthDate` | `company.relatedIndividuals[i].birthInfo.birthDate` |
+| `representatives[i].birthCity` | `company.relatedIndividuals[i].birthInfo.city` |
+| `representatives[i].birthCountryCode` | `company.relatedIndividuals[i].birthInfo.country` |
+| `representatives[i].birthCityPostalCode` | `company.relatedIndividuals[i].birthInfo.postalCode` |
+| `individualUltimateBeneficialOwners[i].direct` | `company.relatedIndividuals[i].ultimateBeneficialOwner.ownership.type` |
+| `individualUltimateBeneficialOwners[i].indirect` | (see `ownership.type`) |
+| `individualUltimateBeneficialOwners[i].totalCapitalPercentage` | `company.relatedIndividuals[i].ultimateBeneficialOwner.ownership.totalPercentage` |
+| - | `company.relatedIndividuals[i].ultimateBeneficialOwner.qualificationType` |
+| - | `company.relatedIndividuals[i].ultimateBeneficialOwner.controlTypes` |
+| `individualUltimateBeneficialOwners[i].identityDocumentDetails.*` | `company.relatedIndividuals[i].ultimateBeneficialOwner.identityDocumentInfo.*` |
+
+## Related companies
+
+The `company.relatedCompanies` array replaces entries in the deprecated `representatives` array where `type` was `Company`. The data is restructured as a dedicated top-level field with renamed fields.

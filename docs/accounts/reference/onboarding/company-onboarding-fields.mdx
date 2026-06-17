@@ -1,0 +1,194 @@
+---
+title: Company onboarding fields
+related:
+  - /accounts/reference/onboarding/company-onboarding-fields-api-mapping
+  - /accounts/guides/onboarding/company
+  - /accounts/reference/onboarding/country-requirements
+  - /accounts/reference/onboarding/individual-onboarding-fields
+audience:
+  - dev
+  - ops
+---
+
+# Company onboarding fields
+
+<p className="ia-lede">Per-country required, optional, and conditional field requirements for company onboarding, with available options and API mapping tables.</p>
+
+Use this reference to determine which fields are required, optional, or conditional for each country when creating a company onboarding.
+For GraphQL types and validation constraints, refer to [`CreateCompanyAccountHolderOnboardingInput`](https://api-reference.swan.io/inputs/create-company-account-holder-onboarding-input/) in the API reference.
+
+:::caution Supporting documents
+All requested supporting documents must be submitted to complete onboarding.
+:::
+
+<FieldRequirementsLegend />
+
+## Account information {#fields}
+
+**Related field:** `accountInfo`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `name` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+**Available options**
+
+- `country`: `FRA`, `DEU`, `ESP`, `NLD`, `ITA`, `BEL`.
+
+## Account administrator {#account-administrator}
+
+**Related field:** `accountAdmin`
+
+:::info Account admin fields and sign-up
+Although many `accountAdmin` fields are optional during onboarding, they are required when the user signs up. We recommend collecting and sending this information before the end of the onboarding flow.
+:::
+
+### Administrator personal information
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `email` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `firstName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `lastName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `nationality` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `preferredLanguage` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `taxIdentificationNumber` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `typeOfRepresentation` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+
+**Available options**
+
+- `preferredLanguage`: `de`, `en`, `es`, `fi`, `fr`, `it`, `nl`, `pt`.
+- `typeOfRepresentation`: `LegalRepresentative`, `PowerOfAttorney`.
+
+### Administrator address
+
+**Related field:** `accountAdmin.address`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+### Administrator birth information
+
+**Related field:** `accountAdmin.birthInfo`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `birthDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+### Administrator US tax information
+
+**Related field:** `accountAdmin.unitedStatesTaxInfo`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `isUnitedStatesPerson` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
+
+¹ `isUnitedStatesPerson` is required if the `companyType` is `SelfEmployed`.
+
+² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+
+### User device information
+
+**Related field:** `accountAdmin.userDeviceInfo`
+
+These fields are hidden from end users. Provide them through your backend integration only.
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `geoloc.lat` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `geoloc.lng` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `ip` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `userAgent` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+## Company {#company}
+
+**Related field:** `company`
+
+### Registration and business activity
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `name` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `registrationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> |
+| `registrationDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `legalFormCode` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `businessActivity` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `businessActivityDescription` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `monthlyPaymentVolume` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `regulatoryClassification` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `forecastYearlyIncome` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `headcount` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `tradeName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `websites` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `signupDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `acquisitionChannel` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+`acquisitionChannel` is hidden from end users. Provide it through your backend integration only.
+
+³ `registrationNumber` is required if `company.address.country` is not Germany.
+
+**Available options**
+
+**`businessActivity`**
+
+`AccommodationAndFoodService`, `AdministrativeAndSupportServiceActivities`, `AgricultureForestryAndFishing`, `ArtsSportsAndRecreation`, `Construction`, `Education`, `ElectricityGasSteamAndAirConditioningSupply`, `ExtraterritorialOrganisationsAndBodies`, `FinancialAndInsuranceActivities`, `HouseholdEmployerAndOwnUseActivities`, `HumanHealthAndSocialWork`, `Manufacturing`, `MiningAndQuarrying`, `OtherServiceActivities`, `ProfessionalScientificAndTechnicalActivities`, `PublicAdministrationAndDefenceSocialSecurity`, `PublishingBroadcastingAndContentProductionAndDistribution`, `RealEstateActivities`, `TelecommunicationItAndInformationServices`, `TransportationAndStorage`, `WaterSupplySewerageWasteManagementAndRemediation`, `WholesaleAndRetailTrade`.
+
+**`monthlyPaymentVolume`**
+
+`LessThan10000`, `Between10000And50000`, `Between50000And100000`, `MoreThan100000`.
+
+**`regulatoryClassification`**
+
+`NonFinancialActive`, `NonFinancialPassive`, `FinancialInstitution`.
+
+**`forecastYearlyIncome`**
+
+`From0To500000`, `From500001To1000000`, `From1000001To5000000`, `MoreThan5000000`.
+
+**`headcount`**
+
+`Between1And10`, `Between11And50`, `Between51And250`, `MoreThan250`.
+
+**`acquisitionChannel`**
+
+`InboundOrganic`, `InboundReferral`, `OutboundSales`, `OutboundAccountingFirm`.
+
+:::tip Legal forms
+Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query to retrieve all legal forms for a given country, translated based on the `Accept-Language` header. Each legal form includes a `code` you can use as the `legalFormCode` value. If the requested language is unavailable, the query falls back to the country's default language.
+:::
+
+### Company tax information
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> |
+| `vatNumber` | <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
+
+⁴ `company.taxIdentificationNumber` is required if any of the following conditions are true:
+
+- `accountInfo.country` is Germany, Italy, or Spain.
+- `company.address.country` is different from `accountInfo.country`.
+
+### Company address
+
+**Related field:** `company.address`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `city` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `postalCode` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |

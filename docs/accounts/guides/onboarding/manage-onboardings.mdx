@@ -1,0 +1,418 @@
+---
+title: Manage onboardings
+audience:
+  - dev
+related:
+  - /accounts/guides/onboarding
+  - /accounts/guides/onboarding/individual
+  - /accounts/guides/onboarding/company
+---
+
+import DeprecationTimeline from './partials/_deprecated-mutation-timeline.mdx';
+import ExportNextSteps from '../../../topics/partials/_export-next-steps.mdx';
+
+# Manage onboardings
+
+These operations apply to both individual and company onboardings: monitor progress, list required <Term id="supporting-documents">supporting documents</Term>, export onboarding data, and finalize an onboarding.
+
+## Get information about an onboarding {#get-info}
+
+Use the `accountHolderOnboardings` query to get information about your onboardings, allowing you to monitor progress or share information with your end user.
+
+Queries are highly customizable, so use the `accountHolderOnboardings` query to retrieve any information that will help you follow along with your users.
+You can also use it to retrieve onboarding IDs.
+
+After getting information about an onboarding, you might want to **update that onboarding** if it is still ongoing.
+Refer to the guides to update an [individual](/accounts/guides/onboarding/individual/update) or [company](/accounts/guides/onboarding/company/update) onboarding.
+
+:::tip Prerequisites
+To monitor onboarding progress, you must have at least one existing onboarding, either [individual](/accounts/guides/onboarding/individual/create) or [company](/accounts/guides/onboarding/company/create).
+The onboarding can have [any status](/accounts/concepts/onboarding/statuses).
+:::
+
+:::note Deprecated queries
+`onboardings` is deprecated. Use `accountHolderOnboardings` for all new integrations.
+<DeprecationTimeline />
+For single-onboarding lookups, use `accountHolderOnboarding` (replaces `onboarding`).
+:::
+
+### Guide
+
+1. Call the `accountHolderOnboardings` query.
+1. Add all the query options you'd like to monitor.
+    * For this exercise, add: `createdAt`, `accountAdmin { email }`, `onboardingUrl`, `statusInfo` > `status`, `id`, and `totalCount`.
+    * To `statusInfo` > `status`, add a **rejection** as well: `OnboardingInvalidStatusInfo` with `errors`, `field`, and `status`.
+1. You can only get information for up to **100 onboardings** at a time. Add [pagination](/build/using-api/pagination) to tailor your response to the information you need.
+
+### Query
+
+<a href="https://explorer.swan.io?query=cXVlcnkgTW9uaXRvck9uYm9hcmRpbmcgewogIGFjY291bnRIb2xkZXJPbmJvYXJkaW5ncyhmaXJzdDogMTApIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgLi4uIG9uIEluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgICBvbmJvYXJkaW5nVXJsCiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIC4uLiBvbiBPbmJvYXJkaW5nSW52YWxpZFN0YXR1c0luZm8gewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBlcnJvcnMgewogICAgICAgICAgICAgICAgZmllbGQKICAgICAgICAgICAgICAgIGVycm9ycwogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgICAgYWNjb3VudEFkbWluIHsKICAgICAgICAgICAgZW1haWwKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgLi4uIG9uIENvbXBhbnlBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgICBvbmJvYXJkaW5nVXJsCiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgIC4uLiBvbiBPbmJvYXJkaW5nSW52YWxpZFN0YXR1c0luZm8gewogICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICBlcnJvcnMgewogICAgICAgICAgICAgICAgZmllbGQKICAgICAgICAgICAgICAgIGVycm9ycwogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgICAgYWNjb3VudEFkbWluIHsKICAgICAgICAgICAgZW1haWwKICAgICAgICAgIH0KICAgICAgICAgIGNvbXBhbnkgewogICAgICAgICAgICBuYW1lCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICB0b3RhbENvdW50CiAgfQp9Cg==&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+The response returns an `AccountHolderOnboarding` union. Use inline fragments to access type-specific fields for `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`.
+
+```graphql {} showLineNumbers
+query MonitorOnboarding {
+  accountHolderOnboardings(first: 10) {
+    edges {
+      node {
+        ... on IndividualAccountHolderOnboarding {
+          id
+          createdAt
+          onboardingUrl
+          statusInfo {
+            status
+            ... on OnboardingInvalidStatusInfo {
+              __typename
+              errors {
+                field
+                errors
+              }
+              status
+            }
+          }
+          accountAdmin {
+            email
+          }
+        }
+        ... on CompanyAccountHolderOnboarding {
+          id
+          createdAt
+          onboardingUrl
+          statusInfo {
+            status
+            ... on OnboardingInvalidStatusInfo {
+              __typename
+              errors {
+                field
+                errors
+              }
+              status
+            }
+          }
+          accountAdmin {
+            email
+          }
+          company {
+            name
+          }
+        }
+      }
+    }
+    totalCount
+  }
+}
+```
+
+### Payload
+
+Review the sample payload with two onboardings: one `Invalid` company onboarding and one `Valid` individual onboarding.
+
+```json {} showLineNumbers
+{
+  "data": {
+    "accountHolderOnboardings": {
+      "edges": [
+        {
+          "node": {
+            "id": "$ONBOARDING_ID",
+            "createdAt": "2023-06-20T14:10:39.286Z",
+            "onboardingUrl": "https://api.banking.swan.io/projects/$PROJECT_ID/onboardings/$ONBOARDING_ID?lang=es",
+            "statusInfo": {
+              "status": "Invalid",
+              "__typename": "OnboardingInvalidStatusInfo",
+              "errors": [
+                {
+                  "field": "company.relatedIndividuals[0].birthInfo.birthDate",
+                  "errors": [
+                    "Missing"
+                  ]
+                }
+              ]
+            },
+            "accountAdmin": {
+              "email": "alberto.moreno@mimarca.io"
+            },
+            "company": {
+              "name": "MiMarca"
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "$ONBOARDING_ID",
+            "createdAt": "2023-06-20T14:00:20.207Z",
+            "onboardingUrl": "https://api.banking.swan.io/projects/$PROJECT_ID/onboardings/$ONBOARDING_ID?lang=en",
+            "statusInfo": {
+              "status": "Valid"
+            },
+            "accountAdmin": {
+              "email": "sofia.ramos@mybrand.io"
+            }
+          }
+        }
+      ],
+      "totalCount": 2
+    }
+  }
+}
+```
+
+## Get a list of required onboarding documents {#get-list}
+
+Get a list of required [supporting documents](/accounts/concepts/documents) for your onboarding using the API.
+Add information about collecting supporting documents to the success payload when creating an onboarding link.
+
+:::info Empty list
+The mutation might return an **empty list of required documents**.
+This is expected behavior, meaning no supporting documents are required for this onboarding at this time.
+:::
+
+### Guide
+
+1. Create your onboarding link for an [individual](/accounts/guides/onboarding/individual/create) or a [company](/accounts/guides/onboarding/company/create).
+1. Add the `supportingDocumentCollection` field and the `requiredSupportingDocumentPurposes` subfield to the success payload.
+You might also choose to add collection status info.
+
+### Mutation
+
+:::caution Partial mutation
+Add this information to the full mutation when creating an [individual](/accounts/guides/onboarding/individual/create) or [company](/accounts/guides/onboarding/company/create) onboarding link.
+Note that the example features company onboarding.
+:::
+
+```graphql {4,11-14,16-17} showLineNumbers
+mutation ListRequiredDocuments {
+  createCompanyAccountHolderOnboarding {
+  {...}
+    ... on CreateCompanyAccountHolderOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        id
+        statusInfo {
+          status
+        }
+        supportingDocumentCollection {
+          requiredSupportingDocumentPurposes {
+            acceptableSupportingDocumentTypes
+            name
+          }
+          statusInfo {
+            status
+          }
+        }
+      }
+    }
+  {...}
+  }
+}
+
+```
+
+### Payload
+
+Review this full success payload for a company account holder onboarding.
+
+Notice the documents listed (lines 10-22), as well as the collection status `WaitingForDocument` (line 26).
+
+```json {11-28} showLineNumbers
+{
+  "data": {
+    "createCompanyAccountHolderOnboarding": {
+      "__typename": "CreateCompanyAccountHolderOnboardingSuccessPayload",
+      "onboarding": {
+        "id": "$ONBOARDING_ID",
+        "statusInfo": {
+          "status": "Valid"
+        },
+        "supportingDocumentCollection": {
+          "requiredSupportingDocumentPurposes": [
+            {
+              "acceptableSupportingDocumentTypes": [
+                "UBODeclaration"
+              ],
+              "name": "UBODeclaration"
+            },
+            {
+              "acceptableSupportingDocumentTypes": [
+                "SwornStatement"
+              ],
+              "name": "SwornStatement"
+            }
+          ],
+          "statusInfo": {
+            "status": "WaitingForDocument"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Export onboarding data {#export-onboarding-data}
+
+You can export the onboarding data available on the Dashboard, either from your Dashboard or with the API.
+Review the next steps to understand what happens after finalizing your export.
+
+### Dashboard
+
+1. On your Dashboard, go to **Data** > **Onboardings**.
+1. Click the **download icon** to trigger a `.csv` export.
+1. A modal appears. Click **Export data** to finalize the request.
+
+![Screenshot of Swan Dashboard onboarding page with a callout download icon to trigger an export](../../../images/topics/onboarding/onboarding-export.png)
+
+### API
+
+1. Call the `exportOnboardingData` mutation.
+1. Add your `email`. A link to download the `.csv` export is sent to the email address you provide.
+1. If required, add filters to your export.
+    - The following mutation is filtered to `Ongoing (Invalid)` `Company` onboardings (line 5).
+1. Add the success payload and rejections.
+
+#### Mutation
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0T25ib2FyZGluZ3MgewogIGV4cG9ydE9uYm9hcmRpbmdEYXRhKAogICAgaW5wdXQ6IHsKICAgICAgZW1haWw6ICIkWU9VUl9FTUFJTF9BRERSRVNTIgogICAgICBmaWx0ZXJzOiB7IHR5cGVzOiBDb21wYW55LCBzdGF0dXM6IEludmFsaWQgfQogICAgfQogICkgewogICAgLi4uIG9uIEV4cG9ydERhdGFTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZXhwb3J0SWQKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtU2ltdWx0YW5lb3VzRXhwb3J0c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE1heGltdW1EYWlseUV4cG9ydHNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4,5,10} showLineNumbers
+mutation ExportOnboardings {
+  exportOnboardingData(
+    input: {
+      email: "$YOUR_EMAIL_ADDRESS"
+      filters: { types: Company, status: Invalid }
+    }
+  ) {
+    ... on ExportDataSuccessPayload {
+      __typename
+      exportId
+    }
+    ... on MaximumSimultaneousExportsRejection {
+      __typename
+      message
+    }
+    ... on MaximumDailyExportsReachedRejection {
+      __typename
+      message
+    }
+  }
+}
+```
+#### Payload
+
+The payload returns the export ID.
+
+```json {5} showLineNumbers
+{
+  "data": {
+    "exportOnboardingData": {
+      "__typename": "ExportDataSuccessPayload",
+      "exportId": "$EXPORT_ID"
+    }
+  }
+}
+```
+
+### Next steps
+
+<ExportNextSteps />
+
+## Finalize an onboarding {#finalize}
+
+You can finalize onboardings in several ways:
+
+- **Using the API**.
+- Your **end users** can also finalize their own onboardings **using the onboarding URLs** you create for [individuals](/accounts/guides/onboarding/individual/create) or [companies](/accounts/guides/onboarding/company/create).
+- If you use Swan's Web Banking interface, they can finalize their onboarding themselves with the app.
+
+:::tip Prerequisites
+To finalize an onboarding using the API:
+
+* You must have a [user access token](/build/using-api/authentication#tokens-user) for the user whose onboarding you're finalizing, and the user must have accessed their authentication URL at least one time.
+* The [onboarding status](/accounts/concepts/onboarding/statuses) must be `Ongoing (Valid)`.
+
+If you need to update an onboarding before finalizing it, follow the guides for updating an [individual](/accounts/guides/onboarding/individual/update) or [company](/accounts/guides/onboarding/company/update) onboarding.
+:::
+
+### Guide
+
+Finalize an onboarding using the API.
+
+1. First, [retrieve the ID](/accounts/guides/onboarding/manage-onboardings#get-info) for the onboarding you're finalizing.
+1. Call the `finalizeAccountHolderOnboarding` mutation.
+1. Enter the onboarding ID retrieved in step 1.
+1. Add optional messages to the success payload, either for validation or in case of rejection.
+1. Confirm you're using the user access token to run the mutation.
+
+:::note Deprecated mutation
+The previous `finalizeOnboarding` mutation is deprecated.
+<DeprecationTimeline />
+Use `finalizeAccountHolderOnboarding` for all new integrations.
+:::
+
+### Mutation
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRmluYWxpemVPbmJvYXJkaW5nIHsKICBmaW5hbGl6ZUFjY291bnRIb2xkZXJPbmJvYXJkaW5nKGlucHV0OiB7IG9uYm9hcmRpbmdJZDogIiRPTkJPQVJESU5HX0lEIiB9KSB7CiAgICAuLi4gb24gRmluYWxpemVBY2NvdW50SG9sZGVyT25ib2FyZGluZ1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBvbmJvYXJkaW5nIHsKICAgICAgICAuLi4gb24gSW5kaXZpZHVhbEFjY291bnRIb2xkZXJPbmJvYXJkaW5nIHsKICAgICAgICAgIGlkCiAgICAgICAgICBhY2NvdW50IHsKICAgICAgICAgICAgaWQKICAgICAgICAgIH0KICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgLi4uIG9uIENvbXBhbnlBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgYWNjb3VudCB7CiAgICAgICAgICAgIGlkCiAgICAgICAgICB9CiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gT25ib2FyZGluZ05vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIE9uYm9hcmRpbmdBbHJlYWR5RmluYWxpemVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIE9uYm9hcmRpbmdOb3RSZWFkeUZvckZpbmFsaXphdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+Notice the request to include the account ID, as well as the onboarding status, in the success payload. The response is an `AccountHolderOnboarding` union — use inline fragments to select fields for `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`.
+
+```graphql {2,6-13,15-22} showLineNumbers
+mutation FinalizeOnboarding {
+  finalizeAccountHolderOnboarding(input: { onboardingId: "$ONBOARDING_ID" }) {
+    ... on FinalizeAccountHolderOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        ... on IndividualAccountHolderOnboarding {
+          id
+          account {
+            id
+          }
+          statusInfo {
+            status
+          }
+        }
+        ... on CompanyAccountHolderOnboarding {
+          id
+          account {
+            id
+          }
+          statusInfo {
+            status
+          }
+        }
+      }
+    }
+    ... on OnboardingNotFoundRejection {
+      __typename
+    }
+    ... on OnboardingAlreadyFinalizedRejection {
+      __typename
+    }
+    ... on OnboardingNotReadyForFinalizationRejection {
+      __typename
+    }
+  }
+}
+```
+
+### Payload
+
+Notice the ID for the newly-created account and the onboarding status `Finalized`. Both union types return the same field structure; the example below shows an individual onboarding.
+
+```json {4,8,10,14} showLineNumbers
+{
+  "data": {
+    "finalizeAccountHolderOnboarding": {
+      "__typename": "FinalizeAccountHolderOnboardingSuccessPayload",
+      "onboarding": {
+        "id": "$ONBOARDING_ID",
+        "account": {
+          "id": "$NEW_ACCOUNT_ID"
+        },
+        "statusInfo": {
+          "status": "Finalized"
+        }
+      }
+    }
+  }
+}
+```

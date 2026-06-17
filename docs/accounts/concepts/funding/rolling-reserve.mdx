@@ -1,0 +1,21 @@
+---
+title: Rolling reserve
+audience:
+  - dev
+  - ops
+---
+
+import RollingReserveDefinition from '../../../topics/definitions/_rolling-reserve.mdx';
+
+# Rolling reserve {#rolling-reserve}
+
+When using SEPA Direct Debit B2B to fund your account, Swan reserves 100% of your transaction for three business days, after which the reserved amount is released to your account.
+Reserved funds are typically released around 20:00 Central European [Summer] Time (CET/CEST) on the last day of the rolling reserve period.
+[Query the API](/accounts/guides/funding/get-info#guide-release-date) for an account funding transaction release date.
+
+## How it works
+
+<RollingReserveDefinition />
+
+The `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/build/using-api/webhooks#events-transactions) notify you when a rolling reserve is updated or released. 
+Subscribe to both webhooks to stay updated on your transactions' rolling reserve.

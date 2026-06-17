@@ -1,0 +1,49 @@
+---
+title: Queries
+---
+
+# Queries {#graphql-queries}
+
+Entry point to the API used to request information from the server.
+These are read-only operations, used only to fetch data from the remote API.
+Queries are similar to `GET` requests in a REST API.
+
+Queries always begin with the keyword `query`, after which you'll choose the fields for which you want to fetch data.
+
+## Query example {#graphql-queries-example}
+
+Consider the following example, which queries `user` > `mobilePhoneNumber`.
+The payload returns the user's `mobilePhoneNumber`.
+
+Note that this is a basic example.
+Consider this [query example from onboarding](/accounts/guides/onboarding/manage-onboardings#get-info) to see more complexity, including nested fields.
+You can also explore all of Swan's queries in [API Explorer](https://explorer.swan.io/).
+
+```graphql title="Query" showLineNumbers
+query { 
+  user(id: "$SWAN_USER_ID") { #query name
+    mobilePhoneNumber #field
+  }
+}
+```
+
+```json title="Payload" {4} showLineNumbers
+{
+  "data": {
+    "user": {
+      "mobilePhoneNumber": "$USER_PHONE_NUMBER"
+    }
+  }
+}
+```
+
+:::note Query options
+Swan often has two query options per object, such as `user` and `users`.
+
+- `user` requires an `id` and returns data about a single user.
+- `users` doesn't require an `id` and returns data about all of your users.
+:::
+
+## Related
+
+- [About GraphQL](/build/graphql) · [Mutations](/build/graphql/mutations) · [Schema](/build/graphql/schema)

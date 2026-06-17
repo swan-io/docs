@@ -1,0 +1,92 @@
+---
+title: Requirements
+related:
+  - /accounts/guides/onboarding
+  - /accounts/reference/onboarding/country-requirements
+  - /accounts/concepts/documents
+audience:
+  - dev
+  - ops
+---
+
+# Requirements
+
+## Country requirements {#country-reqs}
+
+Onboarding is a **highly localized experience**.
+Everything from **what to include in your API request** to how to ask **users to verify their identity** to whether Swan **requires certain ID numbers or documents** depends on the [account country](/accounts/concepts/account/country).
+
+Account onboarding country requirements are described in the [individual](/accounts/guides/onboarding/individual/requirements#country-reqs) and [company](/accounts/guides/onboarding/company/requirements#country-reqs) onboarding sections.
+Please follow the requirements for your target countries closely.
+
+## Supporting documents {#documents}
+
+Collecting [supporting documents](/accounts/concepts/documents) impacts multiple elements of the onboarding process.
+Consider these steps, including the statuses of both [account holder verification](/accounts/concepts/account-holders/verification#verification-process-statuses) and the [supporting document collection](/accounts/concepts/documents/statuses#collection-statuses).
+
+<table>
+  <tr>
+    <th>Step</th>
+    <th>Event</th>
+    <th>Account holder<br />verification status</th>
+    <th>Supporting document<br />collection status</th>
+  </tr>
+  <tr>
+    <td><center>1</center></td>
+    <td>Onboarding created</td>
+    <td><center>Not yet created</center></td>
+    <td><center>`WaitingForDocument`</center></td>
+  </tr>
+  <tr>
+    <td><center>2</center></td>
+    <td>Onboarding finalized</td>
+    <td><center>`NotStarted`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>3</center></td>
+    <td>Legal representative completes [identification](/topics/users/identifications/)</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>4</center></td>
+    <td>Swan requests [supporting documents](/accounts/concepts/documents)<br /><br />💡 *[Subscribe to the webhook](/build/using-api/webhooks) `supportingDocumentCollection.updated`. You'll be notified when a request is sent to collect documents.*</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td><center>5</center></td>
+    <td>Partner uploads new documents<br /><br />💡 *If needed, [get a list of required documents](/accounts/guides/onboarding/manage-onboardings#get-list). Then, [upload missing documents](/accounts/guides/documents/upload-onboarding).*</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+  <tr>
+    <td><center>6</center></td>
+    <td>Partner requests a collection review<br /><br />💡 *Partners (you) need to request a supporting document collection review after all supporting documents are uploaded. [Request a review](/accounts/guides/documents/request-collection-review) with the API or from your Dashboard.*</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td><center>7</center></td>
+    <td>Swan reviews supporting documents</td>
+    <td><center>`Pending`</center></td>
+    <td><center>`PendingReview`</center></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><center>8</center></td>
+    <td>(a) Swan **approves** the account holder</td>
+    <td><center>`Verified`</center></td>
+    <td><center>`Approved`</center></td>
+  </tr>
+  <tr>
+    <td>(b) Swan **needs more documents** to verify the account holder<br /><br />💡 *[Get the list of required documents](/accounts/guides/onboarding/manage-onboardings#get-list) and review the rejection reason. Then, return to step 4.*</td>
+    <td><center>`WaitingForInformation`</center></td>
+    <td><center>`WaitingForDocuments`</center></td>
+  </tr>
+</table>
+
+:::caution Mandatory documents
+All requested supporting documents are mandatory to finalize an onboarding.
+Upload every document Swan requests before requesting a collection review.
+:::

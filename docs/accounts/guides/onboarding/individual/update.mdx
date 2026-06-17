@@ -1,0 +1,89 @@
+---
+title: Update an individual onboarding
+audience:
+  - dev
+related:
+  - /accounts/guides/onboarding/individual
+  - /accounts/guides/onboarding/individual/create
+  - /accounts/guides/onboarding/manage-onboardings
+---
+
+import DeprecationTimeline from '../partials/_deprecated-mutation-timeline.mdx';
+import UpdateOnboardingPrereqs from '../partials/_prereqs-update.mdx';
+
+# Update an individual onboarding {#update}
+
+Update individual onboardings using the API.
+
+<UpdateOnboardingPrereqs />
+
+## Guide
+
+Update an individual onboarding by **adding an account name**.
+
+1. First, [retrieve the ID](/accounts/guides/onboarding/manage-onboardings#get-info) for the onboarding you need to update.
+1. Call the `updateIndividualAccountHolderOnboarding` mutation.
+1. Enter the onboarding ID retrieved in step 1.
+1. Add the `accountInfo.name` field with an account name (example: Personal account).
+1. Add desired messages to the success payload, either for validation or in case of rejection.
+
+:::note Deprecated mutation
+The previous `updateIndividualOnboarding` mutation is deprecated.
+<DeprecationTimeline />
+Use `updateIndividualAccountHolderOnboarding` for all new integrations.
+:::
+
+## Mutation
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlSW5kaXZpZHVhbE9uYm9hcmRpbmcgewogIHVwZGF0ZUluZGl2aWR1YWxBY2NvdW50SG9sZGVyT25ib2FyZGluZygKICAgIGlucHV0OiB7CiAgICAgIG9uYm9hcmRpbmdJZDogIiRPTkJPQVJESU5HX0lEIgogICAgICBhY2NvdW50SW5mbzogewogICAgICAgIG5hbWU6ICJQZXJzb25hbCBhY2NvdW50IgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlSW5kaXZpZHVhbEFjY291bnRIb2xkZXJPbmJvYXJkaW5nU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG9uYm9hcmRpbmcgewogICAgICAgIGFjY291bnRJbmZvIHsKICAgICAgICAgIG5hbWUKICAgICAgICB9CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBPbmJvYXJkaW5nTm90Rm91bmRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgICAuLi4gb24gT25ib2FyZGluZ0FscmVhZHlGaW5hbGl6ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgfQp9Cg==&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4-7,11-14} showLineNumbers
+mutation UpdateIndividualOnboarding {
+  updateIndividualAccountHolderOnboarding(
+    input: {
+      onboardingId: "$ONBOARDING_ID"
+      accountInfo: {
+        name: "Personal account"
+      }
+    }
+  ) {
+    ... on UpdateIndividualAccountHolderOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        accountInfo {
+          name
+        }
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on OnboardingNotFoundRejection {
+      __typename
+    }
+    ... on OnboardingAlreadyFinalizedRejection {
+      __typename
+    }
+  }
+}
+```
+
+## Payload
+
+```json {6-8} showLineNumbers
+{
+  "data": {
+    "updateIndividualAccountHolderOnboarding": {
+      "__typename": "UpdateIndividualAccountHolderOnboardingSuccessPayload",
+      "onboarding": {
+        "accountInfo": {
+          "name": "Personal account"
+        },
+        "statusInfo": {
+          "status": "Valid"
+        }
+      }
+    }
+  }
+}
+```

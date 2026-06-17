@@ -1,0 +1,78 @@
+---
+title: Closure reason codes
+related:
+  - /accounts/concepts/closure
+  - /accounts/guides/closure/get-closure-info
+audience:
+  - dev
+  - ops
+---
+
+# Closure reason codes {#closure-reason-codes}
+
+Swan provides specific closure reason codes to help you understand why an account was closed.
+You can view the closure reason code for a closed account by going to **Dashboard** > **Data** > **Accounts** and selecting the account, or by [querying the account status with the API](/accounts/guides/closure/get-closure-info).
+
+Closure reasons fall into different categories depending on who initiated the closure and the circumstances.
+
+## Timeline for closure reason codes {#closure-reason-timeline}
+
+Before 2 April 2026, Swan used a limited set of four closure reason codes: `ComplianceReason`, `PartnerReason`, `Inactivity`, and `CapitalDepositReason`.
+These codes have been replaced with more granular codes that provide better transparency about why an account was closed.
+
+Accounts closed before 2 April 2026 keep their original reason codes.
+Refer to the [deprecated reason codes](#deprecated-reasons) for the full mapping.
+
+## General closure reasons {#general-reasons}
+
+| Reason code | Explanation |
+| --- | --- |
+| `RequestedByHolder` | Closure requested by the end user. |
+| `RequestedByPartner` | Closure requested by the Partner for any reason. |
+| `RemediationPlan` | Closure following a Partner remediation plan. |
+| `PartnerChurn` | Closure following a Partner churn. |
+| `DeathClosure` | Account holder is deceased. |
+| `DormantAccount` | Prolonged inactivity according to local regulatory definitions or internal policy. |
+| `Other` | Reason not covered by the current list. |
+
+## KYC, Re-KYC, and capital deposit closure reasons {#kyc-capital-deposit-reasons}
+
+| Reason code | Explanation |
+| --- | --- |
+| `KYCIssue` | Documents missing, incorrect, or no reply. |
+| `ForbiddenActivity` | Prohibited business sectors. |
+| `DuplicateOnboarding` | A second account was created by mistake. |
+| `DeniedCountryResidency` | High-risk UBO or resident. |
+| `RefusedIbanCountry` | The account holder was assigned the wrong IBAN country, or the IBAN country isn't allowed. |
+| `CompanyRegistrationCountryNotSupported` | The company registration country isn't supported by Swan. |
+| `BusinessInactiveOrNotRegistered` | The company is inactive or not registered. |
+| `UnsupportedLegalForm` | The legal form can't be onboarded by Swan. |
+| `TCViolation` | Terms & Conditions violation. |
+| `ReKYCNoReply` | The account holder failed to reply to a Re-KYC request. |
+| `CapitalDepositCompleted` | Standard closure of a temporary capital deposit account after the company is registered. |
+| `CapitalDepositWithdrawn` | The capital deposit has been withdrawn. |
+| `CapitalDepositRefusedByNotary` | The notary refused the capital deposit case. |
+
+## Compliance and regulatory closure reasons {#compliance-reasons}
+
+| Reason code | Explanation |
+| --- | --- |
+| `ComplianceReason` | Closure for compliance reasons. |
+| `RegulatoryRequirement` | Closure required by regulation. |
+
+:::note
+These are high-level categories for closures. In some cases, Swan uses these codes when we cannot share the specific closure reason with partners, such as in cases of fraud or risk. We cannot provide further details on compliance or regulatory closures.
+:::
+
+## Deprecated reason codes {#deprecated-reasons}
+
+The following reason codes were deprecated on 2 April 2026.
+They still appear on accounts closed before this date, but are no longer assigned to new closures.
+
+| Deprecated code | Used for | Replaced by |
+| --- | --- | --- |
+| `PartnerReason` | Closure requested by the account holder or legal representative. | `RequestedByHolder` |
+| `Inactivity` | Prolonged account inactivity. | `DormantAccount` |
+| `CapitalDepositReason` | All capital deposit closures (cancellation, completion, or notary refusal). | Any code in [KYC, Re-KYC, and capital deposit closure reasons](#kyc-capital-deposit-reasons). |
+
+`ComplianceReason` is not deprecated and remains in use.

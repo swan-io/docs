@@ -1,0 +1,85 @@
+---
+title: Cancel a case
+audience:
+  - dev
+related:
+  - /accounts/guides/capital-deposits
+---
+
+# Cancel a capital deposit case
+
+Cancel an in-progress capital deposit case with the API, which automatically closes the associated accounts.
+
+Use the API to cancel a capital deposit case.
+
+import CancelCase from './partials/_cancel-case.mdx';
+
+:::tip Prerequisites
+<CancelCase />
+:::
+
+## Guide {#steps}
+
+1. Call the `cancelCapitalDepositCase` mutation.
+1. Add the capital deposit case ID (line 2).
+1. Add the success payload and any information you'd like to receive (line 3).
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsQ2FzZSB7CiAgY2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlKGlucHV0OiB7IGlkOiAiJENBUElUQUxfREVQT1NJVF9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsQ2FwaXRhbERlcG9zaXRDYXNlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNhcGl0YWxEZXBvc2l0Q2FzZSB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdENhc2VDYW5jZWxlZFN0YXR1c0luZm8gewogICAgICAgICAgICByZWFzb25Db2RlCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,3,7-9} showLineNumbers
+mutation CancelCase {
+  cancelCapitalDepositCase(input: { id: "$CAPITAL_DEPOSIT_CASE_ID" }) {
+    ... on CancelCapitalDepositCaseSuccessPayload {
+      __typename
+      capitalDepositCase {
+        statusInfo {
+          status
+          ... on CapitalDepositCaseCanceledStatusInfo {
+            reasonCode
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+The payload confirms the capital deposit case status changed to `Canceled` and returns the reason code.
+
+```json {8} showLineNumbers
+{
+  "data": {
+    "cancelCapitalDepositCase": {
+      "__typename": "CancelCapitalDepositCaseSuccessPayload",
+      "capitalDepositCase": {
+        "statusInfo": {
+          "status": "Canceled",
+          "reasonCode": "KYCIssue"
+        }
+      }
+    }
+  }
+}
+```
+
+## What happens after cancellation {#after-cancellation}
+
+When you cancel a capital deposit case, all associated accounts are automatically closed: shareholder accounts and the future company account.
+These accounts receive the [closure reason code](/accounts/concepts/closure/reason-codes) `CapitalDepositWithdrawn`.
+
+You can subscribe to the [`CapitalDepositCaseEvent.Canceled` webhook](/build/using-api/webhooks#events-capital-deposits) to receive notifications when a capital deposit case is canceled.
+The [cancelation reason code](/accounts/reference/capital-deposits#cancelation-reason-codes) is also available directly on the capital deposit case, in the `CapitalDepositCaseCanceledStatusInfo` type.
+
+:::info Completed capital deposits
+When a capital deposit is successfully completed, shareholder accounts are closed with the reason code `CapitalDepositCompleted`.
+:::
+
+:::note Backward compatibility
+Capital deposit cases and accounts affected before 2 April 2026 may still show the deprecated closure reason code `CapitalDepositReason`.
+:::

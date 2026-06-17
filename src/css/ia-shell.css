@@ -1,0 +1,549 @@
+/* DOC-1814 — IA shell layout primitives.
+   Layout lifted from the staged mockup; all type and colour pulled from
+   Infima --ifm-* variables (which derive from Lake), so light/dark follow for free.
+   No hardcoded hex, no imported display fonts. */
+
+:root {
+  --ia-ink: var(--ifm-color-emphasis-900);
+  --ia-ink-2: var(--ifm-color-emphasis-700);
+  --ia-ink-3: var(--ifm-color-emphasis-600);
+  --ia-line: var(--ifm-color-emphasis-200);
+  --ia-line-2: var(--ifm-color-emphasis-100);
+  --ia-surface: var(--ifm-card-background-color, var(--ifm-background-surface-color));
+  --ia-primary: var(--ifm-color-primary);
+  --ia-primary-soft: color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
+  --ia-dev: var(--ifm-color-primary);
+  --ia-dev-soft: color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
+  /* Operators audience — Lake "Shakespeare": dark-blue text/dot (700) on a solid
+     light-blue badge (100). Raw on-brand tokens transcribed from the Lake guide by
+     eye; confirm against the live kit tokens. (dev stays --ifm-color-primary = Swan.) */
+  --ia-ops: #3a6271;
+  --ia-ops-soft: #dfedf2;
+  --ia-radius: 4px;
+}
+
+/* Kicker / section-label badge */
+.ia-kicker {
+  display: inline-block;
+  padding: 0.15em 0.6em;
+  border: 1px solid var(--ia-ink-2);
+  border-radius: 2px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ia-ink-2);
+}
+
+/* Get started — paths grid */
+.ia-paths-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+.ia-path-card {
+  display: block; padding: 1.1rem 1.25rem;
+  border: 1px solid var(--ia-line); border-radius: var(--ia-radius);
+  background: var(--ia-surface); color: inherit; text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ia-path-card:hover { border-color: var(--ia-ink-3); box-shadow: 0 1px 4px rgba(0,0,0,0.05); text-decoration: none; }
+.ia-path-card--emphasis { border-color: var(--ia-primary); background: var(--ia-primary-soft); }
+.ia-path-card__marker {
+  display: block; font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ia-ink-3);
+}
+.ia-path-card--emphasis .ia-path-card__marker { color: var(--ia-primary); }
+.ia-path-card__title {
+  display: block; font-family: var(--ifm-heading-font-family); font-weight: 600;
+  font-size: 1.25rem; margin: 0.25rem 0 0.35rem; color: var(--ifm-heading-color);
+}
+.ia-path-card__desc { display: block; color: var(--ia-ink-2); font-size: 0.95rem; line-height: 1.45; margin-bottom: 0.6rem; }
+.ia-path-card__meta { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; color: var(--ia-ink-3); letter-spacing: 0.03em; }
+
+/* Get started — partnership map */
+.ia-partnership-map { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.9rem; align-items: stretch; }
+.ia-map-side {
+  display: flex; flex-direction: column; padding: 1rem 1.1rem;
+  border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface);
+}
+.ia-map-side--decision { background: var(--ia-primary-soft); border-color: var(--ia-primary); }
+.ia-map-side__header { padding-bottom: 0.6rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--ia-line-2); }
+.ia-map-side__label { display: block; font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1.05rem; color: var(--ifm-heading-color); }
+.ia-map-side--decision .ia-map-side__label { color: var(--ia-primary); }
+.ia-map-side__where { display: block; font-size: 0.85rem; color: var(--ia-ink-3); margin-top: 0.1rem; }
+.ia-map-item { font-size: 0.9rem; color: var(--ia-ink-2); padding: 0.35rem 0; border-bottom: 1px solid var(--ia-line-2); line-height: 1.5; }
+.ia-map-item:last-child { border-bottom: none; }
+.ia-map-item__route { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.78rem; color: var(--ia-ink-3); letter-spacing: 0.02em; margin-bottom: 0.1rem; }
+.ia-map-count { font-family: var(--ifm-font-family-monospace); font-size: 0.78rem; color: var(--ia-ink-3); letter-spacing: 0.04em; text-transform: uppercase; padding-top: 0.5rem; margin-top: 0.5rem; border-top: 1px solid var(--ia-line-2); }
+.ia-map-side--decision .ia-map-count { color: var(--ia-primary); }
+.ia-map-arrow { align-self: center; font-size: 1.4rem; color: var(--ia-ink-3); padding: 0 0.25rem; }
+
+/* Section landing — concept diagram (SVG authored in the page) */
+.ia-concept-diagram { margin: 1rem auto 0.5rem; max-width: 880px; }
+.ia-concept-diagram svg { width: 100%; height: auto; display: block; }
+.ia-concept-node { cursor: pointer; transition: filter 0.2s ease; }
+.ia-concept-node rect { fill: var(--ia-surface); stroke: var(--ia-line); stroke-width: 1.5; transition: stroke 0.2s, fill 0.2s; }
+.ia-concept-node:hover rect { stroke: var(--ia-primary); stroke-width: 2; fill: var(--ia-primary-soft); }
+.ia-concept-node--center rect { fill: var(--ia-primary-soft); stroke: var(--ia-primary); stroke-width: 2.5; }
+.ia-concept-node__label { fill: var(--ifm-heading-color); font-family: var(--ifm-heading-font-family); font-weight: 600; }
+.ia-concept-node--center .ia-concept-node__label,
+.ia-concept-node:hover .ia-concept-node__label { fill: var(--ia-primary); }
+.ia-concept-node__sub { fill: var(--ia-ink-3); font-family: var(--ifm-font-family-monospace); }
+.ia-concept-line { stroke: var(--ia-line); stroke-width: 1.5; fill: none; }
+
+/* Section landing — path columns */
+.ia-path-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.ia-path-column { padding: 1.1rem 1.25rem; border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface); }
+.ia-path-column__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--ia-line-2); }
+.ia-path-column__sub { font-size: 0.9rem; color: var(--ia-ink-3); }
+.ia-audience-tag { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
+.ia-audience-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.ia-audience-tag--dev { color: var(--ia-dev); background: var(--ia-dev-soft); }
+.ia-audience-tag--ops { color: var(--ia-ops); background: var(--ia-ops-soft); }
+.ia-path-steps { list-style: none; counter-reset: step; padding: 0; margin: 0; }
+.ia-path-steps li { counter-increment: step; display: grid; grid-template-columns: 22px 1fr; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid var(--ia-line-2); }
+.ia-path-steps li:last-child { border-bottom: none; }
+.ia-path-steps li::before { content: counter(step); font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; color: var(--ia-ink-3); padding-top: 0.1rem; }
+.ia-step__type { font-family: var(--ifm-font-family-monospace); font-size: 0.72rem; color: var(--ia-ink-3); letter-spacing: 0.02em; text-transform: uppercase; margin-right: 0.4rem; }
+.ia-step__name { color: var(--ia-ink-2); font-weight: 600; }
+.ia-step__desc { color: var(--ia-ink-3); font-size: 0.85rem; line-height: 1.4; }
+
+/* Section landing — related products */
+.ia-related-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+.ia-related-card { display: block; padding: 0.9rem 1rem; border: 1px solid var(--ia-line); border-radius: 3px; background: var(--ia-surface); color: inherit; text-decoration: none; }
+.ia-related-card:hover { border-color: var(--ia-ink-3); text-decoration: none; }
+.ia-related-card__title { display: block; font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1.05rem; margin-bottom: 0.1rem; color: var(--ifm-heading-color); }
+.ia-related-card p { margin: 0; color: var(--ia-ink-3); font-size: 0.9rem; line-height: 1.4; }
+
+/* Parent task — path picker */
+.ia-path-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin: 0.5rem 0 2rem; }
+.ia-path-option { display: block; padding: 1.35rem; border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface); color: inherit; text-decoration: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.ia-path-option:hover { border-color: var(--ia-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.05); text-decoration: none; }
+.ia-path-option__name { display: block; font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1.25rem; margin: 0.6rem 0 0.35rem; color: var(--ifm-heading-color); }
+.ia-path-option__desc { display: block; color: var(--ia-ink-2); margin-bottom: 0.6rem; }
+.ia-path-option__meta { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.85rem; color: var(--ia-ink-3); }
+.ia-shared-list { padding-left: 1.25rem; color: var(--ia-ink-2); }
+
+/* Path-specific guide — screenshot placeholders */
+.ia-screenshot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.25rem 0 1.5rem; }
+.ia-screenshot { margin: 0; }
+.ia-screenshot__image { aspect-ratio: 16 / 10; background: var(--ia-primary-soft); border: 1.5px dashed var(--ia-primary); border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--ia-primary); }
+.ia-screenshot__label { font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; letter-spacing: 0.02em; text-transform: uppercase; }
+.ia-screenshot figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ia-ink-2); line-height: 1.5; }
+
+/* Audience meta box (styles ready; right-rail placement needs a swizzle) */
+.ia-audience-meta { padding: 0.85rem 1rem; border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface); font-size: 0.9rem; }
+.ia-audience-meta__section { padding-bottom: 0.7rem; margin-bottom: 0.7rem; border-bottom: 1px solid var(--ia-line-2); }
+.ia-audience-meta__section:last-child { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
+.ia-meta-label { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ia-ink-3); margin-bottom: 0.35rem; font-weight: 600; }
+.ia-counterpart-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.6rem; border: 1px dashed var(--ia-line); border-radius: 3px; color: var(--ia-ink-2); text-decoration: none; margin-top: 0.5rem; }
+.ia-counterpart-link:hover { border-color: var(--ia-ink-3); border-style: solid; text-decoration: none; }
+.ia-related-link { display: block; padding: 0.15rem 0; color: var(--ia-ink-2); font-size: 0.9rem; text-decoration: none; }
+.ia-related-link:hover { color: var(--ia-ink); text-decoration: none; }
+.ia-related-link__type { font-family: var(--ifm-font-family-monospace); font-size: 0.72rem; color: var(--ia-ink-3); margin-right: 0.25rem; }
+
+/* Collapse grids on narrow viewports */
+@media (max-width: 996px) {
+  .ia-paths-grid,
+  .ia-partnership-map,
+  .ia-path-columns,
+  .ia-related-grid,
+  .ia-path-picker,
+  .ia-screenshot-row { grid-template-columns: 1fr; }
+  .ia-map-arrow { transform: rotate(90deg); }
+}
+
+/* Lede, map list fill, concept-node sizes */
+.ia-lede { font-size: 1.2rem; line-height: 1.6; color: var(--ia-ink-2); max-width: 40rem; margin: 0 0 1.5rem; }
+.ia-map-list { flex: 1; }
+.ia-step__meta { display: flex; align-items: baseline; flex-wrap: wrap; }
+.ia-concept-node__label { font-size: 22px; }
+.ia-concept-node--center .ia-concept-node__label { font-size: 34px; }
+.ia-concept-node__sub { font-size: 13px; }
+
+/* ===== IA desktop rail (DOC-1814 §A step 1) =====
+   Pins audience + counterpart + the stock TOC + related as one sticky column.
+   Chips reuse the existing .ia-audience-tag look; rail chrome uses --ifm-* only. */
+.ia-rail {
+  position: sticky;
+  top: calc(var(--ifm-navbar-height) + 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+/* Neutralize the stock TOC's own sticky so the four blocks pin together. */
+.ia-rail .theme-doc-toc-desktop {
+  position: static;
+  top: auto;
+  max-height: none;
+}
+.ia-rail__block { font-size: 0.85rem; }
+.ia-rail__label {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ifm-color-emphasis-600);
+}
+.ia-rail__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ia-rail__link { display: inline-block; line-height: 1.4; }
+.ia-rail__list { list-style: none; margin: 0; padding: 0; }
+.ia-rail__list li { margin-bottom: 0.5rem; }
+.ia-rail__list li:last-child { margin-bottom: 0; }
+
+/* Styled containers so the chrome reads as distinct cards, not part of the TOC.
+   The audience badge (top) and the counterpart + related group (bottom) each sit
+   in a bordered surface; the stock TOC between them stays plain. Desktop rail only. */
+.ia-rail .ia-rail__group {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-card-background-color);
+}
+/* Divider between stacked blocks inside a group (e.g. counterpart / related). */
+.ia-rail .ia-rail__group .ia-rail__block + .ia-rail__block {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* Counterpart link rendered as a bordered card: title + audience subtitle. */
+.ia-rail__card {
+  display: block;
+  padding: 0.5rem 0.7rem;
+  border: 1px dashed var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  line-height: 1.3;
+  text-decoration: none;
+}
+.ia-rail__card:hover {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-100);
+  text-decoration: none;
+}
+.ia-rail__card-title { display: block; font-weight: 600; color: var(--ifm-font-color-base); }
+/* Target audience shown as real audience chip(s), not a grey subtitle. */
+.ia-rail__card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+
+/* Rail header: the page title as a back-to-top link, with the audience one-liner
+   beneath it; a hairline separates it from the TOC. */
+.ia-rail__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+/* Quiet title — the rail is a nav helper, so this reads as muted context, not a
+   headline. Still links back to the top of the page. */
+.ia-rail__title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ifm-color-emphasis-700);
+  text-decoration: none;
+}
+.ia-rail__title:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+/* Audience as a one-liner: "AUDIENCE: ‹chip›". */
+.ia-rail__audience {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.ia-rail__audience .ia-rail__label {
+  margin: 0;
+}
+
+/* ===== IA mobile chrome (DOC-1814 §A step 2) =====
+   Compact audience strip above the title, and the counterpart + related block
+   after the content, shown only below the 997px theme breakpoint; the desktop
+   rail owns >= 997px. Reuses the .ia-rail__* element styles; --ifm-* only. */
+.ia-rail-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  margin: 0 0 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+.ia-rail-strip .ia-rail__block { font-size: 0.85rem; }
+.ia-rail-end {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+/* Space the counterpart and related blocks in the mobile end region. */
+.ia-rail-end .ia-rail__block + .ia-rail__block {
+  margin-top: 1.25rem;
+}
+
+/* The desktop rail (>= 997px) carries this chrome; hide the mobile forms there. */
+@media (min-width: 997px) {
+  .ia-rail-strip,
+  .ia-rail-end {
+    display: none;
+  }
+}
+
+/* ============================================================
+   FlowMap — journey/diagram module (```flowmap fenced block)
+   Modes: lanes · pathway · graph(chain|lifecycle|spokes)
+   ============================================================ */
+.flowmap { margin: 1.4rem 0; }
+.flowmap__t { font-weight: 600; display: block; }
+.flowmap__d { font-size: 0.8rem; color: var(--ifm-color-emphasis-700); display: block; margin-top: 2px; }
+.flowmap__chip { margin-top: 6px; }
+.flowmap--error {
+  border: 1px solid var(--ifm-color-danger);
+  background: var(--ifm-color-danger-contrast-background, #fff5f5);
+  color: var(--ifm-color-danger-dark);
+  border-radius: 8px; padding: 10px 14px; font-size: 0.85rem;
+}
+
+/* --- lanes --- */
+.flowmap--lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flowmap-lane {
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 14px; padding: 14px;
+}
+.flowmap-lane__h {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 700; font-size: 0.8rem; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--ifm-color-primary); margin-bottom: 12px;
+}
+.flowmap-lane__n {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ifm-color-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex: none;
+}
+.flowmap-lcard {
+  display: block; background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200); border-radius: 10px;
+  padding: 10px 12px; margin-bottom: 9px; text-decoration: none; color: inherit;
+}
+.flowmap-lcard:last-child { margin-bottom: 0; }
+.flowmap-lcard:hover { border-color: var(--ifm-color-primary); text-decoration: none; }
+
+/* --- pathway --- */
+.flowmap--pathway { position: relative; margin-left: 8px; }
+.flowmap--pathway::before {
+  content: ""; position: absolute; left: 11px; top: 6px; bottom: 6px;
+  width: 2px; background: var(--ifm-color-emphasis-300);
+}
+.flowmap-prow { position: relative; padding: 0 0 16px 40px; }
+.flowmap-prow:last-child { padding-bottom: 0; }
+.flowmap-prow__dot {
+  position: absolute; left: 2px; top: 0; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ifm-background-surface-color); border: 2px solid var(--ifm-color-primary);
+  color: var(--ifm-color-primary); font-weight: 700; font-size: 0.72rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.flowmap-prow__head { display: inline-flex; align-items: center; gap: 0.4em; flex-wrap: wrap; }
+.flowmap-prow__type { flex: none; }
+.flowmap-prow__t { font-weight: 600; }
+a.flowmap-prow__t:hover { color: var(--ifm-color-primary); }
+.flowmap-prow__d { font-size: 0.82rem; color: var(--ifm-color-emphasis-700); margin-top: 2px; }
+
+/* --- graph (chain / lifecycle / spokes) --- */
+.flowmap--graph { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.flowmap-node {
+  display: block; text-decoration: none; color: inherit;
+  border: 1.5px solid var(--ifm-color-primary); background: var(--ifm-color-primary-lightest);
+  border-radius: 12px; padding: 10px 14px; min-width: 110px;
+}
+a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
+.flowmap-arrow { color: var(--ifm-color-primary); font-size: 1.25rem; line-height: 1; }
+.flowmap--spokes { align-items: center; }
+.flowmap-spokegrid {
+  display: grid; grid-template-columns: repeat(2, minmax(120px, 1fr)); gap: 12px; flex: 1; min-width: 240px;
+}
+
+@media (max-width: 760px) {
+  .flowmap--lanes { grid-template-columns: 1fr; }
+  .flowmap--graph { flex-direction: column; align-items: stretch; }
+  .flowmap-arrow { transform: rotate(90deg); align-self: center; }
+  .flowmap-spokegrid { grid-template-columns: 1fr; }
+}
+
+/* --- grid (flat lookup set, e.g. reference) --- */
+.flowmap--grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.flowmap-gcard {
+  display: block; background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200); border-radius: 12px;
+  padding: 14px 16px; text-decoration: none; color: inherit;
+}
+.flowmap-gcard:hover { border-color: var(--ifm-color-primary); text-decoration: none; }
+
+/* ============================================================
+   Content-type icons (Concept 💡 · Guide 🧭 · Reference 🗂️)
+   One SVG per type in static/img/type-*.svg, recolored via CSS mask
+   so it inherits currentColor (themes + dark mode). Powers the
+   React <ContentTypeIcon> span and the sidebar ::before alike.
+   ============================================================ */
+.ia-type-icon {
+  display: inline-block; position: relative; width: 1em; height: 1em; flex: none;
+  vertical-align: -0.15em; --ia-tip-delay: 0.32s; /* page tooltip */
+}
+/* glyph painted via ::before, leaving ::after free for the tooltip bubble */
+.ia-type-icon::before {
+  content: ""; display: block; width: 100%; height: 100%;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / contain; mask: no-repeat center / contain;
+}
+.ia-type-icon--concept::before { -webkit-mask-image: url('/img/type-concept.svg'); mask-image: url('/img/type-concept.svg'); }
+.ia-type-icon--guide::before   { -webkit-mask-image: url('/img/type-guide.svg');   mask-image: url('/img/type-guide.svg'); }
+.ia-type-icon--ref::before     { -webkit-mask-image: url('/img/type-ref.svg');     mask-image: url('/img/type-ref.svg'); }
+/* area markers for cross-product / cross-section related links (package / wrench / rocket) */
+.ia-type-icon--area-product::before     { -webkit-mask-image: url('/img/area-product.svg');     mask-image: url('/img/area-product.svg'); }
+.ia-type-icon--area-build::before   { -webkit-mask-image: url('/img/area-build.svg');   mask-image: url('/img/area-build.svg'); }
+.ia-type-icon--area-get-started::before { -webkit-mask-image: url('/img/area-get-started.svg'); mask-image: url('/img/area-get-started.svg'); }
+
+/* rail "Related" content-type indicator: the same glyph used elsewhere, as an icon */
+.ia-rail__typeicon { width: 1.05em; height: 1.05em; margin-right: .45em; vertical-align: -0.18em; color: var(--ifm-color-emphasis-600); cursor: help; flex: none; }
+
+/* rail header page title marker — inherits the title color (no accent) */
+.ia-rail__title .ia-type-icon { margin-right: .4em; }
+
+/* page H1 title marker — same glyph as the rail badges, scaled to the header and
+   tinted like them (muted), no dashed underline */
+.ia-h1-type { width: .82em; height: .82em; margin-right: .42em; vertical-align: -0.04em; color: var(--ifm-color-emphasis-600); cursor: help; }
+
+/* sidebar markers on the TOP-SECTION headers (Concepts / Guides / Reference) */
+.ia-type-concept > .menu__list-item-collapsible > .menu__link::before,
+.ia-type-concept > .menu__link::before,
+.ia-type-guide > .menu__list-item-collapsible > .menu__link::before,
+.ia-type-guide > .menu__link::before,
+.ia-type-ref > .menu__list-item-collapsible > .menu__link::before,
+.ia-type-ref > .menu__link::before {
+  content: ""; display: inline-block; width: 1.05em; height: 1.05em; flex: none;
+  margin-right: .5em; vertical-align: -0.15em; background-color: currentColor;
+  -webkit-mask: no-repeat center / contain; mask: no-repeat center / contain;
+}
+.ia-type-concept > .menu__list-item-collapsible > .menu__link::before,
+.ia-type-concept > .menu__link::before { -webkit-mask-image: url('/img/type-concept.svg'); mask-image: url('/img/type-concept.svg'); }
+.ia-type-guide > .menu__list-item-collapsible > .menu__link::before,
+.ia-type-guide > .menu__link::before { -webkit-mask-image: url('/img/type-guide.svg'); mask-image: url('/img/type-guide.svg'); }
+.ia-type-ref > .menu__list-item-collapsible > .menu__link::before,
+.ia-type-ref > .menu__link::before { -webkit-mask-image: url('/img/type-ref.svg'); mask-image: url('/img/type-ref.svg'); }
+
+/* "Also available" counterpart — parent-section context line above the title */
+.ia-rail__card-context {
+  display: block; font-size: 0.72rem; color: var(--ia-ink-3);
+  letter-spacing: 0.02em; margin-bottom: 0.35em;
+}
+
+/* Lightweight tooltip (replaces native `title` so we control the show delay).
+   Used by content-type icons and typed sidebar sections — 0.32s reveal. */
+[data-ia-tip] { position: relative; }
+/* Lift the hovered host above following siblings so its tooltip (a positioned
+   descendant) isn't painted over by later sidebar items in the DOM. */
+[data-ia-tip]:hover,
+[data-ia-tip]:focus-within {
+  z-index: 61;
+}
+[data-ia-tip]::after {
+  content: attr(data-ia-tip);
+  position: absolute; top: calc(100% + 6px); left: 0;
+  z-index: 60; width: max-content; max-width: 240px;
+  padding: 0.4em 0.6em; border-radius: 6px;
+  background: var(--ifm-color-emphasis-900); color: var(--ifm-color-emphasis-100);
+  font: 400 0.75rem/1.35 var(--ifm-font-family-base);
+  text-transform: none; letter-spacing: normal; text-align: left;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  opacity: 0; transform: translateY(-3px); pointer-events: none;
+  transition: opacity 0.07s ease, transform 0.07s ease; transition-delay: 0s;
+  white-space: normal;
+}
+[data-ia-tip]:hover::after,
+[data-ia-tip]:focus-visible::after {
+  opacity: 1; transform: translateY(0);
+  transition-delay: var(--ia-tip-delay, 0.32s);
+}
+
+/* Opt-in glossary term (<Term>). Dotted underline + tooltip; inherits text
+   color so it reads as "defined term" rather than a navigation link. */
+.ia-term {
+  --ia-tip-delay: 0.32s;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ifm-color-emphasis-400);
+  cursor: help;
+}
+.ia-term:hover,
+.ia-term:focus-visible {
+  color: inherit;
+  text-decoration: none;
+  border-bottom-color: var(--ifm-color-emphasis-600);
+}
+
+/* Auto-derived section dropdowns (ia-nav plugin): compact root panel of
+   content-type groups, each opening a nested flyout of domains/pages.
+   The root <ul> reuses Infima's .dropdown__menu chrome; nested flyouts use a
+   distinct class so Infima's `.dropdown--hoverable:hover .dropdown__menu`
+   rule doesn't reveal every level at once. */
+.ia-nav-menu {
+  overflow: visible; /* don't clip the left:100% flyouts */
+  max-height: none;
+}
+.ia-flyout {
+  position: relative;
+}
+.ia-flyout__parent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.ia-flyout__caret {
+  color: var(--ifm-color-emphasis-500);
+  font-size: 1.1em;
+  line-height: 1;
+}
+.ia-flyout__menu {
+  position: absolute;
+  top: -0.5rem;
+  left: 100%;
+  margin-left: 0.15rem;
+  min-width: 12rem;
+  /* see ::before below — bridges the gap so hover survives diagonal travel */
+  list-style: none;
+  padding: 0.5rem;
+  background-color: var(--ifm-dropdown-background-color);
+  border-radius: var(--ifm-global-radius);
+  box-shadow: var(--ifm-global-shadow-md);
+  z-index: var(--ifm-z-index-dropdown);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+}
+.ia-flyout:hover > .ia-flyout__menu,
+.ia-flyout:focus-within > .ia-flyout__menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  transform: translateX(0);
+}
+/* Transparent bridge over the parent→submenu gap (incl. the 0.15rem margin and
+   the panel's right padding). Keeps the cursor inside the hoverable subtree
+   during diagonal travel, so the flyout doesn't close mid-move. */
+.ia-flyout__menu::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.6rem;
+  width: 0.6rem;
+}
+.ia-flyout__menu .dropdown__link {
+  white-space: nowrap;
+}

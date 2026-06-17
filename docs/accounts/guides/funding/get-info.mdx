@@ -1,0 +1,208 @@
+---
+title: Get funding information
+audience:
+  - dev
+related:
+  - /accounts/concepts/funding
+  - /accounts/guides/funding/add-source
+  - /accounts/guides/funding/initiate-request
+  - /accounts/guides/funding/cancel-source
+---
+
+# Get funding info
+
+<p className="ia-lede">Query funding sources, list an account's sources, and retrieve a funding transaction's release date with the API.</p>
+
+You can get information about funding sources and requests with the API.
+
+## Get information about a funding source {#guide-one}
+
+1. Call the `fundingSource` query.
+1. Add your funding source ID.
+1. Add all the information you'd like to review.
+
+<h3 id="query-source">Query</h3>
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlSW5mbyB7CiAgZnVuZGluZ1NvdXJjZShpZDogIiRZT1VSX0ZVTkRJTkdfU09VUkNFX0lEIikgewogICAgLi4uIG9uIERpcmVjdERlYml0RnVuZGluZ1NvdXJjZSB7CiAgICAgIGlkCiAgICAgIG5hbWUKICAgICAgaWJhbgogICAgICBjcmVhdGVkQXQKICAgICAgcGF5bWVudE1hbmRhdGUgewogICAgICAgIC4uLiBvbiBTRVBBUGF5bWVudERpcmVjdERlYml0TWFuZGF0ZSB7CiAgICAgICAgICBpZAogICAgICAgICAgbmFtZQogICAgICAgICAgdHJhbnNhY3Rpb25zIHsKICAgICAgICAgICAgZWRnZXMgewogICAgICAgICAgICAgIG5vZGUgewogICAgICAgICAgICAgICAgbGFiZWwKICAgICAgICAgICAgICAgIGlkCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,3,9} showLineNumbers
+query GetSourceInfo {
+  fundingSource(id: "$YOUR_FUNDING_SOURCE_ID") {
+    ... on DirectDebitFundingSource {
+      id
+      name
+      iban
+      createdAt
+      paymentMandate {
+        ... on SEPAPaymentDirectDebitMandate {
+          id
+          name
+          transactions {
+            edges {
+              node {
+                label
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+<h3 id="payload-source">Payload</h3>
+
+The payload shows that the user used their funding source to perform two transactions.
+
+```json {15,21} showLineNumbers
+{
+  "data": {
+    "fundingSource": {
+      "id": "$YOUR_SOURCE_ID",
+      "name": "Your Funding Source Name",
+      "iban": "$YOUR_NON_SWAN_IBAN",
+      "createdAt": "2024-01-22T18:10:26.271Z",
+      "paymentMandate": {
+        "id": "$YOUR_MANDATE_ID",
+        "name": "Your Mandate Name",
+        "transactions": {
+          "edges": [
+            {
+              "node": {
+                "label": "Transaction 1",
+                "id": "$YOUR_TRANSACTION_ID_1"
+              }
+            },
+            {
+              "node": {
+                "label": "Transaction 2",
+                "id": "$YOUR_TRANSACTION_ID_2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+## Get a list of funding sources {#guide-list}
+
+1. Call the `account` query.
+1. Add your account ID.
+1. Add `fundingSources`, then add the `DirectDebitFundingSource` and `SEPAPaymentDirectDebitMandate` unions.
+
+<h3 id="query-list">Query</h3>
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlTGlzdCB7CiAgYWNjb3VudChhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIikgewogICAgZnVuZGluZ1NvdXJjZXMgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gRGlyZWN0RGViaXRGdW5kaW5nU291cmNlIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgbmFtZQogICAgICAgICAgICBpYmFuCiAgICAgICAgICAgIHBheW1lbnRNYW5kYXRlIHsKICAgICAgICAgICAgICAuLi4gb24gU0VQQVBheW1lbnREaXJlY3REZWJpdE1hbmRhdGUgewogICAgICAgICAgICAgICAgaWQKICAgICAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2-3,6,11} showLineNumbers
+query GetSourceList {
+  account(accountId: "$YOUR_ACCOUNT_ID") {
+    fundingSources {
+      edges {
+        node {
+          ... on DirectDebitFundingSource {
+            id
+            name
+            iban
+            paymentMandate {
+              ... on SEPAPaymentDirectDebitMandate {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+<h3 id="payload-list">Payload</h3>
+
+The payload provides the list of funding sources for your account.
+
+```json {8,17} showLineNumbers
+{
+  "data": {
+    "account": {
+      "fundingSources": {
+        "edges": [
+          {
+            "node": {
+              "id": "$YOUR_SOURCE_ID_1",
+              "name": "Your Funding Source Name 1",
+              "iban": "$YOUR_NON_SWAN_IBAN_1",
+              "paymentMandate": {
+                "id": "$YOUR_MANDATE_ID_1",
+                "name": "Your Mandate Name 1"
+              }
+            },
+            "node": {
+              "id": "$YOUR_SOURCE_ID_2",
+              "name": "Your Funding Source Name 2",
+              "iban": "$YOUR_NON_SWAN_IBAN_2",
+              "paymentMandate": {
+                "id": "$YOUR_MANDATE_ID_2",
+                "name": "Your Mandate Name 2"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+## Get a funding transaction release date {#guide-release-date}
+
+1. Call the `transaction` query.
+1. Add your transaction ID.
+1. Add the `SEPADirectDebitTransaction` union.
+1. Add `reservedAmountReleasedAt` and any other information that's interesting to you.
+
+<h3 id="query-release-date">Query</h3>
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0UmVsZWFzZURhdGUgewogIHRyYW5zYWN0aW9uKGlkOiAiJFRSQU5TQUNUSU9OX0lEIikgewogICAgLi4uIG9uIFNFUEFEaXJlY3REZWJpdFRyYW5zYWN0aW9uIHsKICAgICAgaWQKICAgICAgcmVzZXJ2ZWRBbW91bnQgewogICAgICAgIGN1cnJlbmN5CiAgICAgICAgdmFsdWUKICAgICAgfQogICAgICByZXNlcnZlZEFtb3VudFJlbGVhc2VkQXQKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,3,9} showLineNumbers
+query GetReleaseDate {
+  transaction(id: "$TRANSACTION_ID") {
+    ... on SEPADirectDebitTransaction {
+      id
+      reservedAmount {
+        currency
+        value
+      }
+      reservedAmountReleasedAt
+    }
+  }
+}
+```
+
+<h3 id="payload-release-date">Payload</h3>
+
+The payload returns `reservedAmountReleasedAt`, the day and time the reserved amount of the account funding transaction is scheduled to be released.
+
+```json {10} showLineNumbers
+{
+  "data": {
+    "transaction": {
+      "__typename": "SEPADirectDebitTransaction",
+      "id": "$TRANSACTION_ID",
+      "reservedAmount": {
+        "currency": "EUR",
+        "value": "15.00"
+      },
+      "reservedAmountReleasedAt": "2025-03-11T19:00:00.000Z"
+    }
+  }
+}
+```

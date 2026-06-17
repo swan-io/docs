@@ -33,7 +33,7 @@ Otherwise, SEPA Credit Transfers and Internal Credit Transfers function almost i
 
 ### Consent {#consent}
 
-Initiating credit transfers is a [sensitive operation](../../../users/consent/index.mdx#sensitive) and requires consent from an account member with the `canInitiatePayments` [membership permission](../../../accounts/memberships/index.mdx#permissions).
+Initiating credit transfers is a [sensitive operation](../../../users/consent/index.mdx#sensitive) and requires consent from an account member with the `canInitiatePayments` [membership permission](/accounts/reference/memberships/membership-permissions#permissions).
 
 ### Risk and credit transfers {#risk}
 
@@ -66,7 +66,7 @@ Additionally, Swan allows external financial institutions to verify that a Swan 
 If there's an information mismatch or partial match, the financial institution can notify the debtor, who can then confirm their beneficiary details before sending the transfer.
 
 Swan also **validates the format** of all beneficiary IBANs.
-You can [check the format of your IBANs](../../../accounts/ibans/guide-validate.mdx) with the API before using them to send a transfer.
+You can [check the format of your IBANs](/accounts/guides/ibans/validate) with the API before using them to send a transfer.
 
 ### Invoice references
 
@@ -86,7 +86,7 @@ You'll find the invoice reference in the `transaction.label` field after retriev
 
 ### Transfer limitations {#limitations}
 
-1. Credit transfers can't be sent if [**account holder verification**](../../../onboarding/account-holders/index.mdx#verification-process) is still **in progress**.
+1. Credit transfers can't be sent if [**account holder verification**](/accounts/concepts/account-holders/verification#verification-process) is still **in progress**.
 While finalizing verification, the account's `paymentLevel` is `Limited` and the `initiateCreditTransfers` mutation returns an error.
 1. Swan accounts aren't designed to have a **negative balance**. Therefore, Swan checks an account's `Available` balance before executing credit transfers every time. If there isn't enough in the account, the transfer is rejected for insufficient funds.
 1. If you'd like to plan credit transfers in advance, you can do so **up to one year in the future** using the `requestedExecutionAt` input when initiating your transfer.
@@ -103,7 +103,7 @@ They are removed when the account holder verification status changes to `Verifie
 
 These restrictions primarily affect first transfers during account holder verification.
 
-Learn more about [limited account restrictions](../../../onboarding/account-holders/index.mdx#limited-account-restrictions).
+Learn more about [limited account restrictions](/accounts/concepts/account-holders/first-transfer#limited-account-restrictions).
 
 ## Instant SEPA Credit Transfers {#instant}
 
@@ -114,7 +114,7 @@ The speedy version of SEPA Credit Transfers, Instant SEPA Credit Transfers have 
 1. Availability 24 hours a day, 7 days a week, 365 days a year, including when [SEPA is unavailable](../../index.mdx#sepa-availability) for other transaction types.
 
 :::note IBAN validation 
-Consider [validating IBANs](../../../accounts/ibans/guide-validate.mdx) before initiating instant transfers.
+Consider [validating IBANs](/accounts/guides/ibans/validate) before initiating instant transfers.
 :::
 
 ### Fallback mode {#instant-fallback}

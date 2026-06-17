@@ -57,6 +57,7 @@ module.exports = {
         doc("accounts/concepts/onboarding/notifications", "Notifications"),
         doc("accounts/concepts/onboarding/verification-renewal", "Verification renewal"),
       ], { link: "accounts/concepts/onboarding/index" }),
+      doc("accounts/concepts/capital-deposits/index", "Capital deposits"),
       cat("Account", [
         doc("accounts/concepts/account/country", "Account country"),
         doc("accounts/concepts/account/language", "Account language"),
@@ -129,15 +130,15 @@ module.exports = {
         doc("accounts/guides/onboarding/requirements", "Requirements"),
         doc("accounts/guides/onboarding/manage-onboardings", "Manage onboardings"),
         doc("accounts/guides/onboarding/migrate-api", "Migrate to the current API"),
-        cat("Capital deposits", [
-          doc("accounts/guides/onboarding/capital-deposits/index", "Overview"),
-          doc("accounts/guides/onboarding/capital-deposits/create-case", "Create a case"),
-          doc("accounts/guides/onboarding/capital-deposits/upload-documents", "Upload documents"),
-          doc("accounts/guides/onboarding/capital-deposits/update-company", "Update company"),
-          doc("accounts/guides/onboarding/capital-deposits/update-shareholder-amount", "Update shareholder amount"),
-          doc("accounts/guides/onboarding/capital-deposits/cancel", "Cancel a case"),
-        ], { link: "accounts/guides/onboarding/capital-deposits/index" }),
       ], { link: "accounts/guides/onboarding/index" }),
+      cat("Capital deposits", [
+        doc("accounts/guides/capital-deposits/index", "Overview"),
+        doc("accounts/guides/capital-deposits/create-case", "Create a case"),
+        doc("accounts/guides/capital-deposits/upload-documents", "Upload documents"),
+        doc("accounts/guides/capital-deposits/update-company", "Update company"),
+        doc("accounts/guides/capital-deposits/update-shareholder-amount", "Update shareholder amount"),
+        doc("accounts/guides/capital-deposits/cancel", "Cancel a case"),
+      ], { link: "accounts/guides/capital-deposits/index" }),
       cat("Memberships", [
         doc("accounts/guides/memberships/index", "Overview"),
         doc("accounts/guides/memberships/add-one", "Add one member"),
@@ -203,9 +204,9 @@ module.exports = {
         doc("accounts/reference/onboarding/company-onboarding-fields", "Company onboarding fields"),
         doc("accounts/reference/onboarding/company-onboarding-fields-api-mapping", "Company onboarding API mapping"),
         doc("accounts/reference/onboarding/individual-onboarding-fields", "Individual onboarding fields"),
-        doc("accounts/reference/onboarding/capital-deposit-reference", "Capital deposit reference"),
         doc("accounts/reference/onboarding/proof-of-address", "Proof of address"),
       ], { link: "accounts/reference/onboarding/index" }),
+      doc("accounts/reference/capital-deposits/index", "Capital deposits"),
       cat("Memberships", [
         doc("accounts/reference/memberships/membership-permissions", "Membership permissions"),
         doc("accounts/reference/memberships/membership-fields", "Membership fields"),

@@ -59,9 +59,18 @@ module.exports = {
           resources: [
             { label: "API Reference", icon: "apiref", href: "https://api-reference.swan.io", desc: "Full GraphQL schema" },
             { label: "API Explorer", icon: "explorer", href: "https://explorer.swan.io/", desc: "Run queries live" },
-            { label: "Changelog", icon: "changelog", to: "/changelog", desc: "What’s shipped" },
-            { label: "Preview", icon: "preview", to: "/preview", desc: "What’s next" },
           ],
+        },
+        {
+          // DOC-1814 — Changelog/Preview restored as standalone navbar buttons
+          // (pulled back out of the Developer resources dropdown).
+          type: "html",
+          position: "right",
+          value: `<div class="swan-unified-nav">
+            <a class="swan-tip swan-icon-btn" href="/changelog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span class="swan-tip__label" aria-hidden="true">Changelog</span></a>
+            <div class="separator"></div>
+            <a class="swan-tip swan-icon-btn" href="/preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="swan-tip__label" aria-hidden="true">Preview</span></a>
+          </div>`
         },
         { type: "html", position: "right", value: `<span class="navbar__vr" aria-hidden="true"></span>` },
         { type: "search", position: "right" },

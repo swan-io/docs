@@ -1,5 +1,13 @@
 // redirects from original doc pathnames
 module.exports = [
+  // DOC-1814 — Capital deposits promoted to its own domain (out of onboarding)
+  { from: "/accounts/guides/onboarding/capital-deposits", to: "/accounts/guides/capital-deposits" },
+  { from: "/accounts/guides/onboarding/capital-deposits/create-case", to: "/accounts/guides/capital-deposits/create-case" },
+  { from: "/accounts/guides/onboarding/capital-deposits/upload-documents", to: "/accounts/guides/capital-deposits/upload-documents" },
+  { from: "/accounts/guides/onboarding/capital-deposits/update-company", to: "/accounts/guides/capital-deposits/update-company" },
+  { from: "/accounts/guides/onboarding/capital-deposits/update-shareholder-amount", to: "/accounts/guides/capital-deposits/update-shareholder-amount" },
+  { from: "/accounts/guides/onboarding/capital-deposits/cancel", to: "/accounts/guides/capital-deposits/cancel" },
+  { from: "/accounts/reference/onboarding/capital-deposit-reference", to: "/accounts/reference/capital-deposits" },
   // DOC-1814 cutover — batch 3B: developers -> build
   { from: "/developers", to: "/build" },
   { from: "/developers/contact", to: "/get-started" },
@@ -111,7 +119,7 @@ module.exports = [
     to: "/accounts/concepts/account-holders",
   },
   { from: "/concept/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
-  { from: "/concept/capital-deposit", to: "/accounts/guides/onboarding/capital-deposits" },
+  { from: "/concept/capital-deposit", to: "/accounts/guides/capital-deposits" },
   { from: "/concept/card", to: "/topics/cards/" },
   { from: "/concept/iban", to: "/accounts/concepts/ibans" },
   { from: "/concept/merchants-accepting-payments", to: "/topics/merchants/" },
@@ -127,7 +135,7 @@ module.exports = [
   { from: "/guide/control-card-usage", to: "/topics/payments/cards/sandbox" },
   {
     from: "/guide/create-a-capital-deposit",
-    to: "/accounts/guides/onboarding/capital-deposits#france",
+    to: "/accounts/guides/capital-deposits#france",
   },
   { from: "/guide/create-a-new-account", to: "/accounts/guides/onboarding#links" },
   { from: "/guide/fund-an-account", to: "/accounts/concepts/funding" },
@@ -707,31 +715,31 @@ module.exports = [
   },
   {
     from: "/topics/capital-deposits",
-    to: "/accounts/guides/onboarding/capital-deposits",
+    to: "/accounts/guides/capital-deposits",
   },
   {
     from: "/topics/capital-deposits/france/guide",
-    to: "/accounts/guides/onboarding/capital-deposits#france",
+    to: "/accounts/guides/capital-deposits#france",
   },
   {
     from: "/topics/capital-deposits/france/guide-create-case",
-    to: "/accounts/guides/onboarding/capital-deposits/create-case",
+    to: "/accounts/guides/capital-deposits/create-case",
   },
   {
     from: "/topics/capital-deposits/france/guide-upload-documents",
-    to: "/accounts/guides/onboarding/capital-deposits/upload-documents",
+    to: "/accounts/guides/capital-deposits/upload-documents",
   },
   {
     from: "/topics/capital-deposits/guide-cancel",
-    to: "/accounts/guides/onboarding/capital-deposits/cancel",
+    to: "/accounts/guides/capital-deposits/cancel",
   },
   {
     from: "/topics/capital-deposits/guide-update-company",
-    to: "/accounts/guides/onboarding/capital-deposits/update-company",
+    to: "/accounts/guides/capital-deposits/update-company",
   },
   {
     from: "/topics/capital-deposits/guide-update-shareholder-amount",
-    to: "/accounts/guides/onboarding/capital-deposits/update-shareholder-amount",
+    to: "/accounts/guides/capital-deposits/update-shareholder-amount",
   },
   {
     from: "/topics/accounts",
@@ -881,7 +889,7 @@ module.exports = [
   { from: "/accounts/reference/company-onboarding-fields", to: "/accounts/reference/onboarding/company-onboarding-fields" },
   { from: "/accounts/reference/company-onboarding-fields-api-mapping", to: "/accounts/reference/onboarding/company-onboarding-fields-api-mapping" },
   { from: "/accounts/reference/individual-onboarding-fields", to: "/accounts/reference/onboarding/individual-onboarding-fields" },
-  { from: "/accounts/reference/capital-deposit-reference", to: "/accounts/reference/onboarding/capital-deposit-reference" },
+  { from: "/accounts/reference/capital-deposit-reference", to: "/accounts/reference/capital-deposits" },
   { from: "/accounts/reference/proof-of-address", to: "/accounts/reference/onboarding/proof-of-address" },
   { from: "/accounts/reference/sandbox-billing", to: "/accounts/reference/sandbox/sandbox-billing" },
   { from: "/accounts/reference/sandbox-documents", to: "/accounts/reference/sandbox/sandbox-documents" },

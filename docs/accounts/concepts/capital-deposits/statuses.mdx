@@ -1,0 +1,49 @@
+---
+title: Capital deposit statuses
+related:
+  - /accounts/concepts/capital-deposits
+  - /accounts/concepts/capital-deposits/process
+  - /accounts/concepts/capital-deposits/shareholders
+  - /accounts/reference/capital-deposits
+audience:
+  - dev
+  - ops
+---
+
+# Capital deposit statuses
+
+A capital deposit tracks three interlocking state machines: the **case**, each **shareholder**, and each **document**. They advance together, and the case status reflects where the whole deposit stands.
+
+```flowmap
+{
+  "mode": "graph",
+  "layout": "spokes",
+  "nodes": [
+    { "id": "case", "title": "Case status", "desc": "The master signal for the whole deposit." },
+    { "id": "shareholders", "title": "Shareholder statuses", "to": "/accounts/concepts/capital-deposits/shareholders", "desc": "One per shareholder, tracking onboarding and transfer." },
+    { "id": "documents", "title": "Document statuses", "desc": "One per required document, gating review." }
+  ]
+}
+```
+
+## The case is the master clock {#case}
+
+The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case) status is the top-level signal for the deposit. It moves from initial requirements through Swan's review and the notary steps to `Completed`, or to `Canceled` at any point. The case can't pass a step until the shareholders and documents it depends on are ready.
+
+For the full state machine and every value, see [case statuses](/accounts/reference/capital-deposits#case-statuses) and the [cancelation reason codes](/accounts/reference/capital-deposits#cancelation-reason-codes) attached to a canceled case.
+
+## Shareholders advance alongside it {#shareholders}
+
+Each [shareholder](/accounts/concepts/capital-deposits/shareholders) carries their own status reflecting how far they've onboarded and transferred funds: from `PendingOnboarding`, through verification and transfer, to `CapitalFundsWiredToNotary`. The case only completes once every shareholder reaches that final state.
+
+For the full state machine and every value, see [shareholder statuses](/accounts/reference/capital-deposits#shareholders-statuses).
+
+## Documents gate progress {#documents}
+
+Each required document moves from `Pending` to `Uploaded`, then to `Validated` or `Refused`. A `Refused` document must be re-uploaded before the case can move forward.
+
+For the full state machine and every value, see [document statuses](/accounts/reference/capital-deposits#documents-statuses).
+
+## How statuses cascade {#cascade}
+
+The three models aren't independent. When a `CapitalDepositCase` is `Canceled`, every shareholder status flips to `CapitalDepositCanceled`, and any temporary account already opened for a shareholder is closed automatically.

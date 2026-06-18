@@ -41,16 +41,16 @@ Together we complete a few main actions, from opening the case to wiring the fun
 
 The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case) API object is the spine of the process: it compiles everything for a single deposit.
 
-1. Details about the future company
-1. Company account
-1. [Shareholder](/accounts/concepts/capital-deposits/shareholders) information
-1. Capital deposit documents
+- Details about the future company
+- Company account
+- [Shareholder](/accounts/concepts/capital-deposits/shareholders) information
+- [Capital deposit documents](#documents)
 
 The case moves through several [statuses](/accounts/concepts/capital-deposits/statuses), and a reason code explains any cancelation. See [case statuses](/accounts/reference/capital-deposits#case-statuses) and [cancelation reason codes](/accounts/reference/capital-deposits#cancelation-reason-codes).
 
 ## Required documents {#documents}
 
-Processing a capital shares deposit **requires several documents** from shareholders and the future company, uploaded with the API. A document that doesn't meet Swan's requirements is assigned the status `Refused` and must be uploaded again. See the [list of required documents](/accounts/reference/capital-deposits#documents-list) and [document statuses](/accounts/reference/capital-deposits#documents-statuses).
+Processing a capital shares deposit **requires several documents** from shareholders and the future company, [uploaded with the API](/accounts/guides/capital-deposits/upload-documents). A document that doesn't meet Swan's requirements is assigned the status `Refused` and must be uploaded again. See the [list of required documents](/accounts/reference/capital-deposits#documents-list) and [document statuses](/accounts/reference/capital-deposits#documents-statuses).
 
 ## Sequence diagram {#diagram}
 
@@ -72,6 +72,6 @@ participant N as Notary
     N -->> S: Uploads capital share deposit certificate
     S ->> P: Downloads certificate
     P -->> S: Uploads proof of registration
-    S ->> N: Sends proof of registration & bank account details
+    S ->> N: Sends proof of registration and bank account details
     N -->> S: Transfers funds to Swan company account
 ```

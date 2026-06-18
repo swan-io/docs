@@ -5,7 +5,7 @@ type: release
 
 ## Improvements
 
-🔗 You can now control [public onboarding links](/topics/onboarding/#links) separately for creating and updating accounts. If you already have public links enabled, both are on by default — adjust them anytime in your Dashboard under **Onboarding** > **Public Links**.
+🔗 You can now control [public onboarding links](/topics/onboarding/#links) separately for creating and updating accounts. If you already have public links enabled, both are on by default — adjust them anytime in your Dashboard under **Onboarding** > **Public links**.
 
 🔄 All accounts closed before April 2, 2026 now use the [2026 closure reason codes](/topics/accounts/closure/#closure-reason-codes). Your whole portfolio is consistent, so you can run data analysis across your full history.
 
@@ -20,7 +20,7 @@ type: release
 
 🔍 You can now filter [virtual IBANs](/topics/accounts/ibans/#virtual) by status — `Enabled` or `Canceled` — with the `status` filter on [`virtualIbanEntries`](https://api-reference.swan.io/objects/virtual-ibanentry-connection/) in the [`account`](https://api-reference.swan.io/queries/account/) query. This makes it easy to surface only `Enabled` IBANs, even when an account has many of them.
 
-📋 You can now create a [capital deposit](/topics/capital-deposits/) case for companies whose legal name is longer than 100 characters. The limit on the `companyName`, `accountName`, and `name` fields rises from 100 to 255 characters, matching standard French registry formats. No changes needed on your end.
+📋 You can now create a [capital deposit](/topics/capital-deposits/) case for companies whose legal name is longer than 100 characters. The limit on the `companyName`, `accountName`, and `name` fields has increased to 255 characters (previously 100), matching standard French registry formats. No changes needed on your end.
 
 🔄 The conditions for an account to move from `Closing` to `Closed` status are changing in two ways:
 
@@ -29,12 +29,12 @@ type: release
 
 All other conditions stay the same, so accounts may sit in `Closing` status longer than before.
 
-🔄 Incoming credit transfers to a `Closing` account are now accepted when the booked balance is negative. This helps settle outstanding debts before the account fully closes. Transfers to `Closing` accounts with a zero or positive balance are still returned, as before.
+🔄 Incoming credit transfers to a `Closing` account are now accepted when the booked balance is negative. This helps settle outstanding debts before the account is `Closed`. Transfers to `Closing` accounts with a zero or positive balance are still returned, as before.
 
 ## API updates
 
 ### Upcoming breaking changes
 
-⚠️ The `DormantAccount` closure reason is **deprecated**. [`Inactivity`](https://api-reference.swan.io/enums/close-account-reason-type/) replaces it, with the description: "Prolonged inactivity according to local regulatory definitions or internal policy." All accounts that previously used `DormantAccount` are now migrated to `Inactivity`.
+⚠️ The `DormantAccount` closure reason is **deprecated**. [`Inactivity`](https://api-reference.swan.io/enums/close-account-reason-type/) replaces it, with the description: "Prolonged inactivity according to local regulatory definitions or internal policy." All accounts that previously used the `DormantAccount` closure reason are now using `Inactivity`.
 
-If your integration filters, displays, or processes closure reasons by code, update it to handle `Inactivity` and remove any reference to `DormantAccount`. See the [updated closure reason codes](/topics/accounts/closure/#closure-reason-codes) and [deprecated reason codes](/topics/accounts/closure/#deprecated-reasons) for the full mapping.
+If your integration filters, displays, or processes closure reasons by code, update it to handle the new code `Inactivity` and remove any reference to `DormantAccount`. See the [updated closure reason codes](/topics/accounts/closure/#closure-reason-codes) and [deprecated reason codes](/topics/accounts/closure/#deprecated-reasons) for the full mapping.

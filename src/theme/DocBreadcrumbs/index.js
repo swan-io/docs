@@ -132,8 +132,8 @@ export default function DocBreadcrumbs() {
         <Link
           to={upHref}
           className="ia-bc-up"
-          aria-label={`Up to ${parent.label}`}
-          title={`Up to ${parent.label}`}>
+          aria-label={`Up to the parent page: ${parent.label}`}
+          data-ia-tip={`Up to the parent page: ${parent.label}`}>
           ↑
         </Link>
       )}

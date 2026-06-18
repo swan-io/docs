@@ -50,7 +50,7 @@ module.exports = {
   ],
 
   accountsSidebar: [
-    doc("accounts/index", "Overview"),
+    doc("accounts/index", "Accounts overview"),
     top("Concepts", [
       cat("Onboarding", [
         doc("accounts/concepts/onboarding/statuses", "Statuses"),
@@ -118,17 +118,31 @@ module.exports = {
         doc("accounts/guides/onboarding/index", "Overview"),
         cat("Company onboarding", [
           doc("accounts/guides/onboarding/company/requirements", "Requirements and fields"),
-          doc("accounts/guides/onboarding/company/create", "Create a link"),
+          cat("Create a link", [
+            doc("accounts/guides/onboarding/company/create/from-the-dashboard", "From the Dashboard"),
+            doc("accounts/guides/onboarding/company/create/using-the-api", "Using the API"),
+          ], { link: "accounts/guides/onboarding/company/create/index" }),
           doc("accounts/guides/onboarding/company/update", "Update"),
         ], { link: "accounts/guides/onboarding/company/index" }),
         cat("Individual onboarding", [
           doc("accounts/guides/onboarding/individual/requirements", "Requirements and fields"),
-          doc("accounts/guides/onboarding/individual/create", "Create a link"),
+          cat("Create a link", [
+            doc("accounts/guides/onboarding/individual/create/from-the-dashboard", "From the Dashboard"),
+            doc("accounts/guides/onboarding/individual/create/using-the-api", "Using the API"),
+          ], { link: "accounts/guides/onboarding/individual/create/index" }),
           doc("accounts/guides/onboarding/individual/update", "Update"),
         ], { link: "accounts/guides/onboarding/individual/index" }),
         doc("accounts/guides/onboarding/account-holder-tasks", "Account holder tasks"),
+        cat("Export account holder data", [
+          doc("accounts/guides/onboarding/account-holder-export/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/onboarding/account-holder-export/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/onboarding/account-holder-export/index" }),
         doc("accounts/guides/onboarding/requirements", "Requirements"),
         doc("accounts/guides/onboarding/manage-onboardings", "Manage onboardings"),
+        cat("Export onboarding data", [
+          doc("accounts/guides/onboarding/export/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/onboarding/export/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/onboarding/export/index" }),
         doc("accounts/guides/onboarding/migrate-api", "Migrate to the current API"),
       ], { link: "accounts/guides/onboarding/index" }),
       cat("Capital deposits", [
@@ -155,29 +169,62 @@ module.exports = {
         ], { link: "accounts/guides/memberships/export/index" }),
       ], { link: "accounts/guides/memberships/index" }),
       cat("Account operations", [
-        doc("accounts/guides/account-operations/export", "Export accounts"),
-        doc("accounts/guides/account-operations/generate-statement", "Generate a statement"),
-        doc("accounts/guides/account-operations/bank-details", "Get bank details"),
+        cat("Export accounts", [
+          doc("accounts/guides/account-operations/export/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/account-operations/export/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/account-operations/export/index" }),
+        cat("Generate a statement", [
+          doc("accounts/guides/account-operations/generate-statement/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/account-operations/generate-statement/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/account-operations/generate-statement/index" }),
+        cat("Get bank details", [
+          doc("accounts/guides/account-operations/bank-details/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/account-operations/bank-details/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/account-operations/bank-details/index" }),
         doc("accounts/guides/account-operations/create-additional-account", "Create additional accounts"),
       ], { link: "accounts/guides/account-operations/index" }),
       cat("IBANs", [
-        doc("accounts/guides/ibans/add-virtual", "Add a virtual IBAN"),
+        cat("Add a virtual IBAN", [
+          doc("accounts/guides/ibans/add-virtual/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/ibans/add-virtual/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/ibans/add-virtual/index" }),
         doc("accounts/guides/ibans/cancel-virtual", "Cancel a virtual IBAN"),
-        doc("accounts/guides/ibans/get-info", "Get IBAN info"),
+        cat("Get IBAN info", [
+          doc("accounts/guides/ibans/get-info/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/ibans/get-info/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/ibans/get-info/index" }),
         doc("accounts/guides/ibans/validate", "Validate an IBAN"),
       ], { link: "accounts/guides/ibans/index" }),
       cat("Closure", [
         doc("accounts/guides/closure/close-unlimited", "Close an unlimited account"),
         doc("accounts/guides/closure/close-limited", "Close a limited account"),
-        doc("accounts/guides/closure/close-link", "Close via link"),
-        doc("accounts/guides/closure/get-closure-info", "Get closure info"),
+        cat("Close via link", [
+          doc("accounts/guides/closure/close-link/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/closure/close-link/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/closure/close-link/index" }),
+        cat("Get closure information", [
+          doc("accounts/guides/closure/get-closure-info/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/closure/get-closure-info/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/closure/get-closure-info/index" }),
       ], { link: "accounts/guides/closure/index" }),
       cat("Documents", [
-        doc("accounts/guides/documents/upload-onboarding", "Upload onboarding documents"),
+        cat("Upload onboarding documents", [
+          doc("accounts/guides/documents/upload-onboarding/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/documents/upload-onboarding/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/documents/upload-onboarding/index" }),
         doc("accounts/guides/documents/upload-transaction", "Upload transaction documents"),
-        doc("accounts/guides/documents/request-collection-review", "Request a collection review"),
-        doc("accounts/guides/documents/get-info", "Get document info"),
-        doc("accounts/guides/documents/delete", "Delete a document"),
+        cat("Request a collection review", [
+          doc("accounts/guides/documents/request-collection-review/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/documents/request-collection-review/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/documents/request-collection-review/index" }),
+        cat("Get document info", [
+          doc("accounts/guides/documents/get-info/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/documents/get-info/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/documents/get-info/index" }),
+        cat("Delete a document", [
+          doc("accounts/guides/documents/delete/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/documents/delete/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/documents/delete/index" }),
       ], { link: "accounts/guides/documents/index" }),
       cat("Funding", [
         doc("accounts/guides/funding/add-source", "Add a funding source"),
@@ -186,8 +233,14 @@ module.exports = {
         doc("accounts/guides/funding/get-info", "Get funding info"),
       ], { link: "accounts/guides/funding/index" }),
       cat("Billing", [
-        doc("accounts/guides/billing/get-details", "Get billing details"),
-        doc("accounts/guides/billing/get-list", "Get billing list"),
+        cat("Get billing details", [
+          doc("accounts/guides/billing/get-details/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/billing/get-details/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/billing/get-details/index" }),
+        cat("Get billing list", [
+          doc("accounts/guides/billing/get-list/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/billing/get-list/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/billing/get-list/index" }),
         doc("accounts/guides/billing/compliant-billing", "Compliant billing"),
       ], { link: "accounts/guides/billing/index" }),
     ], "accounts/guides/index", "ia-type-guide"),
@@ -223,7 +276,7 @@ module.exports = {
   ],
 
   cardsSidebar: [
-    doc("cards/index", "Overview"),
+    doc("cards/index", "Cards overview"),
     top("Concepts", [
       doc("cards/concepts/virtual", "Virtual cards"),
       doc("cards/concepts/physical", "Physical cards"),
@@ -267,7 +320,7 @@ module.exports = {
   ],
 
   paymentsSidebar: [
-    doc("payments/index", "Overview"),
+    doc("payments/index", "Payments overview"),
     top("Concepts", [
       doc("payments/concepts/transactions", "Transactions"),
       doc("payments/concepts/credit-transfers", "Credit transfers"),
@@ -341,7 +394,7 @@ module.exports = {
   ],
 
   usersSidebar: [
-    doc("users/index", "Overview"),
+    doc("users/index", "Users overview"),
     top("Concepts", [
       doc("users/concepts/consent", "Consent"),
       doc("users/concepts/identifications", "Identifications"),
@@ -373,7 +426,7 @@ module.exports = {
   ],
 
   buildSidebar: [
-    doc("build/index", "Overview"),
+    doc("build/index", "Build overview"),
     // Natural learning order: the API concept (GraphQL) → how to call it
     // (Using the API) → the utilities that support development (Tools).
     top("GraphQL", [

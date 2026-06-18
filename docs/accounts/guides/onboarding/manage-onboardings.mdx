@@ -9,7 +9,6 @@ related:
 ---
 
 import DeprecationTimeline from './partials/_deprecated-mutation-timeline.mdx';
-import ExportNextSteps from '../../../topics/partials/_export-next-steps.mdx';
 
 # Manage onboardings
 
@@ -251,70 +250,7 @@ Notice the documents listed (lines 10-22), as well as the collection status `Wai
 
 ## Export onboarding data {#export-onboarding-data}
 
-You can export the onboarding data available on the Dashboard, either from your Dashboard or with the API.
-Review the next steps to understand what happens after finalizing your export.
-
-### Dashboard
-
-1. On your Dashboard, go to **Data** > **Onboardings**.
-1. Click the **download icon** to trigger a `.csv` export.
-1. A modal appears. Click **Export data** to finalize the request.
-
-![Screenshot of Swan Dashboard onboarding page with a callout download icon to trigger an export](../../../images/topics/onboarding/onboarding-export.png)
-
-### API
-
-1. Call the `exportOnboardingData` mutation.
-1. Add your `email`. A link to download the `.csv` export is sent to the email address you provide.
-1. If required, add filters to your export.
-    - The following mutation is filtered to `Ongoing (Invalid)` `Company` onboardings (line 5).
-1. Add the success payload and rejections.
-
-#### Mutation
-
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0T25ib2FyZGluZ3MgewogIGV4cG9ydE9uYm9hcmRpbmdEYXRhKAogICAgaW5wdXQ6IHsKICAgICAgZW1haWw6ICIkWU9VUl9FTUFJTF9BRERSRVNTIgogICAgICBmaWx0ZXJzOiB7IHR5cGVzOiBDb21wYW55LCBzdGF0dXM6IEludmFsaWQgfQogICAgfQogICkgewogICAgLi4uIG9uIEV4cG9ydERhdGFTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZXhwb3J0SWQKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtU2ltdWx0YW5lb3VzRXhwb3J0c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE1heGltdW1EYWlseUV4cG9ydHNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
-
-```graphql {4,5,10} showLineNumbers
-mutation ExportOnboardings {
-  exportOnboardingData(
-    input: {
-      email: "$YOUR_EMAIL_ADDRESS"
-      filters: { types: Company, status: Invalid }
-    }
-  ) {
-    ... on ExportDataSuccessPayload {
-      __typename
-      exportId
-    }
-    ... on MaximumSimultaneousExportsRejection {
-      __typename
-      message
-    }
-    ... on MaximumDailyExportsReachedRejection {
-      __typename
-      message
-    }
-  }
-}
-```
-#### Payload
-
-The payload returns the export ID.
-
-```json {5} showLineNumbers
-{
-  "data": {
-    "exportOnboardingData": {
-      "__typename": "ExportDataSuccessPayload",
-      "exportId": "$EXPORT_ID"
-    }
-  }
-}
-```
-
-### Next steps
-
-<ExportNextSteps />
+You can export onboarding data from the Dashboard or with the API. See **[Export onboarding data](/accounts/guides/onboarding/export)** for both paths.
 
 ## Finalize an onboarding {#finalize}
 
@@ -353,7 +289,7 @@ Use `finalizeAccountHolderOnboarding` for all new integrations.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gRmluYWxpemVPbmJvYXJkaW5nIHsKICBmaW5hbGl6ZUFjY291bnRIb2xkZXJPbmJvYXJkaW5nKGlucHV0OiB7IG9uYm9hcmRpbmdJZDogIiRPTkJPQVJESU5HX0lEIiB9KSB7CiAgICAuLi4gb24gRmluYWxpemVBY2NvdW50SG9sZGVyT25ib2FyZGluZ1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBvbmJvYXJkaW5nIHsKICAgICAgICAuLi4gb24gSW5kaXZpZHVhbEFjY291bnRIb2xkZXJPbmJvYXJkaW5nIHsKICAgICAgICAgIGlkCiAgICAgICAgICBhY2NvdW50IHsKICAgICAgICAgICAgaWQKICAgICAgICAgIH0KICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgLi4uIG9uIENvbXBhbnlBY2NvdW50SG9sZGVyT25ib2FyZGluZyB7CiAgICAgICAgICBpZAogICAgICAgICAgYWNjb3VudCB7CiAgICAgICAgICAgIGlkCiAgICAgICAgICB9CiAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gT25ib2FyZGluZ05vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIE9uYm9hcmRpbmdBbHJlYWR5RmluYWxpemVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgfQogICAgLi4uIG9uIE9uYm9hcmRpbmdOb3RSZWFkeUZvckZpbmFsaXphdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-Notice the request to include the account ID, as well as the onboarding status, in the success payload. The response is an `AccountHolderOnboarding` union — use inline fragments to select fields for `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`.
+Notice the request to include the account ID, as well as the onboarding status, in the success payload. The response is an `AccountHolderOnboarding` union: use inline fragments to select fields for `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`.
 
 ```graphql {2,6-13,15-22} showLineNumbers
 mutation FinalizeOnboarding {

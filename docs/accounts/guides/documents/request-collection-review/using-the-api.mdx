@@ -1,0 +1,84 @@
+---
+title: Using the API
+audience:
+  - dev
+counterpart: /accounts/guides/documents/request-collection-review/from-the-dashboard
+related:
+  - /accounts/guides/documents/request-collection-review
+  - /accounts/guides/documents/request-collection-review/from-the-dashboard
+  - /accounts/concepts/documents
+---
+
+# Request a collection review using the API
+
+Ask Swan to review a supporting document collection once all required documents are uploaded, with the API.
+
+:::tip Prerequisites
+You should only call this mutation if the onboarding is finalized and the <Term id="account-holder">account holder</Term> exists.
+:::
+
+## Guide {#guide}
+
+1. First, [retrieve the collection ID](/accounts/guides/documents/get-info) (`supportingDocumentCollectionId`).
+1. Call the `requestSupportingDocumentCollectionReview` mutation.
+1. Enter the collection ID retrieved in step 1.
+1. Add optional messages to the payload, either for validation or in case of rejection.
+
+### Mutation
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gUmVxdWVzdENvbGxlY3Rpb25SZXZpZXcgewogIHJlcXVlc3RTdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uUmV2aWV3KAogICAgaW5wdXQ6IHsKICAgICAgc3VwcG9ydGluZ0RvY3VtZW50Q29sbGVjdGlvbklkOiAiJENPTExFQ1RJT05fSUQiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gUmVxdWVzdFN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb25SZXZpZXdTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgc3VwcG9ydGluZ0RvY3VtZW50Q29sbGVjdGlvbiB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFN1cHBvcnRpbmdEb2N1bWVudENvbGxlY3Rpb25Ob3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBTdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uU3RhdHVzTm90QWxsb3dlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBuZXdTdGF0dXMKICAgICAgb2xkU3RhdHVzCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {3,5-10} showLineNumbers
+mutation RequestCollectionReview {
+  requestSupportingDocumentCollectionReview(
+    input: { supportingDocumentCollectionId: "$COLLECTION_ID" }
+  ) {
+    ... on RequestSupportingDocumentCollectionReviewSuccessPayload {
+      __typename
+      supportingDocumentCollection {
+        id
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on SupportingDocumentCollectionNotFoundRejection {
+      id
+      message
+    }
+    ... on SupportingDocumentCollectionStatusNotAllowedRejection {
+      __typename
+      message
+      newStatus
+      oldStatus
+    }
+  }
+}
+```
+
+### Payload
+
+Notice the status `PendingReview`.
+You can also confirm this on your Dashboard. There should be an infobox in the supporting documents tab for this onboarding.
+
+```json {6,8} showLineNumbers
+{
+  "data": {
+    "requestSupportingDocumentCollectionReview": {
+      "__typename": "RequestSupportingDocumentCollectionReviewSuccessPayload",
+      "supportingDocumentCollection": {
+        "id": "b52c51b4-8a23-45a2-b77a-e6d691f4578c",
+        "statusInfo": {
+          "status": "PendingReview"
+        }
+      }
+    }
+  }
+}
+```
+
+{/* Dashboard steps moved to from-the-dashboard.mdx */}

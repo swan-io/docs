@@ -5,31 +5,33 @@ type: release
 
 ## Improvements
 
-🔗 You can now control [public onboarding links](/topics/onboarding/#links) separately for creating and updating accounts. If you already have public links enabled, both are on by default — adjust them anytime in your Dashboard under **Onboarding** > **Public links**.
+🔗 You can now control [public onboarding links](/topics/onboarding/#links) separately for creating and updating accounts. If you've already turned on public links, both are on by default — adjust them anytime in your Dashboard under **Onboarding** > **Public links**.
 
-🔄 All accounts closed before April 2, 2026 now use the [2026 closure reason codes](/topics/accounts/closure/#closure-reason-codes). Your whole portfolio is consistent, so you can run data analysis across your full history.
+🔄 All accounts closed before 2 April 2026 now use the [2026 closure reason codes](/topics/accounts/closure/#closure-reason-codes). All your accounts use the same codes, so you can run data analysis across your full history.
 
-🔄 All capital deposits canceled before April 2, 2026 now use the [2026 cancelation reason codes](/topics/capital-deposits/#cancelation-reason-codes). As with closures, your whole portfolio is consistent, so you can run data analysis across your full history.
+🔄 All capital deposits canceled before 2 April 2026 now use the [2026 cancelation reason codes](/topics/capital-deposits/#cancelation-reason-codes). As with closures, all your capital deposits use the same codes, so you can run data analysis across your full history.
 
-📩 You can now see how your onboarding and Know Your Customer (KYC) email notifications are configured, from your Dashboard under **Settings** > **Notifications**. No need to contact Swan just to check your setup. The following notifications are now visible:
+📩 You can now see how your onboarding and Know Your Customer (KYC) email notifications are configured, from your Dashboard under **Settings** > **Notifications**. The following notifications are now visible:
 
-- **Your account terms and conditions** — always on, and can't be deactivated or edited for compliance reasons.
-- **First transfer** — view your current setup; contact Swan to change it.
-- **Request supporting documents** — view your current setup; contact Swan to change it.
-- **Request supporting documents reminders** — view your current setup; contact Swan to change it.
+- **Your account terms and conditions** — always on; can't be deactivated or edited for compliance reasons.
+- **First transfer** — contact Swan to change it.
+- **Request supporting documents** — contact Swan to change it.
+- **Request supporting documents reminders** — contact Swan to change it.
 
-🔍 You can now filter [virtual IBANs](/topics/accounts/ibans/#virtual) by status — `Enabled` or `Canceled` — with the `status` filter on [`virtualIbanEntries`](https://api-reference.swan.io/objects/virtual-ibanentry-connection/) in the [`account`](https://api-reference.swan.io/queries/account/) query. This makes it easy to surface only `Enabled` IBANs, even when an account has many of them.
+🔍 You can now filter [virtual IBANs](/topics/accounts/ibans/#virtual) by status — `Enabled` or `Canceled` — with the `status` filter on [`virtualIbanEntries`](https://api-reference.swan.io/objects/virtual-ibanentry-connection/) in the [`account`](https://api-reference.swan.io/queries/account/) query. This makes it easy to surface only `Enabled` IBANs, even when an account has many virtual IBANs.
 
 📋 You can now create a [capital deposit](/topics/capital-deposits/) case for companies whose legal name is longer than 100 characters. The limit on the `companyName`, `accountName`, and `name` fields has increased to 255 characters (previously 100), matching standard French registry formats. No changes needed on your end.
 
-🔄 The conditions for an account to move from `Closing` to `Closed` status are changing in two ways:
+🔄 The conditions for an account to move from `Closing` to `Closed` status are changing. Before an account can close, all of the following must be true:
 
-- The window for the last outgoing [SEPA Credit Transfer](/topics/payments/credit-transfers/sepa/) grows from 5 to 30 days.
-- A new condition applies: no incoming or outgoing transaction can be in `Upcoming` or `Pending` status, for any payment type.
+- The `Booked` balance is zero.
+- The last incoming [SEPA Credit Transfer](/topics/payments/credit-transfers/sepa/) was more than 30 days ago.
+- The last outgoing SEPA Credit Transfer was more than 30 days ago (previously 5 days).
+- No incoming or outgoing transaction is in `Upcoming` or `Pending` status, for any payment type (new).
 
-All other conditions stay the same, so accounts may sit in `Closing` status longer than before.
+Because of these changes, accounts may stay in `Closing` status longer than before. If your integration tracks closure timing, adjust your expectations accordingly.
 
-🔄 Incoming credit transfers to a `Closing` account are now accepted when the booked balance is negative. This helps settle outstanding debts before the account is `Closed`. Transfers to `Closing` accounts with a zero or positive balance are still returned, as before.
+🔄 Incoming credit transfers to a `Closing` account are now accepted when the booked balance is negative. This helps settle outstanding debts before the account is `Closed`. Transfers to `Closing` accounts with a zero or positive balance are still returned to the sender, as before.
 
 ## API updates
 

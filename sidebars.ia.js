@@ -57,7 +57,10 @@ module.exports = {
         doc("accounts/concepts/onboarding/notifications", "Notifications"),
         doc("accounts/concepts/onboarding/verification-renewal", "Verification renewal"),
       ], { link: "accounts/concepts/onboarding/index" }),
-      doc("accounts/concepts/capital-deposits/index", "Capital deposits"),
+      cat("Capital deposits", [
+        doc("accounts/concepts/capital-deposits/process", "Process"),
+        doc("accounts/concepts/capital-deposits/shareholders", "Shareholders"),
+      ], { link: "accounts/concepts/capital-deposits/index" }),
       cat("Account", [
         doc("accounts/concepts/account/country", "Account country"),
         doc("accounts/concepts/account/language", "Account language"),

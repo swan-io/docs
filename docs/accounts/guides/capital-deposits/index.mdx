@@ -1,6 +1,7 @@
 ---
 title: Capital deposits
 related:
+  - /accounts/concepts/capital-deposits
   - /accounts/guides/capital-deposits/create-case
   - /accounts/guides/onboarding
   - /accounts/guides/onboarding/company
@@ -13,8 +14,6 @@ audience:
 
 # Capital deposits
 
-import CapitalDepositDefinition from "../../../topics/definitions/_capital-deposit.mdx";
-
 <p className="ia-lede">Deposit your client's share capital before registering their new French company: create a capital deposit case, collect documents, verify shareholders, and transfer funds to the notary.</p>
 
 ## In this section
@@ -25,106 +24,7 @@ import CapitalDepositDefinition from "../../../topics/definitions/_capital-depos
 - [Update company](/accounts/guides/capital-deposits/update-company)
 - [Update shareholder amount](/accounts/guides/capital-deposits/update-shareholder-amount)
 
-> <CapitalDepositDefinition />
-
-When **creating a new company**, you're required to **deposit your share capital** before registering the company.
-
-## Overview {#overview}
-
-Several key stakeholders are involved in the capital deposit process: **you**; **your client**, their future company, and their shareholders; **Swan** (and Swan's API); and Swan's partner **notary**.
-
-The capital deposit process consists of a few main actions:
-
-- Creating a Swan capital deposit case to collect everything
-- Creating Swan accounts
-- Verifying identities
-- Uploading documents
-- Transferring funds
-
-Learn more about the stakeholders and their interactions to complete a capital deposit on this page before continuing to the [guide for 🇫🇷 France](/accounts/guides/capital-deposits/#france).
-
-## Capital deposit case {#case}
-
-The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case) API object compiles all information for a capital deposit case, including:
-
-1. Details about the future company
-1. Company account
-1. Shareholder information
-1. Capital deposit documents
-
-### Case statuses {#case-statuses-leadin}
-
-A capital deposit case moves through several statuses. See [Capital deposit case statuses](/accounts/reference/capital-deposits#case-statuses).
-
-### Cancelation reason codes {#cancelation-reason-codes-leadin}
-
-When a case is canceled, a reason code explains why. See [Cancelation reason codes](/accounts/reference/capital-deposits#cancelation-reason-codes).
-
-## Required documents {#documents}
-
-Processing your capital shares deposit **requires several documents**.
-These can be uploaded using the API.
-Documents must meet Swan's requirements; otherwise, the document will be assigned the status `Refused` and you'll need to upload the document again.
-
-### List of required documents {#documents-list-leadin}
-
-Several documents are required from shareholders and the future company. See [List of required documents](/accounts/reference/capital-deposits#documents-list).
-
-### Document statuses {#documents-statuses-leadin}
-
-Each document moves through statuses as Swan reviews it. See [Document statuses](/accounts/reference/capital-deposits#documents-statuses).
-
-## Shareholders {#shareholders}
-
-A shareholder is a physical or legal person who deposits funds in exchange for ownership of the future company.
-To deposit funds, the shareholder opens a **temporary** Swan payment account.
-
-Because they're opening an account, each shareholder must go through the [onboarding](/accounts/guides/onboarding), [identification](/topics/users/identifications/), and [account holder verification](/accounts/concepts/account-holders/verification#verification-process) processes.
-After completing requirements, the shareholder's account is assigned an IBAN they can use to deposit funds.
-
-As soon as the `CapitalDepositCase` is complete, the shareholder's temporary account **closes automatically**.
-
-Shareholders must provide proof of their residence address.
-Only official documents are validated.
-Refer to the **list of acceptable documents** in the [Partnership Document Center](/accounts/reference/onboarding/proof-of-address).
-
-### Shareholder statuses {#shareholders-statuses-leadin}
-
-Each shareholder moves through several statuses as they onboard and transfer funds. See [Shareholder statuses](/accounts/reference/capital-deposits#shareholders-statuses).
-
-## Transfer requirements {#transfer-requirements}
-
-Shareholder accounts have specific transfer requirements for capital deposits.
-
-### SEPA Credit Transfers only {#sepa-only}
-
-:::caution
-Shareholder accounts only accept [SEPA Credit Transfers](/topics/payments/credit-transfers/sepa/) for capital deposits.
-International credit transfers are **rejected automatically** before settlement, regardless of the amount.
-Ensure all transfers are sent from the shareholder's account in their name.
-:::
-
-## Sequence diagram {#diagram}
-
-```mermaid
-sequenceDiagram
-autonumber
-participant SH as Shareholder
-participant P as Partner (You)
-participant S as Swan
-participant N as Notary
-    P->>S: Creates capital deposit case
-    P->>S: Finalizes shareholder and company account onboarding
-    SH->>S: Completes identification
-    P->>S: Uploads required documents
-    SH->>S: Transfers capital to their new Swan account
-    S ->> N: Sends documents and transfers funds
-    N -->> S: Uploads capital share deposit certificate
-    S ->> P: Downloads certificate
-    P -->> S: Uploads proof of registration
-    S ->> N: Sends proof of registration & bank account details
-    N -->> S: Transfers funds to Swan company account
-```
+For how a capital deposit works (the stakeholders, the `CapitalDepositCase` object, required documents, and the end-to-end sequence), see the [capital deposit process](/accounts/concepts/capital-deposits/process) and [shareholders](/accounts/concepts/capital-deposits/shareholders) concepts.
 
 ## Updating a shareholder's deposit amount {#update-amount}
 
@@ -173,7 +73,7 @@ Depositing share capital in France is a multi-step process involving several key
 - The notary completes steps 7 and 9.
 
 :::info General capital deposit information
-Review the [**sequence diagram**](#diagram) on the general capital deposit page to see the interactions in more details, plus find information about **statuses**, **shareholders**, and more.
+See the [sequence diagram](/accounts/concepts/capital-deposits/process#diagram) and the [shareholders](/accounts/concepts/capital-deposits/shareholders) concept for the full interactions and statuses.
 :::
 
 ### Step 1: Create capital deposit case {#create-api-case}

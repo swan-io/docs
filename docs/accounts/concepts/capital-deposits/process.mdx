@@ -1,0 +1,60 @@
+---
+title: Capital deposit process
+related:
+  - /accounts/concepts/capital-deposits
+  - /accounts/concepts/capital-deposits/shareholders
+  - /accounts/guides/capital-deposits
+  - /accounts/reference/capital-deposits
+audience:
+  - dev
+  - ops
+---
+
+# Capital deposit process
+
+Several key stakeholders are involved in the <Term id="capital-deposit">capital deposit</Term> process: **you**; **your client**, their future company, and their shareholders; **Swan** (and Swan's API); and Swan's partner **notary**.
+
+The capital deposit process consists of a few main actions:
+
+- Creating a Swan capital deposit case to collect everything
+- Creating Swan accounts
+- Verifying identities
+- Uploading documents
+- Transferring funds
+
+## Capital deposit case {#case}
+
+The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case) API object compiles all information for a capital deposit case, including:
+
+1. Details about the future company
+1. Company account
+1. Shareholder information
+1. Capital deposit documents
+
+A capital deposit case moves through several statuses, and a reason code explains any cancelation. See [case statuses](/accounts/reference/capital-deposits#case-statuses) and [cancelation reason codes](/accounts/reference/capital-deposits#cancelation-reason-codes).
+
+## Required documents {#documents}
+
+Processing a capital shares deposit **requires several documents** from shareholders and the future company, uploaded with the API. A document that doesn't meet Swan's requirements is assigned the status `Refused` and must be uploaded again. See the [list of required documents](/accounts/reference/capital-deposits#documents-list) and [document statuses](/accounts/reference/capital-deposits#documents-statuses).
+
+## Sequence diagram {#diagram}
+
+```mermaid
+sequenceDiagram
+autonumber
+participant SH as Shareholder
+participant P as Partner (You)
+participant S as Swan
+participant N as Notary
+    P->>S: Creates capital deposit case
+    P->>S: Finalizes shareholder and company account onboarding
+    SH->>S: Completes identification
+    P->>S: Uploads required documents
+    SH->>S: Transfers capital to their new Swan account
+    S ->> N: Sends documents and transfers funds
+    N -->> S: Uploads capital share deposit certificate
+    S ->> P: Downloads certificate
+    P -->> S: Uploads proof of registration
+    S ->> N: Sends proof of registration & bank account details
+    N -->> S: Transfers funds to Swan company account
+```

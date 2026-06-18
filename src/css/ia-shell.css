@@ -547,3 +547,54 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
 .ia-flyout__menu .dropdown__link {
   white-space: nowrap;
 }
+
+/* ============================================================
+   Page card — auto prev/next footer (DOC-1814).
+   The swizzled DocItem/Paginator renders these from sidebar order:
+   arrow = direction, content-type/area icon = label, title = destination.
+   Compact only; reuses --ia-* tokens; surface mirrors .ia-path-card. */
+.ia-page-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin: 2rem 0; }
+.ia-page-card {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid transparent; border-radius: 8px;
+  background: var(--ia-surface); color: inherit; text-decoration: none;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08); /* match .theme-doc-markdown panel */
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ia-page-card:hover { border-color: var(--ia-primary); box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12); text-decoration: none; }
+.ia-page-card__body { flex: 1; min-width: 0; }
+.ia-page-card__title { display: inline-flex; align-items: center; gap: 0.4em; font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1rem; color: var(--ifm-heading-color); }
+.ia-page-card__arrow { flex: none; color: var(--ia-primary); font-size: 1.2rem; line-height: 1; }
+.ia-page-card--next { flex-direction: row-reverse; text-align: right; }
+@media (max-width: 760px) { .ia-page-nav { grid-template-columns: 1fr; } }
+
+/* Breadcrumbs restyled to match the prev/next page cards: a bordered surface
+   strip, full-size crumbs, and the type icon as visible as the crumb text. */
+.theme-doc-breadcrumbs {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 8px;
+  background: var(--ia-surface);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08); /* match .theme-doc-markdown panel */
+}
+.theme-doc-breadcrumbs .breadcrumbs { margin: 0; flex: 1; min-width: 0; }
+.theme-doc-breadcrumbs .breadcrumbs__link {
+  background: transparent; color: var(--ia-ink-2);
+  font-size: 0.95rem; padding: 0.1rem 0.25rem;
+}
+.theme-doc-breadcrumbs .breadcrumbs__link:hover { background: transparent; color: var(--ia-primary); }
+.theme-doc-breadcrumbs .breadcrumbs__item--active .breadcrumbs__link {
+  background: transparent; color: var(--ifm-heading-color); font-weight: 600;
+}
+/* Type / area icon — inherits the crumb color (matches the cards), shown once per type. */
+.ia-bc-typeicon { margin-right: 0.3em; color: inherit; vertical-align: -0.12em; }
+/* Right-floating "up to parent" button — fills the full-width bar's free space. */
+.ia-bc-up {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 1.9rem; height: 1.9rem; border-radius: 6px;
+  border: 1px solid var(--ia-line); color: var(--ia-ink-2);
+  font-size: 1.05rem; line-height: 1; text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.ia-bc-up:hover { border-color: var(--ia-primary); color: var(--ia-primary); text-decoration: none; }

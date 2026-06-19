@@ -19,7 +19,7 @@ A capital deposit tracks three interlocking state machines: the **case**, each *
   "mode": "graph",
   "layout": "spokes",
   "nodes": [
-    { "id": "case", "title": "Case status", "desc": "The master signal for the whole deposit." },
+    { "id": "case", "title": "Case status", "desc": "The master clock for the whole deposit." },
     { "id": "shareholders", "title": "Shareholder statuses", "to": "/accounts/concepts/capital-deposits/shareholders", "desc": "One per shareholder, tracking onboarding and transfer." },
     { "id": "documents", "title": "Document statuses", "desc": "One per required document, gating review." }
   ]
@@ -28,7 +28,7 @@ A capital deposit tracks three interlocking state machines: the **case**, each *
 
 ## The case is the master clock {#case}
 
-The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case) status is the top-level signal for the deposit. It moves from initial requirements through Swan's review and the notary steps to `Completed`, or to `Canceled` at any point. The case can't pass a step until the shareholders and documents it depends on are ready.
+The [`CapitalDepositCase`](https://api-reference.swan.io/objects/capital-deposit-case) status paces the whole deposit. It moves from initial requirements through Swan's review and the notary steps to `Completed`, or to `Canceled` at any point. The case can't pass a step until the shareholders and documents it depends on are ready.
 
 For the full state machine and every value, see [case statuses](/accounts/reference/capital-deposits#case-statuses) and the [cancelation reason codes](/accounts/reference/capital-deposits#cancelation-reason-codes) attached to a canceled case.
 
@@ -46,4 +46,4 @@ For the full state machine and every value, see [document statuses](/accounts/re
 
 ## How statuses cascade {#cascade}
 
-The three models aren't independent. When a `CapitalDepositCase` is `Canceled`, every shareholder status flips to `CapitalDepositCanceled`, and any temporary account already opened for a shareholder is closed automatically.
+The three models aren't independent. Beyond the forward gating described above, the dependency also runs in reverse: when a `CapitalDepositCase` is `Canceled`, every shareholder status flips to `CapitalDepositCanceled`, and any temporary account already opened for a shareholder is closed automatically.

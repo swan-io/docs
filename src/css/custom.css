@@ -233,6 +233,14 @@ pre {
 .menu__caret:hover {
   background-color: transparent;
 }
+/* The category label link carries data-ia-tip (content-type tooltip) and gets
+   lifted to z-index 61 on hover, which otherwise paints it over the caret button
+   that follows it in the DOM — so caret clicks fall through to the link and
+   navigate to the hub instead of collapsing. Keep the caret above so it toggles.
+   (.menu__caret is already position:absolute above, so z-index applies as-is.) */
+.menu__caret {
+  z-index: 62;
+}
 
 /* Text clears the caret; leaves align under the label above them. */
 .menu__link {

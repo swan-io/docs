@@ -3,7 +3,7 @@ import React from 'react';
 // Content-type marker icon (lightbulb / compass / card index). One source of truth:
 // the SVGs live in static/img/type-*.svg and are recolored via CSS mask + currentColor,
 // so the same asset powers this component AND the sidebar ::before icons.
-const LABELS = { Concept: 'Concept', Guide: 'Guide', Ref: 'Reference' };
+export const LABELS = { Concept: 'Concept', Guide: 'Guide', Ref: 'Reference' };
 
 // Hover tooltip explaining each content type (custom [data-ia-tip] bubble + help
 // cursor as the hover affordance — used by the sidebar, rail, and page-title markers).

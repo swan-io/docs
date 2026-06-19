@@ -4,7 +4,7 @@ import React from 'react';
 // build, get-started). Same mechanism as ContentTypeIcon — a .ia-type-icon glyph
 // recolored via CSS mask + currentColor, with a [data-ia-tip] tooltip — so these chips
 // read consistently with the Concept/Guide/Reference icons. Glyphs: package / wrench / rocket.
-const LABELS = { product: 'Product', 'build': 'Build', 'get-started': 'Get started' };
+export const LABELS = { product: 'Product', 'build': 'Build', 'get-started': 'Get started' };
 const DESCRIPTIONS = {
   product: 'Another Swan product.',
   'build': 'Tools and API reference for building.',

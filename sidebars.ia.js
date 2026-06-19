@@ -55,7 +55,6 @@ module.exports = {
       cat("Onboarding", [
         doc("accounts/concepts/onboarding/statuses", "Statuses"),
         doc("accounts/concepts/onboarding/notifications", "Notifications"),
-        doc("accounts/concepts/onboarding/verification-renewal", "Verification renewal"),
       ], { link: "accounts/concepts/onboarding/index" }),
       cat("Capital deposits", [
         doc("accounts/concepts/capital-deposits/process", "Process"),
@@ -75,6 +74,7 @@ module.exports = {
         doc("accounts/concepts/account-holders/verification", "Verification"),
         doc("accounts/concepts/account-holders/first-transfer", "First transfer"),
         doc("accounts/concepts/account-holders/notifications", "Notifications"),
+        doc("accounts/concepts/account-holders/verification-renewal", "Verification renewal"),
       ], { link: "accounts/concepts/account-holders/index" }),
       cat("Memberships", [
         doc("accounts/concepts/memberships/inviting", "Inviting members"),

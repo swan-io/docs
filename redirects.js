@@ -8,6 +8,8 @@ module.exports = [
   { from: "/accounts/guides/onboarding/capital-deposits/update-shareholder-amount", to: "/accounts/guides/capital-deposits/update-shareholder-amount" },
   { from: "/accounts/guides/onboarding/capital-deposits/cancel", to: "/accounts/guides/capital-deposits/cancel" },
   { from: "/accounts/reference/onboarding/capital-deposit-reference", to: "/accounts/reference/capital-deposits" },
+  // DOC-1814 — Verification renewal moved from onboarding to account-holders
+  { from: "/accounts/concepts/onboarding/verification-renewal", to: "/accounts/concepts/account-holders/verification-renewal" },
   // DOC-1814 cutover — batch 3B: developers -> build
   { from: "/developers", to: "/build" },
   { from: "/developers/contact", to: "/get-started" },
@@ -80,7 +82,7 @@ module.exports = [
   // DOC-1814 — onboarding model pages relocated from guides to concepts
   { from: "/accounts/guides/onboarding/statuses", to: "/accounts/concepts/onboarding/statuses" },
   { from: "/accounts/guides/onboarding/notifications", to: "/accounts/concepts/onboarding/notifications" },
-  { from: "/accounts/guides/onboarding/verification-renewal", to: "/accounts/concepts/onboarding/verification-renewal" },
+  { from: "/accounts/guides/onboarding/verification-renewal", to: "/accounts/concepts/account-holders/verification-renewal" },
   // DOC-1814 cutover — batch 1: accounts/memberships
   { from: "/topics/accounts/memberships", to: "/accounts/concepts/memberships" },
   { from: "/topics/accounts/memberships/admin-change", to: "/accounts/guides/memberships/change-admin" },

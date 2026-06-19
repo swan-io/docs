@@ -3,6 +3,8 @@ import clsx from "clsx";
 import Link from "@docusaurus/Link";
 import { useLocation } from "@docusaurus/router";
 import { usePluginData } from "@docusaurus/useGlobalData";
+import { typeChip } from "@site/src/components/rail/resolve";
+import { DESCRIPTIONS } from "@site/src/components/ContentTypeIcon";
 
 const norm = (s) => {
   let r = String(s || "").trim();
@@ -27,9 +29,13 @@ function DesktopNodes({ nodes, level }) {
     <ul className={level === 1 ? "dropdown__menu ia-nav-menu" : "ia-flyout__menu"}>
       {nodes.map((node, i) => {
         const exp = expandable(node, level);
+        // Level-1 nodes are the content-type groups (Concepts/Guides/Reference);
+        // give them the same Diátaxis tooltip the sidebar and rail use.
+        const chip = level === 1 ? typeChip(node.to) : null;
+        const tip = chip ? DESCRIPTIONS[chip] : undefined;
         return (
           <li key={i} className={clsx(exp && "ia-flyout")}>
-            <Link className={clsx("dropdown__link", exp && "ia-flyout__parent")} {...linkProps(node)}>
+            <Link className={clsx("dropdown__link", exp && "ia-flyout__parent")} data-ia-tip={tip} {...linkProps(node)}>
               {node.label}
               {exp && <span className="ia-flyout__caret" aria-hidden="true">›</span>}
             </Link>

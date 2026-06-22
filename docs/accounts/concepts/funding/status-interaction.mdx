@@ -43,13 +43,13 @@ sequenceDiagram
     A-->>S: Initiates account funding request
     S-->>D: Sends direct debit instruction
     Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification remains `PendingVerification`
-    alt debtor didn't declare mandate to debtor institution in step ➎
+    alt account holder didn't declare mandate to debtor institution in step ➎
     rect rgb(253, 235, 219)
         D--xS: Transaction is rejected or returned
         S-->>A: Returns failed transaction message
         Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status remains `PendingVerification`
     end
-    else debtor declared mandate to debtor institution in step ➎
+    else account holder declared mandate to debtor institution in step ➎
         rect rgb(210 246 231)
         D-->>S: Transaction is booked
         Note over S: Funding source status remains `Enabled`<br />Payment mandate status remains `Enabled`<br />Account verification status remains `PendingVerification`

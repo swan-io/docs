@@ -67,7 +67,7 @@ module.exports = {
         doc("accounts/concepts/account/type-and-level", "Account type and level"),
         doc("accounts/concepts/account/balances", "Balances"),
         doc("accounts/concepts/account/transactions", "Transactions"),
-        doc("accounts/concepts/account/documents", "Statements & bank details"),
+        doc("accounts/concepts/account/documents", "Statements and bank details"),
         doc("accounts/concepts/account/statuses", "Account statuses"),
       ], { link: "accounts/concepts/account/index" }),
       cat("Account holders", [

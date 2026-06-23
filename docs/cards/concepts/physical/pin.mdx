@@ -1,0 +1,68 @@
+---
+title: PIN
+audience:
+  - dev
+  - ops
+related:
+  - /cards/concepts/physical
+  - /cards/guides/physical/print
+  - /cards/guides/physical/block-unblock
+---
+
+import DayTimeStandard from '../../../topics/partials/_day-time.mdx';
+
+# PIN (Personal Identification Number)
+
+<p className="ia-lede">The four-digit PIN of a physical card: how it's chosen or assigned, when it becomes available, and what happens after incorrect attempts.</p>
+
+Physical cards have a **four-digit PIN**, or *Personal Identification Number*.
+A card's PIN is chosen or assigned when the card is printed.
+After a PIN is chosen or assigned, it **can't be changed**.
+
+The PIN for each physical card is available to the cardholder on Swan's Web Banking interface.
+PINs aren't available on your Dashboard because only the cardholder should have easy access to the PIN for their card.
+
+If a cardholder **forgets their PIN**, they can view it on your interface.
+If needed, you can use the `ViewPhysicalCardPin` mutation to view the numbers yourself, which requires a user access token associated with the cardholder.
+Note that if three incorrect attempts are made to enter the PIN, the card is automatically `Suspended`.
+
+:::caution
+If a cardholder shares their PIN, Swan can't take responsibility for fraud associated with that card.
+:::
+
+## Choosing a card's PIN {#pin-choose}
+
+To allow your cardholders to **choose their PIN**, set the `choosePin` paramater to `true` when [printing physical cards](/cards/guides/physical/print).
+You can set this paramater with the `printPhysicalCard` and `addCards` mutations.
+
+If you don't add the `choosePin` paramater, or you set it to `false`, Swan assigns a PIN randomly.
+A card's PIN **can't be changed**.
+
+You can [print a physical card](/cards/guides/physical/print#print-with-virtual) for another account member with the `addCards` mutation, allowing the member cardholder to choose their PIN by setting the `choosePin` paramater to `true`.
+Swan sends a text message to the member cardholder's mobile number used for Swan containing a link to choose their PIN.
+
+Alternatively, you can use the `addCard` mutation to [add only the virtual card](/cards/guides/virtual/add#add-one).
+Then, the cardholder can request their own physical card and choose their PIN.
+
+:::info
+You can't choose a custom PIN for a cardholder who hasn't [completed identification](/topics/users/identifications) or whose [account membership status](/accounts/concepts/memberships/statuses#binding-errors) is `BindingUserError`.
+:::
+
+## PIN availability {#pin-ready}
+
+You can view a card's PIN as soon as it's assigned during the printing process.
+
+- If you print a physical card **before 17:00 CET/CEST** (Central European [Summer] Time), the card's PIN is available by the end of the day.
+- If you print a physical card **after 17:00 CET/CEST**, the card's PIN is available by the end of the following day.
+- If you allow your cardholder to **choose their PIN** (`choosePin` is `true`), add an additional 24-hour delay.
+
+<DayTimeStandard />
+
+## Incorrect PIN attempts {#pin-incorrect-attempts}
+
+If the cardholder enters their PIN incorrectly **three times**, the physical card will be blocked (status: suspended) and no payments with the physical card can be made online or in person.
+
+Note that a physical card blocked for three incorrect PIN attempts will have the reason `IncorrectPinCodeAttemptsExceeded` (on the `PhysicalCardSuspendedStatusInfo`).
+You'll have to wait 24 hours before being able to [unblock the physical card](/cards/guides/physical/block-unblock).
+
+You can continue to use both virtual and digital cards while the physical card is temporarily blocked.

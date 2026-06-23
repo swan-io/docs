@@ -282,45 +282,71 @@ module.exports = {
   cardsSidebar: [
     doc("cards/index", "Cards overview"),
     top("Concepts", [
-      doc("cards/concepts/virtual", "Virtual cards"),
-      doc("cards/concepts/physical", "Physical cards"),
-      doc("cards/concepts/digital", "Digital cards"),
+      doc("cards/concepts/card-formats", "Card formats"),
+      cat("Virtual cards", [
+        doc("cards/concepts/virtual/single-use-cards", "Single-use cards"),
+        doc("cards/concepts/virtual/statuses", "Statuses"),
+      ], { link: "cards/concepts/virtual/index" }),
+      cat("Physical cards", [
+        doc("cards/concepts/physical/name-printing", "Name printing"),
+        doc("cards/concepts/physical/pin", "PIN"),
+        doc("cards/concepts/physical/delivery-and-shipping", "Delivery and shipping"),
+        doc("cards/concepts/physical/renewal", "Renewal"),
+        doc("cards/concepts/physical/statuses", "Statuses"),
+      ], { link: "cards/concepts/physical/index" }),
+      cat("Digital cards", [
+        doc("cards/concepts/digital/statuses", "Statuses"),
+      ], { link: "cards/concepts/digital/index" }),
+      doc("cards/concepts/card-products", "Card products"),
       doc("cards/concepts/card-packages", "Card packages"),
       doc("cards/concepts/design", "Card design"),
-    ]),
+    ], "cards/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Lifecycle", [
-        doc("cards/guides/lifecycle/issue", "Issue a card"),
-        doc("cards/guides/lifecycle/update", "Update a card"),
-        doc("cards/guides/lifecycle/export", "Export cards"),
-      ]),
-      cat("Virtual", [
-        doc("cards/guides/virtual/add", "Add a virtual card"),
-        doc("cards/guides/virtual/cancel", "Cancel a virtual card"),
-        doc("cards/guides/virtual/view-info", "View card info"),
-      ]),
-      cat("Physical", [
-        doc("cards/guides/physical/activate", "Activate a card"),
-        doc("cards/guides/physical/block-unblock", "Block or unblock a card"),
-        doc("cards/guides/physical/cancel", "Cancel a card"),
-        doc("cards/guides/physical/print", "Print a card"),
-        doc("cards/guides/physical/renew", "Renew a card"),
-        doc("cards/guides/physical/view-info", "View card info"),
-      ]),
-      cat("Digital", [
-        doc("cards/guides/digital/add", "Add to a wallet"),
-        doc("cards/guides/digital/cancel", "Cancel a digital card"),
-      ]),
+        doc("cards/guides/lifecycle/issue", "Issue cards"),
+        cat("Update card settings", [
+          doc("cards/guides/lifecycle/update/from-the-dashboard", "From the Dashboard"),
+          doc("cards/guides/lifecycle/update/using-the-api", "Using the API"),
+        ], { link: "cards/guides/lifecycle/update/index" }),
+        cat("Export card data", [
+          doc("cards/guides/lifecycle/export/from-the-dashboard", "From the Dashboard"),
+          doc("cards/guides/lifecycle/export/using-the-api", "Using the API"),
+        ], { link: "cards/guides/lifecycle/export/index" }),
+      ], { link: "cards/guides/lifecycle/index" }),
+      cat("Products", [
+        doc("cards/guides/products/configure-card-product", "Configure a card product"),
+        doc("cards/guides/products/get-card-package-tier", "Get card package tier"),
+      ], { link: "cards/guides/products/index" }),
       cat("Design", [
         doc("cards/guides/design/standard", "Standard design"),
         doc("cards/guides/design/custom", "Custom design"),
-      ]),
-    ]),
+      ], { link: "cards/guides/design/index" }),
+      cat("Virtual", [
+        doc("cards/guides/virtual/add", "Add a virtual card"),
+        doc("cards/guides/virtual/view-info", "View card info"),
+        doc("cards/guides/virtual/cancel", "Cancel a virtual card"),
+      ], { link: "cards/guides/virtual/index" }),
+      cat("Physical", [
+        doc("cards/guides/physical/print", "Print a card"),
+        doc("cards/guides/physical/activate", "Activate a card"),
+        doc("cards/guides/physical/view-info", "View card info"),
+        doc("cards/guides/physical/block-unblock", "Block or unblock a card"),
+        doc("cards/guides/physical/renew", "Renew a card"),
+        doc("cards/guides/physical/cancel", "Cancel a card"),
+      ], { link: "cards/guides/physical/index" }),
+      cat("Digital", [
+        doc("cards/guides/digital/add", "Add to a wallet"),
+        doc("cards/guides/digital/cancel", "Cancel a digital card"),
+      ], { link: "cards/guides/digital/index" }),
+    ], "cards/guides/index", "ia-type-guide"),
     top("Reference", [
+      doc("cards/reference/spending-limits", "Spending limits"),
+      doc("cards/reference/card-settings", "Card settings"),
+      doc("cards/reference/shipping-and-delivery", "Shipping and delivery"),
+      doc("cards/reference/insurance-and-claims", "Insurance and claims"),
       doc("cards/reference/sandbox-physical", "Sandbox: physical cards"),
       doc("cards/reference/sandbox-digital", "Sandbox: digital cards"),
-      doc("cards/reference/card-fraud-types", "Card fraud types"),
-    ]),
+    ], "cards/reference/index", "ia-type-ref"),
   ],
 
   paymentsSidebar: [

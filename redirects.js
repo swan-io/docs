@@ -122,7 +122,7 @@ module.exports = [
   },
   { from: "/concept/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/concept/capital-deposit", to: "/accounts/guides/capital-deposits" },
-  { from: "/concept/card", to: "/topics/cards/" },
+  { from: "/concept/card", to: "/cards" },
   { from: "/concept/iban", to: "/accounts/concepts/ibans" },
   { from: "/concept/merchants-accepting-payments", to: "/topics/merchants/" },
   { from: "/concept/overview", to: "/get-started/set-up-swan/glossary" },
@@ -145,7 +145,7 @@ module.exports = [
     from: "/guide/give-access-to-your-account",
     to: "/accounts/concepts/memberships", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   },
-  { from: "/guide/issue-cards", to: "/topics/cards/overview/guide-issue" },
+  { from: "/guide/issue-cards", to: "/cards/guides/lifecycle/issue" },
   { from: "/guide/make-a-transaction", to: "/topics/payments/" },
   { from: "/guide/manage-accounts-and-ibans", to: "/accounts/concepts/ibans" },
   { from: "/guide/quickstart", to: "/get-started/set-up-swan/step-by-step" },
@@ -308,7 +308,7 @@ module.exports = [
   { from: "/help/faq/account-membership", to: "/accounts/concepts/memberships" }, // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   { from: "/help/faq/accounts", to: "/accounts/concepts/account" }, // DOC-1814: chain-rewrite (was /topics/accounts/)
   { from: "/help/faq/api", to: "/build" },
-  { from: "/help/faq/cards", to: "/topics/cards/" },
+  { from: "/help/faq/cards", to: "/cards" },
   { from: "/help/faq/consent", to: "/topics/users/consent/" },
   {
     from: "/help/faq/kyc-and-verification-process",
@@ -394,28 +394,28 @@ module.exports = [
   },
   {
     from: "/help/faq/cards/after-uploading-my-logo-i-see-a-black-or-white-rectangle-instead-of-my-logo",
-    to: "/topics/cards/design/guide-standard#logo",
+    to: "/cards/guides/design/standard#logo",
   },
   {
     from: "/help/faq/cards/can-i-define-or-change-my-pin-code",
-    to: "/topics/cards/physical/#pin",
+    to: "/cards/concepts/physical/pin",
   },
-  { from: "/help/faq/cards/can-i-pay-everywhere", to: "/topics/cards/" },
+  { from: "/help/faq/cards/can-i-pay-everywhere", to: "/cards" },
   {
     from: "/help/faq/cards/can-i-provide-a-pin-code-to-someone-other-than-the-cardholder-for-example-a-helper-agency",
-    to: "/topics/cards/physical/#pin",
+    to: "/cards/concepts/physical/pin",
   },
   {
     from: "/help/faq/cards/can-swan-issue-cards-with-my-companys-custom-design",
-    to: "/topics/cards/design/guide-custom",
+    to: "/cards/guides/design/custom",
   },
   {
     from: "/help/faq/cards/can-there-be-several-cards-attached-to-a-natural-persons-account",
-    to: "/topics/cards/#cards-account-memberships",
+    to: "/cards/concepts/card-formats#cards-account-memberships",
   },
   {
     from: "/help/faq/cards/do-cards-come-with-insurance",
-    to: "/topics/cards/",
+    to: "/cards",
   },
   {
     from: "/help/faq/cards/does-3ds-work-for-single-use-virtual-cards-suvc",
@@ -427,11 +427,11 @@ module.exports = [
   },
   {
     from: "/help/faq/cards/the-logo-appears-smaller-than-it-should-be-even-with-a-100-zoom",
-    to: "/topics/cards/design/guide-standard#logo",
+    to: "/cards/guides/design/standard#logo",
   },
   {
     from: "/help/faq/cards/what-are-the-guidelines-to-add-a-custom-logo-on-cards",
-    to: "/topics/cards/design/guide-standard#logo",
+    to: "/cards/guides/design/standard#logo",
   },
   {
     from: "/help/faq/cards/what-does-a-declined-payment-with-the-reason-merchant-should-resubmit-authorization-mean",
@@ -503,8 +503,34 @@ module.exports = [
   },
   {
     from: "/topics/cards/physical/guide-renew",
-    to: "/topics/cards/physical/#renew",
+    to: "/cards/guides/physical/renew",
   },
+  // DOC-1814 — Cards migrated from /topics/cards to /cards (IA shell)
+  { from: "/topics/cards", to: "/cards" },
+  { from: "/topics/cards/overview/guide-issue", to: "/cards/guides/lifecycle/issue" },
+  { from: "/topics/cards/overview/guide-update", to: "/cards/guides/lifecycle/update" },
+  { from: "/topics/cards/overview/guide-export", to: "/cards/guides/lifecycle/export" },
+  { from: "/topics/cards/design", to: "/cards/concepts/design" },
+  { from: "/topics/cards/design/guide-standard", to: "/cards/guides/design/standard" },
+  { from: "/topics/cards/design/guide-custom", to: "/cards/guides/design/custom" },
+  { from: "/topics/cards/card-packages", to: "/cards/concepts/card-packages" },
+  { from: "/topics/cards/card-packages/guide-product-configuration", to: "/cards/guides/products/configure-card-product" },
+  { from: "/topics/cards/card-packages/guide-get-card-package-tier", to: "/cards/guides/products/get-card-package-tier" },
+  { from: "/topics/cards/virtual", to: "/cards/concepts/virtual" },
+  { from: "/topics/cards/virtual/guide-add", to: "/cards/guides/virtual/add" },
+  { from: "/topics/cards/virtual/guide-view-info", to: "/cards/guides/virtual/view-info" },
+  { from: "/topics/cards/virtual/guide-cancel", to: "/cards/guides/virtual/cancel" },
+  { from: "/topics/cards/physical", to: "/cards/concepts/physical" },
+  { from: "/topics/cards/physical/guide-print", to: "/cards/guides/physical/print" },
+  { from: "/topics/cards/physical/guide-activate", to: "/cards/guides/physical/activate" },
+  { from: "/topics/cards/physical/guide-view-info", to: "/cards/guides/physical/view-info" },
+  { from: "/topics/cards/physical/guide-block-unblock", to: "/cards/guides/physical/block-unblock" },
+  { from: "/topics/cards/physical/guide-cancel", to: "/cards/guides/physical/cancel" },
+  { from: "/topics/cards/physical/sandbox", to: "/cards/reference/sandbox-physical" },
+  { from: "/topics/cards/digital", to: "/cards/concepts/digital" },
+  { from: "/topics/cards/digital/guide-add", to: "/cards/guides/digital/add" },
+  { from: "/topics/cards/digital/guide-cancel", to: "/cards/guides/digital/cancel" },
+  { from: "/topics/cards/digital/sandbox", to: "/cards/reference/sandbox-digital" },
   {
     from: "/topics/accounts/overview/guide-close",
     to: "/accounts/concepts/closure",
@@ -551,11 +577,11 @@ module.exports = [
   },
   {
     from: '/preview/card-insurance/',
-    to: '/topics/cards/card-packages',
+    to: '/cards/concepts/card-packages',
   },
   {
     from: '/preview/card-insurance/guide-insurance-integration',
-    to: '/topics/cards/card-packages/guide-product-configuration',
+    to: '/cards/guides/products/configure-card-product',
   },
   {
     from: '/preview/belgian-ibans/belgian-ibans',

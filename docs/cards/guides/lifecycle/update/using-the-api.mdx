@@ -1,0 +1,78 @@
+---
+title: Using the API
+audience:
+  - dev
+counterpart: /cards/guides/lifecycle/update/from-the-dashboard
+related:
+  - /cards/reference/card-settings
+  - /cards/reference/spending-limits
+---
+
+import SuspicionOfFraud from '../../../../topics/partials/_card-fraud-suspicion.mdx';
+
+# Update card settings using the API
+
+To understand all options for card product settings, please review the [card settings reference](/cards/reference/card-settings#settings).
+
+Card product settings are **valid for all payments** linked to the card, including all virtual, physical, and digital cards.
+
+1. Update all card settings by calling the `updateCard` mutation.
+1. When updating card settings, make sure you are authenticated with a user access token associated with the correct account member.
+    - Additionally, the account member must have the [membership permission](/accounts/reference/memberships/membership-permissions#permissions) `canManageCards`.
+    - The permission `canManageAccountMembership` is optional.
+1. The request from this mutation returns a newly created consent resource containing the `consentUrl`.
+1. The URL allows you to redirect the user making the modification to Swan's [Strong Customer Authentication](/topics/users/consent#sca).
+
+After the consent process is completed, the card is updated and its attribute version is increased by one.
+
+<SuspicionOfFraud />
+
+## Spending limit updates {#spending-limit-updates}
+
+You can update spending limits with the `updateCard` mutation, including switching between [rolling and calendar periods](/cards/reference/spending-limits#limits-periods).
+Use the `spendingLimit` field to set the period, amount, and mode.
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQ2FyZFRyYW5zYWN0aW9uU2V0dGluZ3MgewogIHVwZGF0ZUNhcmQoCiAgICBpbnB1dDogewogICAgICBjYXJkSWQ6ICIkWU9VUl9DQVJEX0lEIgogICAgICB3aXRoZHJhd2FsOiBmYWxzZQogICAgICBpbnRlcm5hdGlvbmFsOiBmYWxzZQogICAgICBub25NYWluQ3VycmVuY3lUcmFuc2FjdGlvbnM6IGZhbHNlCiAgICAgIGVDb21tZXJjZTogZmFsc2UKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfQ09OU0VOVF9VUkwiCiAgICB9CiAgKSB7CiAgICAuLi4gb24gVXBkYXRlQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBjb25zZW50IHsKICAgICAgICBjb25zZW50VXJsCiAgICAgICAgaWQKICAgICAgfQogICAgfQogICAgLi4uIG9uIEFjY291bnROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBDYXJkTm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE1lbWJlcnNoaXBOb3RBbGxvd2VkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBmaWVsZHMgewogICAgICAgIGNvZGUKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4,9} showLineNumbers
+mutation UpdateCardTransactionSettings {
+  updateCard(
+    input: {
+      cardId: "$YOUR_CARD_ID"
+      withdrawal: false
+      international: false
+      nonMainCurrencyTransactions: false
+      eCommerce: false
+      consentRedirectUrl: "$YOUR_CONSENT_URL"
+    }
+  ) {
+    ... on UpdateCardSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+        id
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+Open the `consentUrl` returned by the mutation to consent to the update.
+
+```json {6,7} showLineNumbers
+{
+  "data": {
+    "updateCard": {
+      "__typename": "UpdateCardSuccessPayload",
+      "consent": {
+        "consentUrl": "$YOUR_CONSENT_URL",
+        "id": "$YOUR_CONSENT_ID"
+      }
+    }
+  }
+}
+```

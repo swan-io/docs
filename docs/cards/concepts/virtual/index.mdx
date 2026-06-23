@@ -1,0 +1,93 @@
+---
+title: Virtual cards
+audience:
+  - dev
+  - ops
+related:
+  - /cards/guides/virtual/add
+  - /cards/concepts/virtual/single-use-cards
+  - /cards/concepts/virtual/statuses
+  - /cards/concepts/physical
+  - /cards/concepts/digital
+---
+
+import VirtualCardsDefinition from '../../../topics/definitions/_cards-virtual.mdx';
+import AddCardsUseCases from '../../partials/_add-cards-use-cases.mdx';
+import AddCardsAlert from '../../partials/_adding-cards-use-case-alert.mdx';
+import VirtualPhysicalCardNumbers from '../../partials/_card-numbers.mdx';
+
+# Virtual cards
+
+<p className="ia-lede">Swan's default card format: created and enabled instantly for immediate online use, and the foundation that every physical and digital card is built on.</p>
+
+<VirtualCardsDefinition />
+
+Whenever you issue a new card, a virtual card number is **created and enabled instantly**, and the cardholder can start using it online right away.
+The virtual card must exist before a physical card can be printed or a virtual card added to a digital wallet.
+
+A virtual card represents the card contract for all associated cards.
+After adding a virtual card, you can update it, view its sensitive information, and cancel or deactivate it.
+If you deactivate a virtual card, all physical and digital cards attached to it are also deactivated.
+
+## Adding virtual cards with the API {#mutations}
+
+You can use one of several mutations to add virtual cards with the API.
+
+| Mutation | Use case | Guide |
+| --- | --- | --- |
+| [`addCard`](https://api-reference.swan.io/mutations/add-card/) | Add one virtual card for one account member. | [Add a virtual card](/cards/guides/virtual/add#add-one) |
+| [`addCards`](https://api-reference.swan.io/mutations/add-cards/) | <AddCardsUseCases /> | [Add multiple virtual cards](/cards/guides/virtual/add#add-multiple)<br /><br />[Print physical cards when adding virtual cards](/cards/guides/virtual/add#print-with-virtual) |
+| [`addSingleUseVirtualCard`](https://api-reference.swan.io/mutations/add-single-use-virtual-card/) | Add one single-use virtual card for one account member. | [Add a single-use virtual card](/cards/guides/virtual/add#add-suv-one) |
+| [`addSingleUseVirtualCards`](https://api-reference.swan.io/mutations/add-single-use-virtual-cards/) | Add single-use virtual cards for multiple account members. ∗ | [Add single-use virtual cards](/cards/guides/virtual/add#add-suv-multiple) |
+
+<AddCardsAlert />
+
+## Card number and PIN {#number-pin}
+
+Each virtual card has a unique card number, different from a physical card added at the same time.
+**Virtual cards don't have a PIN** (Personal Identification Number).
+
+Swan makes the virtual card's number, CVC, and expiry date available in Web Banking.
+The **card number** and **CVC** are considered sensitive data and must be **masked by default**.
+The cardholder must complete a **consent request** before the numbers can be unmasked.
+
+:::info Virtual and physical card numbers
+<VirtualPhysicalCardNumbers />
+:::
+
+## Renewal and expiry {#renewal}
+
+Virtual cards have a standard expiration period of **3 years from creation**.
+
+Standard virtual cards are renewed automatically unless a custom `cardContractExpiryDate` is set.
+When renewed, the card number and CVC remain the same, the expiry date extends by 3 years, and all associated physical and digital cards continue to function.
+No action is required from the cardholder.
+
+To prevent automatic renewal, set a custom `cardContractExpiryDate` when creating or [updating](/cards/guides/lifecycle/update) the card.
+If the card expires without renewal, the status changes to `Canceled` and can no longer be used.
+
+Single-use virtual cards follow different expiry rules. Refer to [single-use virtual cards](/cards/concepts/virtual/single-use-cards#renewal-suv).
+
+## Cancellation of virtual cards {#cancel}
+
+Canceling a virtual card is an **irreversible action** that immediately and permanently invalidates the card.
+Cancellation impacts the entire card contract, including the virtual card and any associated physical and digital cards.
+**Consent isn't required** to cancel cards.
+When cancellation is complete, you're no longer billed for the card.
+
+If you don't want to cancel the entire card contract, you can cancel just a [physical](/cards/guides/physical/cancel) or [digital](/cards/guides/digital/cancel) card instead.
+
+You can cancel virtual cards [with the API](/cards/guides/virtual/cancel).
+If you use Swan's Web Banking interface, cardholders can [cancel (permanently block) their cards](https://support.swan.io/hc/en-150/articles/18538920070045-Block-your-card) independently.
+
+## In this section
+
+```flowmap
+{
+  "mode": "pathway",
+  "items": [
+    { "title": "Single-use virtual cards", "to": "/cards/concepts/virtual/single-use-cards", "desc": "One-off and recurring single-use cards, and how they avoid 3DS consent." },
+    { "title": "Virtual card statuses", "to": "/cards/concepts/virtual/statuses", "desc": "The virtual card lifecycle, which also represents the card contract status." }
+  ]
+}
+```

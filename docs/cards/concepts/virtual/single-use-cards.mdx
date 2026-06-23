@@ -1,0 +1,87 @@
+---
+title: Single-use virtual cards
+audience:
+  - dev
+  - ops
+related:
+  - /cards/concepts/virtual
+  - /cards/guides/virtual/add
+  - /cards/reference/spending-limits
+---
+
+# Single-use virtual cards
+
+<p className="ia-lede">A restricted virtual card for a single transaction or a single merchant, which lets users avoid 3DS consent because of its limited scope.</p>
+
+Single-use virtual (SUV) cards can either be used once or for a single dedicated merchant.
+Therefore, you can consider SUV card use like this: they're for (a) one time, or (b) one place.
+
+Because of their very limited scope, users can **avoid [3-D Secure (3DS) consent](/topics/payments/cards#3ds)** when paying with SUV cards.
+SUV cards can be either **one-off** or **recurring**.
+
+:::warning
+SUV cards can't be added to Apple Wallet or Google Wallet.
+:::
+
+## One-off {#suv-one-off}
+
+In theory, one-off SUV cards work only once, for a single transaction.
+It's not that straightforward, however, because some merchants send multiple authorizations for a single debit.
+Pre-authorization is a good example, as the merchant pre-authorizes an amount, and then a separate transaction is created for the actual debit.
+
+Ideally, the card issuer (you or your customer) should cancel one-off SUV cards after the expected debit has been used.
+Note that setting a spending limit is mandatory.
+Consider setting the expected debit amount as the spending limit, rendering the card unusable after that limit is reached.
+
+For one-off cards, the `AccountHolderSpendingLimit.period` is `Always`.
+
+:::warning
+**One-off SUV cards automatically expire 30 days after creation**. This applies when `SpendingLimitPeriod` is set to `Always` in the [`addSingleUseVirtualCard`](https://api-reference.swan.io/mutations/add-single-use-virtual-card/) and [`addSingleUseVirtualCards`](https://api-reference.swan.io/mutations/add-single-use-virtual-cards/) mutations.
+
+Swan automatically sets the `cardContractExpiryDate` to 30 days from creation when the spending limit period is `Always`.
+:::
+
+### Card status after spending limit {#suv-one-off-status}
+
+When a one-off SUV card reaches its spending limit, the card becomes unusable.
+The card status remains `Enabled`, but transactions are declined once the spending limit is reached.
+
+You can track remaining spending using the `spending` field in the card query.
+
+:::tip Best practice
+Cancel one-off SUV cards after the expected transaction completes. Refer to [canceling virtual cards](/cards/guides/virtual/cancel) for instructions.
+:::
+
+## Recurring {#suv-recurring}
+
+You can think of recurring SUV cards as *single-merchant* virtual cards.
+The `AccountHolderSpendingLimit.period` is **not** `Always`.
+
+When the cardholder uses a recurring SUV card for the first time, Swan restricts the card to the merchant ID that triggered the authorization.
+
+If the cardholder uses the card with the same merchant, the merchant IDs match, and the transaction goes through.
+However, if they use the card elsewhere, the merchant IDs don't match, and the transaction is rejected.
+
+### Spending limits for recurring cards {#suv-recurring-limits}
+
+Recurring SUV cards have spending limits tied to the defined period (`Daily`, `Weekly`, or `Monthly`), not to individual transactions.
+A recurring SUV card with a €500 weekly limit, for example, can be used multiple times with the same merchant until the €500 limit is reached within the rolling 7-day period.
+
+There's no restriction on the number of times a recurring card can be used with the same merchant, as long as spending stays within the limit for the defined period.
+The spending limit resets on a rolling basis. Refer to [hour-level aggregation](/cards/reference/spending-limits#hour-level-aggregation) for details on how rolling periods are calculated.
+
+### Disabling a recurring SUV cardholder's membership
+
+When the account membership of a recurring SUV cardholder is disabled, the card is automatically reassigned to the account's legal representative and remains active, ensuring expenses aren't interrupted.
+
+This automatic reassignment maintains business continuity while preserving proper account control.
+
+## Single-use virtual card expiry {#renewal-suv}
+
+Single-use virtual cards aren't automatically renewed.
+
+**One-off SUV cards** expire 30 days after creation (see [warning above](#suv-one-off)).
+**Recurring SUV cards** expire after 3 years unless a custom `cardContractExpiryDate` is set.
+
+When a recurring SUV card expires, the cardholder must create a new card and make the first payment to lock it to the merchant ID.
+The new card then works with the same merchant for future transactions.

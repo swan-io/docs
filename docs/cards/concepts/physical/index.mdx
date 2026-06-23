@@ -1,0 +1,66 @@
+---
+title: Physical cards
+audience:
+  - dev
+  - ops
+related:
+  - /cards/guides/physical/print
+  - /cards/concepts/virtual
+  - /cards/concepts/physical/statuses
+  - /cards/concepts/physical/renewal
+  - /cards/concepts/design
+---
+
+import PhysicalCardsDefinition from '../../../topics/definitions/_cards-physical.mdx';
+import AddCardsUseCases from '../../partials/_add-cards-use-cases.mdx';
+import AddCardsAlert from '../../partials/_adding-cards-use-case-alert.mdx';
+import VirtualPhysicalCardNumbers from '../../partials/_card-numbers.mdx';
+
+# Physical cards
+
+<p className="ia-lede">An optional plastic card ordered for a virtual card, usable for swipe, chip and PIN, contactless, and online payments.</p>
+
+<PhysicalCardsDefinition />
+
+You can order a physical card for each virtual card.
+Swan physical cards are typical plastic cards that can be used for swipe, chip and PIN, contactless, and online transactions.
+Your [design](/cards/concepts/design) is printed on all physical cards.
+
+## Printing physical cards with the API {#mutations}
+
+You can use one of several mutations to print physical cards with the API.
+
+| Mutation | Use case | Guide |
+| --- | --- | --- |
+| [`printPhysicalCard`](https://api-reference.swan.io/mutations/print-physical-card/) | Print one physical card for one account member. The [virtual card](/cards/concepts/virtual) must already be added. | [Print a physical card](/cards/guides/physical/print#print-one) |
+| [`addCards`](https://api-reference.swan.io/mutations/add-cards/) | <AddCardsUseCases /> | [Print a physical card when adding a virtual card](/cards/guides/physical/print#print-with-virtual) |
+| [`addCardsWithGroupDelivery`](https://api-reference.swan.io/mutations/add-cards-with-group-delivery/) | Ship a group of physical cards together to the same address. | [Print multiple physical cards with group delivery](/cards/guides/physical/print#print-group) |
+
+<AddCardsAlert />
+
+## Card number {#number}
+
+Each physical card has a unique card number, different even from the virtual card added before the physical card was printed.
+
+Swan makes the physical card's number, CVC, expiry date, and the PIN available in Web Banking.
+The **card number**, **CVC**, and **PIN** are considered sensitive data and must be **masked by default**.
+The cardholder must complete a **consent request** before the numbers can be unmasked.
+
+:::info Virtual and physical card numbers
+<VirtualPhysicalCardNumbers />
+:::
+
+## In this section
+
+```flowmap
+{
+  "mode": "pathway",
+  "items": [
+    { "title": "Name printed on card", "to": "/cards/concepts/physical/name-printing", "desc": "Legal name rules, additional lines, and number plates." },
+    { "title": "PIN", "to": "/cards/concepts/physical/pin", "desc": "Four-digit PIN: choosing, availability, and incorrect attempts." },
+    { "title": "Delivery and shipping", "to": "/cards/concepts/physical/delivery-and-shipping", "desc": "Delivery address, printing hubs, and the Netherlands Maestro fallback." },
+    { "title": "Renewal", "to": "/cards/concepts/physical/renewal", "desc": "The 3-year renewal cycle, checkpoints, and renewal statuses." },
+    { "title": "Physical card statuses", "to": "/cards/concepts/physical/statuses", "desc": "The physical card lifecycle." }
+  ]
+}
+```

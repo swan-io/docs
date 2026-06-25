@@ -352,13 +352,25 @@ module.exports = {
   paymentsSidebar: [
     doc("payments/index", "Payments overview"),
     top("Concepts", [
-      doc("payments/concepts/transactions", "Transactions"),
-      doc("payments/concepts/credit-transfers", "Credit transfers"),
-      doc("payments/concepts/verification-of-payee", "Verification of payee (VoP)"),
-      doc("payments/concepts/direct-debit", "Direct debit"),
-      doc("payments/concepts/cards", "Card payments"),
-      doc("payments/concepts/merchants", "Merchants"),
-    ]),
+      cat("Transactions", [
+        doc("payments/concepts/transactions/statuses", "Statuses"),
+      ], { link: "payments/concepts/transactions/index" }),
+      cat("Credit transfers", [
+        doc("payments/concepts/credit-transfers/sepa", "SEPA Credit Transfers"),
+        doc("payments/concepts/credit-transfers/international", "International Credit Transfers"),
+        doc("payments/concepts/credit-transfers/statuses", "Statuses"),
+      ], { link: "payments/concepts/credit-transfers/index" }),
+      cat("Verification of payee (VoP)", [
+        doc("payments/concepts/verification-of-payee/bulk-transfers", "Bulk credit transfers"),
+      ], { link: "payments/concepts/verification-of-payee/index" }),
+      cat("Direct debit", [
+        doc("payments/concepts/direct-debit/statuses", "Statuses"),
+      ], { link: "payments/concepts/direct-debit/index" }),
+      cat("Card payments", [
+        doc("payments/concepts/cards/statuses", "Statuses"),
+      ], { link: "payments/concepts/cards/index" }),
+      doc("payments/concepts/merchants/index", "Merchants"),
+    ], "payments/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Credit transfers", [
         cat("SEPA", [
@@ -373,6 +385,8 @@ module.exports = {
         ]),
         cat("International", [
           doc("payments/guides/credit-transfers/international/quote", "Get a quote"),
+          doc("payments/guides/credit-transfers/international/get-beneficiary-forms", "Get beneficiary information"),
+          doc("payments/guides/credit-transfers/international/get-transaction-forms", "Get transaction details"),
           doc("payments/guides/credit-transfers/international/add-beneficiary", "Add a beneficiary"),
           doc("payments/guides/credit-transfers/international/initiate", "Initiate a transfer"),
           doc("payments/guides/credit-transfers/international/get-info", "Get transfer info"),
@@ -390,34 +404,77 @@ module.exports = {
         doc("payments/guides/cards/get-enriched-info", "Get enriched info"),
       ]),
       cat("Overview", [
-        doc("payments/guides/overview/export", "Export payments"),
-        doc("payments/guides/overview/generate-transaction-statement", "Generate a transaction statement"),
         doc("payments/guides/overview/get-payment-id", "Get a payment ID"),
+        doc("payments/guides/overview/get-payment-info", "Get payment info"),
         doc("payments/guides/overview/get-transaction-id", "Get a transaction ID"),
         doc("payments/guides/overview/get-transaction-info", "Get transaction info"),
+        doc("payments/guides/overview/get-transaction-list", "Get a list of transactions"),
+        doc("payments/guides/overview/generate-transaction-statement", "Generate a transaction statement"),
+        doc("payments/guides/overview/export", "Export payments"),
       ]),
       cat("Merchants", [
-        doc("payments/guides/merchants/index", "Overview"),
         doc("payments/guides/merchants/onboarding-overview", "Onboarding overview"),
         doc("payments/guides/merchants/missing-information", "Missing information"),
+        doc("payments/guides/merchants/sandbox", "Sandbox"),
         cat("Profiles", [
           doc("payments/guides/merchants/profiles/request", "Request a profile"),
           doc("payments/guides/merchants/profiles/get-info", "Get profile info"),
           doc("payments/guides/merchants/profiles/update", "Update a profile"),
         ]),
-        cat("Online", [
-          doc("payments/guides/merchants/online/cards", "Cards"),
-          doc("payments/guides/merchants/online/sdd", "SEPA Direct Debit"),
-          doc("payments/guides/merchants/online/idd", "International Direct Debit"),
-        ]),
-        cat("In-person", [
-          doc("payments/guides/merchants/in-person/cards", "Cards"),
-          doc("payments/guides/merchants/in-person/checks", "Checks"),
-        ]),
+        cat("Accepting online payments", [
+          cat("Cards", [
+            doc("payments/guides/merchants/online/cards/accept", "Accept card payments"),
+            doc("payments/guides/merchants/online/cards/request", "Request payment methods"),
+            doc("payments/guides/merchants/online/cards/create-link", "Create a payment link"),
+            doc("payments/guides/merchants/online/cards/sandbox", "Sandbox"),
+          ], { link: "payments/guides/merchants/online/cards/index" }),
+          cat("SEPA Direct Debit", [
+            doc("payments/guides/merchants/online/sdd/accept", "Accept SEPA Direct Debit"),
+            doc("payments/guides/merchants/online/sdd/request", "Request payment methods"),
+            doc("payments/guides/merchants/online/sdd/declare", "Declare a mandate"),
+            doc("payments/guides/merchants/online/sdd/get-mandate", "Get a mandate"),
+            doc("payments/guides/merchants/online/sdd/initiate", "Initiate a payment"),
+            doc("payments/guides/merchants/online/sdd/update", "Update payment methods"),
+            doc("payments/guides/merchants/online/sdd/create-link", "Create a payment link"),
+            doc("payments/guides/merchants/online/sdd/sandbox", "Sandbox"),
+          ], { link: "payments/guides/merchants/online/sdd/index" }),
+          cat("Internal Direct Debit", [
+            doc("payments/guides/merchants/online/idd/accept", "Accept Internal Direct Debit"),
+            doc("payments/guides/merchants/online/idd/request", "Request payment methods"),
+            doc("payments/guides/merchants/online/idd/declare", "Declare a mandate"),
+            doc("payments/guides/merchants/online/idd/initiate", "Initiate a payment"),
+            doc("payments/guides/merchants/online/idd/refund", "Refund a payment"),
+            doc("payments/guides/merchants/online/idd/sandbox", "Sandbox"),
+          ], { link: "payments/guides/merchants/online/idd/index" }),
+        ], { link: "payments/guides/merchants/online/index" }),
+        cat("Accepting in-person payments", [
+          cat("Cards", [
+            doc("payments/guides/merchants/in-person/cards/setup", "Set up"),
+            doc("payments/guides/merchants/in-person/cards/request-method", "Request payment methods"),
+            doc("payments/guides/merchants/in-person/cards/accept", "Accept payments"),
+            doc("payments/guides/merchants/in-person/cards/initialize", "Initialize the terminal"),
+            doc("payments/guides/merchants/in-person/cards/create-payments", "Create payments"),
+            doc("payments/guides/merchants/in-person/cards/sandbox", "Sandbox"),
+          ], { link: "payments/guides/merchants/in-person/cards/index" }),
+          cat("French checks", [
+            doc("payments/guides/merchants/in-person/checks/accept", "Accept checks"),
+            doc("payments/guides/merchants/in-person/checks/request", "Request payment methods"),
+            doc("payments/guides/merchants/in-person/checks/initiate", "Initiate a payment"),
+            doc("payments/guides/merchants/in-person/checks/sandbox", "Sandbox"),
+          ], { link: "payments/guides/merchants/in-person/checks/index" }),
+        ], { link: "payments/guides/merchants/in-person/index" }),
       ], { link: "payments/guides/merchants/index" }),
     ]),
     top("Reference", [
-      doc("payments/reference/sandbox", "Sandbox"),
+      cat("Sandbox", [
+        doc("payments/reference/sandbox/sandbox-sepa", "SEPA Credit Transfers"),
+        doc("payments/reference/sandbox/sandbox-direct-debit", "SEPA Direct Debit"),
+        doc("payments/reference/sandbox/sandbox-international", "International Credit Transfers"),
+        doc("payments/reference/sandbox/sandbox-cards", "Card payments"),
+      ], { link: "payments/reference/sandbox/index" }),
+      doc("payments/reference/international-transfers", "International transfer countries and rails"),
+      doc("payments/reference/card-payment-countries", "Card payment countries"),
+      doc("payments/reference/card-rejection-reasons", "Card rejection reasons"),
       doc("payments/reference/schemes", "Scheme tables"),
       doc("payments/reference/transaction-fraud-types", "Transaction fraud types"),
     ]),

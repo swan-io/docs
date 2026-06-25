@@ -1,5 +1,71 @@
 ---
-title: "Update a profile"
+title: Update a merchant profile
+audience:
+  - dev
+related:
+  - /payments/concepts/merchants
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Update a merchant profile
+
+You can [request an update to a merchant profile](/payments/concepts/merchants#profiles-update) with the API.
+If you use **Swan's Web Banking interface**, merchants can request an update through their app.
+
+Request an update for the merchant's name, website, product type, expected monthly payment volume, expected average basket, and logo.
+**All updates are reviewed by Swan**.
+
+## Guide {#guide}
+
+1. Call the `requestMerchantProfileUpdate` mutation. You don't need consent.
+1. Include **only** the information you wish to update.
+    - Possible fields: `merchantName`, `productType`, `expectedMonthlyPaymentVolume`, `expectedAverageBasket`.
+1. Configure the success payload to display the updated information in case you need to verify it.
+1. Add relevant payload and rejection details (not shown) to your mutation.
+    - In the following example, the `expectedAverageBasket`, or expected average transaction, changed from €50 to €75 (line 8). Therefore, request the updated basket in the success payload (lines 12-14).
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gUHJvZmlsZVVwZGF0ZSB7CiAgcmVxdWVzdE1lcmNoYW50UHJvZmlsZVVwZGF0ZSgKICAgIGlucHV0OiB7CiAgICAgIG1lcmNoYW50UHJvZmlsZUlkOiAiJE1FUkNIQU5UX1BST0ZJTEVfSUQiCiAgICAgIGV4cGVjdGVkQXZlcmFnZUJhc2tldDogeyB2YWx1ZTogIjc1IiwgY3VycmVuY3k6ICJFVVIiIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBSZXF1ZXN0TWVyY2hhbnRQcm9maWxlVXBkYXRlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlcXVlc3RNZXJjaGFudFByb2ZpbGVVcGRhdGUgewogICAgICAgIHN0YXR1cwogICAgICAgIGV4cGVjdGVkQXZlcmFnZUJhc2tldCB7CiAgICAgICAgICBjdXJyZW5jeQogICAgICAgICAgdmFsdWUKICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBJbnRlcm5hbEVycm9yUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {5,12-14} showLineNumbers
+mutation ProfileUpdate {
+  requestMerchantProfileUpdate(
+    input: {
+      merchantProfileId: "$MERCHANT_PROFILE_ID"
+      expectedAverageBasket: { value: "75", currency: "EUR" }
+    }
+  ) {
+    ... on RequestMerchantProfileUpdateSuccessPayload {
+      __typename
+      requestMerchantProfileUpdate {
+        status
+        expectedAverageBasket {
+          currency
+          value
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload confirms your update request to an average basket of €75 with the  status `PendingReview`.
+
+```json {6,8-9} showLineNumbers
+{
+  "data": {
+    "requestMerchantProfileUpdate": {
+      "__typename": "RequestMerchantProfileUpdateSuccessPayload",
+      "requestMerchantProfileUpdate": {
+        "status": "PendingReview",
+        "expectedAverageBasket": {
+          "currency": "EUR",
+          "value": "75"
+        }
+      }
+    }
+  }
+}
+```

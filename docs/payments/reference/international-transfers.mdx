@@ -1,0 +1,114 @@
+---
+title: International transfer countries and rails
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/credit-transfers/international
+  - /payments/guides/credit-transfers/international/initiate
+---
+
+# International transfer countries and rails
+
+The currencies, rails, fee groups, and countries allowed for International Credit Transfers.
+Attempts to send a currency using a rail or to a country not listed here are rejected.
+
+## Outgoing transfers in local currencies {#local}
+
+Users can send International Credit Transfers in specific currencies using their corresponding local rails. Each currency has designated available rails and fee groups.
+
+| Currency | Available rails | Fee group |
+|----------|----------------|-----------|
+| 🇦🇺 `AUD` Australian Dollar | `australian`, `australian_bpay` | 1 |
+| 🇧🇷 `BRL` Brazilian Real∗ | `brazil` | 3 |
+| 🇨🇦 `CAD` Canadian Dollar | `iban` | 1 |
+| 🇨🇭 `CHF` Swiss Franc | `iban` | 1 |
+| 🇨🇱 `CLP` Chilean Peso | `chile` | 4 |
+| 🇪🇺 `EUR` Euro | `swift_code` | 1 |
+| 🇬🇧 `GBP` Great British Pound Sterling | `iban`, `sort_code`, `swift_code` | 1 |
+| 🇭🇰 `HKD` Hong Kong Dollar | `hongkong`, `hong_kong_fps` | 2 |
+| 🇮🇩 `IDR` Indonesian Rupiah | `indonesian` | 2 |
+| 🇮🇱 `ILS` Israeli New Shekel | `israeli_local` | 4 |
+| 🇮🇳 `INR` Indian Rupee | `indian`, `indian_upi` | 2 |
+| 🇯🇵 `JPY` Japanese Yen | `japanese` | 2 |
+| 🇰🇷 `KRW` South Korean Won | `south_korean_paygate`, `south_korean_paygate_business` | 3 |
+| 🇲🇽 `MXN` Mexican Peso | `mexican` | 2 |
+| 🇲🇾 `MYR` Malaysian Ringgit∗ | `malaysian`, `malaysian_duitnow` | 2 |
+| 🇳🇿 `NZD` New Zealand Dollar | `newzealand` | 1 |
+| 🇸🇬 `SGD` Singapore Dollar | `singapore`, `singapore_paynow` | 2 |
+| 🇹🇭 `THB` Thai Baht | `thailand` | 2 |
+| 🇺🇸 `USD` United States Dollar | `fedwire_local`, `aba`, `swift_code` | 1 |
+| 🇺🇾 `UYU` Uruguayan Peso | `uruguay` | 4 |
+| 🇻🇳 `VND` Vietnamese Dong | `vietnam_earthport` | 2 |
+
+∗ *Currencies marked with a single asterisk can't be sent from a Swan company account.*
+
+**Important**: Attempts to send currencies using rails not listed in this table are rejected. For example, Indonesian Rupiah `IDR` can only be sent on the `indonesian` rail.
+
+## Outgoing SWIFT transfers {#swift}
+
+Users can send International Credit Transfers on the `swift_code` rail in United States Dollars `USD`, Euros `EUR`, or Great British Pounds `GBP`, to the countries listed below. Fee group: 1.
+
+<Tabs>
+  <TabItem value="swift-usd" label="🇺🇸 USD/SWIFT" default>
+    #### <code>swift_code</code> + 🇺🇸 United States Dollars <code>USD</code>
+
+    **Allowed countries for Swift + USD transfers**:
+
+    | First letter | Allowed countries |
+    |-------------|-------------------|
+    | A - B | Albania, Algeria, Andorra, Angola, Antigua and Barbuda, Argentina, Armenia, Australia, Austria, Azerbaijan, Bahrain, Barbados, Belgium, Bhutan, Bolivia, Bosnia and Herzegovina, Brunei Darussalam, Bulgaria, Burkina Faso |
+    | C - E | Canada, Cambodia, Chile, China, Christmas Island, Cocos (Keeling) Islands, Cook Islands, Costa Rica, Côte d'Ivoire, Croatia, Cyprus, Czech Republic, Denmark, Dominica, Dominican Republic, Ecuador, El Salvador, Estonia, Ethiopia |
+    | F - G | Falkland Islands (Malvinas), Faroe Islands, Fiji, Finland, France, French Guiana, French Polynesia, Gabon, Gambia, Georgia, Germany, Ghana, Gibraltar, Greece, Greenland, Grenada, Guadeloupe, Guatemala, Guernsey, Guinea, Guyana |
+    | H - L | Haiti, Holy See (Vatican City State), Honduras, Hong Kong (locally with the CHATS system), Hungary, Iceland, India, Indonesia, Ireland, Isle of Man, Israel, Italy, Jamaica, Japan, Jersey, Kazakhstan, Kenya, Kiribati, Kuwait, Laos, Latvia, Liberia, Liechtenstein, Lithuania, Luxembourg |
+    | M - O | Macedonia (Republic of North), Malawi, Malaysia, Malta, Marshall Islands, Martinique, Mauritania, Mauritius, Mayotte, Mexico, Micronesia (Federated States of), Monaco, Montenegro, Montserrat, Morocco, Namibia, Nepal, Netherlands, New Caledonia, New Zealand, Niger, Niue, Norfolk Island, Northern Mariana Islands, Norway |
+    | P - S | Palau, Papua New Guinea, Paraguay, Peru, Poland, Portugal, Reunion, Romania, Rwanda, Saint Helena, Saint Lucia, Saint Vincent and Grenadines, Samoa, San Marino, Sao Tome and Principe, Senegal, Serbia, Seychelles, Sierra Leone, Singapore, Slovakia, Slovenia, Solomon Islands, South Africa, South Korea, Spain, Sri Lanka, Suriname, Sweden, Switzerland |
+    | T - Z | Taiwan (Republic of China), Tajikistan, Tanzania, Thailand, Timor-Leste, Tonga, Tunisia, Turks and Caicos Islands, Tuvalu, United Arab Emirates, United Kingdom, Uruguay, Uzbekistan, Vietnam, Wallis and Futuna Islands, Zambia |
+
+    **Important**: Attempts to send United States Dollars `USD` using `swift_code` to countries not listed are rejected.
+  </TabItem>
+
+  <TabItem value="swift-eur" label="🇪🇺 EUR/SWIFT">
+    #### <code>swift_code</code> + 🇪🇺 Euros <code>EUR</code>
+
+    **Allowed countries for Swift + EUR transfers**:
+
+    | First letter | Allowed countries |
+    |-------------|-------------------|
+    | A - B | Albania, Algeria, American Samoa, Andorra, Angola, Antigua and Barbuda, Argentina, Armenia, Aruba, Australia, Azerbaijan, Bahrain, Bangladesh, Barbados, Benin, Bermuda, Bhutan, Bolivia, Bosnia and Herzegovina, Brunei Darussalam, Burkina Faso |
+    | C - E | Cambodia, Cape Verde, Chile, China, Christmas Island, Cocos (Keeling) Islands, Cook Islands, Costa Rica, Côte d'Ivoire, Dominica, Dominican Republic, Ecuador, Egypt, El Salvador, Ethiopia |
+    | F - G | Falkland Islands (Malvinas), Faroe Islands, Fiji, French Polynesia, Gabon, Gambia, Georgia, Ghana, Greenland, Grenada, Guatemala, Guernsey, Guyana |
+    | H - L | Haiti, Holy See (Vatican City State), Honduras, Hong Kong, SAR China (locally with the CHATS system), India, Indonesia, Israel, Jamaica, Japan, Jersey, Kazakhstan, Kenya, Kiribati, South Korea, Kosovo, Kuwait, Lao PDR, Lesotho, Liberia |
+    | M - O | Macedonia (Republic of North), Malawi, Malaysia, Maldives, Marshall Islands, Mauritania, Mauritius, Mexico, Micronesia (Federated States of), Moldova, Montenegro, Montserrat, Morocco, Mozambique, Namibia, Nepal, New Caledonia, New Zealand, Niger, Niue, Norfolk Island, Oman |
+    | P - S | Palau, Papua New Guinea, Paraguay, Peru, Qatar, Rwanda, Saint Helena, Saint Lucia, Saint Vincent and Grenadines, Samoa, San Marino, Sao Tome and Principe, Saudi Arabia, Senegal, Serbia, Seychelles, Sierra Leone, Singapore, Solomon Islands, South Africa, Sri Lanka, Suriname |
+    | T - Z | Taiwan (Republic of China), Tajikistan, Tanzania (United Republic of), Thailand, Timor-Leste, Tonga, Tunisia, Tuvalu, United Arab Emirates, United Kingdom, United States of America, Uruguay, Uzbekistan, Vietnam, Wallis and Futuna Islands, Zambia |
+
+    **Important**: Attempts to send Euros `EUR` using `swift_code` to countries not listed are rejected.
+  </TabItem>
+
+  <TabItem value="swift-gbp" label="🇬🇧 GBP/SWIFT">
+    #### <code>swift_code</code> + 🇬🇧 Great British Pounds <code>GBP</code>
+
+    **Allowed countries for Swift + GBP transfers**:
+
+    | First letter | Allowed countries |
+    |-------------|-------------------|
+    | A - L | Albania, Aruba, Azerbaijan, Bahrain, Bangladesh, Bermuda, Bosnia and Herzegovina, Cape Verde, Costa Rica, Dominican Republic, Egypt, Faroe Islands, Georgia, Greenland, Guatemala, Guernsey, Jersey, Kazakhstan, Kosovo, Kuwait, Israel, Lesotho |
+    | M - Z | Maldives, Moldova, Montenegro, Mozambique, Mauritania, Mauritius, North Macedonia, Oman, Qatar, Saint Lucia, Serbia, Saudi Arabia, Seychelles, Sao Tome and Principe, Tunisia, Timor-Leste, United Arab Emirates (UAE) |
+
+    **Important**: Attempts to send Great British Pounds `GBP` using `swift_code` to countries not listed are rejected.
+  </TabItem>
+</Tabs>
+
+## Incoming transfers {#incoming}
+
+Incoming International Credit Transfers are **only allowed** from accounts located in the following countries.
+If a country **isn't on the following list**, incoming transfers are rejected.
+
+| First letter | Allowed countries |
+|--------------|------------------|
+| A - G | Algeria, Andorra, Armenia, Aruba, Australia, Austria, Bahrain, Belgium, Brazil, Canada, Chile, Colombia, Cyprus, Czechia, Denmark, Dominican Republic, Estonia, Finland, France, Georgia, Germany, Greece, Guatemala, Guyana |
+| H - O | Honduras, Hong Kong, Iceland, India, Indonesia, Ireland, Israel, Italy, Japan, Liechtenstein, Lithuania, Luxembourg, Malaysia, Malta, Martinique, Mayotte, Mexico, Moldova, Netherlands, New Zealand, Norway |
+| P - Z | Paraguay, Peru, Poland, Portugal, Romania, San Marino, Singapore, Slovakia, Slovenia, South Korea, Spain, Sweden, Switzerland, Thailand, United Kingdom of Great Britain and Northern Ireland, United States of America, Uruguay, Uzbekistan |
+
+**Important**: Incoming transfers from countries not on this list are rejected.

@@ -1,0 +1,47 @@
+---
+title: Concepts
+audience:
+  - dev
+  - ops
+related:
+  - /payments
+  - /payments/concepts/transactions
+---
+
+# Payments concepts
+
+<p className="ia-lede">The models behind Swan payments: how a payment groups transactions, the payment methods that move money, and the merchant side that accepts it.</p>
+
+## How payments work
+
+A payment is a request to move money. Each payment groups one or more transactions, which are what actually credit and debit accounts.
+
+```flowmap
+{
+  "mode": "graph",
+  "layout": "chain",
+  "nodes": [
+    { "id": "pay", "title": "Payment", "to": "/payments/concepts/transactions#payments", "desc": "A request to move money." },
+    { "id": "txn", "title": "Transactions", "to": "/payments/concepts/transactions#transactions", "desc": "The credits and debits a payment creates." }
+  ]
+}
+```
+
+## Payment methods
+
+Each payment method has its own model, rules, and statuses.
+
+```flowmap
+{
+  "mode": "graph",
+  "layout": "spokes",
+  "nodes": [
+    { "id": "txn", "title": "Transactions" },
+    { "title": "Credit transfers", "to": "/payments/concepts/credit-transfers", "desc": "Push payments across SEPA and the world." },
+    { "title": "Direct debit", "to": "/payments/concepts/direct-debit", "desc": "Pull payments collected by mandate." },
+    { "title": "Card payments", "to": "/payments/concepts/cards", "desc": "Card transactions, authorization, and clearing." },
+    { "title": "Verification of payee", "to": "/payments/concepts/verification-of-payee", "desc": "Beneficiary verification for SEPA transfers." },
+    { "title": "Merchants", "to": "/payments/concepts/merchants", "desc": "Accept payments online and in person." }
+  ]
+}
+```

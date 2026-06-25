@@ -1,5 +1,73 @@
 ---
-title: "Suspend a mandate"
+title: Suspend a payment mandate
+audience:
+  - dev
+related:
+  - /payments/concepts/direct-debit
+  - /payments/guides/direct-debit/enable-mandate
 ---
 
-> **Shell stub** — structure only, no content yet (DOC-1814).
+# Suspend a payment mandate
+
+Suspend SEPA Direct Debit received payment mandates with the API.
+SEPA Direct Debit instructions associated with a [`Suspended` received payment mandate](/payments/concepts/direct-debit#received-instructions-execution) are `Rejected`.
+
+:::tip Prerequisites
+1. You're an account member with the `canInitiatePayments` [membership permission](/accounts/reference/memberships/membership-permissions#permissions).
+1. You only need a [project access token](/build/using-api/authentication#tokens-project) for this mutation.
+:::
+
+## Guide {#guide}
+
+1. Call the `suspendReceivedDirectDebitMandate` mutation.
+1. Add the ID for the mandate you're suspending.
+1. Add the `SuspendReceivedDirectDebitMandateSuccessPayload`, including the `suspendedAt` if you'd like to review the exact time and date at which the mandate was suspended.
+1. Add rejections (not shown).
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gU3VzcGVuZE1hbmRhdGUgewogIHN1c3BlbmRSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZSgKICAgIGlucHV0OiB7IHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlSWQ6ICIkWU9VUl9NQU5EQVRFX0lEIiB9CiAgKSB7CiAgICAuLi4gb24gU3VzcGVuZFJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHJlY2VpdmVkRGlyZWN0RGViaXRNYW5kYXRlIHsKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgICAuLi4gb24gUmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGVTdGF0dXNJbmZvU3VzcGVuZGVkIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBzdXNwZW5kZWRBdAogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIFN1c3BlbmRSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZWRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgICAgcmVhc29uCiAgICB9CiAgICAuLi4gb24gUmVjZWl2ZWREaXJlY3REZWJpdE1hbmRhdGVOb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBSZWNlaXZlZERpcmVjdERlYml0TWFuZGF0ZUNhbmNlbGVkUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {3,10-11,13} showLineNumbers
+mutation SuspendMandate {
+  suspendReceivedDirectDebitMandate(
+    input: { receivedDirectDebitMandateId: "$YOUR_MANDATE_ID" }
+  ) {
+    ... on SuspendReceivedDirectDebitMandateSuccessPayload {
+      __typename
+      receivedDirectDebitMandate {
+        id
+        statusInfo {
+          status
+          ... on ReceivedDirectDebitMandateStatusInfoSuspended {
+            __typename
+            suspendedAt
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows the status `Suspended`, as well as the date and time at which it was suspended.
+
+```json {8,10} showLineNumbers
+{
+  "data": {
+    "suspendReceivedDirectDebitMandate": {
+      "__typename": "SuspendReceivedDirectDebitMandateSuccessPayload",
+      "receivedDirectDebitMandate": {
+        "id": "$YOUR_MANDATE_ID",
+        "statusInfo": {
+          "status": "Suspended",
+          "__typename": "ReceivedDirectDebitMandateStatusInfoSuspended",
+          "suspendedAt": "2024-01-31T13:49:13.620765Z"
+        }
+      }
+    }
+  }
+}
+```

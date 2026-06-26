@@ -1,8 +1,16 @@
 ---
-title: Users overview
+title: The user
+audience:
+  - dev
+  - ops
+related:
+  - /users/concepts/user/statuses
+  - /users/concepts/identifications
+  - /users/concepts/consent
+  - /users/guides/overview/deactivate
 ---
 
-# Users overview
+# The user
 
 A **Swan user** is an actual person identified within Swan by their mobile phone number.
 Swan users are managed **globally**, not project-by-project.
@@ -55,12 +63,12 @@ Your user:
 
 7. Enters their **birth information**: birth city, postal code, country, and nationality.
     - If you include this information when [creating their sign-up link](/build/using-api/authentication#url-parameters-optional), they won't need to enter it again.
-1. Enters their **residency information**. Swan only requests the information required for the relevant [identification process](./identifications/index.mdx#levels-processes) (to be completed in step 9).
+1. Enters their **residency information**. Swan only requests the information required for the relevant [identification process](/users/concepts/identifications#levels-processes) (to be completed in step 9).
     - `QES` process: residency address, city, country, and postal code.
     - `PVID` or `Expert` process: residency country only.
     - If you include this information when [creating their sign-up link](/build/using-api/authentication#url-parameters-optional), they won't need to enter it again.
 1. **Reviews and confirms all provided information**: personal, birth, and residency. Users can modify their information before confirming.
-1. [**Completes identification**](./identifications/index.mdx), where Swan verifies their identity. This step **can be performed later**, though it's recommended to complete it as soon as possible. When using the API, you must trigger this step.
+1. [**Completes identification**](/users/concepts/identifications), where Swan verifies their identity. This step **can be performed later**, though it's recommended to complete it as soon as possible. When using the API, you must trigger this step.
 1. *(Optional)* **Sets up biometrics**, if desired and available on their mobile device. Biometrics typically include face or fingerprint authentication.
 1. Gets redirected to your redirect URL.
 
@@ -195,7 +203,7 @@ When a user is deactivated successfully, the **[phone number](#phone-numbers) as
 
 All of the following conditions must be met:
 
-import DeactivateRequirements from './overview/_deactivate-reqs.mdx';
+import DeactivateRequirements from '../../partials/_deactivate-reqs.mdx';
 
 <DeactivateRequirements />
 
@@ -208,45 +216,11 @@ If conditions aren't met, there are three possible rejection reasons:
 1. `UserAlreadyDeactivatedRejection`: the user associated with this user ID was already deactivated.
 1. `UserNotFoundRejection`: the user associated with this user ID wasn't found in the system.
 
-Learn how to [deactivate a user with the API](./overview/guide-deactivate.mdx).
+Learn how to [deactivate a user with the API](/users/guides/overview/deactivate).
 You can also submit a request to [Swan Support](https://partner-support.swan.io/hc/en-gb/requests).
 
 :::note Webhook
 To get a notification when a user is deactivated, subscribe to the `User.Deactivated` [webhook](/build/using-api/webhooks).
 :::
 
-## Statuses {#statuses}
-
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    UC((User created)) -.-> A[Active]
-    A -.-> B[Blocked]
-    B -.-> A
-    A -.-> D[Deactivated]
-    subgraph FS[Final status]
-        D
-    end
-    style UC fill:#D4D3D5,stroke:#514F59
-    style FS fill:#fffdf4,stroke:#cca922
-```
-
-| Status | Explanation |
-|---|---|
-| `Active` | Users are `Active` as soon as they're created. They can access and use Swan. |
-| `Blocked` | Status assigned by Swan for security reasons.<br /><br />`Blocked` users can't access or use Swan services. The phone number remains attached to the user and can't be used for someone else. In certain edge cases, `Blocked` users can return to `Active` after careful review. |
-| `Deactivated` | You can deactivate users [with the API](./overview/guide-deactivate.mdx), and Swan can also assign this status.<br /><br />Deactivated users can't access Swan or use Swan services. Phone numbers attached to `Deactivated` users can be assigned to someone else. |
-
-:::caution Access tokens
-[User access tokens](/build/using-api/authentication#tokens-user) associated with `Blocked` or `Deactivated` users are revoked as soon as the status changes from `Active`.
-You can no longer use the API on their behalf.
-You also can't use a [project access token to impersonate](/build/using-api/authentication#tokens-project) `Blocked` or `Deactivated` users. 
-:::
-
-## Guides {#guides}
-
-- [Get a list of users](./overview/guide-get-list.mdx)
-- [Get information about multiple users](./overview/guide-get-info-multiple.mdx)
-- [Get information about a single user](./overview/guide-get-info-one.mdx)
-- [Export user data](./overview/guide-export.mdx)
-- [Deactivate a user](./overview/guide-deactivate.mdx)
+The user moves through a defined set of [user statuses](./statuses.mdx).

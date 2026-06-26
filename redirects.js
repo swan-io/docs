@@ -101,7 +101,7 @@ module.exports = [
   },
   { from: "/api/api-explorer", to: "/build/tools/api-explorer" },
   { from: "/api/authentication", to: "/build/using-api/authentication" },
-  { from: "/api/consent", to: "/topics/users/consent/" },
+  { from: "/api/consent", to: "/users/concepts/consent/" },
   { from: "/api/endpoints", to: "/build#endpoints" },
   { from: "/api/errors", to: "/build/using-api/errors-rejections" },
   { from: "/api/event-simulator", to: "/build/tools/event-simulator" },
@@ -128,7 +128,7 @@ module.exports = [
   { from: "/concept/overview", to: "/get-started/set-up-swan/glossary" },
   { from: "/concept/payment", to: "/payments/" },
   { from: "/concept/projects", to: "/get-started/set-up-swan/create-project" },
-  { from: "/concept/user", to: "/topics/users/" },
+  { from: "/concept/user", to: "/users/concepts/user/" },
   { from: "/guide/accept-payments-merchants", to: "/payments/concepts/merchants/" },
   {
     from: "/guide/choose-integration",
@@ -182,19 +182,19 @@ module.exports = [
   { from: "/regulatory/status-options", to: "/get-started/become-a-partner/licence-regulatory-status#legal-status" },
   {
     from: "/user-flow-diagrams/consent",
-    to: "/topics/users/consent/#consent-diagrams-end-user",
+    to: "/users/concepts/consent/#consent-diagrams-end-user",
   },
   {
     from: "/user-flow-diagrams/identity-verification-process",
-    to: "/topics/users/identifications/#diagrams",
+    to: "/users/concepts/identifications/#diagrams",
   },
   {
     from: "/user-flow-diagrams/onboardings",
     to: "/accounts/guides/onboarding/company/requirements#diagrams",
   },
-  { from: "/user-flow-diagrams/passcode-reset", to: "/topics/users/#login" },
-  { from: "/user-flow-diagrams/sign-in", to: "/topics/users/#signup" },
-  { from: "/user-flow-diagrams/sign-up", to: "/topics/users/#login" },
+  { from: "/user-flow-diagrams/passcode-reset", to: "/users/concepts/user/#login" },
+  { from: "/user-flow-diagrams/sign-in", to: "/users/concepts/user/#signup" },
+  { from: "/user-flow-diagrams/sign-up", to: "/users/concepts/user/#login" },
   {
     from: "/api/authentication/project-access-token",
     to: "/build/using-api/authentication#tokens-project",
@@ -205,23 +205,23 @@ module.exports = [
   },
   {
     from: "/api/consent/integrate-strong-customer-authentication-sca",
-    to: "/topics/users/consent/guide-integrate-sca",
+    to: "/users/guides/consent/integrate-sca",
   },
   {
     from: "/api/consent/multiple-consent",
-    to: "/topics/users/consent/#multi-consent",
+    to: "/users/concepts/consent/#multi-consent",
   },
   {
     from: "/api/consent/preferred-channel",
-    to: "/topics/users/consent/#notifications",
+    to: "/users/concepts/consent/#notifications",
   },
   {
     from: "/api/consent/server-to-server-consent",
-    to: "/topics/users/consent/#s2s",
+    to: "/users/concepts/consent/#s2s",
   },
   {
     from: "/api/consent/workflows",
-    to: "/topics/users/consent/#consent-diagrams",
+    to: "/users/concepts/consent/#consent-diagrams",
   },
   {
     from: "/concept/account-funding/funding-source",
@@ -309,7 +309,7 @@ module.exports = [
   { from: "/help/faq/accounts", to: "/accounts/concepts/account" }, // DOC-1814: chain-rewrite (was /topics/accounts/)
   { from: "/help/faq/api", to: "/build" },
   { from: "/help/faq/cards", to: "/cards" },
-  { from: "/help/faq/consent", to: "/topics/users/consent/" },
+  { from: "/help/faq/consent", to: "/users/concepts/consent/" },
   {
     from: "/help/faq/kyc-and-verification-process",
     to: "/accounts/concepts/account-holders",
@@ -455,15 +455,15 @@ module.exports = [
   },
   {
     from: "/help/faq/consent/can-i-handle-consent",
-    to: "/topics/users/consent/#overview",
+    to: "/users/concepts/consent/#overview",
   },
   {
     from: "/help/faq/kyc-and-verification-process/how-can-i-entice-my-user-to-verify-their-identity",
-    to: "/topics/users/identifications/#encourage",
+    to: "/users/concepts/identifications/#encourage",
   },
   {
     from: "/help/faq/kyc-and-verification-process/how-can-i-track-my-customers-verification-process",
-    to: "/topics/users/identifications/#tracking",
+    to: "/users/concepts/identifications/#tracking",
   },
   {
     from: "/help/faq/kyc-and-verification-process/which-types-of-businesses-does-swan-restrict",
@@ -471,11 +471,11 @@ module.exports = [
   },
   {
     from: "/help/faq/kyc-and-verification-process/why-do-my-users-need-to-go-through-kyc",
-    to: "/topics/users/identifications/",
+    to: "/users/concepts/identifications/",
   },
   {
     from: "/help/faq/onboarding/is-the-kyc-process-over-after-identity-document-verification-and-liveness-detection",
-    to: "/topics/users/identifications/#overview",
+    to: "/users/concepts/identifications/#overview",
   },
   {
     from: "/help/faq/sepa-transactions/what-are-the-countries-reachable-on-the-sepa-network",
@@ -1005,4 +1005,26 @@ module.exports = [
   { from: "/topics/merchants/in-person/checks/guide-request", to: "/payments/guides/merchants/in-person/checks/request" },
   { from: "/topics/merchants/in-person/checks/guide-initiate", to: "/payments/guides/merchants/in-person/checks/initiate" },
   { from: "/topics/merchants/in-person/checks/sandbox", to: "/payments/guides/merchants/in-person/checks/sandbox" },
+  // DOC-1814 — Users migrated from topics/users into the IA shell
+  { from: "/topics/users", to: "/users/concepts/user/" },
+  { from: "/topics/users/consent", to: "/users/concepts/consent/" },
+  { from: "/topics/users/consent/guide-cancel", to: "/users/guides/consent/cancel" },
+  { from: "/topics/users/consent/guide-configure-notifications", to: "/users/guides/consent/configure-notifications" },
+  { from: "/topics/users/consent/guide-create-multiconsent", to: "/users/guides/consent/create-multiconsent" },
+  { from: "/topics/users/consent/guide-implement-s2s", to: "/users/guides/consent/implement-s2s" },
+  { from: "/topics/users/consent/guide-integrate-sca", to: "/users/guides/consent/integrate-sca" },
+  { from: "/topics/users/identifications", to: "/users/concepts/identifications/" },
+  { from: "/topics/users/identifications/guide-get-identifications", to: "/users/guides/identifications/get-identifications" },
+  { from: "/topics/users/identifications/guide-get-latest-id", to: "/users/guides/identifications/get-latest-id" },
+  { from: "/topics/users/identifications/sandbox", to: "/users/reference/sandbox-identifications" },
+  { from: "/topics/users/overview/guide-deactivate", to: "/users/guides/overview/deactivate" },
+  { from: "/topics/users/overview/guide-export", to: "/users/guides/overview/export" },
+  { from: "/topics/users/overview/guide-get-info-one", to: "/users/guides/overview/get-info-one" },
+  { from: "/topics/users/overview/guide-get-info-multiple", to: "/users/guides/overview/get-info-multiple" },
+  { from: "/topics/users/overview/guide-get-list", to: "/users/guides/overview/get-list" },
+  // DOC-1814 — Identity documents absorbed into users/reference/identity-methods
+  { from: "/partnership/document-center/identity", to: "/users/reference/identity-methods/" },
+  { from: "/partnership/document-center/identity/expert", to: "/users/reference/identity-methods/expert" },
+  { from: "/partnership/document-center/identity/pvid", to: "/users/reference/identity-methods/pvid" },
+  { from: "/partnership/document-center/identity/qes", to: "/users/reference/identity-methods/qes" },
 ];

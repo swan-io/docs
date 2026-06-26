@@ -483,12 +483,19 @@ module.exports = {
   usersSidebar: [
     doc("users/index", "Users overview"),
     top("Concepts", [
-      doc("users/concepts/consent", "Consent"),
-      doc("users/concepts/identifications", "Identifications"),
-    ]),
+      cat("The user", [
+        doc("users/concepts/user/statuses", "Statuses"),
+      ], { link: "users/concepts/user/index" }),
+      cat("Consent", [
+        doc("users/concepts/consent/statuses", "Statuses"),
+      ], { link: "users/concepts/consent/index" }),
+      cat("Identifications", [
+        doc("users/concepts/identifications/statuses", "Statuses"),
+      ], { link: "users/concepts/identifications/index" }),
+    ], "users/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Consent", [
-        doc("users/guides/consent/create-multiconsent", "Create a multiconsent"),
+        doc("users/guides/consent/create-multiconsent", "Create a multi-consent"),
         doc("users/guides/consent/configure-notifications", "Configure notifications"),
         doc("users/guides/consent/implement-s2s", "Implement server-to-server"),
         doc("users/guides/consent/integrate-sca", "Integrate SCA"),
@@ -505,11 +512,15 @@ module.exports = {
         doc("users/guides/overview/get-info-multiple", "Get info on multiple users"),
         doc("users/guides/overview/get-list", "Get a user list"),
       ]),
-    ]),
+    ], "users/guides/index", "ia-type-guide"),
     top("Reference", [
-      doc("users/reference/identity-methods", "Identity methods (Expert, PVID, QES)"),
+      cat("Identity methods (Expert, PVID, QES)", [
+        doc("users/reference/identity-methods/expert", "Expert"),
+        doc("users/reference/identity-methods/pvid", "PVID"),
+        doc("users/reference/identity-methods/qes", "QES"),
+      ], { link: "users/reference/identity-methods/index" }),
       doc("users/reference/sandbox-identifications", "Sandbox: identifications"),
-    ]),
+    ], "users/reference/index", "ia-type-ref"),
   ],
 
   buildSidebar: [

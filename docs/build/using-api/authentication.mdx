@@ -38,7 +38,7 @@ You then provide your token in an HTTP authorization header, such as `Authorizat
 
 ## User access tokens {#tokens-user}
 
-User access tokens allow you to act on behalf of an individual user in your project, often with the goal of [executing sensitive operations](/topics/users/consent/#sensitive).
+User access tokens allow you to act on behalf of an individual user in your project, often with the goal of [executing sensitive operations](/users/concepts/consent#sensitive).
 They must use the grant type **authorization code**.
 
 User access tokens are **valid for one hour** (3600 seconds), after which you can refresh it or get a new token.
@@ -233,7 +233,7 @@ https://oauth.swan.io/oauth2/auth?response_type=code&client_id=$YOUR_CLIENT_ID&r
 | --- | --- |
 | `onboardingId`<br/>(line 11) |  Avoids asking the customer to enter their own residence address if they provide that information during onboarding. |
 | `email` | If you include the `email` parameter, it triggers an [email verification](/accounts/concepts/memberships/inviting#invite) flow automatically. If you include the parameter *and* the email address, it triggers the email verification flow with the email address pre-filled.<br /><br />Email addresses must be **encoded**, for example `email=jules%40email.com`. |
-| `identificationLevel`<br/>(line 13) |  Indicate your preferred [identification level](/topics/users/identifications/#levels-processes): `PVID`, `QES`, `Expert` or `Auto`.<br /><br />Swan recommends setting `Auto` as your preferred identification level when guiding users through an identification flow, reengaging them to complete it, or inviting account members.<br /><br /> `Auto` allows Swan to direct your users to the best identification flow for their situation.  If your project is configured to [bypass identification](/accounts/concepts/memberships/statuses#remove-identification), eligible users will automatically skip it.<br /><br /> If you use the `Auto` identification level, make sure you include the `onboardingId` (line 11) or the `accountMembershipId` (line 12) in the authorization URL.|
+| `identificationLevel`<br/>(line 13) |  Indicate your preferred [identification level](/users/concepts/identifications#levels-processes): `PVID`, `QES`, `Expert` or `Auto`.<br /><br />Swan recommends setting `Auto` as your preferred identification level when guiding users through an identification flow, reengaging them to complete it, or inviting account members.<br /><br /> `Auto` allows Swan to direct your users to the best identification flow for their situation.  If your project is configured to [bypass identification](/accounts/concepts/memberships/statuses#remove-identification), eligible users will automatically skip it.<br /><br /> If you use the `Auto` identification level, make sure you include the `onboardingId` (line 11) or the `accountMembershipId` (line 12) in the authorization URL.|
 | `phoneNumber`<br />`firstName`<br />(line 14)<br/>`lastName`<br />(line 15)<br/>`birthDate`<br />`birthCity`<br />`birthCountry`<br />`nationality`<br />`language`<br />`birthPlacePostalCode`<br />`residencyAddress`<br />`residencyAddressCity`<br />`residencyAddressCountry`<br />`residencyAddressPostalCode` |  Avoids asking the customer to enter this information during user registration.<br /><br />Required formats: <ul><li>`phoneNumber`: **encoded**, including the plus `+` sign in the country code *(`phoneNumber=%2B3312345678901`, where `%2B` represents the plus sign)*</li><li>`birthDate`: YYYY-MM-DD *(year-month-day)*</li><li>`birthCountry`, `nationality`, and `residencyAddressCountry`: ISO 3166-1 alpha-3 *(France = `FRA`)*</li><li>`language`: ISO 639-1 (alpha 2) *(Spanish = `es`)*</li></ul> |
 
 #### 2.2 Receive approval from user {#code-approve}
@@ -250,7 +250,7 @@ You can choose to display the authorization page in **fullscreen** or as a **nat
 A native popup is more challenging to implement but provides a better user experience.
 
 Note that you **can't use webviews or iFrames**.
-Read about why in the overview of the [integrate Strong Customer Authentication](/topics/users/consent/guide-integrate-sca#overview) guide.
+Read about why in the overview of the [integrate Strong Customer Authentication](/users/guides/consent/integrate-sca#overview) guide.
 :::
 
 #### 2.3 Receive authorization code {#code-receive}
@@ -324,7 +324,7 @@ Use a new authorization code or a new client secret (or both) to try your reques
 After getting the token, **use it immediately** to **verify which user is logged in**.
 
 Adding a `phoneNumber` to the OAuth 2.0 URL in step 2.1 **isn't sufficient** to know which user is logged in.
-Sometimes, a phone number might have been used by a [deactivated user](/topics/users/#deactivate) before being used for a new user.
+Sometimes, a phone number might have been used by a [deactivated user](/users/concepts/user#deactivate) before being used for a new user.
 Additionally, your user might have replaced the number you provided with a different number, or gone through the process to [update their phone number](https://support.swan.io/hc/en-150/articles/16332148291741-Updating-your-phone-number) with Swan.
 
 It's impossible to detect these changes when getting a user access token, so it's **crucial to verify** that the user associated with the token is the logged-in user.
@@ -387,7 +387,7 @@ You can add information in your HTTP header to any GraphQL API request to [imper
 However, this method doesn't work with the OAuth 2.0 API.
 
 :::tip Approved use cases
-1. Act as the legal representative to perform [server-to-server consent](/topics/users/consent/#s2s) operations.
+1. Act as the legal representative to perform [server-to-server consent](/users/concepts/consent#s2s) operations.
 1. Get updated or refreshed user data with a [webhook notification](/build/using-api/webhooks) on the `user` object.
 1. Illustrate a user's problem to Partners and Swan support teams.
 1. Use the Swan API on behalf of a user:

@@ -21,10 +21,10 @@ module.exports = {
     top("Become a partner", [
       doc("get-started/become-a-partner/index", "Overview"),
       doc("get-started/become-a-partner/country-coverage", "Country coverage"),
-      doc("get-started/become-a-partner/licence-regulatory-status", "Licence & regulatory status"),
+      doc("get-started/become-a-partner/licence-regulatory-status", "Licence and regulatory status"),
       doc("get-started/become-a-partner/orias-registration", "ORIAS registration"),
-      doc("get-started/become-a-partner/rates-billing", "Rates & billing"),
-      doc("get-started/become-a-partner/brand-communication", "Brand & communication rules"),
+      doc("get-started/become-a-partner/rates-billing", "Rates and billing"),
+      doc("get-started/become-a-partner/brand-communication", "Brand and communication rules"),
       cat("Protections", [
         doc("get-started/become-a-partner/protections/index", "Overview"),
         doc("get-started/become-a-partner/protections/data-protection", "Data protection (GDPR)"),
@@ -464,7 +464,7 @@ module.exports = {
           ], { link: "payments/guides/merchants/in-person/checks/index" }),
         ], { link: "payments/guides/merchants/in-person/index" }),
       ], { link: "payments/guides/merchants/index" }),
-    ]),
+    ], "payments/guides/index", "ia-type-guide"),
     top("Reference", [
       cat("Sandbox", [
         doc("payments/reference/sandbox/sandbox-sepa", "SEPA Credit Transfers"),
@@ -477,7 +477,7 @@ module.exports = {
       doc("payments/reference/card-rejection-reasons", "Card rejection reasons"),
       doc("payments/reference/schemes", "Scheme tables"),
       doc("payments/reference/transaction-fraud-types", "Transaction fraud types"),
-    ]),
+    ], "payments/reference/index", "ia-type-ref"),
   ],
 
   usersSidebar: [
@@ -536,7 +536,7 @@ module.exports = {
     ]),
     top("Using the API", [
       doc("build/using-api/authentication", "Authentication"),
-      doc("build/using-api/errors-rejections", "Errors & rejections"),
+      doc("build/using-api/errors-rejections", "Errors and rejections"),
       doc("build/using-api/idempotency", "Idempotency"),
       doc("build/using-api/pagination", "Pagination"),
       doc("build/using-api/payment-control", "Payment control"),

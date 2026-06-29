@@ -1,0 +1,99 @@
+---
+title: Account Information Service (AIS)
+---
+
+# Account Information Service (AIS)
+
+import AisDefinition from '../definitions/_ais.mdx';
+
+> <AisDefinition />
+
+## What TPPs can access {#access}
+
+- Account list and details.
+- Account balances (available, booked, and pending).
+- Transaction history, with filtering and pagination.
+
+## Common AIS use cases {#use-cases}
+
+- Accounting and financial management software importing bank transactions automatically.
+- Personal finance management apps aggregating balances across multiple banks.
+- Business expense tracking and reconciliation tools.
+
+## Access conditions {#conditions}
+
+- The [Swan user](/topics/users/) must authenticate and grant explicit consent.
+- The user must have an active [account membership](/topics/accounts/memberships/) with the `canViewAccount` permission.
+- Consent must be valid, meaning it has not expired or been revoked.
+- The connection must be active, meaning Salt Edge's daily refresh is working.
+
+## Transaction history {#transaction-history}
+
+- By default, Swan returns all transactions since account creation, including cards and transfers.
+- TPPs commonly filter results to the last 3 months on their end.
+- Some TPPs expose an endpoint that lets users retrieve transaction history beyond 3 months.
+
+## Account scope {#account-scope}
+
+By default, Swan returns all accounts the user has access to.
+
+:::note All or nothing
+The consent flow does not currently allow users to select a subset of accounts; it is all or nothing.
+:::
+
+## No accounts visible after authentication {#troubleshooting-no-accounts}
+
+This most often happens when a user authenticates with their **personal phone number**, but their Swan account is tied to their **professional phone number**.
+The phone number is Swan's unique [user](/topics/users/) identifier, so authentication succeeds but returns no accounts.
+
+**Solutions**:
+
+- **Option 1, try with the correct phone number**: authenticate again using the professional phone number linked to the Swan account.
+- **Option 2, transfer accounts to the personal phone number**:
+    1. If the personal phone number is already linked to another Swan user, that user must first be deactivated to free the number (see the [`deactivateUser` mutation preconditions](/topics/users/overview/guide-deactivate)).
+    1. The user linked to the professional phone number (and to the accounts) then changes their phone number to the personal one at [link.swan.io/edit-phone](https://link.swan.io/edit-phone).
+    1. Once complete, the accounts are accessible using the personal phone number.
+
+For complex cases involving multi-project users, contact [Swan Support](https://supportform.swan.io/).
+
+## Transaction field mapping {#field-mapping}
+
+The table below maps Swan's internal transaction fields to the external fields exposed through Salt Edge, following the Berlin Group standard.
+
+| Internal field (Swan) | External field (Salt Edge) | Notes |
+|---|---|---|
+| `id` | `id` | |
+| `amount.value` | `amount` | Negative string for debit, positive for credit. |
+| `amount.currency` | `currency` | Currency code, such as `EUR` or `USD`. |
+| `statusInfo.bookingDate` | `booking_date` | Optional. Date in `YYYY-MM-DD` format. |
+| `statusInfo.status` | `status` | Only `Booked` and `Pending` transactions are exposed. `Rejected` transactions are not served through AIS. |
+| `statusInfo.valueDate` when `Booked`, otherwise `updatedAt` | `value_date` | Date in `YYYY-MM-DD` format. When the transaction is not booked, this refers to the `updatedAt` date. |
+| `label` | `remittance_information.unstructured` | Transaction label or description. Swan defaults to something like `Transfer to/from X` if the input was empty when initiating a SEPA Credit Transfer. |
+| `reference` | `remittance_information.structured` | Structured payment reference. |
+| `paymentId` | `extra.additional_information` | Not the same as the transaction ID. A payment can have multiple transactions, for example for fees. |
+| For SCTs: `creditor.name`. Else if user is on the credit side: `account.holder.info.name`. Else: `counterparty`. | `creditor_details.name` | Creditor or recipient name. |
+| `creditor.IBAN` | `creditor_details.account.iban` | Optional. Always served when the transaction is a SEPA Credit Transfer or the end user is on the credit side. |
+| `creditor.currency` | `creditor_details.account.currency` | Optional. Only served when the end user is on the credit side. |
+| For SCTs: `debtor.name`. Else if user is on the debit side: `account.holder.info.name`. Else: `counterparty`. | `debtor_details.name` | Debtor or payer name. |
+| `debtor.IBAN` | `debtor_details.account.iban` | Optional. Always served when the transaction is a SEPA Credit Transfer or the end user is on the debit side. |
+| `debtor.currency` | `debtor_details.account.currency` | Optional. Only served when the end user is on the debit side. |
+
+:::note Why rejected transactions are not served
+Rejected transactions were never actually debited or credited.
+They represent failed payment attempts rather than completed financial movements, so they are excluded from AIS data.
+:::
+
+:::caution Reconciliation: do not use `value_date` for pending transactions
+For pending transactions, `value_date` maps to `updatedAt`, which changes every time the transaction is updated.
+
+Instead:
+
+- Use `id` as the stable unique key across all states.
+- Use `booking_date` as the date anchor.
+- Only reconcile transactions with status `Booked`.
+:::
+
+## References {#references}
+
+- [Salt Edge transaction docs](https://priora.saltedge.com/docs/aspsp/v2/swan/ais#connector-endpoints-accounts-accounts-transactions).
+- [Swan Transaction interface](https://api-reference.swan.io/interfaces/transaction).

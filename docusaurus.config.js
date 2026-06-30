@@ -152,6 +152,9 @@ module.exports = {
     require.resolve("./plugins/ia-rail-meta"),
     require.resolve("./plugins/ia-glossary-terms"),
     require.resolve("./plugins/ia-nav"),
+    // Layer 2: emit {URL}.md mirrors + add them to sitemap.xml. Listed after the
+    // preset's sitemap so sitemap.xml exists when this plugin's postBuild runs.
+    require.resolve("./plugins/md-mirror"),
     "docusaurus-plugin-matomo",
     [
       "@docusaurus/plugin-client-redirects",

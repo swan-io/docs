@@ -155,6 +155,9 @@ module.exports = {
     // Layer 2: emit {URL}.md mirrors + add them to sitemap.xml. Listed after the
     // preset's sitemap so sitemap.xml exists when this plugin's postBuild runs.
     require.resolve("./plugins/md-mirror"),
+    // Phase 0: emit a root /llms.txt (canonical URLs + reading order from
+    // sidebars.ia.js) for LLM consumers. postBuild, like md-mirror.
+    require.resolve("./plugins/llms-txt"),
     "docusaurus-plugin-matomo",
     [
       "@docusaurus/plugin-client-redirects",

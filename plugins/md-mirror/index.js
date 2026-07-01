@@ -3,20 +3,31 @@ const path = require("path");
 const matter = require("gray-matter");
 
 // Layer 2 of the AI-as-reader blueprint: emit a plain-markdown mirror of every
-// docs page at {URL}.md, served alongside the HTML, and add those URLs to
-// sitemap.xml.
+// docs page at {URL}.md, served alongside the HTML, and make those URLs
+// crawler-discoverable.
 //
-// Lifecycle: the heavy lifting runs in postBuild (we need the final outDir and
-// the sitemap to already be written). The actual MDX->markdown transform lives
-// in ./mdToMarkdown.mjs (ESM, shared with the vitest suite); we load it with a
-// dynamic import since this plugin file is CommonJS, like the sibling ia-*
-// plugins.
+// Lifecycle: the heavy lifting runs in postBuild (we need the final outDir).
+// The actual MDX->markdown transform lives in ./mdToMarkdown.mjs (ESM, shared
+// with the vitest suite); we load it with a dynamic import since this plugin
+// file is CommonJS, like the sibling ia-* plugins.
+//
+// Sitemap discovery is ORDER-INDEPENDENT by design. Docusaurus runs every
+// plugin's postBuild concurrently (build.js: `await Promise.all(plugins.map(
+// ... plugin.postBuild ...))`), so @docusaurus/plugin-sitemap's sitemap.xml may
+// not exist yet — or ever, at a deterministic moment — while this hook runs.
+// Mutating sitemap.xml is therefore a race (it was: the file was usually absent
+// and all .md URLs silently dropped). Instead we write our OWN sitemap-mirrors
+// .xml and advertise both it and the preset sitemap.xml via robots.txt. We only
+// ever write our own files, never read the preset's output, so the result is
+// the same regardless of which postBuild wins the race.
 //
 // Path mapping: routeBasePath is "/", so a page's permalink maps directly to a
 // sibling markdown file — permalink "/accounts/concepts" -> build/accounts/
 // concepts.md, served at /accounts/concepts.md next to /accounts/concepts/.
 const DOCS_DIR = path.join(__dirname, "..", "..", "docs");
-const SITEMAP_FILE = "sitemap.xml";
+const MIRROR_SITEMAP_FILE = "sitemap-mirrors.xml";
+const PRESET_SITEMAP_FILE = "sitemap.xml";
+const ROBOTS_FILE = "robots.txt";
 
 function walk(dir, acc) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -60,23 +71,46 @@ function mdRelPath(permalink) {
   return rel + ".md";
 }
 
-// Insert <url> entries for the .md mirrors before </urlset>. Returns false if
-// the sitemap isn't there yet (plugin-order issue) so the caller can warn.
-function appendToSitemap(outDir, urls) {
-  const sitemapPath = path.join(outDir, SITEMAP_FILE);
-  if (!fs.existsSync(sitemapPath)) return false;
-  const xml = fs.readFileSync(sitemapPath, "utf8");
-  const close = "</urlset>";
-  const idx = xml.lastIndexOf(close);
-  if (idx === -1) return false;
+// Write a standalone sitemap listing the .md mirror URLs. We own this file
+// outright, so there's no dependency on the preset sitemap's timing.
+function writeMirrorSitemap(outDir, urls) {
   const entries = urls
     .map(
       (u) =>
         `<url><loc>${u}</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>`
     )
     .join("");
-  fs.writeFileSync(sitemapPath, xml.slice(0, idx) + entries + xml.slice(idx));
-  return true;
+  const xml =
+    '<?xml version="1.0" encoding="UTF-8"?>' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
+    entries +
+    "</urlset>";
+  fs.writeFileSync(path.join(outDir, MIRROR_SITEMAP_FILE), xml);
+}
+
+// Advertise the given sitemaps in robots.txt so crawlers discover them no
+// matter which postBuild ran first. Docusaurus generates no robots.txt of its
+// own, so normally we create a permissive one (identical in effect to having no
+// robots.txt) carrying the Sitemap: hints. If one already exists, we only
+// append the Sitemap: lines we're missing — idempotent, never clobbering.
+function ensureRobotsSitemaps(outDir, sitemapUrls) {
+  const robotsPath = path.join(outDir, ROBOTS_FILE);
+  const lines = sitemapUrls.map((u) => `Sitemap: ${u}`);
+  const existing = fs.existsSync(robotsPath)
+    ? fs.readFileSync(robotsPath, "utf8")
+    : "";
+  if (!existing.trim()) {
+    fs.writeFileSync(
+      robotsPath,
+      `User-agent: *\nAllow: /\n\n${lines.join("\n")}\n`
+    );
+    return;
+  }
+  const toAdd = lines.filter((l) => !existing.includes(l));
+  if (toAdd.length) {
+    const sep = existing.endsWith("\n") ? "" : "\n";
+    fs.writeFileSync(robotsPath, existing + sep + toAdd.join("\n") + "\n");
+  }
 }
 
 module.exports = function mdMirror() {
@@ -119,12 +153,16 @@ module.exports = function mdMirror() {
         written++;
       }
 
-      const sitemapOk = appendToSitemap(outDir, urls);
+      writeMirrorSitemap(outDir, urls);
+      const mirrorSitemapUrl = `${base}${baseUrl}/${MIRROR_SITEMAP_FILE}`;
+      ensureRobotsSitemaps(outDir, [
+        `${base}${baseUrl}/${PRESET_SITEMAP_FILE}`,
+        mirrorSitemapUrl,
+      ]);
       console.log(
         `[md-mirror] wrote ${written} .md mirror(s); ` +
-          (sitemapOk
-            ? `added ${urls.length} URL(s) to ${SITEMAP_FILE}`
-            : `WARNING: ${SITEMAP_FILE} not found, .md URLs not added (check plugin order)`)
+          `added ${urls.length} URL(s) to ${MIRROR_SITEMAP_FILE}; ` +
+          `advertised it + ${PRESET_SITEMAP_FILE} in ${ROBOTS_FILE}`
       );
       if (warnings.length) {
         const unique = [...new Set(warnings)];

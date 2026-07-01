@@ -9,7 +9,7 @@ const require = createRequire(import.meta.url);
 const mdMirror = require("./index.js");
 
 // End-to-end smoke: run the plugin's postBuild against the real docs tree into a
-// throwaway outDir and confirm it emits .md mirrors and updates the sitemap.
+// throwaway outDir and confirm it emits .md mirrors and a discoverable sitemap.
 // This exercises the glob -> permalink -> render -> write -> sitemap path without
 // a full (slow) Docusaurus/webpack build.
 describe("md-mirror plugin postBuild", () => {
@@ -17,7 +17,8 @@ describe("md-mirror plugin postBuild", () => {
 
   beforeAll(async () => {
     outDir = fs.mkdtempSync(path.join(os.tmpdir(), "md-mirror-"));
-    // Stub a sitemap as the preset's sitemap plugin would have written.
+    // Stub a sitemap as the preset's sitemap plugin would have written, to prove
+    // we leave it untouched (postBuild hooks race; we never mutate it).
     fs.writeFileSync(
       path.join(outDir, "sitemap.xml"),
       '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://docs.swan.io/</loc></url></urlset>'
@@ -46,9 +47,21 @@ describe("md-mirror plugin postBuild", () => {
     expect(count(outDir)).toBeGreaterThan(100);
   });
 
-  it("adds .md URLs to sitemap.xml before </urlset>", () => {
-    const xml = fs.readFileSync(path.join(outDir, "sitemap.xml"), "utf8");
+  it("writes .md URLs to its own sitemap-mirrors.xml (order-independent)", () => {
+    const xml = fs.readFileSync(path.join(outDir, "sitemap-mirrors.xml"), "utf8");
     expect(xml).toContain("https://docs.swan.io/accounts/concepts.md");
+    expect(xml.startsWith("<?xml")).toBe(true);
     expect(xml.trim().endsWith("</urlset>")).toBe(true);
+  });
+
+  it("leaves the preset sitemap.xml untouched", () => {
+    const xml = fs.readFileSync(path.join(outDir, "sitemap.xml"), "utf8");
+    expect(xml).not.toContain(".md</loc>");
+  });
+
+  it("advertises both sitemaps in robots.txt", () => {
+    const robots = fs.readFileSync(path.join(outDir, "robots.txt"), "utf8");
+    expect(robots).toContain("Sitemap: https://docs.swan.io/sitemap.xml");
+    expect(robots).toContain("Sitemap: https://docs.swan.io/sitemap-mirrors.xml");
   });
 });

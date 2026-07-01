@@ -13,39 +13,27 @@ related:
 
 <p className="ia-lede">The models behind Swan accounts: from onboarding and account holders through the account itself, its memberships, IBANs, funding, billing, supporting documents, and closure.</p>
 
-## How an account comes to be
+## The account model
 
-Onboarding creates a verified account holder, and that account holder owns the Swan account.
-
-```flowmap
-{
-  "mode": "graph",
-  "layout": "chain",
-  "nodes": [
-    { "id": "onb", "title": "Onboarding", "to": "/accounts/concepts/onboarding", "desc": "The process that creates account holders." },
-    { "id": "ah", "title": "Account holders", "to": "/accounts/concepts/account-holders", "desc": "The verified individual or company." },
-    { "id": "acc", "title": "Account", "to": "/accounts/concepts/account", "desc": "The euro account itself." }
-  ]
-}
-```
-
-## What's attached to an account
-
-Everything else hangs off the account: who can use it, how money moves, and how it scales or closes.
+Onboarding creates a verified account holder, who owns the Swan account. Everything else hangs off that account: who can use it, how money moves, how it scales, and how it closes.
 
 ```flowmap
 {
   "mode": "graph",
-  "layout": "spokes",
+  "layout": "spine",
   "nodes": [
-    { "id": "acc", "title": "Account" },
-    { "title": "Memberships", "to": "/accounts/concepts/memberships", "desc": "Who can access the account." },
-    { "title": "IBANs", "to": "/accounts/concepts/ibans", "desc": "Main and virtual IBANs." },
-    { "title": "Account funding", "to": "/accounts/concepts/funding", "desc": "Add money to the account." },
-    { "title": "Billing", "to": "/accounts/concepts/billing", "desc": "Fees and invoices." },
-    { "title": "Supporting documents", "to": "/accounts/concepts/documents", "desc": "Verify holders and transactions." },
-    { "title": "Multiple accounts", "to": "/accounts/concepts/multiple-accounts", "desc": "More accounts per holder." },
-    { "title": "Closure", "to": "/accounts/concepts/closure", "desc": "Who closes the account, how, and why." }
+    { "id": "onb", "title": "Onboarding", "to": "/accounts/concepts/onboarding", "desc": "Creates the account holder." },
+    { "id": "ah", "title": "Account holders", "to": "/accounts/concepts/account-holders", "desc": "The verified owner.", "branches": [
+      { "title": "Multiple accounts", "to": "/accounts/concepts/multiple-accounts", "desc": "1 holder, N accounts" }
+    ] },
+    { "id": "acc", "title": "Account", "to": "/accounts/concepts/account", "desc": "The euro account.", "branches": [
+      { "title": "Memberships", "to": "/accounts/concepts/memberships", "desc": "1 account, N members" },
+      { "title": "IBANs", "to": "/accounts/concepts/ibans", "desc": "1 main + N virtual" },
+      { "title": "Account funding", "to": "/accounts/concepts/funding", "desc": "money in" },
+      { "title": "Billing", "to": "/accounts/concepts/billing", "desc": "fees and invoices" },
+      { "title": "Supporting documents", "to": "/accounts/concepts/documents", "desc": "verify holders and transactions" }
+    ] },
+    { "id": "clo", "title": "Closure", "to": "/accounts/concepts/closure", "endpoint": true, "desc": "Account end-of-life." }
   ]
 }
 ```

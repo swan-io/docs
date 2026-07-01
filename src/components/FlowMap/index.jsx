@@ -5,7 +5,7 @@ import ContentTypeIcon from '../ContentTypeIcon';
 /**
  * FlowMap — a single data-driven module for navigation hubs AND concept diagrams.
  * Authored inline as a ```flowmap fenced block (JSON spec), like ```mermaid.
- * Modes: lanes (lifecycle phases) · pathway (ordered sequence) · graph (chain/lifecycle/spokes)
+ * Modes: lanes (lifecycle phases) · pathway (ordered sequence) · graph (chain/lifecycle/spokes/spine)
  *        · tracks (side-by-side audience reading paths) · grid.
  */
 
@@ -122,6 +122,32 @@ function Tracks({ tracks = [] }) {
   );
 }
 
+// spine — a vertical backbone (lifecycle / hierarchy) whose nodes each carry an
+// optional cluster of "branch" concepts that attach to them. Replaces spokes where
+// the leaves aren't true peers: a parent, an endpoint, or hidden sub-groups.
+function Spine({ nodes = [] }) {
+  return (
+    <div className="flowmap flowmap--spine">
+      {nodes.map((n, i) => {
+        const branches = n.branches || [];
+        const nodeClass = `flowmap-spine-node${n.endpoint ? ' flowmap-spine-node--endpoint' : ''}`;
+        return (
+          <div className="flowmap-spine__row" key={n.id || i}>
+            <Card item={n} className={nodeClass} />
+            {branches.length ? (
+              <div className="flowmap-spine__branches">
+                {branches.map((b, j) => (
+                  <Card key={j} item={b} className="flowmap-spine-branch" />
+                ))}
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function arrowBetween(a, b, edges) {
   const e = edges.find(
     (x) => (x.from === a.id && x.to === b.id) || (x.from === b.id && x.to === a.id),
@@ -130,6 +156,9 @@ function arrowBetween(a, b, edges) {
 }
 
 function Graph({ layout = 'chain', nodes = [], edges = [] }) {
+  if (layout === 'spine') {
+    return <Spine nodes={nodes} />;
+  }
   if (layout === 'spokes') {
     const [root, ...rest] = nodes;
     return (

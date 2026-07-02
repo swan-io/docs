@@ -39,6 +39,7 @@ const ICONS = {
   tools: svg(<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />),
   usingapi: svg(<><circle cx="7.5" cy="15.5" r="5.5" /><path d="m21 2-9.6 9.6" /><path d="m15.5 7.5 3 3L22 7l-3-3" /></>),
   graphql: svg(<><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></>),
+  status: svg(<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />),
   doc: svg(<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></>),
 };
 
@@ -120,12 +121,14 @@ export default function DevelopersDropdown({ to = "/build", label = "Developer r
             {groups.map((g, i) => {
               const exp = g.children && g.children.length > 0;
               return (
-                <li key={i}>
+                <li
+                  key={i}
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                >
                   <Link
                     className={clsx("dev-row", i === active && "dev-row--active")}
                     to={g.to}
-                    onMouseEnter={() => setActive(i)}
-                    onFocus={() => setActive(i)}
                   >
                     <span className="dev-ic" aria-hidden="true">{ICONS[groupIcon(g.label)]}</span>
                     <span className="dev-row__text">{g.label}</span>

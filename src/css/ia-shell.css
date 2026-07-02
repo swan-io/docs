@@ -57,6 +57,32 @@
 .ia-path-card__desc { display: block; color: var(--ia-ink-2); font-size: 0.95rem; line-height: 1.45; margin-bottom: 0.6rem; }
 .ia-path-card__meta { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; color: var(--ia-ink-3); letter-spacing: 0.03em; }
 
+/* Get help — support triage. Vertical rows read as "your question, this channel"
+   and sit better in the narrow doc content column than a card grid. */
+.ia-triage { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.25rem 0; }
+.ia-triage__row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--ia-line); border-radius: var(--ia-radius);
+  background: var(--ia-surface); color: inherit; text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ia-triage__row:hover { border-color: var(--ia-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.05); text-decoration: none; }
+.ia-triage__icon {
+  display: inline-grid; place-items: center; flex: none;
+  width: 2.5rem; height: 2.5rem; border-radius: 8px;
+  background: var(--ia-primary-soft); color: var(--ia-primary);
+}
+.ia-triage__icon svg { width: 1.3rem; height: 1.3rem; }
+.ia-triage__body { display: flex; flex-direction: column; gap: 0.15rem; flex: 1; min-width: 0; }
+.ia-triage__title { font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1.05rem; color: var(--ifm-heading-color); }
+.ia-triage__desc { color: var(--ia-ink-2); font-size: 0.92rem; line-height: 1.45; }
+.ia-triage__host { font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; color: var(--ia-ink-3); letter-spacing: 0.02em; flex: none; }
+@media (max-width: 600px) {
+  .ia-triage__row { flex-wrap: wrap; }
+  .ia-triage__host { flex-basis: 100%; padding-left: 3.5rem; }
+}
+
 /* Get started — partnership map */
 .ia-partnership-map { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.9rem; align-items: stretch; }
 .ia-map-side {
@@ -491,6 +517,15 @@ a.flowmap-spine-node:hover { background: var(--ifm-background-surface-color); }
 .ia-type-guide > .menu__link::before { -webkit-mask-image: url('/img/type-guide.svg'); mask-image: url('/img/type-guide.svg'); }
 .ia-type-ref > .menu__list-item-collapsible > .menu__link::before,
 .ia-type-ref > .menu__link::before { -webkit-mask-image: url('/img/type-ref.svg'); mask-image: url('/img/type-ref.svg'); }
+
+/* "Get help" sidebar entry: a lifebuoy marker so the folded support page reads
+   like the external resource links above it. Painted in the accent to match them. */
+.ia-help-link > .menu__link::before {
+  content: ""; display: inline-block; width: 1.05em; height: 1.05em; flex: none;
+  margin-right: .5em; vertical-align: -0.15em; background-color: var(--ia-primary);
+  -webkit-mask: url('/img/support.svg') no-repeat center / contain;
+  mask: url('/img/support.svg') no-repeat center / contain;
+}
 
 /* "Also available" counterpart — parent-section context line above the title */
 .ia-rail__card-context {

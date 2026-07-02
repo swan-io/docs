@@ -14,6 +14,15 @@ const cat = (label, items, opts = {}) => ({
 const top = (label, items, link, className) =>
   cat(label, items, { collapsible: true, collapsed: false, link, className });
 const doc = (id, label) => ({ type: "doc", id, label });
+// External sidebar link with an inline icon (html item — Docusaurus link items
+// can't carry icons). Icon paths mirror the cards on the Resources page.
+const svgIcon = (inner) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const extLink = (label, href, iconInner) => ({
+  type: "html",
+  className: "menu-ext-link",
+  value: `<a class="menu__link menu-ext-link__a" href="${href}" target="_blank" rel="noopener noreferrer">${svgIcon(iconInner)}<span>${label}</span></a>`,
+});
 
 module.exports = {
   getStartedSidebar: [
@@ -46,6 +55,16 @@ module.exports = {
       doc("get-started/integration-by-segment/accounting-platforms", "Accounting platforms"),
       doc("get-started/integration-by-segment/expense-management", "Expense management"),
       doc("get-started/integration-by-segment/meal-cards", "Meal cards"),
+    ]),
+    top("Resources & support", [
+      extLink("Status", "https://status.swan.io/", '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />'),
+      extLink("Trust Center", "https://trust.swan.io/", '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />'),
+      extLink("Roadmap", "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22", '<polygon points="1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21 1 6" /><line x1="8" y1="3" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="21" />'),
+      // The three support channels are folded into one page that triages the
+      // reader. Native doc item (not an html link) so the page keeps the
+      // sidebar and gets in-app routing; the lifebuoy marker matches the
+      // external links above (see .ia-help-link in ia-shell.css).
+      { type: "doc", id: "get-started/get-help", label: "Get help", className: "ia-help-link" },
     ]),
   ],
 

@@ -1,47 +1,25 @@
 const ia = require("./sidebars.ia.js");
 
-module.exports = {
+// Empty sidebar sections are handled automatically. Docusaurus rejects a
+// category with no items and no link, so before the config is exported we walk
+// the tree and drop a muted "Nothing here yet" placeholder into any empty
+// grouping (styled via .sidebar-empty-hint in custom.css). Leave a section's
+// `items: []` and it self-labels — no per-section boilerplate. (Sections that
+// have a link but no children are already covered by the CSS :empty rule.)
+const EMPTY_HINT = { type: "html", value: "Nothing here yet", className: "sidebar-empty-hint" };
+const fillEmptySections = (items) =>
+  Array.isArray(items)
+    ? items.map((item) => {
+        if (item && item.type === "category") {
+          const filled = fillEmptySections(item.items || []);
+          return { ...item, items: filled.length === 0 && !item.link ? [EMPTY_HINT] : filled };
+        }
+        return item;
+      })
+    : items;
+
+const sidebars = {
   ...ia,
-  docSidebar: [
-    {
-      type: "category",
-      label: "Introduction",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        "index",
-      ],
-    },
-    {
-      type: "category",
-      label: "Resources",
-      collapsible: false,
-      collapsed: false,
-      items: [
-        {
-          type: "link",
-          label: "Status page",
-          href: "https://status.swan.io/",
-        },
-        {
-          type: "link",
-          label: "Trust Center",
-          href: "https://trust.swan.io/",
-        },
-        {
-          type: "link",
-          label: "Support Center",
-          href: "https://support.swan.io/hc/en-150",
-        },
-        {
-          type: "link",
-          label: "Roadmap",
-          href: "https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22",
-        },
-        "topics/contact",
-      ],
-    },
-  ],
   // DOC-1814 batch 2: partnership migrated to get-started/become-a-partner (+ accounts/users reference).
   // Remnant only — identity documents are deferred to the users batch.
   previewSidebar: [
@@ -52,11 +30,13 @@ module.exports = {
       className: 'sidebar-preview-notice',
     },
     {
+      // Empty grouping: leave items empty and fillEmptySections (above) injects
+      // the "Nothing here yet" placeholder. Add real pages here when a feature
+      // enters preview.
       type: "category",
       label: "Preview",
       collapsible: false,
       collapsed: false,
-      link: { type: "doc", id: "preview/index" },
       items: [],
     },
     {
@@ -107,3 +87,7 @@ module.exports = {
     },
   ],
 };
+
+module.exports = Object.fromEntries(
+  Object.entries(sidebars).map(([key, value]) => [key, fillEmptySections(value)]),
+);

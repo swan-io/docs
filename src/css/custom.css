@@ -278,6 +278,43 @@ pre {
   background-color: transparent;
 }
 
+/* Empty sidebar sections show a muted hint automatically, so any current or
+   future empty section reads as intentionally empty rather than a broken gap.
+   The wording lives here once and applies to both shapes an empty section can
+   take:
+     1. A section that links to a landing but has no child pages yet renders an
+        empty list -> :empty::after supplies the hint with no config at all.
+     2. A grouping with no link must carry one placeholder item (Docusaurus
+        requires every category to have a link or at least one item), so mark
+        that item `sidebar-empty-hint` with an empty value and the same text
+        appears. This is the only per-section step, and it is one line. */
+.sidebar-empty-hint,
+.theme-doc-sidebar-item-category > .menu__list:empty::after {
+  padding: 2px 12px 6px 16px;
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--ifm-color-emphasis-600);
+}
+.theme-doc-sidebar-item-category > .menu__list:empty::after {
+  content: "Nothing here yet";
+  display: block;
+}
+
+/* Resources & support — external links in the sidebar, each with its icon.
+   Rendered as html items (link items can't carry icons); the anchor keeps the
+   native .menu__link look and we only add the icon layout. */
+.menu-ext-link__a.menu__link {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.menu-ext-link__a svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+  color: var(--ia-primary, var(--ifm-color-primary));
+}
+
 .menu__caret:before,
 .menu__link--sublist-caret:after {
   width: 1em;

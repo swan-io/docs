@@ -59,6 +59,7 @@ module.exports = {
           resources: [
             { label: "API Reference", icon: "apiref", href: "https://api-reference.swan.io", desc: "Full GraphQL schema" },
             { label: "API Explorer", icon: "explorer", href: "https://explorer.swan.io/", desc: "Run queries live" },
+            { label: "Status", icon: "status", href: "https://status.swan.io/", desc: "Platform health & incidents" },
           ],
         },
         {

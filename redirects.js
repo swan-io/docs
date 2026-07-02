@@ -12,7 +12,7 @@ module.exports = [
   { from: "/accounts/concepts/onboarding/verification-renewal", to: "/accounts/concepts/account-holders/verification-renewal" },
   // DOC-1814 cutover — batch 3B: developers -> build
   { from: "/developers", to: "/build" },
-  { from: "/developers/contact", to: "/get-started" },
+  { from: "/developers/contact", to: "/get-started/get-help" },
   { from: "/developers/graphql", to: "/build/graphql" },
   { from: "/developers/tools", to: "/build" },
   { from: "/developers/tools/api-explorer", to: "/build/tools/api-explorer" },
@@ -67,7 +67,7 @@ module.exports = [
   { from: "/partnership/protections/report-vulnerability", to: "/get-started/become-a-partner/protections#vulnerability-disclosure" },
   { from: "/partnership/protections/fraud", to: "/get-started/become-a-partner/protections/fraud-obligations" },
   { from: "/partnership/protections/fraud/types", to: "/get-started/become-a-partner/protections/fraud-obligations#types" },
-  { from: "/partnership/contact", to: "/get-started" },
+  { from: "/partnership/contact", to: "/get-started/get-help" },
   { from: "/partnership/document-center/company-registration", to: "/accounts/reference/onboarding/country-requirements" },
   { from: "/partnership/document-center/company-registration/france", to: "/accounts/reference/onboarding/country-requirements/france" },
   { from: "/partnership/document-center/company-registration/germany", to: "/accounts/reference/onboarding/country-requirements/germany" },
@@ -152,7 +152,9 @@ module.exports = [
   { from: "/guide/use-our-api", to: "/build" },
   { from: "/guide/use-our-webhooks", to: "/build/using-api/webhooks" },
   { from: "/help/changelog", to: "/changelog/" },
-  { from: "/help/contact-us", to: "/topics/contact" },
+  { from: "/help/contact-us", to: "/get-started/get-help" },
+  { from: "/topics/contact", to: "/get-started/get-help" },
+  { from: "/welcome", to: "/get-started" },
   {
     from: "/help/countries-coverage",
     to: "/get-started/become-a-partner/country-coverage",

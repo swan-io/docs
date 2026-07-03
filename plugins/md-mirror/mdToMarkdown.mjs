@@ -480,7 +480,7 @@ function inlinePartial(absPath, ctx, props = {}) {
     props,
   };
   const blocks = transformBlocks(tree.children, childCtx);
-  const isDefinition = absPath.replace(/\\/g, "/").includes("/topics/definitions/");
+  const isDefinition = absPath.replace(/\\/g, "/").includes("/_shared/definitions/");
   return isDefinition ? [blockquote(blocks)] : blocks;
 }
 

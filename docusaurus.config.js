@@ -17,6 +17,11 @@ module.exports = {
   projectName: "docs", // Usually your repo name.
 
   themeConfig: {
+    colorMode: {
+      defaultMode: "light",
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
     algolia: {
       appId: "PWGO6EETLK",
       apiKey: "55d34883c659e60e4d4d625f78c01fbc",

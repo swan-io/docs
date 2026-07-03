@@ -115,10 +115,10 @@ describe("admonitions -> GFM alerts", () => {
 });
 
 describe("definition partials -> blockquote", () => {
-  it("wraps a topics/definitions partial in a blockquote", () => {
-    const defPath = "/repo/docs/topics/definitions/_account.mdx";
+  it("wraps a _shared/definitions partial in a blockquote", () => {
+    const defPath = "/repo/docs/_shared/definitions/_account.mdx";
     const out = renderWith(
-      "import AccountDefinition from '../topics/definitions/_account.mdx';\n\n<AccountDefinition />",
+      "import AccountDefinition from '../_shared/definitions/_account.mdx';\n\n<AccountDefinition />",
       { [defPath]: "A Swan account holds euros." },
       "/repo/docs/accounts"
     );

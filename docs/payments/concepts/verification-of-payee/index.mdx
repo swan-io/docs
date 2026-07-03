@@ -118,7 +118,9 @@ Following the [European Payments Council (EPC)'s recommended matching rules](htt
 The beneficiary's bank can return one of four verification results. **All results must be displayed to the end-user**. Swan will systematically display the VoP result and warning on the SCA consent screen.
 
 <Tabs>
-  <TabItem value="match" label="✅ Match" default>
+  <TabItem value="match" label="✅ Match" id="vop-match" default>
+    #### Match result
+
     **Result**: Exact match found between provided details and account holder information
     
     **End-user action**: Safe to proceed with transfer
@@ -129,7 +131,9 @@ The beneficiary's bank can return one of four verification results. **All result
     </div>
   </TabItem>
   
-  <TabItem value="close" label="⚠️ Close match">
+  <TabItem value="close" label="⚠️ Close match" id="vop-close">
+    #### Close match result
+
     **Result**: Close match with suggested correction from beneficiary's bank
     
     **End-user action**: Review suggested name correction before proceeding
@@ -140,7 +144,9 @@ The beneficiary's bank can return one of four verification results. **All result
     </div>
   </TabItem>
   
-  <TabItem value="no-match" label="❌ No match">
+  <TabItem value="no-match" label="❌ No match" id="vop-no-match">
+    #### No match result
+
     **Result**: No match found between provided details and account holder information
     
     **End-user action**: Verify beneficiary details carefully before proceeding
@@ -151,7 +157,9 @@ The beneficiary's bank can return one of four verification results. **All result
     </div>
   </TabItem>
   
-  <TabItem value="not-possible" label="❌ Verification not possible">
+  <TabItem value="not-possible" label="❌ Verification not possible" id="vop-not-possible">
+    #### Verification not possible result
+
     **Result**: IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists.
     
     **End-user action**: Verify beneficiary details carefully before proceeding
@@ -317,13 +325,17 @@ flowchart TD
 Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. You can decide the level of friction and optional actions to display.
 
 <Tabs>
-  <TabItem value="match" label="✅ Match" default>
+  <TabItem value="match" label="✅ Match" id="custom-ux-match" default>
+    ##### Custom UX: match result
+
     **Recommended actions**: None required - proceed with payment
     
     ![VoP Match web banking screen](../../../images/topics/payments/credit-transfers/vop/PC_match.png)
   </TabItem>
   
-  <TabItem value="close" label="⚠️ Close match">
+  <TabItem value="close" label="⚠️ Close match" id="custom-ux-close">
+    ##### Custom UX: close match result
+
     **Recommended actions**: 
     - Display the suggested name correction.
     - Offer to update the beneficiary name.
@@ -332,7 +344,9 @@ Examples of how to present VoP verification results in your web banking interfac
     ![VoP Close match web banking screen](../../../images/topics/payments/credit-transfers/vop/PC_close_match.png)
   </TabItem>
   
-  <TabItem value="no-match" label="❌ No match">
+  <TabItem value="no-match" label="❌ No match" id="custom-ux-no-match">
+    ##### Custom UX: no match result
+
     **Recommended actions**: 
     - Clear warning about the mismatch.
     - Option to edit the beneficiary details.
@@ -342,7 +356,9 @@ Examples of how to present VoP verification results in your web banking interfac
     ![VoP No match web banking screen](../../../images/topics/payments/credit-transfers/vop/PC_no_match.png)
   </TabItem>
   
-  <TabItem value="not-possible" label="❌ Verification not possible">
+  <TabItem value="not-possible" label="❌ Verification not possible" id="custom-ux-not-possible">
+    ##### Custom UX: verification not possible result
+
     **Recommended actions**: 
     - Explain verification is unavailable.
     - Suggest checking the IBAN format.

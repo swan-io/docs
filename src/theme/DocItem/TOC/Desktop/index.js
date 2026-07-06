@@ -1,6 +1,6 @@
 import React from "react";
 import OriginalTOCDesktop from "@theme-original/DocItem/TOC/Desktop";
-import { useDoc } from "@docusaurus/theme-common/internal";
+import { useDoc } from "@docusaurus/plugin-content-docs/client";
 import Audience from "@site/src/components/rail/Audience";
 import Counterpart from "@site/src/components/rail/Counterpart";
 import Related from "@site/src/components/rail/Related";

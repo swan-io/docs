@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import Link from "@docusaurus/Link";
 import { translate } from "@docusaurus/Translate";
-import { useVisibleBlogSidebarItems } from "@docusaurus/theme-common/internal";
+import { useVisibleBlogSidebarItems } from "@docusaurus/plugin-content-blog/client";
 import styles from "./styles.module.css";
 import Modal from "@site/src/components/modal";
 export default function BlogSidebarDesktop({ sidebar }) {

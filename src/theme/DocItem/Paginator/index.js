@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "@docusaurus/Link";
-import { useDoc } from "@docusaurus/theme-common/internal";
+import { useDoc } from "@docusaurus/plugin-content-docs/client";
 import { typeChip, areaKind } from "@site/src/components/rail/resolve";
 import ContentTypeIcon from "@site/src/components/ContentTypeIcon";
 import AreaIcon from "@site/src/components/AreaIcon";

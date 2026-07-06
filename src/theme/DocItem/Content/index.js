@@ -1,6 +1,6 @@
 import React from "react";
 import OriginalContent from "@theme-original/DocItem/Content";
-import { useDoc } from "@docusaurus/theme-common/internal";
+import { useDoc } from "@docusaurus/plugin-content-docs/client";
 import Audience from "@site/src/components/rail/Audience";
 import Counterpart from "@site/src/components/rail/Counterpart";
 import Related from "@site/src/components/rail/Related";

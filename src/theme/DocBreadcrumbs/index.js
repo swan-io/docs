@@ -1,10 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import {ThemeClassNames} from '@docusaurus/theme-common';
-import {
-  useSidebarBreadcrumbs,
-  useHomePageRoute,
-} from '@docusaurus/theme-common/internal';
+import {useSidebarBreadcrumbs} from '@docusaurus/plugin-content-docs/client';
+import {useHomePageRoute} from '@docusaurus/theme-common/internal';
 import {useLocation} from '@docusaurus/router';
 import Link from '@docusaurus/Link';
 import {translate} from '@docusaurus/Translate';
@@ -34,7 +32,6 @@ function typeKey(route) {
   return typeChip(route) || `area:${areaKind(route)}`;
 }
 
-// TODO move to design system folder
 function BreadcrumbsItemLink({children, href, isLast}) {
   const className = 'breadcrumbs__link';
   if (isLast) {
@@ -52,7 +49,6 @@ function BreadcrumbsItemLink({children, href, isLast}) {
     <span className={className}>{children}</span>
   );
 }
-// TODO move to design system folder
 function BreadcrumbsItem({children, active, index, addMicrodata}) {
   return (
     <li

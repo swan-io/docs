@@ -11,7 +11,6 @@ module.exports = {
   url,
   baseUrl: "/",
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.png",
   organizationName: "swan-io", // Usually your GitHub org/user name.
   projectName: "docs", // Usually your repo name.
@@ -105,6 +104,9 @@ module.exports = {
   },
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
     parseFrontMatter: async (params) => {
       const result = await params.defaultParseFrontMatter(params);
       if (
@@ -176,6 +178,8 @@ module.exports = {
       {
         blogTitle: "Changelog",
         postsPerPage: 10,
+        // Changelog entries are short release notes shown in full — no truncation needed.
+        onUntruncatedBlogPosts: "ignore",
         blogSidebarTitle: "All releases",
         blogSidebarCount: "ALL",
         id: "changelog",

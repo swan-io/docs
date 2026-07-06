@@ -76,7 +76,9 @@ function collectIds(items, acc, seen) {
 // doc id -> absolute source path, or null if neither .mdx nor .md exists.
 function sourceFor(id) {
   for (const ext of [".mdx", ".md"]) {
-    const p = path.join(DOCS_DIR, `${id}${ext}`);
+    const p = path.resolve(DOCS_DIR, `${id}${ext}`);
+    // Path-traversal guard (CWE-22): sidebar ids must stay inside docs/.
+    if (!p.startsWith(DOCS_DIR + path.sep)) return null;
     if (fs.existsSync(p)) return p;
   }
   return null;

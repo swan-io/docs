@@ -137,6 +137,7 @@ module.exports = function mdMirror() {
         try {
           markdown = render(source, {
             dir: path.dirname(file),
+            root: DOCS_DIR,
             warnings,
             sourceLabel,
           });
@@ -146,7 +147,13 @@ module.exports = function mdMirror() {
           continue;
         }
 
-        const outPath = path.join(outDir, rel);
+        // Path-traversal guard (CWE-22): `rel` derives from frontmatter slugs;
+        // never write a mirror outside the build output directory.
+        const outPath = path.resolve(outDir, rel);
+        if (!outPath.startsWith(path.resolve(outDir) + path.sep)) {
+          console.warn(`[md-mirror] ${sourceLabel}: mirror path escapes outDir, skipped`);
+          continue;
+        }
         fs.mkdirSync(path.dirname(outPath), { recursive: true });
         fs.writeFileSync(outPath, markdown);
         urls.push(`${base}${baseUrl}/${rel}`);

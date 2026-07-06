@@ -2,10 +2,12 @@ import { describe, it, expect } from "vitest";
 import { render, normalizeAdmonitions } from "./mdToMarkdown.mjs";
 
 // A render() that resolves partial imports from an in-memory map keyed by the
-// absolute path the import resolves to (dir + relative specifier).
+// absolute path the import resolves to (dir + relative specifier). Mirrors
+// production: root is the docs content root (CWE-22 containment boundary).
 function renderWith(source, files = {}, dir = "/repo/docs/x") {
   return render(source, {
     dir,
+    root: "/repo/docs",
     readFile: (p) => {
       if (p in files) return files[p];
       throw new Error("no such file " + p);
@@ -123,6 +125,19 @@ describe("definition partials -> blockquote", () => {
       "/repo/docs/accounts"
     );
     expect(out).toContain("> A Swan account holds euros.");
+  });
+});
+
+describe("path-traversal guard (CWE-22)", () => {
+  it("refuses partials that resolve outside the content root", () => {
+    const escaped = "/repo/secrets/_creds.mdx";
+    const out = renderWith(
+      "import Creds from '../../secrets/_creds.mdx';\n\n<Creds />",
+      { [escaped]: "TOP-SECRET" },
+      "/repo/docs/accounts"
+    );
+    expect(out).not.toContain("TOP-SECRET");
+    expect(out).toContain("<!-- partial outside content root: _creds.mdx -->");
   });
 });
 

@@ -463,6 +463,13 @@ function inlinePartial(absPath, ctx, props = {}) {
   const label = path.basename(absPath);
   if (ctx.stack.includes(absPath))
     return [html(`<!-- skipped recursive partial: ${label} -->`)];
+  // Path-traversal guard (CWE-22): only read partials inside the content root.
+  if (
+    ctx.root &&
+    absPath !== ctx.root &&
+    !absPath.startsWith(ctx.root + path.sep)
+  )
+    return [html(`<!-- partial outside content root: ${label} -->`)];
   let raw;
   try {
     raw = ctx.readFile(absPath);
@@ -691,6 +698,7 @@ const defaultReadFile = (p) => fs.readFileSync(p, "utf8");
  * @param {object} [opts]
  * @param {string} [opts.dir] directory of the source file (for partial imports)
  * @param {(absPath:string)=>string} [opts.readFile] FS reader (injectable for tests)
+ * @param {string} [opts.root] Content root; partials resolving outside it are refused (CWE-22 guard)
  * @param {string[]} [opts.warnings] sink for unhandled-component warnings
  * @param {string} [opts.sourceLabel] label used in warnings
  * @returns {string} markdown with a YAML frontmatter head
@@ -700,6 +708,7 @@ export function render(source, opts = {}) {
   const tree = parseMdx(normalizeAdmonitions(body));
   const ctx = {
     dir: opts.dir || ".",
+    root: opts.root ? path.resolve(opts.root) : null,
     readFile: opts.readFile || defaultReadFile,
     imports: buildImportMap(tree, opts.dir || "."),
     stack: [],

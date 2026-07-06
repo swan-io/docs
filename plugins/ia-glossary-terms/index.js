@@ -9,11 +9,9 @@ const path = require("path");
 //
 // Mirrors plugins/ia-rail-meta: read files in loadContent, setGlobalData in
 // contentLoaded. Zero new dependencies.
+const DOCS_DIR = path.join(__dirname, "..", "..", "docs");
 const GLOSSARY = path.join(
-  __dirname,
-  "..",
-  "..",
-  "docs",
+  DOCS_DIR,
   "get-started",
   "set-up-swan",
   "glossary.mdx"
@@ -68,7 +66,9 @@ function buildTerms() {
   const importRe = /import\s+(\w+)\s+from\s+['"]([^'"]+)['"]\s*;?/g;
   let im;
   while ((im = importRe.exec(src))) {
-    imports[im[1]] = path.resolve(dir, im[2]);
+    const resolved = path.resolve(dir, im[2]);
+    // Path-traversal guard (CWE-22): only partials inside docs/ may be read.
+    if (resolved.startsWith(DOCS_DIR + path.sep)) imports[im[1]] = resolved;
   }
 
   // Split the body into segments per heading carrying an explicit {#anchor}.

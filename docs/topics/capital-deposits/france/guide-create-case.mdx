@@ -230,15 +230,20 @@ mutation createCase {
 ## Payload {#payload}
 
 The options selected in the mutation example produce the following success payload.
+
+Onboardings start with the information you prefilled, so their status can be `Invalid` at first.
+They're completed later in the [capital deposit process](./guide.mdx).
+
 Note several pieces of key information:
 
 1. Your capital deposit case `id` (line 6).
-1. Your company onboarding `id` (line 8).
-1. Information about required documents (starts on line 14).
-1. Information about shareholders (starts on line 31), including:
-   - Onboarding `id` (individual: line 38, company: line 60)
-   - Document `id` (individual: line 45, company: line 65)
-1. Status of the entire capital deposit case (line 82).
+1. Your company onboarding `id` and status (lines 48 and 54).
+1. Information about the case's required documents (starts on line 7).
+1. Information about shareholders (starts on line 57), including:
+   - Onboarding `id` and status (individual: lines 75-77, company: lines 89-91)
+   - Document `id` (individual: line 68; note the company shareholder has no documents at creation)
+1. Status of the entire capital deposit case (line 39).
+1. Total capital deposit amount, which the API calculates from all shareholders' amounts (line 42).
 
 :::info Queries
 This information can help you complete your capital deposit.
@@ -246,86 +251,43 @@ This information can help you complete your capital deposit.
 If needed, use the **`capitalDepositCase` query** to get information about an individual case, or the **`capitalDepositCases` query** for information about all ongoing capital deposit cases.
 :::
 
-```graphql {6,8,14,31,38,45,60,65,82-84} showLineNumbers
+```graphql {6,7,39-41,42-45,48,57,68,75,89} showLineNumbers
 {
   "data": {
     "createCapitalDepositCase": {
       "capitalDepositCase": {
         "companyName": "MyBrand",
         "id": "$CAPITAL_DEPOSIT_CASE_ID",
-        "companyOnboarding": {
-          "id": "$COMPANY_ONBOARDING_ID",
-          "createdAt": "2024-07-18T14:12:40.633Z",
-          "info": {
-            "type": "Company"
-          }
-        },
         "documents": [
           {
-            "type": "ArticlesOfIncorporation"
+            "type": "ArticlesOfIncorporation",
+            "statusInfo": {
+              "status": "Pending"
+            }
           },
           {
-            "type": "CompanyLeaseAgreement"
+            "type": "CompanyLeaseAgreement",
+            "statusInfo": {
+              "status": "Pending"
+            }
           },
           {
-            "type": "PowerOfAttorney"
+            "type": "PowerOfAttorney",
+            "statusInfo": {
+              "status": "Pending"
+            }
           },
           {
-            "type": "CapitalShareDepositCertificate"
+            "type": "CapitalShareDepositCertificate",
+            "statusInfo": {
+              "status": "Pending"
+            }
           },
           {
-            "type": "RegisterExtract"
-          }
-        ],
-        "shareholders": [
-          {
-            "info": {
-              "__typename": "IndividualShareholder",
-              "firstName": "Henri",
-              "lastName": "Dupont"
-            },
-            "id": "$INDIVIDUAL_SHAREHOLDER_ID",
-            "onboarding": {
-              "id": "$INDIVIDUAL_SHAREHOLDER_ONBOARDING_ID"
-            },
-            "documents": [
-              {
-                "type": "ProofOfIndividualAddress",
-                "id": "$INDIVIDUAL_SHAREHOLDER_DOCUMENT_ID"
-              },
-              {
-                "type": "ProofOfIdentity",
-                "id": "$INDIVIDUAL_SHAREHOLDER_DOCUMENT_ID"
-              }
-            ]
-          },
-          {
-            "info": {
-              "__typename": "CompanyShareholder",
-              "name": "Company shareholder"
-            },
-            "id": "$COMPANY_SHAREHOLDER_ID",
-            "onboarding": {
-              "id": "$COMPANY_SHAREHOLDER_ONBOARDING_ID"
-            },
-            "documents": [
-              {
-                "type": "RegisterExtract",
-                "id": "$COMPANY_SHAREHOLDER_DOCUMENT_ID"
-              },
-              {
-                "type": "ArticlesOfIncorporation",
-                "id": "$COMPANY_SHAREHOLDER_DOCUMENT_ID"
-              },
-              {
-                "type": "CorporateIncomeTaxReturn",
-                "id": "$COMPANY_SHAREHOLDER_DOCUMENT_ID"
-              },
-              {
-                "type": "ProofOfIdentity",
-                "id": "$COMPANY_SHAREHOLDER_DOCUMENT_ID"
-              }
-            ]
+            "type": "RegisterExtract",
+            "statusInfo": {
+              "status": "Pending"
+            }
           }
         ],
         "statusInfo": {
@@ -335,7 +297,56 @@ If needed, use the **`capitalDepositCase` query** to get information about an in
           "currency": "EUR",
           "value": "10500"
         },
-        "updatedAt": "2024-07-18T14:12:40.672Z"
+        "updatedAt": "2026-07-10T12:40:43.594Z",
+        "companyOnboarding": {
+          "id": "$COMPANY_ONBOARDING_ID",
+          "createdAt": "2026-07-10T12:40:43.534Z",
+          "info": {
+            "type": "Company"
+          },
+          "statusInfo": {
+            "status": "Invalid"
+          }
+        },
+        "shareholders": [
+          {
+            "info": {
+              "__typename": "IndividualShareholder",
+              "firstName": "Henri",
+              "lastName": "Dupont"
+            },
+            "id": "$INDIVIDUAL_SHAREHOLDER_ID",
+            "documents": [
+              {
+                "type": "ProofOfIndividualAddress",
+                "id": "$INDIVIDUAL_SHAREHOLDER_DOCUMENT_ID",
+                "statusInfo": {
+                  "status": "Pending"
+                }
+              }
+            ],
+            "onboarding": {
+              "id": "$INDIVIDUAL_SHAREHOLDER_ONBOARDING_ID",
+              "statusInfo": {
+                "status": "Valid"
+              }
+            }
+          },
+          {
+            "info": {
+              "__typename": "CompanyShareholder",
+              "name": "Company shareholder"
+            },
+            "id": "$COMPANY_SHAREHOLDER_ID",
+            "documents": [],
+            "onboarding": {
+              "id": "$COMPANY_SHAREHOLDER_ONBOARDING_ID",
+              "statusInfo": {
+                "status": "Invalid"
+              }
+            }
+          }
+        ]
       }
     }
   }

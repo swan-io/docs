@@ -156,6 +156,7 @@ export default function BlogSidebarDesktop({ sidebar }) {
           src="https://xr22w.mjt.lu/wgt/xr22w/0oqk/form?c=ce289285"
           width="100%"
           style={{ height: "480px" }}
+          sandbox="allow-forms allow-scripts allow-same-origin"
         ></iframe>
       </Modal>
       <script

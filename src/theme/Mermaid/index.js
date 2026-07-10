@@ -14,6 +14,7 @@ import {
   MermaidContainerClassName,
   useMermaidRenderResult,
 } from '@docusaurus/theme-mermaid/client';
+import DOMPurify from 'dompurify';
 
 function ExpandIcon() {
   return (
@@ -53,6 +54,14 @@ function MermaidRenderResult({renderResult}) {
   const ref = useRef(null);
   const overlayRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
+
+  // foreignObject is not in DOMPurify's SVG profile but Mermaid uses it to
+  // render HTML labels (e.g. nodes containing <br/>). Adding it here lets
+  // DOMPurify still sanitize the HTML inside it via its HTML rules.
+  const safeSvg = DOMPurify.sanitize(renderResult.svg, {
+    USE_PROFILES: { svg: true, svgFilters: true },
+    ADD_TAGS: ['foreignObject'],
+  });
 
   // Bind any interactive handlers mermaid attached (e.g. clickable nodes).
   useEffect(() => {
@@ -95,7 +104,7 @@ function MermaidRenderResult({renderResult}) {
         ref={ref}
         className={`${MermaidContainerClassName} ia-mermaid__diagram`}
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{__html: renderResult.svg}}
+        dangerouslySetInnerHTML={{__html: safeSvg}}
       />
       {expanded && (
         <div
@@ -117,7 +126,7 @@ function MermaidRenderResult({renderResult}) {
             className={`${MermaidContainerClassName} ia-mermaid-overlay__stage`}
             onClick={(e) => e.stopPropagation()}
             // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{__html: renderResult.svg}}
+            dangerouslySetInnerHTML={{__html: safeSvg}}
           />
         </div>
       )}

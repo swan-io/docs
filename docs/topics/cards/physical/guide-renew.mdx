@@ -6,6 +6,7 @@ title: Renew physical cards
 
 Physical cards expire three years after they are printed.
 They're then automatically renewed for another three years unless the card is [canceled](/topics/cards/physical/guide-cancel).
+If you want a physical card to stay usable until its expiry date without being renewed, call the `cancelPhysicalCardRenewal` mutation while the card is in `ToRenew` status.
 
 If you want the renewed physical card to be delivered to a new address, call the `confirmPhysicalCardRenewal` mutation at least **8 weeks** before the last day of the card's expiry month. 
 If no action is taken, the renewed card will be shipped to the original delivery address.
@@ -92,6 +93,64 @@ The payload confirms that the physical card expires on 09/21 (line 6), and its r
       "__typename": "ConfirmPhysicalCardRenewalSuccessPayload",
       "physicalCard": {
         "expiryDate": "09/21",
+        "statusInfo": {
+          "status": "ToRenew"
+        }
+      }
+    }
+  }
+}
+```
+
+## Cancel a physical card renewal {#cancel-renewal}
+
+To stop a physical card from being renewed without canceling it, call the `cancelPhysicalCardRenewal` mutation.
+The card stays valid until its expiry date, then expires instead of renewing.
+
+:::info Before you cancel a renewal
+- The card must be in `ToRenew` status when you call the mutation. If it isn't, Swan returns a `PhysicalCardWrongStatusRejection`.
+- The card stays usable until its expiry date. It isn't canceled immediately.
+- This differs from [`cancelPhysicalCard`](./guide-cancel.mdx), which cancels the card immediately and can't be reversed.
+- Subscribe to the `Card.Updated` [webhook](/developers/using-api/webhooks/#events-cards) to know when a card enters `ToRenew`.
+:::
+
+### Guide {#cancel-renewal-guide}
+
+1. Call the `cancelPhysicalCardRenewal` mutation.
+2. Add the `cardId` for the physical card whose renewal you're canceling (line 2).
+3. Add the `CancelPhysicalCardRenewalSuccessPayload`, including any information you'd like to review (line 3).
+4. Add rejections (not shown).
+
+### Mutation {#cancel-renewal-mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsUmVuZXdhbCB7CiAgY2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbChpbnB1dDogeyBjYXJkSWQ6ICIkWU9VUl9DQVJEX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FyZE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFBoeXNpY2FsQ2FyZE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGlkZW50aWZpZXIKICAgIH0KICAgIC4uLiBvbiBQaHlzaWNhbENhcmRXcm9uZ1N0YXR1c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBjdXJyZW50U3RhdHVzCiAgICAgIGV4cGVjdGVkU3RhdHVzCiAgICB9CiAgfQp9Cg==&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,3} showLineNumbers
+mutation CancelRenewal {
+  cancelPhysicalCardRenewal(input: { cardId: "$YOUR_CARD_ID" }) {
+    ... on CancelPhysicalCardRenewalSuccessPayload {
+      __typename
+      physicalCard {
+        statusInfo {
+          status
+        }
+      }
+    }
+  }
+}
+```
+
+### Payload {#cancel-renewal-payload}
+
+The physical card stays in `ToRenew` status (line 7).
+It remains usable until its expiry date, then expires instead of being renewed.
+
+```json {7} showLineNumbers
+{
+  "data": {
+    "cancelPhysicalCardRenewal": {
+      "__typename": "CancelPhysicalCardRenewalSuccessPayload",
+      "physicalCard": {
         "statusInfo": {
           "status": "ToRenew"
         }

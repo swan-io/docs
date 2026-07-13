@@ -23,6 +23,7 @@ When an account enters the `Closing` status, the following resources are **cance
 - All [virtual IBANs](../ibans/index.mdx#virtual).
 
 Additionally, incoming SEPA Credit Transfers are automatically returned, payment mandates for incoming SEPA Direct Debits are canceled, and any attempted incoming SEPA Direct Debit is rejected.
+The exception is a negative `Booked` balance: a `Closing` account then accepts incoming SEPA Credit Transfers to help clear it, as explained in [Negative balances with `Closing` accounts](#negative-balances-closing).
 Your users must cancel all outgoing SEPA Direct Debits themselves, as Swan has no control over those payment mandates.
 
 ### Conditions to move from `Closing` to `Closed` {#closing-to-closed-conditions}
@@ -35,6 +36,16 @@ An account moves from `Closing` to `Closed` only when it meets all four of the f
 - No incoming or outgoing transaction is in the `Upcoming` or `Pending` status, across any payment type.
 
 These conditions apply from 16 June 2026.
+
+## Negative balances with `Closing` accounts {#negative-balances-closing}
+
+An account can carry a negative `Booked` balance while its closure is in progress.
+For example, an outstanding debit might settle after closure starts, or fees might be deducted after closure.
+A `Closing` account can't move from `Closing` to `Closed` until the negative balance is cleared.
+
+To help resolve this, Swan accepts incoming SEPA Credit Transfers on a `Closing` account when its `Booked` balance is negative.
+The transfer is booked to the account, so it can eventually move from `Closing` to `Closed`.
+Once the `Booked` balance reaches zero or turns positive, the standard rejection rules apply again, and incoming credit transfers are returned with the SEPA reason code `AC04` (`AccountClosed` in the API).
 
 ## Account closure processes {#processes}
 

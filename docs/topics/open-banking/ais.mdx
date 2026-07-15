@@ -14,6 +14,33 @@ import AisDefinition from '../definitions/_ais.mdx';
 - Account balances (available, booked, and pending).
 - Transaction history, with filtering and pagination.
 
+## AIS flow {#flow}
+
+The diagram below shows the full AIS sequence, from the moment the user connects their Swan account to the software application receiving the account data.
+
+```mermaid
+sequenceDiagram
+autonumber
+participant User
+participant SoftwareApp as Software application
+participant TPP
+participant SaltEdge as Salt Edge
+participant Swan
+    User->>SoftwareApp: Wants to connect their Swan account
+    SoftwareApp->>TPP: Requests the bank connection
+    TPP->>SaltEdge: Sends authorization request
+    SaltEdge->>Swan: PSD2 Connector starts the consent flow
+    Swan-->>User: Redirects to Swan consent application
+    User->>Swan: Authenticates with SCA and grants consent
+    Swan-->>SaltEdge: Returns the access token
+    SaltEdge-->>TPP: Forwards the access token
+    TPP->>SaltEdge: Requests account data
+    SaltEdge->>Swan: Fetches account data
+    Swan-->>SaltEdge: Returns balances and transactions
+    SaltEdge-->>TPP: Forwards account data
+    TPP-->>SoftwareApp: Delivers data, which the software displays to the user
+```
+
 ## Common AIS use cases {#use-cases}
 
 - Accounting and financial management software importing bank transactions automatically.
@@ -39,6 +66,7 @@ By default, Swan returns all accounts the user has access to.
 
 :::note All or nothing
 The consent flow does not currently allow users to select a subset of accounts; it is all or nothing.
+This is a known limitation of the current consent flow.
 :::
 
 ## No accounts visible after authentication {#troubleshooting-no-accounts}

@@ -49,3 +49,24 @@ participant Swan
 ### References {#references}
 
 - [Salt Edge PIS docs](https://priora.saltedge.com/docs/aspsp/v2/swan/pis).
+
+## Payment session statuses {#statuses}
+
+The payment session status reflects the overall state of a payment.
+Single and bulk payments share the same statuses, except `PART`, which applies to bulk payments only.
+
+| Status | Type | Applies to | Meaning | Swan transaction status | Sent when |
+|---|---|---|---|---|---|
+| `RCVD` | Ongoing | Single and bulk | Received | — | Payment session created, no transactions linked yet, consent pending. |
+| `PDNG` | Ongoing | Single and bulk | Pending | `Pending` | At least one transaction is `Pending`. |
+| `ACSC` | Final | Single and bulk | Accepted, settlement completed | `Booked` | All transactions are `Booked`. |
+| `RJCT` | Final | Single and bulk | Rejected | `Rejected` | All transactions are `Rejected`, or the consent failed. |
+| `PART` | Final | Bulk only | Partially accepted | `Booked` and/or `Rejected` | All transactions are either `Booked` or `Rejected`. |
+
+## FAQ {#faq}
+
+### I validated my consent but don't see any transaction
+
+The PIS flow has two SCA steps: an OAuth consent and a separate payment consent.
+Validating only the first won't create a transaction.
+Make sure the payment consent is validated too.

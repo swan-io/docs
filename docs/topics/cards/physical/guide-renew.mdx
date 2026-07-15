@@ -6,7 +6,7 @@ title: Renew physical cards
 
 Physical cards expire three years after they are printed.
 They're then automatically renewed for another three years unless the card is [canceled](/topics/cards/physical/guide-cancel).
-If you want a physical card to stay usable until its expiry date without being renewed, call the `cancelPhysicalCardRenewal` mutation while the card is in `ToRenew` status.
+To stop a physical card from renewing without canceling it, call the `cancelPhysicalCardRenewal` mutation while the card is in `ToRenew` status. The card stays active until it expires, then isn't renewed.
 
 If you want the renewed physical card to be delivered to a new address, call the `confirmPhysicalCardRenewal` mutation at least **8 weeks** before the last day of the card's expiry month. 
 If no action is taken, the renewed card will be shipped to the original delivery address.
@@ -105,13 +105,13 @@ The payload confirms that the physical card expires on 09/21 (line 6), and its r
 ## Cancel a physical card renewal {#cancel-renewal}
 
 To stop a physical card from being renewed without canceling it, call the `cancelPhysicalCardRenewal` mutation.
-The card stays valid until its expiry date, then expires instead of renewing.
+The card stays active until its expiry date, then expires instead of renewing.
 
 :::info Before you cancel a renewal
 - The card must be in `ToRenew` status when you call the mutation. If it isn't, Swan returns a `PhysicalCardWrongStatusRejection`.
-- The card stays usable until its expiry date. It isn't canceled immediately.
+- The card stays active until its expiry date. It isn't canceled immediately.
 - This differs from [`cancelPhysicalCard`](./guide-cancel.mdx), which cancels the card immediately and can't be reversed.
-- Subscribe to the `Card.Updated` [webhook](/developers/using-api/webhooks/#events-cards) to know when a card enters `ToRenew`.
+- Subscribe to the `Card.Updated` [webhook](/developers/using-api/webhooks/#events-cards) to know when a card enters `ToRenew` status.
 :::
 
 ### Guide {#cancel-renewal-guide}
@@ -143,7 +143,7 @@ mutation CancelRenewal {
 ### Payload {#cancel-renewal-payload}
 
 The physical card stays in `ToRenew` status (line 7).
-It remains usable until its expiry date, then expires instead of being renewed.
+It stays active until its expiry date, then expires instead of being renewed.
 
 ```json {7} showLineNumbers
 {

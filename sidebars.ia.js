@@ -21,7 +21,7 @@ const svgIcon = (inner) =>
 const extLink = (label, href, iconInner) => ({
   type: "html",
   className: "menu-ext-link",
-  value: `<a class="menu__link menu-ext-link__a" href="${href}" target="_blank" rel="noopener noreferrer">${svgIcon(iconInner)}<span>${label}</span></a>`,
+  value: `<a class="menu__link menu-ext-link__a" href="${href}" target="_blank" rel="noopener noreferrer">${svgIcon(iconInner)}<span>${label}</span><svg class="menu-ext-link__ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M7 7h10v10" /></svg></a>`,
 });
 
 module.exports = {
@@ -422,19 +422,18 @@ module.exports = {
         doc("payments/guides/cards/get-list", "Get card payments"),
         doc("payments/guides/cards/get-enriched-info", "Get enriched info"),
       ]),
-      cat("Overview", [
-        doc("payments/guides/overview/get-payment-id", "Get a payment ID"),
-        doc("payments/guides/overview/get-payment-info", "Get payment info"),
-        doc("payments/guides/overview/get-transaction-id", "Get a transaction ID"),
-        doc("payments/guides/overview/get-transaction-info", "Get transaction info"),
-        doc("payments/guides/overview/get-transaction-list", "Get a list of transactions"),
-        doc("payments/guides/overview/generate-transaction-statement", "Generate a transaction statement"),
-        doc("payments/guides/overview/export", "Export payments"),
+      cat("Payment operations", [
+        doc("payments/guides/payment-operations/get-payment-id", "Get a payment ID"),
+        doc("payments/guides/payment-operations/get-payment-info", "Get payment info"),
+        doc("payments/guides/payment-operations/get-transaction-id", "Get a transaction ID"),
+        doc("payments/guides/payment-operations/get-transaction-info", "Get transaction info"),
+        doc("payments/guides/payment-operations/get-transaction-list", "Get a list of transactions"),
+        doc("payments/guides/payment-operations/generate-transaction-statement", "Generate a transaction statement"),
+        doc("payments/guides/payment-operations/export", "Export payments"),
       ]),
       cat("Merchants", [
         doc("payments/guides/merchants/onboarding-overview", "Onboarding overview"),
         doc("payments/guides/merchants/missing-information", "Missing information"),
-        doc("payments/guides/merchants/sandbox", "Sandbox"),
         cat("Profiles", [
           doc("payments/guides/merchants/profiles/request", "Request a profile"),
           doc("payments/guides/merchants/profiles/get-info", "Get profile info"),
@@ -445,7 +444,6 @@ module.exports = {
             doc("payments/guides/merchants/online/cards/accept", "Accept card payments"),
             doc("payments/guides/merchants/online/cards/request", "Request payment methods"),
             doc("payments/guides/merchants/online/cards/create-link", "Create a payment link"),
-            doc("payments/guides/merchants/online/cards/sandbox", "Sandbox"),
           ], { link: "payments/guides/merchants/online/cards/index" }),
           cat("SEPA Direct Debit", [
             doc("payments/guides/merchants/online/sdd/accept", "Accept SEPA Direct Debit"),
@@ -455,7 +453,6 @@ module.exports = {
             doc("payments/guides/merchants/online/sdd/initiate", "Initiate a payment"),
             doc("payments/guides/merchants/online/sdd/update", "Update payment methods"),
             doc("payments/guides/merchants/online/sdd/create-link", "Create a payment link"),
-            doc("payments/guides/merchants/online/sdd/sandbox", "Sandbox"),
           ], { link: "payments/guides/merchants/online/sdd/index" }),
           cat("Internal Direct Debit", [
             doc("payments/guides/merchants/online/idd/accept", "Accept Internal Direct Debit"),
@@ -463,7 +460,6 @@ module.exports = {
             doc("payments/guides/merchants/online/idd/declare", "Declare a mandate"),
             doc("payments/guides/merchants/online/idd/initiate", "Initiate a payment"),
             doc("payments/guides/merchants/online/idd/refund", "Refund a payment"),
-            doc("payments/guides/merchants/online/idd/sandbox", "Sandbox"),
           ], { link: "payments/guides/merchants/online/idd/index" }),
         ], { link: "payments/guides/merchants/online/index" }),
         cat("Accepting in-person payments", [
@@ -473,23 +469,27 @@ module.exports = {
             doc("payments/guides/merchants/in-person/cards/accept", "Accept payments"),
             doc("payments/guides/merchants/in-person/cards/initialize", "Initialize the terminal"),
             doc("payments/guides/merchants/in-person/cards/create-payments", "Create payments"),
-            doc("payments/guides/merchants/in-person/cards/sandbox", "Sandbox"),
           ], { link: "payments/guides/merchants/in-person/cards/index" }),
           cat("French checks", [
             doc("payments/guides/merchants/in-person/checks/accept", "Accept checks"),
             doc("payments/guides/merchants/in-person/checks/request", "Request payment methods"),
             doc("payments/guides/merchants/in-person/checks/initiate", "Initiate a payment"),
-            doc("payments/guides/merchants/in-person/checks/sandbox", "Sandbox"),
           ], { link: "payments/guides/merchants/in-person/checks/index" }),
         ], { link: "payments/guides/merchants/in-person/index" }),
       ], { link: "payments/guides/merchants/index" }),
     ], "payments/guides/index", "ia-type-guide"),
     top("Reference", [
       cat("Sandbox", [
-        doc("payments/reference/sandbox/sandbox-sepa", "SEPA Credit Transfers"),
-        doc("payments/reference/sandbox/sandbox-direct-debit", "SEPA Direct Debit"),
-        doc("payments/reference/sandbox/sandbox-international", "International Credit Transfers"),
-        doc("payments/reference/sandbox/sandbox-cards", "Card payments"),
+        doc("payments/reference/sandbox/sandbox-sepa", "Sandbox: SEPA Credit Transfers"),
+        doc("payments/reference/sandbox/sandbox-direct-debit", "Sandbox: SEPA Direct Debit"),
+        doc("payments/reference/sandbox/sandbox-international", "Sandbox: International Credit Transfers"),
+        doc("payments/reference/sandbox/sandbox-cards", "Sandbox: card payments"),
+        doc("payments/reference/sandbox/sandbox-merchants", "Sandbox: merchants"),
+        doc("payments/reference/sandbox/sandbox-merchant-online-cards", "Sandbox: merchant online cards"),
+        doc("payments/reference/sandbox/sandbox-merchant-sdd", "Sandbox: merchant SEPA Direct Debit"),
+        doc("payments/reference/sandbox/sandbox-merchant-idd", "Sandbox: merchant Internal Direct Debit"),
+        doc("payments/reference/sandbox/sandbox-merchant-in-person-cards", "Sandbox: merchant in-person cards"),
+        doc("payments/reference/sandbox/sandbox-merchant-checks", "Sandbox: merchant French checks"),
       ], { link: "payments/reference/sandbox/index" }),
       doc("payments/reference/international-transfers", "International transfer countries and rails"),
       doc("payments/reference/card-payment-countries", "Card payment countries"),
@@ -513,6 +513,13 @@ module.exports = {
       ], { link: "users/concepts/identifications/index" }),
     ], "users/concepts/index", "ia-type-concept"),
     top("Guides", [
+      cat("User operations", [
+        doc("users/guides/user-operations/deactivate", "Deactivate a user"),
+        doc("users/guides/user-operations/export", "Export users"),
+        doc("users/guides/user-operations/get-info-one", "Get info on one user"),
+        doc("users/guides/user-operations/get-info-multiple", "Get info on multiple users"),
+        doc("users/guides/user-operations/get-list", "Get a user list"),
+      ]),
       cat("Consent", [
         doc("users/guides/consent/create-multiconsent", "Create a multi-consent"),
         doc("users/guides/consent/configure-notifications", "Configure notifications"),
@@ -523,13 +530,6 @@ module.exports = {
       cat("Identifications", [
         doc("users/guides/identifications/get-identifications", "Get identifications"),
         doc("users/guides/identifications/get-latest-id", "Get the latest identification"),
-      ]),
-      cat("Overview", [
-        doc("users/guides/overview/deactivate", "Deactivate a user"),
-        doc("users/guides/overview/export", "Export users"),
-        doc("users/guides/overview/get-info-one", "Get info on one user"),
-        doc("users/guides/overview/get-info-multiple", "Get info on multiple users"),
-        doc("users/guides/overview/get-list", "Get a user list"),
       ]),
     ], "users/guides/index", "ia-type-guide"),
     top("Reference", [

@@ -4,7 +4,7 @@ title: Manage SEPA Direct Debit mandates
 
 # Manage SEPA Direct Debit mandates
 
-This guide helps partner support teams answer user questions about SEPA Direct Debit mandates, check mandate information in the Dashboard, route requests, troubleshoot rejected payments, and know when to escalate to your development team or Swan Support.
+This guide helps partner support teams answer user questions about SEPA Direct Debit mandates, check mandate information in the Dashboard, route requests, troubleshoot rejected payments, and know when to raise a Swan Support request.
 
 For full product documentation, refer to the [SEPA Direct Debit overview](https://docs.swan.io/topics/payments/direct-debit/) and [add a payment mandate](https://docs.swan.io/topics/payments/direct-debit/guide-add-mandate/). For user-facing explanations, share [SEPA Direct Debit mandates](https://support.swan.io/hc/en-150/articles/19637943123101) and [Direct debit overview](https://support.swan.io/hc/en-150/articles/24510545177501).
 
@@ -12,7 +12,7 @@ For full product documentation, refer to the [SEPA Direct Debit overview](https:
 - Mandates are stored at **account level**. Each one represents a creditor that can take money from the account.
 - Use the Dashboard to check mandate statuses, review creditor and debtor details, and find mandate IDs for escalation.
 - Most mandate actions (updating, suspending, canceling) require your dev team or Swan Support. You can't perform them from the Dashboard.
-- Swan checks mandate statuses and available balances at **6:00 CET/CEST** on the day the payment is due.
+- Swan checks mandate statuses and available balances at **6:00 AM CET/CEST** on the day the payment is due.
 - The most common cause of rejected direct debits is incomplete B2B consents.
 - Refund rights differ by scheme: SDD Core allows refunds up to 8 calendar weeks; SDD B2B has no refund rights.
 :::
@@ -28,7 +28,7 @@ Here are the key terms you'll see in the Dashboard and on mandate documents:
 | **Mandate** | Allows a creditor to take money from the account. |
 | **Creditor** | The company collecting the money. |
 | **Debtor** | The account holder being debited — your user. |
-| **SCI / ICS** | The creditor's unique identifier (SEPA Creditor Identifier / Identifiant Créancier SEPA). You'll need this when escalating issues. |
+| **SCI / ICS** | The creditor's unique identifier (SEPA Creditor Identifier / Identifiant Créancier SEPA). You'll need this when raising a Swan Support request. |
 | **UMR / RUM** | The Unique Mandate Reference that identifies this specific mandate. You'll need this when escalating issues. |
 
 :::note
@@ -58,7 +58,7 @@ A mandate must be set to `Enabled` in the Dashboard to work. Any other status me
 | --- | --- | --- |
 | `Enabled` | The mandate is active. All good. | If a direct debit still failed, check the account balance, account status is `Enabled`, or whether creditor details match. |
 | `ConsentInitiationPending` or `ConsentPending` | The user hasn't finished setting up or consenting to the B2B mandate yet. | Ask them to complete the approval before the payment due date. If stuck, walk them through it in your product or raise a Swan Support request. |
-| `Suspended` | The mandate is temporarily blocked. No debits can go through. | Check with the user — do they want to keep it blocked or resume it? To resume it, your dev team can use the API or raise a Swan Support request. |
+| `Suspended` | The mandate is temporarily blocked. No debits can go through. | Check with the user — do they want to keep it blocked or resume it? To resume it, your dev team can integrate the feature using the API or raise a Swan Support request. |
 | `Canceled` | The mandate has been permanently canceled. | Future debits from this creditor will be rejected. The user may need a new mandate or updated instructions from the creditor. |
 
 For B2B mandates, `Enabled` only appears after the user has approved the mandate.
@@ -94,7 +94,7 @@ From here, you can figure out whether the user needs to complete their approval,
 
 ## Register a new B2B mandate
 
-B2B mandates should be registered by the user through your product or the Dashboard whenever possible. The person completing it must be authorized to manage payments on the account, usually the legal representative.
+Your user should register B2B mandates through your product or the Dashboard whenever possible. The person completing it must be authorized to manage payments on the account, usually the legal representative.
 
 To send a B2B mandate registration link from your Dashboard or add a mandate with the API, refer to the guide to [add a received direct debit mandate](https://docs.swan.io/topics/payments/direct-debit/guide-add-mandate/). The guide includes Dashboard steps with screenshots as well as the full API mutation.
 
@@ -112,7 +112,7 @@ Registering a B2B mandate is similar to authorizing a payment; it must be comple
 
 ## Update a B2B received mandate
 
-You can only [update a B2B received mandate through the API](https://docs.swan.io/topics/payments/direct-debit/guide-update-mandate). This requires your dev team and a [user access token](https://docs.swan.io/developers/using-api/authentication/#tokens-user) from an account member with the `canInitiatePayments` permission. You can't do this from the Dashboard.
+You can only [update a B2B received mandate through the API](https://docs.swan.io/topics/payments/direct-debit/guide-update-mandate). Your dev team can integrate this feature so your user can do this themselves using their [user access token](https://docs.swan.io/developers/using-api/authentication/#tokens-user) from an account member with the `canInitiatePayments` permission. You can't do this from the Dashboard.
 
 :::warning
 Any update triggers a new consent cycle. The mandate can't be used until your user consents to the updated details. After the user consents, the mandate status returns to `Enabled`. Warn the user if a payment is due soon; if they don't approve in time, the next debit will fail.
@@ -120,31 +120,32 @@ Any update triggers a new consent cycle. The mandate can't be used until your us
 
 ---
 
-## Stop or cancel a direct debit mandate
+## Stop or cancel a direct debit
 
-To suspend or cancel a mandate, your dev team can action this through the API, or you can reach out to Swan Support using the [Partner support request form](https://partner-support.swan.io/hc/en-gb/requests/new).
-
-| Action | What it does | Reversible? | What happens next |
+| Action | What it does | Reversible? | Who can do it |
 | --- | --- | --- | --- |
-| **Suspend** | Temporarily blocks future debits. Any pending instructions are rejected. | Yes — it can be resumed/re-enabled. | Any debit attempted while suspended is rejected. For Core mandates, the creditor may resubmit a new mandate. |
-| **Cancel** | Permanently cancels the mandate. | No. | Future debits from this creditor are rejected. One-off mandates may be canceled automatically after execution. |
+| **Suspend** | Temporarily blocks future debits. Any pending instructions are rejected. | Yes — your dev team can re-enable it. | Your dev team, through the API. |
+| **Cancel** | Permanently ends the mandate. Future debits from this creditor are rejected. | No. | Swan Support only. |
 
-:::note
-If your integration already supports this, your user may be able to suspend or cancel mandates directly from your product's interface.
+:::warning
+Canceling a mandate is permanent. If your user later needs to set up direct debits with the same creditor again, a new mandate with a new Unique Mandate Reference (UMR) is required — the original reference can't be reused.
 :::
 
-**What to do**
-1. Confirm with your user whether they want to pause debits temporarily (suspend) or stop them permanently (cancel).
-2. Pass the request to your dev team with the **mandate ID** (visible in **Dashboard** > **Data** > **Accounts** > **Received Direct Debit Mandates**) and the action (`suspend` or `cancel`).
-3. Your dev team can follow the [Suspend a mandate](https://docs.swan.io/topics/payments/direct-debit/guide-suspend-mandate/) or [Cancel a mandate](https://docs.swan.io/topics/payments/direct-debit/guide-cancel-mandate/) guide.
+**What to do:**
 
-You can also send a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) with the mandate ID and requested action for further assistance.
+1. Confirm with your user whether they want to pause debits temporarily (suspend) or stop them permanently (cancel).
+1. **To suspend:** Pass the request to your dev team with the **mandate ID** (visible in **Dashboard** > **Data** > **Accounts** > **Received Direct Debit Mandates**). Your dev team can follow the [Suspend a mandate](https://docs.swan.io/topics/payments/direct-debit/guide-suspend-mandate/) guide. To resume debits later, they can [enable the mandate](https://docs.swan.io/topics/payments/direct-debit/guide-enable-mandate/).
+1. **To cancel:** Raise a [Swan support request](https://partner-support.swan.io/hc/en-gb/requests/new) with the mandate ID and confirmation that the user wants to permanently cancel.
+
+:::tip
+If your integration already supports it, your user may be able to suspend mandates directly from your product's interface.
+:::
 
 ---
 
 ## Understand when payments are executed
 
-Swan checks all pending direct debit instructions at **6:00 CET/CEST** on the day the payment is due. At that point, Swan checks that:
+Swan checks all pending direct debit instructions at **6:00 AM CET/CEST** on the day the payment is due. At that point, Swan checks that:
 
 1. The mandate status is `Enabled`.
 2. The account's available balance is sufficient.
@@ -152,7 +153,7 @@ Swan checks all pending direct debit instructions at **6:00 CET/CEST** on the da
 If both checks pass, Swan executes the payment and the transaction status updates to `Booked`. If either check fails, Swan rejects the payment.
 
 :::tip
-If your user consents to a mandate after 6:00 CET on the due date, Swan won't process it until the next scheduled payment. Let your users know about this timing so they understand why their consent might still show as pending.
+If your user consents to a mandate after 6:00 AM CET on the due date, Swan won't process it until the next scheduled payment. Let your users know about this timing so they understand why their consent might still show as pending.
 :::
 
 ---
@@ -162,7 +163,7 @@ If your user consents to a mandate after 6:00 CET on the due date, Swan won't pr
 | Cause | How to check | What to do |
 | --- | --- | --- |
 | B2B mandate not approved/consented | Mandate status isn't `Enabled` (shows `ConsentInitiationPending` or `ConsentPending`). | Initiate consent or remind your user to complete it. You can resend the consent request if needed. |
-| Insufficient available balance | Check available balance (not booked balance) before 6:00 CET/CEST. | Your user must add funds before the next execution date. |
+| Insufficient available balance | Check the `Available` balance (not `Booked`) before 6:00 AM CET/CEST. | Your user must add funds before the next execution date. |
 | Account closed or closing | Check account status in the Dashboard. | Your user needs to open a new account. All payment mandates for incoming SEPA Direct Debits are canceled, and attempted incoming debits are rejected. |
 | Invalid mandate information | Creditor's details, SCI / ICS, UMR / RUM, or debtor IBAN don't match registered mandate. | Contact the creditor to verify details. For B2B, the mandate may need to be updated and approved again. |
 | Core mandate not visible yet | The creditor hasn't sent the first direct debit instruction yet. | Let the user know there's nothing to do — the mandate appears automatically when the first debit arrives. |
@@ -192,7 +193,7 @@ Your user's refund rights depend on their mandate scheme. For full details, incl
 - Verify no partial refunds are requested (refunds must be for the full original amount).
 
 #### Step 2: Identify the refund window
-- **Within 8 weeks of the debit:** The end user can request a refund without justification (**Core SDD refund requested by debtor**).
+- **Within 8 weeks of the debit: Your user can request a refund without justification (**Core SDD refund requested by debtor**).
 - **After 8 weeks and up to 13 months:** Only possible if the transaction is unauthorized or there is no valid mandate (Reason: **MD01 — No Authorization**). The request requires additional checks and evidence. The receiving/creditor bank may accept or reject the claim.
 - **After 13 months:** No longer eligible under the Core SDD refund framework.
 
@@ -209,7 +210,7 @@ Before escalating to Swan, collect:
 If the user has not contacted the creditor, ask them to try resolving it directly with the creditor first. Swan will ask for this evidence.
 :::
 
-#### Step 4: Escalate to Swan
+#### Step 4: Raise a Swan Support request
 Submit a request via the [Partner support request form](https://partner-support.swan.io/hc/en-gb/requests/new) including all collected details from the escalation checklists below.
 
 ---

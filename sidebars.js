@@ -397,6 +397,24 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Open Banking",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Overview",
+          link: { type: "doc", id: "topics/open-banking/index" },
+          collapsed: true,
+          items: [
+            "topics/open-banking/ais",
+            "topics/open-banking/pis",
+          ],
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Payments",
       collapsible: false,
       collapsed: false,

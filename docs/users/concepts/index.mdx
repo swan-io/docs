@@ -11,20 +11,32 @@ related:
 
 # Users concepts
 
-<p className="ia-lede">The models behind Swan users: the person identified by their phone number, the consent that authorizes sensitive operations, and the identifications that prove who they are.</p>
+<p className="ia-lede">Understanding Swan users.</p>
 
 ## What makes up a Swan user
 
-A Swan user is the person at the centre. Identification proves who they are, and consent authorizes the sensitive operations they perform.
+The user is the person at the centre of your integration.
 
+Identification proves who they are  by using their phone number.<br/>
+Explicit consent authorizes the sensitive operations they perform.<br/>
+<br/>
 ```flowmap
 {
   "mode": "graph",
-  "layout": "spokes",
+  "layout": "spine",
   "nodes": [
-    { "id": "user", "title": "The user", "to": "/users/concepts/user", "desc": "The person identified by their mobile phone number, and their lifecycle." },
-    { "id": "id", "title": "Identifications", "to": "/users/concepts/identifications", "desc": "How users prove their identity, by level and process." },
-    { "id": "consent", "title": "Consent", "to": "/users/concepts/consent", "desc": "How users authorize sensitive operations through SCA." }
+    { "id": "user", "title": "The user", "to": "/users/concepts/user", "desc": "The person identified by their mobile phone number.", "branches": [
+      { "title": "Signing up", "to": "/users/concepts/user/sign-up", "desc": "First time through an authentication link" },
+      { "title": "Logging in", "to": "/users/concepts/user/login", "desc": "Verification code, then passcode or biometrics" },
+      { "title": "User deactivation", "to": "/users/concepts/user/deactivation", "desc": "Requirements and rejections" },
+      { "title": "User statuses", "to": "/users/concepts/user/statuses", "desc": "Active, Blocked, Deactivated" }
+    ] },
+    { "id": "id", "title": "Identifications", "to": "/users/concepts/identifications", "desc": "How users prove their identity, by level and process.", "branches": [
+      { "title": "Identification statuses", "to": "/users/concepts/identifications/statuses", "desc": "lifecycle and rejection reasons" }
+    ] },
+    { "id": "consent", "title": "Consent", "to": "/users/concepts/consent", "desc": "How users authorize sensitive operations through SCA.", "branches": [
+      { "title": "Consent statuses", "to": "/users/concepts/consent/statuses", "desc": "from creation to a final status" }
+    ] }
   ]
 }
 ```

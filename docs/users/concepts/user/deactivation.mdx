@@ -1,0 +1,41 @@
+---
+title: User deactivation
+audience:
+  - dev
+  - ops
+related:
+  - /users/guides/user-operations/deactivate
+  - /users/concepts/user/statuses
+  - /build/using-api/webhooks
+---
+
+import DeactivateRequirements from '../../partials/_deactivate-reqs.mdx';
+
+# User deactivation
+
+In certain circumstances, you might want to deactivate a user.
+When a user is deactivated successfully, the **[phone number](/users/concepts/user#phone-numbers) associated with their Swan user object can be used for a new user**.
+
+## Requirements {#requirements}
+
+All of the following conditions must be met:
+
+<DeactivateRequirements />
+
+If all conditions are met, the user can be deactivated.
+When a user is deactivated, all user access tokens and refresh tokens associated with the deactivated user are revoked and can no longer be used.
+
+## Rejections {#rejections}
+
+If conditions aren't met, there are three possible rejection reasons:
+
+1. `UserCannotBeDeactivatedRejection`: the explained conditions aren't met.
+1. `UserAlreadyDeactivatedRejection`: the user associated with this user ID was already deactivated.
+1. `UserNotFoundRejection`: the user associated with this user ID wasn't found in the system.
+
+Learn how to [deactivate a user with the API](/users/guides/user-operations/deactivate).
+You can also submit a request to [Swan Support](https://partner-support.swan.io/hc/en-gb/requests).
+
+:::note Webhook
+To get a notification when a user is deactivated, subscribe to the `User.Deactivated` [webhook](/build/using-api/webhooks).
+:::

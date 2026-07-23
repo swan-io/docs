@@ -194,9 +194,9 @@ module.exports = [
     from: "/user-flow-diagrams/onboardings",
     to: "/accounts/guides/onboarding/company/requirements#diagrams",
   },
-  { from: "/user-flow-diagrams/passcode-reset", to: "/users/concepts/user/#login" },
-  { from: "/user-flow-diagrams/sign-in", to: "/users/concepts/user/#signup" },
-  { from: "/user-flow-diagrams/sign-up", to: "/users/concepts/user/#login" },
+  { from: "/user-flow-diagrams/passcode-reset", to: "/users/concepts/user/login" },
+  { from: "/user-flow-diagrams/sign-in", to: "/users/concepts/user/login" },
+  { from: "/user-flow-diagrams/sign-up", to: "/users/concepts/user/sign-up" },
   {
     from: "/api/authentication/project-access-token",
     to: "/build/using-api/authentication#tokens-project",

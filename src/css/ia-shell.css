@@ -370,7 +370,9 @@
 .flowmap-lcard:hover { border-color: var(--ifm-color-primary); text-decoration: none; }
 
 /* --- pathway --- */
-.flowmap--pathway { position: relative; margin-left: 8px; }
+.flowmap--pathway { position: relative; width: fit-content; margin-inline: auto; }
+/* inside a tracks column the pathway is column content, not a standalone diagram */
+.ia-path-column .flowmap--pathway { width: auto; margin-left: 8px; margin-right: 0; }
 .flowmap--pathway::before {
   content: ""; position: absolute; left: 11px; top: 6px; bottom: 6px;
   width: 2px; background: var(--ifm-color-emphasis-300);
@@ -390,21 +392,28 @@ a.flowmap-prow__t:hover { color: var(--ifm-color-primary); }
 .flowmap-prow__d { font-size: 0.82rem; color: var(--ifm-color-emphasis-700); margin-top: 2px; }
 
 /* --- graph (chain / lifecycle / spokes) --- */
-.flowmap--graph { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+/* flowmap diagrams sit centered in the content column by design: shrink-to-fit
+   layouts get auto inline margins (fit-content self-clamps to the column width);
+   fluid grids (grid, lanes, tracks) already span the full column. */
+.flowmap--graph { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .flowmap-node {
   display: block; text-decoration: none; color: inherit;
   border: 1.5px solid var(--ifm-color-primary); background: var(--ifm-color-primary-lightest);
   border-radius: 12px; padding: 10px 14px; min-width: 110px;
 }
-a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
+a.flowmap-node:hover { background: var(--ifm-background-surface-color); text-decoration: none; }
 .flowmap-arrow { color: var(--ifm-color-primary); font-size: 1.25rem; line-height: 1; }
-.flowmap--spokes { align-items: center; }
+.flowmap--spokes { align-items: center; width: fit-content; margin-inline: auto; }
 .flowmap-spokegrid {
   display: grid; grid-template-columns: repeat(2, minmax(120px, 1fr)); gap: 12px; flex: 1; min-width: 240px;
 }
 
 /* --- spine (vertical backbone + branch clusters) --- */
-.flowmap--spine { display: flex; flex-direction: column; gap: 16px; align-items: stretch; position: relative; }
+.flowmap--spine {
+  display: flex; flex-direction: column; gap: 16px; align-items: stretch; position: relative;
+  /* shrink to content and center in the page; wide spines still clamp to full width */
+  width: fit-content; margin-inline: auto;
+}
 /* one continuous backbone, threaded behind the nodes (they sit on top and mask it) */
 .flowmap--spine::before {
   content: ""; position: absolute; left: 86px; top: 26px; bottom: 26px;
@@ -420,7 +429,7 @@ a.flowmap-node:hover { background: var(--ifm-background-surface-color); }
   background-image: linear-gradient(var(--ia-primary-soft), var(--ia-primary-soft));
   border-radius: 12px; padding: 10px 14px;
 }
-a.flowmap-spine-node:hover { background: var(--ifm-background-surface-color); }
+a.flowmap-spine-node:hover { background: var(--ifm-background-surface-color); text-decoration: none; }
 .flowmap-spine-node--endpoint { background: var(--ifm-background-surface-color); border-style: dashed; }
 .flowmap-spine-node .flowmap__d { font-size: 0.74rem; }
 .flowmap-spine__branches {
@@ -441,12 +450,14 @@ a.flowmap-spine-node:hover { background: var(--ifm-background-surface-color); }
   border: 1px solid var(--ifm-color-emphasis-200); background: var(--ifm-background-surface-color);
   border-radius: 8px; padding: 7px 11px;
 }
-.flowmap-spine-branch:hover { border-color: var(--ifm-color-primary); background: var(--ia-primary-soft); }
+.flowmap-spine-branch:hover { border-color: var(--ifm-color-primary); background: var(--ia-primary-soft); text-decoration: none; }
 .flowmap-spine-branch .flowmap__t { font-weight: 500; font-size: 0.85rem; }
 .flowmap-spine-branch .flowmap__d { font-size: 0.72rem; }
 
 @media (max-width: 760px) {
   .flowmap--lanes { grid-template-columns: 1fr; }
+  /* stacked layouts go back to full width so cards don't shrink-wrap */
+  .flowmap--spine, .flowmap--spokes, .flowmap--pathway { width: auto; }
   .flowmap--graph { flex-direction: column; align-items: stretch; }
   .flowmap-arrow { transform: rotate(90deg); align-self: center; }
   .flowmap-spokegrid { grid-template-columns: 1fr; }

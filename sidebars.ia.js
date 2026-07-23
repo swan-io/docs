@@ -503,6 +503,9 @@ module.exports = {
     doc("users/index", "Users overview"),
     top("Concepts", [
       cat("The user", [
+        doc("users/concepts/user/sign-up", "Signing up"),
+        doc("users/concepts/user/login", "Logging in"),
+        doc("users/concepts/user/deactivation", "Deactivation"),
         doc("users/concepts/user/statuses", "Statuses"),
       ], { link: "users/concepts/user/index" }),
       cat("Consent", [

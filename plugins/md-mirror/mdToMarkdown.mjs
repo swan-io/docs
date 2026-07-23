@@ -79,7 +79,13 @@ const RAW_HTML_FALLBACK = new Set([
   "figcaption",
 ]);
 
-const ADMONITION_NAMES = Object.keys(ADMONITION).join("|");
+// Literal regex (no RegExp built from data, CWE-185): the alternation must
+// list exactly the ADMONITION keys above — the assertion catches drift.
+const ADMONITION_OPENER =
+  /^(\s*):::(note|tip|info|warning|caution|danger|success)[ \t]+(?!\[)(\S.*?)[ \t]*$/;
+if (Object.keys(ADMONITION).join("|") !== "note|tip|info|warning|caution|danger|success") {
+  throw new Error("ADMONITION keys out of sync with ADMONITION_OPENER");
+}
 
 // ---------------------------------------------------------------------------
 // mdast node helpers
@@ -142,9 +148,7 @@ function parseMdx(content) {
 //      (space), which otherwise leaks as literal text. Rewrite to brackets.
 export function normalizeAdmonitions(content) {
   const lines = content.split("\n");
-  const opener = new RegExp(
-    `^(\\s*):::(${ADMONITION_NAMES})[ \\t]+(?!\\[)(\\S.*?)[ \\t]*$`
-  );
+  const opener = ADMONITION_OPENER;
   const headingId = /[ \t]*\{#[A-Za-z0-9_-]+\}[ \t]*$/;
   let inFence = false;
   let marker = "";

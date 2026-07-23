@@ -12,7 +12,9 @@ function walk(dir, acc) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     // Docusaurus excludes `_`-prefixed files/dirs from routing (partials).
     if (entry.name.startsWith("_")) continue;
-    const full = path.join(dir, entry.name);
+    const full = path.resolve(dir, entry.name);
+    // Path-traversal guard (CWE-22): the walk must stay inside docs/.
+    if (!full.startsWith(DOCS_DIR + path.sep)) continue;
     if (entry.isDirectory()) walk(full, acc);
     else if (/\.mdx?$/.test(entry.name)) acc.push(full);
   }

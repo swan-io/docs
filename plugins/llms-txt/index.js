@@ -163,7 +163,8 @@ module.exports = function llmsTxt() {
       const warnings = [];
       const { text, sectionCount, linkCount } = buildLlmsTxt(siteConfig, warnings);
 
-      fs.writeFileSync(path.join(outDir, "llms.txt"), text);
+      // Fixed leaf name under the build dir Docusaurus hands us (CWE-22).
+      fs.writeFileSync(path.resolve(outDir, "llms.txt"), text);
       console.log(
         `[llms-txt] wrote llms.txt: ${sectionCount} section(s), ${linkCount} link(s)`
       );

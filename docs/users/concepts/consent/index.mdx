@@ -4,24 +4,24 @@ audience:
   - dev
   - ops
 related:
-  - /users/concepts/consent/statuses
+  - /users/reference/sensitive-operations
   - /users/guides/consent/integrate-sca
-  - /users/guides/consent/implement-s2s
   - /users/concepts/identifications
 ---
 
 # Consent
 
-## Overview {#overview}
+<p className="ia-lede">Some operations at Swan are considered sensitive, and sensitive operations always require user consent.</p>
 
 Consent is built into Swan's offer, meaning you don't handle it yourself.
 In fact, you can't: it's part of Swan's [regulatory responsibility](/get-started/become-a-partner/licence-regulatory-status#license) to manage consent.
 Additionally, **consent can't be deactivated**.
 
-Some operations at Swan are considered sensitive, and **sensitive operations always require user consent**.
 To initiate sensitive operations **using the API**, you need to authenticate with an access token.
-You can either use a [user access token](/build/using-api/authentication#tokens-user) in the name of the user wanting to make the payment, or with a [project access token](/build/using-api/authentication#tokens-project) impersonating that user.
+You can use either a [user access token](/build/using-api/authentication#tokens-user) in the name of the user wanting to make the payment, or a [project access token](/build/using-api/authentication#tokens-project) impersonating that user.
 Users must consent to granting a user access token.
+
+Review the full [list of sensitive operations](/users/reference/sensitive-operations) in the reference section.
 
 Consent requests move through a defined set of [consent statuses](./statuses.mdx).
 
@@ -29,7 +29,7 @@ Consent requests move through a defined set of [consent statuses](./statuses.mdx
 
 To protect the user and comply with legal requirements, users can only provide consent through Strong Customer Authentication (SCA).
 
-SCA is a requirement of the EU Revised Directive on Payment Services (PSD2) to payment service providers within the European Economic Area.
+SCA is required by the EU Revised Directive on Payment Services (PSD2) for payment service providers within the European Economic Area.
 The requirement mandates **multi-factor authentication** to increase the security of electronic payments.
 All Swan consent processes use SCA.
 
@@ -52,7 +52,7 @@ Though there's much more happening technically, the user experience to consent t
 <details>
   <summary>Video completing Strong Customer Authentication on mobile</summary>
     <div>
-        <img src={require("../../../images/users/consent/sca-flow.gif").default} alt="Map of Swan coverage for individual and company accounts" />
+        <img src={require("../../../images/users/consent/sca-flow.gif").default} alt="Video of a user completing Strong Customer Authentication on a mobile device" />
     </div>
 </details>
 
@@ -63,84 +63,15 @@ Text messages are valid for **15 minutes**, and consent links **time out 20 minu
 In the [consent sequence diagrams](#consent-diagrams), this user experience occurs when the user opens the consent link and completes the consent request.
 Look for the arrow description `Uses page to consent to the operation`.
 
-## List of sensitive operations {#sensitive}
-
-The following mutations are sensitive operations and typically require consent. Some may not, depending on context (for example, `suspendAccountMembership`).
-All links lead to the mutation's API Reference page.
-Mutations marked with the symbol ⮂ are eligible for [server-to-server consent](#s2s).
-
-<h3 id="sensitive-accounts">Accounts and onboarding</h3>
-
-- [`closeAccount`](https://api-reference.swan.io/mutations/close-account/)
-- [`openAccount`](https://api-reference.swan.io/mutations/open-account/) ⮂
-- [`finalizeAccountHolderOnboarding`](https://api-reference.swan.io/mutations/finalize-account-holder-onboarding/) ⮂
-- [`finalizeOnboarding`](https://api-reference.swan.io/mutations/finalize-onboarding/) (deprecated) ⮂
-- [`updateAccountSettings`](https://api-reference.swan.io/mutations/update-account-settings/) ⮂
-
-<h3 id="sensitive-account-memberships">Account memberships</h3>
-
-- [`addAccountMembership`](https://api-reference.swan.io/mutations/add-account-membership/) ⮂
-- [`addAccountMemberships`](https://api-reference.swan.io/mutations/add-account-memberships/) ⮂
-- [`suspendAccountMembership`](https://api-reference.swan.io/mutations/suspend-account-membership/) ⮂
-- [`resumeAccountMembership`](https://api-reference.swan.io/mutations/resume-account-membership/) ⮂
-- [`updateAccountMembership`](https://api-reference.swan.io/mutations/update-account-membership/) ⮂
-
-<h3 id="sensitive-cards">Cards</h3>
-
-- **Adding cards**:
-    - [`addCard`](https://api-reference.swan.io/mutations/add-card/) ⮂
-    - [`addCards`](https://api-reference.swan.io/mutations/add-cards/) ⮂
-    - [`addCardsWithGroupDelivery`](https://api-reference.swan.io/mutations/add-cards-with-group-delivery/) ⮂
-    - [`addDigitalCard`](https://api-reference.swan.io/mutations/add-digital-card/)
-    - [`addSingleUseVirtualCard`](https://api-reference.swan.io/mutations/add-single-use-virtual-card/) ⮂
-    - [`addSingleUseVirtualCards`](https://api-reference.swan.io/mutations/add-single-use-virtual-cards/) ⮂
-- **Virtual cards**:
-    - [`updateCard`](https://api-reference.swan.io/mutations/update-card/) ⮂
-    - [`viewCardNumbers`](https://api-reference.swan.io/mutations/view-card-numbers/)
-- **Physical cards**:
-    - [`printPhysicalCard`](https://api-reference.swan.io/mutations/print-physical-card/) ⮂
-    - [`activatePhysicalCard`](https://api-reference.swan.io/mutations/activate-physical-card/) ⮂
-    - [`resumePhysicalCard`](https://api-reference.swan.io/mutations/resume-physical-card/) ⮂
-    - [`viewPhysicalCardNumbers`](https://api-reference.swan.io/mutations/view-physical-card-numbers/)
-    - [`viewPhysicalCardPin`](https://api-reference.swan.io/mutations/view-physical-card-pin/)
-
-<h3 id="sensitive-funding">Funding</h3>
-
-- [`addDirectDebitFundingSource`](https://api-reference.swan.io/mutations/add-direct-debit-funding-source/) ⮂
-- [`initiateFundingRequest`](https://api-reference.swan.io/mutations/initiate-funding-request/) ⮂
-
-<h3 id="sensitive-payments-transactions">Payments and transactions</h3>
-
-- **Credit transfers**:
-    - [`initiateCreditTransfers`](https://api-reference.swan.io/mutations/initiate-credit-transfers/) ⮂
-    - [`initiateInternationalCreditTransfer`](https://api-reference.swan.io/mutations/initiate-international-credit-transfer/) ⮂
-    - [`scheduleStandingOrder`](https://api-reference.swan.io/mutations/schedule-standing-order/) ⮂
-- **Direct debit payment mandates**:
-    - [`addReceivedInternalDirectDebitB2bMandate`](https://api-reference.swan.io/mutations/add-received-internal-direct-debit-b2-b-mandate/) ⮂
-    - [`addReceivedSepaDirectDebitB2bMandate`](https://api-reference.swan.io/mutations/add-received-sepa-direct-debit-b2-b-mandate/) ⮂
-    - [`enableReceivedDirectDebitMandate`](https://api-reference.swan.io/mutations/enable-received-direct-debit-mandate/) ⮂
-    - [`updateReceivedSepaDirectDebitB2bMandate`](https://api-reference.swan.io/mutations/update-received-sepa-direct-debit-b2-b-mandate/) ⮂
-- **Other**:
-    - [`refund`](https://api-reference.swan.io/mutations/refund/) ⮂
-
-<h3 id="trusted-beneficiaries">Trusted beneficiaries</h3>
-
-- [`addTrustedInternationalBeneficiary`](https://api-reference.swan.io/mutations/add-trusted-international-beneficiary)
-- [`addTrustedSepaBeneficiaries`](https://api-reference.swan.io/mutations/add-trusted-sepa-beneficiaries)
-- [`addTrustedSepaBeneficiary`](https://api-reference.swan.io/mutations/add-trusted-sepa-beneficiary)
-
 ## Multi-consents {#multi-consent}
 
 Multi-consent allows you to group multiple consents for sensitive operations into a single consent, so your user can **consent to multiple operations at the same time**.
 For example, your user could consent to adding a card, adding an account membership, and initiating a credit transfer, all at once.
 Creating a multi-consent is an asynchronous operation, and you can group up to **100 child consents** into one multi-consent.
 
-When the user consents to the multi-consent, the status changes to `OperationCommitting` and the user is informed their multi-consent is complete.
-Note that child consents aren't processed immediately.
-
-As the multi-consent executes, if any child consent fails, the status of the whole multi-consent changes to `Failed`.
-Any child consents that were `Accepted` before the failed child consent remain valid.
-Any child consents that were still waiting to be executed are canceled.
+When the user consents to the multi-consent, they're informed their multi-consent is complete.
+However, child consents aren't processed immediately: execution is asynchronous, and each child consent can still succeed or fail.
+Refer to [consent statuses](./statuses.mdx) for how a multi-consent and its child consents resolve.
 
 Since execution is asynchronous, consider subscribing to [consent webhooks](/build/using-api/webhooks#events-consent) to stay updated on the progress of each child consent.
 
@@ -161,52 +92,6 @@ Learn how to **specify notification preferences** and **configure your own notif
 If you use Swan's Web Banking interface, Swan sends a text message to your users for one-time passwords, logins, and consents, regardless of preferred channel and notification configuration.
 :::
 
-## Server-to-server consent {#s2s}
-
-If you have thousands of operations waiting for consent, requiring consent directly from the user could become a blocker.
-Server-to-server (S2S) consent bypasses direct user intervention, making bulk actions that your integrations might require easier to execute.
-For example, you might consider using server-to-server consent to generate single-use virtual cards to pay merchants, perform batch payments, and refund transfers.
-
-Human interaction is always required for SCA, but Swan makes an exception for your own accounts.
-If you want to implement it, you can use S2S consent to approve sensitive operations.
-Note that your implementation requires approval from Swan.
-
-Many sensitive operations are eligible for server-to-server consent.
-Some operations allow you to view highly sensitive information and, therefore, aren't eligible for server-to-server consent.
-Review the [list of sensitive operations](#sensitive) to know which operations are eligible for server-to-server consent, marked with the symbol ⮂.
-
-Learn how to **implement server-to-server consent** in the [dedicated guide](/users/guides/consent/implement-s2s).
-
-### Key cryptography {#s2s-crypto}
-
-Server-to-server consent relies on key cryptography respecting a specific algorithm.
-Swan won't accept keys that don't respect this algorithm.
-
-The model involves a pair of keys, public and private.
-Keys must respect the following algorithm:
-
-- ECDSA with reputed strong curve (such as p-256)
-- Key type must be exported in JWK
-
-You'll install the public key on your Dashboard, and it will be used to verify the server signature for all S2S operations.
-You're required to keep the corresponding private key secure on your side.
-
-:::caution Replace keys
-Swan strongly advises you to replace your key pair every two years.
-:::
-
-### Role of projects and legal reps {#s2s-projects}
-
-For security and regulatory purposes, server-to-server consent is bound to a project, more specifically to the project's legal representative.
-You can't apply S2S consent configured in one project to operations in another project.
-Instead, implement S2S consent in both projects independently.
-
-The keys, both public and private, are attributed to the project's legal representative.
-Only the legal representative can perform operations with server-to-server consent.
-With consent, you can also impersonate the legal representative with a project access token.
-
-Any operation required to set up or modify S2S consent (such as installing the public key or adding IP addresses) must be consented to by the legal representative using Strong Customer Authentication.
-
 ## Consent sequence diagrams {#consent-diagrams}
 
 ### Diagram: Computer {#consent-diagrams-computer}
@@ -214,7 +99,7 @@ Any operation required to set up or modify S2S consent (such as installing the p
 If your user is on a computer, their consent flow depends on your [notification settings](#notifications).
 They'll either receive a **text message from Swan** (arrows 6-8) or a **notification from you** (arrows 9-12).
 
-Users are guided through a  similar but slightly different flow for online payments that require [3-D Secure consent](/payments/concepts/cards#3ds).
+Online payments that require [3-D Secure consent](/payments/concepts/cards#3ds) guide users through a slightly different flow.
 
 ```mermaid
 sequenceDiagram
@@ -277,27 +162,6 @@ participant UM as User's mobile device
     P ->> UM: Confirms sensitive operation
 ```
 
-### Diagram: Server-to-server {#consent-diagrams-s2s}
-
-To trigger the S2S sequence, your user sends you a request.
-This diagram completes the operation with server-to-server consent.
-
-*Note that the diagram doesn't illustrate how you communicate with your user.*
-
-```mermaid
-sequenceDiagram
-participant PS as Partner server
-participant P as Partner API
-participant S as Swan API
-    P ->> S: Calls sensitive mutation
-    S ->> P: Returns consent info, including consent challenge
-    P ->> PS: Signs consent challenge with private key
-    PS ->> P: Returns signed consent challenge
-    P ->> S: Calls mutation to grant consent with server signature
-    S ->> S: Verifies signature with Partner public key
-    S ->> S: Grants consent and executes callback
-```
-
 ### Diagram: End-user perspective {#consent-diagrams-end-user}
 
 <details>
@@ -306,3 +170,15 @@ participant S as Swan API
     <iframe src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F7K15ufXZK7Zgan770kkTmq%2FUser-flow-diagrams%3Ftype%3Ddesign%26node-id%3D1%253A563%26mode%3Ddesign%26t%3DoGQbGo0SuPiYeJMG-1" allowFullScreen style={{width: "100%", height: 400}}></iframe>
   </div>
 </details>
+
+## In this section
+
+```flowmap
+{
+  "mode": "pathway",
+  "items": [
+    { "title": "Server-to-server consent", "to": "/users/concepts/consent/server-to-server" },
+    { "title": "Consent statuses", "to": "/users/concepts/consent/statuses" }
+  ]
+}
+```

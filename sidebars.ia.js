@@ -509,6 +509,7 @@ module.exports = {
         doc("users/concepts/user/statuses", "Statuses"),
       ], { link: "users/concepts/user/index" }),
       cat("Consent", [
+        doc("users/concepts/consent/server-to-server", "Server-to-server"),
         doc("users/concepts/consent/statuses", "Statuses"),
       ], { link: "users/concepts/consent/index" }),
       cat("Identifications", [
@@ -540,7 +541,9 @@ module.exports = {
         doc("users/reference/identity-methods/expert", "Expert"),
         doc("users/reference/identity-methods/pvid", "PVID"),
         doc("users/reference/identity-methods/qes", "QES"),
+        doc("users/reference/identity-methods/recommendations", "Recommendations by country"),
       ], { link: "users/reference/identity-methods/index" }),
+      doc("users/reference/sensitive-operations", "Sensitive operations"),
       doc("users/reference/sandbox-identifications", "Sandbox: identifications"),
     ], "users/reference/index", "ia-type-ref"),
   ],

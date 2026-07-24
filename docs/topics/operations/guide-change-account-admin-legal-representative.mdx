@@ -1,0 +1,220 @@
+---
+title: Change an account administrator or legal representative
+---
+
+# Change an account administrator or legal representative
+
+This guide helps partner support teams handle requests to change an account administrator (admin) or legal representative: what to collect, what to tell your user, how to track progress, and when to escalate.
+
+For user-facing instructions in Swan's web banking, share [Change your account's legal representative](https://support.swan.io/hc/en-150/articles/change-legal-representative).
+
+For the technical API reference, including mutations, status values, and rejection types, see [Change account administrator](https://docs.swan.io/topics/accounts/memberships/admin-change).
+
+:::info Key takeaways
+- Changing an account admin or legal representative can't be done through the Dashboard alone. **It requires a support request.**
+- The secure form link is valid for **7 calendar days**, and progress isn't saved.
+- The change applies to **all accounts** belonging to the account holder, not just one.
+- You can only have **one active request** at a time per account holder. Starting a new request while one is active will delay both.
+- Complete documents are the best way to avoid delays. Missing documents move the request back into information collection.
+- After the change is completed, Swan doesn't automatically remove or downgrade the previous admin.
+:::
+
+:::note
+Consider integrating account membership management into your product so your users can manage membership changes themselves. See the [account membership documentation](https://docs.swan.io/topics/accounts/memberships) for API details.
+:::
+
+:::note
+If the user also needs a phone number change, complete that separately before or after the admin change, not at the same time.
+:::
+
+---
+
+## Admin vs. legal representative changes
+
+| Change type | What it means | Applies to |
+| --- | --- | --- |
+| **Change account admin** | Transfer administrative control of the account to a different person. | Company accounts |
+| **Change legal representative** | Update who is recognized as the company's legal representative. | Company accounts only: companies, associations, homeowner associations, and other legal entities |
+
+This process doesn't apply to individual or self-employed account holders. For full details on account memberships and permissions, refer to [Account memberships](https://docs.swan.io/topics/accounts/memberships).
+
+---
+
+## Prepare to submit the request
+
+Before starting the change request, gather as much context as possible from your user so Swan can process it without repeated follow-ups.
+
+- Identify the company and the requested new admin or legal representative.
+- Check whether your user already provided supporting documents.
+- Include all known context and attachments in the first support request.
+- Don't ask your user for information you already have in your own tools, such as account references or previously attached documents.
+- Ask for missing information in one complete request, not across multiple follow-ups.
+
+:::note
+Swan still verifies any new account holders; this guide covers what you need to do on your side beforehand.
+:::
+
+:::note
+An ongoing verification renewal (reKYC) doesn’t block an admin change request. The two processes can run at the same time.
+:::
+
+---
+
+## Prepare documents
+
+Missing documents are the primary cause of delays. The exact documents required depend on the company type and situation. Swan determines what's missing after reviewing the request. For the full list, refer to [required supporting documents](https://docs.swan.io/topics/accounts/documents).
+
+### Checklist
+
+The exact documents required depend on the company type, reason for the change, and who is completing the form. Not all items below apply to every case. Share this with your user before they open the form so they can prepare; Swan confirms which documents are required after reviewing the request.
+
+**Always required**
+
+- Company or association registration document. Swan retrieves this automatically for French companies; all other companies must upload it.
+
+:::note
+For Germany, Netherlands, and Italy accounts, collect the new administrator's residency address and tax identification number from your user before submitting the request. The form doesn't include these fields for those countries.
+:::
+
+**Required in some situations**
+
+- Identity document of the current legal representative (color, front and back): required when the new administrator is not the company's legal representative.
+- Power of attorney: required when the person completing the form is not the new administrator.
+- Updated articles of association: required if the company's articles of association have changed.
+- General assembly minutes: required for associations and homeowner associations when the appointment was made by a general assembly.
+- Decision of appointment document: required for associations and homeowner associations when the appointment was made by a board decision.
+
+:::warning
+Tell your user to gather documents **before** opening the link; the form doesn't save their progress.
+:::
+
+---
+
+## Update access after the change
+
+Swan doesn't automatically remove or downgrade the previous admin. Their membership and permissions stay the same.
+
+After Swan confirms the change is complete, ask the new admin whether the previous admin should keep access.
+
+- If the previous admin should no longer access the account, direct the new admin to disable the previous admin’s account membership.
+- If the previous admin should keep access but no longer have full admin rights, the new admin must downgrade their permissions.
+
+If your product doesn’t let support teams manage account memberships directly, ask your development team to add this capability using Swan's [Account Membership API](https://docs.swan.io/topics/accounts/memberships).
+
+:::warning Important
+Leaving the previous admin with full permissions can create a security risk. They may still be able to perform sensitive actions on the account, including initiating transactions or managing other account members.
+:::
+
+---
+
+## Fix common issues
+
+### Handle an expired form link
+
+The form link expires after **7 calendar days** and doesn't save progress. Your user must submit a new request for a new link. There's no way to recover what was entered.
+
+### Troubleshoot form submission issues
+
+Ask your user for a screenshot of the issue, then raise a support request in your Dashboard. See [Contact Swan Support](#contact-swan-support).
+
+### Help your user understand a document request
+
+Swan shares a separate upload link via the support ticket. Check the ticket and forward the link to your user if they need help identifying what to upload.
+
+Common missing items:
+
+- Proof of the legal representative change (board resolution or general assembly minutes)
+- Power of attorney (when someone other than the new legal representative completes the form)
+- Updated articles of association
+- Supporting identity document
+
+### Follow up after form submission
+
+1. Confirm the user actually completed and submitted the form, not just opened it.
+2. Check spam and junk folders for emails from Swan.
+3. If confirmed, raise a support request in your Dashboard. See [Contact Swan Support](#contact-swan-support).
+
+### Handle a departed legal representative
+
+This is common for homeowner associations and companies where the previous legal representative has left:
+
+1. Ask your user to gather documentation proving the departure, such as a resignation letter, updated company registry, or general assembly minutes appointing a new representative.
+2. Have the new legal representative or an authorized person submit a support request.
+3. Include the departure documentation along with the standard required documents.
+4. If the outgoing representative is unreachable and their identity document isn't available, note this in the support request; Swan will advise on alternative documentation.
+
+### Resolve a blocked membership
+
+If the new admin or legal representative's membership is blocked, Swan can't complete the change until the blocker is resolved. Raise a Swan support request. See [Contact Swan Support](#contact-swan-support). Don't attempt workarounds.
+
+### Resend the new administrator's invitation
+
+After Swan validates the documents, the new administrator receives an invitation email to join all accounts belonging to the account holder. If the invitation isn't received:
+
+1. Ask the new administrator to check their spam and junk folders.
+2. Check the support ticket; Swan may have shared information there.
+3. If still not received, raise a support request in your Dashboard via the existing ticket. Don't open a new ticket.
+
+If your product is integrated with the Swan API, your development team can also use the `sendAccountMembershipInviteNotification` mutation to resend the invitation. The membership status must be `InvitationSent`. **Up to 5 invitations can be sent per day per membership.**
+
+### Cancel a change request
+
+Requests can't be canceled through the Dashboard or directly by the partner.
+
+- If the status is **Ongoing** (form not yet submitted): the link expires automatically after 7 calendar days. No action is needed.
+- If the status is **Pending** or **WaitingForInformation**: raise a support request in your Dashboard and ask for a refusal. See [Contact Swan Support](#contact-swan-support).
+
+After expiry or refusal, a new request can be initiated if needed.
+
+### Handle a bulk legal representative update
+
+For bulk legal representative changes, submit a support request in your Dashboard and include enough context for Swan to identify the accounts in scope and process the change.
+
+In your request, include:
+
+- Account holder or company name
+- Current legal representative
+- New legal representative
+- Reason for the change
+- Whether the change applies to all related accounts or only a specific subset
+- Any supporting documents already available
+
+If the accounts in scope can't be clearly identified from this information, include a CSV or account list. Swan must be able to confirm exactly which accounts are included before creating the bulk change requests.
+
+---
+
+## Contact Swan Support
+
+Raise a request using the [Partner support request form](https://partner-support.swan.io/hc/en-gb/requests/new).
+
+Contact Swan Support if:
+
+- Your user submitted the form and hasn't received a response.
+- Your user received a document request they don't understand.
+- Your user can't submit the form.
+- The form link expired.
+- The change was approved but the account doesn't reflect the update.
+- The previous legal representative is no longer part of the entity and you need guidance on alternative documentation.
+- The new admin or legal representative's membership is blocked.
+
+### Always include:
+
+- Account holder or company name
+- IBAN
+- Names of the current and new admin or legal representative
+- Date the form was submitted
+- Screenshots, if the issue is form-related
+- Any reference numbers from previous communications
+
+---
+
+## Share these articles with your users
+
+When your users have questions about updating account details, share these support articles directly:
+
+- [Change your account's legal representative](https://support.swan.io/hc/en-150/articles/change-legal-representative): guide on the legal representative change process for account holders
+- [Power of Attorney (POA)](https://support.swan.io/hc/en-150/articles/power-of-attorney): explains what a PoA is, how to complete it, and Swan's templates
+
+:::tip
+You can also use these articles as a starting point to create your own help center content, tailored to your product's terminology and your users' specific context.
+:::

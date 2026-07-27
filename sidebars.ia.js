@@ -518,8 +518,14 @@ module.exports = {
     ], "users/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("User operations", [
-        doc("users/guides/user-operations/deactivate", "Deactivate a user"),
-        doc("users/guides/user-operations/export", "Export users"),
+        cat("Deactivate a user", [
+          doc("users/guides/user-operations/deactivate/from-the-dashboard", "From the Dashboard"),
+          doc("users/guides/user-operations/deactivate/using-the-api", "Using the API"),
+        ], { link: "users/guides/user-operations/deactivate/index" }),
+        cat("Export users", [
+          doc("users/guides/user-operations/export/from-the-dashboard", "From the Dashboard"),
+          doc("users/guides/user-operations/export/using-the-api", "Using the API"),
+        ], { link: "users/guides/user-operations/export/index" }),
         doc("users/guides/user-operations/get-info-one", "Get info on one user"),
         doc("users/guides/user-operations/get-info-multiple", "Get info on multiple users"),
         doc("users/guides/user-operations/get-list", "Get a user list"),

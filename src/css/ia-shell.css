@@ -764,8 +764,6 @@ a.flowmap-spine-node:hover { background: var(--ifm-background-surface-color); te
 }
 .ia-mermaid-overlay__stage {
   display: flex;
-  align-items: center;
-  justify-content: center;
   box-sizing: border-box;
   width: 96vw;
   height: 91vh;
@@ -775,13 +773,18 @@ a.flowmap-spine-node:hover { background: var(--ifm-background-surface-color); te
   border-radius: var(--ia-radius);
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
 }
-/* Override Mermaid's inline `max-width:<natural>px` so the diagram scales up to
-   fill the stage (driven off height; width follows the viewBox aspect ratio). */
+/* Override Mermaid's inline `max-width:<natural>px` so the diagram fills the
+   stage width; height follows the viewBox aspect ratio and may exceed the
+   stage, which then scrolls vertically. Auto margins center diagrams shorter
+   than the stage; align-items/justify-content centering would instead clip
+   the top/left of overflowing ones. */
 .ia-mermaid-overlay__stage > svg {
-  width: auto !important;
-  height: 100% !important;
+  flex-shrink: 0;
+  width: 100% !important;
+  height: auto !important;
   max-width: 100% !important;
-  max-height: 100% !important;
+  max-height: none !important;
+  margin: auto;
 }
 /* Translucent dark disc + white glyph: reads on both the white card and the dark
    backdrop, so it stays legible wherever the near-fullscreen stage edge lands. */

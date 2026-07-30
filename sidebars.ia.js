@@ -509,6 +509,7 @@ module.exports = {
         doc("users/concepts/user/statuses", "Statuses"),
       ], { link: "users/concepts/user/index" }),
       cat("Consent", [
+        doc("users/concepts/consent/sca", "Strong Customer Authentication"),
         doc("users/concepts/consent/server-to-server", "Server-to-server"),
         doc("users/concepts/consent/statuses", "Statuses"),
       ], { link: "users/concepts/consent/index" }),

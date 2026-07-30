@@ -7,13 +7,15 @@ title: View sensitive information
 To make online payments you usually need to provide the card numbers, the expiration date, and the CVC.
 All of this data is considered sensitive and is not directly available through the Web Banking interface or the API.
 
+Use the API to temporarily and securely enable the ability to view a card's sensitive information. 
+
 :::note Information not visible
 If information fails to become visible despite having the appropriate permissions, it may remain hidden due to regulatory restrictions based on your location.
 :::
 
 ## View virtual card numbers {#view-number}
 
-1. When the Account member wants to display sensitive information, you must call the `viewCardNumbers` mutation which returns a consent.
+1. When the account member wants to display sensitive information, you must call the `viewCardNumbers` mutation which returns a consent.
 1. Replace $YOUR_CARD_ID with your card ID, and $YOUR_REDIRECT_URL with the URL you want to redirect the user to after viewing the card numbers.
 1. Make sure you are authenticated with a user access token using the name of the card's account member.
 1. Then a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan. You need to open a native pop-up to display the `consentUrl`. This URL will redirect the user to a page with the card numbers displayed with the card design.

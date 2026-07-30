@@ -1,0 +1,21 @@
+---
+title: 30 July 2026
+type: release
+---
+
+## Improvements
+
+🔄 [Incoming Verification of Payee (VoP) requests](/topics/payments/credit-transfers/sepa/vop/incoming-vop-requests/#verification-outcomes) for accounts in `Closing` status now go through standard matching, returning Match, Close match, or No match. Previously, these requests returned Impossible to match, blocking senders at the verification step. This aligns VoP with incoming credit transfers, where `Closing` accounts [already accept transfers to settle outstanding debts](/changelog/18-june-2026). Requests for accounts in `Closed` or `Suspended` status still return Impossible to match.
+
+🔄 Document rejection reason labels are now clearer and unified across onboarding, KYC, transaction, and capital deposit flows in your Dashboard. Each label explains exactly why a document was rejected, even when there's no additional rejection message.
+
+## API updates
+
+### Upcoming breaking changes
+
+🛡️ Starting **August 31, 2026**, the [`addReceivedSepaDirectDebitB2bMandate`](/topics/payments/direct-debit/guide-add-mandate) mutation enforces SEPA format validation on two fields:
+
+- `creditorIdentifier`: must follow the [SEPA Creditor Identifier (SCI)](/topics/merchants/online/sdd/#sci) structure, including an ISO two-letter country code, two-digit checksum, creditor business activity code, and national identification feature.
+- `mandateReference`: must be a valid SEPA mandate reference of up to 35 characters.
+
+This prevents creating mandates with incorrect data, which later cause `MandateInvalid` rejections on outgoing SEPA Direct Debit B2B transactions.

@@ -1,0 +1,196 @@
+---
+title: Manage user identification
+unlisted: true
+---
+
+# Manage user identification
+
+This guide helps partner support teams support their users through identification: sharing identification links, tracking statuses, resolving common failures, and knowing when to contact Swan.
+
+For user-facing guidance on how identification works, share [Identification process overview](https://support.swan.io/hc/en-150/articles/22865683055133) with your users.
+
+For identification levels, processes, statuses, and reason codes, see [Identifications](/topics/users/identifications/).
+
+:::info Key takeaways
+
+- Your users can identify themselves at any time, 24 hours a day.
+- Identification sessions expire. Time limits depend on the process — see [identification statuses](/topics/users/identifications/#statuses).
+- The identification text message (SMS) link works once. Once your user closes the waiting page, they can't request a new one.
+- Only the user can complete identification. You can't complete or cancel one on their behalf.
+- An `Invalid` identification carries a reason code. Some codes mean your user should retry; others mean they shouldn't, and you contact Swan Support instead.
+
+:::
+
+---
+
+## About identification
+
+Identification is how Swan confirms a user is who they say they are. Your users need to complete it at three points:
+
+- [Account onboarding](/topics/onboarding/)
+- Accepting an [account membership](/topics/accounts/memberships/)
+- Resetting their passcode
+
+Your users can complete identification at any time, 24 hours a day, 7 days a week. They need to log in to Swan first.
+
+Swan supports three identification processes: Expert, PVID, and QES. Expert and QES both include a manual review, so these take longer than PVID. When you use the **Auto** option, Swan picks the right process for each user automatically. Accepted processes vary by country and account type — see [levels and processes](/topics/users/identifications/#levels-processes).
+
+:::note Not every user needs identification
+
+Users with non-sensitive access to an account may not need to identify themselves in some B2B situations. This depends on their [account membership permissions](/topics/accounts/memberships/#remove-identification).
+
+:::
+
+:::tip Integration
+
+Ask your development team to:
+
+- Surface identification status and `Invalid` reason codes inside your own product using Swan's [Identifications API](/topics/users/identifications/), so you can see why an identification failed without opening the Dashboard.
+- Send authentication links to users who haven't identified themselves, by adding the `identificationLevel` parameter to the scope. See the [guide to get a user access token](/developers/using-api/authentication/guide-get-token-user#auth-code).
+- Test status and reason code combinations with the Event Simulator in **Dashboard** > **Developers** > **Event Simulator** > **Sandbox identifications**.
+
+:::
+
+---
+
+## Help a user who can't complete identification
+
+Swan sends your user an SMS with an identification link. If your user is stuck, check where they are in the flow before you send anything new.
+
+:::caution The SMS link works once
+
+Your user can request a new SMS with **Retry** or the QR code on the waiting page. Once they close that page, they can't request a new one. If they've closed it, send them a direct identification link.
+
+:::
+
+To help a user who can't get back into the flow:
+
+1. Share a direct identification link with them. See [Swan Academy](https://academy.swan.io/chapters?lessonID=32ae4d89-d7cb-4710-802b-b0ffb45cbb91&courseID=f0502146-2908-4d73-b5ef-0a7691e4486d&slideIndex=3).
+2. Tell your user they need to log in before they can identify themselves.
+3. Tell your user to finish in one sitting, because the session expires. For the time limit that applies to their process, see [identification statuses](/topics/users/identifications/#statuses).
+
+---
+
+## Understand identification attempts
+
+If identification is set to **Auto**, Swan automatically routes your users through the recommended identification flow. If your user can't complete the initial identification method after several failed or incomplete attempts, Swan may fall back to QES.
+
+The next attempt can look different from the first, so tell your user to expect that.
+
+:::caution Only the user can complete identification
+
+You, a third party, and Swan can't complete identification on a user's behalf, and you can't cancel one for them either. If your user can't complete identification because of a physical or technical constraint, raise a support request in your Dashboard.
+
+:::
+
+---
+
+## Track a user's identification
+
+1. Go to **Dashboard** > **Data** > **Users**.
+2. Open the relevant user profile.
+3. Review the identification status and history.
+
+See [Swan Academy](https://academy.swan.io/chapters?lessonID=32ae4d89-d7cb-4710-802b-b0ffb45cbb91&courseID=f0502146-2908-4d73-b5ef-0a7691e4486d&slideIndex=4) for a walkthrough video.
+
+### What to do for each status
+
+For what each status means, see [identification statuses](/topics/users/identifications/#statuses).
+
+| Status | What you do |
+| --- | --- |
+| `Started` | Remind your user to complete identification. It expires automatically if they don't finish in time. |
+| `Pending` | Wait for the review to finish. Expert and QES include a manual review, so these take longer than PVID. Don't contact Swan Support unless the status has been `Pending` for more than one business day.|
+| `Valid` | Nothing. Account holder verification starts next. |
+| `Invalid` | Check the reason code, then see [Handle an Invalid identification](#handle-an-invalid-identification). |
+| `Expired` | Send a new identification link and tell your user to finish in one sitting. |
+| `Canceled` | Ask your user to start again. You can't restart an identification for them. |
+
+:::note Two different Pending statuses
+
+`Pending` on an identification means a review is in progress. Account holder verification has its own `Pending` status, which means Swan is reviewing the account holder's information. Check which object you're looking at in the Dashboard before you act.
+
+:::
+
+---
+
+## Fix common identification issues
+
+### Handle an Invalid identification
+
+Every `Invalid` identification carries a reason code. Check it in **Dashboard** > **Data** > **Users**. For what each code means, see [invalid reason codes](/topics/users/identifications/#tracking-reason-codes).
+
+Some reason codes mean your user should try again with a better capture or a different document. Others, including data mismatches like `NonMatchingIdentity` and `InvalidOrMissingData`, can't be fixed by retrying, and you can't correct the details yourself. See [invalid reason codes](/topics/users/identifications/#tracking-reason-codes) to identify which you're looking at, then contact [Swan Support](https://partner-support.swan.io/hc/en-gb/requests/new) if a retry won't help.
+
+For the user-facing explanation of rejection messages, share [Identification rejection reasons and solutions](https://support.swan.io/hc/en-150/articles/30681783157277) with your user.
+
+### Share these capture tips
+
+When a retry is the right answer, tell your user to:
+
+- Use Chrome on mobile if possible.
+- Use a strong 4G/5G or stable Wi-Fi connection.
+- Complete the process in one go, without switching browsers or apps.
+- Stay in the same browser from start to finish.
+- Hold the document in your hand, in good natural light.
+- Keep your fingers off the document text and photo.
+- Capture the document in full color, front and back.
+
+### Help a user whose phone isn't compatible
+
+If your user's phone isn't compatible with the identification flow:
+
+1. Ask your user to try another compatible device.
+2. If that isn't possible, raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) in your Dashboard. Include the user ID, the identification processes attempted, and a description of what happened.
+
+### Help a user who is overseas
+
+If your user is overseas and can't complete identification from their current location:
+
+1. Ask your user to connect with a VPN set to their home country, then try again.
+2. If the problem continues, raise a support request in your Dashboard with the user ID and your user's current location.
+
+### Resend an identification link to the correct user
+
+If an identification link went to the wrong user, raise a support request in your Dashboard with the correct user ID. Don't forward or share identification links between users.
+
+### Change the identification process
+
+Changing the identification process in your product needs Swan's approval. See [recommendations](/topics/users/identifications/#processes-recommendations) for the processes accepted in each country.
+
+---
+
+## Contact Swan Support
+
+Submit a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) if:
+
+- An identification is `Invalid` with a data-mismatch reason code, such as `NonMatchingIdentity` or `InvalidOrMissingData`.
+- An identification is `Invalid` with `FraudDetected`, `SanctionListHit`, `NegativeNewsHit`, or `InvoluntaryIdentification`.
+- You're unsure how to handle a reason code.
+- Your user's phone isn't compatible and they have no other device.
+- Your user can't complete identification from their current location, even with a VPN.
+- An identification link went to the wrong user.
+- You want to change the identification process in your product.
+
+Include in your request:
+
+- Account ID and user ID
+- Identification process used
+- Current status, and the reason code if the status is `Invalid`
+- Steps already taken
+
+---
+
+## Share these articles with your users
+
+Share these Support Center articles with users who have questions about identification:
+
+- [Identification process overview](https://support.swan.io/hc/en-150/articles/22865683055133): how identification works, when it's required, and what to expect
+- [Identification rejection reasons and solutions](https://support.swan.io/hc/en-150/articles/30681783157277): rejection messages with causes and fixes
+- [Consent and SMS issues](https://support.swan.io/hc/en-150/articles/18130894864541): what to do when consent codes don't arrive
+
+:::tip Help center content
+
+You can also use these articles as a starting point for your own help center content, tailored to your product's terminology and your users' context.
+
+:::

@@ -403,7 +403,7 @@ module.exports = {
       items: [
         {
           type: "category",
-          label: "Overview",
+          label: "Open Banking overview",
           link: { type: "doc", id: "topics/open-banking/index" },
           collapsed: true,
           items: [

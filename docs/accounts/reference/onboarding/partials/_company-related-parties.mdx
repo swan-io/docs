@@ -1,0 +1,136 @@
+### Related individuals
+
+**Related field:** `company.relatedIndividuals`
+
+The `relatedIndividuals` array is required for all countries. At least one Legal Representative and one Ultimate Beneficial Owner (UBO) are required to finalize a company onboarding. The same individual can fulfill both roles depending on the `type`.
+
+Each individual must have a `type` that determines which additional fields are required:
+
+- `LegalRepresentative`: the individual represents the company legally.
+- `UltimateBeneficialOwner`: the individual holds ownership or control over the company.
+- `LegalRepresentativeAndUltimateBeneficialOwner`: the individual serves both roles.
+
+#### Core fields
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `type` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `firstName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `lastName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `sex` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `nationality` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> |
+| `email` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `preferredFirstName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+⁵ `nationality` is required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+**Available options**
+
+- `type`: `UltimateBeneficialOwner`, `LegalRepresentative`, `LegalRepresentativeAndUltimateBeneficialOwner`.
+- `sex`: `Male`, `Female`, `Unknown`.
+
+#### Address
+
+**Related field:** `relatedIndividuals[i].address`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `addressLine1` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> |
+| `addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `city` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> |
+| `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> |
+| `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+
+⁶ In France and the Netherlands, `addressLine1`, `city`, and `postalCode` are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+#### Birth information
+
+**Related field:** `relatedIndividuals[i].birthInfo`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `birthDate` | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <Req /> |
+| `city` | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <Req /> |
+| `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `postalCode` | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> |
+
+⁷ In Germany (for `birthDate`, `city`, `postalCode`) and Spain (for `postalCode` only), these fields are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+#### Tax information
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> |
+
+⁸ `taxIdentificationNumber` is required if all of the following are true:
+
+- `type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+- One of the following:
+    - `company.regulatoryClassification` is `NonFinancialPassive` **and** `relatedIndividuals[i].address.country` is different from `accountInfo.country`.
+    - `accountInfo.country` is Germany or Italy.
+
+#### United States tax information
+
+**Related field:** `relatedIndividuals[i].unitedStatesTaxInfo`
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `isUnitedStatesPerson` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> |
+
+⁹ `unitedStatesTaxIdentificationNumber` is required if `relatedIndividuals[i].unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+
+#### Legal Representative fields
+
+The `legalRepresentative` object is required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `legalRepresentative.roles` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+
+#### UBO fields
+
+The `ultimateBeneficialOwner` object is required if `type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `ultimateBeneficialOwner.qualificationType` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `ultimateBeneficialOwner.ownership.type` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> |
+| `ultimateBeneficialOwner.ownership.totalPercentage` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> |
+| `ultimateBeneficialOwner.controlTypes` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> |
+
+¹⁰ `ownership.type` and `ownership.totalPercentage` are required if `qualificationType` is `Ownership`.
+
+¹¹ `controlTypes` is required if `qualificationType` is `Control`.
+
+**Available options**
+
+- `qualificationType`: `Ownership`, `Control`, `LegalRepresentative`.
+- `ownership.type`: `Direct`, `Indirect`, `DirectAndIndirect`.
+- `controlTypes`: `VotingRights`, `ControlViaTrustOrSimilar`, `RightToAppointOrRemoveBoard`, `ShareholderAgreementOrContract`, `StrategicOrManagerialInfluence`.
+
+#### Identity document information (Italy only)
+
+These fields are only required for Italian accounts (`accountInfo.country` = `ITA`).
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `ultimateBeneficialOwner.identityDocumentInfo.type` | <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
+| `ultimateBeneficialOwner.identityDocumentInfo.number` | <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
+| `ultimateBeneficialOwner.identityDocumentInfo.expiryDate` | <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
+| `ultimateBeneficialOwner.identityDocumentInfo.issueDate` | <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
+| `ultimateBeneficialOwner.identityDocumentInfo.issuingAuthority` | <Opt /> | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> |
+
+### Related companies
+
+**Related field:** `company.relatedCompanies`
+
+Use this array when a company (not an individual) serves as a Legal Representative for the account holder company.
+
+| Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `entityName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `registrationCountry` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `registrationNumber` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `roles` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |

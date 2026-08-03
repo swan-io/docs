@@ -4,27 +4,22 @@ audience:
   - dev
 related:
   - /users/concepts/consent
+  - /users/concepts/consent/sca
+  - /users/concepts/consent/statuses
   - /users/guides/consent/configure-notifications
 ---
 
 # Integrate Strong Customer Authentication (SCA)
 
-If you want to embed Swan into your own mobile app, you'll need to integrate Strong Customer Authentication (SCA) using in-app browsers.
-
-By default, when a user performs SCA in a mobile app, Swan opens the smartphone's default browser and redirects the user out of the mobile app to complete SCA. Once SCA is complete, the user must exit their smartphone browser and return to the mobile app.
-
-With SCA integration, you can embed an in-app browser directly into your mobile app so SCA opens within the application. Once SCA is complete, the user closes the in-app browser and remains inside your mobile app.
+If you embed Swan into your own mobile app, integrate Strong Customer Authentication (SCA) using an **in-app browser** so your users complete SCA without leaving your app.
+Review [SCA in your mobile app](/users/concepts/consent/sca#mobile-app) for how this changes the default browser behavior and when the integration is relevant.
 
 :::danger In-app browser required
 For security reasons, all links **must open** in in-app browsers.<br />
 Therefore, **never use WebViews** to open URLs (`consentUrl` or `oAuthUrl`).
 :::
 
-## When to use SCA integration {#when-to-use}
-
-SCA integration is relevant when you have a mobile app and your users perform all actions from the mobile app. This improves the user experience by keeping users inside your mobile app rather than redirecting them to an external browser.
-
-## What you'll need {#overview}
+## What you'll need {#what-you-need}
 
 SCA integration works for both OAuth (login/authentication) and Consent (sensitive operations) flows.
 
@@ -48,7 +43,7 @@ Use the documentation for your system's recommended API to set up your in-app br
 We provide an official React Native package: [@swan-io/react-native-browser](https://github.com/swan-io/react-native-browser)
 
 :::warning Follow the references
-When using frameworks other than React Native, ensure that your package is configured in a way that follows Swan's implementation references.
+When using frameworks other than React Native, make sure your package is configured to follow Swan's implementation references.
 :::
 
 ## Step 2: Set up your deep link listener {#deep-link-listener}
@@ -60,7 +55,7 @@ Use the documentation for your system's recommended tutorial to set up the deep 
 | Android | [Create deep links to app content](https://developer.android.com/training/app-links/deep-linking)                                      |
 | iOS     | [Defining a custom URL scheme for your app](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) |
 
-If you are using React Native, follow [this guide](https://reactnative.dev/docs/linking).
+If you use React Native, follow the [React Native linking guide](https://reactnative.dev/docs/linking).
 
 ## Step 3: Configure the sign-in process {#configure-signin}
 
@@ -241,8 +236,8 @@ During redirection, Swan adds these query parameters to the URL.
 
 - `consentId`.
 - `env`: `Sandbox` or `Live`.
-- `status`: `Accepted`, `CustomerRefused`, `OperationCommitting`, `CredentialRefused` (deprecated), `Created`, `Started`, `Expired`, `Failed`, or `Canceled`.
-  - _Including the status doesn't replace the need to query Swan's API to confirm the consent._
+- `status`: the [consent status](/users/concepts/consent/statuses) at the time of redirection.
+  - Including the status doesn't replace the need to query Swan's API to confirm the consent.
 - `resourceId` (if the consent only impacts one resource).
 
 ### 4.5 Additional operations {#configure-consent-additional-ops}

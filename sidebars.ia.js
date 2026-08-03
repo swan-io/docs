@@ -514,6 +514,7 @@ module.exports = {
         doc("users/concepts/consent/statuses", "Statuses"),
       ], { link: "users/concepts/consent/index" }),
       cat("Identifications", [
+        doc("users/concepts/identifications/levels-processes", "Levels and processes"),
         doc("users/concepts/identifications/statuses", "Statuses"),
       ], { link: "users/concepts/identifications/index" }),
     ], "users/concepts/index", "ia-type-concept"),

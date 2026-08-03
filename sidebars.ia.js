@@ -2,6 +2,8 @@
  * DOC-1814 — IA shell sidebars (presentation fork, no content).
  * Additive: merge into sidebars.js without touching the existing four exports.
  */
+const { annotate } = require("./ia-sidebar-index-targets");
+
 const cat = (label, items, opts = {}) => ({
   type: "category",
   label,
@@ -24,7 +26,10 @@ const extLink = (label, href, iconInner) => ({
   value: `<a class="menu__link menu-ext-link__a" href="${href}" target="_blank" rel="noopener noreferrer">${svgIcon(iconInner)}<span>${label}</span><svg class="menu-ext-link__ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M7 7h10v10" /></svg></a>`,
 });
 
-module.exports = {
+// DOC-1834 — annotate() stamps customProps.iaIndexTarget on categories without
+// a link, so clicking one in the sidebar also lands the reader on the index
+// that carries its context (see ia-sidebar-index-targets.js).
+module.exports = annotate({
   getStartedSidebar: [
     doc("get-started/index", "Overview"),
     top("Become a partner", [
@@ -585,4 +590,4 @@ module.exports = {
       doc("build/tools/test-tools-guide", "Test tools guide"),
     ]),
   ],
-};
+});

@@ -1,5 +1,12 @@
 // redirects from original doc pathnames
+const { categoryRedirects } = require("./ia-sidebar-index-targets");
+
 module.exports = [
+  // DOC-1834 — sidebar categories without an index page (e.g.
+  // /users/guides/user-operations) aren't routes; redirect them to the index
+  // that carries their context. Derived from sidebars.ia.js, see
+  // ia-sidebar-index-targets.js.
+  ...categoryRedirects(require("./sidebars.ia.js")),
   // DOC-1814 — Capital deposits promoted to its own domain (out of onboarding)
   { from: "/accounts/guides/onboarding/capital-deposits", to: "/accounts/guides/capital-deposits" },
   { from: "/accounts/guides/onboarding/capital-deposits/create-case", to: "/accounts/guides/capital-deposits/create-case" },

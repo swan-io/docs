@@ -271,6 +271,11 @@ module.exports = annotate({
         ], { link: "accounts/guides/billing/get-list/index" }),
         doc("accounts/guides/billing/compliant-billing", "Compliant billing"),
       ], { link: "accounts/guides/billing/index" }),
+      cat("Sandbox", [
+        doc("accounts/guides/sandbox/billing", "Sandbox: billing"),
+        doc("accounts/guides/sandbox/documents", "Sandbox: documents"),
+        doc("accounts/guides/sandbox/funding", "Sandbox: funding"),
+      ], { link: "accounts/guides/sandbox/index" }),
     ], "accounts/guides/index", "ia-type-guide"),
     top("Reference", [
       cat("Onboarding", [
@@ -295,11 +300,6 @@ module.exports = annotate({
       cat("Multiple accounts", [
         doc("accounts/reference/accounts/multiple-accounts-requirements", "Multiple-accounts requirements"),
       ], { link: "accounts/reference/accounts/index" }),
-      cat("Sandbox", [
-        doc("accounts/reference/sandbox/sandbox-billing", "Sandbox: billing"),
-        doc("accounts/reference/sandbox/sandbox-documents", "Sandbox: documents"),
-        doc("accounts/reference/sandbox/sandbox-funding", "Sandbox: funding"),
-      ], { link: "accounts/reference/sandbox/index" }),
     ], "accounts/reference/index", "ia-type-ref"),
   ],
 
@@ -362,14 +362,16 @@ module.exports = annotate({
         doc("cards/guides/digital/add", "Add to a wallet"),
         doc("cards/guides/digital/cancel", "Cancel a digital card"),
       ], { link: "cards/guides/digital/index" }),
+      cat("Sandbox", [
+        doc("cards/guides/sandbox-physical", "Sandbox: physical cards"),
+        doc("cards/guides/sandbox-digital", "Sandbox: digital cards"),
+      ]),
     ], "cards/guides/index", "ia-type-guide"),
     top("Reference", [
       doc("cards/reference/spending-limits", "Spending limits"),
       doc("cards/reference/card-settings", "Card settings"),
       doc("cards/reference/shipping-and-delivery", "Shipping and delivery"),
       doc("cards/reference/insurance-and-claims", "Insurance and claims"),
-      doc("cards/reference/sandbox-physical", "Sandbox: physical cards"),
-      doc("cards/reference/sandbox-digital", "Sandbox: digital cards"),
     ], "cards/reference/index", "ia-type-ref"),
   ],
 
@@ -482,20 +484,20 @@ module.exports = annotate({
           ], { link: "payments/guides/merchants/in-person/checks/index" }),
         ], { link: "payments/guides/merchants/in-person/index" }),
       ], { link: "payments/guides/merchants/index" }),
+      cat("Sandbox", [
+        doc("payments/guides/sandbox/sepa", "Sandbox: SEPA Credit Transfers"),
+        doc("payments/guides/sandbox/direct-debit", "Sandbox: SEPA Direct Debit"),
+        doc("payments/guides/sandbox/international", "Sandbox: International Credit Transfers"),
+        doc("payments/guides/sandbox/cards", "Sandbox: card payments"),
+        doc("payments/guides/sandbox/merchants", "Sandbox: merchants"),
+        doc("payments/guides/sandbox/merchant-online-cards", "Sandbox: merchant online cards"),
+        doc("payments/guides/sandbox/merchant-sdd", "Sandbox: merchant SEPA Direct Debit"),
+        doc("payments/guides/sandbox/merchant-idd", "Sandbox: merchant Internal Direct Debit"),
+        doc("payments/guides/sandbox/merchant-in-person-cards", "Sandbox: merchant in-person cards"),
+        doc("payments/guides/sandbox/merchant-checks", "Sandbox: merchant French checks"),
+      ], { link: "payments/guides/sandbox/index" }),
     ], "payments/guides/index", "ia-type-guide"),
     top("Reference", [
-      cat("Sandbox", [
-        doc("payments/reference/sandbox/sandbox-sepa", "Sandbox: SEPA Credit Transfers"),
-        doc("payments/reference/sandbox/sandbox-direct-debit", "Sandbox: SEPA Direct Debit"),
-        doc("payments/reference/sandbox/sandbox-international", "Sandbox: International Credit Transfers"),
-        doc("payments/reference/sandbox/sandbox-cards", "Sandbox: card payments"),
-        doc("payments/reference/sandbox/sandbox-merchants", "Sandbox: merchants"),
-        doc("payments/reference/sandbox/sandbox-merchant-online-cards", "Sandbox: merchant online cards"),
-        doc("payments/reference/sandbox/sandbox-merchant-sdd", "Sandbox: merchant SEPA Direct Debit"),
-        doc("payments/reference/sandbox/sandbox-merchant-idd", "Sandbox: merchant Internal Direct Debit"),
-        doc("payments/reference/sandbox/sandbox-merchant-in-person-cards", "Sandbox: merchant in-person cards"),
-        doc("payments/reference/sandbox/sandbox-merchant-checks", "Sandbox: merchant French checks"),
-      ], { link: "payments/reference/sandbox/index" }),
       doc("payments/reference/international-transfers", "International transfer countries and rails"),
       doc("payments/reference/card-payment-countries", "Card payment countries"),
       doc("payments/reference/card-rejection-reasons", "Card rejection reasons"),
@@ -548,6 +550,7 @@ module.exports = annotate({
         doc("users/guides/identifications/get-identifications", "Get identifications"),
         doc("users/guides/identifications/get-latest-id", "Get the latest identification"),
       ]),
+      doc("users/guides/sandbox-identifications", "Sandbox: identifications"),
     ], "users/guides/index", "ia-type-guide"),
     top("Reference", [
       cat("Identity methods (Expert, PVID, QES)", [
@@ -557,7 +560,6 @@ module.exports = annotate({
         doc("users/reference/identity-methods/recommendations", "Recommendations by country"),
       ], { link: "users/reference/identity-methods/index" }),
       doc("users/reference/sensitive-operations", "Sensitive operations"),
-      doc("users/reference/sandbox-identifications", "Sandbox: identifications"),
     ], "users/reference/index", "ia-type-ref"),
   ],
 

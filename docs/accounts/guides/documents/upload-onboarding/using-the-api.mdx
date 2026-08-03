@@ -52,11 +52,9 @@ mutation GenerateUploadUrl {
 
 ### Step 2: Recover generated URL from payload {#guide-recover-url}
 
-Recover the generated `url` in the payload, as well as several pairs of keys and values.
+import UploadRecoverUrl from '../partials/_upload-recover-url.mdx';
 
-:::caution Upload URL expiration
-The `url` is **only valid for seven days**, after which you'd need to generate a new `url`.
-:::
+<UploadRecoverUrl />
 
 ```json {8-9,12-13,20-21,24-25,28-29,32-33,36-37,40} showLineNumbers
 {
@@ -107,27 +105,9 @@ The `url` is **only valid for seven days**, after which you'd need to generate a
 
 ### Step 3: Send POST request {#guide-send-post}
 
-Send an HTTP POST request to the `url` without a `Content-Type` header using the following cURL command.
-Supported file formats are `.heic`, `.jpg`, `.pdf`, and `.png`.
+import UploadPostRequest from '../partials/_upload-post-request.mdx';
 
-```curl showLineNumbers
-curl --location --request POST '$UPLOAD_URL' \
---form 'Key="INPUT/$ID"' \
---form 'X-Amz-Algorithm="AWS4-HMAC-SHA256"' \
---form 'X-Amz-Credential="$CREDENTIAL"' \
---form 'X-Amz-Date="20220705T135458Z"' \
---form 'X-Amz-Security-Token="$TOKEN"' \
---form 'Policy="$POLICY"' \
---form 'X-Amz-Signature="$SIGNATURE"' \
---form 'X-Amz-Meta-X-Swan-Supporting-Document-Id="$DOCUMENT_ID"' \
---form 'file=@"$FILE_PATH"'
-```
-
-*Replace all `$VARIABLES` with the values provided in the payload.*
-
-:::tip Upload successful
-When you upload a document with the HTTP POST cURL command, Amazon sends a *204: No content error*, **but the document was successfully uploaded**.
-:::
+<UploadPostRequest />
 
 :::info Programmatic uploads
 When uploading via code (not cURL), send the file as a readable stream and ensure your HTTP client sets the `Content-Length` header correctly. Some libraries require this explicitly for multipart form uploads.

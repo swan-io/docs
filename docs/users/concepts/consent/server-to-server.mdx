@@ -22,12 +22,12 @@ Many sensitive operations are eligible for server-to-server consent.
 Some operations allow you to view highly sensitive information and, therefore, aren't eligible for server-to-server consent.
 Review the [list of sensitive operations](/users/reference/sensitive-operations) to know which operations are eligible for server-to-server consent, marked with the symbol ⮂.
 
-Learn how to **implement server-to-server consent** in the [dedicated guide](/users/guides/consent/implement-s2s).
+Learn more in the [guide to implement server-to-server consent](/users/guides/consent/implement-s2s).
 
 ## Key cryptography {#s2s-crypto}
 
 Server-to-server consent relies on a pair of keys, public and private.
-Swan only accepts keys that use the following algorithm:
+Swan only accepts keys that meet the following requirements:
 
 - ECDSA with a reputed strong curve (such as p-256)
 - Exported in JWK format
@@ -65,8 +65,8 @@ participant P as Partner API
 participant S as Swan API
     P ->> S: Calls sensitive mutation
     S ->> P: Returns consent info, including consent challenge
-    P ->> PS: Signs consent challenge with private key
-    PS ->> P: Returns signed consent challenge
+    P ->> PS: Requests signature of consent challenge
+    PS ->> P: Returns consent challenge signed with private key
     P ->> S: Calls mutation to grant consent with server signature
     S ->> S: Verifies signature with Partner public key
     S ->> S: Grants consent and executes callback

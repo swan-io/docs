@@ -26,7 +26,7 @@ Your user:
     - If you include their number when [creating their sign-up link](/build/using-api/authentication#url-parameters-optional), they won't need to enter it again.
 1. **Confirms their phone number**. How they confirm depends on whether they opened the sign-up link from a computer or their mobile device:
     1. **Desktop**: Swan sends your user a text message with a verification code. The user enters this code on their computer to confirm their phone number.
-    1. **Mobile device**: Swan sends your user a text message with a verification code.
+    1. **Mobile device**: Swan sends your user a text message with a verification code. The user enters this code on their mobile device to confirm their phone number.
 1. **Enters their personal information**: first name, last name, and birthdate. This information must match the information that appears on their identity document.
     - The user skips this step if you included this information when [creating their sign-up link](/build/using-api/authentication#url-parameters-optional).
 1. **Sets a 6-digit passcode**. Users must remember their passcode. Swan can request it anytime the user needs to consent to a sensitive operation.
@@ -87,9 +87,11 @@ flowchart TB
 
     ConfirmsPasscode --> EmailVerificationIncluded{Email verification included in OAuth URL?}
     EmailVerificationIncluded -- Yes --> EmailVerificationFlow([Email verification flow])
-    EmailVerificationIncluded -- No --> EntersBirthInfo
+    EmailVerificationIncluded -- No --> IdRequired
 
-    EmailVerificationFlow --> EntersBirthInfo([Enters birth information])
+    EmailVerificationFlow --> IdRequired{Identification required?}
+    IdRequired -- No --> S
+    IdRequired -- Yes --> EntersBirthInfo([Enters birth information])
     EntersBirthInfo --> EntersResidencyInfo([Enters residency information])
     EntersResidencyInfo --> ConfirmsInfo([Confirms personal, birth,<br/>and residency information])
 
@@ -122,6 +124,7 @@ flowchart TB
     style ConfirmsInfo fill:#D4D3D5,stroke:#514F59
     style UserStartedComputer fill:#E6E6FA,stroke:#6A5ACD
     style QueryParams fill:#E6E6FA,stroke:#6A5ACD
+    style IdRequired fill:#E6E6FA,stroke:#6A5ACD
 ```
 <details>
   <summary>End-user perspective of signing up</summary>

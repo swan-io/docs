@@ -1,0 +1,482 @@
+---
+title: Troubleshoot incoming and outgoing transfers
+---
+
+# Troubleshoot incoming and outgoing transfers
+
+This guide helps partner support teams troubleshoot incoming and outgoing credit transfers for your users: what to collect, how to explain common statuses, when to wait, and when to contact Swan Support.
+
+:::info Key takeaways
+
+- Start every investigation by identifying direction (IN or OUT), transfer type, and the transfer's status.
+- If a transfer isn't visible at all, check whether your user completed the consent step before assuming the transfer failed.
+- Don't share compliance or regulatory rejection details. Share only the reasons that are safe to disclose.
+- Rejected transfers return automatically within 3 business days. A recall is different, takes longer, and isn't guaranteed.
+- Your users can download a transaction confirmation statement for `Booked` SEPA, Instant SEPA, and International Credit Transfers.
+- Before Swan can trace a `Booked` outgoing transfer, you need written proof from the beneficiary's bank that the money wasn't received. An account statement isn't enough.
+
+:::
+
+---
+
+## Who does what
+
+| Who | What they do |
+| --- | --- |
+| Your user | Sends and receives transfers, gives consent, contacts the beneficiary or sender, and provides supporting documents |
+| You (Partner Ops) | Identify and classify the transfer in the Dashboard, explain statuses to your user, gather evidence, and contact Swan Support when needed |
+| Swan Support | Processes transfers, reviews flagged transactions, and investigates with banking partners when you provide evidence |
+
+---
+
+## Transfer types
+
+Credit transfers are push payments: the debtor sends funds to a creditor. Troubleshooting depends on identifying the right type first.
+
+| Transfer type | What it's for | What to know for support |
+| --- | --- | --- |
+| Instant SEPA Credit Transfer | EUR transfer that processes immediately | Completes in around 10 seconds. Runs 24/7, including weekends and SEPA closing days. Investigate any `Pending` status. |
+| SEPA Credit Transfer | EUR transfer within SEPA, sometimes called a regular transfer | Settles within 48 business hours, typically 1 to 2 business days. Not processed on weekends or SEPA TARGET closing days. |
+| Swan Internal Credit Transfer | Transfer between two Swan accounts | Almost as quick as instant. Both accounts are on Swan, so there's no external bank to chase. |
+| Standing order | Scheduled, recurring transfer within SEPA | Can be instant or regular. Canceling stops future executions only. |
+| International Credit Transfer | Transfer outside the SEPA zone, in a non-euro currency | Typically 1 to 5 business days depending on destination and rail. Can't have the status `Upcoming`. Creates a separate fee transaction. |
+
+:::caution Instant transfer limit
+
+Instant SEPA Credit Transfers have a maximum of €100,000 per transaction. Above that, your user needs to send a regular SEPA Credit Transfer instead. See [SEPA Credit Transfers](/topics/payments/credit-transfers/sepa/).
+
+:::
+
+---
+
+## Payment status and transaction status
+
+Swan tracks two separate things, and mixing them up sends investigations down the wrong path.
+
+| | What it tracks | Statuses |
+| --- | --- | --- |
+| **Payment** | Your user's instruction to send money | `ConsentPending`, `Initiated`, `Rejected` |
+| **Transaction** | The movement of money in or out of the account | `Upcoming`, `Pending`, `Booked`, `Rejected`, `Canceled` |
+
+A payment only becomes a transaction once it's `Initiated`. If your user never completed consent, the payment sits at `ConsentPending` and **no transaction is ever created** — so there's nothing to find in the transaction history. Check this before you treat a missing transfer as a failure.
+
+For what each transaction status means, see [Credit transfers > Statuses](/topics/payments/credit-transfers/#statuses).
+
+---
+
+## Permissions
+
+Check an account member's rights in **Dashboard** > **Data** > **Account memberships**, then open the membership and check **General** > rights:
+
+- `canViewAccount`: needed to see transfers.
+- `canInitiatePayments`: needed to send transfers.
+- `canManageBeneficiaries`: needed to add or edit saved beneficiaries.
+
+Adding a beneficiary also requires your user to give consent, separately from consenting to the transfer itself.
+
+---
+
+## Country coverage and currencies
+
+International Credit Transfers go to a limited set of countries, and each currency has to travel on a specific rail. SWIFT carries USD, EUR, and GBP only. Local rails carry local currencies, and your user needs the exact rail for the currency — Indonesian rupiah can only go on the Indonesian rail, for example.
+
+Check current coverage in [International Credit Transfers](/topics/payments/credit-transfers/international/#outgoing-allowed-countries). If the country or currency isn't supported, Swan can't send or receive funds for that route.
+
+:::tip Integration: transfer statuses
+
+Ask your development team to surface transfer status, payment status, and rejection reasons inside your own product using Swan's API, so your team can investigate without opening the Dashboard. See [Credit transfers](/topics/payments/credit-transfers/). They can also test transfer scenarios using the Event Simulator in **Dashboard** > **Developers** > **Event Simulator**.
+
+:::
+
+---
+
+## Start every investigation
+
+Confirm your user is asking about a transfer that has already happened or should have happened. If they're asking how to create one, point them to your product's transfer flow instead.
+
+### 1. Identify the transfer
+
+Ask your user for:
+
+- Debtor IBAN
+- Creditor IBAN
+- Amount and currency
+- Execution date
+- Transfer reference, transaction label, or end-to-end reference
+
+Then find the transaction in **Dashboard** > **Data** > **Transactions**. The transaction detail page gives you the transaction ID, execution date, status, amount, payment product, debtor and creditor details, and any supporting documents.
+
+For international transfers that aren't visible, direct your user to ask the sending institution for a SWIFT payment confirmation, usually called an MT103.
+
+### 2. Classify the issue
+
+1. Is it incoming (IN) or outgoing (OUT)?
+2. Which transfer type is it?
+3. Did the payment get consent, or is it still `ConsentPending`?
+4. Is there a transaction in the history? If so, what's its status?
+5. Is there a shareable reason in the transaction details?
+
+:::caution Accounts still in verification
+
+While account holder verification is in progress, the account's payment level is `Limited` and Swan automatically rejects some incoming transfers. See [Limited account restrictions](/topics/payments/credit-transfers/sepa/#limited-account-restrictions) for current thresholds, and share [Transfer restrictions during verification](https://support.swan.io/hc/en-150/articles/17774309993501) with your user.
+
+:::
+
+### 3. Check for incidents
+
+Check [status.swan.io](https://status.swan.io) for a known incident overlapping the transaction timing. If there is one, include that context when you contact Swan.
+
+---
+
+## Quick triage
+
+| Direction | Transfer type | Status or visibility | What you do |
+| --- | --- | --- | --- |
+| Outgoing | Instant SEPA | `Booked`, beneficiary says not received | Direct your user to ask the beneficiary to check with their bank. Get written proof of non-receipt before contacting Swan. |
+| Outgoing | Instant SEPA | `Rejected` | Explain the rejection at a safe level. If fallback was used, the transfer continues as a regular SEPA Credit Transfer. Otherwise funds return automatically. |
+| Outgoing | Instant SEPA | `Pending` | Unusual for an instant transfer. Submit a Swan Support request with the transaction details. |
+| Outgoing | SEPA | `Booked`, beneficiary says not received | Wait 48 business hours from submission. If it's still missing, get written proof of non-receipt. |
+| Outgoing | SEPA or International | `Pending` | If a review is indicated, wait. If a technical pending status persists past the next business day, submit a Swan Support request. |
+| Outgoing | Any | No transaction at all | Check consent first. If the payment is `ConsentPending`, your user needs to complete consent or start again. |
+| Incoming | Instant SEPA | `Booked` | Confirm the funds are available. |
+| Incoming | Instant SEPA | `Pending` | Unusual for an instant transfer. Submit a Swan Support request. |
+| Incoming | SEPA | Not visible | Ask your user for proof of transfer. If beneficiary details match and normal timelines have passed, the sender's bank needs to investigate. |
+| Incoming | International | Not visible | Ask your user for the MT103. Submit a Swan Support request if you still can't locate it. |
+
+---
+
+## Handle outgoing transfers
+
+### If an outgoing transfer is `Booked` but the beneficiary says they didn't receive it
+
+**Applies to:** SEPA, Instant SEPA, and International Credit Transfers. For Swan Internal transfers, check the receiving Swan account directly instead — there's no external bank involved.
+
+A `Booked` outgoing transfer means Swan processed and submitted it.
+
+1. Confirm the transfer details with your user.
+2. Direct your user to ask the beneficiary to check with their financial institution.
+3. Give your user the transaction confirmation statement or end-to-end reference to pass on. See [Give your user proof of a transfer](#give-your-user-proof-of-a-transfer).
+4. If the beneficiary's bank says it didn't receive the funds, direct your user to ask that bank for written proof.
+5. Submit a Swan Support request with that proof and the transaction details.
+
+Allow the normal processing time before escalating: 48 business hours for SEPA, around 10 seconds for Instant SEPA, and up to 5 business days for International.
+
+See [Trace a transfer that wasn't received](#trace-a-transfer-that-wasnt-received) for the full procedure.
+
+### If an outgoing transfer is `Rejected`
+
+First check whether the rejection reason is safe to share.
+
+| Reason type | What to say |
+| --- | --- |
+| Compliance or regulatory | Confirm the transfer was rejected, but don't share more. Explain that regulatory requirements prevent Swan from disclosing the specific reason. |
+| Everything else | Share the specific reason if it's safe to disclose — insufficient funds, invalid recipient details, or a spending limit exceeded. |
+
+:::caution Don't disclose compliance reasons
+
+Never share the detail behind a compliance or regulatory rejection, even if your user pushes for it. If your user challenges the rejection or asks for details you can't share, submit a Swan Support request.
+
+:::
+
+For rejected outgoing transfers:
+
+- Funds return automatically within 3 business days. If they haven't after that, submit a Swan Support request with the transaction details.
+- If Instant SEPA fallback was activated, the transfer continues as a regular SEPA Credit Transfer and no action is needed. Two transactions appear in the history: the rejected instant transfer and the new regular one. This is expected and isn't a duplicate. See [Fallback mode](/topics/payments/credit-transfers/sepa/#instant-fallback).
+- If there was no fallback, your user needs to resubmit once they've addressed the reason.
+- For instant transfers, retrying as a regular SEPA Credit Transfer can help, because regular transfers have fewer real-time constraints.
+
+:::caution Exchange rate locks for one business day
+
+**Applies to:** International Credit Transfers involving currency conversion.
+
+The exchange rate is calculated when your user starts the transfer and locks for one business day. If your user doesn't consent within that time, the rate unlocks and Swan rejects the transfer. Your user needs to start a new transfer at the current rate.
+
+Direct your user to [Currency exchange and fees for International Credit Transfers](https://support.swan.io/hc/en-150/articles/20983746712861), or to [Consent and SMS issues](https://support.swan.io/hc/en-150/articles/18130894864541) if consent is what's failing.
+
+:::
+
+### If a transfer was rejected for insufficient funds but the balance looked sufficient
+
+Swan checks the account's `Available` balance immediately before executing, and rejects instantly if it's short. `Available` excludes amounts already committed — pending card authorizations, other upcoming transfers, and pending direct debits — so your user may be looking at a different number.
+
+1. Check the `Available` balance at the time of the rejection, not now.
+2. Look for other transactions competing for the same funds around that time.
+3. Explain the difference, and tell your user to resubmit once funds are available.
+
+### If an outgoing transfer is `Pending`
+
+| Pending reason | What it means | What you do |
+| --- | --- | --- |
+| Under review | Swan needs more time to review the transfer. | Tell your user it's still processing. Submit a Swan Support request if there's no update after a few business days. |
+| Technical or bank execution | The transfer is in an intermediate processing status. | For SEPA or International, this can be normal briefly. If it's still stuck the next business day, submit a Swan Support request. |
+| Instant SEPA | Instant transfers complete in around 10 seconds. | Submit a Swan Support request with the transaction details. |
+
+:::note SEPA closing days
+
+Regular SEPA Credit Transfers aren't processed at weekends or on SEPA closing days: New Year's Day, Good Friday, Easter Monday, Labor Day, Christmas Day, and Boxing Day. Transfers submitted on those days are processed on the next business day. Instant SEPA Credit Transfers are unaffected and run every day of the year.
+
+:::
+
+### If an outgoing transfer isn't visible
+
+1. Check whether your user completed consent. If the payment is `ConsentPending`, no transaction exists yet — your user needs to finish consent or start again. Share [Consent and SMS issues](https://support.swan.io/hc/en-150/articles/18130894864541) if consent is failing repeatedly.
+2. Check in **Dashboard** > **Data** > **Account memberships** that the member has **Can initiate transfers**.
+3. Ask your user to resubmit and complete every validation step.
+
+If your user still can't submit, or the issue looks like it's coming from your integration, see [If your user reports an error or a feature that isn't working](#if-your-user-reports-an-error-or-a-feature-that-isnt-working).
+
+### If your user reports an error or a feature that isn't working
+
+**Applies to:** All transfer types.
+
+Errors when creating a transfer, adding a beneficiary, or setting up a standing order usually come from your product or your integration, not from a transfer that already exists. Don't troubleshoot these as a missing transfer.
+
+1. Ask what they were doing, what they saw, and when — including the exact error message and a screenshot.
+2. Check [status.swan.io](https://status.swan.io) for an overlapping incident.
+3. Check the member's rights in **Dashboard** > **Data** > **Account memberships**. Adding beneficiaries needs **Can manage beneficiaries**; sending needs **Can initiate transfers**.
+4. Check that account holder verification is complete.
+5. If none of that explains it, pass the error message, timing, and account ID to your development team.
+6. If they confirm the error is coming from Swan's API, submit a Swan Support request with their findings.
+
+:::caution Beneficiary and standing order management are part of your integration
+
+Whether your users can add beneficiaries or manage standing orders depends on what your product exposes through Swan's API. If a capability is missing or broken for every user rather than one, it's an integration task for your development team, not a support request.
+
+:::
+
+### If your user wants to modify a submitted transfer
+
+Submitted transfers can't be edited.
+
+- If the transfer is `Upcoming`, cancel it and ask your user to resubmit with the correct details. See [Cancel an upcoming transfer](#cancel-an-upcoming-transfer).
+- If it's `Pending` or `Booked`, modification isn't possible. Your user can request a recall. See [Returns and recalls](#returns-and-recalls).
+
+---
+
+## Handle incoming transfers
+
+### If an incoming transfer is `Booked`
+
+The funds are available in the account. If your user can't see them, ask them to check they're looking at the correct account, and at **History** rather than **Upcoming** in Web Banking.
+
+### If an incoming transfer is `Rejected`
+
+- Funds return automatically to the sender's account within 3 business days.
+- If the reason is compliance-related, don't share the detail.
+- If it's safe to share, explain it.
+- The sender needs to correct the issue and resubmit.
+
+If funds haven't returned after 3 business days, submit a Swan Support request.
+
+### If an incoming transfer is `Pending`
+
+| Pending reason | What you do |
+| --- | --- |
+| Under review | Tell your user Swan needs more time. Swan may ask for more information. |
+| Technical processing | Submit a Swan Support request if the status doesn't update, or if your user needs a confirmed status. |
+| Instant SEPA | Submit a Swan Support request. This isn't expected for an instant transfer. |
+
+### If an incoming SEPA transfer isn't visible
+
+1. Confirm 48 business hours have passed since the sender submitted it.
+2. Ask your user for proof of transfer from the sending institution.
+3. Check the beneficiary details on the proof against the Swan account details.
+4. If they don't match, direct your user to ask the sender to check with their bank and resubmit with the correct details.
+5. If they match, instruct your user to ask the sender to contact their financial institution and open an investigation.
+
+If the sender's bank needs written confirmation from Swan that the money wasn't received, raise a support request in your Dashboard.
+
+### If an incoming International transfer isn't visible
+
+Before asking for documentation, search **Dashboard** > **Data** > **Transactions** by beneficiary IBAN and check whether the transfer is there with a `Rejected` status. If it is, follow [If an incoming transfer is `Rejected`](#if-an-incoming-transfer-is-rejected) instead.
+
+1. Confirm up to 5 business days have passed.
+2. Direct your user to ask the sender for a SWIFT payment confirmation (an MT103).
+3. Check the sending and beneficiary details against the account.
+4. Submit a Swan Support request with the MT103 and the transfer details.
+
+If Swan and its providers can't locate the funds, the sending institution is often the only party that can trace the transfer through the network.
+
+### If your user receives an unexpected incoming transfer
+
+Check the transaction label, reference, and debtor details on the transaction detail page in **Dashboard** > **Data** > **Transactions**. If the label or reference is missing and you can't identify the source, submit a Swan Support request with the account ID and transaction details.
+
+### If your user needs to return funds received by mistake
+
+Submit a Swan Support request to return the funds to the sender. Your user needs to consent before Swan returns anything.
+
+### If the incoming amount is lower than expected
+
+**Applies to:** International Credit Transfers.
+
+The credited amount can be lower than what the sender says they sent, for two reasons: Swan's processing and currency exchange fees, and intermediary banks deducting their own fees along the routing chain.
+
+Direct your user to [Currency exchange and fees for International Credit Transfers](https://support.swan.io/hc/en-150/articles/20983746712861) for the breakdown. If fees don't explain the difference, submit a Swan Support request.
+
+For a SEPA transfer, fees aren't the explanation. Check for a partial payment or a second transaction instead.
+
+:::note Outgoing international transfers create two transactions
+
+Every outgoing International Credit Transfer produces a transfer transaction and a separate fee transaction. Your user seeing two debits is expected, not a duplicate. You can filter fee transactions in **Dashboard** > **Data** > **Transactions** by the `FeesIn` and `FeesOut` types.
+
+:::
+
+---
+
+## Give your user proof of a transfer
+
+**Applies to:** `Booked` SEPA, Instant SEPA, and International Credit Transfers, incoming and outgoing.
+
+Users ask for proof of execution, a payment attestation, or a receipt — usually for accounting, or to give to a beneficiary chasing them. Swan provides this as a**transaction confirmation statement**.
+
+- Download it from **Dashboard** > **Data** > **Transactions**: open the transfer and select **Transaction confirmation**. The button only appears for eligible transfers.
+- It isn't available for transfers in any status other than `Booked`, or for card,direct debit, and fee transactions.
+- If your user needs something a confirmation statement doesn't cover, submit a Swan Support request with the transaction ID and say what the document is for.
+
+:::tip Integration: confirmation statements
+
+Ask your development team to expose transaction confirmation statements in your product using Swan's API, so your users can download their own instead of asking you.
+
+:::
+
+---
+
+## Trace a transfer that wasn't received
+
+**Applies to:** `Booked` SEPA, Instant SEPA, and International Credit Transfers.
+
+Use this when an outgoing transfer is `Booked` but the beneficiary says they haven't received it.
+
+1. Give your user the transaction confirmation statement, including the end-to-end reference.
+2. Direct your user to ask the beneficiary to check with their financial institution using that reference.
+3. If the beneficiary's bank confirms non-receipt, direct your user to ask that bank for written proof.
+4. Submit a Swan Support request with that proof and the transaction details.
+5. Swan uses the evidence to investigate with its banking partners.
+
+:::caution An account statement isn't enough
+
+An account statement extract doesn't support a trace. Swan needs a document from the receiving institution confirming the money wasn't received.
+
+:::
+
+---
+
+## Returns and recalls
+
+These are different things, and users conflate them.
+
+| | What it is | Who starts it | Timing |
+| --- | --- | --- | --- |
+| **Return** | Automatic reversal by a bank that can't process the transfer — closed account, wrong BIC, technical error | The receiving bank, automatically | Funds back within 3 business days |
+| **Recall** | A request to reverse a completed transfer, usually sent to the wrong IBAN | The debtor, via their bank | Beneficiary responds within 15 business days. Not guaranteed |
+
+Recalls work the same way for SEPA Credit Transfers and Instant SEPA Credit Transfers.
+
+### Request a recall for an outgoing transfer
+
+1. Ask your user for the transaction ID, the reason, and supporting evidence.
+2. Submit a Swan Support request with the recall details, as early as possible — recalls have a submission deadline.
+3. Swan sends a recall request to the beneficiary's bank.
+4. The beneficiary's bank notifies the beneficiary, who decides whether to accept.
+5. If they accept, funds are credited back to your user's account. If they refuse or don't respond within 15 business days, the recall closes.
+
+A separate recall transaction appears in the history, linked to the original transfer by the same payment ID. It doesn't replace the original.
+
+### Handle a recall request for an incoming transfer
+
+1. Swan asks your user whether they accept the recall.
+2. Your user decides whether to accept or refuse.
+3. If they accept, Swan debits the funds and sends them to the debtor.
+4. If they refuse, the funds stay in the account.
+5. If they don't respond within 15 business days, the recall closes.
+
+:::caution Accepting a recall needs sufficient balance
+
+Swan can only debit the funds if your user's `Available` balance covers the recall amount. If your user has already spent the money, accepting won't complete. Tell your user to check their available balance before accepting.
+
+:::
+
+---
+
+## Cancel an upcoming transfer
+
+**Applies to:** SEPA, Instant SEPA, and Swan Internal Credit Transfers.
+**Doesn't apply to:** International Credit Transfers, which can't have the status `Upcoming`.
+
+You can cancel a transfer yourself while it still has the status `Upcoming`. Once it's `Booked`, cancellation isn't available — use [Returns and recalls](#returns-and-recalls) instead.
+
+1. Go to **Dashboard** > **Data** > **Transactions**.
+2. Open the transfer and confirm its status is `Upcoming`.
+3. Select **Cancel transaction**.
+
+The **Cancel transaction** button only appears while the transfer is eligible. If you can't see it, the transfer has moved out of `Upcoming` and you'll need to trace it or request a recall.
+
+Upcoming transfers can't be edited. If your user needs different details, cancel and ask them to create a new transfer.
+
+### Cancel a standing order
+
+Canceling a standing order stops future executions. It doesn't reverse transfers already sent. If one has already gone out and needs reversing, cancel the standing order first, then follow [Returns and recalls](#returns-and-recalls) for the individual transfer.
+
+:::tip Integration: self-serve cancellations
+
+Ask your development team to build cancellation into your product using Swan's API, so your users can cancel their own `Upcoming` transfers and standing orders. See [Cancel a credit transfer](/topics/payments/credit-transfers/sepa/guide-cancel-ct) and [Cancel a standing order](/topics/payments/credit-transfers/sepa/guide-cancel-so).
+
+:::
+
+---
+
+## Keep your user updated
+
+While Swan investigates:
+
+- Tell your user you're checking with Swan.
+- Share any timeframe Swan gives you.
+- Follow up with Swan if you don't get a first response within a reasonable time.
+- Update your user regularly, even when there's nothing new to report.
+- If you don't understand the answer you receive, ask Swan to clarify before replying to your user.
+
+---
+
+## Contact Swan Support
+
+Submit a Swan Support request if:
+
+- You can't identify a transfer after collecting the required details.
+- An Instant SEPA transfer is stuck in `Pending`.
+- A SEPA or International transfer is stuck in a technical pending status past the next business day.
+- A transfer has been `Pending` for several business days with no communication.
+- A `Booked` outgoing transfer hasn't been received and you have written proof of non-receipt.
+- An incoming transfer isn't visible and you have proof of transfer or an MT103.
+- A rejected transfer hasn't returned after 3 business days.
+- Your user needs a recall, or needs to return funds received by mistake.
+- You can't explain the response you received from Swan.
+
+Include in your request:
+
+- Account ID
+- Transaction or payment ID, if available
+- Direction: incoming or outgoing
+- Transfer type
+- Status and status details, if visible
+- Debtor IBAN and creditor IBAN
+- Amount and currency
+- Execution date
+- Transfer reference or end-to-end reference
+- Proof of transfer, proof of non-receipt, or MT103, depending on the case
+- Screenshots or incident context, if relevant
+
+---
+
+## Share these articles with your users
+
+- [Delayed incoming transfers](https://support.swan.io/hc/en-150/articles/17098757792413) — an expected incoming transfer hasn't arrived
+- [Outgoing transfer not processed](https://support.swan.io/hc/en-150/articles/17371882828829) — an outgoing transfer isn't showing
+- [Credit transfer and card payment fraud disputes](https://support.swan.io/hc/en-150/articles/17099978406045) — reporting fraud or requesting a recall
+- [Currency exchange and fees for International Credit Transfers](https://support.swan.io/hc/en-150/articles/20983746712861) — unexpected fees on international transfers
+- [Consent and SMS issues](https://support.swan.io/hc/en-150/articles/18130894864541) — consent isn't completing
+
+:::tip Help center content
+
+You can also use these articles as a starting point for your own help center content, tailored to your product's terminology and your users' context.
+
+:::

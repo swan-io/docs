@@ -37,7 +37,7 @@ Credit transfers are push payments: the debtor sends funds to a creditor. Troubl
 | --- | --- | --- |
 | Instant SEPA Credit Transfer | EUR transfer that processes immediately. | Completes in around 10 seconds. Runs 24/7, including weekends and SEPA closing days. Investigate any `Pending` status. |
 | SEPA Credit Transfer | EUR transfer within SEPA, sometimes called a regular transfer. | Settles within 48 business hours, typically 1 to 2 business days. Not processed on weekends or SEPA TARGET closing days. |
-| Swan Internal Credit Transfer | Transfer between two Swan account.s | Almost as quick as instant. Both accounts are on Swan, so there's no external bank to chase. |
+| Swan Internal Credit Transfer | Transfer between two Swan accounts. | Almost as quick as instant. Both accounts are on Swan, so there's no external bank to chase. |
 | Standing order | Scheduled, recurring transfer within SEPA. | Can be instant or regular. Canceling stops future executions only. |
 | International Credit Transfer | Transfer outside the SEPA zone, in a non-euro currency. | Typically 1 to 5 business days depending on destination and rail. Can't have the status `Upcoming`. Creates a separate fee transaction. |
 
@@ -80,7 +80,7 @@ Adding a beneficiary also requires your user to give consent, separately from co
 
 International Credit Transfers go to a limited set of countries, and each currency has to travel on a specific rail. SWIFT carries USD, EUR, and GBP only. Local rails carry local currencies, and your user needs the exact rail for the currency; Indonesian rupiah can only go on the Indonesian rail, for example.
 
-Check current coverage in [International Credit Transfers](/topics/payments/credit-transfers/international/#outgoing-allowed-countries). If the country or currency isn't supported, Swan can't send or receive funds for that route.
+Check current coverage in [International Credit Transfers](/topics/payments/credit-transfers/international/#risk-outgoing). If the country or currency isn't supported, Swan can't send or receive funds for that route.
 
 :::tip Integration: transfer statuses
 
@@ -149,7 +149,7 @@ Check [status.swan.io](https://status.swan.io) for a known incident overlapping 
 
 ### If an outgoing transfer is `Booked` but the beneficiary says they didn't receive it
 
-**Applies to:** SEPA, Instant SEPA, and International Credit Transfers. For Swan Internal transfers, check the receiving Swan account directly instead, there's no external bank involved.
+**Applies to:** SEPA, Instant SEPA, and International Credit Transfers. For Swan Internal transfers, check the receiving Swan account directly instead. There's no external bank involved.
 
 A `Booked` outgoing transfer means Swan processed and submitted it.
 
@@ -170,7 +170,7 @@ First check whether the rejection reason is safe to share.
 | Reason type | What to say |
 | --- | --- |
 | Compliance or regulatory | Confirm the transfer was rejected, but don't share more. Explain that regulatory requirements prevent Swan from disclosing the specific reason. |
-| Everything else | Share the specific reason if it's safe to disclose; insufficient funds, invalid recipient details, or a spending limit exceeded. |
+| Everything else | Share the specific reason if it's safe to disclose: insufficient funds, invalid recipient details, or a spending limit exceeded. |
 
 :::caution Don't disclose compliance reasons
 
@@ -213,14 +213,14 @@ Swan checks the account's `Available` balance immediately before executing, and 
 
 :::note SEPA closing days
 
-Regular SEPA Credit Transfers aren't processed at weekends or on SEPA closing days: New Year's Day, Good Friday, Easter Monday, Labor Day, Christmas Day, and Boxing Day. Transfers submitted on those days are processed on the next business day. Instant SEPA Credit Transfers are unaffected and run every day of the year.
+Regular SEPA Credit Transfers aren't processed on weekends or on [TARGET closing days](/topics/payments/#sepa-availability): New Year's Day, Good Friday, Easter Monday, 1 May (Labor Day), Christmas Day, and 26 December. Transfers submitted on those days are processed on the next business day. Instant SEPA Credit Transfers are unaffected and run every day of the year.
 
 :::
 
 ### If an outgoing transfer isn't visible
 
-1. Check whether your user completed consent. If the payment is `ConsentPending`, no transaction exists yet, your user needs to finish consent or start again. Share [Consent and SMS issues](https://support.swan.io/hc/en-150/articles/18130894864541) if consent is failing repeatedly.
-2. Check in **Dashboard** > **Data** > **Account memberships** that the member has **Can initiate transfers**.
+1. Check whether your user completed consent. If the payment is `ConsentPending`, no transaction exists yet: your user needs to finish consent or start again. Share [Consent and SMS issues](https://support.swan.io/hc/en-150/articles/18130894864541) if consent is failing repeatedly.
+2. Check in **Dashboard** > **Data** > **Account memberships** that the member has `canInitiatePayments`.
 3. Ask your user to resubmit and complete every validation step.
 
 If your user still can't submit, or the issue looks like it's coming from your integration, see [If your user reports an error or a feature that isn't working](#if-your-user-reports-an-error-or-a-feature-that-isnt-working).
@@ -233,7 +233,7 @@ Errors when creating a transfer, adding a beneficiary, or setting up a standing 
 
 1. Ask what they were doing, what they saw, and when, including the exact error message and a screenshot.
 2. Check [status.swan.io](https://status.swan.io) for an overlapping incident.
-3. Check the member's rights in **Dashboard** > **Data** > **Account memberships**. Adding beneficiaries needs **Can manage beneficiaries**; sending needs **Can initiate transfers**.
+3. Check the member's rights in **Dashboard** > **Data** > **Account memberships**. Adding beneficiaries needs `canManageBeneficiaries`; sending needs `canInitiatePayments`.
 4. Check that account holder verification is complete.
 5. If none of that explains it, pass the error message, timing, and account ID to your development team.
 6. If they confirm the error is coming from Swan's API, submit a Swan Support request with their findings.
@@ -327,10 +327,10 @@ Every outgoing International Credit Transfer produces a transfer transaction and
 
 **Applies to:** `Booked` SEPA, Instant SEPA, and International Credit Transfers, incoming and outgoing.
 
-Users ask for proof of execution, a payment attestation, or a receipt, usually for accounting, or to give to a beneficiary chasing them. Swan provides this as a**transaction confirmation statement**.
+Users ask for proof of execution, a payment attestation, or a receipt, usually for accounting, or to give to a beneficiary chasing them. Swan provides this as a **transaction confirmation statement**.
 
 - Download it from **Dashboard** > **Data** > **Transactions**: open the transfer and select **Transaction confirmation**. The button only appears for eligible transfers.
-- It isn't available for transfers in any status other than `Booked`, or for card,direct debit, and fee transactions.
+- It isn't available for transfers in any status other than `Booked`, or for card, direct debit, and fee transactions.
 - If your user needs something a confirmation statement doesn't cover, submit a Swan Support request with the transaction ID and say what the document is for.
 
 :::tip Integration: confirmation statements
@@ -363,11 +363,11 @@ An account statement extract doesn't support a trace. Swan needs a document from
 
 ## Returns and recalls
 
-These are different things, and it's important to understand the differences.
+Returns and recalls are different things, and mixing them up sets the wrong expectations with your user.
 
 | | What it is | Who starts it | Timing |
 | --- | --- | --- | --- |
-| **Return** | Automatic reversal by a bank that can't process the transfer, closed account, wrong BIC, technical error | The receiving bank, automatically | Funds back within 3 business days |
+| **Return** | Automatic reversal by a bank that can't process the transfer: closed account, wrong BIC, or technical error | The receiving bank, automatically | Funds back within 3 business days |
 | **Recall** | A request to reverse a completed transfer, usually sent to the wrong IBAN | The debtor, via their bank | Beneficiary responds within 15 business days. Not guaranteed |
 
 Recalls work the same way for SEPA Credit Transfers and Instant SEPA Credit Transfers.
@@ -375,7 +375,7 @@ Recalls work the same way for SEPA Credit Transfers and Instant SEPA Credit Tran
 ### Request a recall for an outgoing transfer
 
 1. Ask your user for the transaction ID, the reason, and supporting evidence.
-2. Submit a Swan Support request with the recall details, as early as possible, recalls have a submission deadline.
+2. Submit a Swan Support request with the recall details as early as possible. Recalls have a submission deadline.
 3. Swan sends a recall request to the beneficiary's bank.
 4. The beneficiary's bank notifies the beneficiary, who decides whether to accept.
 5. If they accept, funds are credited back to your user's account. If they refuse or don't respond within 15 business days, the recall closes.

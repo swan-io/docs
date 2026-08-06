@@ -63,7 +63,7 @@ The merchant payment object has **distinct balances** to follow a payment's life
 
 | SDD payment object balance | Explanation |
 |---|---|
-| `availableToCancel` | Pending amount that can still be canceled. Cancellations must be requested by the day before the scheduled execution and within the specified [cutoff time](/topics/merchants/online/sdd/#canceling). |
+| `availableToCancel` | Pending amount that can still be canceled. Cancellations must be requested by the business day before the scheduled execution and within the specified [cutoff time](/topics/merchants/online/sdd/#canceling). |
 | `totalCanceled` | The total amount canceled for this merchant payment. |
 | `totalCaptured` | The total amount captured by the merchant. |
 | `availableToRefund` | The amount the merchant can refund. Use this balance to know if a payment is eligible for a refund. |
@@ -150,12 +150,17 @@ Merchants can cancel SEPA Direct Debit payments using the [`cancelMerchantPaymen
 To understand if a payment is cancelable, check its `availableToCancel` balance.
 Only the full amount can be canceled.
 
-Payments can only be canceled before transactions are sent to the SEPA payment gateway, respecting the current cutoff times:
+Payments can only be canceled before transactions are sent to the SEPA payment gateway.
+Cancellation requests must be submitted **the business day before the scheduled execution** and before the scheme-specific cutoff time:
 
-- **SDD Core**: Payments can be canceled until approximately **11:00 Central European [Summer] Time (CET/CEST)**
-- **SDD B2B**: Payments can be canceled until approximately **10:00 Central European [Summer] Time (CET/CEST)**
+- **SDD Core**: Until approximately **11:00** Central European [Summer] Time (CET/CEST).
+- **SDD B2B**: Until approximately **10:00** Central European [Summer] Time (CET/CEST).
 
 After these cutoff times, the payment can't be canceled and will proceed to settlement.
+
+:::info Timezone
+All cutoff times are in Central European Time (CET) or Central European Summer Time (CEST), depending on the season.
+:::
 
 ## Payment mandates {#mandates}
 

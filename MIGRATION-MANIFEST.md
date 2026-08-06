@@ -138,7 +138,7 @@ Lede → prerequisites → numbered steps → query/mutation fence with explorer
 ### Reference table page
 Terse. Field tables: `<Req/><Opt/><Cnd/>` on every row + one `<FieldRequirementsLegend/>` near first use. Feature/support tables: `<Supported/><Unsupported/>` + `<SupportStatusLegend/>`; `<Yes/><No/>` for binary cells. Tabs for per-variant content (country, process, Sandbox vs Live).
 
-Eligibility and other binary markers are ALWAYS a table column with `<Yes/>`/`<No/>` cells and a column header naming the property; never a bespoke inline symbol on list items (settled 6 August 2026: the former ⮂ marker in `users/reference/sensitive-operations.mdx` was converted to a "Server-to-server" column). Badge components are global via `MDXComponents.js`; no import needed.
+Eligibility and other binary markers are ALWAYS a table column with `<Yes/>`/`<No/>` cells and a column header naming the property; never a bespoke inline symbol on list items (settled 6 August 2026: the former ⮂ marker in `users/reference/sensitive-operations.mdx` was converted to a "Server-to-server" column). The same applies to requirement badges: the `<Req/><Opt/><Cnd/>` column is headed "Requirement", never left with an empty header (settled 6 August 2026; empty-header tables in Payments predate the rule and are retrofitted during that domain's pass). Badge components are global via `MDXComponents.js`; no import needed.
 
 ### External embeds
 Do not carry external iframes (Figma and similar) into migrated pages for new domains; replace with a Mermaid diagram or an image. The remaining Figma embed in `users/concepts/identifications/index.mdx` is scheduled for removal in a separate later task.

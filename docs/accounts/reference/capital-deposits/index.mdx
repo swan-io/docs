@@ -15,8 +15,6 @@ audience:
 
 ## Case statuses {#case-statuses}
 
-{/* TODO:PM, predates live CapitalDepositCaseStatus enum, see ledger */}
-
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'basis' } } }%%
 flowchart TD
@@ -50,9 +48,9 @@ flowchart TD
 | `WaitingForInitialRequirements` | The case has been initiated and is waiting for shareholder verification, fund transfers, document uploads, and completion of company onboarding. |
 | `PendingInternalReview` | Swan is reviewing the information and documents provided. |
 | `WaitingForAdditionalInformation` | After review, Swan has requested additional details or corrections from the customer and is awaiting their response. |
-| `WaitingForNotaryShareDepositCertificate` | **_Notary reviews_** _the deposited funds and submitted documents, then creates the certificate and uploads it to Swan_. |
+| `WaitingForNotaryShareDepositCertificate` | **Notary reviews** the deposited funds and submitted documents, then creates the certificate and uploads it to Swan. |
 | `WaitingForRegisterExtract` | The end-user uploads their register extract for notary review. |
-| `WaitingForNotaryTransfer` | **_Notary reviews_** _the register extract_. If the document is rejected by either Swan or the notary, the case will move back to `WaitingForRegisterExtract`. |
+| `WaitingForNotaryTransfer` | **Notary reviews** the register extract. If the document is rejected by either Swan or the notary, the case will move back to `WaitingForRegisterExtract`. |
 | `Canceled` | The case was canceled before completion by either you or Swan. A [cancelation reason code](#cancelation-reason-codes) is available in the `CapitalDepositCaseCanceledStatusInfo` type. |
 | `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
 
@@ -76,17 +74,18 @@ For those cases, refer to the account-level deprecated closure reason `CapitalDe
 | `BusinessInactiveOrNotRegistered` | The company is inactive or not registered. |
 | `UnsupportedLegalForm` | The legal form can't be onboarded by Swan. |
 | `TCViolation` | Terms and Conditions violation. |
-| `CapitalDepositCompleted` | Standard closure of a temporary capital deposit account after the company is registered. |
 | `CapitalDepositWithdrawn` | The capital deposit has been withdrawn. |
 | `CapitalDepositRefusedByNotary` | The notary refused the capital deposit case. |
 | `ComplianceReason` | Cancelation for compliance reasons. |
 | `RegulatoryRequirement` | Cancelation required by regulation. |
 
-These reason codes are derived from the same list as [account closure reason codes](/accounts/concepts/closure/reason-codes).
+These reason codes come from the dedicated `CapitalDepositCaseCancellationReasonType` enum.
+Most values are shared with [account closure reason codes](/accounts/concepts/closure/reason-codes), which apply at the account level.
+When a capital deposit completes successfully, the case isn't canceled; instead, shareholder accounts are closed with the account-level reason code `CapitalDepositCompleted`.
 
 ## List of required documents {#documents-list}
 
-All documents are **mandatory** unless marked _if requested_.
+All documents are **mandatory**. The lease agreement marked with an asterisk (∗) has alternatives, explained below the table.
 
 <table>
   <tr>
@@ -170,9 +169,9 @@ All documents are **mandatory** unless marked _if requested_.
       All identity documents must be in full color and include the front and back of the document.</p>
     | Official company address is... | Elements required |
 | --- | --- |
-| Legal representative's address | <ul><li>Business address affidavit *(domiciliation statement)* from the legal representative</li><li>If the legal representative *isn't* a shareholder:<ul><li>Identity document for the legal representative</li><li>Proof of address for the legal representative</li></ul></li></ul> |
-| Legal representative's address, but they're renting or hosted by someone else | <ul><li>Business address affidavit *(domiciliation statement)* from the host</li><li>If the legal representative *isn't* a shareholder:<ul><li>Identity document for the legal representative</li><li>Identity document for the host</li><li>Proof of address for the host</li></ul></li></ul> |
-| Another company's office address | <ul><li>KBIS of host company issued within the last three months</li><li>Business address affidavit *(domiciliation statement)* from the host company's legal representative</li><li>Identity document for the legal representative who provided the business address affidavit</li></ul> |
+| Legal representative's address | <ul><li>Business address affidavit ("domiciliation statement") from the legal representative</li><li>If the legal representative isn't a shareholder:<ul><li>Identity document for the legal representative</li><li>Proof of address for the legal representative</li></ul></li></ul> |
+| Legal representative's address, but they're renting or hosted by someone else | <ul><li>Business address affidavit ("domiciliation statement") from the host</li><li>If the legal representative isn't a shareholder:<ul><li>Identity document for the legal representative</li><li>Identity document for the host</li><li>Proof of address for the host</li></ul></li></ul> |
+| Another company's office address | <ul><li>KBIS of host company issued within the last three months</li><li>Business address affidavit ("domiciliation statement") from the host company's legal representative</li><li>Identity document for the legal representative who provided the business address affidavit</li></ul> |
   </div>
 </details>
 
@@ -196,7 +195,7 @@ flowchart LR
 | Document status | Explanation |
 | --- | --- |
 | `Pending`   | Place for the document is created, but the document isn't uploaded yet. |
-| `Uploaded`  | Document successfully uploaded; you can change and re-upload the document as long it retains the status `Uploaded`<br/><br/>**Next step**: Swan reviews the document and either validates or refuses it. |
+| `Uploaded`  | Document successfully uploaded; you can change and re-upload the document as long as it retains the status `Uploaded`.<br/><br/>**Next step**: Swan reviews the document and either validates or refuses it. |
 | `Validated` | Swan validated the document. |
 | `Refused`   | Document doesn't meet requirements. Review `reasonCode` for a refusal category and the optional `reason` for a plain-text explanation. Both are visible on your Dashboard and available through the API.<br/><br/>**Next step**: Upload a new document, then the status returns to `Uploaded`. |
 

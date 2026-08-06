@@ -32,13 +32,13 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
     - Include a `+` in front of the phone number.
 1. Choose `true` for the permissions you'd like to grant to the invited account member.
 1. Choose the [account membership language](/accounts/concepts/memberships/language) (line 20). If no language is chosen, the membership inherits the [account language](/accounts/concepts/account/language).
-1. Add the success payload, including any information you'd like to review (line 51).
-1. Add the <Term id="consent">consent</Term> URL to the success payload (line 59): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add the success payload, including any information you'd like to review (line 55).
+1. Add the <Term id="consent">consent</Term> URL to the success payload (line 63): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
 
 :::note Can Manage Cards
 The `canManageCards` permission is technically optional.
-However, it's recommended to choose true or false for this permission anyway.
+But it's recommended to choose true or false for this permission anyway.
 If you don't include the `canManageCards` permission in your API call, it inherits the same value as `canManageAccountMembership`.
 :::
 
@@ -125,7 +125,7 @@ The <Term id="account-holder">account holder</Term>, <Term id="legal-representat
 
 1. Get the `consentUrl`, included in the payload (lines 11).
     - All consent URLs are the same when adding members in bulk.
-    - Remember, the payload only provides the `consentUrl` if you added it in step 1.8.
+    - Remember, the payload only provides the `consentUrl` if you added it in step 1.9.
 1. Send the `consentUrl` to the account holder, the account's legal representative, or the account member with `canManageAccountMembership` permissions.
 1. As soon as consent is provided, they're redirected to your `consentRedirectUrl` defined in the initial API call, which fetches an OAuth 2.0 authorization code and a user access token.
 1. **Store** the invited account member's new `accountMembershipId`. You'll need it to bind the membership.

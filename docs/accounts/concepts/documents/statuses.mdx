@@ -33,13 +33,15 @@ flowchart LR
     style F fill:#fffdf4,stroke:#cca922
 ```
 
+The lifecycle below is described for onboarding-related collections; collections requested for [transactions or verification renewal](/accounts/concepts/documents#required-documents) move through the same statuses.
+
 | Collection status | Explanation |
 |---|---|
-| `WaitingForDocument` | Onboarding is created and ready for documents, or documents were submitted but Swan is requesting additional documents<br/><br/>**Next step**: moves to `PendingReview` after onboarding is finalized |
-| `PendingReview` | Onboarding is finalized and a document review is needed<br/><br/>**Next step**: Can move to `Approved`, `Rejected`, or `Canceled` depending on partner actions and Swan decisions (or, if documents are insufficient → `WaitingForDocument`) |
-| `Approved` | Swan approved the supporting document collection |
-| `Rejected` | Swan rejected the supporting document collection |
-| `Canceled` | Swan canceled the supporting document collection (this could also be at the partner's request) |
+| `WaitingForDocument` | Onboarding is created and ready for documents, or documents were submitted but Swan is requesting additional documents.<br/><br/>**Next step**: Moves to `PendingReview` after onboarding is finalized. |
+| `PendingReview` | Onboarding is finalized and a document review is needed.<br/><br/>**Next step**: Can move to `Approved`, `Rejected`, or `Canceled` depending on partner actions and Swan decisions (or, if documents are insufficient, back to `WaitingForDocument`). |
+| `Approved` | Swan approved the supporting document collection. |
+| `Rejected` | Swan rejected the supporting document collection. |
+| `Canceled` | Swan canceled the supporting document collection (this could also be at the partner's request). |
 
 ## Document statuses {#document-statuses}
 
@@ -69,7 +71,7 @@ flowchart LR
 | `NotUploaded` | URL was generated but collection was closed before a document was uploaded |
 
 :::note Deleting a document
-An `Uploaded` document can be deleted (for example, if the wrong file was shared). Deletion removes the document rather than assigning it a status. See [Delete a document](/accounts/guides/documents/delete).
+An `Uploaded` document can be deleted by you or by Swan (for example, if the wrong file was shared). Deletion removes the document rather than assigning it a status. See [Delete a document](/accounts/guides/documents/delete).
 :::
 
 ## `Refused` document reason codes {#refused}
@@ -95,10 +97,10 @@ You can also [query the API](/accounts/guides/documents/get-info).
 | `BadDocumentQuality` | The quality of the document submitted is too low. All document content must be clear and legible. |
 | `FullDocumentRequired` | The entire document must be submitted, not just a portion of the document. |
 | `MissingProviderProofOfAddress` | The accommodation provider's proof of address is required. |
-| `MissingProviderProof`<br />`OfAddressAndIdDocument` | The accommodation provider's ID and proof of address are required. |
+| `MissingProviderProofOfAddressAndIdDocument` | The accommodation provider's ID and proof of address are required. |
 | `PowerOfAttorneyToSwanRequired` | A signed and dated Power of Attorney must be provided to Swan. |
-| `MissingCompanyDomiciliationStatement` | A document stating the company's registered address is required. This document can be referred to as a *domiciliation statement*. |
-| `HandwrittenOrCertified`<br />`ElectronicSignatureRequired` | The signature must be handwritten or electronically certified. |
+| `MissingCompanyDomiciliationStatement` | A document stating the company's registered address is required. This document can be referred to as a "domiciliation statement". |
+| `HandwrittenOrCertifiedElectronicSignatureRequired` | The signature must be handwritten or electronically certified. |
 | `MissingDescription` | More information is needed to understand the nature of this transaction. |
 | `InvalidTransaction` | The information in the document submitted doesn't match this specific transaction. |
 | `TransactionNameMismatch` | The issuer or beneficiary name in the document submitted doesn't match the transaction details. |

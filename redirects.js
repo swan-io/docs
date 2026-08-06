@@ -588,6 +588,27 @@ module.exports = [
     from: "/topics/onboarding/documents/guide-get-list",
     to: "/accounts/guides/onboarding/manage-onboardings#get-list",
   },
+  // DOC-1879 — legacy URLs missed in earlier batches (gap audit, 6 August 2026)
+  {
+    from: "/topics/onboarding/documents/guide-get-info",
+    to: "/accounts/guides/documents/get-info",
+  },
+  {
+    from: "/topics/onboarding/documents/guide-retrieve-info",
+    to: "/accounts/guides/documents/get-info",
+  },
+  {
+    from: "/topics/onboarding/documents/guide-add-webhooks",
+    to: "/build/using-api/webhooks#create-dashboard",
+  },
+  {
+    from: "/topics/onboarding/overview/guide-retrieve-onboarding-id",
+    to: "/accounts/guides/onboarding/manage-onboardings#get-info",
+  },
+  {
+    from: "/topics/onboarding/support",
+    to: "/accounts/concepts/documents",
+  },
   {
     from: "/topics/accounts/documents/guide-upload",
     to: "/accounts/guides/documents/upload-onboarding",
@@ -865,6 +886,19 @@ module.exports = [
   {
     from: "/topics/accounts/overview/guide-get-bank-details",
     to: "/accounts/guides/account-operations/bank-details",
+  },
+  // DOC-1879 — legacy URLs missed in earlier batches (gap audit, 6 August 2026)
+  {
+    from: "/topics/accounts/about",
+    to: "/accounts",
+  },
+  {
+    from: "/topics/accounts/guides/account-configure",
+    to: "/accounts/guides/account-operations",
+  },
+  {
+    from: "/topics/accounts/overview/guide-update",
+    to: "/accounts/concepts/account",
   },
   {
     from: "/topics/accounts/funding",

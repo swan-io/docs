@@ -16,12 +16,12 @@ audience:
   "mode": "graph",
   "layout": "lifecycle",
   "nodes": [
-    { "id": "invalid", "title": "Ongoing (Invalid)", "desc": "Missing or incorrect required info." },
-    { "id": "valid", "title": "Ongoing (Valid)", "desc": "All required info present." },
+    { "id": "invalid", "title": "Invalid", "desc": "Ongoing: missing or incorrect required info." },
+    { "id": "valid", "title": "Valid", "desc": "Ongoing: all required info present." },
     { "id": "finalized", "title": "Finalized", "desc": "Onboarding complete." }
   ],
   "edges": [
-    { "from": "invalid", "to": "valid" },
+    { "from": "invalid", "to": "valid", "dir": "both" },
     { "from": "valid", "to": "finalized" }
   ]
 }
@@ -29,9 +29,9 @@ audience:
 
 | Status | Explanation |
 |---|---|
-| `Ongoing (Invalid)` | <ul><li>This is the first status assigned to an onboarding when **using the frontend**.</li><li>If using the **API**, this is the first status if **not all required information** is included with your mutation.</li><li>Status might change to `Invalid` if required information is removed or if some information is incorrect.</li></ul>**Next step**: Submit or update required information to advance to `Ongoing (Valid)` (both you and the end user can submit or update information) |
-| `Ongoing (Valid)` | <ul><li>This is the first status assigned to an onboarding if **using the API** and you **included all required information** with your mutation.</li><li>Status changes to `Valid` when missing required information is submitted or if incorrect information is updated.</li></ul>**Next step**: User completes form, clicks "Finalize," and provides consent to complete the onboarding process |
-| `Finalized` | Onboarding completed |
+| `Invalid` (ongoing) | <ul><li>This is the first status assigned to an onboarding when **using the frontend**.</li><li>If using the **API**, this is the first status if **not all required information** is included with your mutation.</li><li>Status might change back to `Invalid` if required information is removed or if some information is incorrect.</li></ul>**Next step**: Submit or update required information to advance to `Valid` (both you and the end user can submit or update information). |
+| `Valid` (ongoing) | <ul><li>This is the first status assigned to an onboarding if **using the API** and you **included all required information** with your mutation.</li><li>Status changes to `Valid` when missing required information is submitted or if incorrect information is updated.</li></ul>**Next step**: User completes form, clicks "Finalize," and provides consent to complete the onboarding process. |
+| `Finalized` | Onboarding completed. |
 
 ## API sequence diagram {#diagram}
 

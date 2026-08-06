@@ -56,8 +56,8 @@ flowchart LR
 | `NotStarted` | Verification process hasn't started yet. The account holder's legal representative needs to complete [identification](/users/concepts/identifications) before starting account holder verification. |
 | `Pending` | Swan is reviewing the account holder's information before activating or refusing the account. |
 | `WaitingForInformation` | Swan is waiting for information from the account holder, such as a [first transfer](/accounts/concepts/account-holders/first-transfer), [supporting documents](/accounts/concepts/documents), or something else. |
-| `Verified` | Swan verified the account holder and the process is complete |
-| `Refused` | Swan won't onboard this account holder |
+| `Verified` | Swan verified the account holder and the process is complete. |
+| `Refused` | Swan won't onboard this account holder. |
 
 ### Waiting for information status {#waiting-for-info}
 
@@ -66,12 +66,12 @@ If the account holder verification status is `WaitingForInformation`, the accoun
 
 | Requirement | Explanation |
 | --- | --- |
-| `FirstTransfer` <br /> `Required` | Account holder needs to send a [first transfer](/accounts/concepts/account-holders/first-transfer) to their Swan account. |
-| `LegalRepresentative` <br /> `DetailsRequired` | More information is required about the account's legal representative, or about the account member acting as the legal representative with Power of Attorney. |
-| `Organization` <br /> `DetailsRequired` | More information is required about the organization. |
-| `SupportingDocuments` <br /> `Required` | Provide the requested [supporting documents](/accounts/concepts/documents). |
-| `TaxId` <br /> `Required` | Provide the Tax ID for both the account holder and the organization. |
-| `UboDetails` <br /> `Required` | More information is required about the organization's ultimate beneficial owner or owners (UBO). |
+| `FirstTransferRequired` | Account holder needs to send a [first transfer](/accounts/concepts/account-holders/first-transfer) to their Swan account. |
+| `LegalRepresentativeDetailsRequired` | More information is required about the account's legal representative, or about the account member acting as the legal representative with Power of Attorney. |
+| `OrganizationDetailsRequired` | More information is required about the organization. |
+| `SupportingDocumentsRequired` | Provide the requested [supporting documents](/accounts/concepts/documents). |
+| `TaxIdRequired` | Provide the Tax ID for both the account holder and the organization. |
+| `UboDetailsRequired` | More information is required about the organization's ultimate beneficial owner or owners (UBO). |
 | `Other` | Swan contacts your account holder directly about additional requirements. |
 
 ## Verification sequence diagram {#verification-process-diagram}
@@ -109,7 +109,7 @@ participant S as Swan
         S ->> P: Sends webhook about missing supporting documents
         P ->> U: Requests documents
         U ->> P: Provides documents
-        P ->>S: Uploads documents with the API
+        P ->> S: Uploads documents with the API
     else SCENARIO B: Account holder provides documents
         S ->> U: Sends email requesting supporting documents
         U ->> S: Uploads documents to banking interface

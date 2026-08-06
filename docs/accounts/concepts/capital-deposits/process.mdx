@@ -52,7 +52,7 @@ The case moves through several [statuses](/accounts/concepts/capital-deposits/st
 
 ## Required documents {#documents}
 
-Processing a capital shares deposit **requires several documents** from shareholders and the future company, [uploaded with the API](/accounts/guides/capital-deposits/upload-documents). A document that doesn't meet Swan's requirements is assigned the status `Refused` and must be uploaded again. See the [list of required documents](/accounts/reference/capital-deposits#documents-list) and [document statuses](/accounts/reference/capital-deposits#documents-statuses).
+Processing a capital deposit **requires several documents** from shareholders and the future company, [uploaded with the API](/accounts/guides/capital-deposits/upload-documents). A document that doesn't meet Swan's requirements is assigned the status `Refused` and must be uploaded again. See the [list of required documents](/accounts/reference/capital-deposits#documents-list) and [document statuses](/accounts/reference/capital-deposits#documents-statuses).
 
 ## Sequence diagram {#diagram}
 
@@ -65,14 +65,14 @@ participant SH as Shareholder
 participant P as Partner (You)
 participant S as Swan
 participant N as Notary
-    P->>S: Creates capital deposit case
-    P->>S: Finalizes shareholder and company account onboarding
-    SH->>S: Completes identification
-    P->>S: Uploads required documents
-    SH->>S: Transfers capital to their new Swan account
+    P ->> S: Creates capital deposit case
+    P ->> S: Finalizes shareholder and company account onboarding
+    SH ->> S: Completes identification
+    P ->> S: Uploads required documents
+    SH ->> S: Transfers capital to their new Swan account
     S ->> N: Sends documents and transfers funds
     N -->> S: Uploads capital share deposit certificate
-    S ->> P: Downloads certificate
+    S ->> P: Provides certificate for download
     P -->> S: Uploads proof of registration
     S ->> N: Sends proof of registration and bank account details
     N -->> S: Transfers funds to Swan company account

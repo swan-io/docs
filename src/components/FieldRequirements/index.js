@@ -46,13 +46,13 @@ export const Unsupported = () => (
 );
 
 export const No = () => (
-  <span className="badge unsup no-click" title="No">
+  <span className="badge unsup no-click" role="img" aria-label="No" title="No">
     ✗
   </span>
 );
 
 export const Yes = () => (
-  <span className="badge sup no-click" title="Yes">
+  <span className="badge sup no-click" role="img" aria-label="Yes" title="Yes">
     ✓
   </span>
 );

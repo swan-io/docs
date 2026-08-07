@@ -34,10 +34,10 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 1. Add the <Term id="consent">consent</Term> URL to the success payload (line 30): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
 
-:::note Can Manage Cards
+:::note Can manage cards
 The `canManageCards` permission is technically optional.
 But it's recommended to choose `true` or `false` for this permission anyway.
-If you don't include the `CanManageCards` permission in your API call, it inherits the same value as `canManageAccountMembership`.
+If you don't include the `canManageCards` permission in your API call, it inherits the same value as `canManageAccountMembership`.
 :::
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQWRkTWVtYmVyIHsKICBhZGRBY2NvdW50TWVtYmVyc2hpcCgKICAgIGlucHV0OiB7CiAgICAgIGFjY291bnRJZDogIiRBQ0NPVU5UX0lEIgogICAgICByZXN0cmljdGVkVG86IHsKICAgICAgICBmaXJzdE5hbWU6ICJKdWxlcyIKICAgICAgICBsYXN0TmFtZTogIkZsZXVyeSIKICAgICAgICBwaG9uZU51bWJlcjogIiszMzYwMDAwMDAwMCIKICAgICAgICBiaXJ0aERhdGU6ICJ5eXl5LW1tLWRkIgogICAgICB9CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRSRURJUkVDVF9VUkwiCiAgICAgIGVtYWlsOiAianVsZXMuZmxldXJ5QG15YnJhbmQuaW8iCiAgICAgIGNhbkluaXRpYXRlUGF5bWVudHM6IHRydWUKICAgICAgY2FuTWFuYWdlQWNjb3VudE1lbWJlcnNoaXA6IHRydWUKICAgICAgY2FuTWFuYWdlQmVuZWZpY2lhcmllczogdHJ1ZQogICAgICBjYW5NYW5hZ2VDYXJkczogZmFsc2UKICAgICAgY2FuVmlld0FjY291bnQ6IHRydWUKICAgICAgbGFuZ3VhZ2U6IGVuCiAgICB9CiAgKSB7CiAgICAuLi4gb24gQWRkQWNjb3VudE1lbWJlcnNoaXBTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgYWNjb3VudE1lbWJlcnNoaXAgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBBY2NvdW50TWVtYmVyc2hpcENvbnNlbnRQZW5kaW5nU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICB9CiAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEJhZEFjY291bnRTdGF0dXNSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW52YWxpZFBob25lTnVtYmVyUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gUGVybWlzc2lvbkNhbm5vdEJlR3JhbnRlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
@@ -86,7 +86,7 @@ mutation AddMember {
 
 ## Step 2: Get consent to add member {#get-consent}
 
-1. Get the `consentUrl`, included in the payload (line 11). Remember, the payload only provides the `consentUrl` if you added it in step 1.8.
+1. Get the `consentUrl`, included in the payload (line 11). Remember, the payload only returns the `consentUrl` if you added it in step 1.8.
 1. Send the `consentUrl` to the <Term id="account-holder">account holder</Term>, the account's <Term id="legal-representative">legal representative</Term>, or the account member with `canManageAccountMembership` permissions.
 1. As soon as consent is provided, they're redirected to your `consentRedirectUrl` defined in the initial API call, which fetches an OAuth 2.0 authorization code and a user access token.
 1. **Store** the invited account member's new `accountMembershipId`. You'll need it to bind the membership.

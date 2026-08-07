@@ -51,6 +51,33 @@ Completing the onboarding process serves several purposes.
 1. The person who performed the onboarding process becomes the <Term id="legal-representative">legal representative</Term> of the account. They're also the account's first member with [full permissions](/accounts/reference/memberships/membership-permissions).
 1. Your relationship with the account holder is stored in the `partnershipStatusInfo` field of the `account` object.
 
+## API sequence diagram {#api-flow}
+
+This sequence diagram depicts the onboarding flow with the API.
+
+```mermaid
+sequenceDiagram
+participant S as Swan
+participant P as Partner
+participant U as User
+    alt Partner decision
+        P ->> P: Determines need for Swan account
+    else User request
+    activate U
+        U ->> P: Requests Swan account and<br/>provides required information
+    end
+    P ->> S: Creates onboarding ID
+    S -->> P: Returns onboarding ID
+    P ->> U: Sends authentication link (OAuth 2.0)
+    U ->> S: Logs in
+    S -->> P: Redirects user to partner interface
+    deactivate U
+    P ->> S: Requests user access token
+    S -->> P: Returns user access token
+    P ->> S: Finalizes onboarding with user access token
+    S -->> P: Confirms account holder and account creation
+```
+
 ## In this section
 
 ```flowmap

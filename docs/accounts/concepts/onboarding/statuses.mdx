@@ -11,6 +11,10 @@ audience:
 
 # Onboarding statuses
 
+The lifecycle of an onboarding, from creation through to `Finalized`.
+
+## Statuses {#statuses}
+
 ```flowmap
 {
   "mode": "graph",
@@ -33,29 +37,4 @@ audience:
 | `Valid` (ongoing) | <ul><li>This is the first status assigned to an onboarding if **using the API** and you **included all required information** with your mutation.</li><li>Status changes to `Valid` when missing required information is submitted or if incorrect information is updated.</li></ul>**Next step**: User completes form, clicks "Finalize," and provides consent to complete the onboarding process. |
 | `Finalized` | Onboarding completed. |
 
-## API sequence diagram {#diagram}
-
-Review this sequence diagram that depicts the onboarding flow with the API.
-
-```mermaid
-sequenceDiagram
-participant S as Swan
-participant P as Partner
-participant U as User
-    alt Partner decision
-        P ->> P: Determines need for Swan account
-    else User request
-    activate U
-        U ->> P: Requests Swan account and<br/>provides required information
-    end
-    P ->> S: Creates onboarding ID
-    S -->> P: Returns onboarding ID
-    P ->> U: Sends authentication link (OAuth 2.0)
-    U ->> S: Logs in
-    S -->> P: Redirects user to partner interface
-    deactivate U
-    P ->> S: Requests user access token
-    S -->> P: Returns user access token
-    P ->> S: Finalizes onboarding with user access token
-    S -->> P: Confirms account holder and account creation
-```
+To see how the actors interact during an onboarding, review the [API sequence diagram](/accounts/concepts/onboarding#api-flow) on the onboarding concept page.

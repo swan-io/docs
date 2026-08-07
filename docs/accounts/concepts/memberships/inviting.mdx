@@ -33,10 +33,38 @@ If you use Swan's Web Banking interface, your users can [invite members](https:/
 | Inviter provides phone number and email | <ul><li>Account member's mobile SIM card serves as the [authentication factor](/build/using-api/authentication#url-parameters-optional).</li><li>Account member can be assigned all [membership permissions](/accounts/reference/memberships/membership-permissions#permissions).</li><li>Swan confirms the member's phone number during the [sign-up process](/users/concepts/user/sign-up).</li></ul> |
 | Inviter provides email only | <ul><li>Account member's verified email serves as the [authentication factor](/build/using-api/authentication#url-parameters-optional). The membership isn't enabled until user verifies their email.</li><li>Account member can only be assigned the `canViewAccount` and `canManageCards` [membership permissions](/accounts/reference/memberships/membership-permissions#permissions).</li><li>Swan confirms the member's email during the [sign-up process](/users/concepts/user/sign-up).</li><li>Swan collects the user's phone number during the sign-up process so the member can perform sensitive operations such as initiating payments, ordering cards, and viewing sensitive card information.</li></ul> |
 
+## Invitation sequence diagram {#invitation-diagram}
+
+This sequence diagram depicts adding an account membership and binding the invitee to it with the API.
+
+```mermaid
+sequenceDiagram
+autonumber
+participant I as Invitee
+participant U as Requester∗
+participant P as Partner (you)
+participant S as Swan
+    U ->> P: Requests account access for invitee
+    P ->> S: Calls `addAccountMembership` mutation
+    S ->> U: Sends request for consent
+    U ->> S: Provides consent
+    S ->> P: Returns `accountMembershipId`
+    P ->> I: Sends login URL to invitee
+    I ->> S: Logs into Swan with OAuth 2.0
+    S ->> I: Redirects to Partner's interface with OAuth 2.0 access code
+    I ->> P: Redirected to Partner's interface with OAuth 2.0 access code
+    P ->> S: Requests invitee's user access token
+    S ->> P: Returns invitee's user access token
+    P ->> S: Calls `bindAccountMembership` mutation with<br />`accountMembershipId` using invitee's user access token
+    S ->> P: Confirms account membership success,<br />meaning invitee is bound to account
+```
+∗ The **requester** can be the <Term id="account-holder">account holder</Term>, the account's <Term id="legal-representative">legal representative</Term>, or an account member with the `canManageAccountMembership` permission.
+The requester provides consent (diagram line 4).
+
 ## Company accounts {#company-members}
 
 Account memberships are **especially useful for company accounts**.
-The <Term id="legal-representative">legal representative</Term> grants permissions to other employees.
+The legal representative grants permissions to other employees.
 Employees can then manage their own payments, such as software or sales expenses, independently.
 The company's accountant can use their membership to access account statements.
 With enough permissions, managers can add cards for their team.

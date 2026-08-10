@@ -124,6 +124,8 @@ H1 == title → ia-lede → the concept's own model in prose (this page OWNS the
 ### Statuses page — model: `docs/users/concepts/user/statuses.mdx`
 One Mermaid `flowchart` + one definitions table per status machine; diagram nodes and table rows must agree. Backticked statuses are real GraphQL enum values (verify against the schema, never diagrams/prose). Node styling: start grey `#D4D3D5`, final-status subgraph amber `#fffdf4`, canceled red. Access/side-effect caveats go in an admonition after the table.
 
+Page shape (settled 7 August 2026; Accounts complies): H1 → one-line lede → a single `## Statuses {#anchor}` section holding the diagram and table. Pages tracking several machines use one named h2 per machine, and any page-level overview flowmap gets its own h2 — never left headingless under the H1. No API sequence diagrams on statuses pages: a flow diagram lives on the page that owns the flow (the concept sub-hub or the flow's leaf concept, e.g. `accounts/concepts/onboarding/index.mdx`, `accounts/concepts/memberships/inviting.mdx`), with a one-line cross-link from the statuses page. Cards' legacy "Status flow"/"Status definitions" split predates this rule and is retrofitted during the Cards pass (DOC-1880).
+
 ### Dual-path guide (Dashboard + API)
 Three pages, always:
 - **Chooser index** — model: `docs/users/guides/user-operations/deactivate/index.mdx`: ia-lede → `## Choose how to deactivate` with `ia-path-picker`/`ia-path-option` cards (audience tag + name + desc) → `## Before you start` with shared prerequisites imported from a partial → link to the backing concept.
@@ -145,7 +147,7 @@ Do not carry external iframes (Figma and similar) into migrated pages for new do
 
 ## 5. Finished-page floor (per type)
 
-- **Every page:** `audience`, (almost always) `related`, ≥1 `<Term>` at the first UNLINKED jargon mention (register new ids in the glossary FIRST; if the first mention is already a cross-link, keep the link, no Term).
+- **Every page:** `audience`, (almost always) `related`, ≥1 `<Term>` at the first UNLINKED jargon mention (register new ids in the glossary FIRST; if the first mention is already a cross-link, keep the link, no Term). If a page's jargon has no glossary entry, either register the id or make the first mention a cross-link to its owning concept page (`accounts/concepts/closure/communications.mdx` is the precedent, 7 August 2026). Thin operational leaves (export, get-list, Dashboard variants) with no unwrapped jargon legitimately carry zero Terms.
 - **Domain overview:** concepts spokes flowmap + audience tracks flowmap.
 - **Concepts hub:** relationship flowmap of the domain model.
 - **Guide showing a mutation/query:** explorer-badge link above the fence (no API call → no link).
@@ -159,6 +161,7 @@ Do not carry external iframes (Figma and similar) into migrated pages for new do
 - Link text names the target page; never "above/below/previously".
 - Sub-hub previews its leaves in one line each, then links; leaves link back to the parent and sideways to guides/reference via `related`.
 - Sibling section hubs cross-reference each other in `related` (concepts ↔ guides ↔ reference).
+- When content moves between pages, re-audit `<Term>` wrapping on BOTH pages: the move can strip the source page's only wrap of a term or duplicate the target's. Wrap the new first mention on the source; unwrap the now-duplicate mention on the target. Also re-check inbound `#anchor` links to any heading the move removes or renames (anchors only WARN in the build).
 
 ## 7. No-loss gate (run per domain, before deleting `topics/`)
 

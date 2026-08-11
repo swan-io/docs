@@ -97,6 +97,7 @@ module.exports = annotate({
       ], { link: "accounts/concepts/account/index" }),
       cat("Account holders", [
         doc("accounts/concepts/account-holders/verification", "Verification"),
+        doc("accounts/concepts/account-holders/verification-statuses", "Verification statuses"),
         doc("accounts/concepts/account-holders/first-transfer", "First transfer"),
         doc("accounts/concepts/account-holders/notifications", "Notifications"),
         doc("accounts/concepts/account-holders/verification-renewal", "Verification renewal"),

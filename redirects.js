@@ -27,6 +27,9 @@ module.exports = [
   { from: "/payments/reference/sandbox/sandbox-merchant-in-person-cards", to: "/payments/guides/sandbox/merchant-in-person-cards" },
   { from: "/payments/reference/sandbox/sandbox-merchant-checks", to: "/payments/guides/sandbox/merchant-checks" },
   { from: "/users/reference/sandbox-identifications", to: "/users/guides/sandbox-identifications" },
+  // DOC-1879 — "Statements and bank details" concept split into two pages (SRP);
+  // bank details content now lives at /accounts/concepts/account/bank-details.
+  { from: "/accounts/concepts/account/documents", to: "/accounts/concepts/account/statements" },
   // DOC-1814 — Capital deposits promoted to its own domain (out of onboarding)
   { from: "/accounts/guides/onboarding/capital-deposits", to: "/accounts/guides/capital-deposits" },
   { from: "/accounts/guides/onboarding/capital-deposits/create-case", to: "/accounts/guides/capital-deposits/create-case" },

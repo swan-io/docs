@@ -5,6 +5,7 @@ related:
   - /accounts/concepts/memberships/permissions
   - /accounts/guides/memberships/add-one
   - /accounts/guides/memberships/add-multiple
+  - /accounts/guides/memberships/resend-invitation
 audience:
   - dev
   - ops
@@ -14,7 +15,10 @@ audience:
 
 ## Invitation process {#invite}
 
-The invitation process allows you to grant account access to new users. When you invite someone to become an account member, they receive an email notification (sent automatically with Swan's Web Banking; sent with the `sendAccountMembershipInviteNotification` mutation for [API integrations](/accounts/concepts/memberships/notifications)) asking them to accept the invitation and bind their Swan user to their <Term id="account-membership">account membership</Term> to grant access to the account on which you invited them.
+The invitation process allows you to grant account access to new users.
+
+When you invite someone to become an account member, they receive an email notification asking them to accept the invitation and bind their Swan user to their <Term id="account-membership">account membership</Term>, granting access to the account on which you invited them.
+With Swan's Web Banking, the invitation email is sent automatically; for [API integrations](/accounts/concepts/memberships/notifications), send it with the [`sendAccountMembershipInviteNotification` mutation](/accounts/guides/memberships/resend-invitation).
 
 You can invite account members by phone number or by verified email.
 Use the API to add one membership or multiple memberships.
@@ -23,7 +27,7 @@ If you use Swan's Web Banking interface, your users can [invite members](https:/
 **Invitation flow**:
 
 1. A user with an account membership (the inviter) with the `canManageAccountMembership` permission creates a new account membership (for the invitee) using the API or our Web Banking interface.
-1. The new membership is created with the status `ConsentPending` or `InvitationSent`, depending on whether <Term id="consent">consent</Term> is required.
+1. The new membership is created with the [status](/accounts/concepts/memberships/statuses) `ConsentPending` or `InvitationSent`, depending on whether <Term id="consent">consent</Term> is required.
 1. We send an email invitation to the invited member (depending on your [notification configuration](/accounts/concepts/memberships/notifications)).
 1. The invited member clicks the link in the email, signs in or signs up to Swan, and accepts the invitation.
 1. The user is bound to the account membership and the status changes to `Enabled` or `BindingUserError`.
@@ -58,23 +62,5 @@ participant S as Swan
     P ->> S: Calls `bindAccountMembership` mutation with<br />`accountMembershipId` using invitee's user access token
     S ->> P: Confirms account membership success,<br />meaning invitee is bound to account
 ```
-∗ The **requester** can be the <Term id="account-holder">account holder</Term>, the account's <Term id="legal-representative">legal representative</Term>, or an account member with the `canManageAccountMembership` permission.
-The requester provides consent (diagram line 4).
-
-## Company accounts {#company-members}
-
-Account memberships are **especially useful for company accounts**.
-The legal representative grants permissions to other employees.
-Employees can then manage their own payments, such as software or sales expenses, independently.
-The company's accountant can use their membership to access account statements.
-With enough permissions, managers can add cards for their team.
-How you use account memberships and the corresponding permissions is up to you.
-
-## Unlimited memberships {#unlimited-memberships}
-
-Swan users can have memberships to an **unlimited** number of Swan accounts.
-
-Consider the following example, where Sasha Oliveira has account memberships to accounts for MyBrand and eFounders.
-Based on their [membership permissions](/accounts/reference/memberships/membership-permissions#permissions), Sasha can access and manage memberships for both accounts, but only manage cards for one.
-
-![Visual depiction of multiple account memberships with different permissions](../../../images/accounts/membership-overview.png)
+<sup>∗ The **requester** can be the <Term id="account-holder">account holder</Term>, the account's <Term id="legal-representative">legal representative</Term>, or an account member with the `canManageAccountMembership` permission.
+The requester provides consent (diagram line 4).</sup>

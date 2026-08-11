@@ -190,7 +190,7 @@ module.exports = annotate({
         doc("accounts/guides/memberships/update", "Update member"),
         doc("accounts/guides/memberships/disable", "Disable member"),
         doc("accounts/guides/memberships/suspend-resume", "Suspend or resume member"),
-        doc("accounts/guides/memberships/resend-invitation", "Resend invitation"),
+        doc("accounts/guides/memberships/resend-invitation", "Send or resend invitation"),
         doc("accounts/guides/memberships/fix-binding-error", "Fix binding error"),
         doc("accounts/guides/memberships/change-admin", "Change admin"),
         cat("Export memberships", [

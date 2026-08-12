@@ -144,6 +144,8 @@ H1 → ia-lede → `## In this section` → a `lanes` flowmap, one lane per task
 
 Section-hub `title` is the bare section name (`Concepts`, `Guides`, `Reference`); the H1 is domain-qualified (`# Users concepts`). They intentionally differ.
 
+**Nested guide sub-hub** (e.g. `guides/onboarding/`, blessed 12 August 2026): lede → `## In this section` lanes/pathway nav → genuinely shared operational content after (cross-cutting notices, link mechanics). The leaf-coverage gate applies to the sub-hub's own leaves, including dual-path trios (each trio's chooser must appear in a lane).
+
 ### Concept sub-hub (`concepts/<concept>/index.mdx`) — models: `docs/users/concepts/{user,consent,identifications}/index.mdx`
 H1 == title → ia-lede → the concept's own model in prose (this page OWNS the shared facts; facet h2s preview in 1–3 sentences and link to the leaf page) → a CLOSING `## In this section` pathway flowmap listing the leaves. All three Users sub-hubs end with this pathway. Hub with only one leaf: no pathway (30 July 2026 decision).
 
@@ -177,7 +179,7 @@ Terse. Field tables: `<Req/><Opt/><Cnd/>` on every row + one `<FieldRequirements
 Eligibility and other binary markers are ALWAYS a table column with `<Yes/>`/`<No/>` cells and a column header naming the property; never a bespoke inline symbol on list items (settled 6 August 2026: the former ⮂ marker in `users/reference/sensitive-operations.mdx` was converted to a "Server-to-server" column). The same applies to requirement badges: the `<Req/><Opt/><Cnd/>` column is headed "Requirement", never left with an empty header (settled 6 August 2026; empty-header tables in Payments predate the rule and are retrofitted during that domain's pass).
 
 ### External embeds and iframes
-Do not carry external iframes (Figma and similar) into migrated pages; replace with a Mermaid diagram or an image. Any RETAINED iframe requires an explicit `sandbox` allowlist (security hardening, 12 August 2026); the two legacy Figma embeds (company `requirements.mdx`, user `sign-up.mdx`) have neither — delete rather than migrate (see Appendix).
+Do not carry external iframes (Figma and similar) into migrated pages; replace with a Mermaid diagram or an image. Any RETAINED iframe requires an explicit `sandbox` allowlist — all nine live Figma embeds were sandboxed on 12 August 2026. The delete-vs-replace decision for the legacy Figma embeds remains open (see Appendix).
 
 ### Rendering behaviors (12 August 2026)
 - `FlowMap`, `Term`, `Tabs`, and all badge components are global via `MDXComponents.js` — no imports.
@@ -359,3 +361,4 @@ Product facts the schema cannot answer, awaiting team confirmation:
 1. Sandbox-vs-Live environment statements for every API example (§4 rule): applying the sweep requires per-mutation environment knowledge — currently only `accounts/guides/ibans/validate.mdx` carries a (data-provenance) note. Confirm a standard phrasing, then sweep Users and Accounts guides.
 2. Export-user-data prerequisites: the trio has no prerequisites block because none are documented anywhere (mutation takes only `email`); confirm whether token-type or other prerequisites exist, then add the shared partial per §4.
 3. Deactivate from-the-dashboard steps pending verification (`{/* TODO:SME */}` marker in place).
+4. Create-onboarding prerequisites: the individual and company create `using-the-api` guides carry no prerequisites block, and neither does live v2 (checked 12 August 2026). Confirm the token requirements (project access token?), then add a shared partial per §4 — mirror of the export-prerequisites item above.

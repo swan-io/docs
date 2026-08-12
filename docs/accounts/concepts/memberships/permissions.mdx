@@ -17,13 +17,29 @@ These rights are referred to as **permissions** in the Swan API and Web Banking 
 Swan doesn't offer role-based access control (RBAC).
 Instead, you choose exactly what each account member can see and do on a member-by-member basis.
 
-For the full list of permissions, how to grant them, the card-management matrix, and adding members with no permissions, see the [membership permissions reference](/accounts/reference/memberships/membership-permissions).
+The [membership permissions reference](/accounts/reference/memberships/membership-permissions) holds the full list of permissions and the card-management matrix.
 
-## Country requirements for account memberships
+## Granting permissions {#permissions-grant}
 
-Required and optional membership fields vary by <Term id="ibans">IBAN</Term> country. See the [membership fields reference](/accounts/reference/memberships/membership-fields#country-req).
+To grant permissions to other account members, the account member must have the permission `canManageAccountMembership`.
+They can only grant permissions they already have.
 
-## Validation rules
+For example, if an account member doesn't have the `canManageCards` permission, they can't grant it to another account member.
+If they try to grant the `canManageCards` permission anyway, the API returns a `PermissionCannotBeGrantedRejection` error.
+
+## No permissions {#permissions-none}
+
+You can add account members without granting them any membership permissions.
+For example, if you want to give a user a card associated with the account, but you don't want them to view account information or perform any actions for the account, you'd add an account membership with no permissions.
+
+In this case, all membership permission booleans are `false`.
+This type of invitation doesn't require <Term id="consent">consent</Term> from the <Term id="account-holder">account holder</Term> and skips the status `InvitationSent`.
+
+## Country requirements for account memberships {#country-req}
+
+Required and optional [membership fields vary by IBAN country](/accounts/reference/memberships/membership-fields#country-req).
+
+## Validation rules {#validation}
 
 Field-format rules, including the first and last name pattern, are in the [membership fields reference](/accounts/reference/memberships/membership-fields#validation).
 

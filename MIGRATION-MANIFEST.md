@@ -150,7 +150,7 @@ H1 == title → ia-lede → the concept's own model in prose (this page OWNS the
 ### Statuses page — model: `docs/users/concepts/user/statuses.mdx`
 One Mermaid `flowchart` + one definitions table per status machine; diagram nodes and table rows must agree. Backticked statuses are real GraphQL enum values (verify per §10 schema checks, never against diagrams/prose). Node styling: start grey `#D4D3D5`, final-status subgraph amber `#fffdf4`, canceled red. Access/side-effect caveats go in an admonition after the table. **Deprecated enum values** get one prose line under the table ("The `ConsentStatus` enum also includes `CredentialRefused`, which is deprecated…") — never a table row, never a diagram node.
 
-Page shape (settled 7 August 2026; Accounts complies): H1 → one-line lede → a single `## Statuses {#anchor}` section holding the diagram and table. Pages tracking several machines use one named h2 per machine, and any page-level overview flowmap gets its own h2 — never left headingless under the H1. No API sequence diagrams on statuses pages: a flow diagram lives on the page that owns the flow (the concept sub-hub or the flow's leaf concept, e.g. `accounts/concepts/onboarding/index.mdx`, `accounts/concepts/memberships/inviting.mdx`), with a one-line cross-link from the statuses page. Cards' legacy "Status flow"/"Status definitions" split predates this rule and is retrofitted during the Cards pass (DOC-1880).
+Page shape (settled 7 August 2026; Accounts complies): H1 → one-line lede → a single `## Statuses {#anchor}` section holding the diagram and table. EXCEPTION (codified 13 August 2026): an auxiliary table or reason-code list tightly coupled to ONE status may be a second h2 on the same page (precedents: `account-holders/verification-statuses.mdx` requirements table, `identifications/statuses.mdx` invalid reason codes). Pages tracking several machines use one named h2 per machine, and any page-level overview flowmap gets its own h2 — never left headingless under the H1. No API sequence diagrams on statuses pages: a flow diagram lives on the page that owns the flow (the concept sub-hub or the flow's leaf concept, e.g. `accounts/concepts/onboarding/index.mdx`, `accounts/concepts/memberships/inviting.mdx`), with a one-line cross-link from the statuses page. Cards' legacy "Status flow"/"Status definitions" split predates this rule and is retrofitted during the Cards pass (DOC-1880).
 
 ### Dual-path guide (Dashboard + API)
 Three pages, always:
@@ -207,7 +207,7 @@ Do not carry external iframes (Figma and similar) into migrated pages; replace w
 - The cross-linking pass is body-wide: link first mentions inside admonitions, numbered steps, and partials too, across domains where the owner lives elsewhere.
 
 ### Anchors (all rules, 12 August 2026)
-- **Author a short explicit `{#anchor}` on every h2/h3** — a short slug, not the heading's auto-slug (`## Card formats {#formats}`). This is what makes anchor stability mechanically safe: rewording a heading can't move a link. If a section is genuinely rewritten into something else, rename the anchor to match.
+- **Author a short explicit `{#anchor}` on every h2/h3** — a short slug, not the heading's auto-slug (`## Card formats {#formats}`). This is what makes anchor stability mechanically safe: rewording a heading can't move a link. If a section is genuinely rewritten into something else, rename the anchor to match. EXEMPTION (settled 13 August 2026): `## In this section` headings carry no explicit anchor — the heading text is fixed by convention, so its auto-slug cannot drift; no such heading anywhere in the repo has one.
 - **Never delete an existing anchor**, even a no-op h1 anchor — readers share them (user rule).
 - Anchors are stable across moves: a section that moves pages (or into a partial) keeps its `{#anchor}` at the destination.
 - **On every move/rename, re-check inbound `#anchor` links** — they only WARN in the build. Batch retargets: replace the LONGEST anchor first, and beware `\b` in regex (it matches before a hyphen: `#verification-process\b` also hits `#verification-process-diagram`); grep the sweep's own output for self-inflicted mangling; `changelog/` lives outside `docs/` — grep both.
@@ -334,9 +334,17 @@ Product facts the schema cannot answer, awaiting team confirmation:
 2. Flowmap and Mermaid fences pass into the `.md` mirrors as raw JSON/code — hubs whose navigation lives only in a flowmap are unreadable to AI readers; decide whether hubs need a prose equivalent.
 3. Vale enforcement: currently advisory with a near-empty vocab (2 entries); decide blocking levels and grow `vocab.txt`.
 4. Path-picker audience tag labels: "Operators" (plural) vs "Developer" (singular) — pick one.
-5. The two legacy Figma iframes (`users/concepts/identifications/index.mdx` scheduled for removal; company `requirements.mdx` and user `sign-up.mdx` unsandboxed): delete or add `sandbox` allowlists.
+5. Figma iframes (nine repo-wide): ALL now carry `sandbox="allow-scripts allow-same-origin"` (interim security fix, 13 August 2026). The remaining decision is delete-and-replace vs keep — the Figma content can't be recreated as Mermaid without access to the designs.
+6. Dashboard one-liner pages and promotions: the three placeholder from-the-dashboard pages (closure/get-closure-info, ibans/get-info, ibans/add-virtual) AND the five Users get-* guides whose ledes name a Dashboard equivalent are ONE decision — promote to choosers, keep as pointers, or remove from nav.
 
 ### Housekeeping tasks
 - Rename `get-started/_partials/` → `get-started/partials/` during the Get Started pass (§1 naming rule).
 - Retrofit Cards' legacy "Status flow"/"Status definitions" split during DOC-1880 (§4 statuses shape).
 - Retrofit Payments' empty-header badge tables during DOC-1881 (§4 reference tables).
+- `_shared/partials/_transaction-statuses.mdx` now has a single consumer (`payments/concepts/transactions/statuses.mdx`) after the Accounts duplicate render was removed — retier during DOC-1881.
+- Convert PVID/QES regional prose lists to the Expert-style country matrix during the identity-methods September edit (deferred 13 August 2026).
+
+### SME items (facts the docs can't state without confirmation)
+1. Sandbox-vs-Live environment statements for every API example (§4 rule): applying the sweep requires per-mutation environment knowledge — currently only `accounts/guides/ibans/validate.mdx` carries a (data-provenance) note. Confirm a standard phrasing, then sweep Users and Accounts guides.
+2. Export-user-data prerequisites: the trio has no prerequisites block because none are documented anywhere (mutation takes only `email`); confirm whether token-type or other prerequisites exist, then add the shared partial per §4.
+3. Deactivate from-the-dashboard steps pending verification (`{/* TODO:SME */}` marker in place).

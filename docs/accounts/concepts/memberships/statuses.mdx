@@ -11,7 +11,9 @@ audience:
 
 # Statuses and lifecycle
 
-## Account membership statuses {#statuses}
+The lifecycle of an <Term id="account-membership">account membership</Term>, from `ConsentPending` through to `Disabled`.
+
+## Statuses {#statuses}
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -51,7 +53,7 @@ For the sequence of API calls that adds a membership and binds the invitee to it
 
 ### Binding user errors {#binding-errors}
 
-The <Term id="account-membership">account membership</Term> status can be `BindingUserError` for several reasons, including the following scenarios:
+The account membership status can be `BindingUserError` for several reasons, including the following scenarios:
 
 - The information you submitted about the invited account member doesn't match the information they provided when [signing up for an account](/users/concepts/user/sign-up).
 - The user hasn't completed [identification](/users/concepts/identifications).
@@ -66,30 +68,9 @@ After an account member's status is `Enabled`, updating their personal details d
 If fraud is suspected, [suspend the membership](/accounts/guides/memberships/suspend-resume).
 :::
 
-## Removing identification {#remove-identification}
-
-Verifying your account members' identity is a required step in most circumstances.
-But with a **detailed agreement with Swan**, you might be allowed to bypass identification for certain membership permissions.
-
-Even if your project is configured to remove identification, memberships with the following permissions **can't bypass** it:
-
-- `canManageAccountMembership`
-- `canInitiatePayments`
-- `canManageBeneficiaries`
-
-This configuration **is retroactive**. Memberships created before identification was removed no longer need to verify their identity. 
-Contact your PIM (Product Integration Manager) to ask about removing identification.
-
 ## Closed accounts and memberships {#closed}
 
 When Swan [accounts are closed](/accounts/concepts/account), the account memberships are impacted as well.
 
 As soon as an [account status](/accounts/concepts/account/statuses) changes to `Closing`, account members can no longer manage account memberships and beneficiaries or initiate payments (except to empty the account).
 When the account status changes to `Closed`, account members can view the account for one year, after which all memberships to the closed account are `Disabled`.
-
-## Versioning {#versioning}
-
-Account memberships have a `version` attribute.
-
-When a new membership is added, the `version` is `0`, then increases by 1 with each change.
-Changes include suspending, resuming, and updating the membership.

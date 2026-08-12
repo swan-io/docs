@@ -51,11 +51,14 @@ flowchart LR
     E -.-> S[Suspended]
     S -.-> E
     E -.-> C
+    P -.-> R[Rejected]
+    E -.-> R
     subgraph U[Can use source]
         E
     end
     subgraph F[Final status]
         C
+        R
     end
     style AMA fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
@@ -68,5 +71,6 @@ flowchart LR
 | `Enabled` | The account funding source is consented to and can be used. |
 | `Suspended` | Swan can suspend a funding source if there's suspicion of fraud. While suspended, the funding source can't be used. |
 | `Canceled` | The account funding source is canceled and no longer available for use. Swan account holders and eligible account members can cancel a funding source. The associated payment mandate is also `Canceled`. |
+| `Rejected` | The funding source was rejected because [account verification](/accounts/concepts/funding/account-verification) was rejected (reason code `AccountVerificationRejected`). The funding source can't be used. |
 
 *API Reference: [`FundingSourceStatusInfo`](https://api-reference.swan.io/interfaces/funding-source-status-info)*

@@ -17,9 +17,11 @@ Closure reasons fall into different categories depending on who initiated the cl
 
 ## Timeline for closure reason codes {#closure-reason-timeline}
 
-Before 2 April 2026, Swan used a limited set of four closure reason codes (`ComplianceReason`, `PartnerReason`, `Inactivity`, and `CapitalDepositReason`). Three were replaced with more granular codes for better transparency about why an account was closed; `ComplianceReason` remains in use.
+Before 2 April 2026, Swan used a limited set of four closure reason codes (`ComplianceReason`, `PartnerReason`, `Inactivity`, and `CapitalDepositReason`).
+On 2 April 2026, more granular codes replaced `PartnerReason`, `Inactivity`, and `CapitalDepositReason` for better transparency about why an account was closed; `ComplianceReason` remains in use.
+In June 2026, `DormantAccount` was deprecated in turn and replaced by `Inactivity`, which returned with its current, more precise meaning.
 
-Accounts closed before 2 April 2026 keep their original reason codes.
+All accounts closed before 2 April 2026 now use the current closure reason codes: accounts that carried a deprecated code were migrated retroactively.
 Refer to the [deprecated reason codes](#deprecated-reasons) for the full mapping.
 
 ## General closure reasons {#general-reasons}
@@ -31,7 +33,7 @@ Refer to the [deprecated reason codes](#deprecated-reasons) for the full mapping
 | `RemediationPlan` | Closure following a Partner remediation plan. |
 | `PartnerChurn` | Closure following a Partner churn. |
 | `DeathClosure` | <Term id="account-holder">Account holder</Term> is deceased. |
-| `DormantAccount` | Prolonged inactivity according to local regulatory definitions or internal policy. |
+| `Inactivity` | Prolonged inactivity according to local regulatory definitions or internal policy. |
 | `Other` | Reason not covered by the current list. |
 
 ## KYC, Re-KYC, and capital deposit closure reasons {#kyc-capital-deposit-reasons}
@@ -65,13 +67,13 @@ These are high-level categories for closures. In some cases, Swan uses these cod
 
 ## Deprecated reason codes {#deprecated-reasons}
 
-The following reason codes were deprecated on 2 April 2026.
-They still appear on accounts closed before this date, but are no longer assigned to new closures.
+The following reason codes are deprecated and no longer appear on any closed account: accounts that carried them were migrated retroactively to the replacement codes.
 
 | Deprecated code | Used for | Replaced by |
 | --- | --- | --- |
 | `PartnerReason` | Closure requested by the account holder or <Term id="legal-representative">legal representative</Term>. | `RequestedByHolder` |
-| `Inactivity` | Prolonged account inactivity. | `DormantAccount` |
 | `CapitalDepositReason` | All capital deposit closures (cancellation, completion, or notary refusal). | Any code in [KYC, Re-KYC, and capital deposit closure reasons](#kyc-capital-deposit-reasons). |
+| `DormantAccount` | Prolonged account inactivity (assigned between April and June 2026). | `Inactivity` |
+| `CapitalDepositCanceled` | Legacy capital deposit cancelations. | `CapitalDepositWithdrawn` |
 
-`ComplianceReason` is not deprecated and remains in use.
+`ComplianceReason` and `Inactivity` are not deprecated and remain in use.

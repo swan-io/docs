@@ -212,3 +212,45 @@ Pick the layout from the content; never dress a list of sub-page cards as a fake
 | Audience-split entry | `tracks` |
 
 Leaf concept pages need no flowmap; only hubs and the domain overview do.
+
+## 10. Content Pass surgery catalog (settled 11–12 August 2026, Accounts round)
+
+Detection heuristics and the settled fix for each recurring page disease. Precedents are all in Accounts.
+
+### Splits and merges
+- **And-title smell:** a concept page titled "X and Y" over two unrelated objects splits into one page per object, each paired with its guide via `related`. Precedent: "Statements and bank details" → `account/statements` + `account/bank-details`. Redirect the old URL to the PRIMARY successor; a redirect carries the fragment, so old deep links to the secondary's anchors land at the primary's top — retarget every internal deep link precisely before relying on the redirect.
+- **Embedded status machine:** a status diagram + table living mid-page in a concept narrative extracts to its own statuses leaf (shape per section 4); the flow-owning page keeps its sequence diagram; the two pages exchange one-line pointers. Precedent: `account-holders/verification` → `verification-statuses` (auxiliary tables tightly coupled to one status, like `WaitingForInformation` requirements, move WITH the statuses).
+- **Stub leaf:** a leaf of only bullet lists (~20 lines) merges into its hub with a redirect; hubs are the home of "why use this" content. Precedent: `multiple-accounts/benefits` → hub.
+- **Model facts squatting on operational pages** move to the owning concept or hub: `versioning` → memberships hub; `remove-identification` → permissions; "Company accounts"/"Unlimited memberships" → memberships hub.
+- **Reframed pages keep their slug** (rename title/H1/labels only) — a slug change would chain the legacy `topics/` redirect. Precedent: `resend-invitation` reframed "Send or resend...". Titles name the precise API object (invitation **notification**, not invitation).
+
+### Misplacement detectors
+- **Link-graph inversion:** if the concept that OWNS a fact links out "for all details" to a page that doesn't own it, the content is on the wrong page. Precedent: Limited-account transfer restrictions lived on `first-transfer`; moved to `type-and-level`.
+- **Repeated per-item boilerplate:** N sections each restating trigger/configuration/template collapse to ONE shared section up front + a per-item delta line. Precedent: verification notifications (4 emails → `## Configuration` table + "Account information included" per email). Zero information loss: every varying cell must map to a delta line or an exception note.
+
+### Anchor and retarget rules
+- **Never delete an existing anchor**, even a no-op h1 anchor — readers share them (user rule, 12 August 2026). Keep section anchors stable on moves; when a section moves pages, it keeps its `{#anchor}` at the destination.
+- **Batch retargets:** replace the LONGEST anchor first, and beware `\b` in regex — it matches before a hyphen, so `#verification-process\b` also hits `#verification-process-diagram`. Grep the sweep's own output for self-inflicted mangling, and remember changelog/ lives outside docs/ (grep both).
+- After a retarget, re-read the LINK TEXT: text promising content the new target lacks ("limited accounts *and verification*") gets renamed to name the target.
+
+### Meaning-preservation audit (end of every surgery round)
+`git diff <session-start-sha>` and re-read every reworded hunk against the original. Known failure modes: softened consequences (dropping "automatically rejected"), narrowed/widened claims (options lists), flattened role names ("Account Manager" → "Contact us"), resend-vs-send semantics on limits. Deliberate deviations get flagged to the user and the domain ticket, never applied silently.
+
+### Schema checks (expanded rule, 12 August 2026)
+Any question the schema can answer gets checked proactively, not deferred to the ticket: status-to-object attribution (`Verified` is `AccountHolder.verificationStatus`, NOT an `AccountStatus`), field names and plurality (`Account.statements`, not `statement`), mutation/rejection existence, enum values. Fast path: grep the local clone `~/Documents/api-reference/docs/{enums,objects,mutations,queries,unions}/*.mdx` (values sit as `<b>Value</b>` between "Values" and "Member Of"). The clone LAGS live — an absence or discrepancy is only real after confirming on `api-reference.swan.io` via WebFetch (curl is blocked). Watch deprecation notes: live may hold BOTH a deprecated shape (`status: StatementStatus`) and its replacement (`statusInfo`); docs should match the NEW one.
+
+### Freshness checks
+- Future-tense feature sections ("will be available", "released in <year>") get cross-checked: against the schema (the object may already exist — `WebBankingSettings.canOpenAccount` does) and against the docs themselves (a "coming up" item whose page already shipped is an unambiguous fix).
+- Past-dated "upcoming" notices (breaking-change dates that have passed) need confirmation the change actually happened before removal — deploys slip.
+
+### Pending verification — DOC-1879 (as of 12 August 2026)
+Product facts the schema cannot answer, awaiting team confirmation:
+1. Usage-metrics "Additional account fee" row — name contradicts its own explanation.
+2. Invitation email daily limit — five total sends vs original+five resends (three doc statements aligned to "five emails/day"; rejection description gives no number).
+3. Bank-details page vs `type-and-level`: does main-IBAN assignment require `Unlimited`, or can it exist at `Limited`?
+4. Belgium local-IBAN bank codes (main + virtual) to replace the `ZZZZ` placeholder; distinguish the two "Check digits" rows.
+5. Account-opened notification: three vs four routing options (consolidated table sides with the old template table = four).
+6. Canonical contact term: "Strategic Account Manager (SAM)" (4 uses) vs "your Account Manager" (2 uses).
+7. Web Banking `canOpenAccount`: API objects exist; Dashboard toggle + Web Banking creation-flow availability unconfirmed ("2026" claim in `multiple-accounts/shared-details-and-management`).
+8. `coming-up.mdx`: three past-dated breaking-change notices (20 May, 21 May, 4 June 2026) — remove once confirmed shipped.
+9. Billing hub's "billing module activated 1 March 2023" note — keep or retire (user decision).

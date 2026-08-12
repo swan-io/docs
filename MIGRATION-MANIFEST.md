@@ -152,6 +152,14 @@ One Mermaid `flowchart` + one definitions table per status machine; diagram node
 
 Page shape (settled 7 August 2026; Accounts complies): H1 → one-line lede → a single `## Statuses {#anchor}` section holding the diagram and table. EXCEPTION (codified 13 August 2026): an auxiliary table or reason-code list tightly coupled to ONE status may be a second h2 on the same page (precedents: `account-holders/verification-statuses.mdx` requirements table, `identifications/statuses.mdx` invalid reason codes). Pages tracking several machines use one named h2 per machine, and any page-level overview flowmap gets its own h2 — never left headingless under the H1. No API sequence diagrams on statuses pages: a flow diagram lives on the page that owns the flow (the concept sub-hub or the flow's leaf concept, e.g. `accounts/concepts/onboarding/index.mdx`, `accounts/concepts/memberships/inviting.mdx`), with a one-line cross-link from the statuses page. Cards' legacy "Status flow"/"Status definitions" split predates this rule and is retrofitted during the Cards pass (DOC-1880).
 
+### In-page section ordering (codified 12 August 2026)
+Within a page body, order sections by reader priority, not by the source's historical accretion:
+1. **Orientation before detail:** every page opens with at least one orienting sentence under the H1 before the first h2 (precedents: `closure/processes.mdx`, `funding/settlement.mdx`).
+2. **Current before historical:** the lookup content readers come for (tables, status machines, code lists) precedes timelines, migration notes, and change history. Deprecated material CLOSES the page, with any timeline/history section directly above the deprecated section it narrates (precedent: `closure/reason-codes.mdx`).
+3. **Journey order for nav lists:** `pathway` items follow the reader's task sequence, never alphabetical or sidebar order (precedent: funding hub).
+4. **Group lookups by kind:** related code/reference sections sit adjacent, not separated by unrelated content (precedent: `reference/capital-deposits` cancelation + document refusal codes).
+Anchors move with their sections (§6); demoting a section is not deleting it.
+
 ### Dual-path guide (Dashboard + API)
 Three pages, always:
 - **Chooser index** — model: `docs/users/guides/user-operations/deactivate/index.mdx`: ia-lede → `## Choose how to deactivate` with `ia-path-picker`/`ia-path-option` cards (audience tag + name + desc) → `## Before you start` with shared prerequisites imported from a partial → link to the backing concept. Card copy names the concrete artifact and the reason to choose it: dev desc names the mutation, ops desc names the medium plus the use case ("Manual `.csv` export from the Dashboard. For ad-hoc reporting and audits.").

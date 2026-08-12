@@ -12,8 +12,8 @@ audience:
 
 # Membership permissions
 
-This reference details every <Term id="account-membership">account membership</Term> permission, how permissions are granted, and how the `canManageCards` and `canManageAccountMembership` permissions interact.
-For the conceptual overview of account memberships, see [Memberships](/accounts/concepts/memberships).
+This reference details every <Term id="account-membership">account membership</Term> permission and how the `canManageCards` and `canManageAccountMembership` permissions interact.
+For how permissions are granted and memberships with no permissions, see the [permissions concept](/accounts/concepts/memberships/permissions).
 
 ## Permissions {#permissions}
 
@@ -24,14 +24,6 @@ For the conceptual overview of account memberships, see [Memberships](/accounts/
 | `canInitiatePayments` | [Initiate (send) credit transfers](/payments/concepts/credit-transfers/) to trusted beneficiaries. |
 | `canManageAccountMembership` | Add, update, suspend, resume, and disable account memberships, and view the list of account members. |
 | `canManageCards` | View, add, and update their own cards and [cards for account memberships](/cards/concepts/card-formats#cards-account-memberships) they manage. |
-
-## Granting permissions {#permissions-grant}
-
-To grant permissions to other account members, the account member must have the permission `canManageAccountMembership`.
-They can only grant permissions they already have.
-
-For example, if an account member doesn't have the `canManageCards` permission, they can't grant it to another account member.
-If they try to grant the `canManageCards` permission anyway, the API returns a `PermissionCannotBeGrantedRejection` error.
 
 ## Managing cards {#permissions-cards}
 
@@ -109,10 +101,4 @@ Cardholders without the `canViewAccount` permission can view their own transacti
 
 \* *others* → other account members
 
-## No permissions {#permissions-none}
-
-You can add account members without granting them any membership permissions.
-For example, if you want to give a user a card associated with the account, but you don't want them to view account information or perform any actions for the account, you'd add an account membership with no permissions.
-
-In this case, all membership permission booleans are `false`.
-This type of invitation doesn't require <Term id="consent">consent</Term> from the <Term id="account-holder">account holder</Term> and skips the status `InvitationSent`.
+Memberships can also be created with [no permissions at all](/accounts/concepts/memberships/permissions#permissions-none).

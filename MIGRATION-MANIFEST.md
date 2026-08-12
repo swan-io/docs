@@ -131,7 +131,7 @@ Any page with rail metadata needs at least one real h2/h3 (production build thro
 ### Domain overview (`<domain>/index.mdx`) — model: `docs/users/index.mdx`
 1. Frontmatter title = domain name; no H1 in body (or H1 == title).
 2. `<p className="ia-lede">` one-sentence identity of the domain, with `<Term>` on first jargon.
-3. `## Concepts` + a `graph`/`spokes` flowmap of the domain's main concepts.
+3. `## Concepts` + a `graph`/`spokes` flowmap of the domain's main concepts — only when every non-root node truly hangs off the root (§9's true-feeder condition; Users qualifies). When some concepts precede or own the root instead, split into two fences under the same heading, each introduced by a line of prose: a `chain` for the lifecycle (creation → root → end-of-life) and a `spokes` of the root's real satellites (precedent: Accounts overview, 12 August 2026). Every concept sub-hub must appear in exactly one of the fences.
 4. `## Find your path` + a `tracks` flowmap: one track per audience (`Developers`/`dev`, `Operators`/`ops`), each item typed `Concept`/`Guide`/`Ref` with a one-line desc.
 
    Tracks are CURATED (settled and enforced 6 August 2026): aim for 5–7 items per track, hard ceiling 7; order as a first-session journey (ALL concepts, then guides, then AT MOST one reference, last — no interleaving; a track with no first-session lookup table has no Ref item, like the Users operators track); select by "needed in the first session" and "highest-traffic tasks"; every item must also be reachable through the section hubs (tracks are a shortcut, never coverage). All four existing domain overviews comply.
@@ -277,6 +277,8 @@ Pick the layout from the content; never dress a list of sub-page cards as a fake
 | Flat ordered nav list | `pathway` |
 | Guides/reference nav by group | `lanes` (or `grid`) |
 | Audience-split entry | `tracks` |
+
+Spokes' "true feeders" condition is strict: a node that precedes, creates, or owns the root is not a feeder. When a domain's concepts split between lifecycle and satellites, use a `chain` + `spokes` fence pair under one heading (§4, Accounts overview precedent).
 
 Leaf concept pages need no flowmap; only hubs and the domain overview do. A malformed flowmap spec renders as a page-level error box, not a build failure (§8 checklist). Flowmap fences reach the `.md` mirrors as raw JSON (see Appendix, open decision).
 

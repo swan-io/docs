@@ -11,7 +11,7 @@ audience:
 
 # Capital deposit reference
 
-<p className="ia-lede">Cancelation reason codes and required documents for <Term id="capital-deposit">capital deposit</Term> cases.</p>
+<p className="ia-lede">Cancelation reason codes, document refusal reasons, and required documents for <Term id="capital-deposit">capital deposit</Term> cases.</p>
 
 For the case, shareholder, and document state machines, see [capital deposit statuses](/accounts/concepts/capital-deposits/statuses).
 
@@ -43,6 +43,38 @@ For those cases, refer to the account-level deprecated closure reason `CapitalDe
 These reason codes come from the dedicated `CapitalDepositCaseCancellationReasonType` enum.
 Most values are shared with [account closure reason codes](/accounts/concepts/closure/reason-codes), which apply at the account level.
 When a capital deposit completes successfully, the case isn't canceled; instead, shareholder accounts are closed with the account-level reason code `CapitalDepositCompleted`.
+
+## Document refusal reasons {#document-refusal-reasons}
+
+When a capital deposit document is [`Refused`](/accounts/concepts/capital-deposits/statuses#documents), a reason code is available on the [`CapitalDepositDocumentRefusedStatusInfo`](https://api-reference.swan.io/objects/capital-deposit-document-refused-status-info) type, with an optional plain-text `reason` adding details.
+
+These reason codes come from the dedicated `DocumentReasonCode` enum.
+[Supporting documents](/accounts/concepts/documents/statuses#refused) use a different enum for refusal reasons.
+
+| Reason code | Explanation |
+| --- | --- |
+| `CompanyNameMismatch` | The company name in the document submitted doesn't match Swan's records. |
+| `DeclaredAmountMismatch` | The declared amount in the document submitted doesn't match Swan's records. |
+| `ExpiredDocument` | Documents must have been issued within the last three months. |
+| `InvalidAddress` | The address in the document submitted doesn't match Swan's records. |
+| `InvalidDocument` | The document submitted isn't valid or in an accepted format. |
+| `InvalidOrMissingData` | The name in the document submitted is invalid, missing, or not clearly visible. |
+| `MissingAccommodationProviderId` | An identity document for the accommodation provider is required. |
+| `MissingAccommodationProviderIdLetter` | The accommodation provider's ID and letter providing proof of accommodation are required. |
+| `MissingAccommodationProviderLetter` | A letter providing proof of accommodation from the provider is required. |
+| `UnacceptableDocument` | The document submitted doesn't match the requested document type. |
+| `ProviderColorIdDocumentRequired` | The document must be submitted in color. |
+| `MissingSignature` | The document submitted must be signed or dated. |
+| `BadDocumentQuality` | The quality of the document submitted is too low. All document content must be clear and legible. |
+| `FullDocumentRequired` | The entire document must be submitted, not just a portion of the document. |
+| `MissingProviderProofOfAddress` | The accommodation provider's proof of address is required. |
+| `MissingProviderProofOfAddressAndIdDocument` | The accommodation provider's ID and proof of address are required. |
+| `PowerOfAttorneyToSwanRequired` | A signed and dated Power of Attorney must be provided to Swan. |
+| `MissingCompanyDomiciliationStatement` | A document stating the company's registered address is required. This document can be referred to as a "domiciliation statement". |
+| `HandwrittenOrCertifiedElectronicSignatureRequired` | The signature must be handwritten or electronically certified. |
+| `ComplianceReason` | The document was refused for compliance reasons. |
+| `InvalidDepositBankName` | The bank name in the articles of association document is invalid. |
+| `MissingCompanyProviderRegisterExtract` | The register extract of the company providing the accommodation and an identity document for its legal representative are required. |
 
 ## List of required documents {#documents-list}
 

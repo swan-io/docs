@@ -111,7 +111,6 @@ module.exports = annotate({
         doc("accounts/concepts/memberships/notifications", "Notifications"),
       ], { link: "accounts/concepts/memberships/index" }),
       cat("Multiple accounts", [
-        doc("accounts/concepts/multiple-accounts/benefits", "Benefits and use cases"),
         doc("accounts/concepts/multiple-accounts/requirements-and-activation", "Requirements and activation"),
         doc("accounts/concepts/multiple-accounts/shared-details-and-management", "Shared details and management"),
       ], { link: "accounts/concepts/multiple-accounts/index" }),

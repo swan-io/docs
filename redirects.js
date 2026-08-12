@@ -27,6 +27,8 @@ module.exports = [
   { from: "/payments/reference/sandbox/sandbox-merchant-in-person-cards", to: "/payments/guides/sandbox/merchant-in-person-cards" },
   { from: "/payments/reference/sandbox/sandbox-merchant-checks", to: "/payments/guides/sandbox/merchant-checks" },
   { from: "/users/reference/sandbox-identifications", to: "/users/guides/sandbox-identifications" },
+  // DOC-1879 — Multiple accounts "Benefits and use cases" stub merged into the concept hub.
+  { from: "/accounts/concepts/multiple-accounts/benefits", to: "/accounts/concepts/multiple-accounts" },
   // DOC-1879 — "Statements and bank details" concept split into two pages (SRP);
   // bank details content now lives at /accounts/concepts/account/bank-details.
   { from: "/accounts/concepts/account/documents", to: "/accounts/concepts/account/statements" },

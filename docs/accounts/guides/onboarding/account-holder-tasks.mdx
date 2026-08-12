@@ -19,15 +19,16 @@ Operational tasks for existing <Term id="account-holder">account holders</Term>:
 If an account holder already exists, you can add another **individual account** for that account holder.
 
 The account holder still needs to be "officially" verified by Swan, but verification is quick as Swan already knows the account holder.
+For **company** account holders, use the [Multiple Accounts feature](/accounts/concepts/multiple-accounts) instead.
 
 :::tip Prerequisites
-The account holder must be `Verified` with an `Open` account.
+The account holder must be `Verified` with an `Opened` account.
 :::
 
 1. [Create a new individual onboarding](/accounts/guides/onboarding/individual/create), using the same information as the account holder's existing Swan account.
 1. Finalize the onboarding with the new onboarding ID and the user access token.
 The account holder doesn't need to do anything.
-1. You'll get a new `accountId` immediately with the status `Pending`.
+1. You'll get a new `accountId` immediately while [verification](/accounts/concepts/account-holders/verification-statuses) is `Pending`.
 1. Swan will verify the account.
 Since Swan already knows the account holder, verification is quicker than for a new account holder.
 
@@ -37,7 +38,7 @@ Call the `accountHolder` query to get an account holder's verification status.
 Add `verificationStatusInfo` to get more details about specific statuses.
 This guide gives more details about an account holder verification with the status `WaitingForInformation`.
 
-### Guide
+### Guide {#get-status-guide}
 
 1. First, [retrieve the required `accountHolderId`](#simulate-status-update-get-id).
 1. Call the `accountHolder` query.
@@ -50,7 +51,7 @@ This guide gives more details about an account holder verification with the stat
 Review possible `verificationRequirements` in the [waiting for information requirements](/accounts/concepts/account-holders/verification-statuses#waiting-for-info).
 :::
 
-### Query
+### Query {#get-status-query}
 
 <a href="https://explorer.swan.io?query=cXVlcnkgV2FpdGluZ0ZvckluZm9TdGF0dXMgewogIGFjY291bnRIb2xkZXIoaWQ6ICIkQUNDT1VOVF9IT0xERVJfSUQiKSB7CiAgICB2ZXJpZmljYXRpb25TdGF0dXNJbmZvIHsKICAgICAgc3RhdHVzCiAgICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyV2FpdGluZ0ZvckluZm9ybWF0aW9uVmVyaWZpY2F0aW9uU3RhdHVzSW5mbyB7CiAgICAgICAgX190eXBlbmFtZQogICAgICAgIHdhaXRpbmdGb3JJbmZvcm1hdGlvbkF0CiAgICAgICAgc3RhdHVzCiAgICAgICAgdmVyaWZpY2F0aW9uUmVxdWlyZW1lbnRzIHsKICAgICAgICAgIGlkCiAgICAgICAgICB0eXBlCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -73,7 +74,7 @@ query WaitingForInfoStatus {
 }
 ```
 
-### Payload
+### Payload {#get-status-payload}
 
 Note the two verification requirements needed from this account holder (lines 11, 15).
 

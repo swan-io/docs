@@ -106,7 +106,7 @@ module.exports = annotate({
         doc("accounts/concepts/memberships/inviting", "Inviting members"),
         doc("accounts/concepts/memberships/permissions", "Permissions"),
         doc("accounts/concepts/memberships/language", "Membership language"),
-        doc("accounts/concepts/memberships/statuses", "Statuses and lifecycle"),
+        doc("accounts/concepts/memberships/statuses", "Statuses"),
         doc("accounts/concepts/memberships/admin-change", "Administrator change"),
         doc("accounts/concepts/memberships/notifications", "Notifications"),
       ], { link: "accounts/concepts/memberships/index" }),

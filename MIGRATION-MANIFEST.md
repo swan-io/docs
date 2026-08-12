@@ -254,3 +254,62 @@ Product facts the schema cannot answer, awaiting team confirmation:
 7. Web Banking `canOpenAccount`: API objects exist; Dashboard toggle + Web Banking creation-flow availability unconfirmed ("2026" claim in `multiple-accounts/shared-details-and-management`).
 8. `coming-up.mdx`: three past-dated breaking-change notices (20 May, 21 May, 4 June 2026) — remove once confirmed shipped.
 9. Billing hub's "billing module activated 1 March 2023" note — keep or retire (user decision).
+
+## 11. Platform contracts (mined from the full branch diff, 12 August 2026)
+
+Mechanisms in `plugins/` and `src/theme` that impose authoring obligations. Each amends the cited section.
+
+### Sidebar and category wiring (amends §2)
+- Every domain sidebar MUST begin with a `doc(...)` overview item: `ia-nav` derives the navbar dropdown from it, `ia-sidebar-index-targets` uses it as the last-resort click target, and the `custom-sectionDropdown` `to:` in `docusaurus.config.js` must equal its route.
+- A category with no `link:` is auto-wired by `ia-sidebar-index-targets.js`: click (and direct URL, via generated redirects) resolves to the category's own `<dir>/index` child if listed, else the nearest ancestor index. NEVER hand-write a redirect for a category URL — `categoryRedirects()` generates them (§8.5's "add redirects for every moved live URL" applies to moved PAGES only).
+- All children of an index-less category must share ONE directory, or the generated redirect degrades (fires from the shallower common path, or not at all — the direct URL then 404s).
+- To give a category a real landing page without `link:`, list its index as a child labeled "Overview" (get-started/become-a-partner precedent).
+
+### AI-reader layer: llms.txt + .md mirrors
+- The sidebar is the canonical set for `llms.txt`: a routable page in no sidebar is invisible to LLM readers (warns, never fails). A NEW top-level sidebar must also be added to the hardcoded `SECTIONS` list in `plugins/llms-txt/index.js`.
+- Every non-underscore `.md(x)` under `docs/` is republished at `{URL}.md`, sitemapped, and advertised in robots.txt — no opt-out key. A draft page committed under `docs/` becomes a crawlable artifact.
+- Any NEW MDX component needs a renderer in `plugins/md-mirror/mdToMarkdown.mjs` (+ `yarn test`), else mirrors degrade with "Unhandled component" warnings. Six mockup component names (AudienceMetaBox, LearningPathColumns, PathPickerCards, ConceptsGrid, RelatedProductsGrid, TypedRelTag) render as TODO comments — do not use them.
+- Explorer badges must carry the REAL base64 query: the mirror decodes `?query=` into a `graphql` fence, so a stale badge ships a wrong example to AI readers.
+
+### Glossary / Term mechanics (amends §5)
+- Registration contract: the glossary heading needs an explicit `{#anchor}` (that anchor IS the `<Term id>`), the section's first `<Component />` must be the imported definition partial, and the partial's FIRST SENTENCE becomes the tooltip — write it to stand alone. Singular aliases (`iban`→`ibans`, ...) are hand-registered in `plugins/ia-glossary-terms/index.js`.
+- `docs/_shared/definitions/` is its own tier: one file per term, dual-consumed by the glossary AND the owning concept page so the two can't drift.
+- An unknown or typo'd `<Term id>` renders as PLAIN TEXT — no link, no tooltip, no build error. A Term pass ends with a grep audit of ids against glossary anchors, not just a green build.
+
+### Silent-failure audit (run at the end of every pass)
+Beyond §8's images and anchors, the production build does NOT catch: unknown `<Term id>` (plain text); malformed flowmap JSON (page-level error box — visually check every flowmap); a partial imported from outside `docs/` (silently dropped by mirror and glossary); llms.txt resolution warnings; md-mirror "Unhandled component" warnings; Vale (advisory only — no CI hook, no yarn script; run `vale` manually and extend `styles/Google/vocab.txt` for Swan nouns instead of rewording them). Rail/route errors THROW only in production builds — `yarn start` merely warns, so all gates run on `yarn build`.
+
+### Rendering facts worth knowing
+- `related` rail links are re-bucketed by type in a fixed order and each renders the TARGET page's `title` — authored order survives only within a bucket; to change how a related link reads, retitle the target.
+- The site is light-mode only (toggle removed): one set of screenshots and diagram colors.
+- Mermaid gets a built-in full-screen affordance (large sequence diagrams need no splitting) and output is DOMPurify-sanitized to the SVG profile (+`foreignObject` for `<br/>` labels).
+- Headingless tab panels become linkable with `<TabItem id="...">` — anchors into inactive tabs work.
+- Any RETAINED iframe needs an explicit `sandbox` allowlist; the two legacy Figma embeds (company `requirements.mdx`, user `sign-up.mdx`) have none — delete rather than migrate (extends §4 external embeds).
+- `FlowMap` and `Term` are global via `MDXComponents.js` like the badges — no import needed.
+
+## 12. Content Pass doctrine additions (branch mine, 12 August 2026)
+
+### Partials doctrine (amends §1)
+- Extraction criterion: verbatim duplication on ≥2 pages, at ANY size (one sentence up to a 73-line prose+Mermaid+tables block). Near-identical-but-for-a-noun → ONE parameterized props partial (`{props.fullprocess}`), never two files.
+- FOUR tiers: `docs/_shared/partials/` (cross-domain) → `<domain>/partials/` → `<task-group>/partials/` (e.g. `guides/merchants/partials/`, may nest) → colocated `_x.mdx` sibling (single consumer group). The folder is named `partials/`, underscore on FILES only; `get-started/_partials/` is the outlier to rename during its pass.
+- Extract the WHOLE block — admonition wrapper, headings WITH their anchors, `<Term>` wraps — so anchors survive extraction; then re-run the §6 Term rebalance on every consumer page.
+- Imports sit inline directly above their render point; only `_shared/definitions/` imports group at the top of the file.
+- Placeholder pages use the shared `_wip-placeholder.mdx` (+ `{/* TODO:SME */}` marker), never bespoke wording.
+
+### Detectors (extends §10)
+- **Fat hub:** an overgrown concept hub sheds facet leaves, split by page TYPE — prose model → concept leaf, long API-object list → reference page — and keeps one-line pointers. Precedent: consent hub → `sca.mdx`, `server-to-server.mdx`, `reference/sensitive-operations.mdx`.
+- **"When to use X" h2 on a guide** is conceptual exposition: move it to the owning concept; the guide's lede keeps a one-line pointer (SCA precedent).
+- **Enum list outside its statuses page:** three or more backticked enum members in a bullet or cell collapse to a link to the statuses page. Deprecated values get one prose line under the statuses table — never a table row or diagram node.
+- **Ops-guide candidate:** a single-path API guide whose task also exists in the Dashboard → `git mv` to `<task>/using-the-api.mdx`, add the chooser as `<task>/index.mdx` (the legacy URL then resolves to the chooser — NO redirect needed), add `from-the-dashboard.mdx`.
+- **Tail pointer:** never append a "Review X" sentence after a sentence that already states the fact — make the fact itself the link. Amends §6: navigational links name the target; tail pointers link the restated fact.
+- **Prerequisite self-sufficiency:** a guide leaf that links to another page for its prerequisites is a defect — import the shared partial locally under `## Before you start`.
+- **`related` precision:** point `related` at the narrowest owning leaf, not the concept hub; reference leaves also list their parent hub.
+- **Author short explicit `{#anchor}`s on every h2/h3** (short slug, not the heading's auto-slug) — this is what makes §10's anchor stability mechanically safe. If a section is genuinely rewritten, rename the anchor to match.
+- **Sandbox pages are Guides, never Reference.** Two or fewer sandbox guides stay flat files; three or more get a `sandbox/` folder with its own hub.
+
+### Open platform decisions (to settle with the team)
+1. Frontmatter `description`: §3 bans it, but llms-txt and the rail read it — either keep the ban (llms.txt ships bare links) or admit `description` to the contract deliberately.
+2. Flowmap and Mermaid fences pass into the `.md` mirrors as raw JSON/code — hubs whose navigation lives only in a flowmap are unreadable to AI readers; decide whether hubs need a prose equivalent.
+3. Vale enforcement: currently advisory with a near-empty vocab (2 entries); decide blocking levels and grow `vocab.txt`.
+4. Path-picker audience tag labels: "Operators" (plural) vs "Developer" (singular) — pick one.
+5. The two legacy Figma iframes: delete or add `sandbox` allowlists.

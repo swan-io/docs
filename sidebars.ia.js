@@ -173,7 +173,7 @@ module.exports = annotate({
           doc("accounts/guides/onboarding/export/using-the-api", "Using the API"),
         ], { link: "accounts/guides/onboarding/export/index" }),
         doc("accounts/guides/onboarding/migrate-api", "Migrate to the current API"),
-      ], { link: "accounts/guides/onboarding/index" }),
+      ]),
       cat("Capital deposits", [
         doc("accounts/guides/capital-deposits/index", "Overview"),
         doc("accounts/guides/capital-deposits/create-case", "Create a case"),
@@ -181,7 +181,7 @@ module.exports = annotate({
         doc("accounts/guides/capital-deposits/update-company", "Update company"),
         doc("accounts/guides/capital-deposits/update-shareholder-amount", "Update shareholder amount"),
         doc("accounts/guides/capital-deposits/cancel", "Cancel a case"),
-      ], { link: "accounts/guides/capital-deposits/index" }),
+      ]),
       cat("Memberships", [
         doc("accounts/guides/memberships/index", "Overview"),
         doc("accounts/guides/memberships/add-one", "Add one member"),
@@ -196,7 +196,7 @@ module.exports = annotate({
           doc("accounts/guides/memberships/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/memberships/export/using-the-api", "Using the API"),
         ], { link: "accounts/guides/memberships/export/index" }),
-      ], { link: "accounts/guides/memberships/index" }),
+      ]),
       cat("Account operations", [
         cat("Export accounts", [
           doc("accounts/guides/account-operations/export/from-the-dashboard", "From the Dashboard"),

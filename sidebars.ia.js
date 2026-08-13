@@ -171,7 +171,10 @@ module.exports = annotate({
       ]),
       cat("Account holders", [
         doc("accounts/guides/account-holders/add-account", "Add an account"),
-        doc("accounts/guides/account-holders/get-verification-status", "Get verification status"),
+        cat("Get verification status", [
+          doc("accounts/guides/account-holders/get-verification-status/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/account-holders/get-verification-status/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/account-holders/get-verification-status/index" }),
         doc("accounts/guides/account-holders/request-first-transfer", "Request a first transfer"),
         cat("Export account holder data", [
           doc("accounts/guides/account-holders/export/from-the-dashboard", "From the Dashboard"),

@@ -119,6 +119,7 @@ module.exports = annotate({
       ], { link: "accounts/concepts/ibans/index" }),
       cat("Billing", [
         doc("accounts/concepts/billing/fees", "Fees"),
+        doc("accounts/concepts/billing/regulated-fees", "Regulated fees"),
         doc("accounts/concepts/billing/usage-metrics", "Usage-based metrics"),
         doc("accounts/concepts/billing/invoices", "Invoices"),
       ], { link: "accounts/concepts/billing/index" }),

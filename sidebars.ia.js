@@ -31,21 +31,19 @@ const extLink = (label, href, iconInner) => ({
 // that carries its context (see ia-sidebar-index-targets.js).
 module.exports = annotate({
   getStartedSidebar: [
-    doc("get-started/index", "Overview"),
+    doc("get-started/index", "Get started overview"),
     top("Become a partner", [
-      doc("get-started/become-a-partner/index", "Overview"),
       doc("get-started/become-a-partner/country-coverage", "Country coverage"),
       doc("get-started/become-a-partner/licence-regulatory-status", "Licence and regulatory status"),
       doc("get-started/become-a-partner/orias-registration", "ORIAS registration"),
       doc("get-started/become-a-partner/rates-billing", "Rates and billing"),
       doc("get-started/become-a-partner/brand-communication", "Brand and communication rules"),
       cat("Protections", [
-        doc("get-started/become-a-partner/protections/index", "Overview"),
         doc("get-started/become-a-partner/protections/data-protection", "Data protection (GDPR)"),
         doc("get-started/become-a-partner/protections/financial-protections", "Financial protections"),
         doc("get-started/become-a-partner/protections/fraud-obligations", "Fraud obligations"),
-      ]),
-    ]),
+      ], { link: "get-started/become-a-partner/protections/index" }),
+    ], "get-started/become-a-partner/index"),
     top("Set up Swan", [
       doc("get-started/set-up-swan/choose-integration", "Choose your integration"),
       doc("get-started/set-up-swan/quickstart", "Quickstart"),
@@ -144,7 +142,6 @@ module.exports = annotate({
     ], "accounts/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Onboarding", [
-        doc("accounts/guides/onboarding/index", "Overview"),
         cat("Company onboarding", [
           doc("accounts/guides/onboarding/company/requirements", "Requirements and fields"),
           cat("Create a link", [
@@ -168,7 +165,7 @@ module.exports = annotate({
           doc("accounts/guides/onboarding/export/using-the-api", "Using the API"),
         ], { link: "accounts/guides/onboarding/export/index" }),
         doc("accounts/guides/onboarding/migrate-api", "Migrate to the current API"),
-      ]),
+      ], { link: "accounts/guides/onboarding/index" }),
       cat("Account holders", [
         doc("accounts/guides/account-holders/add-account", "Add an account"),
         cat("Get verification status", [
@@ -182,16 +179,14 @@ module.exports = annotate({
         ], { link: "accounts/guides/account-holders/export/index" }),
       ], { link: "accounts/guides/account-holders/index" }),
       cat("Capital deposits", [
-        doc("accounts/guides/capital-deposits/index", "Overview"),
         doc("accounts/guides/capital-deposits/deposit-capital", "Deposit capital in France"),
         doc("accounts/guides/capital-deposits/create-case", "Create a case"),
         doc("accounts/guides/capital-deposits/upload-documents", "Upload documents"),
         doc("accounts/guides/capital-deposits/update-company", "Update company"),
         doc("accounts/guides/capital-deposits/update-shareholder-amount", "Update shareholder amount"),
         doc("accounts/guides/capital-deposits/cancel", "Cancel a case"),
-      ]),
+      ], { link: "accounts/guides/capital-deposits/index" }),
       cat("Memberships", [
-        doc("accounts/guides/memberships/index", "Overview"),
         doc("accounts/guides/memberships/add-one", "Add one member"),
         doc("accounts/guides/memberships/add-multiple", "Add multiple members"),
         doc("accounts/guides/memberships/update", "Update member"),
@@ -204,7 +199,7 @@ module.exports = annotate({
           doc("accounts/guides/memberships/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/memberships/export/using-the-api", "Using the API"),
         ], { link: "accounts/guides/memberships/export/index" }),
-      ]),
+      ], { link: "accounts/guides/memberships/index" }),
       cat("Account operations", [
         cat("Export accounts", [
           doc("accounts/guides/account-operations/export/from-the-dashboard", "From the Dashboard"),
@@ -578,12 +573,11 @@ module.exports = annotate({
     // Natural learning order: the API concept (GraphQL) → how to call it
     // (Using the API) → the utilities that support development (Tools).
     top("GraphQL", [
-      doc("build/graphql/index", "Overview"),
       doc("build/graphql/schema", "Schema"),
       doc("build/graphql/queries", "Queries"),
       doc("build/graphql/mutations", "Mutations"),
       doc("build/graphql/types", "Types"),
-    ]),
+    ], "build/graphql/index"),
     top("Using the API", [
       doc("build/using-api/authentication", "Authentication"),
       doc("build/using-api/errors-rejections", "Errors and rejections"),

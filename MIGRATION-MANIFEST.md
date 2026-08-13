@@ -304,6 +304,7 @@ Detection heuristics and the settled fix for each recurring page disease. Preced
 - **Model facts squatting on operational pages** move to the owning concept or hub: `versioning` → memberships hub; `remove-identification` → permissions; "Company accounts"/"Unlimited memberships" → memberships hub.
 - **Ops-guide candidate:** a single-path API guide whose task also exists in the Dashboard → `git mv` to `<task>/using-the-api.mdx`, add the chooser as `<task>/index.mdx` (legacy URL resolves to the chooser — no redirect, §2), add `from-the-dashboard.mdx`, flip the sidebar entry to a `cat(...)`. Precedent (Users): export, deactivate.
 - **Reframed pages keep their slug**; titles name the precise API object (invitation **notification**, not invitation). Precedent: `resend-invitation`.
+- **Grab-bag dissolution:** a "tasks" page that is several legacy pages merged behind anchors (redirects.js targeting `page#anchor` is the tell) dissolves back into one leaf per task; tail-pointer sections (a one-liner linking to a dedicated chooser) are dropped, sandbox sections move to the domain `sandbox/` folder, and each legacy redirect repoints DIRECTLY at its new leaf (no chaining through the dead page). The dead URL needs no redirect if it never shipped to live. Precedent: `onboarding/account-holder-tasks` → `guides/account-holders/{add-account,get-verification-status,request-first-transfer}` + `sandbox/account-holders` + export chooser moved to `account-holders/export/` (13 August 2026).
 
 ### Misplacement detectors
 - **Link-graph inversion:** if the concept that OWNS a fact links out "for all details" to a page that doesn't own it, the content is on the wrong page. Precedent: Limited-account transfer restrictions lived on `first-transfer`; moved to `type-and-level`.
@@ -347,7 +348,7 @@ Product facts the schema cannot answer, awaiting team confirmation:
 3. Vale enforcement: currently advisory with a near-empty vocab (2 entries); decide blocking levels and grow `vocab.txt`.
 4. Path-picker audience tag labels: "Operators" (plural) vs "Developer" (singular) — pick one.
 5. Figma iframes (nine repo-wide): ALL now carry `sandbox="allow-scripts allow-same-origin"` (interim security fix, 13 August 2026). The remaining decision is delete-and-replace vs keep — the Figma content can't be recreated as Mermaid without access to the designs.
-6. Dashboard one-liner pages and promotions: the three placeholder from-the-dashboard pages (closure/get-closure-info, ibans/get-info, ibans/add-virtual) AND the five Users get-* guides whose ledes name a Dashboard equivalent are ONE decision — promote to choosers, keep as pointers, or remove from nav.
+6. Dashboard one-liner pages and promotions: the three placeholder from-the-dashboard pages (closure/get-closure-info, ibans/get-info, ibans/add-virtual) AND the five Users get-* guides whose ledes name a Dashboard equivalent are ONE decision — promote to choosers, keep as pointers, or remove from nav. Add `accounts/guides/account-holders/get-verification-status` to the list (split out of account-holder-tasks 13 August 2026; single-path API today, Dashboard shows verification status under Data > Account holders).
 
 ### Housekeeping tasks
 - Rename `get-started/_partials/` → `get-started/partials/` during the Get Started pass (§1 naming rule).

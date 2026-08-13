@@ -145,7 +145,7 @@ H1 → ia-lede → `## In this section` → a `lanes` flowmap, one lane per task
 
 Section-hub `title` is the bare section name (`Concepts`, `Guides`, `Reference`); the H1 is domain-qualified (`# Users concepts`). They intentionally differ.
 
-**Nested guide sub-hub** (e.g. `guides/onboarding/`, blessed 12 August 2026; template settled 13 August 2026): verb-first lede → `## In this section` nav flowmap (`grid`/`lanes`/`pathway` per §9) → genuinely shared operational content after (cross-cutting notices, link mechanics). Nothing else sits between the lede and the nav. Majority-shape precedents: onboarding, account-holders. The Account operations hub is the one outlier (extra concept-pointer paragraph between lede and nav) — trim pending user decision. The leaf-coverage gate applies to the sub-hub's own leaves, including dual-path trios (each trio's chooser must appear in a lane).
+**Nested guide sub-hub** (e.g. `guides/onboarding/`, blessed 12 August 2026; template settled 13 August 2026): verb-first lede → `## In this section` nav flowmap (`grid`/`lanes`/`pathway` per §9) → genuinely shared operational content after (cross-cutting notices, link mechanics). Nothing else sits between the lede and the nav. Majority-shape precedents: onboarding, account-holders. (The former Account operations outlier — an extra concept-pointer paragraph between lede and nav — was trimmed 13 August 2026; the pointer survives in its `related` rail.) The leaf-coverage gate applies to the sub-hub's own leaves, including dual-path trios (each trio's chooser must appear in a lane).
 
 ### Concept sub-hub (`concepts/<concept>/index.mdx`) — models: `docs/users/concepts/{user,consent,identifications}/index.mdx`
 H1 == title → ia-lede → the concept's own model in prose (this page OWNS the shared facts; facet h2s preview in 1–3 sentences and link to the leaf page) → a CLOSING `## In this section` pathway flowmap listing the leaves. All three Users sub-hubs end with this pathway. Hub with only one leaf: no pathway (30 July 2026 decision).
@@ -316,8 +316,8 @@ Detection heuristics and the settled fix for each recurring page disease. Preced
 - **Enum list outside its statuses page:** three or more backticked enum members in a bullet or cell collapse to a link to the statuses page (deprecated-value handling in §4).
 - **Repeated per-item boilerplate:** N sections each restating trigger/configuration/template collapse to ONE shared section up front + a per-item delta line. Precedent: verification notifications (4 emails → `## Configuration` table + "Account information included" per email). Zero information loss: every varying cell must map to a delta line or an exception note.
 
-### Schema checks (expanded rule, 12 August 2026)
-Any question the schema can answer gets checked proactively, not deferred to the ticket: status-to-object attribution (`Verified` is `AccountHolder.verificationStatus`, NOT an `AccountStatus`), field names and plurality (`Account.statements`, not `statement`), mutation/rejection existence, enum values. Fast path: grep the local clone `~/Documents/api-reference/docs/{enums,objects,mutations,queries,unions}/*.mdx` (values sit as `<b>Value</b>` between "Values" and "Member Of"). The clone LAGS live — an absence or discrepancy is only real after confirming on `api-reference.swan.io` via WebFetch (curl is blocked). Watch deprecation notes: live may hold BOTH a deprecated shape (`status: StatementStatus`) and its replacement (`statusInfo`); docs should match the NEW one.
+### Schema checks (expanded rule, 12 August 2026; tooling updated 13 August 2026)
+Any question the schema can answer gets checked proactively, not deferred to the ticket: status-to-object attribution (`Verified` is `AccountHolder.verificationStatus`, NOT an `AccountStatus`), field names and plurality (`Account.statements`, not `statement`), mutation/rejection existence, enum values. **Fast path (preferred): the Swan Partner GQL Search MCP** — `introspect-graphql-type` returns live, verbatim SDL including `@deprecated` directives (no clone lag, no summarizer paraphrase); `search-graphql-schema` finds types by keyword. The Swan Docs MCP (`search-docs`) does the same for live v2 pages. Fallbacks when MCP is unavailable (headless/cron runs): grep the local clone `~/Documents/api-reference/docs/{enums,objects,mutations,queries,unions}/*.mdx` (values sit as `<b>Value</b>` between "Values" and "Member Of") — but the clone lags FAR beyond its snapshot date (22 May 2026 clone is missing the entire March-beta onboarding API); an absence or discrepancy is only real after confirming live, via MCP or `api-reference.swan.io` WebFetch (curl is blocked). Watch deprecation notes: live may hold BOTH a deprecated shape (`status: StatementStatus`) and its replacement (`statusInfo`); docs should match the NEW one.
 
 ### Freshness checks
 - Future-tense feature sections ("will be available", "released in <year>") get cross-checked: against the schema (the object may already exist — `WebBankingSettings.canOpenAccount` does) and against the docs themselves (a "coming up" item whose page already shipped is an unambiguous fix).
@@ -332,7 +332,7 @@ Any question the schema can answer gets checked proactively, not deferred to the
 
 ## Appendix: open items — state, not doctrine
 
-Transient. Review at the start of each domain pass; delete entries as they resolve. (Last reviewed 12 August 2026.)
+Transient. Review at the start of each domain pass; delete entries as they resolve. (Last reviewed 13 August 2026.)
 
 ### Pending verification — DOC-1879
 Product facts the schema cannot answer, awaiting team confirmation:
@@ -345,6 +345,10 @@ Product facts the schema cannot answer, awaiting team confirmation:
 7. Web Banking `canOpenAccount`: API objects exist; Dashboard toggle + Web Banking creation-flow availability unconfirmed ("2026" claim in `multiple-accounts/shared-details-and-management`).
 8. `coming-up.mdx`: three past-dated breaking-change notices (20 May, 21 May, 4 June 2026) — remove once confirmed shipped.
 9. Billing hub's "billing module activated 1 March 2023" note — keep or retire (user decision).
+
+### Pending verification — browser checks (not doable headless)
+1. The nine sandboxed Figma embeds: confirm they still RENDER with `sandbox="allow-scripts allow-same-origin"` (attrs match the repo's own hardening precedent, but a blank frame would implicate the sandbox attribute). Separate from the delete-vs-replace decision above.
+2. Visual density of the rebuilt flowmaps: the Accounts concepts spine (11 nodes, 41 branches) and the Accounts overview chain + spokes pair — JSON-valid and rule-correct, but three times larger than the Users model they follow. If either renders as visual soup, the fallback is trimming branches to sub-hub nodes only (record as a deliberate §4 deviation).
 
 ### Open platform decisions (to settle with the team)
 1. Frontmatter `description`: §3 bans it, but llms-txt and the rail read it — either keep the ban (llms.txt ships bare links) or admit `description` to the contract deliberately.
@@ -360,6 +364,9 @@ Product facts the schema cannot answer, awaiting team confirmation:
 - Retrofit Payments' empty-header badge tables during DOC-1881 (§4 reference tables).
 - `_shared/partials/_transaction-statuses.mdx` now has a single consumer (`payments/concepts/transactions/statuses.mdx`) after the Accounts duplicate render was removed — retier during DOC-1881.
 - Convert PVID/QES regional prose lists to the Expert-style country matrix during the identity-methods September edit (deferred 13 August 2026).
+- Refresh or retire the local `~/Documents/api-reference` clone: its 22 May 2026 snapshot lags far beyond its date (entire March-beta onboarding API absent). Superseded as fast path by the GQL MCP (§10) — keep only if offline grep is still wanted.
+- Capital-deposits guides hub: the three summary sections (update amount, update company, cancel) each render the same prereq partial as their leaf guide plus a one-line effect summary — deliberate dual-consumption, but first candidate for trimming if the hub is ever flagged as long (noted 13 August 2026).
+- Onboarding requirements pages: `title` ("Requirements and fields") ≠ H1 ("Company/Individual onboarding requirements") — harmonize per the memberships precedent (title == H1, 13 August 2026) whichever way the team prefers.
 - **Public onboarding links create/update split (18 June 2026 changelog, FRONT-1910):** Dashboard > Onboarding > Public links now has separate toggles for creating and updating accounts. Not yet reflected anywhere in the migrated tree — the onboarding hub links section (`accounts/guides/onboarding/index.mdx`), the `_public-onboarding-links.mdx` partial, and the create `from-the-dashboard` guides all predate the split (checked 13 August 2026). Internal review of FRONT-1910 (Nicolas Moreau) also flagged that the update-mode Dashboard wording lacks the data-exposure warning create mode has, and that the docs "Learn more" target should clarify it. Fold into the DOC-1879 Accounts content pass or the fork-alignment sweep below. Note the update mode is a *setting* in the Dashboard, but updating still happens via API or the shared onboarding link — there is deliberately no Dashboard UI for editing onboarding fields, so the update guides stay API-only.
 - **Old onboarding API retirement (end of September 2026):** everything below retires with the previous onboarding mutations and queries. Per §10 freshness rules, confirm the removal actually shipped before deleting anything — deploys slip. The full list (inventoried 13 August 2026):
   - `accounts/guides/onboarding/migrate-api.mdx` — the migration guide itself; retarget its inbound entry in `redirects.js` when it goes.

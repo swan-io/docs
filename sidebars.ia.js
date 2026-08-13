@@ -183,6 +183,7 @@ module.exports = annotate({
       ], { link: "accounts/guides/account-holders/index" }),
       cat("Capital deposits", [
         doc("accounts/guides/capital-deposits/index", "Overview"),
+        doc("accounts/guides/capital-deposits/deposit-capital", "Deposit capital in France"),
         doc("accounts/guides/capital-deposits/create-case", "Create a case"),
         doc("accounts/guides/capital-deposits/upload-documents", "Upload documents"),
         doc("accounts/guides/capital-deposits/update-company", "Update company"),

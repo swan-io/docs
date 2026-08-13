@@ -169,7 +169,7 @@ module.exports = [
   { from: "/guide/control-card-usage", to: "/payments/guides/sandbox/cards" },
   {
     from: "/guide/create-a-capital-deposit",
-    to: "/accounts/guides/capital-deposits#france",
+    to: "/accounts/guides/capital-deposits/deposit-capital",
   },
   { from: "/guide/create-a-new-account", to: "/accounts/guides/onboarding#links" },
   { from: "/guide/fund-an-account", to: "/accounts/concepts/funding" },
@@ -802,7 +802,7 @@ module.exports = [
   },
   {
     from: "/topics/capital-deposits/france/guide",
-    to: "/accounts/guides/capital-deposits#france",
+    to: "/accounts/guides/capital-deposits/deposit-capital",
   },
   {
     from: "/topics/capital-deposits/france/guide-create-case",

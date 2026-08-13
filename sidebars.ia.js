@@ -161,11 +161,6 @@ module.exports = annotate({
           ], { link: "accounts/guides/onboarding/individual/create/index" }),
           doc("accounts/guides/onboarding/individual/update", "Update"),
         ], { link: "accounts/guides/onboarding/individual/index" }),
-        doc("accounts/guides/onboarding/account-holder-tasks", "Account holder tasks"),
-        cat("Export account holder data", [
-          doc("accounts/guides/onboarding/account-holder-export/from-the-dashboard", "From the Dashboard"),
-          doc("accounts/guides/onboarding/account-holder-export/using-the-api", "Using the API"),
-        ], { link: "accounts/guides/onboarding/account-holder-export/index" }),
         doc("accounts/guides/onboarding/requirements", "Requirements"),
         doc("accounts/guides/onboarding/manage-onboardings", "Manage onboardings"),
         cat("Export onboarding data", [
@@ -174,6 +169,15 @@ module.exports = annotate({
         ], { link: "accounts/guides/onboarding/export/index" }),
         doc("accounts/guides/onboarding/migrate-api", "Migrate to the current API"),
       ]),
+      cat("Account holders", [
+        doc("accounts/guides/account-holders/add-account", "Add an account"),
+        doc("accounts/guides/account-holders/get-verification-status", "Get verification status"),
+        doc("accounts/guides/account-holders/request-first-transfer", "Request a first transfer"),
+        cat("Export account holder data", [
+          doc("accounts/guides/account-holders/export/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/account-holders/export/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/account-holders/export/index" }),
+      ], { link: "accounts/guides/account-holders/index" }),
       cat("Capital deposits", [
         doc("accounts/guides/capital-deposits/index", "Overview"),
         doc("accounts/guides/capital-deposits/create-case", "Create a case"),
@@ -273,6 +277,7 @@ module.exports = annotate({
         doc("accounts/guides/billing/compliant-billing", "Compliant billing"),
       ], { link: "accounts/guides/billing/index" }),
       cat("Sandbox", [
+        doc("accounts/guides/sandbox/account-holders", "Sandbox: account holders"),
         doc("accounts/guides/sandbox/billing", "Sandbox: billing"),
         doc("accounts/guides/sandbox/documents", "Sandbox: documents"),
         doc("accounts/guides/sandbox/funding", "Sandbox: funding"),

@@ -726,23 +726,23 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/account-holders/guide-add-additional-account",
-    to: "/accounts/guides/onboarding/account-holder-tasks#add-additional-account",
+    to: "/accounts/guides/account-holders/add-account",
   },
   {
     from: "/topics/onboarding/account-holders/guide-get-status",
-    to: "/accounts/guides/onboarding/account-holder-tasks#get-status",
+    to: "/accounts/guides/account-holders/get-verification-status",
   },
   {
     from: "/topics/onboarding/account-holders/guide-request-first-transfer",
-    to: "/accounts/guides/onboarding/account-holder-tasks#request-first-transfer",
+    to: "/accounts/guides/account-holders/request-first-transfer",
   },
   {
     from: "/topics/onboarding/account-holders/guide-export",
-    to: "/accounts/guides/onboarding/account-holder-tasks#export",
+    to: "/accounts/guides/account-holders/export",
   },
   {
     from: "/topics/onboarding/account-holders/sandbox",
-    to: "/accounts/guides/onboarding/account-holder-tasks#sandbox",
+    to: "/accounts/guides/sandbox/account-holders",
   },
   {
     from: "/topics/onboarding/company",

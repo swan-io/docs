@@ -34,7 +34,7 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 1. Choose the [account membership language](/accounts/concepts/memberships/language) (line 20). If no language is chosen, the membership inherits the [account language](/accounts/concepts/account/language).
 1. Add the success payload, including any information you'd like to review (line 55).
 1. Add the <Term id="consent">consent</Term> URL to the success payload (line 63): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
-1. Add rejections (not shown).
+1. Add rejections (starting on line 70).
 
 :::note Can manage cards
 The `canManageCards` permission is technically optional.
@@ -114,9 +114,37 @@ mutation AddMultipleMembers {
         }
       }
     }
+    ... on BadAccountStatusRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on InvalidPhoneNumberRejection {
+      __typename
+      message
+    }
+    ... on PermissionCannotBeGrantedRejection {
+      __typename
+      message
+    }
+    ... on TooManyItemsRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      fields {
+        code
+        message
+        path
+      }
+      message
+    }
   }
 }
-
 ```
 
 ## Step 2: Get consent to add member {#get-consent}

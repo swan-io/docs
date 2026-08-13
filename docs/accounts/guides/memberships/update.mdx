@@ -1,5 +1,5 @@
 ---
-title: Update a membership
+title: Update member
 audience:
   - dev
 related:
@@ -25,7 +25,7 @@ import Prerequisites from './partials/_update-prereqs.mdx';
 1. Add the account membership ID and your redirect URL.
 1. Add any information or permissions you'd like to update (lines 5-13).
 1. Add the success payload with the `consentUrl` (line 19).
-1. Add rejections (not shown).
+1. Add rejections (starting on line 22).
 1. Get the `consentUrl` from the payload and send it to the account member updating the membership. Their <Term id="consent">consent</Term> finalizes the update.
 
 ## Mutation {#mutation}
@@ -53,6 +53,39 @@ mutation UpdateMembership {
       consent {
         consentUrl
       }
+    }
+    ... on AccountMembershipCannotBeUpdatedRejection {
+      id
+      message
+    }
+    ... on AccountMembershipNotFoundRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on InvalidPhoneNumberRejection {
+      __typename
+      message
+    }
+    ... on PermissionCannotBeGrantedRejection {
+      __typename
+      message
+    }
+    ... on UserNotAllowedToManageAccountMembershipRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      fields {
+        code
+        message
+        path
+      }
+      message
     }
   }
 }

@@ -1,5 +1,5 @@
 ---
-title: Fix a user binding error
+title: Fix binding error
 audience:
   - dev
 related:
@@ -36,7 +36,7 @@ import Prerequisites from './partials/_update-prereqs.mdx';
 1. Add the `accountMembershipId` and your redirect URL.
 1. Add **only** the information that caused the user binding error (lines 7-10, 12). Refer to [causes of a user binding error](#causes) for precise information.
 1. Add the success payload with the `consentUrl`.
-1. Add any rejections you'd like (not shown).
+1. Add any rejections you'd like (starting on line 21).
 1. Get the `consentUrl` from the payload and send it to the invited account member. **They must <Term id="consent">consent</Term>** to finalize the update.
 
 ## Mutation {#mutation}
@@ -62,6 +62,39 @@ mutation FixBindingError {
       __typename
       consent {
         consentUrl
+      }
+    }
+    ... on AccountMembershipCannotBeUpdatedRejection {
+      id
+      message
+    }
+    ... on AccountMembershipNotFoundRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on InvalidPhoneNumberRejection {
+      __typename
+      message
+    }
+    ... on PermissionCannotBeGrantedRejection {
+      __typename
+      message
+    }
+    ... on UserNotAllowedToManageAccountMembershipRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+      fields {
+        code
+        message
+        path
       }
     }
   }

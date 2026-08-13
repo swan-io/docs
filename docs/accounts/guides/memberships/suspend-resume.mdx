@@ -82,13 +82,17 @@ mutation SuspendMembership {
 }
 ```
 
-```json title="Suspend payload" showLineNumbers
+```json title="Suspend payload" {7} showLineNumbers
 {
   "data": {
     "suspendAccountMembership": {
       "__typename": "SuspendAccountMembershipSuccessPayload",
       "accountMembership": {
-        "id": "$YOUR_MEMBERSHIP_ID"
+        "statusInfo": {
+          "status": "Suspended",
+          "__typename": "AccountMembershipSuspendedStatusInfo",
+          "reason": "$SUSPENSION_REASON"
+        }
       }
     }
   }
@@ -155,22 +159,13 @@ mutation ResumeMembership {
 
 The <Term id="account-holder">account holder</Term>, legal representative of the account, or account member with `canManageAccountMembership` permissions must consent to resuming the membership.
 
-```json {7} title="Resume payload" showLineNumbers
+```json {6} title="Resume payload" showLineNumbers
 {
   "data": {
     "resumeAccountMembership": {
       "__typename": "ResumeAccountMembershipSuccessPayload",
       "consent": {
-        "status": "Created",
-        "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox",
-        "user": {
-          "id": "$YOUR_USER_ID",
-          "identificationLevels": {
-            "PVID": false,
-            "QES": false,
-            "expert": false
-          }
-        }
+        "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
       }
     }
   }

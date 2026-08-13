@@ -1,5 +1,5 @@
 ---
-title: Disable a membership
+title: Disable member
 audience:
   - dev
 related:
@@ -48,6 +48,42 @@ mutation DisableMembership {
           status
         }
         updatedAt
+      }
+    }
+    ... on AccountMembershipCannotBeDisabledRejection {
+      __typename
+      accountMembershipId
+      message
+    }
+    ... on AccountMembershipNotFoundRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on InternalErrorRejection {
+      __typename
+      message
+    }
+    ... on LegalRepresentativeAccountMembershipCannotBeDisabledRejection {
+      __typename
+      accountMembershipId
+      message
+    }
+    ... on UserNotAllowedToDisableItsOwnAccountMembershipRejection {
+      __typename
+      accountMembershipId
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+      fields {
+        code
+        message
+        path
       }
     }
   }

@@ -1,5 +1,5 @@
 ---
-title: Add a membership
+title: Add one member
 audience:
   - dev
 related:
@@ -12,7 +12,8 @@ related:
 
 # Add one member
 
-Add a single <Term id="account-membership">account membership</Term> with the API or from Swan's Web Banking interface.
+Add a single <Term id="account-membership">account membership</Term> with the API.
+If you use Swan's Web Banking interface, eligible account members can also [invite members directly from the app](/accounts/concepts/memberships/inviting).
 
 import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 
@@ -32,7 +33,7 @@ import PrerequisiteAddMembers from './partials/_add-member-prereq.mdx';
 1. Choose the [account membership language](/accounts/concepts/memberships/language) (line 18). If no language is chosen, the membership inherits the [account language](/accounts/concepts/account/language).
 1. Add the success payload, including any information you'd like to review (line 21).
 1. Add the <Term id="consent">consent</Term> URL to the success payload (line 30): `statusInfo` > `AccountMembershipConsentPendingStatusInfo` > `consent` > `consentUrl`.
-1. Add rejections (not shown).
+1. Add rejections (starting on line 38).
 
 :::note Can manage cards
 The `canManageCards` permission is technically optional.
@@ -79,6 +80,31 @@ mutation AddMember {
           }
         }
       }
+    }
+    ... on BadAccountStatusRejection {
+      id
+      message
+    }
+    ... on ForbiddenRejection {
+      __typename
+      message
+    }
+    ... on InvalidPhoneNumberRejection {
+      __typename
+      message
+    }
+    ... on PermissionCannotBeGrantedRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      fields {
+        code
+        message
+        path
+      }
+      message
     }
   }
 }

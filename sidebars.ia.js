@@ -381,6 +381,7 @@ module.exports = annotate({
       doc("cards/reference/card-settings", "Card settings"),
       doc("cards/reference/shipping-and-delivery", "Shipping and delivery"),
       doc("cards/reference/insurance-and-claims", "Insurance and claims"),
+      doc("cards/reference/card-fraud-types", "Card fraud types"),
     ], "cards/reference/index", "ia-type-ref"),
   ],
 

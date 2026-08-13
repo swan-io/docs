@@ -1,3 +1,8 @@
+// Docusaurus watches and cache-busts this file (sidebarPath) but NOT its
+// transitive requires — without the cache delete, a running dev server keeps
+// serving the sidebars.ia.js tree from process start forever (§8 silent-failure
+// checklist #10).
+delete require.cache[require.resolve("./sidebars.ia.js")];
 const ia = require("./sidebars.ia.js");
 
 // Empty sidebar sections are handled automatically. Docusaurus rejects a

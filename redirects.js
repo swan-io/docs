@@ -971,7 +971,7 @@ module.exports = [
   },
   {
     from: "/topics/accounts/documents/guide-upload-transaction",
-    to: "/accounts/guides/documents/upload-transaction",
+    to: "/accounts/guides/documents/upload-transaction/using-the-api",
   },
   {
     from: "/topics/accounts/documents/sandbox",

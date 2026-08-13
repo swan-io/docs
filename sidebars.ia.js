@@ -244,7 +244,10 @@ module.exports = annotate({
           doc("accounts/guides/documents/upload-onboarding/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/documents/upload-onboarding/using-the-api", "Using the API"),
         ], { link: "accounts/guides/documents/upload-onboarding/index" }),
-        doc("accounts/guides/documents/upload-transaction", "Upload transaction documents"),
+        cat("Upload transaction documents", [
+          doc("accounts/guides/documents/upload-transaction/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/documents/upload-transaction/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/documents/upload-transaction/index" }),
         cat("Request a collection review", [
           doc("accounts/guides/documents/request-collection-review/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/documents/request-collection-review/using-the-api", "Using the API"),

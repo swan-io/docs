@@ -3,6 +3,7 @@
  * Additive: merge into sidebars.js without touching the existing four exports.
  */
 const { annotate } = require("./ia-sidebar-index-targets");
+const { annotateAudience } = require("./ia-sidebar-audience");
 
 const cat = (label, items, opts = {}) => ({
   type: "category",
@@ -29,7 +30,9 @@ const extLink = (label, href, iconInner) => ({
 // DOC-1834 — annotate() stamps customProps.iaIndexTarget on categories without
 // a link, so clicking one in the sidebar also lands the reader on the index
 // that carries its context (see ia-sidebar-index-targets.js).
-module.exports = annotate({
+// annotateAudience() stamps ia-aud-* classNames on single-audience nodes,
+// rendered as icon pills by ia-shell.css (see ia-sidebar-audience.js).
+module.exports = annotateAudience(annotate({
   getStartedSidebar: [
     doc("get-started/index", "Get started overview"),
     top("Become a partner", [
@@ -601,4 +604,4 @@ module.exports = annotate({
       doc("build/tools/test-tools-guide", "Test tools guide"),
     ]),
   ],
-});
+}));

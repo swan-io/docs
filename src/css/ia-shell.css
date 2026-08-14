@@ -198,10 +198,10 @@ li.theme-doc-sidebar-item-link.ia-aud-dev,
 li.theme-doc-sidebar-item-link.ia-aud-ops {
   position: relative;
 }
-li.ia-aud-dev > .menu__list-item-collapsible::after { content: "This section is meant for developers."; }
-li.ia-aud-ops > .menu__list-item-collapsible::after { content: "This section is meant for Dashboard operators."; }
-li.theme-doc-sidebar-item-link.ia-aud-dev::after { content: "This article is meant for developers."; }
-li.theme-doc-sidebar-item-link.ia-aud-ops::after { content: "This article is meant for Dashboard operators."; }
+li.ia-aud-dev > .menu__list-item-collapsible::after,
+li.theme-doc-sidebar-item-link.ia-aud-dev::after { content: "For developers"; }
+li.ia-aud-ops > .menu__list-item-collapsible::after,
+li.theme-doc-sidebar-item-link.ia-aud-ops::after { content: "For Dashboard operators"; }
 /* Typed top sections: same bubble, same host — replaces their broken
    data-ia-tip (which never painted, see above). Text mirrors DESCRIPTIONS in
    src/components/ContentTypeIcon. */
@@ -219,7 +219,12 @@ li.ia-type-ref > .menu__list-item-collapsible::after {
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  right: 0;
+  /* Fit the text, but stay inside the sidebar: the aside clip-paths at its
+     box, so a bubble poking past the right edge would be sliced off. 230px
+     keeps the longest typed-section text two-line at the shallow levels and
+     the short audience labels one-line everywhere. */
+  width: max-content;
+  max-width: 230px;
   /* Above .menu__caret (z 62); pointer-events none keeps carets clickable. */
   z-index: 63;
   padding: 0.4em 0.6em;

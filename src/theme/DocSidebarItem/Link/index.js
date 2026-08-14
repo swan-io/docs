@@ -9,8 +9,8 @@ import Link from "@theme-original/DocSidebarItem/Link";
 // original Link spreads unknown props onto its anchor. Sentences must match
 // the CSS tooltip content in ia-shell.css.
 const TIPS = {
-  "ia-aud-dev": "This article is meant for developers.",
-  "ia-aud-ops": "This article is meant for Dashboard operators.",
+  "ia-aud-dev": "For developers",
+  "ia-aud-ops": "For Dashboard operators",
 };
 
 export default function LinkWrapper(props) {

@@ -14,8 +14,8 @@ const stripSlash = (path) => path.replace(/\/+$/, "") || "/";
 // the original Category spreads unknown props onto its label <Link>.
 // Sentences must match the CSS tooltip content in ia-shell.css.
 const AUDIENCE_TIPS = {
-  "ia-aud-dev": "This section is meant for developers.",
-  "ia-aud-ops": "This section is meant for Dashboard operators.",
+  "ia-aud-dev": "For developers",
+  "ia-aud-ops": "For Dashboard operators",
 };
 
 export default function CategoryWrapper(props) {

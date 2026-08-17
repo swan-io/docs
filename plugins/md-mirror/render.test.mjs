@@ -36,6 +36,20 @@ describe("badge mappings", () => {
     expect(out).not.toContain("<Req");
   });
 
+  it("renders TableTip as a bold Tip: label, inline behind <br><br> in HTML table cells", () => {
+    const out = render(
+      "<table><tr><td>Step text<TableTip>Do [this](/guide) first.</TableTip></td></tr></table>"
+    );
+    expect(out).toContain("Step text<br><br>**Tip:** Do [this](/guide) first.");
+    expect(out).not.toContain("<TableTip");
+  });
+
+  it("renders TableTip outside a table as its own paragraph", () => {
+    const out = render("Before.\n\n<TableTip>Standalone advice.</TableTip>");
+    expect(out).toContain("**Tip:** Standalone advice.");
+    expect(out).not.toContain("<br>");
+  });
+
   it("renders the legends as plain prose, not a component", () => {
     const out = render("<FieldRequirementsLegend />\n\n<SupportStatusLegend />");
     expect(out).toContain("Field requirements:");

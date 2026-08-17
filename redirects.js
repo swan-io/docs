@@ -216,7 +216,7 @@ module.exports = [
   { from: "/regulatory/status-options", to: "/get-started/become-a-partner/licence-regulatory-status#legal-status" },
   {
     from: "/user-flow-diagrams/consent",
-    to: "/users/concepts/consent/#consent-diagrams-end-user",
+    to: "/users/concepts/consent/sca#consent-diagrams-end-user",
   },
   {
     from: "/user-flow-diagrams/identity-verification-process",
@@ -251,11 +251,11 @@ module.exports = [
   },
   {
     from: "/api/consent/server-to-server-consent",
-    to: "/users/concepts/consent/#s2s",
+    to: "/users/concepts/consent/server-to-server",
   },
   {
     from: "/api/consent/workflows",
-    to: "/users/concepts/consent/#consent-diagrams",
+    to: "/users/concepts/consent/sca#consent-diagrams",
   },
   {
     from: "/concept/account-funding/funding-source",
@@ -271,7 +271,7 @@ module.exports = [
   },
   {
     from: "/concept/account-holder/country-requirements",
-    to: "/accounts/guides/onboarding#country-reqs",
+    to: "/accounts/reference/onboarding/country-requirements",
   },
   { from: "/concept/account-holder/onboarding", to: "/accounts/guides/onboarding" },
   {
@@ -372,7 +372,7 @@ module.exports = [
   },
   {
     from: "/help/faq/account-membership/do-i-need-to-consent-every-single-time-a-new-membership-is-created",
-    to: "/accounts/reference/memberships/membership-permissions#permissions-none", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/#permissions-none)
+    to: "/accounts/concepts/memberships/permissions#permissions-none", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/#permissions-none)
   },
   {
     from: "/help/faq/accounts/can-i-create-my-own-account-statement",
@@ -489,7 +489,7 @@ module.exports = [
   },
   {
     from: "/help/faq/consent/can-i-handle-consent",
-    to: "/users/concepts/consent/#overview",
+    to: "/users/concepts/consent/",
   },
   {
     from: "/help/faq/kyc-and-verification-process/how-can-i-entice-my-user-to-verify-their-identity",
@@ -750,7 +750,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/company/fields",
-    to: "/accounts/reference/onboarding/company-onboarding-fields#fields",
+    to: "/accounts/reference/onboarding/company-onboarding-fields",
   },
   {
     from: "/topics/onboarding/company/guide-create",
@@ -766,7 +766,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/individual/fields",
-    to: "/accounts/reference/onboarding/individual-onboarding-fields#fields",
+    to: "/accounts/reference/onboarding/individual-onboarding-fields",
   },
   {
     from: "/topics/onboarding/individual/guide-create",
@@ -834,7 +834,7 @@ module.exports = [
   },
   {
     from: "/topics/accounts/closure/guide-close-api",
-    to: "/accounts/guides/closure/close-link#api",
+    to: "/accounts/guides/closure/close-link/using-the-api#api",
   },
   {
     from: "/topics/accounts/closure/guide-close-limited",

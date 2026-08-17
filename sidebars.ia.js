@@ -94,7 +94,7 @@ module.exports = annotateAudience(annotate({
         doc("accounts/concepts/account/transactions", "Transactions"),
         doc("accounts/concepts/account/statements", "Account statements"),
         doc("accounts/concepts/account/bank-details", "Bank details document"),
-        doc("accounts/concepts/account/statuses", "Account statuses"),
+        doc("accounts/concepts/account/statuses", "Statuses"),
       ], { link: "accounts/concepts/account/index" }),
       cat("Account holders", [
         doc("accounts/concepts/account-holders/verification", "Verification"),
@@ -140,6 +140,7 @@ module.exports = annotateAudience(annotate({
         doc("accounts/concepts/funding/payment-mandates", "Payment mandates"),
         doc("accounts/concepts/funding/account-verification", "Account verification"),
         doc("accounts/concepts/funding/status-interaction", "Interaction between statuses"),
+        doc("accounts/concepts/funding/statuses", "Statuses"),
         doc("accounts/concepts/funding/rolling-reserve", "Rolling reserve"),
         doc("accounts/concepts/funding/settlement", "Settlement and cancellation"),
       ], { link: "accounts/concepts/funding/index" }),
@@ -162,7 +163,6 @@ module.exports = annotateAudience(annotate({
           ], { link: "accounts/guides/onboarding/individual/create/index" }),
           doc("accounts/guides/onboarding/individual/update", "Update"),
         ], { link: "accounts/guides/onboarding/individual/index" }),
-        doc("accounts/guides/onboarding/requirements", "Requirements"),
         doc("accounts/guides/onboarding/manage-onboardings", "Manage onboardings"),
         cat("Export onboarding data", [
           doc("accounts/guides/onboarding/export/from-the-dashboard", "From the Dashboard"),
@@ -198,7 +198,7 @@ module.exports = annotateAudience(annotate({
         doc("accounts/guides/memberships/suspend-resume", "Suspend or resume member"),
         doc("accounts/guides/memberships/resend-invitation", "Send or resend invitation"),
         doc("accounts/guides/memberships/fix-binding-error", "Fix binding error"),
-        doc("accounts/guides/memberships/change-admin", "Change admin"),
+        doc("accounts/guides/memberships/change-admin", "Change administrator"),
         cat("Export memberships", [
           doc("accounts/guides/memberships/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/memberships/export/using-the-api", "Using the API"),

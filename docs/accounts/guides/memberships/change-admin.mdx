@@ -1,6 +1,7 @@
 ---
 title: Change the account administrator
 audience:
+  - dev
   - ops
 related:
   - /accounts/concepts/memberships/admin-change
@@ -23,7 +24,8 @@ import AdminChangeEligibility from '../../partials/_admin-change-eligibility.mdx
 
 <AdminChangeEligibility />
 
-Review the [account administrator change concept](/accounts/concepts/memberships/admin-change) for the full model, including the [reasons and required documents](/accounts/concepts/memberships/admin-change#documents), the [request statuses](/accounts/concepts/memberships/admin-change#statuses), and the [API surface](/accounts/concepts/memberships/admin-change#api).
+Review the [account administrator change concept](/accounts/concepts/memberships/admin-change) for the full model, including the [reasons and required documents](/accounts/concepts/memberships/admin-change#documents) and the [request statuses](/accounts/concepts/memberships/statuses#admin-change).
+To track or update a request programmatically, [use the API](#api).
 
 ## Walkthrough {#process}
 
@@ -95,4 +97,60 @@ To cancel a submitted request, follow the [cancelation options on the concept pa
 
 :::tip
 Share the [Change your account's legal representative](https://support.swan.io/hc/en-150/articles/17763494332317-Change-your-account-s-legal-representative) Support Center article with your users. It explains the process from the account holder's perspective.
+:::
+
+## Using the API {#api}
+
+The request form is Swan-hosted, but you can track and update an ongoing change request programmatically.
+
+### Query {#api-query}
+
+Use the [`publicAccountAdminChange`](https://api-reference.swan.io/queries/public-account-admin-change) query to retrieve the current state of an account administrator change by its ID.
+
+<a href="https://explorer.swan.io?query=cXVlcnkgcHVibGljQWNjb3VudEFkbWluQ2hhbmdlKCRhY2NvdW50QWRtaW5DaGFuZ2VJZDogSUQhKSB7CiAgcHVibGljQWNjb3VudEFkbWluQ2hhbmdlKGFjY291bnRBZG1pbkNoYW5nZUlkOiAkYWNjb3VudEFkbWluQ2hhbmdlSWQpIHsKICAgIC4uLiBvbiBBY2NvdW50QWRtaW5DaGFuZ2UgewogICAgICBpZAogICAgICBzdGF0dXMKICAgICAgcmVhc29uCiAgICAgIGFkbWluIHsKICAgICAgICBmaXJzdE5hbWUKICAgICAgICBsYXN0TmFtZQogICAgICAgIGVtYWlsCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBOb25PbmdvaW5nQWNjb3VudEFkbWluQ2hhbmdlIHsKICAgICAgaWQKICAgICAgc3RhdHVzCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql
+query publicAccountAdminChange($accountAdminChangeId: ID!) {
+  publicAccountAdminChange(accountAdminChangeId: $accountAdminChangeId) {
+    ... on AccountAdminChange {
+      id
+      status
+      reason
+      admin {
+        firstName
+        lastName
+        email
+      }
+    }
+    ... on NonOngoingAccountAdminChange {
+      id
+      status
+    }
+  }
+}
+```
+
+The query returns one of two types:
+
+- `AccountAdminChange`: the full object with all fields, returned when the status is `Ongoing`.
+- `NonOngoingAccountAdminChange`: a limited object containing only `id` and `status`, returned for all other statuses. This protects personal information after the form is submitted.
+
+### Mutations {#api-mutations}
+
+| Mutation | Purpose |
+| --- | --- |
+| [`publicUpdateAccountAdminChange`](https://api-reference.swan.io/mutations/public-update-account-admin-change) | Updates the account administrator change with new information (reason, admin details, requester details). Only works when the status is `Ongoing`. |
+| [`publicFinalizeAccountAdminChange`](https://api-reference.swan.io/mutations/public-finalize-account-admin-change) | Submits the completed form for review. Transitions the status from `Ongoing` to `Pending`. Requires all fields and documents to be provided. |
+
+### Rejection types {#api-rejections}
+
+| Rejection | Meaning |
+| --- | --- |
+| `AccountAdminChangeNotFoundRejection` | The account administrator change ID doesn't exist. |
+| `AccountAdminChangeStatusNotEligibleRejection` | The current status doesn't allow this operation. |
+| `AccountAdminChangeMissingInformationRejection` | Required fields are missing from the request. |
+| `AccountAdminChangeMissingDocumentsRejection` | Required supporting documents haven't been uploaded. |
+
+:::info
+The supporting document collection associated with an account administrator change uses the type `AccountAdminChange`. Upload documents to this collection using the [supporting documents](/accounts/concepts/documents) flow.
 :::

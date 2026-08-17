@@ -2,6 +2,7 @@
 title: Statuses and lifecycle
 related:
   - /accounts/concepts/memberships
+  - /accounts/concepts/memberships/admin-change
   - /accounts/guides/memberships/fix-binding-error
   - /accounts/guides/memberships/suspend-resume
 audience:
@@ -11,7 +12,7 @@ audience:
 
 # Statuses and lifecycle
 
-The lifecycle of an <Term id="account-membership">account membership</Term>, from `ConsentPending` through to `Disabled`.
+The lifecycle of an <Term id="account-membership">account membership</Term>, from `ConsentPending` through to `Disabled`, and the lifecycle of an [account administrator change](#admin-change) request.
 
 ## Statuses {#statuses}
 
@@ -69,3 +70,44 @@ If fraud is suspected, [suspend the membership](/accounts/guides/memberships/sus
 :::
 
 [Closing or closed accounts affect memberships](/accounts/concepts/memberships#closed): management and payments stop at `Closing`, and memberships are `Disabled` one year after `Closed`.
+
+## Account administrator change statuses {#admin-change}
+
+An [account administrator change](/accounts/concepts/memberships/admin-change) request has its own lifecycle, separate from the membership statuses above.
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR
+    AC((Account admin<br/>change created)) -.-> O[Ongoing]
+    O --> P[Pending]
+    O --> E[Expired]
+    P -.-> W[WaitingFor<br/>Information]
+    P --> I[InvitationSent]
+    P -.-> V[Verified]
+    P --> R[Refused]
+    W --> P
+    I -.-> W
+    I --> V
+    I --> R
+    subgraph F[Final statuses]
+        E
+        V
+        R
+    end
+    style AC fill:#D4D3D5,stroke:#514F59
+    style F fill:#fffdf4,stroke:#cca922
+```
+
+| Status | Explanation |
+| --- | --- |
+| `Ongoing` | The change request was created. The requester must submit the form within **7 calendar days**. |
+| `Pending` | Swan's KYC team is reviewing the submitted form. No action is required from the requester. |
+| `WaitingForInformation` | Swan's KYC team requested additional information or documents. Swan shares a new supporting document collection URL with you to forward to the requester. The original form URL can no longer be used at this stage. |
+| `InvitationSent` | Swan's KYC team invited the new administrator to the accounts. The new administrator must accept the invitation and verify their identity. This status is skipped if the new administrator already has access to the accounts. |
+| `Expired` | **Final.** The form wasn't submitted within 7 calendar days. The requester needs to start a new request. |
+| `Verified` | **Final.** Swan set the new administrator as the legal representative on all accounts. |
+| `Refused` | **Final.** The KYC team refused the request. No changes were made. |
+
+:::warning
+When a change request expires, all form data becomes inaccessible. Swan doesn't retain the personal information entered on the expired form.
+:::

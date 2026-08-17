@@ -58,7 +58,7 @@ docs/<domain>/
   The folder is always named `partials/` — underscore on FILES only (`get-started/_partials/` is the outlier; rename during its pass, see Appendix).
 - **Extract the WHOLE block** — admonition wrapper, headings WITH their `{#anchor}`s, `<Term>` wraps — so anchors survive extraction unchanged. A partial's `<Term>` renders on every consumer page: re-run the §5 Term rebalance on each consumer after extraction.
 - **Imports sit inline directly above their render point** (even inside an admonition); only `_shared/definitions/` imports group at the top of the file.
-- **Placeholder pages** use the shared `docs/get-started/_partials/_wip-placeholder.mdx` (+ a `{/* TODO:SME */}` marker), never bespoke wording.
+- **Placeholder pages** use the shared `docs/get-started/_partials/_wip-placeholder.mdx` (+ a `{/* TODO:SME */}` marker), never bespoke wording. **Seeded placeholders** (pages carrying draft steps awaiting verification, e.g. the four Dashboard-operations placeholders) instead use the parameterized `docs/accounts/partials/_seeded-placeholder.mdx` (props: `source`, `checks`; the TODO:SME marker is baked into the partial) — added 21 August 2026, replacing four bespoke admonitions.
 - A partial imported from OUTSIDE `docs/` is silently dropped by the md-mirror and the glossary (path-traversal guard, no build error) — partials must resolve inside `docs/`. Relocate any partial imported from `docs/topics/` **before** deleting the legacy folder.
 
 ## 2. Sidebar, nav, and redirects (`sidebars.ia.js`, `redirects.js`)
@@ -342,6 +342,34 @@ Transient. Review at the start of each domain pass; delete entries as they resol
 ### Get started — audience backfill done early (14 August 2026, ahead of DOC-1883)
 All 17 content pages got `audience`: Become a partner = ops (except country-coverage = dual: devs scope the coverage tables too), Protections = ops throughout (subcategory badges as a section), Set up Swan = dev (choose-integration, quickstart, step-by-step) with create-project and glossary dual, overview and get-help dual (get-help also got `rail: false` — no h2, triage page). NOT stamped: the 6 WIP placeholders (connect-mobile, swan-access, data-model, 3 integration-by-segment pages) — no content to judge and no h2, so rail metadata would trip the build gate; stamp them when the SME content lands. `related` backfill for the domain remains open. Remaining audience gaps repo-wide: those 6 placeholders + all 19 Build pages (DOC-1884, likely near-uniform dev) + the 3 shell stubs.
 
+### Accounts reconciliation sweep applied (21 August 2026)
+
+A full audit of Users + Accounts against this manifest was run and fixed in one pass. For the next reader, the notable state changes:
+- **Explicit-anchor rule (§6) now holds branch-wide for Users AND Accounts** (95 anchors added; short slugs per the Users conventions: `{#choose}`, `{#steps}`, `{#guide}`, `{#mutation}`, `{#payload}`).
+- **redirects.js fragment sweep is clean for both domains** (9 stale `#` targets retargeted, including three consent-hub anchors that had moved to `sca.mdx` during the fat-hub split).
+- **Dual-path prerequisite contract enforced**: new shared prereq partials for request-collection-review, delete, upload-onboarding, add-virtual (`ibans/partials/` created), and the close-link Suspended caution; every chooser now has `## Before you start` below the picker plus a backing-concept link.
+- **Funding statuses extracted** to `accounts/concepts/funding/statuses.mdx` (three machines on one page, capital-deposits precedent); the three concept leaves keep their headings + one-line pointers so old anchors survive.
+- **`guides/onboarding/requirements.mdx` dissolved** (stub-leaf rule): the verification/documents crosswalk table moved to `concepts/onboarding/index.mdx#documents`; the country-requirements pointer moved to the guides hub `#country-reqs`. No redirect needed (URL never shipped to live; nothing pointed at it). This also resolves the "onboarding requirements title ≠ H1" housekeeping item for the flat page (the company/individual requirements pages keep theirs).
+- **Country-requirements pages**: the lost legacy "mandatory documents" legend was restored from live v2 and the asterisk marker converted to a `Mandatory` column with `<Yes/>/<No/>` (§7 no-loss regression fixed).
+- **change-admin model content** (reasons enum, document matrix, cancelation, requester model, form limitations) moved to `concepts/memberships/admin-change.mdx`; the guide keeps the walkthrough.
+
+**Deliberate deviations recorded (do not re-flag):**
+1. `capital-deposits/statuses.mdx` keeps its two overview h2s (`{#machines}`, `{#cascade}`) — off-template, but the anchors predate the shape rule and the never-delete-anchors rule wins; the cascade duplication was trimmed to a fact-link.
+2. `add-one`/`add-multiple` share three verbatim list-embedded fragments that are NOT extracted: partials can't compose into numbered-list items without breaking list structure and per-page line references.
+3. `manage-onboardings.mdx` renders `<DeprecationTimeline />` twice — two different deprecation admonitions (queries vs `finalizeOnboarding`) sharing one timeline partial; deliberate dual-consumption.
+4. `resend-invitation.mdx` lost its `{#prerequisites}` anchor when the bullets became a `:::tip Prerequisites` admonition (admonition titles can't host anchors; zero inbound links existed).
+5. Superset explorer badges (badge encodes rejections the fence omits) are kept where the page says "rejections (not shown)" — all five such pages now carry the disclosure; only genuinely stale badges were re-encoded (billing/get-list, account-operations/export).
+6. Reference sub-hub H1s ("Memberships reference", "Onboarding reference") keep their bare titles + qualified H1s — consistent mirror of the section-hub convention.
+7. `compliant-billing.mdx` keeps its default fee-attribution table (the §10 residue flag was low-confidence; revisit only if the billing concept grows a table of its own).
+
+**New open retrofits (fold into the next Accounts round):**
+1. `documents/get-info/using-the-api.mdx` and `bank-details/using-the-api.mdx` still use two different ad-hoc multi-variant shapes (per-variant h2s with nested Query/Payload) — settle ONE shape for multi-variant API guides, or convert to Tabs.
+2. The six country-requirements pages present entity-type variants as consecutive h2 sections; §4 suggests Tabs (precedent `ibans/local.mdx`) — decide before converting.
+3. The 11 byte-identical reason-code rows shared by `reference/capital-deposits` and `closure/reason-codes` can't render from one partial (markdown tables don't compose across imports) — either accept the dual maintenance with a sync note or restructure one side.
+4. `AccountStatementStatus` has no owning statuses home: the enum caution on `generate-statement/using-the-api.mdx` is the de-facto canonical home (values verified live 21 August 2026: `Pending/Generated/Failed/Voided`, new enum, not the deprecated `StatementStatus`). Decide: statuses section on `account/statements.mdx`, or bless the guide caution. Note `TransactionStatementStatusEnum` differs (`Expired`, no `Voided`).
+5. Cards has two complete dual-path trios (`cards/guides/lifecycle/{export,update}/`) absent from the DOC-1880 notes — add to that ticket's checklist (anchor + prereq-partial sweeps likely apply).
+6. `multiple-accounts/shared-details-and-management.mdx` still bundles four concerns (details, management, billing, Web Banking access) — split blocked on DOC-1879 item 7 (`canOpenAccount` verification).
+
 ### Pending verification — DOC-1879
 Product facts the schema cannot answer, awaiting team confirmation:
 1. Usage-metrics "Additional account fee" row — name contradicts its own explanation.
@@ -353,6 +381,7 @@ Product facts the schema cannot answer, awaiting team confirmation:
 7. Web Banking `canOpenAccount`: API objects exist; Dashboard toggle + Web Banking creation-flow availability unconfirmed ("2026" claim in `multiple-accounts/shared-details-and-management`).
 8. `coming-up.mdx`: three past-dated breaking-change notices (20 May, 21 May, 4 June 2026) — remove once confirmed shipped.
 9. Billing hub's "billing module activated 1 March 2023" note — keep or retire (user decision).
+10. Memberships-export chooser "What's included" list says "Invitation status (pending, accepted, suspended, or disabled)" — `accepted` is not an `AccountMembershipStatus` value (live enum: `ConsentPending`, `InvitationSent`, `BindingUserError`, `Enabled`, `Suspended`, `Disabled`; verified 21 August 2026). The CSV may print its own labels — verify against a real Dashboard export before correcting.
 
 ### Pending verification — browser checks (not doable headless)
 1. The nine sandboxed Figma embeds: confirm they still RENDER with `sandbox="allow-scripts allow-same-origin"` (attrs match the repo's own hardening precedent, but a blank frame would implicate the sandbox attribute). Separate from the delete-vs-replace decision above.

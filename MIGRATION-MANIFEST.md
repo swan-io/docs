@@ -185,7 +185,8 @@ Eligibility and other binary markers are ALWAYS a table column with `<Yes/>`/`<N
 Do not carry external iframes (Figma and similar) into migrated pages; replace with a Mermaid diagram or an image. Any RETAINED iframe requires an explicit `sandbox` allowlist — all nine live Figma embeds were sandboxed on 12 August 2026. The delete-vs-replace decision for the legacy Figma embeds remains open (see Appendix).
 
 ### Rendering behaviors (12 August 2026)
-- `FlowMap`, `Term`, `Tabs`, and all badge components are global via `MDXComponents.js` — no imports.
+- `FlowMap`, `Term`, `Tabs`, `TableTip`, and all badge components are global via `MDXComponents.js` — no imports.
+- `<TableTip>...</TableTip>` (added 21 August 2026) is the in-table tip: a mini callout on the same infima success tokens as `:::tip`, for advice inside table cells where a block admonition can't render. Replaces the former `💡` emoji convention — don't reintroduce emoji tips. md-mirror renders it as `**Tip:** ...` (inline behind `<br><br>` inside cells).
 - Mermaid diagrams get a built-in full-screen affordance (large sequence diagrams need no splitting or image export); output is DOMPurify-sanitized to the SVG profile (+`foreignObject`, which is what allows `<br/>` in node labels).
 - Headingless tab panels become linkable with `<TabItem id="...">` — anchors into inactive tabs work.
 - The site is light-mode only (toggle removed): one set of screenshots and diagram colors.

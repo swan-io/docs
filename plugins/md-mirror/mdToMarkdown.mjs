@@ -283,6 +283,16 @@ function renderElement(node, ctx) {
       ],
     };
 
+  // <TableTip>inner</TableTip> -> "Tip: inner" (bold label). Inside a table
+  // cell it stays inline behind a <br><br> separator (a block would break the
+  // GFM row); elsewhere it becomes its own paragraph.
+  if (name === "TableTip") {
+    const r = transformInline(node.children, ctx);
+    const labeled = [strong([text("Tip:")]), text(" "), ...r.nodes];
+    if (ctx.inTableCell) return { inline: [html("<br><br>"), ...labeled], blocks: r.blocks };
+    return { inline: [], blocks: [paragraph(labeled), ...r.blocks] };
+  }
+
   // <Term>inner</Term> -> inner text, tooltip dropped.
   if (name === "Term") {
     const r = transformInline(node.children, ctx);

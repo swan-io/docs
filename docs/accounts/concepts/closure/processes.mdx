@@ -17,9 +17,7 @@ The process depends on who initiates the closure; the immediate effects of enter
 
 ## When the closure process begins {#closure-begins}
 
-When an account enters the `Closing` status, Swan instantly cancels all [cards](/cards), [standing orders](/payments/concepts/credit-transfers/sepa/#standing-orders), [virtual IBANs](/accounts/concepts/ibans/virtual), and <Term id="payment-mandates">payment mandates</Term> for incoming SEPA Direct Debits; incoming SEPA Credit Transfers are returned and attempted incoming SEPA Direct Debits are rejected.
-Your users must cancel all outgoing SEPA Direct Debits themselves, as Swan has no control over those payment mandates.
-Refer to [account statuses](/accounts/concepts/account/statuses#statuses) for the complete effects of the `Closing` and `Closed` statuses.
+When an account enters the `Closing` status, [Swan instantly cancels the account's cards, standing orders, virtual IBANs, and incoming payment mandates, and returns incoming transfers](/accounts/concepts/account/statuses#statuses); the same section covers the complete effects of the `Closing` and `Closed` statuses.
 
 ## Account closure processes {#processes}
 
@@ -59,6 +57,15 @@ Legal representatives can't close accounts with the status `Suspended`.
 
 When the legal representative requests account closure, the reason code is `RequestedByHolder`.
 
+To complete the closure, the account balance must reach zero:
+
+| Balance | Action |
+| --- | --- |
+| Positive | The legal representative transfers the funds out of the account with a SEPA Credit Transfer. |
+| Negative | Swan works with your end users to reach a zero balance. |
+
+After the legal representative consents to account closure and the balance reaches zero, the account is closed within 30 days.
+
 ### Account holder {#closure-account-holder}
 
 An account holder or legal representative can request to close an account by contacting Swan Support directly.
@@ -97,4 +104,4 @@ Before accepting requests from third parties, Swan performs the following action
     - Negative balance: Swan requests the third party transfer funds so the balance reaches zero.
 
 When the account balance reaches zero, Swan changes the account status to `Closed` immediately for legitimate third-party requests.
-The reason code depends on the situation (for example, `DeathClosure` for a deceased account holder). Refer to the [closure reason codes](/accounts/concepts/closure/reason-codes) for a complete list.
+The reason code depends on the situation (for example, `DeathClosure` for a deceased account holder).

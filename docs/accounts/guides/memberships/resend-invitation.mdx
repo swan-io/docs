@@ -3,7 +3,8 @@ title: Send or resend a membership invitation notification
 audience:
   - dev
 related:
-  - /accounts/concepts/memberships
+  - /accounts/concepts/memberships/inviting
+  - /accounts/concepts/memberships/notifications
   - /accounts/guides/memberships/add-one
   - /accounts/guides/memberships/fix-binding-error
 ---
@@ -15,14 +16,13 @@ Send the invitation notification email to an invited account member with the [`s
 With Swan's Web Banking, the invitation email is sent automatically when the [membership is created](/accounts/concepts/memberships/inviting).
 Use this mutation to send the invitation yourself with an API-only integration, or to resend it if the invited member didn't receive their email.
 
-## Guide {#guide}
-
-### Prerequisites {#prerequisites}
-
-- You must authenticate with a **user access token** associated with an existing account member who has the `canManageAccountMembership` permission.
-- Only account members with the `canManageAccountMembership` permission can send invitation notifications.
+:::tip Prerequisites
+- You must authenticate with a **user access token** associated with an existing account member who has the `canManageAccountMembership` permission. Only account members with that permission can send invitation notifications.
 - The <Term id="account-membership">account membership</Term> status must be `InvitationSent`.
 - You can send up to **five invitation emails per day** per membership.
+:::
+
+## Guide {#guide}
 
 ### Step 1: Call the mutation {#call-mutation}
 
@@ -119,12 +119,5 @@ The mutation can return several rejection reasons if the request can't be comple
 
 ## Notification details {#details}
 
-The invitation notification email:
-
-- Is sent to the email address specified when creating the account membership.
-- Uses the account member's preferred language if set, otherwise the account's default language.
-- Includes your partner branding (logo and accent colors).
-- Contains a link for the invited member to accept the invitation and bind their Swan user account to the membership.
-- Can be translated into multiple languages automatically.
-
-If you have feedback about notification translations, contact [Swan Support](https://support.swan.io/hc/en-150) and specify the notification and language.
+The invitation email's recipient, language, branding, and translations are described in the [membership notifications concept](/accounts/concepts/memberships/notifications).
+The [inviting members concept](/accounts/concepts/memberships/inviting) covers how the invited member accepts the invitation and binds their Swan user to the membership.

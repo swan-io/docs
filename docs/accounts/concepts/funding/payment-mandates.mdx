@@ -22,30 +22,4 @@ Swan takes the SCA validation time as the `signatureDate` for the payment mandat
 
 ## Payment mandate statuses {#mandates-statuses}
 
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    AMA((Mandate<br/>added)) -.-> CP[ConsentPending]
-    CP -.-> E[Enabled]
-    CP -.-> C[Canceled]
-    E -.-> C
-    subgraph U[Can use source]
-        E
-    end
-    subgraph F[Final status]
-        C
-    end
-    style AMA fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
-```
-
-| Payment mandate status | Explanation |
-| :---: |---|
-| `ConsentPending` | Payment mandate was added while [adding a direct debit funding source](/accounts/guides/funding/add-source) with the `addDirectDebitFundingSource` mutation.<br/><br/>**Next steps**: <ul><li>If the account holder consents to the mandate, the status moves to `Enabled`.</li><li>If the account holder doesn't consent, the status remains `ConsentPending`.</li><li>If the funding source is canceled, the status moves to `Canceled`.</li></ul> |
-| `Enabled` | Payment mandate is active and valid, and the corresponding funding source (if also `Enabled`) can be used to fund the account.<br /><br />The account holder or eligible account member **must declare** the payment mandate to their debtor institution. |
-| `Canceled` | When a funding source is `Canceled`, the associated payment mandate status also changes to `Canceled`. |
-
-The `PaymentMandateStatus` enum also includes `Rejected`, which isn't used for account funding.
-
-*API Reference: [`PaymentMandateStatusInfo`](https://api-reference.swan.io/interfaces/payment-mandate-status-info)*
+The full payment mandate status machine, with the diagram and every status definition, lives on [account funding statuses](/accounts/concepts/funding/statuses#mandates-statuses).

@@ -30,6 +30,17 @@ There can only be one ongoing change per account holder at a time.
 The form used to submit the request is **unauthenticated**, meaning the requester doesn't need to be an existing account member.
 This allows third parties, such as a company secretary, to submit the request.
 
+## Requester and new administrator {#requester}
+
+The person filling out the form (the **requester**) can be the same person as the new administrator, or a different person.
+
+- **Requester is the new administrator:** The requester provides the new administrator's details directly. No additional requester information is needed.
+- **Requester is different from the new administrator:** The requester provides both their own details and the new administrator's details.
+
+### Form limitations {#limitations}
+
+The form doesn't collect residency address or tax identification number for Germany, Netherlands, and Italy accounts. Partners must collect them separately.
+
 ## Eligibility {#eligibility}
 
 import AdminChangeEligibility from '../../partials/_admin-change-eligibility.mdx';
@@ -39,6 +50,41 @@ import AdminChangeEligibility from '../../partials/_admin-change-eligibility.mdx
 Individual accounts and self-employed account holders aren't eligible.
 
 Follow the [guide to change the account administrator](/accounts/guides/memberships/change-admin) to submit and track a change request.
+
+## Reasons for change {#reasons}
+
+When submitting the form, the requester selects a reason for the change. The reason determines which supporting documents are required.
+
+| API value | Description |
+| --- | --- |
+| `CurrentAdministratorLeft` | The current administrator has left the company. |
+| `InternalReorganization` | The change is due to an internal reorganization. |
+| `AppointedByGeneralAssembly` | The new administrator was appointed by a general assembly. |
+| `AppointedByBoardDecision` | The new administrator was appointed by a board decision. |
+| `Other` | Other reason. |
+
+## Required supporting documents {#documents}
+
+The required documents depend on the account holder's company type, whether the requester is the new administrator, and whether the new administrator is the company's legal representative.
+
+### Core document {#core-doc}
+
+This document is always required:
+
+- **Company or association registration:** Proof of the company's or association's existence (`CompanyRegistration` or `AssociationRegistration`).
+
+:::tip
+For French companies with a valid registration number, Swan automatically retrieves the company registration document from the INPI registry.
+:::
+
+### Conditional documents {#conditional-docs}
+
+| Document | When it's required |
+| --- | --- |
+| `LegalRepresentativeProofOfIdentity` | The new administrator **isn't** the company's legal representative (the current legal representative's ID). |
+| `PowerOfAttorney` | The new administrator **isn't** the company's legal representative. |
+| `GeneralAssemblyMinutes` | The company subtype is `Association` or `HomeOwnerAssociation` **and** the reason is `AppointedByGeneralAssembly`. |
+| `AdministratorDecisionOfAppointment` | The company subtype is `Association` or `HomeOwnerAssociation` **and** the reason is `AppointedByBoardDecision`. |
 
 ## Statuses {#statuses}
 
@@ -78,6 +124,15 @@ flowchart LR
 :::warning
 When a change request expires, all form data becomes inaccessible. Swan doesn't retain the personal information entered on the expired form.
 :::
+
+## Canceling a request {#cancel}
+
+Account administrator change requests can't be canceled directly via the API or Dashboard. You have two options:
+
+- **Wait for expiry:** If the status is still `Ongoing`, the form URL expires automatically after 7 calendar days.
+- **Contact Swan support:** If the status is `Pending` or `WaitingForInformation`, contact Swan support via the support ticket to request a refusal.
+
+After expiry or refusal, a new request can be initiated.
 
 ## API reference {#api}
 

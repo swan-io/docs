@@ -20,7 +20,7 @@ Previous onboarding mutations and queries are deprecated and will be removed at 
 Migrate to the current API before this date to avoid disruption.
 :::
 
-## What's changing
+## What's changing {#changes}
 
 The current API introduces changes across naming, input structure, data requirements, response types, and registry data handling.
 
@@ -32,7 +32,7 @@ Review the full comparison on the [account onboarding enhancements](/preview/new
 - New required fields for enhanced risk assessment and compliance.
 - Explicit registry data retrieval with `companyInfoRegistryData` instead of automatic population.
 
-### Field mapping
+### Field mapping {#mapping}
 
 For a complete field-by-field comparison between the previous and current APIs, refer to the field reference pages:
 
@@ -42,7 +42,7 @@ For a complete field-by-field comparison between the previous and current APIs, 
 These pages include API mapping tables that show each previous field alongside its current equivalent.
 The mapping tables will be available until the previous mutations are retired at the end of September 2026.
 
-## Coexistence
+## Coexistence {#coexistence}
 
 The previous and current onboarding APIs can run in parallel in the same project.
 You don't need to migrate all at once.
@@ -51,12 +51,12 @@ You don't need to migrate all at once.
 - In-progress onboardings created with the previous API can continue to be updated and finalized using the previous mutations.
 - You can create new onboardings with the current API while still managing existing onboardings through the previous API.
 
-## Migration steps
+## Migration steps {#steps}
 
 Follow these steps to migrate your integration.
 Test thoroughly in Sandbox before switching in Live.
 
-### Step 1: Update mutation names
+### Step 1: Update mutation names {#step-1}
 
 Replace each deprecated mutation and query with its current equivalent.
 
@@ -75,7 +75,7 @@ Replace each deprecated mutation and query with its current equivalent.
 | `onboardingInfo` (public query) | `publicAccountHolderOnboarding` |
 | `onboardings` (list query) | `accountHolderOnboardings` |
 
-### Step 2: Update input structure
+### Step 2: Update input structure {#step-2}
 
 The current API uses a nested input structure instead of flat inputs.
 
@@ -92,7 +92,7 @@ For **company** onboardings, group fields into three objects:
 
 Refer to the [individual](/accounts/guides/onboarding/individual/create) and [company](/accounts/guides/onboarding/company/create) creation guides for complete mutation examples.
 
-### Step 3: Handle new required fields
+### Step 3: Handle new required fields {#step-3}
 
 The current API collects additional data for risk assessment and compliance.
 Some fields that were optional or didn't exist in the previous API are now required.
@@ -102,7 +102,7 @@ Check the field reference pages for the complete list of requirements by country
 - [Individual onboarding fields](/accounts/reference/onboarding/individual-onboarding-fields#fields)
 - [Company onboarding fields](/accounts/reference/onboarding/company-onboarding-fields#fields)
 
-### Step 4: Update response handling
+### Step 4: Update response handling {#step-4}
 
 The current API returns typed responses instead of the generic `Onboarding` type.
 
@@ -112,7 +112,7 @@ The current API returns typed responses instead of the generic `Onboarding` type
 
 Update your response parsing to handle the new type names and field structure.
 
-### Step 5: Update registry data handling (French company onboardings)
+### Step 5: Update registry data handling (French company onboardings) {#step-5}
 
 This step applies only if you onboard French companies. If you don't, skip to Step 6.
 
@@ -120,16 +120,16 @@ Previously, Swan auto-populated empty onboarding fields with data from the Frenc
 
 Instead, call the `companyInfoRegistryData` query with the company's `registrationNumber` and `residencyAddressCountry`, then pass the results to the create or update mutation.
 
-### Step 6: Test in Sandbox
+### Step 6: Test in Sandbox {#step-6}
 
 Validate your updated integration in Sandbox before going live.
 Refer to the [testing checklist](#testing-checklist) for key scenarios.
 
-### Step 7: Switch in Live
+### Step 7: Switch in Live {#step-7}
 
 After successful Sandbox testing, deploy your changes to your Live environment.
 
-## In-progress onboardings
+## In-progress onboardings {#in-progress}
 
 The migration doesn't affect in-progress onboardings created with the previous API.
 
@@ -139,7 +139,7 @@ The migration doesn't affect in-progress onboardings created with the previous A
 
 After the previous mutations are removed at the end of September 2026, you'll no longer be able to update or finalize onboardings through them. Make sure your integration is fully migrated by then.
 
-## Deprecation timeline
+## Deprecation timeline {#timeline}
 
 | Date | Event |
 |---|---|

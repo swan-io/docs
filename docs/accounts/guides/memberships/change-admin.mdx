@@ -1,15 +1,15 @@
 ---
-title: Change admin
+title: Change the account administrator
 audience:
   - ops
 related:
-  - /accounts/concepts/memberships
+  - /accounts/concepts/memberships/admin-change
   - /accounts/guides/memberships/disable
   - /accounts/guides/memberships/update
   - /accounts/guides/memberships/resend-invitation
 ---
 
-# Change admin
+# Change the account administrator
 
 Change the <Term id="legal-representative">legal representative</Term> who administers a company's Swan accounts. Swan reviews the request, collects documents, and sets the new administrator as the legal representative on all of the <Term id="account-holder">account holder</Term>'s accounts.
 
@@ -19,11 +19,11 @@ Account administrator changes are only available for **company** account holders
 
 ## Before you start {#before-you-start}
 
-Review the [account administrator change concept](/accounts/concepts/memberships/admin-change) for the full model, including how requests work, the [request statuses](/accounts/concepts/memberships/admin-change#statuses), and the [API surface](/accounts/concepts/memberships/admin-change#api).
-
 import AdminChangeEligibility from '../../partials/_admin-change-eligibility.mdx';
 
 <AdminChangeEligibility />
+
+Review the [account administrator change concept](/accounts/concepts/memberships/admin-change) for the full model, including the [reasons and required documents](/accounts/concepts/memberships/admin-change#documents), the [request statuses](/accounts/concepts/memberships/admin-change#statuses), and the [API surface](/accounts/concepts/memberships/admin-change#api).
 
 ## Walkthrough {#process}
 
@@ -40,10 +40,10 @@ Submit a [Swan Support request](https://supportform.swan.io/) with the account h
 
 The requester opens the form URL and submits the following information:
 
-- Requester details (if the requester is different from the new administrator).
+- Requester details (if the [requester is different from the new administrator](/accounts/concepts/memberships/admin-change#requester)).
 - New account administrator details.
-- Reason for the change.
-- Required [supporting documents](#documents).
+- [Reason for the change](/accounts/concepts/memberships/admin-change#reasons).
+- [Required supporting documents](/accounts/concepts/memberships/admin-change#documents).
 
 Because the form is unauthenticated, any third party can fill it (for example, a company secretary or an outgoing legal representative who no longer has account access).
 
@@ -91,68 +91,7 @@ The new administrator should review the previous administrator's access and deci
 - Keep the membership with full permissions.
 - [Update the membership](/accounts/guides/memberships/update) to a limited role.
 
-## Reasons for change {#reasons}
-
-When submitting the form, the requester selects a reason for the change. The reason determines which supporting documents are required.
-
-| API value | Description |
-| --- | --- |
-| `CurrentAdministratorLeft` | The current administrator has left the company. |
-| `InternalReorganization` | The change is due to an internal reorganization. |
-| `AppointedByGeneralAssembly` | The new administrator was appointed by a general assembly. |
-| `AppointedByBoardDecision` | The new administrator was appointed by a board decision. |
-| `Other` | Other reason. |
-
-## Required supporting documents {#documents}
-
-The required documents depend on the account holder's company type, whether the requester is the new administrator, and whether the new administrator is the company's legal representative.
-
-### Core document {#core-doc}
-
-This document is always required:
-
-- **Company or association registration:** Proof of the company's or association's existence (`CompanyRegistration` or `AssociationRegistration`).
-
-:::tip
-For French companies with a valid registration number, Swan automatically retrieves the company registration document from the INPI registry.
-:::
-
-### Conditional documents {#conditional-docs}
-
-| Document | When it's required |
-| --- | --- |
-| `LegalRepresentativeProofOfIdentity` | The new administrator **isn't** the company's legal representative (the current legal representative's ID). |
-| `PowerOfAttorney` | The new administrator **isn't** the company's legal representative. |
-| `GeneralAssemblyMinutes` | The company subtype is `Association` or `HomeOwnerAssociation` **and** the reason is `AppointedByGeneralAssembly`. |
-| `AdministratorDecisionOfAppointment` | The company subtype is `Association` or `HomeOwnerAssociation` **and** the reason is `AppointedByBoardDecision`. |
-
-## Limitations {#limitations}
-
-| Limitation | Description |
-| --- | --- |
-| Account holder type | Only company account holders are eligible. |
-| Concurrent requests | Only one active account administrator change per account holder at a time. |
-| Form expiry | Form URL expires after 7 calendar days. |
-| Scope | The change applies to all accounts under the same account holder. |
-| Initiation | No self-service yet. Must be requested via a Swan support ticket. |
-| Country-specific fields | The form doesn't collect residency address or tax identification number for Germany, Netherlands, and Italy accounts. Partners must collect them separately. |
-| Identity verification level | QES required for Germany accounts. Expert required for France, Belgium, Italy, Netherlands, and Spain accounts. |
-
-## Requester and new administrator {#requester}
-
-The person filling out the form (the **requester**) can be the same person as the new administrator, or a different person.
-
-- **Requester is the new administrator:** The requester provides the new administrator's details directly. No additional requester information is needed.
-- **Requester is different from the new administrator:** The requester provides both their own details and the new administrator's details.
-
-## Canceling a request {#cancel}
-
-Account administrator change requests can't be canceled directly via the API or Dashboard. You have two options:
-
-- **Wait for expiry:** If the status is still `Ongoing`, the form URL expires automatically after 7 calendar days.
-- **Contact Swan support:** If the status is `Pending` or `WaitingForInformation`, contact Swan support via the support ticket to request a refusal.
-
-After expiry or refusal, a new request can be initiated.
+To cancel a submitted request, follow the [cancelation options on the concept page](/accounts/concepts/memberships/admin-change#cancel).
 
 :::tip
 Share the [Change your account's legal representative](https://support.swan.io/hc/en-150/articles/17763494332317-Change-your-account-s-legal-representative) Support Center article with your users. It explains the process from the account holder's perspective.

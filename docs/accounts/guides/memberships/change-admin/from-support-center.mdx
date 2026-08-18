@@ -1,0 +1,93 @@
+---
+title: From Support Center
+audience:
+  - ops
+counterpart: /accounts/guides/memberships/change-admin/using-the-api
+related:
+  - /accounts/guides/memberships/change-admin
+  - /accounts/guides/memberships/change-admin/using-the-api
+  - /accounts/concepts/memberships/admin-change
+  - /accounts/guides/memberships/disable
+  - /accounts/guides/memberships/update
+  - /accounts/guides/memberships/resend-invitation
+---
+
+# Change the account administrator from Support Center
+
+Submit an account administrator change request through Swan Support, then guide the requester through Swan's hosted form.
+
+import AdminChangeEligibility from '../../../partials/_admin-change-eligibility.mdx';
+
+<AdminChangeEligibility />
+
+## Walkthrough {#process}
+
+### Step 1: Initiate the request {#initiate}
+
+Submit a [Swan Support request](https://supportform.swan.io/) with the account holder information (<Term id="ibans">IBAN</Term> or account holder name).
+
+- This process is not yet self-service in the Dashboard. All requests go through Swan Support to keep all exchanges in a single Zendesk ticket.
+- Swan processes the request, creates the account administrator change, and generates a **form URL**.
+- Swan shares the form URL with you (the partner) to forward to the requester. Partners can't generate this URL themselves.
+- The form URL is valid for **7 calendar days**. After expiry, the status moves to `Expired`, the <Term id="supporting-documents">supporting document</Term> collection is `Canceled`, and a new request must be initiated.
+
+### Step 2: Submit the request form {#submit-form}
+
+The requester opens the form URL and submits the following information:
+
+- Requester details (if the [requester is different from the new administrator](/accounts/concepts/memberships/admin-change#requester)).
+- New account administrator details.
+- [Reason for the change](/accounts/concepts/memberships/admin-change#reasons).
+- [Required supporting documents](/accounts/concepts/memberships/admin-change#documents).
+
+Because the form is unauthenticated, any third party can fill it (for example, a company secretary or an outgoing legal representative who no longer has account access).
+
+### Step 3: Swan reviews the request {#review}
+
+After submission, the status moves to `Pending`. Swan's <Term id="kyc">Know Your Customer</Term> (KYC) team reviews the submitted documents.
+
+- If additional information is needed, the status moves to `WaitingForInformation`. Swan generates a new dedicated document upload URL and shares it with you via the support ticket. The requester can no longer use the original form link at this stage.
+- After the additional documents are uploaded, the status returns to `Pending` and the review resumes.
+
+### Step 4: New administrator receives an invitation {#invitation}
+
+After documents are validated, Swan invites the new administrator to join all accounts belonging to the account holder. The invitation grants full permissions: `canViewAccount`, `canInitiatePayments`, `canManageAccountMembership`, `canManageBeneficiaries`, and `canManageCards` (all `true`).
+
+After accepting the invitation, the new administrator is automatically directed to Swan's [identity verification flow](/users/concepts/identifications). No manual link sharing is needed.
+
+:::tip Invitation not received?
+If the new administrator doesn't receive the invitation, you can [resend it](/accounts/guides/memberships/resend-invitation) using the `sendAccountMembershipInviteNotification` mutation. The membership status must be `InvitationSent`, and you can send up to 5 invitations per day. Alternatively, contact Swan support via the support ticket.
+:::
+
+### Step 5: New administrator becomes the legal representative {#legal-rep}
+
+Before Swan can set the new administrator as the legal representative, they must have the required identification level for their IBAN country.
+
+| IBAN country | Required identification level |
+| --- | --- |
+| France, Belgium, Italy, Netherlands, Spain | Expert |
+| Germany | QES (Qualified Electronic Signature) |
+
+What happens next depends on the new administrator's current identification level:
+
+- **No prior identification:** Swan guides the new administrator through the appropriate [identification](/users/concepts/identifications) process automatically after they accept the invitation.
+- **Lower identification level than required:** Swan support reaches out with a link to complete the appropriate process. The status remains `InvitationSent` until the required level is achieved.
+- **Already has the required level:** Swan sets them as the legal representative immediately.
+
+Once the <Term id="account-membership">account membership</Term> is `Enabled` on all accounts, Swan sets the new administrator as the legal representative on all accounts. The status moves to `Verified` and the supporting document collection moves to `Approved`.
+
+### Step 6: Clean up account access {#clean-up}
+
+Swan doesn't automatically remove or downgrade the previous administrator. Their membership and permissions remain unchanged.
+
+The new administrator should review the previous administrator's access and decide how to proceed:
+
+- [Disable the membership](/accounts/guides/memberships/disable) entirely.
+- Keep the membership with full permissions.
+- [Update the membership](/accounts/guides/memberships/update) to a limited role.
+
+To cancel a submitted request, follow the [cancelation options on the concept page](/accounts/concepts/memberships/admin-change#cancel).
+
+:::tip
+Share the [Change your account's legal representative](https://support.swan.io/hc/en-150/articles/17763494332317-Change-your-account-s-legal-representative) Support Center article with your users. It explains the process from the account holder's perspective.
+:::

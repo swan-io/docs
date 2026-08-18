@@ -198,7 +198,9 @@ module.exports = annotateAudience(annotate({
         doc("accounts/guides/memberships/suspend-resume", "Suspend or resume member"),
         doc("accounts/guides/memberships/resend-invitation", "Send or resend invitation"),
         doc("accounts/guides/memberships/fix-binding-error", "Fix binding error"),
-        doc("accounts/guides/memberships/change-admin", "Change administrator"),
+        cat("Change administrator", [
+          doc("accounts/guides/memberships/change-admin/using-the-api", "Using the API"),
+        ], { link: "accounts/guides/memberships/change-admin/index" }),
         cat("Export memberships", [
           doc("accounts/guides/memberships/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/memberships/export/using-the-api", "Using the API"),

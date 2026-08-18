@@ -164,6 +164,7 @@ module.exports = annotateAudience(annotate({
           doc("accounts/guides/onboarding/individual/update", "Update"),
         ], { link: "accounts/guides/onboarding/individual/index" }),
         doc("accounts/guides/onboarding/manage-onboardings", "Manage onboardings"),
+        doc("accounts/guides/onboarding/look-up-onboardings", "Look up onboardings (Dashboard)"),
         cat("Export onboarding data", [
           doc("accounts/guides/onboarding/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/onboarding/export/using-the-api", "Using the API"),
@@ -554,6 +555,7 @@ module.exports = annotateAudience(annotate({
         doc("users/guides/user-operations/get-info-one", "Get info on one user"),
         doc("users/guides/user-operations/get-info-multiple", "Get info on multiple users"),
         doc("users/guides/user-operations/get-list", "Get a user list"),
+        doc("users/guides/user-operations/look-up-users", "Look up users (Dashboard)"),
       ]),
       cat("Consent", [
         doc("users/guides/consent/create-multiconsent", "Create a multi-consent"),

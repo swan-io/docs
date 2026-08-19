@@ -124,7 +124,7 @@ module.exports = [
   { from: "/topics/accounts/memberships/guide-export", to: "/accounts/guides/memberships/export" },
   { from: "/topics/accounts/memberships/guide-fix-binding-error", to: "/accounts/guides/memberships/fix-binding-error" },
   { from: "/topics/accounts/memberships/guide-resend-invitation", to: "/accounts/guides/memberships/resend-invitation" },
-  { from: "/topics/accounts/memberships/guide-suspend-resume", to: "/accounts/guides/memberships/suspend-resume" },
+  { from: "/topics/accounts/memberships/guide-suspend-resume", to: "/accounts/guides/memberships/suspend" },
   { from: "/topics/accounts/memberships/guide-update", to: "/accounts/guides/memberships/update" },
   // end batch 1
   {

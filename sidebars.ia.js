@@ -201,7 +201,8 @@ module.exports = annotateAudience(annotate({
         doc("accounts/guides/memberships/add-multiple", "Add multiple members"),
         doc("accounts/guides/memberships/update", "Update member"),
         doc("accounts/guides/memberships/disable", "Disable member"),
-        doc("accounts/guides/memberships/suspend-resume", "Suspend or resume member"),
+        doc("accounts/guides/memberships/suspend", "Suspend member"),
+        doc("accounts/guides/memberships/resume", "Resume member"),
         doc("accounts/guides/memberships/resend-invitation", "Send or resend invitation"),
         doc("accounts/guides/memberships/fix-binding-error", "Fix binding error"),
         cat("Change administrator", [

@@ -182,6 +182,7 @@ module.exports = annotateAudience(annotate({
           doc("accounts/guides/account-holders/get-verification-status/using-the-api", "Using the API"),
         ], { link: "accounts/guides/account-holders/get-verification-status/index" }),
         doc("accounts/guides/account-holders/request-first-transfer", "Request a first transfer"),
+        doc("accounts/guides/account-holders/verification-renewal", "Manage verification renewal"),
         cat("Export account holder data", [
           doc("accounts/guides/account-holders/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/account-holders/export/using-the-api", "Using the API"),

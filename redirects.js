@@ -591,7 +591,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/documents/guide-get-list",
-    to: "/accounts/guides/onboarding/manage-onboardings#get-list",
+    to: "/accounts/guides/onboarding/manage-onboardings/list-required-documents",
   },
   // DOC-1879 — legacy URLs missed in earlier batches (gap audit, 6 August 2026)
   {
@@ -608,7 +608,7 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/overview/guide-retrieve-onboarding-id",
-    to: "/accounts/guides/onboarding/manage-onboardings#get-info",
+    to: "/accounts/guides/onboarding/manage-onboardings/get-info",
   },
   {
     from: "/topics/onboarding/support",
@@ -782,19 +782,19 @@ module.exports = [
   },
   {
     from: "/topics/onboarding/overview/guide-get-info",
-    to: "/accounts/guides/onboarding/manage-onboardings#get-info",
+    to: "/accounts/guides/onboarding/manage-onboardings/get-info",
   },
   {
     from: "/topics/onboarding/overview/guide-get-list",
-    to: "/accounts/guides/onboarding/manage-onboardings#get-list",
+    to: "/accounts/guides/onboarding/manage-onboardings/list-required-documents",
   },
   {
     from: "/topics/onboarding/overview/guide-export",
-    to: "/accounts/guides/onboarding/manage-onboardings#export-onboarding-data",
+    to: "/accounts/guides/onboarding/export",
   },
   {
     from: "/topics/onboarding/overview/guide-finalize",
-    to: "/accounts/guides/onboarding/manage-onboardings#finalize",
+    to: "/accounts/guides/onboarding/manage-onboardings/finalize",
   },
   {
     from: "/topics/capital-deposits",

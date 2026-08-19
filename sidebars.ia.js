@@ -270,6 +270,7 @@ module.exports = annotateAudience(annotate({
           doc("accounts/guides/documents/get-info/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/documents/get-info/using-the-api", "Using the API"),
         ], { link: "accounts/guides/documents/get-info/index" }),
+        doc("accounts/guides/documents/get-ids", "Get collection and document IDs"),
         cat("Delete a document", [
           doc("accounts/guides/documents/delete/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/documents/delete/using-the-api", "Using the API"),

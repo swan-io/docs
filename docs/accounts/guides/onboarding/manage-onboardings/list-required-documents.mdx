@@ -1,0 +1,106 @@
+---
+title: List required documents
+audience:
+  - dev
+related:
+  - /accounts/guides/onboarding/manage-onboardings
+  - /accounts/guides/onboarding/individual/create
+  - /accounts/guides/onboarding/company/create
+  - /accounts/guides/documents/upload-onboarding
+  - /accounts/concepts/documents
+---
+
+# Get a list of required onboarding documents
+
+Get a list of required [supporting documents](/accounts/concepts/documents) for your onboarding using the API.
+Add information about collecting supporting documents to the success payload when creating an onboarding link.
+This operation applies to both individual and company onboardings.
+
+:::info Empty list
+The mutation might return an **empty list of required documents**.
+This is expected behavior, meaning no supporting documents are required for this onboarding at this time.
+:::
+
+## Guide {#guide}
+
+1. Create your onboarding link for an [individual](/accounts/guides/onboarding/individual/create) or a [company](/accounts/guides/onboarding/company/create).
+1. Add the `supportingDocumentCollection` field and the `requiredSupportingDocumentPurposes` subfield to the success payload.
+You might also choose to add collection status info.
+
+## Mutation {#mutation}
+
+:::caution Partial mutation
+Add this information to the full mutation when creating an [individual](/accounts/guides/onboarding/individual/create) or [company](/accounts/guides/onboarding/company/create) onboarding link.
+The example features company onboarding.
+:::
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gTGlzdFJlcXVpcmVkRG9jdW1lbnRzIHsKICBjcmVhdGVDb21wYW55QWNjb3VudEhvbGRlck9uYm9hcmRpbmcgewogIHsuLi59CiAgICAuLi4gb24gQ3JlYXRlQ29tcGFueUFjY291bnRIb2xkZXJPbmJvYXJkaW5nU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIG9uYm9hcmRpbmcgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgc3VwcG9ydGluZ0RvY3VtZW50Q29sbGVjdGlvbiB7CiAgICAgICAgICByZXF1aXJlZFN1cHBvcnRpbmdEb2N1bWVudFB1cnBvc2VzIHsKICAgICAgICAgICAgYWNjZXB0YWJsZVN1cHBvcnRpbmdEb2N1bWVudFR5cGVzCiAgICAgICAgICAgIG5hbWUKICAgICAgICAgIH0KICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB7Li4ufQogIH0KfQoK&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4,11-14,16-17} showLineNumbers
+mutation ListRequiredDocuments {
+  createCompanyAccountHolderOnboarding {
+  {...}
+    ... on CreateCompanyAccountHolderOnboardingSuccessPayload {
+      __typename
+      onboarding {
+        id
+        statusInfo {
+          status
+        }
+        supportingDocumentCollection {
+          requiredSupportingDocumentPurposes {
+            acceptableSupportingDocumentTypes
+            name
+          }
+          statusInfo {
+            status
+          }
+        }
+      }
+    }
+  {...}
+  }
+}
+
+```
+
+## Payload {#payload}
+
+Review this full success payload for a company <Term id="account-holder">account holder</Term> onboarding.
+
+Notice the documents listed (lines 11-23), as well as the collection status `WaitingForDocument` (line 26).
+
+```json {11-28} showLineNumbers
+{
+  "data": {
+    "createCompanyAccountHolderOnboarding": {
+      "__typename": "CreateCompanyAccountHolderOnboardingSuccessPayload",
+      "onboarding": {
+        "id": "$ONBOARDING_ID",
+        "statusInfo": {
+          "status": "Valid"
+        },
+        "supportingDocumentCollection": {
+          "requiredSupportingDocumentPurposes": [
+            {
+              "acceptableSupportingDocumentTypes": [
+                "UBODeclaration"
+              ],
+              "name": "UBODeclaration"
+            },
+            {
+              "acceptableSupportingDocumentTypes": [
+                "SwornStatement"
+              ],
+              "name": "SwornStatement"
+            }
+          ],
+          "statusInfo": {
+            "status": "WaitingForDocument"
+          }
+        }
+      }
+    }
+  }
+}
+```

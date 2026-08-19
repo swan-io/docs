@@ -163,8 +163,12 @@ module.exports = annotateAudience(annotate({
           ], { link: "accounts/guides/onboarding/individual/create/index" }),
           doc("accounts/guides/onboarding/individual/update", "Update"),
         ], { link: "accounts/guides/onboarding/individual/index" }),
-        doc("accounts/guides/onboarding/manage-onboardings", "Manage onboardings"),
-        doc("accounts/guides/onboarding/look-up-onboardings", "Look up onboardings (Dashboard)"),
+        cat("Manage onboardings", [
+          doc("accounts/guides/onboarding/manage-onboardings/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/onboarding/manage-onboardings/get-info", "Get onboarding info"),
+          doc("accounts/guides/onboarding/manage-onboardings/list-required-documents", "List required documents"),
+          doc("accounts/guides/onboarding/manage-onboardings/finalize", "Finalize an onboarding"),
+        ], { link: "accounts/guides/onboarding/manage-onboardings/index" }),
         cat("Export onboarding data", [
           doc("accounts/guides/onboarding/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/onboarding/export/using-the-api", "Using the API"),

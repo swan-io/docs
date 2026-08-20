@@ -325,9 +325,7 @@ module.exports = annotateAudience(annotate({
         doc("accounts/reference/memberships/membership-permissions", "Membership permissions"),
         doc("accounts/reference/memberships/membership-fields", "Membership fields"),
       ], { link: "accounts/reference/memberships/index" }),
-      cat("Multiple accounts", [
-        doc("accounts/reference/accounts/multiple-accounts-requirements", "Multiple-accounts requirements"),
-      ], { link: "accounts/reference/accounts/index" }),
+      doc("accounts/reference/accounts/multiple-accounts-requirements", "Multiple-accounts requirements"),
     ], "accounts/reference/index", "ia-type-ref"),
   ],
 

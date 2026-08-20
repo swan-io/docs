@@ -1,0 +1,134 @@
+---
+title: Troubleshoot user binding errors
+---
+
+# Troubleshoot user binding errors
+
+This guide helps partner support teams identify, resolve, and prevent user binding errors.
+
+For technical reference and API integration guides, see [Fix a user binding error](/topics/accounts/memberships/guide-fix-binding-error) and [Update a membership](/topics/accounts/memberships/guide-update) on docs.swan.io.
+
+:::info Key takeaways
+
+- A binding error occurs when the details you provided for an invited account member don't match their sign-up details.
+- You can spot binding errors from your Dashboard. To fix them, direct an account member who has the `canManageAccountMembership` permission, usually the legal representative, to resolve the error in Web Banking.
+- Users can often fix two error types (`emailVerifiedMatchError` and `idVerifiedMatchError`) themselves. If the email doesn't match or the identification link has expired, raise a support request in your Dashboard.
+- The most important prevention tip: check spelling against the user's identity document, not their preferred name.
+
+:::
+
+---
+
+## Understand binding errors
+
+A binding error occurs when the information you provided when inviting an account member doesn't match the information they provided during sign-up. Until the error is resolved, the member can't perform sensitive operations. What they can see depends on your integration: some members may still view account and card information; others may see nothing at all.
+
+Binding errors only occur during initial binding. Updating personal details on an `Enabled` membership doesn't cause a binding error.
+
+| Scenario | Error code | Example | Resolved by |
+| --- | --- | --- | --- |
+| Name spelling mismatch | `firstNameMatchError`, `lastNameMatchError` | You entered "Dupond" but the ID says "Dupont" | Legal representative |
+| Married vs. birth name | `lastNameMatchError` | You used the married name but the ID shows birth name | Legal representative |
+| Phone number typo | `phoneNumberMatchError` | A digit was wrong when membership was created | Legal representative |
+| Date format swap | `birthDateMatchError` | Day and month swapped (03/06 vs. 06/03) | Legal representative |
+| Different email | `emailVerifiedMatchError` | Invited with work email; user signed up with personal email | Swan Support |
+| Email not verified | `emailVerifiedMatchError` | Email matches but user hasn't clicked the verification link | User, see [how users fix it](#help-users-fix-their-own-binding-errors) |
+| Identification not completed | `idVerifiedMatchError` | User hasn't completed the required identification | User, see [how users fix it](#help-users-fix-their-own-binding-errors) |
+
+---
+
+## Spot a binding error
+
+1. Go to **Dashboard** > **Data** > **Account memberships**.
+1. Filter for membership status `BindingUserError`.
+1. Select the affected user.
+
+Your Dashboard shows all mismatched information. The Dashboard doesn't let you correct membership data directly. Your user may be able to correct the mismatch themselves, depending on your integration. Check the integration setup before moving on.
+
+:::info Can't find it?
+
+If you don't find a `BindingUserError` status, the user may not have accepted the invitation and completed sign-up yet. This isn't a binding error. Raise a support request in your Dashboard for guidance.
+
+:::
+
+---
+
+## Fix a binding error from Web Banking
+
+If the affected account has a member with the `canManageAccountMembership` permission (typically the account's legal representative), they can resolve binding errors directly in Web Banking. Share the [Resolve a user binding error](https://support.swan.io/hc/en-150/articles/20431032028829) article on support.swan.io with them for step-by-step instructions.
+
+:::tip No API required
+
+This is the recommended fix path for partners not using the Swan API. It remains an option for partners with API integrations where membership management isn't exposed to users.
+
+:::
+
+---
+
+## Help users fix their own binding errors
+
+Two types of binding errors can be resolved by the user without your intervention. For all other error types, see [Understand binding errors](#understand-binding-errors).
+
+### Email not verified (`emailVerifiedMatchError`)
+
+Tell your user to:
+- Check their inbox for a verification email from Swan.
+- Select the link to verify their email address.
+- Check their spam folder if they can't find the email.
+
+Make sure they're using the same email they originally signed up with.
+
+:::caution Wrong email address verified
+
+If the user verifies a different email address than the one shown on their membership, raise a support request in your Dashboard. Include the correct email address and phone number.
+
+:::
+
+### Identification not completed (`idVerifiedMatchError`)
+
+Tell your user that they need to complete their identity verification. Ask them to open the link they received by email or SMS to start.
+
+If the user's identification link has expired or is no longer accessible, raise a support request in your Dashboard to issue a new one. Include the account membership ID in your request.
+
+---
+
+## Prevent binding errors
+
+1. **Check spelling against the identity document.** Use the exact name on the ID, not their preferred name.
+2. **Use the user's birth name**, not their married name.
+3. **Confirm the phone number format.** Include the country code (for example, +33 for France or +49 for Germany).
+4. **Verify the email address.** Confirm which email the user will sign up with.
+5. **Don't swap day and month** in birth dates.
+
+---
+
+## Contact Swan Support
+
+Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) if:
+
+- The error persists after the legal representative corrected the mismatched information and gave consent.
+- The membership is stuck in `BindingUserError` after the user has completed identification and email verification.
+- You need to resolve a binding error for the legal representative's membership.
+
+Include in your request:
+
+- Account ID and account membership ID
+- The specific error types
+- Resolution steps already taken
+
+---
+
+## Share these articles with your users
+
+Share these Support Center articles with users who have questions about account membership:
+
+- [Resolve a user binding error](https://support.swan.io/hc/en-150/articles/20431032028829-Resolve-a-user-binding-error): fixing the error in Web Banking, step by step.
+- [Add a member to your account](https://support.swan.io/hc/en-150/articles/17648698750877-Add-a-member-to-your-account): inviting a new member with correct details.
+- [Identification process overview](https://support.swan.io/hc/en-150/articles/22865683055133-Identification-process-overview): what to expect during identification.
+
+:::tip Help center content
+
+You can also use these articles as a starting point to create your own FAQ or help center content, tailored to your product's terminology and your users' specific context.
+
+:::
+

@@ -1,0 +1,89 @@
+---
+title: Source list
+audience:
+  - dev
+counterpart: /accounts/guides/funding/get-info/from-the-dashboard
+related:
+  - /accounts/guides/funding/get-info
+  - /accounts/guides/funding/get-info/source-info
+  - /accounts/guides/funding/add-source
+  - /accounts/concepts/funding
+---
+
+# Get a list of funding sources
+
+List an account's funding sources with the `account` query.
+
+## Guide {#guide}
+
+1. Call the `account` query.
+1. Add your account ID.
+1. Add `fundingSources`, then add the `DirectDebitFundingSource` and `SEPAPaymentDirectDebitMandate` unions.
+
+## Query {#query}
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0U291cmNlTGlzdCB7CiAgYWNjb3VudChhY2NvdW50SWQ6ICIkWU9VUl9BQ0NPVU5UX0lEIikgewogICAgZnVuZGluZ1NvdXJjZXMgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gRGlyZWN0RGViaXRGdW5kaW5nU291cmNlIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgbmFtZQogICAgICAgICAgICBpYmFuCiAgICAgICAgICAgIHBheW1lbnRNYW5kYXRlIHsKICAgICAgICAgICAgICAuLi4gb24gU0VQQVBheW1lbnREaXJlY3REZWJpdE1hbmRhdGUgewogICAgICAgICAgICAgICAgaWQKICAgICAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2-3,6,11} showLineNumbers
+query GetSourceList {
+  account(accountId: "$YOUR_ACCOUNT_ID") {
+    fundingSources {
+      edges {
+        node {
+          ... on DirectDebitFundingSource {
+            id
+            name
+            iban
+            paymentMandate {
+              ... on SEPAPaymentDirectDebitMandate {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+## Payload {#payload}
+
+The payload lists the funding sources for your account.
+
+```json {8,19} showLineNumbers
+{
+  "data": {
+    "account": {
+      "fundingSources": {
+        "edges": [
+          {
+            "node": {
+              "id": "$YOUR_SOURCE_ID_1",
+              "name": "Your Funding Source Name 1",
+              "iban": "$YOUR_NON_SWAN_IBAN_1",
+              "paymentMandate": {
+                "id": "$YOUR_MANDATE_ID_1",
+                "name": "Your Mandate Name 1"
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "$YOUR_SOURCE_ID_2",
+              "name": "Your Funding Source Name 2",
+              "iban": "$YOUR_NON_SWAN_IBAN_2",
+              "paymentMandate": {
+                "id": "$YOUR_MANDATE_ID_2",
+                "name": "Your Mandate Name 2"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```

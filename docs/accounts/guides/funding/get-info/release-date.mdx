@@ -1,0 +1,60 @@
+---
+title: Release date
+audience:
+  - dev
+related:
+  - /accounts/guides/funding/get-info
+  - /accounts/concepts/funding/rolling-reserve
+  - /accounts/concepts/funding
+---
+
+# Get a funding transaction release date
+
+Retrieve the day and time a funding transaction's reserved amount is scheduled to be released, with the `transaction` query.
+Review the [rolling reserve concept](/accounts/concepts/funding/rolling-reserve) for why an amount is reserved.
+
+## Guide {#guide}
+
+1. Call the `transaction` query.
+1. Add your transaction ID.
+1. Add the `SEPADirectDebitTransaction` union.
+1. Add `reservedAmountReleasedAt` and any other information that's interesting to you.
+
+## Query {#query}
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0UmVsZWFzZURhdGUgewogIHRyYW5zYWN0aW9uKGlkOiAiJFRSQU5TQUNUSU9OX0lEIikgewogICAgLi4uIG9uIFNFUEFEaXJlY3REZWJpdFRyYW5zYWN0aW9uIHsKICAgICAgaWQKICAgICAgcmVzZXJ2ZWRBbW91bnQgewogICAgICAgIGN1cnJlbmN5CiAgICAgICAgdmFsdWUKICAgICAgfQogICAgICByZXNlcnZlZEFtb3VudFJlbGVhc2VkQXQKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,3,9} showLineNumbers
+query GetReleaseDate {
+  transaction(id: "$TRANSACTION_ID") {
+    ... on SEPADirectDebitTransaction {
+      id
+      reservedAmount {
+        currency
+        value
+      }
+      reservedAmountReleasedAt
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload returns `reservedAmountReleasedAt`, the day and time the reserved amount of the <Term id="account-funding">account funding</Term> transaction is scheduled to be released.
+
+```json {10} showLineNumbers
+{
+  "data": {
+    "transaction": {
+      "__typename": "SEPADirectDebitTransaction",
+      "id": "$TRANSACTION_ID",
+      "reservedAmount": {
+        "currency": "EUR",
+        "value": "15.00"
+      },
+      "reservedAmountReleasedAt": "2025-03-11T19:00:00.000Z"
+    }
+  }
+}
+```

@@ -280,7 +280,12 @@ module.exports = annotateAudience(annotate({
         doc("accounts/guides/funding/add-source", "Add a funding source"),
         doc("accounts/guides/funding/initiate-request", "Initiate a funding request"),
         doc("accounts/guides/funding/cancel-source", "Cancel a funding source"),
-        doc("accounts/guides/funding/get-info", "Get funding info"),
+        cat("Get funding info", [
+          doc("accounts/guides/funding/get-info/from-the-dashboard", "From the Dashboard"),
+          doc("accounts/guides/funding/get-info/source-info", "Source info"),
+          doc("accounts/guides/funding/get-info/source-list", "Source list"),
+          doc("accounts/guides/funding/get-info/release-date", "Release date"),
+        ], { link: "accounts/guides/funding/get-info/index" }),
       ], { link: "accounts/guides/funding/index" }),
       cat("Billing", [
         cat("Get billing details", [

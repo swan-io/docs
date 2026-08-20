@@ -239,6 +239,8 @@ Do not carry external iframes (Figma and similar) into migrated pages; replace w
 
 ## 8. Per-domain order of operations, build gates, and audits
 
+**Testing redirects: production build ONLY.** `@docusaurus/plugin-client-redirects` generates its redirect pages at build time — the `yarn start` dev server serves NONE of them, so every legacy URL 404s in dev by design. To click through redirects, run `yarn build && yarn serve --port 3002` and test against that. (Recorded 21 August 2026 after a dev-server check produced "Page Not Found" for every redirect link.)
+
 Pre-flight: confirm canonical branch; confirm the authoritative migration map (the csv may not exist in the repo — verify, don't assume); confirm legacy source under `docs/topics/<domain>/`; decide the partial-relocation target; confirm `sidebars.ia.js` will get the full tree; confirm a `concepts/<domain>/index.mdx` hub exists (create before the flowmap pass); confirm needed glossary terms are registered.
 
 **Accounts variant:** Accounts is already migrated (no `topics/` source), so it follows a RECONCILIATION pass instead: diff every Accounts page shape against the Users template (hub shapes, closing pathways, frontmatter, floors) and bring it into line; the no-loss gate (§7) applies to any content moved during reconciliation, minus the `topics/` steps.

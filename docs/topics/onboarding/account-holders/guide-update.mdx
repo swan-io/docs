@@ -1,0 +1,146 @@
+---
+title: Update account holder information
+description: Update an account holder's VAT number or tax identification number after onboarding.
+---
+
+# Update account holder information
+
+The `updateAccountHolder` mutation changes an existing account holder's `vatNumber` and `taxIdentificationNumber` after onboarding.
+Use it to correct or add tax details once the account holder already exists.
+
+:::tip Separate from onboarding updates
+This mutation is separate from the onboarding update mutations (`updateCompanyAccountHolderOnboarding` and `updateIndividualAccountHolderOnboarding`).
+Use it after the account holder is created and verified, not while an onboarding is still in progress.
+:::
+
+## Prerequisites
+
+You need a [project access token](../../../developers/using-api/authentication/index.mdx#tokens-project) to call this mutation.
+
+## Update an account holder
+
+### Step 1: Get the account holder ID
+
+Retrieve the `accountHolderId` of the account holder you want to update.
+
+<Tabs>
+<TabItem value="dashboard" label="Dashboard" default>
+
+In your Dashboard, go to **Data** > **Account holders**, open the account holder, and copy its ID.
+
+</TabItem>
+<TabItem value="api" label="API">
+
+Call the `accountHolders` query to list account holders and read the `id` of the one you need.
+
+```graphql
+query GetAccountHolders {
+  accountHolders(first: 10) {
+    edges {
+      node {
+        id
+        info {
+          ... on AccountHolderCompanyInfo {
+            name
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Step 2: Call the mutation
+
+Send the request with your project access token in the `Authorization` header (`Bearer $YOUR_ACCESS_TOKEN`).
+Pass the `accountHolderId` from step 1, then set the fields you want to change.
+Request the rejection members in the payload so you can handle errors.
+
+<a href="https://explorer.swan.io?query=PASTE_EXPLORER_LINK&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql showLineNumbers
+mutation UpdateAccountHolder {
+  updateAccountHolder(
+    input: {
+      accountHolderId: "$YOUR_ACCOUNT_HOLDER_ID"
+      vatNumber: "$YOUR_VAT_NUMBER"
+      taxIdentificationNumber: "$YOUR_TAX_ID_NUMBER"
+    }
+  ) {
+    ... on UpdateAccountHolderSuccessPayload {
+      __typename
+      accountHolder {
+        id
+        updatedDate
+        info {
+          ... on AccountHolderCompanyInfo {
+            vatNumber
+            taxIdentificationNumber
+          }
+        }
+      }
+    }
+    ... on AccountHolderNotFoundRejection {
+      __typename
+      message
+    }
+    ... on ValidationRejection {
+      __typename
+      message
+      fields {
+        code
+        message
+        path
+      }
+    }
+  }
+}
+```
+
+A successful response returns `UpdateAccountHolderSuccessPayload` with the updated values, which confirms the change was applied.
+
+```json showLineNumbers
+{
+  "data": {
+    "updateAccountHolder": {
+      "__typename": "UpdateAccountHolderSuccessPayload",
+      "accountHolder": {
+        "id": "$YOUR_ACCOUNT_HOLDER_ID",
+        "updatedDate": "2026-06-01T09:35:46.673Z",
+        "info": {
+          "vatNumber": "FR40303265045",
+          "taxIdentificationNumber": "30 23 417 612 814"
+        }
+      }
+    }
+  }
+}
+```
+
+:::info VAT numbers apply to companies
+`vatNumber` is available only on company account holders (`AccountHolderCompanyInfo`).
+Individual account holders have a `taxIdentificationNumber` but no VAT number.
+:::
+
+## Country requirements
+
+Which countries require `vatNumber` and `taxIdentificationNumber` is determined at onboarding, and depends on the account holder's country and type.
+For company account holders, `vatNumber` is required only for Italy at onboarding, and is optional elsewhere.
+For the full per-country rules, see the [company onboarding fields](../company/fields.mdx) and [individual onboarding fields](../individual/fields.mdx) pages.
+
+## Rejections
+
+| Rejection | Cause | Solution |
+| --- | --- | --- |
+| `AccountHolderNotFoundRejection` | No account holder matches the `accountHolderId` you passed. | Check the ID from step 1 and confirm it belongs to your project. |
+| `ValidationRejection` | One or more input values are invalid, such as a malformed VAT number. | Read the `fields` array in the response. Each entry has `code`, `message`, and `path` identifying the specific validation error. Correct the flagged field and retry. |
+
+## Related guides
+
+* [Create an individual onboarding](../individual/guide-create.mdx)
+* [Create a company onboarding](../company/guide-create.mdx)
+* [Get information about an onboarding](../overview/guide-get-info.mdx)
+* [Export account holder data](./guide-export.mdx)

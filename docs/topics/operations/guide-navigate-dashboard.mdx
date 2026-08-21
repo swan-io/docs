@@ -1,0 +1,184 @@
+---
+title: Navigate your Dashboard
+---
+
+# Navigate your Dashboard
+
+This guide helps partner support teams navigate the Dashboard and handle day-to-day partner operations. For API guidance, see [Choose your integration](/topics/get-started/choose-integration/) and [Activate your project](/topics/projects/guide-activate/).
+
+:::info Key takeaways
+
+- Your Dashboard is organized into four sections (**Data**, **Insights**, **Developers**, and **Settings**), plus a **Sandbox/Live toggle**.
+- Most day-to-day operations happen in **Data**: users, onboardings, accounts, transactions, and cards.
+- You can perform many actions without contacting Swan Support. See the [self-service actions](#get-to-know-the-self-service-actions).
+- Some actions (like changing an account admin) still require a **Swan Support request**.
+
+:::
+
+## Understand the Dashboard
+
+The Dashboard is your central workspace for managing your Swan project. What you see in the Dashboard is the same data your development team works with via the API, presented in a readable interface.
+
+The Dashboard has four sections, plus a toggle to switch environments:
+
+- **Data**: day-to-day operational work
+- **Insights**: performance monitoring and analytics
+- **Developers**: tools for your development team
+- **Settings**: project configuration (split between partner support and development team)
+- **Sandbox/Live toggle**: switch between test and production environments
+
+## Know the different roles
+
+| Role | Responsibilities |
+| --- | --- |
+| **You** | Data section operations, branding, monitoring in Insights, submitting support requests |
+| **Your development team** | Developers section, redirect URIs, server consent, payment control, all API-based actions |
+| **Swan** | Transfer recalls, account admin changes, cases requiring Swan review |
+
+## Get started if you're new
+
+1. Start with **Dashboard** > **Data** > **Users**. It's the most comprehensive view, showing contact details, identification history, cards, accounts, and balances for each user.
+2. Switch to **Sandbox** to explore without affecting Live data.
+3. Review **Settings** > **Branding** to confirm your project name, logo, and accent color match your brand. If anything needs updating, edit it directly in Branding.
+
+### Notifications and support
+
+- **Incident and status updates**: you can subscribe to [status.swan.io](https://status.swan.io/) to receive real-time notifications about incidents, outages, and maintenance. Notifications aren't pushed directly via the Dashboard but through the status page.
+
+- **Notifications**: from **Dashboard** > **Settings** > **Notifications**, you can manage text message and email notifications sent to your users for certain events, such as rejected card payments. Review the full list of [notifications](/topics/projects/#notifications).
+
+- **Support form**: the partner form in the Dashboard is the main channel to contact Swan for anything that can't be resolved with documentation or built-in tools. See [how to contact Swan Support](#contact-swan-support).
+
+## Manage the Data section
+
+The Data section is where you manage day-to-day operations.
+
+| Tab | What it shows | Common actions |
+| --- | --- | --- |
+| **Users** | All users with contact details, identification history, accounts, balances | Track identification status, review memberships |
+| **Onboardings** | Individual and company onboarding processes | Track progress, upload supporting documents, request review |
+| **Account holders** | Account holders and verification statuses | Monitor KYC progress, track Re-KYC |
+| **Accounts** | Accounts with balances and statuses | View details, review received mandates |
+| **Account memberships** | Memberships across accounts | Check statuses, identify binding errors |
+| **Cards** | Virtual, physical, and digital cards | Cancel cards, review details |
+| **Transactions** | All transactions across accounts | Review details, cancel upcoming transfers, download statements |
+| **Capital deposits** | Capital deposit cases and statuses | Track deposit progress |
+
+## Monitor performance in Insights
+
+The Insights section is your performance monitoring space. It's powered by a live analytics interface that updates in real time. Use it for a general overview and to spot trends.
+
+What can you monitor?
+
+- **Product performance**: see the project overview, active accounts, card usage, and available balances.
+- **Transaction volumes**: track total and average volumes broken down by payment method.
+- **Onboarding performance**: monitor conversion rates, account holder verification progress, and where users drop off in the flow.
+- **Identity verification**: observe funnel completion rates and status breakdowns.
+
+## Test in the Developers section
+
+This section contains tools your development team uses to build and test your integration.
+
+| Tool | What it does | Full guide |
+| --- | --- | --- |
+| **API Explorer** | Test queries and mutations directly | [API Explorer guide](/developers/tools/api-explorer/) |
+| **Webhooks** | Configure endpoints for real-time event notifications | [Webhooks guide](/developers/using-api/webhooks/) |
+| **Event Simulator** | Simulate events in Sandbox to test your integration | [Event Simulator guide](/developers/tools/event-simulator/) |
+
+## Configure your settings
+
+| Setting | What you configure | Who |
+| --- | --- | --- |
+| **Branding** | Project name, logo, accent color | **You** |
+| **Notifications** | Text message and email notifications sent to your users | **You** |
+| **Redirect URIs** | OAuth authentication redirect URLs | **Development team** |
+| **Server consent** | Server-to-server consent flow configuration | **Development team** |
+| **Payment control** | Payment limits and controls | **Development team** |
+
+## Get to know the self-service actions
+
+You can complete the following actions directly from your Dashboard without submitting a Swan Support request or contacting your development team. Use this as a quick reference when a user contacts you with one of these needs.
+
+### Onboarding and verification
+
+If a user's onboarding is waiting on documents, you can upload them and request a Swan review directly. You can also track identification status without contacting Swan. For the full workflows, see [Manage account verification](/topics/operations/guide-account-verification/) and [Manage user identification](/topics/operations/guide-user-identification/).
+
+| Action | Navigation path |
+| --- | --- |
+| Upload supporting documents | **Dashboard** > **Data** > **Onboardings** > select the onboarding > **Supporting documents** > **Supporting document portal** |
+| Request document review | **Dashboard** > **Data** > **Onboardings** > select the onboarding > **Supporting documents** > **Supporting document portal** > **Upload** > **Request review** |
+| Track identification status | **Dashboard** > **Data** > **Users** > select the user |
+
+### Accounts and memberships
+
+Once an account is open, users may need additional IBANs to receive payments, account statements for their records, or help resolving membership issues. These actions cover the most common account management requests you'll receive.
+
+| Action | Navigation path |
+| --- | --- |
+| Create virtual IBANs | **Dashboard** > **Data** > **Accounts** > select the account > **Virtual IBANs** |
+| Download account statements | **Dashboard** > **Data** > **Accounts** > select the account > **Account statements** |
+| Download billing invoices | **Dashboard** > **Data** > **Accounts** > select the account > **invoices** |
+| Spot binding errors | **Dashboard** > **Data** > **Account memberships** > filter by the status `BindingUserError` |
+
+:::info How to create virtual IBANs
+
+Before you can create a virtual IBAN:
+
+- Your Dashboard membership needs write access to accounts.
+- The account must have the payment level `Unlimited` and the account type `PaymentService`.
+
+:::
+
+### Transactions and payments
+
+Transactions cover everything from credit transfers to direct debit mandates. Check this section before escalating, since most transaction queries have a direct answer or action here. For deeper troubleshooting, see [Troubleshoot incoming and outgoing transfers](/topics/operations/guide-troubleshoot-transfers/) and [Manage SEPA Direct Debit mandates](/topics/operations/guide-manage-mandates/).
+
+| Action | Navigation path |
+| --- | --- |
+| Cancel upcoming transfers | **Dashboard** > **Data** > select the account > **Transactions** > open the transfer with the status `Upcoming` > **Cancel transaction** |
+| Download a transaction confirmation | **Dashboard** > **Data** > select the account > **Transactions** > open the transaction with the status `Booked` > **Transaction confirmation** |
+| Review received mandates | **Dashboard** > **Data** > **Accounts** > select the account > **Received Direct Debit Mandates** |
+| Send a B2B mandate registration link | **Dashboard** > **Data** > **Accounts** > select the account > **Received Direct Debit Mandates** > **Copy SDD B2B mandate form link** |
+
+### Cards
+
+Swan offers three card types: virtual, physical, and digital. You can cancel any active card directly from the Cards tab. Cancellation is permanent, so the card can't be reactivated. For disputes, see [Card disputes and chargebacks](/topics/operations/guide-card-disputes-chargebacks/).
+
+:::info Deleting digital cards
+
+Deleting Apple Pay or Google Pay digital cards is currently only possible through the API.
+
+:::
+
+| Action | Navigation path |
+| --- | --- |
+| Cancel a card | **Dashboard** > **Data** > **Cards** > select the card > **Cancel** |
+
+## Contact Swan Support
+
+Submit a Swan Support request using the [Partner support request form](https://partner-support.swan.io/hc/en-gb/requests/new).
+
+Contact Swan Support if:
+
+- You need to request a transfer recall.
+- You need to change an account admin or legal representative. See [Change an account administrator or legal representative](/topics/operations/guide-change-account-admin-legal-representative/).
+- You notice a data discrepancy in your Dashboard that you can't resolve yourself.
+
+Include in your request:
+
+- Account ID or user ID
+- A description of the issue
+- Steps already taken
+
+## Share these articles with your users
+
+- [Download your transaction confirmation statements](https://support.swan.io/hc/en-150/articles/22861134892061-Download-your-transaction-confirmation-statements): how to download and review your transaction confirmation statement.
+- [Block your card](https://support.swan.io/hc/en-150/articles/18538920070045-Blocking-your-card): a step-by-step guide on how to block your card temporarily or permanently.
+- [Account balances](https://support.swan.io/hc/en-150/articles/16464971717277-Account-balances): everything you need to know about account balances.
+
+:::tip Help center content
+
+You can also use these articles as a starting point to create your own FAQ or help center content, tailored to your product's terminology and your users' specific context.
+
+:::
+

@@ -1,0 +1,128 @@
+---
+title: Troubleshoot passcode reset failures
+---
+
+# Troubleshoot passcode reset failures
+
+This guide helps partner support teams troubleshoot passcode reset failures for their users.
+
+For a step-by-step guide your users can follow, see [Passcode reset](https://support.swan.io/hc/en-150/articles/20531243310749-Passcode-reset).
+
+:::info Key takeaways
+
+- The most common cause of passcode reset failures is opening links through **in-app browsers** (such as within Gmail, Outlook, or other messaging apps). Always check this first.
+- Save these session-clear links. They resolve the vast majority of issues without a support ticket:
+  - Mobile: `https://identity.swan.io/authenticator/clear`
+  - Desktop: `https://identity.swan.io/logout/callback`
+- Users shouldn't change a phone number and reset a passcode at the same time. Each change must happen separately, in the right order.
+
+:::
+
+---
+
+## Who does what
+
+| Task | Responsible |
+| --- | --- |
+| Share session-clear links with the user | You |
+| Verify the phone number on the account with the user | You |
+| Guide the user to use their main browser | You |
+| Investigate failed reset attempts | Swan Support |
+| Resolve a phone number access issue | Swan Support |
+
+---
+
+## Reset a passcode
+
+When a user forgets their passcode, they reset it through Swan's Web Banking or your banking app. Direct the user to the [Passcode reset](https://support.swan.io/hc/en-150/articles/20531243310749-Passcode-reset) article for a step-by-step guide. The user must complete the reset themselves. You can't do it on their behalf.
+
+Swan may guide the user through an identity verification step, selecting the method automatically based on their identification status.
+
+:::caution Locked out
+
+After 5 failed attempts, the user is blocked and must complete the full passcode reset flow. Direct the user to follow the on-screen prompts to verify their identity and create a new passcode.
+
+:::
+
+:::note Session expired
+
+If your user's identification is `Expired`, they didn't finish the identification in time. Time limits depend on the process. See [identification statuses](/topics/users/identifications/#statuses). They need to start a new request.
+
+:::
+
+For more guidance on identification, see [Manage user identification](/topics/operations/guide-user-identification/).
+
+---
+
+## Handle a phone number change with a passcode reset
+
+:::caution Don't combine these two changes
+Changing a phone number and resetting a passcode at the same time puts your user in an infinite loop. Each change needs to happen separately, in order.
+:::
+
+**Correct sequence:**
+
+1. The user resets their passcode using their current phone number.
+2. Wait for the reset to be confirmed.
+3. The user can now change their phone number.
+
+If the user no longer has access to their old number, or a duplicate user exists, raise a support request in your Dashboard with the user ID and a description of the problem.
+
+---
+
+## Fix the most common failure: in-app browsers
+
+In-app browsers cause the vast majority of passcode reset failures. When a user opens the reset link from inside an app, it opens in a simplified browser. This causes the process to loop, return to the home page, or display an error.
+
+### Identify an in-app browser
+
+If your user shares screenshots, check the navigation bar:
+
+- **Main browser** (Chrome, Safari): full toolbar with URL bar.
+- **In-app browser**: simplified header without the standard toolbar.
+
+### Fix the issue
+
+Ask your user to complete these steps in order:
+
+1. Clear their authentication session. Use one of these URLs depending on the device:
+   - Mobile: `https://identity.swan.io/authenticator/clear`
+   - Desktop: `https://identity.swan.io/logout/callback`
+
+   A blank page appears after clearing. This is expected. Ask the user to log in again.
+1. Open Web Banking or your branded URL `https://[partner].banking.swan.io/` in their main browser (Chrome or Safari, not from inside another app).
+2. Select **Forgot passcode?** and follow the steps.
+
+---
+
+## Contact Swan Support
+
+Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) if:
+
+- The user cleared their session, is using a main browser, and the reset still fails after multiple attempts.
+- The user is stuck in a phone number change and passcode reset loop, and the steps above don't fix it.
+- The user reports a successful passcode reset, but their new passcode still fails to log them in.
+
+Include in your request:
+
+- User ID
+- Description of the error (ideally with a screen recording)
+- Browser and device type
+- Whether the user was using an in-app browser
+- Steps already taken
+
+---
+
+## Share these articles with your users
+
+Share these Support Center articles with users who have questions about passcode resets:
+
+- [Consent and SMS issues](https://support.swan.io/hc/en-150/articles/18130894864541): troubleshooting SMS delivery and consent problems.
+- [Passcode reset](https://support.swan.io/hc/en-150/articles/20531243310749-Passcode-reset): step-by-step guide for users resetting their passcode, including identity verification paths.
+
+:::tip Help center content
+
+You can also use these articles as a starting point to create your own FAQ or help center content, tailored to your product's terminology and your users' specific context.
+
+:::
+

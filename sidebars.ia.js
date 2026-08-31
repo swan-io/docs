@@ -350,6 +350,7 @@ module.exports = annotateAudience(annotate({
       doc("cards/concepts/card-products", "Card products"),
       doc("cards/concepts/card-packages", "Card packages"),
       doc("cards/concepts/design", "Card design"),
+      doc("cards/concepts/spending-limits", "Spending limits"),
     ], "cards/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Lifecycle", [

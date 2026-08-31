@@ -341,6 +341,7 @@ module.exports = annotateAudience(annotate({
         doc("cards/concepts/physical/name-printing", "Name printing"),
         doc("cards/concepts/physical/pin", "PIN"),
         doc("cards/concepts/physical/delivery-and-shipping", "Delivery and shipping"),
+        doc("cards/concepts/physical/maestro-fallback", "Maestro fallback"),
         doc("cards/concepts/physical/renewal", "Renewal"),
         doc("cards/concepts/physical/statuses", "Statuses"),
       ], { link: "cards/concepts/physical/index" }),

@@ -4,11 +4,59 @@ audience:
   - dev
 related:
   - /cards/concepts/digital
+  - /cards/concepts/digital/statuses
   - /cards/guides/virtual/cancel
+  - /cards/guides/physical/cancel
 ---
 
 # Cancel digital cards
 
-## Cancel a digital card {#guide}
+When you wish to instantly and permanently delete an Apple Pay or Google Pay <Term id="cards-digital">digital card</Term>, you must use the `cancelDigitalCard` mutation.
+Deleting digital cards is currently only possible through the API.
 
-When you wish to instantly and permanently delete an Apple Pay or Google Pay digital card, you must use the `cancelDigitalCard` mutation.
+:::caution Cancelation is irreversible
+Canceled digital cards can't be reactivated.
+Refer to [digital card statuses](/cards/concepts/digital/statuses) for the full lifecycle.
+:::
+
+## Guide {#guide}
+
+1. Call the `cancelDigitalCard` mutation.
+1. Enter the `digitalCardId` of the digital card to cancel.
+1. The canceled digital card is returned in the success payload.
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsRGlnaXRhbENhcmQgewogIGNhbmNlbERpZ2l0YWxDYXJkKGlucHV0OiB7IGRpZ2l0YWxDYXJkSWQ6ICIkWU9VUl9ESUdJVEFMX0NBUkRfSUQiIH0pIHsKICAgIC4uLiBvbiBDYW5jZWxEaWdpdGFsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBkaWdpdGFsQ2FyZCB7CiAgICAgICAgaWQKICAgICAgfQogICAgfQogICAgLi4uIG9uIFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2} showLineNumbers
+mutation CancelDigitalCard {
+  cancelDigitalCard(input: { digitalCardId: "$YOUR_DIGITAL_CARD_ID" }) {
+    ... on CancelDigitalCardSuccessPayload {
+      __typename
+      digitalCard {
+        id
+      }
+    }
+    ... on Rejection {
+      __typename
+      message
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+```json {4} showLineNumbers
+{
+  "data": {
+    "cancelDigitalCard": {
+      "__typename": "CancelDigitalCardSuccessPayload",
+      "digitalCard": {
+        "id": "$YOUR_DIGITAL_CARD_ID"
+      }
+    }
+  }
+}
+```

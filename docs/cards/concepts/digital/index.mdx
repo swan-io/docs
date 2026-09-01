@@ -15,7 +15,7 @@ import CompleteProvisioningGuide from '../../partials/_provisioning-guide.mdx';
 
 # Digital cards
 
-<p className="ia-lede">A virtual or physical card added to Apple Pay or Google Pay for contactless payments, kept up to date automatically by Swan.</p>
+<p className="ia-lede">A <Term id="cards-virtual">virtual</Term> or <Term id="cards-physical">physical</Term> card added to Apple Pay or Google Pay for contactless payments, kept up to date automatically by Swan.</p>
 
 <DigitalCardsDefinition />
 
@@ -25,14 +25,6 @@ If you choose to allow digital cards, your cardholders can add their cards to th
 Swan recommends only digitizing virtual cards for a safer experience.
 
 A list of digital cards is available in the `cards` query.
-
-## Certifying your digital card integration {#integration}
-
-You need to certify your digital card integration before your cardholders can use Apple Pay and Google Pay.
-
-Please use our Partner Support Request form available on your Dashboard, specifying that you'd like to activate in-app provisioning for digital payments. The team will help you get started.
-
-<CompleteProvisioningGuide />
 
 ## Adding cards to digital wallets {#wallets}
 
@@ -49,34 +41,20 @@ There are multiple ways to [add cards to a digital wallet](/cards/guides/digital
 
 1. Your cardholders can do it themselves by entering their virtual or physical card number into the digital wallet.
 1. Your cardholders can use the Swan App and follow the in-app provisioning process.
-1. You can initiate the in-app provisioning process through the `addDigitalCard` mutation.
-1. If cardholders start manual provisioning but don't complete it, you can [help them transition to in-app provisioning](/cards/guides/digital/add#manual-to-inapp) using the `activateDigitalCard` mutation (requires Apple Pay and/or Google Pay certification).
+1. You can initiate the in-app provisioning process through the `addDigitalCard` mutation, or the `addDigitalCards` mutation for several cards at once.
+1. If cardholders start manual provisioning but don't complete it, you can [help them transition to in-app provisioning](/cards/guides/digital/transition-provisioning) using the `activateDigitalCard` mutation (requires Apple Pay and/or Google Pay certification).
 
 ## Renewing digital cards {#auto-renew}
 
 Swan takes care of updating digital cards with Apple Pay and Google Pay.
-It's a clear advantage, as this requires no action from you nor your client.
+It's a clear advantage, as this requires no action from you or your client.
 
 The digital card lifecycle is described in [digital card statuses](/cards/concepts/digital/statuses).
 
-## Troubleshooting digital card provisioning {#troubleshooting}
+## Certifying your digital card integration {#integration}
 
-### Common issues and solutions
+You need to certify your digital card integration before your cardholders can use Apple Pay and Google Pay.
 
-**Digital card stuck in `Pending` status**
-- Check if the cardholder completed the manual provisioning process in their digital wallet.
-- Use the `activateDigitalCard` mutation to help complete the provisioning.
-- Verify that the `walletId` is correctly identified for the pending card.
+Please use our Partner Support Request form available on your Dashboard, specifying that you'd like to activate in-app provisioning for digital payments. The team will help you get started.
 
-**Cannot retrieve `walletId` for pending cards**
-- This is a known limitation with Apple Pay - the platform doesn't provide access to `walletId` for pending tokens.
-- For Google Pay, ensure you're using the correct filters in your query to identify pending cards.
-
-**Certification requirements**
-- Manual provisioning doesn't require additional certification.
-- In-app provisioning requires certification - please use our Partner Support Request form available on your Dashboard to get started.
-- **`activateDigitalCard` requires Apple Pay and/or Google Pay certification** - please open a ticket through our Partner Support Request form available on your Dashboard before implementation.
-
-**Android vs iOS implementation differences**
-- Google Pay provides better support for retrieving pending card information.
-- Apple Pay has platform limitations that may affect certain provisioning flows.
+<CompleteProvisioningGuide />

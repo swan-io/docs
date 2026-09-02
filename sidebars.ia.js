@@ -376,7 +376,10 @@ module.exports = annotateAudience(annotate({
       cat("Virtual", [
         doc("cards/guides/virtual/add", "Add a virtual card"),
         doc("cards/guides/virtual/view-info", "View card info"),
-        doc("cards/guides/virtual/cancel", "Cancel a virtual card"),
+        cat("Cancel a virtual card", [
+          doc("cards/guides/virtual/cancel/from-the-dashboard", "From the Dashboard"),
+          doc("cards/guides/virtual/cancel/using-the-api", "Using the API"),
+        ], { link: "cards/guides/virtual/cancel/index" }),
       ], { link: "cards/guides/virtual/index" }),
       cat("Physical", [
         doc("cards/guides/physical/print", "Print a card"),
@@ -384,7 +387,10 @@ module.exports = annotateAudience(annotate({
         doc("cards/guides/physical/view-info", "View card info"),
         doc("cards/guides/physical/block-unblock", "Block or unblock a card"),
         doc("cards/guides/physical/renew", "Renew a card"),
-        doc("cards/guides/physical/cancel", "Cancel a card"),
+        cat("Cancel a card", [
+          doc("cards/guides/physical/cancel/from-the-dashboard", "From the Dashboard"),
+          doc("cards/guides/physical/cancel/using-the-api", "Using the API"),
+        ], { link: "cards/guides/physical/cancel/index" }),
       ], { link: "cards/guides/physical/index" }),
       cat("Digital", [
         doc("cards/guides/digital/add", "Add to a wallet"),

@@ -10,29 +10,13 @@ related:
 
 # Activate physical cards
 
-Activate a physical card with the API after the cardholder receives it.
-
-## Methods {#methods}
-
-Physical cards can be activated in two ways:
-
-1. **First transaction**: The cardholder enters their PIN during an in-person chip and PIN payment.
-1. **API**: Call the `activatePhysicalCard` mutation (explained in this guide).
-
-## Activation reminder notifications {#activation-reminders}
-
-Swan can send reminder emails when users don't activate their physical card after delivery.
-
-- Reminder notifications are sent at configured intervals (for example, 5, 10, and 15 days after estimated delivery).
-- Notifications stop automatically when the user activates their card or when all reminders have been sent.
-- Partners can enable or disable this feature from **Dashboard** > **Settings** > **Notifications**.
-
-Review the [email notifications table](/get-started/set-up-swan/create-project#notifications-email) on the Projects page for more information.
+Activate a <Term id="cards-physical">physical card</Term> with the API after the cardholder receives it.
+Physical cards can be activated in two ways: the cardholder enters their PIN during a first in-person chip and PIN payment, or you call the `activatePhysicalCard` mutation (explained in this guide).
 
 ## Guide {#guide}
 
-:::note Prerequisites
-- Physical card status: **ToActivate**.
+:::tip Prerequisites
+- Physical card status: `ToActivate`.
 - You have the **identifier** printed on the back of the physical card.
 - You're authenticated with a **user access token** for the cardholder.
 :::
@@ -40,14 +24,14 @@ Review the [email notifications table](/get-started/set-up-swan/create-project#n
 1. Call the `activatePhysicalCard` mutation.
 1. Add the `identifier` from the back of the physical card (line 4).
 1. Add your `consentRedirectUrl` (line 5).
-1. Add the success payload, including the `consentUrl` (line 17).
+1. Add the success payload, including the `consentUrl` (line 18).
 1. Add rejections (not shown).
 
 ### Mutation {#mutation}
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQWN0aXZhdGVDYXJkIHsKICBhY3RpdmF0ZVBoeXNpY2FsQ2FyZCgKICAgIGlucHV0OiB7CiAgICAgIGlkZW50aWZpZXI6ICIkWU9VUl9QSFlTSUNBTF9DQVJEX0lERU5USUZJRVIiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBBY3RpdmF0ZVBoeXNpY2FsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIGV4cGlyeURhdGUKICAgICAgICBpZGVudGlmaWVyCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgICAuLi4gb24gQmFkQWNjb3VudFN0YXR1c1JlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQaHlzaWNhbENhcmROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgICAgaWRlbnRpZmllcgogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIENhcmROb3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIGlkCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBWYWxpZGF0aW9uUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgY29kZQogICAgICAgIG1lc3NhZ2UKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBVc2VyTm90Q2FyZEhvbGRlclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFBoeXNpY2FsQ2FyZFdyb25nU3RhdHVzUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgICBpZGVudGlmaWVyCiAgICAgIGN1cnJlbnRTdGF0dXMKICAgICAgZXhwZWN0ZWRTdGF0dXMKICAgIH0KICAgIC4uLiBvbiBDYW5ub3RBY3RpdmF0ZVBoeXNpY2FsQ2FyZFJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgICAgaWRlbnRpZmllcgogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql title="Mutation" showLineNumbers
+```graphql {4,5,8,18} showLineNumbers
 mutation ActivateCard {
   activatePhysicalCard(
     input: {
@@ -115,9 +99,9 @@ mutation ActivateCard {
 
 The cardholder must consent to activate the physical card.
 Open the `consentUrl` returned in the payload to complete Strong Customer Authentication (SCA) with Swan.
-After consent, the physical card status changes to **Activated**.
+After consent, the physical card status changes to `Activated`.
 
-```json title="Payload" showLineNumbers
+```json {9,13} showLineNumbers
 {
   "data": {
     "activatePhysicalCard": {
@@ -136,3 +120,13 @@ After consent, the physical card status changes to **Activated**.
   }
 }
 ```
+
+## Activation reminder notifications {#activation-reminders}
+
+Swan can send reminder emails when users don't activate their physical card after delivery.
+
+- Reminder notifications are sent at configured intervals (for example, 5, 10, and 15 days after estimated delivery).
+- Notifications stop automatically when the user activates their card or when all reminders have been sent.
+- Partners can enable or disable this feature from **Dashboard** > **Settings** > **Notifications**.
+
+Review the [email notifications table](/get-started/set-up-swan/create-project#notifications-email) on the Projects page for more information.

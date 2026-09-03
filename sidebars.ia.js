@@ -355,7 +355,6 @@ module.exports = annotateAudience(annotate({
     ], "cards/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Lifecycle", [
-        doc("cards/guides/lifecycle/issue", "Issue cards"),
         cat("Update card settings", [
           doc("cards/guides/lifecycle/update/from-the-dashboard", "From the Dashboard"),
           doc("cards/guides/lifecycle/update/using-the-api", "Using the API"),

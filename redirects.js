@@ -177,7 +177,7 @@ module.exports = [
     from: "/guide/give-access-to-your-account",
     to: "/accounts/concepts/memberships", // DOC-1814 batch 1: chain-rewrite (was /topics/accounts/memberships/)
   },
-  { from: "/guide/issue-cards", to: "/cards/guides/lifecycle/issue" },
+  { from: "/guide/issue-cards", to: "/cards/guides/lifecycle#issue" },
   { from: "/guide/make-a-transaction", to: "/payments/" },
   { from: "/guide/manage-accounts-and-ibans", to: "/accounts/concepts/ibans" },
   { from: "/guide/quickstart", to: "/get-started/set-up-swan/step-by-step" },
@@ -535,13 +535,10 @@ module.exports = [
     from: "/help/faq/sepa-transactions/why-is-my-sepa-credit-transfer-still-pending",
     to: "/payments/concepts/credit-transfers/statuses",
   },
-  {
-    from: "/topics/cards/physical/guide-renew",
-    to: "/cards/guides/physical/renew",
-  },
   // DOC-1814 — Cards migrated from /topics/cards to /cards (IA shell)
+  { from: "/topics/cards/physical/guide-renew", to: "/cards/guides/physical/renew" },
   { from: "/topics/cards", to: "/cards" },
-  { from: "/topics/cards/overview/guide-issue", to: "/cards/guides/lifecycle/issue" },
+  { from: "/topics/cards/overview/guide-issue", to: "/cards/guides/lifecycle#issue" },
   { from: "/topics/cards/overview/guide-update", to: "/cards/guides/lifecycle/update" },
   { from: "/topics/cards/overview/guide-export", to: "/cards/guides/lifecycle/export" },
   { from: "/topics/cards/design", to: "/cards/concepts/design" },

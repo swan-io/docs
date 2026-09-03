@@ -9,6 +9,8 @@ related:
 
 # View sensitive information
 
+View a <Term id="cards-virtual">virtual card</Term>'s numbers, expiration date, and CVC, protected by the cardholder's consent.
+
 ## Prepare to view sensitive information {#view-prepare}
 
 The `cardUrl` available in the `card` query leads to a website that displays the card with its design and its sensitive hidden information.
@@ -26,12 +28,12 @@ import InfoNotVisible from '../../partials/_info-not-visible.mdx';
 To make online payments you usually need to provide the card numbers, the expiration date, and the CVC.
 All of this data is considered sensitive and is not directly available through the Web Banking interface or the API.
 
-1. When the Account member wants to display sensitive information, you must call the `viewCardNumbers` mutation which returns a consent.
-1. Replace $YOUR_CARD_ID with your card ID, and $YOUR_REDIRECT_URL with the URL you want to redirect the user to after viewing the card numbers.
+1. When the account member wants to display sensitive information, you must call the `viewCardNumbers` mutation which returns a consent.
+1. Replace `$YOUR_CARD_ID` with your card ID, and `$YOUR_REDIRECT_URL` with the URL you want to redirect the user to after viewing the card numbers.
 1. Make sure you are authenticated with a user access token using the name of the card's account member.
-1. Then a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan. You need to open a native pop-up to display the `consentUrl`. This URL will redirect the user to a page with the card numbers displayed with the card design.
+1. Then a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan. You need to open a native pop-up to display the `consentUrl`. This URL redirects the user to a page with the card numbers displayed with the card design.
 
-### Mutation
+### Mutation {#view-number-mutation}
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gVmlld1NlbnNpdGl2ZUluZm8gewogIHZpZXdDYXJkTnVtYmVycygKICAgIGlucHV0OiB7IGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiLCBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiIH0KICApIHsKICAgIC4uLiBvbiBWaWV3Q2FyZE51bWJlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICAgIGlkCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -54,7 +56,7 @@ mutation ViewSensitiveInfo {
 }
 ```
 
-### Payload
+### Payload {#view-number-payload}
 
 ```json {6-7} showLineNumbers
 {
@@ -70,10 +72,10 @@ mutation ViewSensitiveInfo {
 }
 ```
 
-### After consent
+### After consent {#after-consent}
 
 import AfterConsent from '../../partials/_after-consent.mdx';
 
-<AfterConsent />
+<AfterConsent mutation="viewCardNumbers" />
 
 ![Swan card with information masked and revealed](../../../images/cards/cards-view-info.png)

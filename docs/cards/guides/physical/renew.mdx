@@ -4,20 +4,21 @@ audience:
   - dev
 related:
   - /cards/concepts/physical/renewal
+  - /cards/concepts/physical/statuses
   - /cards/reference/shipping-and-delivery
 ---
 
 # Renew physical cards
 
-Physical cards expire three years after they are printed.
+<Term id="cards-physical">Physical cards</Term> expire three years after they are printed.
 They're then automatically renewed for another three years unless the card is [canceled](/cards/guides/physical/cancel).
 
-If you want the renewed physical card to be delivered to a new address, call the `confirmPhysicalCardRenewal` mutation at least **8 weeks** before the last day of the card's expiry month. 
-If no action is taken, the renewed card will be shipped to the original delivery address.
+If you want the renewed physical card to be delivered to a new address, call the `confirmPhysicalCardRenewal` mutation at least **8 weeks** before the last day of the card's expiry month.
+If no action is taken, the renewed card is shipped to the original delivery address.
 
 :::tip Prerequisites
-1. Confirm that the card is in `ToRenew` status before calling this mutation. 
-This status is automatically triggered **10 weeks** before the last day of the card's expiry month, at midnight Coordinated Universal Time (UTC). 
+1. Confirm that the card is in `ToRenew` status before calling this mutation.
+This status is automatically triggered **10 weeks** before the last day of the card's expiry month, at midnight Coordinated Universal Time (UTC).
 If you're subscribed to the `Card.Updated` [webhook](/build/using-api/webhooks#events-cards), you'll receive a notification when the physical card status changes to `ToRenew`.
 1. Verify the new physical card delivery address with the cardholder.
 :::
@@ -27,7 +28,10 @@ While the physical card is in `ToRenew` status, you can query the original deliv
 
 <details>
   <summary>Query original delivery address</summary>
-```graphql
+
+<a href="https://explorer.swan.io?query=cXVlcnkgUGh5c2ljYWxDYXJkQWRkcmVzcyB7CiAgY2FyZChjYXJkSWQ6ICIkWU9VUl9DQVJEX0lEIikgewogICAgcGh5c2ljYWxDYXJkIHsKICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgLi4uIG9uIFBoeXNpY2FsQ2FyZFRvUmVuZXdTdGF0dXNJbmZvIHsKICAgICAgICAgIGFkZHJlc3MgewogICAgICAgICAgICBhZGRyZXNzTGluZTEKICAgICAgICAgICAgY2l0eQogICAgICAgICAgICBwb3N0YWxDb2RlCiAgICAgICAgICAgIGNvdW50cnkKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql showLineNumbers
 query PhysicalCardAddress {
   card(cardId: "$YOUR_CARD_ID") {
     physicalCard {
@@ -52,15 +56,15 @@ query PhysicalCardAddress {
 ## Guide {#guide}
 
 1. Call the `confirmPhysicalCardRenewal` mutation.
-2. Add the `cardId` for the physical card you're renewing (line 4).
-3. Add the updated physical card delivery `address` (line 5).
-4. Add the `ConfirmPhysicalCardRenewalSuccessPayload`, including any information you'd like to review (line 8).
-5. Add rejections (not shown).
+1. Add the `cardId` for the physical card you're renewing (line 4).
+1. Add the updated physical card delivery `address` (line 5).
+1. Add the `ConfirmPhysicalCardRenewalSuccessPayload`, including any information you'd like to review (line 8).
+1. Add rejections (not shown).
 
-:::warning Delivery address guidelines
-You don't need to include the `companyName` in any `address` fields.
-Consult the [guidelines for providing a card delivery address](/cards/reference/shipping-and-delivery#delivery-address) for more information.
-:::
+import DeliveryAddressCallout from '../../partials/_deliver-address-callout.mdx';
+
+<DeliveryAddressCallout />
+
 ## Mutation {#mutation}
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gUmVuZXdQaHlzaWNhbENhcmQgewogIGNvbmZpcm1QaHlzaWNhbENhcmRSZW5ld2FsKAogICAgaW5wdXQ6IHsKICAgICAgY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIKICAgICAgYWRkcmVzczogewogICAgICAgIGFkZHJlc3NMaW5lMTogIjEwIFJ1ZSBkZSBsYSBQYWl4IgogICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDAiCiAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIENvbmZpcm1QaHlzaWNhbENhcmRSZW5ld2FsU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBoeXNpY2FsQ2FyZCB7CiAgICAgICAgZXhwaXJ5RGF0ZQogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQ2FyZE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgaWQKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIFZhbGlkYXRpb25SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBQaHlzaWNhbENhcmRXcm9uZ1N0YXR1c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY3VycmVudFN0YXR1cwogICAgfQogICAgLi4uIG9uIEludmFsaWRTaGlwcGluZ1Byb3ZpZGVyUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
@@ -105,3 +109,31 @@ The payload confirms that the physical card expires on 09/21 (line 6), and its r
   }
 }
 ```
+
+## Stop the automatic renewal {#cancel-renewal}
+
+To stop a physical card from renewing automatically, without canceling it, call the `cancelPhysicalCardRenewal` mutation while the card is in the `ToRenew` status.
+The card remains active until its expiry date, then expires rather than being renewed and reissued.
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbCB7CiAgY2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbChpbnB1dDogeyBjYXJkSWQ6ICIkWU9VUl9DQVJEX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gUGh5c2ljYWxDYXJkV3JvbmdTdGF0dXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGN1cnJlbnRTdGF0dXMKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2} showLineNumbers
+mutation CancelPhysicalCardRenewal {
+  cancelPhysicalCardRenewal(input: { cardId: "$YOUR_CARD_ID" }) {
+    ... on CancelPhysicalCardRenewalSuccessPayload {
+      __typename
+      physicalCard {
+        statusInfo {
+          status
+        }
+      }
+    }
+    ... on PhysicalCardWrongStatusRejection {
+      __typename
+      currentStatus
+    }
+  }
+}
+```
+
+If the card isn't in the `ToRenew` status, the mutation returns a `PhysicalCardWrongStatusRejection`.

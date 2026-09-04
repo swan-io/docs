@@ -9,6 +9,8 @@ related:
 
 # View sensitive information
 
+View a <Term id="cards-physical">physical card</Term>'s numbers and PIN, both protected by the cardholder's consent.
+
 import InfoNotVisible from '../../partials/_info-not-visible.mdx';
 
 <InfoNotVisible />
@@ -21,7 +23,7 @@ Then a `consentUrl` is returned, inviting the user to start the Strong Customer 
 
 import AfterConsent from '../../partials/_after-consent.mdx';
 
-<AfterConsent />
+<AfterConsent mutation="viewPhysicalCardNumbers" />
 
 ![Swan card with information masked and revealed](../../../images/cards/cards-view-info.png)
 
@@ -30,6 +32,28 @@ To avoid repeating the Strong Customer Authentication each time the client wants
 We advise you to store the `consentId` on your side and run a consent query to check the consent status is `Accepted` and the `updateAt` is less than five minutes, before reusing the `consentUrl`.
 The `consentUrl` only works in the cardholder's browser where the consent was completed.
 :::
+
+### Mutation {#view-number-mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVmlld1BoeXNpY2FsQ2FyZE51bWJlcnMgewogIHZpZXdQaHlzaWNhbENhcmROdW1iZXJzKAogICAgaW5wdXQ6IHsKICAgICAgY2FyZElkOiAiJFlPVVJfQ0FSRF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgfQogICkgewogICAgLi4uIG9uIFZpZXdQaHlzaWNhbENhcmROdW1iZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvbnNlbnQgewogICAgICAgIGNvbnNlbnRVcmwKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4-5} showLineNumbers
+mutation ViewPhysicalCardNumbers {
+  viewPhysicalCardNumbers(
+    input: {
+      cardId: "$YOUR_CARD_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
+    }
+  ) {
+    ... on ViewPhysicalCardNumbersSuccessPayload {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+  }
+}
+```
 
 ## View PIN {#view-pin}
 
@@ -44,11 +68,12 @@ You can check the `isPINReady` boolean (true/false) in the physical card's `stat
 It is `true` when the PIN is available.
 Refer to the section on [PIN availability](/cards/concepts/physical/pin#pin-ready) to understand when a PIN should be ready.
 
-### Mutation
+### Mutation {#view-pin-mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVmlld1BpbiB7CiAgdmlld1BoeXNpY2FsQ2FyZFBpbigKICAgIGlucHV0OiB7IGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiLCBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiIH0KICApIHsKICAgIC4uLiBvbiBWaWV3UGh5c2ljYWxDYXJkUGluU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvbnNlbnQgewogICAgICAgIGNvbnNlbnRVcmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIFBJTk5vdFJlYWR5UmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIHBoeXNpY2FsQ2FyZElkZW50aWZpZXIKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVmlld1BpbiB7CiAgdmlld1BoeXNpY2FsQ2FyZFBpbigKICAgIGlucHV0OiB7CiAgICAgIGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBWaWV3UGh5c2ljYWxDYXJkUGluU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvbnNlbnQgewogICAgICAgIGNvbnNlbnRVcmwKICAgICAgfQogICAgfQogICAgLi4uIG9uIFBJTk5vdFJlYWR5UmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICAgIHBoeXNpY2FsQ2FyZElkZW50aWZpZXIKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
 ```graphql {4-5} showLineNumbers
-mutation viewPin {
+mutation ViewPin {
   viewPhysicalCardPin(
     input: {
       cardId: "$YOUR_CARD_ID"
@@ -70,16 +95,17 @@ mutation viewPin {
 }
 ```
 
-### Payload
+### Payload {#view-pin-payload}
 
 Open the `consentUrl` returned by the mutation to provide consent, then view the PIN.
+
 ```json {6} showLineNumbers
 {
   "data": {
     "viewPhysicalCardPin": {
       "__typename": "ViewPhysicalCardPinSuccessPayload",
       "consent": {
-        "consentUrl": "$CONSENT_URL"
+        "consentUrl": "$YOUR_CONSENT_URL"
       }
     }
   }

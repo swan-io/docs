@@ -6,12 +6,12 @@ audience:
 related:
   - /cards/concepts/virtual
   - /cards/concepts/physical/statuses
-  - /cards/concepts/digital
+  - /cards/concepts/digital/statuses
 ---
 
 # Virtual card statuses
 
-The lifecycle of a <Term id="cards-virtual">virtual card</Term>, from consent to cancelation.
+The lifecycle of a <Term id="cards-virtual">virtual card</Term>, from <Term id="consent">consent</Term> to cancelation.
 These statuses also represent the status of the Swan card contract.
 For the model behind the flow, refer to [virtual cards](/cards/concepts/virtual).
 
@@ -46,6 +46,6 @@ flowchart LR
 |---|---|
 | `ConsentPending` | Virtual card was added and is waiting for the cardholder's consent.<br/><br/>**Next steps**:<ul><li>If consent is refused or fails, the status moves directly to `Canceled`.</li><li>Otherwise, the status moves to `Processing`.</li></ul> |
 | `Processing` | Consent has been received and the card is being prepared. This status only applies when adding multiple virtual cards (`addCards` mutation).<br/><br/>**Next steps**:<ul><li>After the card is ready, the status moves to `Enabled`.</li><li>If the card is canceled before it's ready, the status moves to `Canceling`.</li></ul> |
-| `Enabled` | Virtual card is available for use. |
-| `Canceling` | Card is in the process of being canceled. After a card is assigned the `Canceling` status, the process can't be reversed. |
+| `Enabled` | Virtual card is available for use.<br/><br/>**Next steps**:<ul><li>If the card is canceled, the status moves to `Canceling`.</li></ul> |
+| `Canceling` | Card is in the process of being canceled.<br/><br/>**Next steps**: Card is `Canceled`. After a card is assigned the `Canceling` status, the process can't be reversed. |
 | `Canceled` | Card is canceled, no longer available for use, and can't be re-enabled. |

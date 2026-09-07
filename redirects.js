@@ -449,11 +449,11 @@ module.exports = [
   },
   {
     from: "/help/faq/cards/do-cards-come-with-insurance",
-    to: "/cards",
+    to: "/cards/reference/insurance-and-claims",
   },
   {
     from: "/help/faq/cards/does-3ds-work-for-single-use-virtual-cards-suvc",
-    to: "/payments/concepts/cards/#3ds",
+    to: "/cards/concepts/virtual/single-use-cards",
   },
   {
     from: "/help/faq/cards/how-do-card-payments-work",
@@ -477,11 +477,11 @@ module.exports = [
   },
   {
     from: "/help/faq/cards/what-is-the-exchange-rate-when-i-make-a-payment-outside-the-eea",
-    to: "/payments/concepts/cards/#3ds",
+    to: "/payments/concepts/cards/",
   },
   {
     from: "/help/faq/cards/what-type-of-cards-does-swan-provide",
-    to: "/payments/concepts/cards/#3ds",
+    to: "/cards/concepts/card-formats",
   },
   {
     from: "/help/faq/consent/can-i-disable-consent",

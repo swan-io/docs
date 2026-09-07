@@ -15,7 +15,7 @@ For the model behind the flow, refer to [digital cards](/cards/concepts/digital)
 
 ## Statuses {#statuses}
 
-The API splits digital card statuses across two enums, depending on how far the digitalization has progressed: `PendingDigitalCardStatus` (returned in `PendingDigitalCard.statusInfo`) covers the provisioning phase, and `CompleteDigitalCardStatus` (returned in `CompleteDigitalCard.statusInfo`) covers the card's life after provisioning.
+The API splits digital card statuses across two enums, depending on how far the digitization has progressed: `PendingDigitalCardStatus` (returned in `PendingDigitalCard.statusInfo`) covers the provisioning phase, and `CompleteDigitalCardStatus` (returned in `CompleteDigitalCard.statusInfo`) covers the card's life after provisioning.
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -39,15 +39,15 @@ flowchart LR
     end
     style DCA fill:#D4D3D5,stroke:#514F59
     style F fill:#fffdf4,stroke:#cca922
-    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
+    style U fill:#dfedf2,stroke:#4d8296,stroke-width:3px
 ```
 
 ### Provisioning phase (`PendingDigitalCardStatus`) {#statuses-pending}
 
 | Digital card status | Explanation |
 |---|---|
-| `ConsentPending` | Request to add a digital card was sent with the `addDigitalCard` or `addDigitalCards` mutation and is waiting for the cardholder's consent.<br/><br/>**Next steps**:<ul><li>If the cardholder consents, the status moves to `Pending`.</li><li>If the cardholder doesn't consent, the status moves to `Canceled`.</li><li>If you use the API to cancel the card, the status moves to `Canceled`.</li></ul> |
-| `Pending` | Cardholder added the card to their digital wallet manually, or they provided consent after you added the card with the API.<br/><br/>**Next steps**:<ul><li>If the card is added to their wallet successfully, the status moves to `Enabled`.</li><li>If the card is declined during provisioning, the status moves to `Declined`.</li><li>You can use the `activateDigitalCard` mutation to help complete the provisioning process.</li></ul> |
+| `ConsentPending` | Request to add a digital card was sent with the `addDigitalCard` or `addDigitalCards` mutation and is waiting for the cardholder's <Term id="consent">consent</Term>.<br/><br/>**Next steps**:<ul><li>If the cardholder consents, the status moves to `Pending`.</li><li>If the cardholder doesn't consent, the status moves to `Canceled`.</li><li>If you use the API to cancel the card, the status moves to `Canceled`.</li></ul> |
+| `Pending` | Cardholder added the card to their digital wallet manually, or they provided consent after you added the card with the API.<br/><br/>**Next steps**:<ul><li>If the card is added to their wallet successfully, the status moves to `Enabled`.</li><li>If the card is declined during provisioning, the status moves to `Declined`.</li><li>If the card is canceled during provisioning, the status moves to `Canceled`.</li><li>You can use the `activateDigitalCard` mutation to help complete the provisioning process.</li></ul> |
 | `Declined` | Card was declined during the provisioning process. |
 
 ### After provisioning (`CompleteDigitalCardStatus`) {#statuses-complete}

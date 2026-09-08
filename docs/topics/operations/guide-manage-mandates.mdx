@@ -17,7 +17,7 @@ For user-facing explanations, share [SEPA Direct Debit mandates](https://support
 - Swan checks mandate statuses and available balances at **6 AM (CET/CEST)** on the day the payment is due.
 - The most common cause of rejected direct debits is incomplete B2B consents.
 - Refund rights differ by scheme: SDD Core allows refunds up to 8 calendar weeks; SDD B2B has no right to refund.
-- For B2B mandates, direct your user to register and consent through your product or the Dashboard. Core mandates require no action from you or your user.
+- For B2B mandates, direct your user to register and consent through your product. Core mandates require no action from you or your user.
 :::
 
 ## Understand direct debit mandates
@@ -70,6 +70,12 @@ A mandate must have the status `Enabled` in the Dashboard to work. Any other sta
 
 For B2B mandates, the status `Enabled` only appears after the user has approved the mandate.
 
+:::info Swan checks on pending consents
+
+Swan monitors daily mandates that are `ConsentPending` and proactively reaches out to you and your users to obtain their confirmation and enable the mandates.
+
+:::
+
 ---
 
 ## Handle common direct debit queries
@@ -101,7 +107,7 @@ From here, you can figure out whether the user needs to approve the mandate, con
 
 ## Register a new B2B mandate
 
-Your user should register B2B mandates through your product or the Dashboard whenever possible. The person completing it must be authorized to manage payments on the account, usually the legal representative.
+Your user should register B2B mandates using the registration form link you send them whenever possible. The person completing it must be authorized to manage payments on the account, usually the legal representative.
 
 To send a B2B mandate registration link from your Dashboard or add a mandate with the API, see the guide to [add a received direct debit mandate](/topics/payments/direct-debit/guide-add-mandate/). The guide includes Dashboard steps with screenshots as well as the full API mutation.
 
@@ -109,7 +115,7 @@ To send a B2B mandate registration link from your Dashboard or add a mandate wit
 
 1. Ask if they can access the registration link in your product or Dashboard.
 1. If yes, point them to it and ask them to complete the registration.
-1. If they can't access or complete it, raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) with the required mandate information.
+1. In the event a mandate registration fails, raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) with the required mandate information.
 
 :::info Authorization
 
@@ -170,9 +176,9 @@ Swan checks all pending direct debit instructions at **6 AM (CET/CEST)** on the 
 
 If both checks pass, Swan executes the payment and the transaction status updates to `Booked`. If either check fails, Swan rejects the payment.
 
-:::tip Consent timing
+:::tip Mandate timing
 
-If your user consents to a mandate after 6 AM (CET/CEST) on the due date, Swan won't process it until the next scheduled payment. Let your users know about this timing so they understand why their consent might still show as pending.
+If your user approves a mandate after 6 AM (CET/CEST) on the due date, Swan won't process it until the next scheduled payment. Let your users know about this timing so they understand why their mandate might still show as pending.
 
 :::
 
@@ -211,14 +217,12 @@ Your user's refund rights depend on their mandate scheme. For full details, incl
 
 - Check that the transaction is a **SEPA Core / B2C Direct Debit**
 - Confirm the transaction status is `Booked`
-- Check that the transaction is a **SEPA Core / B2C Direct Debit**.
-- Confirm the transaction status is `Booked`.
 - Verify no partial refunds are requested (refunds must be for the full original amount).
 
 #### Step 2: Identify the refund window
 
 - **Within 8 weeks of the direct debit:** Your user can request a refund without justification (**Core SDD refund requested by debtor**).
-- **After 8 weeks and up to 13 months:** Only possible if the transaction is unauthorized or there's no valid mandate (Reason: **MD01 — No Authorization**). The request requires additional checks and evidence. The receiving/creditor bank may accept or reject the claim.
+- **After 8 weeks and up to 13 months:** Only possible if the transaction is unauthorized or there's no valid mandate. The request requires additional checks and evidence. The receiving/creditor bank may accept or reject the claim.
 - **After 13 months:** No longer eligible under the Core SDD refund framework.
 
 #### Step 3: Collect refund evidence (for requests between 8 weeks and 13 months)
@@ -280,18 +284,8 @@ Contact Swan Support if:
 - Mandate document, if available
 - Confirmation that the request came from someone authorized to manage payments on the account (usually the legal representative)
 
-### For refund requests, also include
+For refund requests, also include the transaction ID. 
 
-- Original transaction ID / Payment ID
-- Transaction end-to-end ID, if available
-- Direct debit / booking date
-- Amount and currency
-- Transaction label
-- Confirmation that the transaction is Core / B2C, not B2B
-- Confirmation that the transaction is `Booked`
-- Confirmation that no refund has already been received or initiated
-- For **within-8-week refunds**: indicate **Core SDD refund requested by debtor**
-- For **after-8-week refunds**: specify reason as **MD01 — No Authorization** and include all refund evidence
 
 ---
 

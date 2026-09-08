@@ -13,11 +13,11 @@ related:
 
 <p className="ia-lede">The automatic 3-year renewal cycle: what changes, the 10-week and 8-week checkpoints, and how to opt out.</p>
 
-<Term id="cards-physical">Physical cards</Term> are **renewed automatically** before the expiry date.
+<Term id="cards-physical">Physical cards</Term> are renewed automatically before the expiry date.
 By default, cards expire three years after the card is printed, and are renewed for an additional three years.
 
-When a physical card is renewed, the **card numbers**, **CVV**, **identifier**, and **expiry date change**.
-The four-digit **PIN doesn't change** for a continuous user experience.
+When a physical card is renewed, the card numbers, CVC, identifier, and expiry date change.
+The four-digit PIN doesn't change for a continuous user experience.
 If your user prefers to [choose their PIN](/cards/concepts/physical/pin#pin-choose), they need to [cancel the expiring card](/cards/guides/physical/cancel) and order a new one.
 It's not possible to choose a new PIN during renewal.
 
@@ -33,23 +33,23 @@ Refer to the [renewal guide](/cards/guides/physical/renew#cancel-renewal) for th
 
 ## Subscriptions {#renew-subscriptions}
 
-After the new card is enabled, Swan uses [Mastercard's Account Billing Updater](https://developer.mastercard.com/product/automatic-billing-updater-abu/) to update the details about the tokenized card.
-If a merchant adheres to Mastercard's Account Billing Updater, they receive the tokenized card's updated details automatically through this service.
+After the new card is enabled, Swan uses [Mastercard's Automatic Billing Updater](https://developer.mastercard.com/product/automatic-billing-updater-abu/) to update the details about the tokenized card.
+If a merchant adheres to Mastercard's Automatic Billing Updater, they receive the tokenized card's updated details automatically through this service.
 
-Therefore, certain existing subscriptions can be transferred to the new card without any action from the cardholder.
+So certain existing subscriptions can be transferred to the new card without any action from the cardholder.
 
 ## Card delivery {#renew-delivery}
 
-New physical cards are shipped between the eleventh and fifteenth of the month before the card expires.
-For example, if the card expires on the **last day of March**, the new card ships between **February 11-15** of the same year.
+New physical cards are shipped between the 11th and 15th of the month before the card expires.
+For example, if the card expires on the last day of March, the new card ships between 11-15 February of the same year.
 
-**Delivery details** are available in the `PhysicalCardRenewedStatusInfo` object.
+Delivery details are available in the `PhysicalCardRenewedStatusInfo` object.
 The estimated delivery date can be found in the `estimatedDeliveryDate` field.
 You'll find the carrier and tracking number in the fields `shippingProvider` and `trackingNumber` as soon as they're available.
 
 ## Verify delivery address {#renew-address}
 
-**10 weeks before** the original card expires, **verify the delivery address** with your cardholder.
+10 weeks before the original card expires, verify the delivery address with your cardholder.
 
 :::info No update provided
 If Swan doesn't receive updated address information at least 8 weeks before the card renews, the renewed card is shipped to the same address as the original card.
@@ -66,8 +66,8 @@ Subscribe to the `Card.Updated` [webhook](/build/using-api/webhooks#events-cards
 
 ## Activating the new card {#renew-activate}
 
-After the cardholder makes an in-person transaction with the new card using the Chip and PIN payment method, the new card's status changes from `Renewed` to `Activated`.
-You could also [use the API](/cards/guides/physical/activate).
+After the cardholder makes an in-person transaction with the new card using the chip and PIN payment method, the new card's status changes from `Renewed` to `Activated`.
+You can also [use the API](/cards/guides/physical/activate).
 
 The old card is then marked `isExpired=true` because only one card can be activated at a time.
 Details about expired physical cards are available in the `card` query (`card` > `physicalCard` > `previousPhysicalCards`).

@@ -208,6 +208,7 @@ module.exports = {
           link: { type: "doc", id: "topics/capital-deposits/france/guide" },
           collapsed: true,
           items: [
+            "topics/capital-deposits/france/guide-create-case-v2",
             "topics/capital-deposits/france/guide-create-case",
             "topics/capital-deposits/france/guide-upload-documents",
           ],

@@ -1,0 +1,647 @@
+---
+title: Create a capital deposit case
+---
+
+# Create a capital deposit case
+
+Create a capital deposit case for a company being incorporated, initiating the main company onboarding and all shareholder onboardings in a single API call.
+
+:::caution Multi-step process
+This page explains step 1 of a **multi-step process**.
+Refer to the [France guide](./guide.mdx) for the whole process.
+:::
+
+## Overview {#overview}
+
+The [`createCapitalDeposit`](https://api-reference.swan.io/mutations/create-capital-deposit) mutation is the new entry point for the capital deposit product, replacing the deprecated `createCapitalDepositCase` mutation.
+
+A single call creates:
+
+- One onboarding for the main company being formed.
+- One onboarding for each company shareholder, if any.
+- One onboarding for each individual shareholder, if any.
+
+Provide all shareholder data upfront: the mutation is designed for a complete, single submission.
+You can update a [company](../../onboarding/company/guide-update.mdx) or [individual](../../onboarding/individual/guide-update.mdx) onboarding to make corrections, but updates aren't the intended path for building a case incrementally.
+
+## What's new {#whats-new}
+
+`createCapitalDeposit` replaces the monolithic `onboardingInfo` block from `createCapitalDepositCase` with structured, per-entity inputs aligned with the standard [Swan onboarding](../../onboarding/index.mdx) format.
+
+| Deprecated (`createCapitalDepositCase`) | New (`createCapitalDeposit`) |
+| --- | --- |
+| `companyShareholders[].onboardingInfo` | `shareholders[].company` with `accountInfo`, `accountAdmin`, `company`, and `oAuthRedirectParameters` |
+| `individualShareholders[].onboardingInfo` | `shareholders[].individual` with `accountInfo`, `accountAdmin`, and `oAuthRedirectParameters` |
+| `onboardingInfo.accountName` | `accountInfo.name` |
+| `representatives` | `company.relatedIndividuals[]` with the type `LegalRepresentative` |
+| `individualUltimateBeneficialOwners` | `company.relatedIndividuals[]` with the type `UltimateBeneficialOwner` |
+| `direct` and `indirect` booleans | `ownership.type` (`Direct` or `Indirect`) and `ownership.totalPercentage` |
+| `language` | `accountAdmin.preferredLanguage` |
+
+The mutation accepts three top-level fields:
+
+```graphql
+createCapitalDeposit(input: {
+  acquisitionChannel: ...     # How you acquired the end user
+  mainCompany: { ... }        # The company being incorporated
+  shareholders: [ ... ]       # One entry per shareholder
+})
+```
+
+Each entry in `shareholders` must contain exactly one of `company` or `individual`:
+
+```graphql
+{ company: { ... } }      # Company shareholder
+{ individual: { ... } }   # Individual shareholder
+```
+
+## Step 1: Prepare your data {#prepare}
+
+Collect the following information for each entity before calling the mutation.
+
+<FieldRequirementsLegend />
+
+On this page, <Cnd /> means the mutation accepts the call without the field, but Swan creates the onboarding with the status `Invalid` until you provide it.
+
+For every account, the account name is optional.
+If you don't provide one, Swan uses `dépôt de capital — <holder name>` by default.
+
+**Main company**
+
+| Data to prepare | Requirement | API field |
+| --- | :---: | --- |
+| Company name | <Req /> | `mainCompany.company.name` |
+| Trade name | <Opt /> | `mainCompany.company.tradeName` |
+| Legal form code | <Cnd /> | `mainCompany.company.legalFormCode` |
+| Registration number | <Opt /> | `mainCompany.company.registrationNumber` |
+| Registered address | <Cnd /> | `mainCompany.company.address` |
+| Business activity | <Cnd /> | `businessActivity`, `businessActivityCode`, `businessActivityDescription` |
+| Account admin | <Req /> | `mainCompany.accountAdmin` |
+| UBOs and legal representatives | <Cnd /> | `mainCompany.company.relatedIndividuals` |
+| Account name | <Opt /> | `mainCompany.accountInfo.name` |
+| Redirect URL | <Req /> | `mainCompany.oAuthRedirectParameters.redirectUrl` |
+
+The main company isn't incorporated yet, so its registration number is optional.
+
+**Each company shareholder**
+
+| Data to prepare | Requirement | API field |
+| --- | :---: | --- |
+| Capital contribution | <Req /> | `shareholders[].company.capitalDepositAmount` |
+| Company name | <Req /> | `shareholders[].company.company.name` |
+| Trade name | <Opt /> | `shareholders[].company.company.tradeName` |
+| Legal form code | <Cnd /> | `shareholders[].company.company.legalFormCode` |
+| Registration number | <Cnd /> | `shareholders[].company.company.registrationNumber` |
+| Registered address | <Cnd /> | `shareholders[].company.company.address` |
+| Business activity | <Cnd /> | `businessActivity`, `businessActivityCode`, `businessActivityDescription` |
+| Account admin | <Req /> | `shareholders[].company.accountAdmin` |
+| UBOs and legal representatives | <Cnd /> | `shareholders[].company.company.relatedIndividuals` |
+| Account name | <Opt /> | `shareholders[].company.accountInfo.name` |
+| Redirect URL | <Req /> | `shareholders[].company.oAuthRedirectParameters.redirectUrl` |
+
+Company shareholders are registered legal entities, so provide their registration number.
+
+:::tip Pre-fill for French companies
+For company shareholders registered in France, use the `companyInfoRegistryData` query with the company's registration number to retrieve data from the National Business Register (RNE).
+Pass the results to the mutation to pre-fill company fields.
+:::
+
+**Each individual shareholder**
+
+| Data to prepare | Requirement | API field |
+| --- | :---: | --- |
+| Capital contribution | <Req /> | `shareholders[].individual.capitalDepositAmount` |
+| First and last name | <Req /> | `shareholders[].individual.accountAdmin.firstName` and `lastName` |
+| Date and place of birth | <Req /> | `shareholders[].individual.accountAdmin.birthInfo` |
+| Nationality | <Req /> | `shareholders[].individual.accountAdmin.nationality` |
+| Address | <Cnd /> | `shareholders[].individual.accountAdmin.address` |
+| Employment status and income | <Cnd /> | `shareholders[].individual.accountAdmin.employmentStatus` and `monthlyIncome` |
+| FATCA information | <Cnd /> | `shareholders[].individual.accountAdmin.unitedStatesTaxInfo` |
+| Account name | <Opt /> | `shareholders[].individual.accountInfo.name` |
+| Redirect URL | <Req /> | `shareholders[].individual.oAuthRedirectParameters.redirectUrl` |
+
+For complete field-level requirements and required-document rules, refer to [company onboarding fields](../../onboarding/company/fields.mdx) and [individual onboarding fields](../../onboarding/individual/fields.mdx).
+
+### Find valid legal form codes {#legal-forms}
+
+Use the `legalForms` query to get all valid legal form codes for a country, with localized names and abbreviations.
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0TGVnYWxGb3JtcyB7CiAgbGVnYWxGb3Jtcyhjb3VudHJ5OiAiRlJBIikgewogICAgY29kZQogICAgY291bnRyeQogICAgbG9jYWxOYW1lCiAgICBsb2NhbEFiYnJldmlhdGlvbgogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql
+query GetLegalForms {
+  legalForms(country: "FRA") {
+    code
+    country
+    localName
+    localAbbreviation
+  }
+}
+```
+
+### Model UBOs across the ownership structure {#ubo-modeling}
+
+When a company is a shareholder of the company being incorporated, declare UBOs at both company levels:
+
+1. Declare the UBOs of the company shareholder in `shareholders[].company.company.relatedIndividuals`.
+1. Declare the ultimate individual UBOs of the main company in `mainCompany.company.relatedIndividuals`.
+
+The same individual can appear in both places, but calculate the ownership percentage relative to the entity being described.
+
+```
+MyBrand
+├── 50% owned directly by Henri Dupont
+└── 50% owned by MyBrand Company Shareholder
+    └── 100% owned by Jules Fleury
+```
+
+| Individual | Entity | Relationship | Percentage |
+| --- | --- | --- | --- |
+| Henri Dupont | MyBrand | Direct UBO | 50% |
+| Jules Fleury | MyBrand | Indirect UBO through the company shareholder | 50% |
+| Jules Fleury | MyBrand Company Shareholder | Direct UBO | 100% |
+
+The percentage in the main company UBO entry is the person's effective ownership of the main company.
+It's not necessarily the percentage they hold in the intermediate company.
+For example, if an intermediate company owns 50% of the main company and an individual owns 60% of that intermediate company, the individual's indirect ownership of the main company is 30%.
+
+A legal representative isn't automatically a UBO.
+Choose the `type` that matches the individual's roles:
+
+- `UltimateBeneficialOwner` for a UBO only.
+- `LegalRepresentative` for a legal representative only.
+- `LegalRepresentativeAndUltimateBeneficialOwner` when the same individual has both roles.
+
+:::caution `relatedCompanies` doesn't model ownership
+Only use `relatedCompanies` when a legal entity acts as the legal representative of another company.
+Represent shareholder ownership through the shareholder company and its `relatedIndividuals`.
+:::
+
+## Step 2: Call the mutation {#call-mutation}
+
+The following example shows a case with one company shareholder and one individual shareholder.
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlQ2FwaXRhbERlcG9zaXQgewogIGNyZWF0ZUNhcGl0YWxEZXBvc2l0KAogICAgaW5wdXQ6IHsKICAgICAgYWNxdWlzaXRpb25DaGFubmVsOiBPdXRib3VuZEFjY291bnRpbmdGaXJtCgogICAgICBtYWluQ29tcGFueTogewogICAgICAgIGFjY291bnRJbmZvOiB7CiAgICAgICAgICBuYW1lOiAiZMOpcMO0dCBkZSBjYXBpdGFsIOKAlCBNeUJyYW5kIgogICAgICAgIH0KCiAgICAgICAgYWNjb3VudEFkbWluOiB7CiAgICAgICAgICBmaXJzdE5hbWU6ICJKdWxlcyIKICAgICAgICAgIGxhc3ROYW1lOiAiRmxldXJ5IgogICAgICAgICAgZW1haWw6ICJib25qb3VyQG15YnJhbmQuZnIiCiAgICAgICAgICBwcmVmZXJyZWRMYW5ndWFnZTogZnIKICAgICAgICAgIG5hdGlvbmFsaXR5OiAiRlJBIgogICAgICAgICAgdHlwZU9mUmVwcmVzZW50YXRpb246IExlZ2FsUmVwcmVzZW50YXRpdmUKICAgICAgICAgIGJpcnRoSW5mbzogewogICAgICAgICAgICBiaXJ0aERhdGU6ICIxOTkwLTA2LTAxIgogICAgICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgICAgICAgIHBvc3RhbENvZGU6ICI3NTAwNyIKICAgICAgICAgIH0KICAgICAgICAgIGFkZHJlc3M6IHsKICAgICAgICAgICAgYWRkcmVzc0xpbmUxOiAiMTAgcnVlIER1cmlzIgogICAgICAgICAgICBhZGRyZXNzTGluZTI6ICJCw6J0aW1lbnQgQSIKICAgICAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMjAiCiAgICAgICAgICAgIHN0YXRlOiAiSWxlIGRlIEZyYW5jZSIKICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIGNvbXBhbnk6IHsKICAgICAgICAgIG5hbWU6ICJNeUJyYW5kIgogICAgICAgICAgbGVnYWxGb3JtQ29kZTogIjZDSFkiCiAgICAgICAgICB0cmFkZU5hbWU6ICJNQiIKICAgICAgICAgIGFkZHJlc3M6IHsKICAgICAgICAgICAgYWRkcmVzc0xpbmUxOiAiMTY4IFJ1ZSBTYWludC1NYXVyIgogICAgICAgICAgICBhZGRyZXNzTGluZTI6ICJCw6J0aW1lbnQgQSIKICAgICAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMTEiCiAgICAgICAgICAgIHN0YXRlOiAiSWxlIGRlIEZyYW5jZSIKICAgICAgICAgIH0KICAgICAgICAgIGJ1c2luZXNzQWN0aXZpdHk6IEFjY29tbW9kYXRpb25BbmRGb29kU2VydmljZQogICAgICAgICAgYnVzaW5lc3NBY3Rpdml0eURlc2NyaXB0aW9uOiAiRXN0YWJsaXNobWVudCB0aGF0IHNlcnZlcyB0cmFkaXRpb25hbCBGcmVuY2ggY3Vpc2luZS4iCiAgICAgICAgICBtb250aGx5UGF5bWVudFZvbHVtZTogQmV0d2VlbjUwMDAwQW5kMTAwMDAwCiAgICAgICAgICByZWd1bGF0b3J5Q2xhc3NpZmljYXRpb246IE5vbkZpbmFuY2lhbEFjdGl2ZQogICAgICAgICAgcmVsYXRlZEluZGl2aWR1YWxzOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAjIEhlbnJpIER1cG9udCAtIGRpcmVjdCBVQk8gaG9sZGluZyA1MCUKICAgICAgICAgICAgICB0eXBlOiBVbHRpbWF0ZUJlbmVmaWNpYWxPd25lcgogICAgICAgICAgICAgIGZpcnN0TmFtZTogIkhlbnJpIgogICAgICAgICAgICAgIGxhc3ROYW1lOiAiRHVwb250IgogICAgICAgICAgICAgIHNleDogTWFsZQogICAgICAgICAgICAgIG5hdGlvbmFsaXR5OiAiRlJBIgogICAgICAgICAgICAgIGJpcnRoSW5mbzogewogICAgICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk4OC0wMi0yNSIKICAgICAgICAgICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDgiCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIGFkZHJlc3M6IHsKICAgICAgICAgICAgICAgIGFkZHJlc3NMaW5lMTogIjI0IFJ1ZSBTYWludC1BbWJyb2lzZSIKICAgICAgICAgICAgICAgIGFkZHJlc3NMaW5lMjogIkLDonRpbWVudCBBIgogICAgICAgICAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICAgICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICAgIHBvc3RhbENvZGU6ICI3NTAxMSIKICAgICAgICAgICAgICAgIHN0YXRlOiAiSWxlIGRlIEZyYW5jZSIKICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgdW5pdGVkU3RhdGVzVGF4SW5mbzogewogICAgICAgICAgICAgICAgaXNVbml0ZWRTdGF0ZXNQZXJzb246IGZhbHNlCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHVsdGltYXRlQmVuZWZpY2lhbE93bmVyOiB7CiAgICAgICAgICAgICAgICBxdWFsaWZpY2F0aW9uVHlwZTogT3duZXJzaGlwCiAgICAgICAgICAgICAgICBvd25lcnNoaXA6IHsKICAgICAgICAgICAgICAgICAgdHlwZTogRGlyZWN0CiAgICAgICAgICAgICAgICAgIHRvdGFsUGVyY2VudGFnZTogNTAKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgewogICAgICAgICAgICAgICMgSnVsZXMgRmxldXJ5IC0gaW5kaXJlY3QgVUJPIGhvbGRpbmcgNTAlIGFuZCBsZWdhbCByZXByZXNlbnRhdGl2ZQogICAgICAgICAgICAgIHR5cGU6IExlZ2FsUmVwcmVzZW50YXRpdmVBbmRVbHRpbWF0ZUJlbmVmaWNpYWxPd25lcgogICAgICAgICAgICAgIGZpcnN0TmFtZTogIkp1bGVzIgogICAgICAgICAgICAgIGxhc3ROYW1lOiAiRmxldXJ5IgogICAgICAgICAgICAgIHNleDogTWFsZQogICAgICAgICAgICAgIG5hdGlvbmFsaXR5OiAiRlJBIgogICAgICAgICAgICAgIGJpcnRoSW5mbzogewogICAgICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk5MC0wNi0wMSIKICAgICAgICAgICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDciCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIGFkZHJlc3M6IHsKICAgICAgICAgICAgICAgIGFkZHJlc3NMaW5lMTogIjEwIHJ1ZSBEdXJpcyIKICAgICAgICAgICAgICAgIGFkZHJlc3NMaW5lMjogIkLDonRpbWVudCBBIgogICAgICAgICAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICAgICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICAgIHBvc3RhbENvZGU6ICI3NTAyMCIKICAgICAgICAgICAgICAgIHN0YXRlOiAiSWxlIGRlIEZyYW5jZSIKICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgdW5pdGVkU3RhdGVzVGF4SW5mbzogewogICAgICAgICAgICAgICAgaXNVbml0ZWRTdGF0ZXNQZXJzb246IGZhbHNlCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHVsdGltYXRlQmVuZWZpY2lhbE93bmVyOiB7CiAgICAgICAgICAgICAgICBxdWFsaWZpY2F0aW9uVHlwZTogT3duZXJzaGlwCiAgICAgICAgICAgICAgICBvd25lcnNoaXA6IHsKICAgICAgICAgICAgICAgICAgdHlwZTogSW5kaXJlY3QKICAgICAgICAgICAgICAgICAgdG90YWxQZXJjZW50YWdlOiA1MAogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBsZWdhbFJlcHJlc2VudGF0aXZlOiB7CiAgICAgICAgICAgICAgICByb2xlczogWyJQcmVzaWRlbnQiXQogICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgIH0KCiAgICAgICAgb0F1dGhSZWRpcmVjdFBhcmFtZXRlcnM6IHsKICAgICAgICAgIHJlZGlyZWN0VXJsOiAiaHR0cHM6Ly93d3cubXlicmFuZC5mciIKICAgICAgICB9CiAgICAgIH0KCiAgICAgIHNoYXJlaG9sZGVyczogWwogICAgICAgIHsKICAgICAgICAgIGNvbXBhbnk6IHsKICAgICAgICAgICAgY2FwaXRhbERlcG9zaXRBbW91bnQ6IHsKICAgICAgICAgICAgICB2YWx1ZTogIjUwMCIKICAgICAgICAgICAgICBjdXJyZW5jeTogIkVVUiIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgYWNjb3VudEluZm86IHsKICAgICAgICAgICAgICBuYW1lOiAiZMOpcMO0dCBkZSBjYXBpdGFsIOKAlCBNeUJyYW5kIENvbXBhbnkgU2hhcmVob2xkZXIiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGFjY291bnRBZG1pbjogewogICAgICAgICAgICAgIGZpcnN0TmFtZTogIkp1bGVzIgogICAgICAgICAgICAgIGxhc3ROYW1lOiAiRmxldXJ5IgogICAgICAgICAgICAgIGVtYWlsOiAiY29tcGFueXNoYXJlaG9sZGVyQG15YnJhbmQuZnIiCiAgICAgICAgICAgICAgcHJlZmVycmVkTGFuZ3VhZ2U6IGZyCiAgICAgICAgICAgICAgbmF0aW9uYWxpdHk6ICJGUkEiCiAgICAgICAgICAgICAgdHlwZU9mUmVwcmVzZW50YXRpb246IExlZ2FsUmVwcmVzZW50YXRpdmUKICAgICAgICAgICAgICBiaXJ0aEluZm86IHsKICAgICAgICAgICAgICAgIGJpcnRoRGF0ZTogIjE5OTAtMDYtMDEiCiAgICAgICAgICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgICAgICAgICBjb3VudHJ5OiAiRlJBIgogICAgICAgICAgICAgICAgcG9zdGFsQ29kZTogIjc1MDA3IgogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBhZGRyZXNzOiB7CiAgICAgICAgICAgICAgICBhZGRyZXNzTGluZTE6ICIxMCBydWUgRHVyaXMiCiAgICAgICAgICAgICAgICBhZGRyZXNzTGluZTI6ICJCw6J0aW1lbnQgQSIKICAgICAgICAgICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgICAgICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMjAiCiAgICAgICAgICAgICAgICBzdGF0ZTogIklsZSBkZSBGcmFuY2UiCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CgogICAgICAgICAgICBjb21wYW55OiB7CiAgICAgICAgICAgICAgbmFtZTogIk15QnJhbmQgQ29tcGFueSBTaGFyZWhvbGRlciIKICAgICAgICAgICAgICBsZWdhbEZvcm1Db2RlOiAiNkNIWSIKICAgICAgICAgICAgICB0cmFkZU5hbWU6ICJNeUJyYW5kIENTIgogICAgICAgICAgICAgIGFkZHJlc3M6IHsKICAgICAgICAgICAgICAgIGFkZHJlc3NMaW5lMTogIjkxIHJ1ZSBkdSBGYXVib3VyZyBTYWludC1Ib25vcsOpIgogICAgICAgICAgICAgICAgYWRkcmVzc0xpbmUyOiAiQsOidGltZW50IEEiCiAgICAgICAgICAgICAgICBjb3VudHJ5OiAiRlJBIgogICAgICAgICAgICAgICAgY2l0eTogIlBhcmlzIgogICAgICAgICAgICAgICAgcG9zdGFsQ29kZTogIjc1MDA4IgogICAgICAgICAgICAgICAgc3RhdGU6ICJJbGUgZGUgRnJhbmNlIgogICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBidXNpbmVzc0FjdGl2aXR5OiBBY2NvbW1vZGF0aW9uQW5kRm9vZFNlcnZpY2UKICAgICAgICAgICAgICBidXNpbmVzc0FjdGl2aXR5RGVzY3JpcHRpb246ICJFc3RhYmxpc2htZW50IHRoYXQgc2VydmVzIHRyYWRpdGlvbmFsIEZyZW5jaCBjdWlzaW5lLiIKICAgICAgICAgICAgICBtb250aGx5UGF5bWVudFZvbHVtZTogQmV0d2VlbjUwMDAwQW5kMTAwMDAwCiAgICAgICAgICAgICAgcmVndWxhdG9yeUNsYXNzaWZpY2F0aW9uOiBOb25GaW5hbmNpYWxBY3RpdmUKICAgICAgICAgICAgICByZWdpc3RyYXRpb25OdW1iZXI6ICI4NTM4MjcxMDMiCiAgICAgICAgICAgICAgdGF4SWRlbnRpZmljYXRpb25OdW1iZXI6ICI4NTM4MjcxMDMiCiAgICAgICAgICAgICAgdmF0TnVtYmVyOiAiRlI5MDg1MzgyNzEwMyIKICAgICAgICAgICAgICByZWxhdGVkSW5kaXZpZHVhbHM6IFsKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgIyBKdWxlcyBGbGV1cnkgLSAxMDAlIGRpcmVjdCBVQk8gYW5kIGxlZ2FsIHJlcHJlc2VudGF0aXZlCiAgICAgICAgICAgICAgICAgIHR5cGU6IExlZ2FsUmVwcmVzZW50YXRpdmVBbmRVbHRpbWF0ZUJlbmVmaWNpYWxPd25lcgogICAgICAgICAgICAgICAgICBmaXJzdE5hbWU6ICJKdWxlcyIKICAgICAgICAgICAgICAgICAgbGFzdE5hbWU6ICJGbGV1cnkiCiAgICAgICAgICAgICAgICAgIHNleDogTWFsZQogICAgICAgICAgICAgICAgICBuYXRpb25hbGl0eTogIkZSQSIKICAgICAgICAgICAgICAgICAgYmlydGhJbmZvOiB7CiAgICAgICAgICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk5MC0wNi0wMSIKICAgICAgICAgICAgICAgICAgICBjaXR5OiAiUGFyaXMiCiAgICAgICAgICAgICAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICAgICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDciCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgYWRkcmVzczogewogICAgICAgICAgICAgICAgICAgIGFkZHJlc3NMaW5lMTogIjEwIHJ1ZSBEdXJpcyIKICAgICAgICAgICAgICAgICAgICBhZGRyZXNzTGluZTI6ICJCw6J0aW1lbnQgQSIKICAgICAgICAgICAgICAgICAgICBjb3VudHJ5OiAiRlJBIgogICAgICAgICAgICAgICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMjAiCiAgICAgICAgICAgICAgICAgICAgc3RhdGU6ICJJbGUgZGUgRnJhbmNlIgogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgIHVuaXRlZFN0YXRlc1RheEluZm86IHsKICAgICAgICAgICAgICAgICAgICBpc1VuaXRlZFN0YXRlc1BlcnNvbjogZmFsc2UKICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICB1bHRpbWF0ZUJlbmVmaWNpYWxPd25lcjogewogICAgICAgICAgICAgICAgICAgIHF1YWxpZmljYXRpb25UeXBlOiBPd25lcnNoaXAKICAgICAgICAgICAgICAgICAgICBvd25lcnNoaXA6IHsKICAgICAgICAgICAgICAgICAgICAgIHR5cGU6IERpcmVjdAogICAgICAgICAgICAgICAgICAgICAgdG90YWxQZXJjZW50YWdlOiAxMDAKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgbGVnYWxSZXByZXNlbnRhdGl2ZTogewogICAgICAgICAgICAgICAgICAgIHJvbGVzOiBbIlByZXNpZGVudCJdCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICBdCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIG9BdXRoUmVkaXJlY3RQYXJhbWV0ZXJzOiB7CiAgICAgICAgICAgICAgcmVkaXJlY3RVcmw6ICJodHRwczovL3d3dy5teWJyYW5kLmZyIgogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICB7CiAgICAgICAgICBpbmRpdmlkdWFsOiB7CiAgICAgICAgICAgIGNhcGl0YWxEZXBvc2l0QW1vdW50OiB7CiAgICAgICAgICAgICAgdmFsdWU6ICI1MDAiCiAgICAgICAgICAgICAgY3VycmVuY3k6ICJFVVIiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGFjY291bnRJbmZvOiB7CiAgICAgICAgICAgICAgbmFtZTogImTDqXDDtHQgZGUgY2FwaXRhbCDigJQgSGVucmkgRHVwb250IgogICAgICAgICAgICB9CgogICAgICAgICAgICBhY2NvdW50QWRtaW46IHsKICAgICAgICAgICAgICBmaXJzdE5hbWU6ICJIZW5yaSIKICAgICAgICAgICAgICBsYXN0TmFtZTogIkR1cG9udCIKICAgICAgICAgICAgICBlbWFpbDogImhlbnJpLmR1cG9udEBteWJyYW5kLmZyIgogICAgICAgICAgICAgIHByZWZlcnJlZExhbmd1YWdlOiBmcgogICAgICAgICAgICAgIG5hdGlvbmFsaXR5OiAiRlJBIgogICAgICAgICAgICAgIGVtcGxveW1lbnRTdGF0dXM6IEVudHJlcHJlbmV1cgogICAgICAgICAgICAgIG1vbnRobHlJbmNvbWU6IE1vcmVUaGFuNDUwMAogICAgICAgICAgICAgIGJpcnRoSW5mbzogewogICAgICAgICAgICAgICAgYmlydGhEYXRlOiAiMTk4OC0wMi0yNSIKICAgICAgICAgICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICAgIGNvdW50cnk6ICJGUkEiCiAgICAgICAgICAgICAgICBwb3N0YWxDb2RlOiAiNzUwMDgiCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIGFkZHJlc3M6IHsKICAgICAgICAgICAgICAgIGFkZHJlc3NMaW5lMTogIjI0IFJ1ZSBTYWludC1BbWJyb2lzZSIKICAgICAgICAgICAgICAgIGFkZHJlc3NMaW5lMjogIkLDonRpbWVudCBBIgogICAgICAgICAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgICAgICAgICAgIGNpdHk6ICJQYXJpcyIKICAgICAgICAgICAgICAgIHBvc3RhbENvZGU6ICI3NTAxMSIKICAgICAgICAgICAgICAgIHN0YXRlOiAiSWxlIGRlIEZyYW5jZSIKICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgIyBSZXF1aXJlZCB0byBmaW5hbGl6ZSBhbiBpbmRpdmlkdWFsIG9uYm9hcmRpbmcKICAgICAgICAgICAgICB1bml0ZWRTdGF0ZXNUYXhJbmZvOiB7CiAgICAgICAgICAgICAgICBpc1VuaXRlZFN0YXRlc1BlcnNvbjogZmFsc2UKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIG9BdXRoUmVkaXJlY3RQYXJhbWV0ZXJzOiB7CiAgICAgICAgICAgICAgcmVkaXJlY3RVcmw6ICJodHRwczovL3d3dy5teWJyYW5kLmZyIgogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICBdCiAgICB9CiAgKSB7CiAgICBfX3R5cGVuYW1lCgogICAgLi4uIG9uIENyZWF0ZUNhcGl0YWxEZXBvc2l0U3VjY2Vzc1BheWxvYWQgewogICAgICBjYXBpdGFsRGVwb3NpdENhc2UgewogICAgICAgIGlkCgogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQoKICAgICAgICB0b3RhbENhcGl0YWxEZXBvc2l0QW1vdW50IHsKICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KCiAgICAgICAgY29tcGFueU9uYm9hcmRpbmcgewogICAgICAgICAgaWQKICAgICAgICAgIG9uYm9hcmRpbmdVcmwKICAgICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgdmFsaWRhdGlvblZlcnNpb24KICAgICAgICAgICAgLi4uIG9uIE9uYm9hcmRpbmdJbnZhbGlkU3RhdHVzSW5mbyB7CiAgICAgICAgICAgICAgZXJyb3JzIHsKICAgICAgICAgICAgICAgIGRldGFpbHMKICAgICAgICAgICAgICAgIGVycm9ycwogICAgICAgICAgICAgICAgZmllbGQKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIHNoYXJlaG9sZGVycyB7CiAgICAgICAgICBpZAogICAgICAgICAgc3RhdHVzCiAgICAgICAgICBvbmJvYXJkaW5nIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgb25ib2FyZGluZ1VybAogICAgICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgICAgICBzdGF0dXMKICAgICAgICAgICAgICB2YWxpZGF0aW9uVmVyc2lvbgogICAgICAgICAgICAgIC4uLiBvbiBPbmJvYXJkaW5nSW52YWxpZFN0YXR1c0luZm8gewogICAgICAgICAgICAgICAgZXJyb3JzIHsKICAgICAgICAgICAgICAgICAgZGV0YWlscwogICAgICAgICAgICAgICAgICBlcnJvcnMKICAgICAgICAgICAgICAgICAgZmllbGQKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KCiAgICAuLi4gb24gQ2FwaXRhbERlcG9zaXRTaGFyZWhvbGRlcnNFbXB0eVJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KCiAgICAuLi4gb24gQ2FwaXRhbERlcG9zaXRNYWluQ29tcGFueU9uYm9hcmRpbmdSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICAgIGZpZWxkcyB7CiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgfQoKICAgIC4uLiBvbiBDYXBpdGFsRGVwb3NpdFNoYXJlaG9sZGVyT25ib2FyZGluZ1JlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgICAgZmllbGRzIHsKICAgICAgICBtZXNzYWdlCiAgICAgICAgcGF0aAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql showLineNumbers
+mutation CreateCapitalDeposit {
+  createCapitalDeposit(
+    input: {
+      acquisitionChannel: OutboundAccountingFirm
+
+      mainCompany: {
+        accountInfo: {
+          name: "dépôt de capital — MyBrand"
+        }
+
+        accountAdmin: {
+          firstName: "Jules"
+          lastName: "Fleury"
+          email: "bonjour@mybrand.fr"
+          preferredLanguage: fr
+          nationality: "FRA"
+          typeOfRepresentation: LegalRepresentative
+          birthInfo: {
+            birthDate: "1990-06-01"
+            city: "Paris"
+            country: "FRA"
+            postalCode: "75007"
+          }
+          address: {
+            addressLine1: "10 rue Duris"
+            addressLine2: "Bâtiment A"
+            country: "FRA"
+            city: "Paris"
+            postalCode: "75020"
+            state: "Ile de France"
+          }
+        }
+
+        company: {
+          name: "MyBrand"
+          legalFormCode: "6CHY"
+          tradeName: "MB"
+          address: {
+            addressLine1: "168 Rue Saint-Maur"
+            addressLine2: "Bâtiment A"
+            country: "FRA"
+            city: "Paris"
+            postalCode: "75011"
+            state: "Ile de France"
+          }
+          businessActivity: AccommodationAndFoodService
+          businessActivityDescription: "Establishment that serves traditional French cuisine."
+          monthlyPaymentVolume: Between50000And100000
+          regulatoryClassification: NonFinancialActive
+          relatedIndividuals: [
+            {
+              # Henri Dupont - direct UBO holding 50%
+              type: UltimateBeneficialOwner
+              firstName: "Henri"
+              lastName: "Dupont"
+              sex: Male
+              nationality: "FRA"
+              birthInfo: {
+                birthDate: "1988-02-25"
+                city: "Paris"
+                country: "FRA"
+                postalCode: "75008"
+              }
+              address: {
+                addressLine1: "24 Rue Saint-Ambroise"
+                addressLine2: "Bâtiment A"
+                country: "FRA"
+                city: "Paris"
+                postalCode: "75011"
+                state: "Ile de France"
+              }
+              unitedStatesTaxInfo: {
+                isUnitedStatesPerson: false
+              }
+              ultimateBeneficialOwner: {
+                qualificationType: Ownership
+                ownership: {
+                  type: Direct
+                  totalPercentage: 50
+                }
+              }
+            }
+            {
+              # Jules Fleury - indirect UBO holding 50% and legal representative
+              type: LegalRepresentativeAndUltimateBeneficialOwner
+              firstName: "Jules"
+              lastName: "Fleury"
+              sex: Male
+              nationality: "FRA"
+              birthInfo: {
+                birthDate: "1990-06-01"
+                city: "Paris"
+                country: "FRA"
+                postalCode: "75007"
+              }
+              address: {
+                addressLine1: "10 rue Duris"
+                addressLine2: "Bâtiment A"
+                country: "FRA"
+                city: "Paris"
+                postalCode: "75020"
+                state: "Ile de France"
+              }
+              unitedStatesTaxInfo: {
+                isUnitedStatesPerson: false
+              }
+              ultimateBeneficialOwner: {
+                qualificationType: Ownership
+                ownership: {
+                  type: Indirect
+                  totalPercentage: 50
+                }
+              }
+              legalRepresentative: {
+                roles: ["President"]
+              }
+            }
+          ]
+        }
+
+        oAuthRedirectParameters: {
+          redirectUrl: "https://www.mybrand.fr"
+        }
+      }
+
+      shareholders: [
+        {
+          company: {
+            capitalDepositAmount: {
+              value: "500"
+              currency: "EUR"
+            }
+
+            accountInfo: {
+              name: "dépôt de capital — MyBrand Company Shareholder"
+            }
+
+            accountAdmin: {
+              firstName: "Jules"
+              lastName: "Fleury"
+              email: "companyshareholder@mybrand.fr"
+              preferredLanguage: fr
+              nationality: "FRA"
+              typeOfRepresentation: LegalRepresentative
+              birthInfo: {
+                birthDate: "1990-06-01"
+                city: "Paris"
+                country: "FRA"
+                postalCode: "75007"
+              }
+              address: {
+                addressLine1: "10 rue Duris"
+                addressLine2: "Bâtiment A"
+                country: "FRA"
+                city: "Paris"
+                postalCode: "75020"
+                state: "Ile de France"
+              }
+            }
+
+            company: {
+              name: "MyBrand Company Shareholder"
+              legalFormCode: "6CHY"
+              tradeName: "MyBrand CS"
+              address: {
+                addressLine1: "91 rue du Faubourg Saint-Honoré"
+                addressLine2: "Bâtiment A"
+                country: "FRA"
+                city: "Paris"
+                postalCode: "75008"
+                state: "Ile de France"
+              }
+              businessActivity: AccommodationAndFoodService
+              businessActivityDescription: "Establishment that serves traditional French cuisine."
+              monthlyPaymentVolume: Between50000And100000
+              regulatoryClassification: NonFinancialActive
+              registrationNumber: "853827103"
+              taxIdentificationNumber: "853827103"
+              vatNumber: "FR90853827103"
+              relatedIndividuals: [
+                {
+                  # Jules Fleury - 100% direct UBO and legal representative
+                  type: LegalRepresentativeAndUltimateBeneficialOwner
+                  firstName: "Jules"
+                  lastName: "Fleury"
+                  sex: Male
+                  nationality: "FRA"
+                  birthInfo: {
+                    birthDate: "1990-06-01"
+                    city: "Paris"
+                    country: "FRA"
+                    postalCode: "75007"
+                  }
+                  address: {
+                    addressLine1: "10 rue Duris"
+                    addressLine2: "Bâtiment A"
+                    country: "FRA"
+                    city: "Paris"
+                    postalCode: "75020"
+                    state: "Ile de France"
+                  }
+                  unitedStatesTaxInfo: {
+                    isUnitedStatesPerson: false
+                  }
+                  ultimateBeneficialOwner: {
+                    qualificationType: Ownership
+                    ownership: {
+                      type: Direct
+                      totalPercentage: 100
+                    }
+                  }
+                  legalRepresentative: {
+                    roles: ["President"]
+                  }
+                }
+              ]
+            }
+
+            oAuthRedirectParameters: {
+              redirectUrl: "https://www.mybrand.fr"
+            }
+          }
+        }
+
+        {
+          individual: {
+            capitalDepositAmount: {
+              value: "500"
+              currency: "EUR"
+            }
+
+            accountInfo: {
+              name: "dépôt de capital — Henri Dupont"
+            }
+
+            accountAdmin: {
+              firstName: "Henri"
+              lastName: "Dupont"
+              email: "henri.dupont@mybrand.fr"
+              preferredLanguage: fr
+              nationality: "FRA"
+              employmentStatus: Entrepreneur
+              monthlyIncome: MoreThan4500
+              birthInfo: {
+                birthDate: "1988-02-25"
+                city: "Paris"
+                country: "FRA"
+                postalCode: "75008"
+              }
+              address: {
+                addressLine1: "24 Rue Saint-Ambroise"
+                addressLine2: "Bâtiment A"
+                country: "FRA"
+                city: "Paris"
+                postalCode: "75011"
+                state: "Ile de France"
+              }
+              # Required to finalize an individual onboarding
+              unitedStatesTaxInfo: {
+                isUnitedStatesPerson: false
+              }
+            }
+
+            oAuthRedirectParameters: {
+              redirectUrl: "https://www.mybrand.fr"
+            }
+          }
+        }
+      ]
+    }
+  ) {
+    __typename
+
+    ... on CreateCapitalDepositSuccessPayload {
+      capitalDepositCase {
+        id
+
+        statusInfo {
+          status
+        }
+
+        totalCapitalDepositAmount {
+          currency
+          value
+        }
+
+        companyOnboarding {
+          id
+          onboardingUrl
+          statusInfo {
+            status
+            validationVersion
+            ... on OnboardingInvalidStatusInfo {
+              errors {
+                details
+                errors
+                field
+              }
+            }
+          }
+        }
+
+        shareholders {
+          id
+          status
+          onboarding {
+            id
+            onboardingUrl
+            statusInfo {
+              status
+              validationVersion
+              ... on OnboardingInvalidStatusInfo {
+                errors {
+                  details
+                  errors
+                  field
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    ... on CapitalDepositShareholdersEmptyRejection {
+      message
+    }
+
+    ... on CapitalDepositMainCompanyOnboardingRejection {
+      message
+      fields {
+        message
+        path
+      }
+    }
+
+    ... on CapitalDepositShareholderOnboardingRejection {
+      message
+      fields {
+        message
+        path
+      }
+    }
+  }
+}
+```
+
+## Step 3: Store IDs and check onboarding status {#store-ids}
+
+From a successful response, store:
+
+- `capitalDepositCase.id`: your reference for the full case.
+- `capitalDepositCase.companyOnboarding.id`: to track the main company onboarding. Also store `onboardingUrl` to redirect your user, unless your integration is API-only.
+- `shareholders[].onboarding.id`: to track each shareholder onboarding. Also store each `onboardingUrl`, unless your integration is API-only.
+
+A successful mutation doesn't mean every onboarding is ready to be finalized.
+
+:::caution Check every onboarding status
+Always check `statusInfo.status` on `companyOnboarding` and on each `shareholders[].onboarding`.
+Swan can create an onboarding with the status `Invalid` when a required field is missing.
+[Get information about the onboarding](../../onboarding/overview/guide-get-info.mdx), read the `errors` array, and fix the issue before finalization.
+:::
+
+Example of a case created with an invalid onboarding:
+
+```json
+{
+  "capitalDepositCase": {
+    "statusInfo": { "status": "WaitingForInitialRequirements" },
+    "companyOnboarding": {
+      "statusInfo": {
+        "status": "Invalid",
+        "validationVersion": "V2",
+        "errors": [
+          {
+            "field": "company.legalFormCode",
+            "details": "Invalid input: expected string, received null"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+:::info Required documents per onboarding
+The documents needed to complete an onboarding depend on the entity and context.
+Before asking your user to complete the flow, [get a list of required onboarding documents](../../onboarding/overview/guide-get-list.mdx).
+:::
+
+## Step 4: Complete onboarding and KYC {#kyc}
+
+After your users [finalize their onboardings](../../onboarding/overview/guide-finalize.mdx), the KYC process for each entity begins with the identification of each account admin.
+
+## Step 5: Upload required documents {#upload}
+
+After you create the case, the capital deposit case status is `WaitingForInitialRequirements`.
+The case stays in this status until all of the following are complete:
+
+- All required capital deposit documents are `Uploaded`.
+- All shareholders passed KYC verification and reached the status `CapitalTransferred`.
+- The main company onboarding is completed.
+
+Document upload and KYC happen in parallel, so you don't need to wait for shareholders to finish their onboarding.
+Start uploading as soon as the documents are available.
+
+When all conditions are met, the case transitions to `PendingInternalReview`.
+For the full lifecycle and status transitions, refer to the [capital deposits overview](../index.mdx#case-statuses).
+
+The case and each shareholder have a `documents` array with pre-assigned document IDs and types.
+Query the case to retrieve the document IDs, then [upload each document](./guide-upload-documents.mdx) with the two-step signed URL flow.
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0Q2FwaXRhbERlcG9zaXREb2N1bWVudHMgewogIGNhcGl0YWxEZXBvc2l0Q2FzZShpZDogIiRZT1VSX0NBUElUQUxERVBPU0lUQ0FTRV9JRCIpIHsKICAgIGRvY3VtZW50cyB7CiAgICAgIGlkCiAgICAgIHR5cGUKICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICAgIHNoYXJlaG9sZGVycyB7CiAgICAgIGlkCiAgICAgIGRvY3VtZW50cyB7CiAgICAgICAgaWQKICAgICAgICB0eXBlCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql
+query GetCapitalDepositDocuments {
+  capitalDepositCase(id: "$YOUR_CAPITALDEPOSITCASE_ID") {
+    documents {
+      id
+      type
+      statusInfo {
+        status
+      }
+    }
+    shareholders {
+      id
+      documents {
+        id
+        type
+        statusInfo {
+          status
+        }
+      }
+    }
+  }
+}
+```
+
+For the list of required documents by stakeholder, refer to the [capital deposits overview](../index.mdx#documents-list).
+
+## Rejections {#rejections}
+
+| Rejection type | Meaning |
+| --- | --- |
+| `CapitalDepositShareholdersEmptyRejection` | No shareholder was provided. |
+| `CapitalDepositMainCompanyOnboardingRejection` | The main company onboarding data is invalid. |
+| `CapitalDepositShareholderOnboardingRejection` | A shareholder onboarding entry is invalid. |
+
+The `fields` array in each rejection identifies the exact field and path causing the error:
+
+```json
+{
+  "__typename": "CapitalDepositShareholderOnboardingRejection",
+  "fields": [
+    {
+      "message": "Legal form code is invalid.",
+      "path": ["shareholders", "0", "company", "company", "legalFormCode"]
+    }
+  ]
+}
+```

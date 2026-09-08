@@ -40,7 +40,7 @@ To unblock a physical card with the `resumePhysicalCard` mutation, you must:
 
 A `consentUrl` is returned inviting the user to start the Strong Customer Authentication with Swan.
 
-If you **chose to block the card**, the card can be used immediately after you unblock it.
+If you chose to block the card, the card can be used immediately after you unblock it.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gVW5ibG9ja1BoeXNpY2FsQ2FyZCB7CiAgcmVzdW1lUGh5c2ljYWxDYXJkKGlucHV0OiB7IGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiLCBjb25zZW50UmVkaXJlY3RVcmw6ICIkWU9VUl9SRURJUkVDVF9VUkwiIH0pIHsKICAgIC4uLiBvbiBSZXN1bWVQaHlzaWNhbENhcmRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29uc2VudCB7CiAgICAgICAgY29uc2VudFVybAogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -59,18 +59,18 @@ mutation UnblockPhysicalCard {
 
 ## Unblock after 3 incorrect PIN attempts {#unblock-pin}
 
-If a card was blocked because the PIN was entered incorrectly 3 times, the **cardholder** must complete the process to resume the card, with one potential interaction from your side depending on your integration.
+If a card was blocked because the PIN was entered incorrectly 3 times, the cardholder must complete the process to resume the card, with one potential interaction from your side depending on your integration.
 
-1. **Wait 24 hours** from the last incorrect PIN attempt.
+1. Wait 24 hours from the last incorrect PIN attempt.
 1. You or the cardholder call the `resumePhysicalCard` mutation to start the unblocking process:
     - **Cardholder**: In Swan's Web Banking interface, clicking **Unblock** calls this mutation. Refer to Swan's [Support Center](https://support.swan.io/hc/en-150/articles/16351372133789-Unblocking-your-card-after-three-incorrect-PIN-attempts) for more information. If you don't use Swan's Web Banking, consider designing your integration with a similar action.
     - **You**: If your integration doesn't allow the cardholder to do so, you need to call the [mutation](#unblock).
     :::caution Wait 24 hours
     If the `resumePhysicalCard` mutation is called before 24 hours pass, it returns an error.
     :::
-1. The cardholder **consents** to the operation.
+1. The cardholder consents to the operation.
     - After receiving consent, the [physical card status](/cards/concepts/physical/statuses) returns from `Suspended` to its previous status, `ToActivate`. If the card is in the [renewal process](/cards/concepts/physical/statuses#renew-statuses), the status returns to `Renewed`.
-1. The cardholder enters their **original PIN** at an ATM ([reminder: a card's PIN never changes](/cards/concepts/physical/pin)).
+1. The cardholder enters their original PIN at an ATM ([reminder: a card's PIN never changes](/cards/concepts/physical/pin)).
 
 :::info View PIN
 - You can display the cardholder's PIN [with the API](/cards/guides/physical/view-info#view-pin).
@@ -89,9 +89,9 @@ Following this process, the card is either completely unblocked or remains suspe
 
 | Withdrawal permission | PIN entered | Transaction outcome | Rejection reason | Card status change |
 | --- | --- | --- | --- | --- |
-| **True** | Correct | Accepted | None | Card is completely unblocked |
+| <Yes /> | Correct | Accepted | None | Card is completely unblocked |
 | | Incorrect | Rejected | `InvalidPin` | Card remains suspended |
-| **False** | Correct | Rejected | `TransactionNotAuthorizedForCardholder` | Card is completely unblocked |
+| <No /> | Correct | Rejected | `TransactionNotAuthorizedForCardholder` | Card is completely unblocked |
 | | Incorrect | Rejected | `InvalidPin` | Card remains active (2 attempts left before suspension) |
 
 #### Special case: Pending unblocking after `resumePhysicalCard`

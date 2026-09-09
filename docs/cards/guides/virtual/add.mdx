@@ -22,10 +22,10 @@ Follow the guides to add [one membership](/accounts/guides/memberships/add-one) 
 
 Add a new card for an existing account member by calling the `addCard` mutation.
 This mutation can only be called on behalf of an account member with the `canManageCards` permission.
-When you do this, make sure you are authenticated with a user access token in the name of the account member.
+When you do this, make sure you're authenticated with a user access token in the name of the account member.
 
-The new card is thus created with the `ConsentPending` status.
-A `consentUrl` is returned which invites the user to start Strong Customer Authentication with Swan.
+The new card is created with the `ConsentPending` status.
+A `consentUrl` is returned which invites the user to start <Term id="sca">Strong Customer Authentication</Term> with Swan.
 After the user completes the Strong Customer Authentication process, the new card changes to `Enabled` status.
 
 In the mutation, you can use the `cardProductId` field (optional) to choose which card design the user receives.
@@ -99,14 +99,14 @@ It works nearly the same way as `addCard` with two additional features:
 1. Add the physical card at the same time you add the virtual card by using the `physicalCard` field in the `addCards` mutation, plus entering a delivery address.
 1. Configure the spending limit when adding the card with the `spendingLimit` field in the `addCards` mutation.
 
-The new card is thus created with the `ConsentPending` status.
+The new card is created with the `ConsentPending` status.
 A `consentUrl` is returned which invites the user to start Strong Customer Authentication with Swan.
 After the user completes the Strong Customer Authentication process, the new card changes to `Processing` status.
 
 The cards are created asynchronously and then change to the `Enabled` status.
 
 Depending on how many cards you're creating, it can take up to several minutes to complete the process.
-For performance reasons, you can create up to **200 cards** per API call.
+For performance reasons, you can create up to 200 cards per API call.
 
 :::tip Expense management
 Use `addCards` to issue cards to your whole team in a single API call.
@@ -287,7 +287,7 @@ mutation AddCardsWithCalendarLimit {
 
 For a rolling period, you can either omit the `mode` field entirely (defaults to rolling) or specify it explicitly:
 
-```graphql {5-7} showLineNumbers
+```graphql
 spendingLimit: {
   period: Weekly
   amount: { value: "500", currency: "EUR" }
@@ -299,7 +299,7 @@ spendingLimit: {
 
 ## Print physical cards when adding virtual cards {#print-with-virtual}
 
-Please refer to the guides in the **physical cards section** to learn more about creating virtual and physical cards at the same time.
+Refer to the guides in the physical cards section to learn more about creating virtual and physical cards at the same time.
 These guides cover settings, spending limits, and allowing your cardholders to choose their own PIN.
 
 - [Print a physical card when adding a virtual card](/cards/guides/physical/print#print-with-virtual)
@@ -315,8 +315,8 @@ This mutation can be called on behalf of any account member with the permission 
 The permission `canManageAccountMembership` is optional.
 Learn more about [permissions and card management](/accounts/reference/memberships/membership-permissions#permissions-cards).
 
-When you do this, make sure you are authenticated with a user access token using the name of the card's account member.
-The new card is thus created with the `ConsentPending` status and a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan.
+When you do this, make sure you're authenticated with a user access token using the name of the card's account member.
+The new card is created with the `ConsentPending` status and a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan.
 After the user completes the Strong Customer Authentication process, the new card changes to `Enabled` status.
 
 Single-use virtual cards can't be physically printed, nor can they be added to digital wallets (Apple or Google).
@@ -328,7 +328,7 @@ Add new single-use virtual cards for existing account members by calling the [`a
 :::info Single-use virtual cards and server-to-server consent
 If you want to issue single-use virtual cards without having direct human interaction to consent and reveal card numbers, you must be the account holder (not available for end-users) and have [server-to-server consent](/users/guides/consent/implement-s2s) implemented.
 
-For both the single-use virtual card mutations (`addSingleUseVirtualCard` and `addSingleUseVirtualCards`), the `SuccessForProjectOwnerPayload` will return a card in `ConsentPending` status.
+For both the single-use virtual card mutations (`addSingleUseVirtualCard` and `addSingleUseVirtualCards`), the `SuccessForProjectOwnerPayload` returns a card in `ConsentPending` status.
 The status changes to `Enabled` after the consent is validated.
 It's recommended to verify the card status before using it.
 :::

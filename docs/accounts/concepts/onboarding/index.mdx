@@ -16,7 +16,7 @@ audience:
 
 ## Overview {#overview}
 
-Account onboarding is the **process to create [account holders](/accounts/concepts/account-holders)**.
+Account onboarding is the process to create [account holders](/accounts/concepts/account-holders).
 
 One end result of onboarding is also creating the first account for the new account holder.
 Account holders complete a new onboarding to open another account, unless a company account holder uses [Multiple Accounts](/accounts/concepts/multiple-accounts).
@@ -35,8 +35,8 @@ The individual and company onboarding processes are similar.
 
 | Type | Explanation |
 | --- | --- |
-| [Individual onboarding](/accounts/guides/onboarding/individual) | <ul><li>Create a new **individual** account holder.</li><li>Open a new **individual** Swan account for that account holder.</li></ul> |
-| [Company onboarding](/accounts/guides/onboarding/company) | <ul><li>Create a new **company** account holder.</li><li>Open a new **company** Swan account for that account holder.</li></ul> |
+| [Individual onboarding](/accounts/guides/onboarding/individual) | <ul><li>Create a new individual account holder.</li><li>Open a new individual Swan account for that account holder.</li></ul> |
+| [Company onboarding](/accounts/guides/onboarding/company) | <ul><li>Create a new company account holder.</li><li>Open a new company Swan account for that account holder.</li></ul> |
 
 :::tip Swan Banking Frontend
 If you'd like to customize the onboarding experience for your users (while respecting local regulations), check out the open source [Swan Banking Frontend](https://swan-io.github.io/swan-partner-frontend/specs/onboarding/).
@@ -46,8 +46,8 @@ If you'd like to customize the onboarding experience for your users (while respe
 
 Completing the onboarding process serves several purposes.
 
-1. A new **account holder** is created.
-1. The account holder's **Swan account** is created.
+1. A new account holder is created.
+1. The account holder's Swan account is created.
 1. The person who performed the onboarding process becomes the <Term id="legal-representative">legal representative</Term> of the account. They're also the account's first member with [full permissions](/accounts/reference/memberships/membership-permissions).
 1. Your relationship with the account holder is stored in the `partnershipStatusInfo` field of the `account` object.
 
@@ -57,6 +57,7 @@ This sequence diagram depicts the onboarding flow with the API.
 
 ```mermaid
 sequenceDiagram
+autonumber
 participant S as Swan
 participant P as Partner
 participant U as User
@@ -110,7 +111,7 @@ Consider these steps, including the statuses of both [account holder verificatio
   </tr>
   <tr>
     <td><center>4</center></td>
-    <td>Swan requests [supporting documents](/accounts/concepts/documents)<TableTip>[Subscribe to the webhook](/build/using-api/webhooks) `supportingDocumentCollection.updated`. You'll be notified when a request is sent to collect documents.</TableTip></td>
+    <td>Swan requests [supporting documents](/accounts/concepts/documents)<TableTip>[Subscribe to the webhook](/build/using-api/webhooks) `SupportingDocumentCollection.Updated`. You'll be notified when a request is sent to collect documents.</TableTip></td>
     <td><center>`WaitingForInformation`</center></td>
     <td><center>`WaitingForDocument`</center></td>
   </tr>
@@ -134,12 +135,12 @@ Consider these steps, including the statuses of both [account holder verificatio
   </tr>
   <tr>
     <td rowspan="2"><center>8</center></td>
-    <td>(a) Swan **approves** the account holder</td>
+    <td>(a) Swan approves the account holder</td>
     <td><center>`Verified`</center></td>
     <td><center>`Approved`</center></td>
   </tr>
   <tr>
-    <td>(b) Swan **needs more documents** to verify the account holder<TableTip>[Get the list of required documents](/accounts/guides/onboarding/manage-onboardings/list-required-documents) and review the rejection reason. Then, return to step 4.</TableTip></td>
+    <td>(b) Swan needs more documents to verify the account holder<TableTip>[Get the list of required documents](/accounts/guides/onboarding/manage-onboardings/list-required-documents) and review the rejection reason. Then, return to step 4.</TableTip></td>
     <td><center>`WaitingForInformation`</center></td>
     <td><center>`WaitingForDocument`</center></td>
   </tr>

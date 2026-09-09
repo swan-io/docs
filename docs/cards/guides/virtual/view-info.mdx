@@ -9,15 +9,15 @@ related:
 
 # View sensitive information
 
-View a <Term id="cards-virtual">virtual card</Term>'s numbers, expiration date, and CVC, protected by the cardholder's consent.
+View a <Term id="cards-virtual">virtual card</Term>'s numbers, expiration date, and CVC, protected by the cardholder's <Term id="consent">consent</Term>.
 
 ## Prepare to view sensitive information {#view-prepare}
 
-The `cardUrl` available in the `card` query leads to a website that displays the card with its design and its sensitive hidden information.
+The `cardDesignUrl` available in the `card` query leads to a website that displays the card with its design and its sensitive hidden information.
 
 Consider integrating it into your product with an iframe or a webview.
 This URL is available for one hour after you query it.
-After one hour, renew the query to get another `cardUrl`.
+After one hour, renew the query to get another `cardDesignUrl`.
 
 import InfoNotVisible from '../../partials/_info-not-visible.mdx';
 
@@ -26,12 +26,12 @@ import InfoNotVisible from '../../partials/_info-not-visible.mdx';
 ## View virtual card numbers {#view-number}
 
 To make online payments you usually need to provide the card numbers, the expiration date, and the CVC.
-All of this data is considered sensitive and is not directly available through the Web Banking interface or the API.
+All of this data is considered sensitive and isn't directly available through the Web Banking interface or the API.
 
 1. When the account member wants to display sensitive information, you must call the `viewCardNumbers` mutation which returns a consent.
 1. Replace `$YOUR_CARD_ID` with your card ID, and `$YOUR_REDIRECT_URL` with the URL you want to redirect the user to after viewing the card numbers.
-1. Make sure you are authenticated with a user access token using the name of the card's account member.
-1. Then a `consentUrl` is returned which invites the user to start the Strong Customer Authentication with Swan. You need to open a native pop-up to display the `consentUrl`. This URL redirects the user to a page with the card numbers displayed with the card design.
+1. Make sure you're authenticated with a user access token using the name of the card's account member.
+1. Then a `consentUrl` is returned which invites the user to start the <Term id="sca">Strong Customer Authentication</Term> with Swan. You need to open a native pop-up to display the `consentUrl`. This URL redirects the user to a page with the card numbers displayed with the card design.
 
 ### Mutation {#view-number-mutation}
 

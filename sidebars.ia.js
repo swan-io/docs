@@ -142,7 +142,7 @@ module.exports = annotateAudience(annotate({
         doc("accounts/concepts/funding/status-interaction", "Interaction between statuses"),
         doc("accounts/concepts/funding/statuses", "Statuses"),
         doc("accounts/concepts/funding/rolling-reserve", "Rolling reserve"),
-        doc("accounts/concepts/funding/settlement", "Settlement and cancellation"),
+        doc("accounts/concepts/funding/settlement", "Settlement and cancelation"),
       ], { link: "accounts/concepts/funding/index" }),
     ], "accounts/concepts/index", "ia-type-concept"),
     top("Guides", [

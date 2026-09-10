@@ -89,6 +89,10 @@ flowchart LR
 If a digital card is stuck in `Pending` status after manual provisioning (for example, the cardholder didn't complete OTP verification), you can use the `activateDigitalCard` mutation to help them complete the process without restarting. Learn more in the [transitioning from manual to in-app provisioning guide](./guide-add.mdx#manual-to-inapp).
 :::
 
+## Tracking digital card changes {#tracking-status}
+To receive notifications when a digital card is created or its status changes, subscribe to `DigitalCard.Created` and `DigitalCard.Updated` [webhooks] (../../../developers/using-api/webhooks). `DigitalCard.Created` is triggered when the card is first created and before it becomes usable in a wallet. You should also subscribe to `DigitalCard.Updated` to track status changes.
+The resource ID in the event is a `digitalCardId` that can be used with the [query `digitalCard(digitalCardId: ...)`] (https://api-reference.swan.io/queries/digital-cardto) retrieve the latest digital card data.
+
 ## Troubleshooting digital card provisioning {#troubleshooting}
 
 ### Common issues and solutions

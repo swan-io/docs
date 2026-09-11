@@ -12,13 +12,12 @@ related:
 # Configure consent notifications
 
 You can declare a preferred notification channel for your users and configure how your consent notifications appear.
-For when to use consent notifications and how they work, refer to [notification preferences](/users/concepts/consent#notifications).
-
-If you're using **Swan's Web Banking interface**, Swan sends a text message to your users for one-time passwords, logins, and consents, regardless of preferred channel and configuration.
+For when to use consent notifications and how they work, including the Web Banking exception, refer to [notification preferences](/users/concepts/consent#notifications).
 
 :::info Timeout
 Your integration has two seconds to respond to a consent notification.
 If your response is anything other than an HTTP `200 OK`, or there's no response at all, Swan redirects the user to the standard text message consent flow.
+The fallback applies to all flows, including 3DS, and users can also choose to receive a text message instead with a button on the consent screen.
 This timeout complies with [3-D Secure (3DS)](/payments/concepts/cards#3ds) requirements.
 :::
 
@@ -98,4 +97,3 @@ While consent is ongoing, the user's mobile displays a looping animation with yo
 
 - If Swan detects that the user is already on a mobile app, Swan uses a mobile consent flow and doesn't send a text message. This differs from consent notifications, which enable communication between the browser and the mobile app for in-app notification consent instead of text message consent.
 - 3DS always uses text messages regardless of whether you're on desktop or mobile, but you can use consent notifications to optimize 3DS UX by setting `preferredNotificationChannel: App`. When configured, users performing 3DS card payment validation receive an in-app notification instead of a text message, containing a consent link that opens the consent app directly on their phone.
-- As of January 2025, consent notifications automatically fall back to text messages if your endpoint doesn't respond correctly. This applies to all flows, including 3DS. Users can also manually choose to receive a text message instead with a button on the consent screen.

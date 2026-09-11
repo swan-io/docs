@@ -71,7 +71,24 @@ To sign your first server-to-server consent, complete the following actions:
 1. Request any [sensitive operation](/users/reference/sensitive-operations) that requires consent.
 1. Retrieve the created consent with the `consents` query. Swan provides the consent `challenge` in the response.
 
-```json {8} showLineNumbers
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0Q29uc2VudENoYWxsZW5nZSB7CiAgY29uc2VudHMgewogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICBpZAogICAgICAgIGNoYWxsZW5nZQogICAgICAgIHB1cnBvc2UKICAgICAgICBzdGF0dXMKICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql showLineNumbers
+query GetConsentChallenge {
+  consents {
+    edges {
+      node {
+        id
+        challenge
+        purpose
+        status
+      }
+    }
+  }
+}
+```
+
+```json {8} title="Payload" showLineNumbers
 {
   "data": {
     "consents": {

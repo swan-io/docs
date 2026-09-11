@@ -42,12 +42,13 @@ flowchart LR
     style F fill:#fffdf4,stroke:#cca922
     style SU fill:#dfedf2,stroke:#4d8296,stroke-width:3px
     style SS fill:#f6ddcc,stroke:#c12236
+    style C fill:#f6ddcc,stroke:#c12236
 ```
 
 | Identification status | Explanation |
 |---|---|
-| `Started` | The identification request was created. The user might have begun the identification process, but they haven't completed it. Their identification is still in progress. |
-| `Pending` | The user completed their portion of the identification process, and Swan identification service providers are reviewing it. |
+| `Started` | The identification request was created. The user might have begun the identification process, but they haven't completed it. Their identification is still in progress.<br /><br />**Next steps**:<ul><li>When the user completes their portion of the process, the status moves to `Pending`.</li><li>If the time limit passes before they finish, the status moves to `Expired`.</li><li>If the identification is canceled, the status moves to `Canceled`.</li></ul> |
+| `Pending` | The user completed their portion of the identification process, and Swan identification service providers are reviewing it.<br /><br />**Next steps**:<ul><li>If the identification is successful, the status moves to `Valid`.</li><li>If it isn't successful, the status moves to `Invalid`.</li><li>If the identification is canceled, the status moves to `Canceled`.</li></ul> |
 | `Valid` | The user's identification was successful, determined by the service provider. |
 | `Invalid` | The user's identification wasn't successful, determined by the service provider. |
 | `Canceled` | An identification request is canceled by your user or Swan. Identifications can be canceled from any non-final status. You can't cancel an identification on your user's behalf. |

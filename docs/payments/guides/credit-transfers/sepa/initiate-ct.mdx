@@ -10,7 +10,7 @@ related:
 
 # Initiate a credit transfer
 
-Send SEPA Credit Transfers, Instant SEPA Credit Transfers, and Swan Internal Credit Transfers with the API.
+Send <Term id="credit-transfer">SEPA Credit Transfers</Term>, Instant SEPA Credit Transfers, and Swan Internal Credit Transfers with the API.
 
 If you use [Swan's Web Banking frontend](https://swan-io.github.io/swan-partner-frontend/specs/banking/transfer), your users can send transfers from their account directly.
 
@@ -31,7 +31,7 @@ Send a SEPA Credit Transfer to a beneficiary within the SEPA network.
 1. Call the `initiateCreditTransfers` mutation.
 1. Add all required information, marked by an (*) asterisk in API Explorer, including your Swan `accountId` (line 6), and information such as your redirect URL and your transfer amount. 
 1. Add [an `idempotencyKey`](/build/using-api/idempotency) to prevent duplicate payments (line 4).
-1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 10-11).
+1. For this use case, add information about your `sepaBeneficiary`, including their name and <Term id="ibans">IBAN</Term> (lines 10-11).
 1. For `mode`, choose `Regular` to send a basic SEPA Credit Transfer.
 1. Add the `InitiateCreditTransfersSuccessPayload` payload.
 1. Add the consent URL to the success payload (line 28): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
@@ -86,12 +86,12 @@ Send a SEPA Credit Transfer with an optional structured or unstructured [invoice
 1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 8-10).
 1. Add `labelType`, choose an option (lines 13-14), and add the reference value in the `label` input.
 1. Add the `InitiateCreditTransfersSuccessPayload` (line 18).
-1. Add the consent URL to the success payload (line 22): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add the consent URL to the success payload (line 25): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
 1. Include error handling for all rejection types defined in the `initiateCreditTransfersPayload` union (lines 31-55)
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gaW5pdGlhdGVXaXRoTGFiZWxUeXBlIHsKICBpbml0aWF0ZUNyZWRpdFRyYW5zZmVycygKICAgIGlucHV0OiB7CiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJVDIzUDAzMDAyMDMyODA2MzIxMjM1NTM3NDgiCiAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICB9CiAgICAgICAgbGFiZWxUeXBlOiBPZ21WY3MKICAgICAgICBsYWJlbDogIjAwMDAwMDAwMDA5NyIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIHBheW1lbnQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBheW1lbnRDb25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gVmFsaWRhdGlvblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZmllbGRzIHsKICAgICAgICBjb2RlCiAgICAgICAgbWVzc2FnZQogICAgICAgIHBhdGgKICAgICAgfQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25Ub2tlbkFscmVhZHlDb25zdW1lZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VucwogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBGb3JiaWRkZW5SZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50Tm90Rm91bmRSZWplY3Rpb24gewogICAgICBpZAogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4,5,7,8-10,13-14,18,22} showLineNumbers
+```graphql {4,5,7,8-10,13-14,18,22,25,31-55} showLineNumbers
 mutation initiateWithLabelType {
   initiateCreditTransfers(
     input: {
@@ -347,7 +347,7 @@ Identify which user initiated a credit transfer by querying the payment before c
 
 ### Query the payment before consent is granted {#query-payment}
 
-While a payment is in `ConsentPending` status, you can query the payment's `statusInfo` to access the `consent` object, which contains the `userId` and full `user` details for the user who must consent to the transfer.
+While a payment is in `ConsentPending` status, you can query the payment's `statusInfo` to access the `consent` object, which contains the `userId` and full `user` details for the user who must <Term id="consent">consent</Term> to the transfer.
 
 Once the payment moves to `Initiated` or `Rejected`, the `PaymentConsentPending` fragment returns null and user information is no longer available through this method.
 
@@ -385,7 +385,7 @@ query GetPaymentInitiator {
 For reliable, long-term access to initiator information, store the user details at the time you initiate the transfer.
 
 The `initiateCreditTransfers` mutation requires a [user access token](/build/using-api/authentication#tokens-user), which identifies the initiating user.
-When you call the mutation successfully, store the user ID or account membership ID alongside the `paymentId` returned in the response.
+When you call the mutation successfully, store the user ID or <Term id="account-membership">account membership</Term> ID alongside the `paymentId` returned in the response.
 
 This approach provides immediate access to user information without additional queries, and remains available regardless of the payment's consent status.
 
@@ -420,6 +420,6 @@ If you're sending multiple transfers, your user consents to all of them with a s
 ```
 
 :::danger Rejected
-If your transaction is created with the status `Rejected`, learn why in the `rejectedReasonCode` field.
+If your <Term id="transactions">transaction</Term> is created with the status `Rejected`, learn why in the `rejectedReasonCode` field.
 For example, the rejection could be due to insufficient funds, or communication between Swan and the other bank timed out.
 :::

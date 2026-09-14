@@ -12,7 +12,11 @@ related:
 
 # Verification of Payee
 
-Verify beneficiary details before sending SEPA Credit Transfers to reduce fraud and payment errors.
+<p className="ia-lede"><Term id="verification-of-payee">Verification of Payee</Term> (VoP) checks beneficiary details against the <Term id="account-holder">account holder</Term> registered at the beneficiary's bank before a <Term id="credit-transfer">SEPA Credit Transfer</Term> is sent, to reduce fraud and payment errors.</p>
+
+import VerificationOfPayeeDefinition from '../../../_shared/definitions/_verification-of-payee.mdx';
+
+> <VerificationOfPayeeDefinition />
 
 :::info Mandatory compliance
 Required for all SEPA Credit Transfers and Instant SEPA Credit Transfers under the [European Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, for all Payment Service Providers (PSPs) in the Eurozone offering SEPA Credit Transfers.
@@ -40,8 +44,8 @@ VoP applies to all countries in the SEPA region. Payment Service Providers (PSPs
 
 | Payment Services Provider location | VoP mandatory date |
 | --- | --- |
-| 🇪🇺 [Eurozone](https://economy-finance.ec.europa.eu/euro/what-euro-area_en) | October 9, 2025 |
-| 🌐 Non-Eurozone | January 9, 2027 |
+| [Eurozone](https://economy-finance.ec.europa.eu/euro/what-euro-area_en) | October 9, 2025 |
+| Non-Eurozone | January 9, 2027 |
 
 The service is **free of charge** for Swan account holders as mandated by the regulation.
 
@@ -63,27 +67,11 @@ This documentation primarily covers **outgoing VoP requests** that you can integ
 VoP happens before sending money to a beneficiary, through this process:
 
 1. **VoP required**: All SEPA Credit Transfers and Instant SEPA Credit Transfers must be verified before authorization.
-2. **Verification request**: Swan sends a VoP request to the beneficiary's bank with the IBAN and beneficiary name.
+2. **Verification request**: Swan sends a VoP request to the beneficiary's bank with the <Term id="ibans">IBAN</Term> and beneficiary name.
 3. **Verification response**: The beneficiary's bank responds with the verification result.
 4. **Result displayed**: VoP result and associated warnings are shown to the end-user.
 
 ```mermaid
-sequenceDiagram
-    participant EU as End-user
-    participant P as Partner
-    participant S as Swan
-
-    EU->>P: Enters beneficiary details
-    P->>S: VoP Triggers
-    S->>S: Generates VoP result
-    S-->>P: Verification results<br/>(Custom integration)
-    P-->>EU: Displays VoP results/warnings<br/>(Custom integration)
-    S-->>EU: Displays VoP results/warnings<br/>(Default integration)
-
-    Note over EU: Reviews the results
-
-    EU->>EU: Decides: Proceed or Cancel
-
     %%{init: {
         'theme': 'base',
         'themeVariables': {
@@ -109,7 +97,30 @@ sequenceDiagram
             'fontFamily': '"Inter", "Segoe UI", system-ui, sans-serif'
         }
     }}%%
+sequenceDiagram
+    participant EU as End-user
+    participant P as Partner
+    participant S as Swan
+    participant Bene as Beneficiary's bank
+
+    EU->>P: Enters beneficiary details
+    P->>S: VoP triggers
+    S->>+Bene: Sends VoP request (IBAN + name)
+    Bene-->>-S: Returns verification result
+    S-->>P: Relays result<br/>(Custom integration)
+    P-->>EU: Displays VoP result/warnings<br/>(Custom integration)
+    S-->>EU: Displays VoP result/warnings<br/>(Default integration)
+
+    Note over EU: Reviews the results
+
+    EU->>EU: Decides: Proceed or Cancel
 ```
+
+:::caution Swan relays results: it doesn't determine them
+For outgoing VoP requests, results are determined solely by the **beneficiary's bank** (the creditor's PSP). Swan sends the verification request and displays the result exactly as received. Swan has no influence over the outcome and can't modify or override it.
+
+If a result seems unexpected, the beneficiary's bank made that determination based on their own matching logic.
+:::
 
 Following the [European Payments Council (EPC)'s recommended matching rules](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2024-10/EPC288-23%20v1.0%20EPC%20Recommendations%20for%20the%20Matching%20Processes%20under%20the%20VOP%20Scheme%20Rulebook_0.pdf), the name is the first and last name of a natural person (individual), or the legal or commercial name of a legal person (company).
 
@@ -118,7 +129,7 @@ Following the [European Payments Council (EPC)'s recommended matching rules](htt
 The beneficiary's bank can return one of four verification results. **All results must be displayed to the end-user**. Swan will systematically display the VoP result and warning on the SCA consent screen.
 
 <Tabs>
-  <TabItem value="match" label="✅ Match" id="vop-match" default>
+  <TabItem value="match" label="Match" id="vop-match" default>
     #### Match result
 
     **Result**: Exact match found between provided details and account holder information
@@ -131,7 +142,7 @@ The beneficiary's bank can return one of four verification results. **All result
     </div>
   </TabItem>
   
-  <TabItem value="close" label="⚠️ Close match" id="vop-close">
+  <TabItem value="close" label="Close match" id="vop-close">
     #### Close match result
 
     **Result**: Close match with suggested correction from beneficiary's bank
@@ -144,7 +155,7 @@ The beneficiary's bank can return one of four verification results. **All result
     </div>
   </TabItem>
   
-  <TabItem value="no-match" label="❌ No match" id="vop-no-match">
+  <TabItem value="no-match" label="No match" id="vop-no-match">
     #### No match result
 
     **Result**: No match found between provided details and account holder information
@@ -157,7 +168,7 @@ The beneficiary's bank can return one of four verification results. **All result
     </div>
   </TabItem>
   
-  <TabItem value="not-possible" label="❌ Verification not possible" id="vop-not-possible">
+  <TabItem value="not-possible" label="Verification not possible" id="vop-not-possible">
     #### Verification not possible result
 
     **Result**: IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists.
@@ -177,7 +188,7 @@ Verification of Payee provides verification results so end-users can make inform
 
 ### User liability with Verification of Payee {#user-liability}
 
-Users who authorize a transfer after receiving a `Close Match`, `No Match`, or `Verification Not Possible` warning accept the associated risks:
+Users who authorize a transfer after receiving a Close match, No match, or Verification not possible warning accept the associated risks:
 
 - The user bears responsibility if funds reach the wrong account.
 - Refunds are not available for misdirected transfers.
@@ -186,7 +197,7 @@ Users can find complete VoP liability information in their Swan account's Terms 
 
 ### Standing Orders {#standing-orders}
 
-VoP applies to Standing Orders with two key differences:
+VoP applies to <Term id="standing-order">Standing Orders</Term> with two key differences:
 
 1. **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
 2. **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
@@ -195,46 +206,26 @@ VoP applies to Standing Orders with two key differences:
 
 Swan provides two integration options based on your user experience (UX) needs and development limitations to ensure a compliant integration.
 
-<div className="row margin-bottom--lg">
-  <div className="col col--6">
-    <div className="card" style={{height: '100%', backgroundColor: '#fffbf0', border: '1px solid #ffeaa7'}}>
-      <div className="card__header">
-        <h3>🟡 Option 1: Default verification</h3>
-      </div>
-      <div className="card__body">
-        <p><strong>Swan automatically verifies beneficiary details when the end-user initiates a credit transfer</strong></p>
-        <ul>
-          <li>No additional development required for single SEPA Credit Transfers.</li>
-          <li>Swan displays VoP results and warnings in the consent screen.</li>
-          <li>Best for: Quick compliance and existing integrations.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div className="col col--6">
-    <div className="card" style={{height: '100%', backgroundColor: '#f0f9f0', border: '1px solid #d4edda'}}>
-      <div className="card__header">
-        <h3>🟢 Option 2: Custom verification</h3>
-      </div>
-      <div className="card__body">
-        <p><strong>Use [the `verifyBeneficiary` mutation](/payments/guides/credit-transfers/sepa/verify-beneficiary) for full control over verification presentation</strong></p>
-        <ul>
-          <li>Complete control over VoP results presentation.</li>
-          <li>Custom error handling and user guidance.</li>
-          <li>Required for bulk payments.</li>
-          <li>Best for: Enhanced UX and high-volume use cases.</li>
-        </ul>
-        <p><a href="/payments/guides/credit-transfers/sepa/verify-beneficiary">Learn how to verify beneficiary details →</a></p>
-      </div>
-    </div>
-  </div>
+import Link from '@docusaurus/Link';
+
+<div className="ia-path-picker">
+  <Link className="ia-path-option" to="#option-1">
+    <span className="ia-audience-tag ia-audience-tag--ops">Operators</span>
+    <span className="ia-path-option__name">Option 1: Default verification</span>
+    <span className="ia-path-option__desc">Swan verifies beneficiary details when the end-user initiates a credit transfer and shows the result in the consent screen. No additional development for single SEPA Credit Transfers. Best for quick compliance and existing integrations.</span>
+  </Link>
+  <Link className="ia-path-option" to="/payments/guides/credit-transfers/sepa/verify-beneficiary">
+    <span className="ia-audience-tag ia-audience-tag--dev">Developer</span>
+    <span className="ia-path-option__name">Option 2: Custom verification</span>
+    <span className="ia-path-option__desc">Call the <code>verifyBeneficiary</code> mutation for full control over how results are presented, custom error handling and user guidance. Required for bulk payments. Best for enhanced UX and high-volume use cases.</span>
+  </Link>
 </div>
 
 ### Supported payment types {#payment-support}
 
 <SupportStatusLegend />
 
-| Payment Type | 🟡 Option 1: Default | 🟢 Option 2: Custom | VoP requirements |
+| Payment type | Option 1: Default | Option 2: Custom | VoP requirements |
 | --- | :---: | :---: | --- |
 | **Single Credit Transfers** | <Supported /> | <Supported /> | Required |
 | **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | [See bulk transfers →](/payments/concepts/verification-of-payee/bulk-transfers) |
@@ -247,15 +238,16 @@ For single credit transfers, you don't have to do anything - Swan will run the V
 Option 1 is [not available for Bulk Credit Transfers](#payment-support). Instead, **Option 2** is designed to handle high-volume payments efficiently and aligns with standard market practices.
 
 <div style={{textAlign: 'center'}}>
+
 ```mermaid
 flowchart TD
-    subgraph Option1 ["🟡"]
+    subgraph Option1 ["Option 1: Default verification"]
         direction TB
         A1["User enters payment details"] --> B1["User submits payment"]
         B1 --> C1["Call initiateCreditTransfers"]
         C1 --> D1["Beneficiary verification (VoP)<br/>handled by Swan"]
         D1 --> E1["Consent screen with VoP result"]
-        E1 --> F1["Payment authorized or cancelled"]
+        E1 --> F1["Payment authorized or canceled"]
         F1 --> G1["Transfer completed"]
     end
     
@@ -272,6 +264,7 @@ flowchart TD
     class G1 transfer
     class Option1 subgraph1
 ```
+
 </div>
 
 ## Option 2: Custom verification {#option-2}
@@ -279,9 +272,10 @@ flowchart TD
 Call [the `verifyBeneficiary` mutation](/payments/guides/credit-transfers/sepa/verify-beneficiary#step-1) before initiating SEPA Credit Transfers to get full control over the verification user experience. You can decide the level of friction here, but we recommend having clear warnings and CTAs to verify or edit beneficiary details based on the verification result.
 
 <div style={{textAlign: 'center'}}>
+
 ```mermaid
 flowchart TD
-    subgraph Option2 ["🟢 Recommended"]
+    subgraph Option2 ["Option 2: Custom verification (recommended)"]
         direction TB
         A2["User enters beneficiary details"] --> B2["Beneficiary verification (VoP)<br/>using the verifyBeneficiary mutation"]
         B2 --> C2["Custom UX handling"]
@@ -307,16 +301,17 @@ flowchart TD
     class H2 transfer
     class Option2 subgraph2
 ```
+
 </div>
 
 ### Verification flow {#verification-flow}
 
 1. **Verify beneficiary**: Call [the `verifyBeneficiary` mutation](/payments/guides/credit-transfers/sepa/verify-beneficiary#step-1) - include the [beneficiary details](/payments/guides/credit-transfers/sepa/verify-beneficiary#step-1) to check against.
-2. **Receive the verification result**: Match, Close match, No Match, or Verification not possible. A unique [`BeneficiaryVerificationToken`](/payments/guides/credit-transfers/sepa/verify-beneficiary#step-3) is also returned.
+2. **Receive the verification result**: Match, Close match, No match, or Verification not possible. A unique [`BeneficiaryVerificationToken`](/payments/guides/credit-transfers/sepa/verify-beneficiary#step-3) is also returned.
 3. **Inform the end-user**: Display appropriate messaging and optional actions based on the verification result.
 4. **User proceeds**: The end-user can choose to proceed with the payment regardless of the result.
 5. **Use token**: Add the `beneficiaryVerificationToken` to the `CreditTransferInput` in [the `initiateCreditTransfers` mutation](/payments/guides/credit-transfers/sepa/initiate-ct).
-6. **User gives consent**: Complete the payment authorization.
+6. **User gives <Term id="consent">consent</Term>**: Complete the payment authorization.
 
 [View detailed implementation →](/payments/guides/credit-transfers/sepa/verify-beneficiary)
 
@@ -325,7 +320,7 @@ flowchart TD
 Examples of how to present VoP verification results in your web banking interface during the "Custom UX handling" step. You can decide the level of friction and optional actions to display.
 
 <Tabs>
-  <TabItem value="match" label="✅ Match" id="custom-ux-match" default>
+  <TabItem value="match" label="Match" id="custom-ux-match" default>
     ##### Custom UX: match result
 
     **Recommended actions**: None required - proceed with payment
@@ -333,7 +328,7 @@ Examples of how to present VoP verification results in your web banking interfac
     ![VoP Match web banking screen](../../../images/payments/credit-transfers/vop/PC_match.png)
   </TabItem>
   
-  <TabItem value="close" label="⚠️ Close match" id="custom-ux-close">
+  <TabItem value="close" label="Close match" id="custom-ux-close">
     ##### Custom UX: close match result
 
     **Recommended actions**: 
@@ -344,7 +339,7 @@ Examples of how to present VoP verification results in your web banking interfac
     ![VoP Close match web banking screen](../../../images/payments/credit-transfers/vop/PC_close_match.png)
   </TabItem>
   
-  <TabItem value="no-match" label="❌ No match" id="custom-ux-no-match">
+  <TabItem value="no-match" label="No match" id="custom-ux-no-match">
     ##### Custom UX: no match result
 
     **Recommended actions**: 
@@ -356,7 +351,7 @@ Examples of how to present VoP verification results in your web banking interfac
     ![VoP No match web banking screen](../../../images/payments/credit-transfers/vop/PC_no_match.png)
   </TabItem>
   
-  <TabItem value="not-possible" label="❌ Verification not possible" id="custom-ux-not-possible">
+  <TabItem value="not-possible" label="Verification not possible" id="custom-ux-not-possible">
     ##### Custom UX: verification not possible result
 
     **Recommended actions**: 
@@ -387,9 +382,3 @@ Bulk credit transfers require [Option 2: Custom verification](#option-2) using t
 | **Individual** | <Req /> | <No /> |
 
 **Learn more**: [Configure bulk credit transfers with VoP →](/payments/concepts/verification-of-payee/bulk-transfers)
-
-## Next steps {#next-steps}
-
-→ Learn how to [verify beneficiary details](/payments/guides/credit-transfers/sepa/verify-beneficiary) using the `verifyBeneficiary` mutation  
-→ Configure [bulk credit transfers with VoP](/payments/concepts/verification-of-payee/bulk-transfers) for high-volume use cases  
-→ Understand how Swan handles [incoming VoP requests](/payments/guides/credit-transfers/sepa/incoming-vop-requests) automatically

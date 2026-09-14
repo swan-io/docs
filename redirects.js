@@ -349,7 +349,7 @@ module.exports = [
     to: "/accounts/concepts/account-holders",
   },
   { from: "/help/faq/onboarding", to: "/accounts/guides/onboarding" },
-  { from: "/help/faq/sepa-transactions", to: "/payments/concepts/transactions/#sepa" },
+  { from: "/help/faq/sepa-transactions", to: "/payments/reference/sepa#sepa" },
   {
     from: "/concept/payment/international-credit-transfers/get-a-quote",
     to: "/payments/guides/credit-transfers/international/quote",
@@ -457,7 +457,7 @@ module.exports = [
   },
   {
     from: "/help/faq/cards/how-do-card-payments-work",
-    to: "/payments/concepts/cards/#authorization-clearing",
+    to: "/payments/concepts/cards/authorization-and-clearing#authorization-clearing",
   },
   {
     from: "/help/faq/cards/the-logo-appears-smaller-than-it-should-be-even-with-a-100-zoom",
@@ -469,15 +469,15 @@ module.exports = [
   },
   {
     from: "/help/faq/cards/what-does-a-declined-payment-with-the-reason-merchant-should-resubmit-authorization-mean",
-    to: "/payments/concepts/cards/#3ds",
+    to: "/payments/concepts/cards/3ds#3ds",
   },
   {
     from: "/help/faq/cards/what-is-3ds-and-when-users-need-to-use-it",
-    to: "/payments/concepts/cards/#3ds",
+    to: "/payments/concepts/cards/3ds#3ds",
   },
   {
     from: "/help/faq/cards/what-is-the-exchange-rate-when-i-make-a-payment-outside-the-eea",
-    to: "/payments/concepts/cards/",
+    to: "/payments/concepts/cards/#international",
   },
   {
     from: "/help/faq/cards/what-type-of-cards-does-swan-provide",
@@ -513,7 +513,7 @@ module.exports = [
   },
   {
     from: "/help/faq/sepa-transactions/what-are-the-countries-reachable-on-the-sepa-network",
-    to: "/payments/concepts/transactions/#sepa-locations",
+    to: "/payments/reference/sepa#sepa-locations",
   },
   {
     from: "/help/faq/sepa-transactions/what-are-the-reference-and-label-fields-describing-a-transaction",
@@ -525,7 +525,7 @@ module.exports = [
   },
   {
     from: "/help/faq/sepa-transactions/when-is-the-sepa-network-open",
-    to: "/payments/concepts/transactions/#sepa-availability",
+    to: "/payments/reference/sepa#sepa-availability",
   },
   {
     from: "/help/faq/sepa-transactions/why-cant-i-view-the-label-or-the-reference-on-my-bank-account",
@@ -1036,12 +1036,12 @@ module.exports = [
   { from: "/topics/merchants/profiles/guide-get-info", to: "/payments/guides/merchants/profiles/get-info" },
   { from: "/topics/merchants/profiles/guide-update", to: "/payments/guides/merchants/profiles/update" },
   { from: "/topics/merchants/online", to: "/payments/guides/merchants/online/" },
-  { from: "/topics/merchants/online/cards", to: "/payments/guides/merchants/online/cards/" },
+  { from: "/topics/merchants/online/cards", to: "/payments/concepts/merchants/online-cards" },
   { from: "/topics/merchants/online/cards/guide-cards", to: "/payments/guides/merchants/online/cards/accept" },
   { from: "/topics/merchants/online/cards/guide-request", to: "/payments/guides/merchants/online/cards/request" },
   { from: "/topics/merchants/online/cards/guide-create-link", to: "/payments/guides/merchants/online/cards/create-link" },
   { from: "/topics/merchants/online/cards/sandbox", to: "/payments/guides/sandbox/merchant-online-cards" },
-  { from: "/topics/merchants/online/sdd", to: "/payments/guides/merchants/online/sdd/" },
+  { from: "/topics/merchants/online/sdd", to: "/payments/concepts/merchants/sepa-direct-debit" },
   { from: "/topics/merchants/online/sdd/guide-sdd", to: "/payments/guides/merchants/online/sdd/accept" },
   { from: "/topics/merchants/online/sdd/guide-request", to: "/payments/guides/merchants/online/sdd/request" },
   { from: "/topics/merchants/online/sdd/guide-declare", to: "/payments/guides/merchants/online/sdd/declare" },
@@ -1050,7 +1050,7 @@ module.exports = [
   { from: "/topics/merchants/online/sdd/guide-update", to: "/payments/guides/merchants/online/sdd/update" },
   { from: "/topics/merchants/online/sdd/guide-create-link", to: "/payments/guides/merchants/online/sdd/create-link" },
   { from: "/topics/merchants/online/sdd/sandbox", to: "/payments/guides/sandbox/merchant-sdd" },
-  { from: "/topics/merchants/online/idd", to: "/payments/guides/merchants/online/idd/" },
+  { from: "/topics/merchants/online/idd", to: "/payments/concepts/merchants/internal-direct-debit" },
   { from: "/topics/merchants/online/idd/guide-idd", to: "/payments/guides/merchants/online/idd/accept" },
   { from: "/topics/merchants/online/idd/guide-request", to: "/payments/guides/merchants/online/idd/request" },
   { from: "/topics/merchants/online/idd/guide-declare", to: "/payments/guides/merchants/online/idd/declare" },
@@ -1058,14 +1058,14 @@ module.exports = [
   { from: "/topics/merchants/online/idd/guide-refund", to: "/payments/guides/merchants/online/idd/refund" },
   { from: "/topics/merchants/online/idd/sandbox", to: "/payments/guides/sandbox/merchant-idd" },
   { from: "/topics/merchants/in-person", to: "/payments/guides/merchants/in-person/" },
-  { from: "/topics/merchants/in-person/cards", to: "/payments/guides/merchants/in-person/cards/" },
+  { from: "/topics/merchants/in-person/cards", to: "/payments/concepts/merchants/in-person-cards" },
   { from: "/topics/merchants/in-person/cards/guide-setup", to: "/payments/guides/merchants/in-person/cards/setup" },
   { from: "/topics/merchants/in-person/cards/guide-request-method", to: "/payments/guides/merchants/in-person/cards/request-method" },
   { from: "/topics/merchants/in-person/cards/guide-accept", to: "/payments/guides/merchants/in-person/cards/accept" },
   { from: "/topics/merchants/in-person/cards/guide-initialize", to: "/payments/guides/merchants/in-person/cards/initialize" },
   { from: "/topics/merchants/in-person/cards/guide-create-payments", to: "/payments/guides/merchants/in-person/cards/create-payments" },
   { from: "/topics/merchants/in-person/cards/sandbox", to: "/payments/guides/sandbox/merchant-in-person-cards" },
-  { from: "/topics/merchants/in-person/checks", to: "/payments/guides/merchants/in-person/checks/" },
+  { from: "/topics/merchants/in-person/checks", to: "/payments/concepts/merchants/french-checks" },
   { from: "/topics/merchants/in-person/checks/guide-checks", to: "/payments/guides/merchants/in-person/checks/accept" },
   { from: "/topics/merchants/in-person/checks/guide-request", to: "/payments/guides/merchants/in-person/checks/request" },
   { from: "/topics/merchants/in-person/checks/guide-initiate", to: "/payments/guides/merchants/in-person/checks/initiate" },

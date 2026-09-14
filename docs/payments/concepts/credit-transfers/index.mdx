@@ -14,21 +14,29 @@ related:
 
 <p className="ia-lede">Move money between accounts around the world, whether in euros across the SEPA network or in multiple currencies over local rails and SWIFT.</p>
 
+import CreditTransferDefinition from '../../../_shared/definitions/_credit-transfer.mdx';
+
+> <CreditTransferDefinition />
+
 ## Types of credit transfers {#types}
 
-Swan offers **two main types** of credit transfers.
+Swan offers **two main types** of <Term id="credit-transfer">credit transfers</Term>.
 Each type has its own rules, capabilities, and APIs.
 
 Refer to the dedicated sections to understand each type and how they work at Swan:
 
 | Transfer type | Description |
 | --- | --- |
-| [**SEPA Credit Transfers**](/payments/concepts/credit-transfers/sepa) | Send and receive money using **euro**-based accounts and the [**SEPA network**](/payments/concepts/transactions#sepa)<br /><br />Includes:<br /><ul><li>**Instant** SEPA Credit Transfers</li><li>**Standing Orders** on the SEPA network</li><li>Swan **Internal** Credit Transfers</li></ul> |
+| [**SEPA Credit Transfers**](/payments/concepts/credit-transfers/sepa) | Send and receive money using **euro**-based accounts and the [**SEPA network**](/payments/reference/sepa#sepa)<br /><br />Includes:<br /><ul><li>**Instant** SEPA Credit Transfers</li><li>**<Term id="standing-order">Standing Orders</Term>** on the SEPA network</li><li>Swan **Internal** Credit Transfers</li></ul> |
 | [**International Credit Transfers**](/payments/concepts/credit-transfers/international) | Send and receive money from around the world in over **40 currencies** using **local payment rails** and **SWIFT** |
 
 ## Beneficiaries {#beneficiaries}
 
-Add **trusted beneficiaries** to accounts to facilitate credit transfers.
+import TrustedBeneficiaryDefinition from '../../../_shared/definitions/_trusted-beneficiary.mdx';
+
+> <TrustedBeneficiaryDefinition />
+
+Add **<Term id="trusted-beneficiary">trusted beneficiaries</Term>** to accounts to facilitate credit transfers.
 Adding trusted beneficiaries also reduces the risk of sending a transfer to an unintended beneficiary.
 
 You can **add trusted beneficiaries with the API**, either with a dedicated mutation or when initiating a credit transfer.
@@ -46,8 +54,8 @@ How account members can interact with beneficiaries depends on their [account me
 | --- | --- |
 | `canViewAccount` | View the list of trusted beneficiaries. |
 | `canManageBeneficiaries` | Add trusted beneficiaries. |
-| `canInitiatePayments`<br />*with* `canManageBeneficiaries` | Initiate credit transfers to trusted **and** unsaved beneficiaries. |
-| `canInitiatePayments`<br />*without* `canManageBeneficiaries` | Initiate credit transfers to trusted beneficiaries **only**. |
+| `canInitiatePayments`<br />with `canManageBeneficiaries` | Initiate credit transfers to trusted **and** unsaved beneficiaries. |
+| `canInitiatePayments`<br />without `canManageBeneficiaries` | Initiate credit transfers to trusted beneficiaries **only**. |
 
 Trusted beneficiaries move through their own status flow.
 Refer to [trusted beneficiary statuses](/payments/concepts/credit-transfers/statuses#beneficiaries-statuses).
@@ -62,7 +70,7 @@ Whether your label and reference entries are visible on other financial institut
 
 ### Custom label {#label-custom}
 
-- Optional field where you can name your transaction.
+- Optional field where you can name your <Term id="transactions">transaction</Term>.
 - According to SEPA, this label is for remittance information (`RemittanceInfo`), or payment details.
 - If left empty, the default value for Web Banking is `Transfer to {beneficiary}`. However, nothing is sent to the beneficiary's bank.
 - This value is displayed in your Swan transaction history.
@@ -74,7 +82,7 @@ Whether your label and reference entries are visible on other financial institut
 - Optional field intended to provide a way for you to include a reference number or code.
 - According to SEPA, this reference should be used for the end-to-end identification reference (`EndToEndId`) used to uniquely identify a transaction from start to finish.
 - Only characters 0-9 and a-z are allowed in this field. The total number of characters allowed can change, so refer to your transfer form for the character maximum.
-- If left empty, there is no default value. Note that the reference field is mandatory for SEPA inter-bank exchanges, so Swan populates an empty field with something similar to your transaction ID.
+- If left empty, there is no default value. The reference field is mandatory for SEPA inter-bank exchanges, so Swan populates an empty field with something similar to your transaction ID.
 - This value will be included in the details of a transaction in your transaction history, but not displayed in the main list.
 - Your **beneficiary probably sees** this reference, though it's impossible to know because every app is different.
 - Called `reference` in the API `transaction` object.

@@ -1,0 +1,71 @@
+---
+title: Stripe SDK errors
+audience:
+  - dev
+related:
+  - /payments/guides/merchants/in-person/cards/create-payments
+  - /payments/concepts/merchants/in-person-cards
+---
+
+# Stripe SDK errors
+
+<p className="ia-lede">Common errors the Stripe Terminal SDK returns while your <Term id="merchants">merchants</Term> process Tap to Pay payments, with their causes and how to resolve them.</p>
+
+These errors come directly from the Stripe Terminal SDK during payment processing, on the device.
+Swan doesn't receive or log them: only you and your merchants see them, in your terminal app.
+Payment intents you create with Swan's API aren't affected by them until the SDK confirms the payment.
+
+## Contactless transaction was canceled {#contactless-canceled}
+
+`Contactless transaction was canceled` and `The command was canceled` are two related errors.
+Aside from the card not supporting contactless payments, several scenarios can trigger them:
+
+- **Contactless limit exceeded**: most regions enforce a per-transaction contactless ceiling (for example, €50 in parts of Europe). If the customer doesn't insert their card and enter their PIN, which isn't possible with Tap to Pay, this error might surface.
+- **Cumulative tap velocity limit**: similar to the contactless limit, but triggered after a set number of consecutive taps.
+- **Offline PIN required**: more prevalent in the UK and Canada. Some cards require an offline PIN, which can't be collected over NFC. The cardholder must insert their card. This is a known Tap to Pay limitation with no current workaround.
+- **Connectivity issues**: if the device loses network connectivity mid-transaction, the contactless flow might be canceled.
+
+## AidlRpcException: failed to send request to AIDL server {#aidl-rpc}
+
+:::info Android only
+This error only occurs with Tap to Pay on Android.
+:::
+
+The full error message is `Contactless transaction failed: AidlRpcException – Failed to send request to AIDL server`.
+
+The Stripe Terminal SDK runs payment processing in a separate background process for security.
+The two processes communicate through Android's inter-process communication mechanism (AIDL).
+This error means the main app lost its connection to the background payment process.
+
+The most common causes are:
+
+- Android killing the background process because of aggressive memory or battery optimization on the device.
+- A crash during app initialization in the background process (for example, a third-party SDK such as Firebase running in a context it wasn't designed for).
+- Running an outdated SDK version. This class of issue improved significantly in releases after v4.4.0.
+
+To troubleshoot:
+
+1. Check whether your `Application.onCreate()` initializes any third-party SDKs that might crash in a background process context.
+1. Review the device's battery optimization settings.
+1. Refer to [dontkillmyapp.com](https://dontkillmyapp.com) for device-specific guidance on preventing Android from killing background processes.
+
+## PIN collection failed: accessibility services enabled {#pin-accessibility}
+
+The full error message is `PIN collection failed due to insecure environment: Accessibility services are enabled, turn off and retry the payment`.
+
+The Stripe Terminal SDK blocks PIN collection if any accessibility service is active on the device, because these services can read screen content or intercept touch events.
+
+The most common culprits are:
+
+- Password manager apps (LastPass, 1Password, Dashlane, and similar).
+- TalkBack or Voice Access (Google's built-in screen readers).
+- Switch Access.
+- Floating chat overlays (for example, Facebook Messenger or WhatsApp bubbles).
+- Magnification gestures.
+
+To resolve the error:
+
+1. Go to **Settings** > **Accessibility** > **Downloaded apps** on the device and disable any active services.
+1. Retry the payment.
+
+For password managers specifically, the user can switch to a manager that uses Android's native Autofill framework, which doesn't require an accessibility service.

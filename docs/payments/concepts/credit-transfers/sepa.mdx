@@ -16,10 +16,10 @@ related:
 
 ## Overview {#overview}
 
-Transfer euros between accounts located in the [Single Euro Payments Area (SEPA)](/payments/concepts/transactions#sepa).
+Transfer euros between accounts located in the [Single Euro Payments Area (SEPA)](/payments/reference/sepa#sepa).
 
 :::info
-Swan automatically includes [Verification of Payee (VoP)](/payments/concepts/verification-of-payee) in all SEPA Credit Transfers to comply with the EU Instant Payments Regulation.
+Swan automatically includes [Verification of Payee (VoP)](/payments/concepts/verification-of-payee) in all <Term id="credit-transfer">SEPA Credit Transfers</Term> to comply with the EU Instant Payments Regulation.
 :::
 
 Swan supports several types of credit transfers.
@@ -29,10 +29,10 @@ Note the acronyms; while the documentation doesn't use them, the acronyms are so
 | --- | --- | --- |
 | SEPA Credit Transfers | Transfers up to 1 cent less than a billion euros within SEPA that take up to 48 business hours to complete  | SCT |
 | Instant SEPA Credit Transfers | Transfers up to 100,000 euros within SEPA that are executed in 10 seconds | SCT Inst |
-| Swan Internal Credit Transfers | Transfers between two Swan accounts in the same project that are almost as quick as instant transfers | *None* ∗ |
-| Standing Orders | Scheduled, recurring transfers within SEPA that can be instant or regular | *None* |
+| Swan Internal Credit Transfers | Transfers between two Swan accounts in the same project that are almost as quick as instant transfers | None |
+| <Term id="standing-order">Standing Orders</Term> | Scheduled, recurring transfers within SEPA that can be instant or regular | None |
 
-∗ *If you see the acronym **ICT**, it's probably referring to [International Credit Transfers](/payments/concepts/credit-transfers/international), not Swan Internal.*
+If you see the acronym **ICT**, it probably refers to [International Credit Transfers](/payments/concepts/credit-transfers/international), not Swan Internal Credit Transfers.
 
 :::info Swan Internal Credit Transfers
 Swan Internal Credit Transfers are executed between two accounts in the **same Swan project**.
@@ -43,7 +43,7 @@ Otherwise, SEPA Credit Transfers and Internal Credit Transfers function almost i
 
 ### Consent {#consent}
 
-Initiating credit transfers is a [sensitive operation](/users/reference/sensitive-operations) and requires consent from an account member with the `canInitiatePayments` [membership permission](/accounts/reference/memberships/membership-permissions#permissions).
+Initiating credit transfers is a [sensitive operation](/users/reference/sensitive-operations) and requires <Term id="consent">consent</Term> from an account member with the `canInitiatePayments` [membership permission](/accounts/reference/memberships/membership-permissions#permissions).
 
 ### Risk and credit transfers {#risk}
 
@@ -55,7 +55,7 @@ Due to the manual review, flagged SEPA Credit Transfers take longer to execute.
 
 ### Verifying beneficiaries {#beneficiary-verification}
 
-**IBAN verification** allows debtors to verify that credit transfers are sent to the right beneficiary *before* initiating the transfer, thus reducing errors and potential fraud.
+**IBAN verification** allows debtors to verify that credit transfers are sent to the right beneficiary before initiating the transfer, thus reducing errors and potential fraud.
 
 :::info Dutch IBANs only
 Swan allows IBAN verification for all transfers between accounts with **Dutch IBANs**, meaning **both** IBANs involved begin with `NL`.
@@ -121,7 +121,7 @@ The speedy version of SEPA Credit Transfers, Instant SEPA Credit Transfers have 
 
 1. A maximum execution time of 10 seconds.
 1. A maximum transaction amount of €100,000.00 (one hundred thousand euros).
-1. Availability 24 hours a day, 7 days a week, 365 days a year, including when [SEPA is unavailable](/payments/concepts/transactions#sepa-availability) for other transaction types.
+1. Availability 24 hours a day, 7 days a week, 365 days a year, including when [SEPA is unavailable](/payments/reference/sepa#sepa-availability) for other transaction types.
 
 :::note IBAN validation 
 Consider [validating IBANs](/accounts/guides/ibans/validate) before initiating instant transfers.
@@ -137,12 +137,12 @@ There are three possible modes.
 | Mode | Description |
 | --- | --- |
 | `InstantWithoutFallback` | When an Instant SEPA Credit Transfer is rejected, the transaction is rejected and your user must initiate a new transaction themselves.<br /><br />In choosing `WithoutFallback`, you'll **abandon the transfer** if it can't be instant. |
-| `InstantWithFallback` | When an Instant SEPA Credit Transfer is rejected, the transfer is **reinitiated automatically** as a **regular** SEPA Credit Transfer instead, with few exceptions. ∗<br /><br />When a transfer falls back, two transactions appear on the transaction history. ∗∗ |
+| `InstantWithFallback` | When an Instant SEPA Credit Transfer is rejected, the transfer is **reinitiated automatically** as a **regular** SEPA Credit Transfer instead, with the exceptions listed after this table.<br /><br />When a transfer falls back, two transactions appear on the transaction history. |
 | `Regular` | Use a regular, non-instant SEPA Credit Transfer from the beginning, which can take up to two business days to arrive (it's usually quicker, though). |
 
-∗ *If the recipient's account can't be found, the account is closed, or the account holder is deceased, a regular transfer won't be initiated.*
+**Fallback exceptions**: if the recipient's account can't be found, the account is closed, or the account holder is deceased, a regular transfer isn't initiated.
 
-*∗∗ When an instant transfer falls back to a regular transfer, you'll see two transactions on your transaction history by default: a rejected `SepaInstantCreditTransferOut` and a new `SepaCreditTransferOut`.*
+When an instant transfer falls back to a regular transfer, you'll see two transactions on your transaction history by default: a rejected `SepaInstantCreditTransferOut` and a new `SepaCreditTransferOut`.
 When calling the `transactions` query, use the filter `includeRejectedWithFallback=false` so your users won't see the rejected instant transfer on their transaction history.
 
 ### Transfer verification {#instant-verification}
@@ -170,6 +170,10 @@ If the `mode` `InstantWithFallback` was chosen when initiating the transfer, a n
 
 ## Standing Orders {#standing-orders}
 
+import StandingOrderDefinition from '../../../_shared/definitions/_standing-order.mdx';
+
+> <StandingOrderDefinition />
+
 Standing orders are scheduled, recurring credit transfers, that, at Swan, are sent on the SEPA network.
 Schedule them on a daily, weekly, or monthly basis.
 Standing Orders can be sent as SEPA Credit Transfers or Instant SEPA Credit Transfers, and [fallback](#instant-fallback) applies for Standing Orders sent instantly.
@@ -188,7 +192,11 @@ Standing Orders cycle through their own [Standing Order statuses](/payments/conc
 
 ## R-transactions {#r-transactions}
 
-After credit transfers are initiated, other transactions, such as R-transactions, can be linked to the credit transfer transaction.
+import RTransactionDefinition from '../../../_shared/definitions/_r-transaction.mdx';
+
+> <RTransactionDefinition />
+
+After credit transfers are initiated, other transactions, such as <Term id="r-transaction">R-transactions</Term>, can be linked to the credit transfer transaction.
 
 ### Returned {#returned}
 
@@ -201,6 +209,8 @@ When a transfer is returned, a `SepaCreditTransferOutReturn` transaction is crea
 Additionally, incoming credit transfers might need to be **returned to the debtor**.
 For example, the account owner might have refused to consent to the transfer after the money was credited to the Swan account.
 When Swan needs to return a transfer, a `SepaCreditTransferInReturn` transaction is created to debit the money from the Swan account.
+
+Incoming transfers to an account in `Closing` status are also returned, unless the account's booked balance is negative: Swan then accepts the transfer to settle the outstanding debt. The [account statuses](/accounts/concepts/account/statuses#statuses) page owns the closing rules.
 
 :::note Incoming transfers with wrong BIC 
 Some banks require the beneficiary's Bank Identifier Code (BIC) when sending a transfer.

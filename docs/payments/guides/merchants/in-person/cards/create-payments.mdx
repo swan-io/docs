@@ -8,12 +8,12 @@ related:
 
 # Create in-person card payments
 
-Create payment intents so your merchants can accept card payments from customers using their terminal app.
+Create payment intents so your <Term id="merchants">merchants</Term> can accept card payments from customers using their terminal app.
 
 ## Prerequisites {#prerequisites}
 
 - The [Stripe Terminal SDK](./setup.mdx) installed and the [device initialized](./initialize.mdx).
-- A **merchant profile** with the status **Enabled**.
+- A **<Term id="merchant-profile">merchant profile</Term>** with the status **Enabled**.
 - An **in-person card payment method** with the status **Enabled**. If you don't have one yet, [request the payment method](./request-method.mdx) first.
 - A project access token, or a user access token with **Can manage members** rights.
 
@@ -65,7 +65,7 @@ mutation CreateInPersonPayment {
 
 | Field | Type | | Description |
 | --- | --- | --- | --- |
-| `merchantProfileId` | `ID` | <Req /> | ID of the merchant profile accepting the payment. |
+| `merchantProfileId` | `ID` | <Req /> | ID of the merchant profile accepting the <Term id="payments">payment</Term>. |
 | `amount` | `AmountInput` | <Req /> | Amount for the payment intent. Minimum: €0.50. |
 | `label` | `String` | <Opt /> | Label shown on the merchant's bank statement. |
 | `externalReference` | `String` | <Opt /> | Reference to match the payment with an external system, such as an order ID. |
@@ -267,20 +267,24 @@ val cancelable = Terminal.getInstance().confirmPaymentIntent(
 ## Merchant payment statuses {#statuses}
 
 After processing, the merchant payment object reflects the payment's lifecycle.
-Refer to the [payment object statuses](./index.mdx#payment-statuses) for the full list.
+Refer to the [payment object statuses](/payments/concepts/merchants/in-person-cards#payment-statuses) for the full list.
 
 | Status | Explanation |
 | --- | --- |
-| `Captured` | Payment authorized and captured. Funds will be [settled](./index.mdx#settlement) to the merchant's account. |
-| `Rejected` | Payment declined by the issuer or by Swan. Refer to [rejection reasons](./index.mdx#rejected) for details. |
+| `Captured` | Payment authorized and captured. Funds will be [settled](/payments/concepts/merchants/in-person-cards#settlement) to the merchant's account. |
+| `Rejected` | Payment declined by the issuer or by Swan. Refer to [rejection reasons](/payments/concepts/merchants/in-person-cards#rejected) for details. |
 | `Disputed` | Customer disputed the payment for some or all of the amount. |
 | `Refunded` | Payment reversed by the merchant for some or all of the amount. |
 
 ## After the payment {#after-payment}
 
-After the payment is captured, the merchant payment object is updated and underlying transactions are created.
-Refer to [card transaction types](./index.mdx#transaction-types) to understand how they settle.
+After the payment is captured, the merchant payment object is updated and underlying <Term id="transactions">transactions</Term> are created.
+Refer to [card transaction types](/payments/concepts/merchants/in-person-cards#transaction-types) to understand how they settle.
 
 import InPersonCardRefundLimitation from '../partials/_in-person-card-refund-limitation.mdx';
 
 <InPersonCardRefundLimitation />
+
+:::info Stripe SDK errors
+Encountering errors from the Stripe Terminal SDK? Refer to [Stripe SDK errors](./stripe-sdk-errors.mdx) for common causes and solutions.
+:::

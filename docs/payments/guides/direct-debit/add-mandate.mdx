@@ -9,10 +9,10 @@ related:
 
 # Add a payment mandate
 
-Add SEPA Direct Debit B2B (Business-to-Business) received payment mandates [with the API](#api) or by [sending a link](#link) to an account member so they can register the mandate themselves.
+Add <Term id="sdd">SEPA Direct Debit</Term> B2B (Business-to-Business) received <Term id="payment-mandates">payment mandates</Term> [with the API](#api) or by [sending a link](#link) to an account member so they can register the mandate themselves.
 
 :::caution B2B mandates only
-This guide is for SEPA Direct Debit B2B mandates only. These mandates are required to authorize a company to debit an account. If an account member completes a non-B2B Direct Debit mandate, their creditor will handle its registration automatically.
+This guide is for SEPA <Term id="direct-debit">Direct Debit</Term> B2B mandates only. These mandates are required to authorize a company to debit an account. If an account member completes a non-B2B Direct Debit mandate, their creditor will handle its registration automatically.
 :::
 
 When **Swan receives** [new SEPA Direct Debit instructions](/payments/concepts/direct-debit#received-instructions-new), the corresponding mandate is added **automatically**.
@@ -30,11 +30,20 @@ import InitiatePaymentsPrereqs from '../../partials/_initiate-payments-prereqs.m
 ### Guide {#guide}
 
 1. Call the `addReceivedSepaDirectDebitB2bMandate` mutation.
-1. Add the Unique Mandate Reference (`mandateReference`) and SEPA Creditor Identifier (`creditorIdentifier`).
-1. Add the creditor's name, plus your Swan IBAN and consent redirect URL.
+1. Add the Unique Mandate Reference (`mandateReference`) and SEPA Creditor Identifier (`creditorIdentifier`). Both must follow the SEPA format (see the caution after this list).
+1. Add the creditor's name, plus your Swan <Term id="ibans">IBAN</Term> and consent redirect URL.
 1. Choose whether the mandate can be used once (`OneOff`) or multiple times (`Recurrent`).
 1. Add the `AddReceivedSepaDirectDebitB2bMandateSuccessPayload`, including the `consentUrl`.
 1. Add rejections (not shown).
+
+:::caution SEPA format validation
+Swan validates two fields against the SEPA format when a B2B mandate is submitted, and rejects values that don't comply:
+
+- `creditorIdentifier` must follow the [SEPA Creditor Identifier (SCI)](/payments/concepts/merchants/sepa-direct-debit#sci) structure: an ISO two-letter country code, a two-digit checksum, a creditor business activity code, and a national identification feature.
+- `mandateReference` must be a valid SEPA mandate reference of up to 35 characters.
+
+This validation prevents mandates with incorrect data, which would otherwise cause `MandateInvalid` rejections on the resulting SEPA Direct Debit B2B <Term id="transactions">transactions</Term>.
+:::
 
 ### Mutation {#mutation}
 
@@ -81,7 +90,7 @@ mutation AddReceivedMandate {
 
 The payload shows the mandate was added successfully with the status `ConsentPending`, and provides the `consentUrl` (line 10).
 
-Make sure to send the `consentUrl` to your user so they can provide consent for the mandate.
+Make sure to send the `consentUrl` to your user so they can provide <Term id="consent">consent</Term> for the mandate.
 
 ```json {7,10} showLineNumbers
 {

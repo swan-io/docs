@@ -4,6 +4,8 @@ audience:
   - dev
   - ops
 related:
+  - /payments/concepts/merchants/statuses
+  - /payments/concepts/merchants/payments
   - /payments/guides/merchants/onboarding-overview
   - /payments/guides/merchants/profiles/request
   - /payments/concepts/transactions
@@ -11,7 +13,7 @@ related:
 
 # Merchants
 
-<p className="ia-lede">Account holders who accept payments by card (online and in person), direct debit, or French check, through payment links or invoices.</p>
+<p className="ia-lede">Account holders who accept <Term id="payments">payments</Term> by card (online and in person), <Term id="direct-debit">direct debit</Term>, or French check, through <Term id="payment-link">payment links</Term> or invoices.</p>
 
 import MerchantsDefinition from '../../../_shared/definitions/_merchants.mdx';
 
@@ -19,10 +21,10 @@ import MerchantsDefinition from '../../../_shared/definitions/_merchants.mdx';
 
 ## Overview {#overview}
 
-Merchants are account holders who want to accept payments by card (online and in person), SEPA Direct Debit, Internal Direct Debit, or French checks. They can do this either through a payment link or an invoice.
+<Term id="merchants">Merchants</Term> are <Term id="account-holder">account holders</Term> who want to accept payments by card (online and in person), <Term id="sdd">SEPA Direct Debit</Term>, Internal Direct Debit, or French checks. They can do this either through a payment link or an invoice.
 This includes contractors, healthcare professionals, artisans, and business owners, among others.
 
-With a merchant profile and at least one active merchant payment method, you can help your merchants accept payments with Swan.
+With a <Term id="merchant-profile">merchant profile</Term> and at least one active <Term id="merchant-payment-method">merchant payment method</Term>, you can help your merchants accept payments with Swan.
 
 :::info Pending review
 Before accepting payments, you need to complete a risk review.
@@ -39,17 +41,21 @@ Both profiles and payment methods initially start with the status `PendingReview
 For payment methods, Swan may change the status to `WaitingForInformation` when additional details are needed. 
 In such cases, you'll receive these details within the `verificationRequirements` list. New information must be provided at the Merchant Profile level.
 
-To manage potential risk, Swan can change the rolling reserve and the payment amount limit. If suspicious activity is detected, we can also **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
+To manage potential risk, Swan can change the <Term id="rolling-reserve">rolling reserve</Term> and the payment amount limit. If suspicious activity is detected, we can also **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
 Swan can also reinstate a profile or payment method by changing the status to `Enabled`.
 Finally, if Swan assigns the status `Rejected` to a profile or payment method, the decision is final and can't be reversed. 
 The user must submit a new request for the account holder, which Swan will review as a separate submission.
 
 ### Webhooks {#webhooks}
 
-Subscribe to numerous webhooks to facilitate your merchant integrations.
+Subscribe to numerous <Term id="webhooks">webhooks</Term> to facilitate your merchant integrations.
 Review the [full list of merchant webhooks](/build/using-api/webhooks#events-merchants), or subscribe to them directly from your **Dashboard** > **Developers** > **Webhooks**.
 
 ## Merchant profiles {#profiles}
+
+import MerchantProfileDefinition from '../../../_shared/definitions/_merchant-profile.mdx';
+
+> <MerchantProfileDefinition />
 
 A **merchant profile** is a collection of business, risk, and support information that fulfills two primary requirements: 
 
@@ -78,39 +84,10 @@ To speed up **merchant profile enablement**, complete as many input fields as po
 | **Additional information** | <Cnd /> | Required only if custom information is needed. Specified in the `expectedMerchantProfileAdditionalInformation` field of the `ProjectInfo` object in the API. |
 | **Supporting documents** | <Cnd /> | Required only after a payment method risk review. Listed in the `paymentMethod` object in the API. |
 
-The merchant profile is created with the status `PendingReview`, and is visible right away on your Dashboard.
 
 ### Merchant profile statuses {#profile-statuses}
 
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    MPR((Merchant profile)) --> PR[PendingReview]
-    PR --> R[Rejected]
-    PR --> E[Enabled]
-    E <-.-> S[Suspended]
-    S --> R
-    S --> D
-    E --> D[Disabled]
-    subgraph U[Can use]
-        E
-    end
-    subgraph F[Final status]
-        D
-        R
-    end
-    style MPR fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-    style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
-```
-
-| Profile status | Explanation |
-|:---:|---|
-| `PendingReview` | The profile is under review by Swan. <br /><br />• If the profile doesn't meet our requirements or we consider it a risk, we'll change the status to `Rejected`. Otherwise, we'll change the status to `Enabled`. <br />• Request payment methods while a profile is `PendingReview`. |
-| `Enabled` | The profile is active.<br /><br />Capabilities:<br />• Request payment methods and accept payments.<br />• Make updates to the profile's information. |
-| `Suspended` | **Swan** assigns this status when we need to review a merchant's profile. The profile can't be `Enabled` again until we complete our review. |
-| `Rejected` | **Swan** assigns this **final status** when a profile's risk is too high, or for other risk-related reasons. |
-| `Disabled` | **You** set this final status using the `disableMerchantProfile` mutation. |
+A profile is created as `PendingReview` and is visible right away on your Dashboard. Swan's risk review then moves it to `Enabled` or `Rejected`. The full lifecycle and the rejection reasons are on the [merchant statuses](/payments/concepts/merchants/statuses#profile-statuses) page.
 
 ### Updating merchant profiles {#profiles-update}
 
@@ -136,28 +113,11 @@ Swan reviews both requests, but only the most recent is made public.
 All update requests are reviewed by Swan according to the same [risk guidelines](#risk) as a new merchant profile.
 :::
 
-### Merchant profile rejection {#profile-rejected}
-
-The merchant profile is created with the status `PendingReview`, and is visible right away on your Dashboard. 
-It is then updated to either `Enabled` or `Rejected` depending on Swan's risk review.
-
-A merchant profile can be rejected for the following reasons:
-
-| Rejection reason | Explanation |
-| --- | --- |
-| `DuplicateProfile` | The profile is the same as an existing one. |
-| `InconsistentOrMissingInformation` | Key information is missing or highly inconsistent, for example, an unrelated website. |
-| `UnsupportedActivity` | The activity is prohibited or the NACE code isn't supported. |
-| `ContractualCriteriaNotFulfilled` | The profile doesn't meet specific criteria agreed upon with Partners. |
-| `GenericRejection` | The profile was rejected for a general reason not covered by other categories. |
-| `SuspiciousBehavior` | The profile was rejected due to alerts related to suspicious processing behavior. |
-
-:::info For Partners only
-These rejection reasons are intended for Partners and shouldn't be displayed to end users.
-If you need more details about a specific rejection, please contact Swan.
-:::
-
 ## Payment methods {#methods}
+
+import MerchantPaymentMethodDefinition from '../../../_shared/definitions/_merchant-payment-method.mdx';
+
+> <MerchantPaymentMethodDefinition />
 
 Your merchants can accept customer payments using several payment methods.
 
@@ -173,118 +133,14 @@ import OnlinePaymentMethods from '../../guides/merchants/partials/_online-list.m
 
 <OnlinePaymentMethods />
 
+Merchant payment methods are enabled per Partner: Swan reviews your use case before your merchants can request them (see the pending-review note above). Rolling reserve, payment amount limits, and how the merchant's name appears on statements are described on the [merchant payments](/payments/concepts/merchants/payments) page.
+
 All merchant payment method requests are subject to a risk review and start with the status `PendingReview`. 
 As part of this process, Swan may need to request additional information from the merchant to complete the assessment.
 
 ### Payment method statuses {#method-statuses}
 
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-
-flowchart LR
-
-PMQ((Payment method<br/>requested)) --> PR[PendingReview]
-PR <-.-> WFI[WaitingForInformation]
-PR --> R[Rejected]
-PR --> E[Enabled]
-E <-.-> S[Suspended]
-S --> R
-S --> D[Disabled]
-E --> D
-
-subgraph U[Can use]
-    E
-end
-
-subgraph F[Final status]
-    D
-    R
-end
-
-style PMQ fill:#D4D3D5,stroke:#514F59
-style F fill:#fffdf4,stroke:#cca922
-style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
-```
-
-| Payment method status | Explanation |
-|---|---|
-| `PendingReview` | The payment method is under review by Swan. <br /><br />• If the request doesn't meet our requirements or we consider it a risk, we'll change the status to `Rejected`.<br />• Otherwise, we'll change the status to `Enabled`. <br /><br />Capabilities:<br />• While a profile is `PendingReview`, you can still request payment methods.|
-| `WaitingForInformation` | More information is needed before the payment method can be reviewed by Swan.<br /><br />• The `verificationRequirements` shows what the Partner must provide to trigger a new review.<br />• Submit supporting documents and request a new review using the `requestSupportingDocumentCollectionReview` mutation.<br />• After all required information is submitted, the status returns to `PendingReview` for a new review. |
-| `Enabled` | The payment method is active.<br /><br />• Use `Enabled` payment methods to accept payments.<br />• Updates to payment methods can only occur when they are `Enabled`. |
-| `Suspended` | **Swan** assigns this status when we need to review the merchant's use of their payment method. The payment method can't be `Enabled` again until we complete our review. |
-| `Rejected` | **Swan** assigns this **final status** when a payment method's risk is too high, or for other risk-related reasons. |
-| `Disabled` | **You** set this final status using the `disableMerchantPaymentMethod` mutation. |
-
-### Payment method rejection {#payment-method-rejected}
-
-A merchant payment method can be rejected for the following reasons:
-
-| Rejection reason | Explanation |
-|------------------|-------------|
-| `InvalidUseCase` | The requested payment method is incompatible with the merchant's business model. |
-| `InconsistentOrMissingInformation` | The merchant didn't provide, or refused to provide, requested information. |
-| `UnsupportedPaymentMethod` | The Partner isn't allowed to request this payment method. |
-| `ContractualCriteriaNotFulfilled` | The request doesn't meet the contractual criterion agreed upon with the Partner. |
-| `GenericRejection` | The request was rejected for a reason not covered by other categories. |
-
-:::info For Partners only
-These rejection reasons are intended for Partners and shouldn't be displayed to end users.
-If you need more details about a specific rejection, please contact Swan.
-:::
-
-### Rolling reserve {#rolling-reserve}
-
-import RollingReserve from '../../guides/merchants/partials/_rolling-reserve.mdx';
-
-<RollingReserve />
-
-| Payment method | Rolling reserve | Default amount |
-| --- | --- | --- |
-| Cards | <Yes /> **Yes** | 100% over 5 business days |
-| SEPA Direct Debit - Core | <Yes /> **Yes** | Determined by a merchant profile risk assessment |
-| SEPA Direct Debit - B2B | <Yes /> **Yes** | 100% over 3 business days |
-| Internal Direct Debit - Standard | <Yes /> **Yes** | Determined by a merchant profile risk assessment |
-| Internal Direct Debit - B2B | <No /> No | Not required |
-| French checks | <Yes /> **Yes** | 100% over 10 interbank business days |
-
-:::info Webhooks
-Subscribe to the relevant webhooks to stay informed about updates:
-- **Rolling reserve value, payment amount limit, and payment methods**: 
-  subscribe to the [merchant payment methods webhooks](/build/using-api/webhooks#events-merchants-payment-methods).  
-
-- **Merchant profile changes**:
-  subscribe to the [merchant profile webhooks](/build/using-api/webhooks#events-merchants-profiles).  
-
-- **Transaction-level rolling reserve releases**:
-  the `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/build/using-api/webhooks#events-transactions) notify you when the rolling reserve of an individual transaction is updated or released.  
-
-Use both merchant and transaction webhooks to cover account-level and transaction-level updates.
-:::
-
-### Payment amount limit {#payment-limit}
-For security and risk management, Swan may apply a **payment amount limit** to single card payments. 
-This limit defines the maximum amount a user can spend in one card transaction. 
-If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` error.
-
-### Statement display {#statement-display}
-
-How your merchant's name appears on the payer's bank statement depends on the payment method.
-
-#### Online card payments {#statement-display-cards}
-
-For online card transactions, the payer's bank statement displays **`SW*[MerchantName]`**, where `MerchantName` is the merchant's name from their profile.
-
-The content of the `label` field may also appear on the statement, depending on the payer's bank.
-Choose the `label` value carefully, as the payer might see it.
-
-#### SEPA Direct Debit {#statement-display-sdd}
-
-For SEPA Direct Debit, the name displayed on the debtor's statement depends on the **SEPA Creditor Identifier** (SCI) used.
-
-| SCI option | Statement displays | Notes |
-| --- | --- | --- |
-| Swan's SCI | **Swan** | Default option. |
-| Merchant's own SCI | **Merchant's name** | Requires [updating the merchant payment method](/payments/guides/merchants/online/sdd/update) through the API. French merchants can request an SCI through the [Partner Support Request form](https://supportform.swan.io/).|
+The full lifecycle, including `WaitingForInformation`, and the rejection reasons are on the [merchant statuses](/payments/concepts/merchants/statuses#method-statuses) page.
 
 ### Versions {#methods-versions-statuses}
 
@@ -294,3 +150,27 @@ Only one version of a payment method can have the status `Enabled`.
 Swan manages the statuses for `Enabled` or `PendingReview` payment methods automatically.
 Therefore, you don't need to change the status before calling the API.
 
+## Account closing and suspension {#account-closing}
+
+When a merchant's account moves to `Closing`, Swan rejects the account's merchant profiles and payment methods with the reason `AccountClosed`, and cancels the merchant's `Upcoming` incoming SEPA Direct Debit <Term id="transactions">transactions</Term> (Core and B2B) that haven't yet been sent to the payment gateway, as well as upcoming check transactions. The corresponding merchant payments move to `Canceled`. Transactions already handed over for settlement complete normally, and returns, refunds, and chargebacks are still `Booked` on the account while it's `Closing`.
+
+On accounts in `Closing` or `Suspended` status, Swan rejects the creation of merchant profiles and payment methods, payment link initiation, merchant payments, and <Term id="payment-mandates">payment mandates</Term>. The rejection identifies the account status as the cause.
+
+Learn more about the [account closure process](/accounts/concepts/closure/processes) and [account statuses](/accounts/concepts/account/statuses#statuses).
+
+## In this section
+
+```flowmap
+{
+  "mode": "pathway",
+  "items": [
+    { "title": "Merchant statuses", "to": "/payments/concepts/merchants/statuses", "desc": "Profile, payment method, and merchant payment status machines, with rejection reasons." },
+    { "title": "Merchant payments", "to": "/payments/concepts/merchants/payments", "desc": "The payment object, its balances, rolling reserve, limits, statement display, and payment links." },
+    { "title": "Online cards", "to": "/payments/concepts/merchants/online-cards", "desc": "Card payments through payment links." },
+    { "title": "In-person cards", "to": "/payments/concepts/merchants/in-person-cards", "desc": "Tap to Pay card payments settled by credit transfer." },
+    { "title": "SEPA Direct Debit", "to": "/payments/concepts/merchants/sepa-direct-debit", "desc": "Core and B2B direct debits under a mandate." },
+    { "title": "Internal Direct Debit", "to": "/payments/concepts/merchants/internal-direct-debit", "desc": "Direct debits between Swan accounts in the same project." },
+    { "title": "French checks", "to": "/payments/concepts/merchants/french-checks", "desc": "Paper checks from French banks." }
+  ]
+}
+```

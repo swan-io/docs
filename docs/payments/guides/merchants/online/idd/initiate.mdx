@@ -12,8 +12,8 @@ related:
 - Debtor's account status: any except `Closing` or `Closed`
 - Merchant profile status: `Enabled`
 - Payment method status: `Enabled`
-- Direct debit payment mandate status: `Enabled`
-- Debtor and merchant have accounts in the same Swan projects
+- <Term id="direct-debit">Direct debit</Term> <Term id="payment-mandates">payment mandate</Term> status: `Enabled`
+- Debtor and <Term id="merchants">merchant</Term> have accounts in the same Swan projects
 - (B2B only) Debtor's account type: `Company`
 :::
 
@@ -21,7 +21,7 @@ related:
 
 1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions.
 1. Call the `initiateMerchantPaymentCollection` mutation.
-1. Add an `idempotencyKey` to prevent duplicate payments (line 4). Refer to the [idempotency guide](/build/using-api/idempotency) for more information.
+1. Add an `idempotencyKey` to prevent duplicate <Term id="payments">payments</Term> (line 4). Refer to the [idempotency guide](/build/using-api/idempotency) for more information.
 1. Include the amount `value` and `currency` (line 5).
 1. Choose `internalDirectDebit` (line 6), and add the payment `mandateId` (line 7) using the [declare a payment mandate](./declare.mdx) guide.
 1. Add the `InitiateMerchantPaymentCollectionSuccessPayload` success payload (line 11).
@@ -34,7 +34,7 @@ import DateIso8601 from '../../../../../_shared/partials/_iso-8601.mdx';
 :::note Dates
 <DateIso8601 />
 
-If the date is left empty, the transaction will be executed as soon as possible.
+If the date is left empty, the <Term id="transactions">transaction</Term> will be executed as soon as possible.
 If the date indicated is a non-business day, the transaction will be executed on the next business day.
 :::
 
@@ -115,7 +115,7 @@ Note the `id` (line 6) for your Internal Direct Debit payment and the status `In
 1. At this point, two transactions are created automatically and sequentially:
     1. First, an incoming Internal Direct Debit (`InternalDirectDebitIn`) is created in the merchant's account with the status `Upcoming`.
     1. Then, an outgoing Internal Direct Debit (`InternalDirectDebitOut`) is created in the debtor's account with the status Upcoming.
-1. On the [settlement date](./index.mdx#settlement), Swan confirms the transaction can be completed, meaning the following must be true:
+1. On the [settlement date](/payments/concepts/merchants/internal-direct-debit#settlement), Swan confirms the transaction can be completed, meaning the following must be true:
    1. Debtor's Swan account status: `Enabled` *(Different from the prerequisites because the account doesn't need to be enabled to start the transaction.)*.
    1. Direct debit payment mandate status: `Enabled`.
    1. Debtor's available balance is enough to cover the transaction.
@@ -123,5 +123,5 @@ Note the `id` (line 6) for your Internal Direct Debit payment and the status `In
 
 :::info Payment received
 - **B2B** transactions: the merchant receives the payment as soon as the status passes to `Booked`.
-- **Standard** transactions: [rolling reserve](./index.mdx#rolling-reserve) begins after the transaction is `Booked`. After the indicated rolling reserve period, the merchant receives the payment.
+- **Standard** transactions: [rolling reserve](/payments/concepts/merchants/internal-direct-debit#rolling-reserve) begins after the transaction is `Booked`. After the indicated rolling reserve period, the merchant receives the payment.
 :::

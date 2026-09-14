@@ -16,24 +16,24 @@ related:
 
 ## Overview {#overview}
 
-Send and receive money almost anywhere in the world using a Swan International Credit Transfer.
+Send and receive money almost anywhere in the world using a Swan <Term id="credit-transfer">International Credit Transfer</Term>.
 
 With Swan International Credit Transfers, you can:
 
-Exchange euros for a different currency, then transfer that money on either local rails or the SWIFT network.
+1. Exchange euros for a different currency, then transfer that money on either local rails or the SWIFT network.
 1. Transfer euros outside of the eurozone using the SWIFT network.
 1. Receive credit transfers initiated outside of the eurozone. You'll receive these transfers in euros as Swan doesn't store money in currency other than euros.
 
-:::tip statuses
+:::tip Statuses
 International Credit Transfers follow the standard [credit transfer status flow](/payments/concepts/credit-transfers/statuses) with one exception: they can't have the status `Upcoming`.
 :::
 
 ## Risk with international transfers {#risk}
 
-International transfers *can* introduce more significant risk than transfers that don't cross borders or change currencies.
+International transfers can introduce more significant risk than transfers that don't cross borders or change currencies.
 Additionally, since more legal jurisdictions are involved, Swan International Credit Transfers must follow regulations for multiple regions.
 
-Potential areas for increased risk and friction include: instability in the target region, diverging requirements for consent or identity documents, different reactions in the case of disputed transactions, fluctuation in currency value and exchange rate, and more.
+Potential areas for increased risk and friction include: instability in the target region, diverging requirements for <Term id="consent">consent</Term> or identity documents, different reactions in the case of disputed <Term id="transactions">transactions</Term>, fluctuation in currency value and exchange rate, and more.
 
 Therefore, **Swan prioritizes a risk-based approach**, which applies to you and your end users.
 In addition to increased scrutiny in the transaction-review process, both automated and manual, Swan uses dynamic forms in the International Credit Transfer API.
@@ -58,15 +58,15 @@ The [lists of allowed countries for outgoing transfers](/payments/reference/inte
 
 The fees listed on this page are always paid by the **Swan user**.
 
-| Fee group | Outgoing transfer fee ∗ | Incoming transfer fee ∗∗ |
+| Fee group | Outgoing transfer fee | Incoming transfer fee |
 | --- | --- | --- |
 | Group 1 | €5 + 0.6% | €5 (+ 0.6%) |
 | Group 2 | €5 + 1% | €5 (+ 1%) |
 | Group 3 | €5 + 2% | €5 (+ 2%) |
 | Group 4 | €5 + 5% | €5 (+ 5%) |
 
-∗ For outgoing transfers, an **additional** €5 fee is charged when sending **USD**, **GBP**, and **EUR** through SWIFT. For these currencies, the total fee is €10 + the percentage % indicated in the table.<br />
-∗∗ For incoming transfers, the additional fee percentage (in parentheses) only applies to transfers not already converted into euros.
+- **Outgoing transfers**: an **additional** €5 fee is charged when sending **USD**, **GBP**, and **EUR** through SWIFT. For these currencies, the total fee is €10 + the percentage indicated in the table.
+- **Incoming transfers**: the additional fee percentage (in parentheses) only applies to transfers not already converted into euros.
 
 **Fees are charged in their own transaction**.
 Therefore, each International Credit Transfer **creates two transactions** on your transaction history: one for the transfer and one for fees.
@@ -110,7 +110,7 @@ Find the exchange rate, as well as fees, in the success payload of the `initiate
 A maximum transaction limit of **€100,000.00** (one hundred thousand euros) applies to all outgoing International Credit Transfers. The payment rail used or currency exchange doesn't impact the maximum transaction limit.
 
 :::caution Transfer limit and rejection
-All outgoing International Credit Transfer exceeding **€100,000.00** will be rejected.
+All outgoing International Credit Transfers exceeding **€100,000.00** will be rejected.
 :::
 
 ### Outgoing transaction statuses {#outgoing-statuses}
@@ -190,7 +190,7 @@ Due to these dynamic forms, it's critical to **run the queries in order** *befor
 ## Incoming transfers {#incoming}
 
 Debtors can send credit transfers to Swan accounts, regardless of the debtor's account currency.
-Swan's existing [Bank Identifier Codes (BICs)](/accounts/concepts/ibans/local) are connected to SWIFT, so Swan users don't need an additional IBAN to receive SWIFT transfers.
+Swan's existing [Bank Identifier Codes (BICs)](/accounts/concepts/ibans/local) are connected to SWIFT, so Swan users don't need an additional <Term id="ibans">IBAN</Term> to receive SWIFT transfers.
 
 <details>
   <summary>Swan and intermediary bank details for incoming transfers</summary>
@@ -226,7 +226,7 @@ Limited accounts have restrictions on incoming International Credit Transfers to
 
 - Any incoming International Credit Transfer, regardless of its amount, on a limited account is automatically rejected.
 
-These restrictions apply while the account holder is completing verification and the account remains in `Limited` status.
+These restrictions apply while the <Term id="account-holder">account holder</Term> is completing verification and the account remains in `Limited` status.
 They are removed when the account holder verification status changes to `Verified` and the payment level changes to `Unlimited`.
 
 Learn more about [limited account transfer restrictions](/accounts/concepts/account/type-and-level#limited-account-restrictions).
@@ -241,7 +241,7 @@ Incoming International Credit Transfers sent on SWIFT can be sent with one of th
 
 ### Booked transfers {#incoming-booked}
 
-When Swan receives an incoming International Credit Transfer, Swan books it immediately and creates a `InternationalCreditTransferTransaction` type (step 8 in the standard flow described).
+When Swan receives an incoming International Credit Transfer, Swan books it immediately and creates an `InternationalCreditTransferTransaction` type (step 8 in the standard flow described).
 
 Use the `transactions` query with the ID for your International Credit Transfer to [get information](/payments/guides/credit-transfers/international/get-info).
 

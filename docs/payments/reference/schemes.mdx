@@ -1,5 +1,44 @@
 ---
-title: "Scheme tables"
+title: Scheme tables
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/credit-transfers/sepa
+  - /payments/concepts/direct-debit
+  - /payments/concepts/merchants/sepa-direct-debit
+  - /payments/concepts/merchants/internal-direct-debit
+  - /payments/reference
 ---
 
-> **Shell stub**: structure only, no content yet (DOC-1814).
+# Scheme tables
+
+Side-by-side specifications of the payment schemes Swan supports: eligibility, refunds, returns, mandates, and timelines.
+
+## Credit transfers {#credit-transfers}
+
+The [types of credit transfers](/payments/concepts/credit-transfers/sepa#overview) (SEPA, Instant SEPA, Swan Internal, and <Term id="standing-order">Standing Orders</Term>) and their acronyms are compared on the SEPA Credit Transfers page. Transfers outside SEPA are [International Credit Transfers](/payments/concepts/credit-transfers/international).
+
+import DirectDebitTable from '../../_shared/partials/_direct-debit-scheme-table.mdx';
+
+## SEPA Direct Debit: Core and B2B {#sdd}
+
+Swan offers two <Term id="sdd">SEPA Direct Debit</Term> schemes for [merchants](/payments/concepts/merchants/sepa-direct-debit): `Core` and `B2B`.
+
+<DirectDebitTable directDebitScheme="Core" creditorType="Creditor" psp="the debtor's payment services provider (PSP)" incomingOutgoing="3 business days after execution date" />
+
+## Internal Direct Debit: Standard and B2B {#idd}
+
+Swan offers two <Term id="direct-debit">Internal Direct Debit</Term> schemes for [merchants](/payments/concepts/merchants/internal-direct-debit): `Standard` and `B2B`.
+
+<DirectDebitTable directDebitScheme="Standard" creditorType="Creditor" psp="Swan" incomingOutgoing="Not possible" />
+
+## Received direct debits {#received}
+
+Specifications of the direct debits a Swan account [receives](/payments/concepts/direct-debit) as the debtor, for the SEPA Core and Internal Standard schemes against B2B.
+
+<DirectDebitTable directDebitScheme="SEPA Core and Internal Standard" creditorType="Creditor" psp="the debtor's payment services provider (PSP)" incomingOutgoing="3 business days after execution date" returnExtra="If Swan can't accept the outgoing direct debit, a rejected SDD-Out transaction is created (example: invalid mandate, account closed)." />
+
+## Card schemes {#cards}
+
+Swan issues Mastercard cards. For [online card acceptance](/payments/concepts/merchants/online-cards#about), Swan supports most major card schemes, including Visa, Mastercard, and Cartes Bancaires (CB) in France; American Express isn't supported. [In-person card acceptance](/payments/concepts/merchants/in-person-cards) runs on the Stripe Terminal SDK.

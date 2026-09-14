@@ -12,7 +12,7 @@ related:
 - Debtor's account status: any except `Closing` or `Closed`
 - Merchant profile status: `Enabled`
 - Payment method status: `Enabled`
-- Direct debit payment mandate status: `Enabled`
+- <Term id="direct-debit">Direct debit</Term> <Term id="payment-mandates">payment mandate</Term> status: `Enabled`
 - [B2B only] Debtor's account type: `Company`
 :::
 
@@ -20,11 +20,15 @@ related:
 
 1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions.
 1. Call the `initiateSepaDirectDebitMerchantPayment` mutation.
-1. Add an `idempotencyKey` to prevent duplicate payments (line 4). Refer to the [idempotency](/build/using-api/idempotency) guide for more information.
+1. Add an `idempotencyKey` to prevent duplicate <Term id="payments">payments</Term> (line 4). Refer to the [idempotency](/build/using-api/idempotency) guide for more information.
 1. Choose `mandateId` and add the payment mandate ID (line 5) from the [declare a payment mandate](./declare.mdx) guide.
 1. Include the amount `value` and `currency` (line 6).
-1. Recommended: include your merchant's name in the `label` field (line 7).
+1. Recommended: include your merchant's name in the `label` field (line 7). The `label` can't exceed 140 characters.
 1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
+
+:::caution Label character limit
+The `label` field can't exceed 140 characters. If the value is too long, Swan rejects the payment. Validate the label length before calling the mutation.
+:::
 
 ## Mutation {#mutation}
 
@@ -33,7 +37,7 @@ import DateIso8601 from '../../../../../_shared/partials/_iso-8601.mdx';
 :::note Dates
 <DateIso8601 />
 
-If the date is left empty, the transaction will be executed as soon as possible.
+If the date is left empty, the <Term id="transactions">transaction</Term> will be executed as soon as possible.
 If the date indicated is a non-business day, the transaction will be executed on the next business day.
 :::
 
@@ -83,7 +87,7 @@ mutation InitiateSdd {
 
 ## Payload {#payload}
 
-Note the `merchantPayment` `id` (line 6) for your SEPA Direct Debit payment.
+Note the `merchantPayment` `id` (line 6) for your <Term id="sdd">SEPA Direct Debit</Term> payment.
 
 ```json {6} showLineNumbers
 {
@@ -101,5 +105,5 @@ Note the `merchantPayment` `id` (line 6) for your SEPA Direct Debit payment.
 ## Next steps {#next}
 
 1. An incoming SEPA Direct Debit (`SepaDirectDebitIn`) is created in the merchant's account with the status `Upcoming`.
-1. On the [settlement date](./index.mdx#settlement), the transaction status changes automatically to `Booked` and [rolling reserve](./index.mdx#rolling-reserve) begins.
+1. On the [settlement date](/payments/concepts/merchants/sepa-direct-debit#settlement), the transaction status changes automatically to `Booked` and [rolling reserve](/payments/concepts/merchants/sepa-direct-debit#rolling-reserve) begins.
 1. After the indicated rolling reserve period, the merchant receives the payment.

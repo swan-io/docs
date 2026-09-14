@@ -1,0 +1,126 @@
+---
+title: Online cards
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/merchants
+  - /payments/concepts/merchants/payments
+  - /payments/concepts/merchants/statuses
+  - /payments/guides/merchants/online/cards
+  - /payments/concepts/cards
+---
+
+# Online cards for merchants
+
+<p className="ia-lede">Accept online card payments as a <Term id="merchants">merchant</Term> through <Term id="payment-link">payment links</Term>: supported schemes, transaction types, settlement, rejection reasons, and disputes.</p>
+
+## Overview {#about}
+
+Cards are the most common way for customers worldwide to pay.
+Swan supports most major card issuers, including Visa, Mastercard, and *Cartes Bancaires* (CB) in France.
+American Express isn't supported.
+
+Merchants can use payment links to accept <Term id="payments">payments</Term> from cardholders anywhere.
+Typical implementations of payment links include:
+- Adding a payment link to an invoice.
+- Sharing a payment link with a QR code.
+- Sending a payment link by email or SMS.
+
+Collect rent, share invoices, and accept customer payments through a Swan merchant account.
+
+In the API, online card acceptance is represented by `OnlineCard`-prefixed types, distinct from in-person card acceptance, which uses `InPersonCard`-prefixed types.
+
+:::info Merchants only
+This section **only applies to merchants** accepting card payments.
+Visit the [card payments section](/payments/concepts/cards) for information about payments made with cards from a Swan account.
+:::
+
+## Merchant card payments {#payments}
+
+Merchant card payments group one or more <Term id="transactions">transactions</Term> in the shared [merchant payment object](/payments/concepts/merchants/payments#object), which is how Swan recommends matching orders, invoices, and sales to the correct payment.
+
+### Card transaction types {#payments-transaction-types}
+
+There are **four transaction types** for merchant card payments.
+
+Authorizations aren't included in a transaction type.
+Instead, they're represented at the payment level, visible through the payment object status `Authorized` and payment object balance `totalAuthorized`.
+
+| Transaction type | Explanation | Impacted account balance |
+|---|---|:---:|
+| `CardInCredit` | Captured payment that first impacts the merchant's `Upcoming` balance, then their `Booked` balance. | `Upcoming`<br />`Booked` |
+| `CardInCreditReversal` | Refunded payment that first impacts the merchant's `Pending` balance, then their `Booked` balance. | `Pending`<br />`Booked` |
+| `CardInCreditChargeback` | Disputed payment that immediately impacts the merchant's `Booked` balance. | `Booked` |
+| `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, impacting the merchant's `Booked` balance. | `Booked` |
+
+:::info Balances
+The impacted balances are Swan's standard [account balances](/accounts/concepts/account/balances), which aren't related to the payment object balances explained later on this page.
+:::
+
+### Payment object statuses {#payments-statuses}
+
+Online card payments use the full [merchant payment machine](/payments/concepts/merchants/statuses#payments-statuses), including `Authorized`. For online cards, `Initiated` means the customer submitted their card details through the payment link but the payment isn't authorized yet; `Rejected` means the issuer or Swan denied the authorization; `Canceled` voids the authorization so the funds can't be captured. Refunds and disputes can cover some or all of the amount.
+
+### Payment object balances {#payments-balances}
+
+All [payment object balances](/payments/concepts/merchants/payments#balances) apply to online card payments. Cancelations must occur before the amount is captured, and when capture is automatic, `totalCaptured` always equals `totalAuthorized`.
+
+## Rolling reserve {#rolling-reserve}
+
+[Rolling reserve](/payments/concepts/merchants/payments#rolling-reserve) applies to online card payments: by default, 100% of the payment over 5 business days.
+
+## Payment amount limit {#payment-limit}
+
+Swan may apply a [payment amount limit](/payments/concepts/merchants/payments#payment-limit) to a single online card payment. If a payment exceeds this limit, the API returns a `ForbiddenRejection` error. To query the limit, use the `paymentAmountLimit` field at the `merchantPaymentMethod` level when you [request the payment method](/payments/guides/merchants/online/cards/request).
+
+## Settlement date and booked time {#settlement}
+
+Merchant card transactions are booked the **business day after the transaction is captured** at **18:00** Coordinated Universal Time (UTC).
+
+For example, transactions captured on Tuesday between 00:00 (midnight) and 23:59 UTC are booked on Wednesday, assuming both Tuesday and Wednesday are business days.
+
+import DayTimeStandard from '../../../_shared/partials/_day-time.mdx';
+
+<DayTimeStandard />
+
+## R-transactions {#r-transactions}
+
+### Rejected {#rejected}
+
+When a card payment is rejected, the cardholder's account is not charged.
+
+Card payments can be rejected (declined) for the following reasons:
+
+| Rejection reason | Explanation | Action |
+|---|---|---|
+| `AmountInvalid` | The amount entered is invalid for this payment. | Verify the payment amount is correct and within acceptable limits, then retry the transaction. |
+| `CardDetailsInvalid` | The card details provided are incorrect or incomplete. | Double-check the card number, expiration date, and card verification code (CVC). If the issue persists, contact your card issuer for verification and more information. |
+| `CardExpired` | The card used is no longer valid because it has expired. | Use a different card with a valid expiration date or request a replacement card from your issuer. |
+| `InvalidPinAttemptsExceeded` | Too many incorrect PIN attempts were made. | Reset the card PIN through your card issuer or contact them to unblock the card. |
+| `RejectedByCardIssuer` | The card issuer rejected the transaction. | Contact your card issuer immediately to understand the specific reason for rejection and resolve any issues. |
+| `SoftDecline3dsExpiration` | The 3D Secure authentication session expired before completion. | Retry the payment and complete the 3D Secure authentication within the time limit. |
+| `SoftDecline3dsFailure` | The 3D Secure authentication failed. | Verify your authentication details and retry. If issues persist, contact your card issuer. |
+| `SoftDecline3dsNotSupported` | The card does not support 3D Secure authentication. | Use a different card that supports 3D Secure or contact your card issuer for a compatible card. |
+| `SoftDecline3dsRequired` | 3D Secure authentication was required but not completed. | Retry the transaction and complete the required 3D Secure authentication. |
+| `SoftDeclineCardAmountLimitsExceeded` | The transaction exceeds the card's allowed spending limit. The cardholder should contact their card issuer for more information. | Contact your card issuer to increase your spending limit or split the transaction into smaller amounts. |
+| `SoftDeclineCardDetailsInvalid` | The card details provided are incorrect or incomplete. The cardholder should contact their card issuer for more information. | Verify all card details (number, expiration, CVC) are entered correctly and retry. |
+| `SoftDeclineCardExpired` | The card used is no longer valid because it has expired. | Use a card with a valid expiration date or request a replacement from your issuer. |
+| `SoftDeclineCardNotActivated` | The card has not been activated yet. The cardholder should contact their card issuer for more information. | Activate your card through your issuer's activation process before attempting the transaction again. |
+| `SoftDeclineCardNotSupported` | The card is not supported for this type of transaction. The cardholder should contact their card issuer for more information. | Use a different card or contact your card issuer to enable this transaction type. |
+| `SoftDeclineCvcCheckFailed` | The card security code (CVC) verification failed. | Verify the 3-digit CVC code on the back of your card and retry with the correct code. |
+| `SoftDeclineCvcInvalid` | The CVC code provided is invalid. | Check the CVC code on your card (3 digits on the back) and re-enter it correctly. |
+| `SoftDeclineInsufficientFunds` | There are insufficient funds to fulfill the payment. | Add funds to your account before retrying the transaction. |
+| `SoftDeclineRefundTimeLimitExceeded` | The refund could not be processed because the allowable time limit has passed. | Contact [Swan Support](https://supportform.swan.io/) or the merchant to explore alternative refund options. |
+| `SoftDeclineRejectedByCardIssuer` | The card issuer declined the transaction. | Contact your card issuer immediately to understand the reason for the decline and resolve the issue. |
+| `SoftDeclineSwanTechnicalErrorOccurred` | A technical error prevented the processing of this card payment. | Retry the transaction. If the problem persists, contact Swan Support with the transaction reference. |
+| `SoftDeclineTransactionAmountIncorrect` | The transaction amount does not match the expected or authorized amount. | Verify the transaction amount with the merchant and retry with the correct amount. |
+| `SwanRefused` | Swan refused the transaction due to risk management or compliance requirements. | Contact Swan Support to understand the specific reason and required next steps. |
+| `SwanTechnicalErrorOccurred` | A technical error prevented the processing of this card payment. | Retry the transaction. If the problem persists, contact Swan Support with the transaction reference. |
+
+### Chargebacks and disputes {#disputes}
+
+Cardholders might create chargebacks, which opens a dispute.
+Merchants can view the dispute automatically; the payment object status, the transaction status, and the merchant's balance all change to reflect the dispute.
+
+To respond to disputes, ask your merchant to [submit a request](https://supportform.swan.io/) to the Swan Support team.

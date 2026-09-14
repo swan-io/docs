@@ -1,0 +1,141 @@
+---
+title: Merchant payments
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/merchants
+  - /payments/concepts/merchants/statuses
+  - /accounts/concepts/account/balances
+  - /build/using-api/webhooks
+---
+
+# Merchant payments
+
+<p className="ia-lede">The merchant payment object groups the <Term id="transactions">transactions</Term> of one <Term id="payments">payment</Term>, whatever the payment method, and carries the statuses, balances, <Term id="rolling-reserve">rolling reserve</Term>, and limits that apply to it.</p>
+
+## Payment object {#object}
+
+Merchant payments include **one or more transactions**.
+For example, one payment might include both a capture and refund transaction.
+
+These transactions are **grouped together** in the **merchant payment object**.
+Swan recommends using the merchant payment object in your integration to help <Term id="merchants">merchants</Term> match orders, invoices, and sales to the correct object.
+This provides better traceability and can help reconcile issues more efficiently.
+
+The transaction types created for each payment method, and the account balances they impact, are described on each method's page: [online cards](/payments/concepts/merchants/online-cards#payments-transaction-types), [in-person cards](/payments/concepts/merchants/in-person-cards#transaction-types), and [French checks](/payments/concepts/merchants/french-checks#payments-transaction-types).
+
+## Statuses {#statuses}
+
+The payment object moves through `Initiated`, `Captured`, and their end states. The full machine, and which statuses each payment method uses, are on the [merchant statuses](/payments/concepts/merchants/statuses#payments-statuses) page.
+
+## Balances {#balances}
+
+The merchant payment object has **distinct balances** to follow a payment's lifecycle.
+Use these balances to check what happened on a payment and what you can still do, such as cancel or refund.
+
+| Payment object balance | Explanation |
+|---|---|
+| `totalAuthorized` | The total authorized amount for this merchant payment. |
+| `availableToCancel` | The authorized amount that can be released. Refer to this balance to verify whether the payment can be canceled. Cancelations must be done before the amount is captured, or earlier in the payment's lifecycle for some payment methods. |
+| `totalCanceled` | The total amount canceled for this merchant payment. |
+| `availableToCapture` | The amount available for merchants to capture if the capture isn't automatic. |
+| `totalCaptured` | The amount captured by the merchant. For card payments with automatic capture, `totalCaptured` is always equal to `totalAuthorized`. |
+| `availableToRefund` | The amount the merchant can refund. Use this balance to know if a payment is eligible for a refund. |
+| `totalRefunded` | The total amount refunded for this merchant payment. |
+| `totalDisputed` | The total amount of this merchant payment disputed by the customer. |
+
+Some balances behave differently by payment method: [SEPA Direct Debit](/payments/concepts/merchants/sepa-direct-debit#payments-balances) uses `availableToCancel` for the pending amount that can still be canceled before the cutoff, and [French checks](/payments/concepts/merchants/french-checks#payments-balances) never use the authorization, capture, or refund balances.
+
+:::info Account balances
+Payment object balances aren't related to Swan's standard [account balances](/accounts/concepts/account/balances), which the underlying transactions impact.
+:::
+
+## Rules by payment method {#rules}
+
+The same payment object follows different operational rules depending on the payment method.
+
+| Payment method | Rolling reserve (default) | Booked or settled | Cancel before | Refunds | Returns and disputes |
+| --- | --- | --- | --- | --- | --- |
+| [Online cards](/payments/concepts/merchants/online-cards) | 100% over 5 business days | Business day after capture, 18:00 UTC | Capture | Some or all of the amount | Chargebacks open a dispute |
+| [In-person cards](/payments/concepts/merchants/in-person-cards) | None by default | Settled by <Term id="credit-transfer">credit transfer</Term> within one business day | Capture | Not available through the API: merchants request them from Swan Support | Chargebacks open a dispute; act through Swan Support |
+| [SEPA Direct Debit Core](/payments/concepts/merchants/sepa-direct-debit) | Determined by a <Term id="merchant-profile">merchant profile</Term> risk assessment | 20:00 CET/CEST on the settlement date | About 11:00 CET/CEST, the day before execution | Up to 8 calendar weeks after due date | Returns possible |
+| [SEPA Direct Debit B2B](/payments/concepts/merchants/sepa-direct-debit) | 100% over 3 business days | 20:00 CET/CEST on the settlement date | About 10:00 CET/CEST, the day before execution | Not possible | Returns possible |
+| [Internal Direct Debit Standard](/payments/concepts/merchants/internal-direct-debit) | Determined by a merchant profile risk assessment | 18:00 CET/CEST on the settlement date (D+1 if sent before 12:00) | 12:00 CET/CEST, one business day before execution | Up to 8 calendar weeks after due date | Returns possible |
+| [Internal Direct Debit B2B](/payments/concepts/merchants/internal-direct-debit) | Not required | 18:00 CET/CEST on the settlement date (D+1 if sent before 12:00) | 12:00 CET/CEST, one business day before execution | Not possible | Not possible |
+| [French checks](/payments/concepts/merchants/french-checks) | 100% over 10 interbank business days | 2 to 3 business days after arrival at the check processing center | Receipt by the check processing center | Not possible | Returns up to 10 business days after `Booked`, extendable to 90 calendar days |
+
+## Rolling reserve {#rolling-reserve}
+
+Rolling reserve is a policy Swan applies to merchant transactions to **protect the merchant and Swan** against various risk factors, primarily insufficient funds and attempted fraud.
+The reserved amount acts as a safety net to cover potential loss for both Swan and the merchant.
+
+Rolling reserve is expressed as a **percentage over a period of time** (example: "100% of the payment amount over 5 business days"). The exact amount and duration vary by payment method and merchant risk profile, and some methods don't require a rolling reserve at all.
+
+For the indicated period of time, the amount isn't part of the merchant's [available account balance](/accounts/concepts/account/balances), after which the funds are released to the merchant and can be used.
+
+| Payment method | Rolling reserve | Default amount |
+| --- | --- | --- |
+| Online cards | <Yes /> **Yes** | 100% over 5 business days |
+| In-person cards | <No /> No | Not applied by default |
+| SEPA Direct Debit - Core | <Yes /> **Yes** | Determined by a merchant profile risk assessment |
+| SEPA Direct Debit - B2B | <Yes /> **Yes** | 100% over 3 business days |
+| Internal Direct Debit - Standard | <Yes /> **Yes** | Determined by a merchant profile risk assessment |
+| Internal Direct Debit - B2B | <No /> No | Not required |
+| French checks | <Yes /> **Yes** | 100% over 10 interbank business days |
+
+:::info Webhooks
+Subscribe to the relevant <Term id="webhooks">webhooks</Term> to stay informed about updates:
+- **Rolling reserve value, payment amount limit, and payment methods**: 
+  subscribe to the [merchant payment methods webhooks](/build/using-api/webhooks#events-merchants-payment-methods).  
+
+- **Merchant profile changes**:
+  subscribe to the [merchant profile webhooks](/build/using-api/webhooks#events-merchants-profiles).  
+
+- **Transaction-level rolling reserve releases**:
+  the `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/build/using-api/webhooks#events-transactions) notify you when the rolling reserve of an individual transaction is updated or released.  
+
+Use both merchant and transaction webhooks to cover account-level and transaction-level updates.
+:::
+
+## Payment amount limit {#payment-limit}
+
+For security and risk management, Swan may apply a **payment amount limit** to a single card, SEPA Direct Debit, or check payment.
+This limit defines the maximum amount a user can spend in one transaction.
+If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` error.
+
+To query this limit, use the `paymentAmountLimit` field at the `merchantPaymentMethod` level in the API.
+
+## Statement display {#statement-display}
+
+How your merchant's name appears on the payer's bank statement depends on the payment method.
+
+### Online card payments {#statement-display-cards}
+
+For online card transactions, the payer's bank statement displays **`SW*[MerchantName]`**, where `MerchantName` is the merchant's name from their profile.
+
+The content of the `label` field may also appear on the statement, depending on the payer's bank.
+Choose the `label` value carefully, as the payer might see it.
+
+### SEPA Direct Debit {#statement-display-sdd}
+
+For SEPA Direct Debit, the name displayed on the debtor's statement depends on the **SEPA Creditor Identifier** (SCI) used.
+
+| SCI option | Statement displays | Notes |
+| --- | --- | --- |
+| Swan's SCI | **Swan** | Default option. |
+| Merchant's own SCI | **Merchant's name** | Requires [updating the merchant payment method](/payments/guides/merchants/online/sdd/update) through the API. French merchants can request an SCI through the [Partner Support Request form](https://supportform.swan.io/).|
+
+## Payment links {#links}
+
+import PaymentLinkDefinition from '../../../_shared/definitions/_payment-link.mdx';
+
+> <PaymentLinkDefinition />
+
+Payment links redirect customers to a Swan-hosted payment page where a customer can choose from the merchant's eligible enabled payment methods.
+These optimized payment pages are customizable with the merchant's name, logo, and accent color.
+
+Your merchants can create links to share with their customers by email or text message.
+They could also include a QR code on an invoice, scannable by the customer with their mobile device.
+
+Payment links serve online card and SEPA Direct Debit payments. Learn how to [create payment links](/payments/guides/merchants/online/cards/create-link).

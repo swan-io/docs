@@ -49,21 +49,6 @@ Instant SEPA Credit Transfers have a maximum of €100,000 per transaction. Abov
 
 ---
 
-## Payment status and transaction status
-
-Swan tracks two separate things, and mixing them up sends investigations down the wrong path.
-
-| | What it tracks | Statuses |
-| --- | --- | --- |
-| **Payment** | Your user's instruction to send money. | `ConsentPending`, `Initiated`, `Rejected` |
-| **Transaction** | The movement of money in or out of the account. | `Upcoming`, `Pending`, `Booked`, `Rejected`, `Canceled` |
-
-A payment only becomes a transaction once it's `Initiated`. If your user never completed consent, the payment sits at `ConsentPending` and **no transaction is ever created**, so there's nothing to find in the transaction history. Check this before you treat a missing transfer as a failure.
-
-For what each transaction status means, see [Credit transfers > Statuses](/topics/payments/credit-transfers/#statuses).
-
----
-
 ## Permissions
 
 Check an account member's rights in **Dashboard** > **Data** > **Account memberships**, then open the membership and check **General** > rights:
@@ -136,7 +121,6 @@ Check [status.swan.io](https://status.swan.io) for a known incident overlapping 
 | Outgoing | Instant SEPA | `Pending` | Unusual for an instant transfer. Submit a Swan Support request with the transaction details. |
 | Outgoing | SEPA | `Booked`, beneficiary says not received | Wait 48 business hours from submission. If it's still missing, get written proof of non-receipt. |
 | Outgoing | SEPA or International | `Pending` | If a review is indicated, wait. If a technical pending status persists past the next business day, submit a Swan Support request. |
-| Outgoing | Any | No transaction at all | Check consent first. If the payment is `ConsentPending`, your user needs to complete consent or start again. |
 | Incoming | Instant SEPA | `Booked` | Confirm the funds are available. |
 | Incoming | Instant SEPA | `Pending` | Unusual for an instant transfer. Submit a Swan Support request. |
 | Incoming | SEPA | Not visible | Ask your user for proof of transfer. If beneficiary details match and normal timelines have passed, the sender's bank needs to investigate. |
@@ -158,7 +142,7 @@ A `Booked` outgoing transfer means Swan processed and submitted it.
 4. If the beneficiary's bank says it didn't receive the funds, direct your user to ask that bank for written proof.
 5. Submit a Swan Support request with that proof and the transaction details.
 
-Allow the normal processing time before escalating: 48 business hours for SEPA, around 10 seconds for Instant SEPA, and up to 5 business days for International.
+Allow the normal processing time before escalating: between 3-5 days for standard SEPA transactions, and up to 10 days for international transfers.
 
 See [Trace a transfer that wasn't received](#trace-a-transfer-that-wasnt-received) for the full procedure.
 

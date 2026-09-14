@@ -4,25 +4,23 @@ audience:
   - dev
   - ops
 related:
+  - /payments/reference/sepa
   - /payments/concepts/transactions/statuses
   - /payments/concepts/credit-transfers
   - /payments/guides/payment-operations/get-transaction-info
   - /accounts/concepts/account/balances
 ---
 
-import PaymentsDefinition from '../../../_shared/definitions/_payments.mdx';
-import TransactionsDefinition from '../../../_shared/definitions/_transactions.mdx';
-import MaestroLink from '../../../_shared/partials/_maestro.mdx';
-import TransactionStatements from '../../../_shared/partials/_transaction-statements.mdx';
-
 # Transactions
 
-<p className="ia-lede">Swan uses a combination of payments and transactions to accomplish all financial operations. A payment is a request to move money; transactions are what actually credit and debit accounts.</p>
+<p className="ia-lede">Swan uses a combination of <Term id="payments">payments</Term> and <Term id="transactions">transactions</Term> to accomplish all financial operations. A payment is a request to move money; transactions are what actually credit and debit accounts.</p>
 
 ## Payments {#payments}
 
 The core of Swan's offer is facilitating the sending and receiving of payments.
 A payment is:
+
+import PaymentsDefinition from '../../../_shared/definitions/_payments.mdx';
 
 > <PaymentsDefinition />
 
@@ -33,7 +31,7 @@ Swan executes several types of payments:
 * [Credit transfers](/payments/concepts/credit-transfers)
 * [Direct debit](/payments/concepts/direct-debit)
 * [Card payments](/payments/concepts/cards)
-* [French check payments](/payments/guides/merchants/in-person/checks) *(merchant offer only)*
+* [French check payments](/payments/guides/merchants/in-person/checks) (merchant offer only)
 
 ### Payment ID {#payments-id}
 
@@ -65,6 +63,8 @@ Additionally, since pull payments are initiated by the creditor and not the debt
 
 ## Transactions {#transactions}
 
+import TransactionsDefinition from '../../../_shared/definitions/_transactions.mdx';
+
 > <TransactionsDefinition />
 
 A single payment is a group  of **one** or **several transactions**.
@@ -73,12 +73,14 @@ All transactions go through a **scoring service** to determine if the transactio
 Transactions are created asynchronously after a payment is initiated.
 In the API, you'll work **primarily with transactions** when seeking information about payments.
 
-For example, two *transactions* are required if you try to send a single SEPA Credit Transfer (SCT) *payment* to an IBAN that doesn't exist.
+For example, two transactions are required if you try to send a single SEPA Credit Transfer (SCT) payment to an <Term id="ibans">IBAN</Term> that doesn't exist.
 
 * Transaction #1: Funds sent with an outgoing SCT to the SEPA network.
 * Transaction #2: Funds returned with a separate transaction from the target bank.
 
-:::info 🇳🇱 Netherlands Maestro fallback
+:::info Netherlands Maestro fallback
+import MaestroLink from '../../../_shared/partials/_maestro.mdx';
+
 <MaestroLink />
 :::
 
@@ -98,7 +100,27 @@ The number increments by 1 with each new booked transaction, giving you a reliab
 
 `sequenceNumber` is also used to order `Booked` transactions on [account statements](/accounts/concepts/account/statements).
 
-`sequenceNumber` is available in `BookedTransactionStatusInfo.balanceAfter` when you [query](https://explorer.swan.io/?query=cXVlcnkgR2V0VHJhbnNhY3Rpb25TZXF1ZW5jZU51bWJlciB7CiAgdHJhbnNhY3Rpb24oaWQ6ICIkWU9VUl9UUkFOU0FDVElPTl9JRCIpIHsKICAgIHN0YXR1c0luZm8gewogICAgICAuLi4gb24gQm9va2VkVHJhbnNhY3Rpb25TdGF0dXNJbmZvIHsKICAgICAgICBiYWxhbmNlQWZ0ZXIgewogICAgICAgICAgc2VxdWVuY2VOdW1iZXIKICAgICAgICAgIGFtb3VudCB7CiAgICAgICAgICAgIHZhbHVlCiAgICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api) `statusInfo`.
+`sequenceNumber` is available in `BookedTransactionStatusInfo.balanceAfter` when you query a transaction's `statusInfo`.
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0VHJhbnNhY3Rpb25TZXF1ZW5jZU51bWJlciB7CiAgdHJhbnNhY3Rpb24oaWQ6ICIkWU9VUl9UUkFOU0FDVElPTl9JRCIpIHsKICAgIHN0YXR1c0luZm8gewogICAgICAuLi4gb24gQm9va2VkVHJhbnNhY3Rpb25TdGF0dXNJbmZvIHsKICAgICAgICBiYWxhbmNlQWZ0ZXIgewogICAgICAgICAgc2VxdWVuY2VOdW1iZXIKICAgICAgICAgIGFtb3VudCB7CiAgICAgICAgICAgIHZhbHVlCiAgICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {6} showLineNumbers
+query GetTransactionSequenceNumber {
+  transaction(id: "$YOUR_TRANSACTION_ID") {
+    statusInfo {
+      ... on BookedTransactionStatusInfo {
+        balanceAfter {
+          sequenceNumber
+          amount {
+            value
+            currency
+          }
+        }
+      }
+    }
+  }
+}
+```
 
 `sequenceNumber` returns `null` for all transaction statuses other than `Booked`.
 
@@ -109,12 +131,14 @@ Backfilling older transactions is in progress, so historical transactions may no
 
 ### Transaction supporting documents {#transactions-supporting-documents}
 
-In certain cases, Swan requires supporting documents to justify transactions.
+In certain cases, Swan requires <Term id="supporting-documents">supporting documents</Term> to justify transactions.
 Swan uses the [supporting documents feature](/accounts/concepts/documents) to manage the request and reception of these documents.
 
 You can [upload these documents proactively](/accounts/guides/documents/upload-transaction/using-the-api) when initiating transactions with the API.
 
 ### Transaction confirmation statements {#transactions-statements}
+
+import TransactionStatements from '../../../_shared/partials/_transaction-statements.mdx';
 
 <TransactionStatements />
 
@@ -141,7 +165,7 @@ Transaction statements move through their own [transaction statement statuses](/
 ### Sharing transaction information {#transactions-sharing-info}
 
 The European Union's [revised Payment Services Directive (PSD2)](https://eur-lex.europa.eu/legal-content/EN/LSU/?uri=celex:32015L2366) regulates how banking interfaces can display transactions.
-In order to **display or share a user's sensitive information**, there must be a **recent consent** from that user.
+In order to **display or share a user's sensitive information**, there must be a **recent <Term id="consent">consent</Term>** from that user.
 
 At the user level, you might need to act on behalf of a user with a **user access token** to access an account's online payment transactions.
 The **user must consent** to this action by performing a [Strong Customer Authentication (SCA)](/users/concepts/consent).
@@ -156,43 +180,3 @@ Swan's frontend complies with PSD2 requirements.
 If you choose to use a custom API integration or to modify [Swan's open source code](https://swan-io.github.io/swan-partner-frontend/specs/banking/history), you are responsible for respecting PSD2 requirements.
 Swan will verify that your offer is compliant.
 :::
-
-## About SEPA {#sepa}
-
-The [Single Euro Payments Area (SEPA)](https://www.europeanpaymentscouncil.eu/about-sepa) is a payment network used to **transfer funds in euros in 40 countries**.
-One of SEPA's primary goals is to **harmozine payments** across these countries, making it **easy to use cashless payment methods** anywhere you are in and around Europe.
-SEPA is regulated by the European Payments Council (EPC).
-
-Swan uses the SEPA Credit Transfer, SEPA Instant Credit Transfer, SEPA Direct Debit payment methods for all transactions not executed internally between Swan accounts.
-
-### SEPA countries and territories {#sepa-locations}
-
-SEPA countries and territories include European Union (EU), European Economic Area (EEA), and non-EU members.
-
-* **EU/EEA members**: Austria, Belgium, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland (including the Aland Islands), France (including French Guiana, Guadeloupe, Martinique, Mayotte, Saint Barthelemy, French Saint Martin, Reunion, and Saint Pierre and Miquelon), Germany, Greece, Hungary, Iceland, Republic of Ireland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Netherlands, Norway, Poland, Portugal (including Madeira and Azores), Romania, Slovakia, Slovenia, Spain (including Ceuta, Melilla, and the Canary Islands), and Sweden.
-* **Non-EU members**: Albania, Andorra, Moldova, Monaco, Montenegro, North Macedonia, San Marino, Switzerland, United Kingdom (including Gibraltar), and Vatican City State/Holy See.
-
-:::note SEPA official list
-SEPA's scope with all of these countries and territories depends on licensing and local regulations.
-Refer to the [EPC's official list](https://www.europeanpaymentscouncil.eu/document-library/other/epc-list-sepa-scheme-countries) for more information.
-:::
-
-### SEPA availability {#sepa-availability}
-
-SEPA follows the Governing Council of the European Central Bank's *Trans-European Automated Real-time Gross settlement Express Transfer* (TARGET) system.
-TARGET closing days were [established in the year 2000](https://www.ecb.europa.eu/press/pr/date/2000/html/pr001214_4.en.html), so this system is long-standing and predictable.
-
-The SEPA network is unavailable on TARGET closing days:
-
-- Saturdays and Sundays
-- New Year's Day
-- Good Friday
-- Easter Monday
-- 1 May (Labor Day)
-- Christmas Day
-- 26 December
-
-Transactions sent on TARGET closing days are processed the next open day.
-The only exceptions are **Instant SEPA Credit Transfers**, which are always exchanged immediately (24 hours a day, 7 days a week, 365 days a year).
-
-Refer to the European Central Bank's [operational status page](https://www.ecb.europa.eu/paym/target/html/index.en.html) for in-the-moment availability, or their [working hours page](https://www.ecb.europa.eu/services/contacts/working-hours/html/index.en.html) for the precise dates of upcoming TARGET closing days.

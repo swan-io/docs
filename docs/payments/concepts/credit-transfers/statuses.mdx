@@ -11,7 +11,7 @@ related:
 
 # Credit transfer statuses
 
-The status flows for credit transfer transactions, trusted beneficiaries, and Standing Orders.
+The status flows for <Term id="credit-transfer">credit transfer</Term> <Term id="transactions">transactions</Term>, <Term id="trusted-beneficiary">trusted beneficiaries</Term>, and <Term id="standing-order">Standing Orders</Term>.
 
 ## Credit transfer statuses {#statuses}
 
@@ -45,8 +45,8 @@ import BalancesStatusesInfo from '../../partials/_balances-statuses-info.mdx';
 
 | Transfer transaction status | Explanation |
 |---|---|
-| `Upcoming` | Transfers are initiated and consent was granted, but the transfers aren't executed yet. Often, this is because the transfer was planned for a future date using the `requestedExecutionAt` input. `Upcoming` transfers don't impact the account balance.<br /><br />*International Credit Transfers can't be `Upcoming`* |
-| `Pending` | Transfers are initiated, consent was granted, and the transfer is set to happen within a few days. The transfers aren't debited from the account yet, but they impact the account's `Pending` balance.<br /><br />Sometimes, transfers might stay `Pending` for longer than expected. This could be for a few reasons, including the possibility that the transaction required a manual review from Swan, or a SEPA Credit Transfer was initiated on a [TARGET closing day](/payments/concepts/transactions#sepa-availability). |
+| `Upcoming` | Transfers are initiated and consent was granted, but the transfers aren't executed yet. Often, this is because the transfer was planned for a future date using the `requestedExecutionAt` input. `Upcoming` transfers don't impact the account balance.<br /><br />International Credit Transfers can't be `Upcoming`.<br /><br />**Next steps**: The transfer moves to `Pending` when execution starts, or to `Canceled` or `Rejected`. |
+| `Pending` | Transfers are initiated, consent was granted, and the transfer is set to happen within a few days. The transfers aren't debited from the account yet, but they impact the account's `Pending` balance.<br /><br />Sometimes, transfers might stay `Pending` for longer than expected. This could be for a few reasons, including the possibility that the transaction required a manual review from Swan, or a SEPA Credit Transfer was initiated on a [TARGET closing day](/payments/reference/sepa#sepa-availability).<br /><br />**Next steps**: The transfer moves to `Booked` when executed, or to `Rejected`. |
 | `Booked` | Completed credit transfers that are displayed on the official account statement. These transfers have been debited from the account, and they impact the account's `Booked` balance. |
 | `Canceled` | An `Upcoming` transaction is canceled by someone with the right to do so, such as the [account holder](/accounts/concepts/account-holders) or an [account member](/accounts/concepts/memberships). Only transfers with the status `Upcoming` can be `Canceled`, and `Canceled` transfers don't impact the account balance. |
 | `Rejected` | Declined or refused transfers. For example, the beneficiary account might be closed, or the account's `Available` balance isn't sufficient to complete the transfer without resulting in a negative balance. |
@@ -77,8 +77,8 @@ flowchart LR
 
 | Trusted beneficiary status | Explanation |
 |---|---|
-| `ConsentPending` | An eligible account member added a trusted beneficiary, either directly (with the dedicated mutation or through Web Banking) or when initiating a transfer.<br /><br />To finish adding the trusted beneficiary, an account member with the `canManageBeneficiaries` permission must consent with [Strong Customer Authentication (SCA)](/users/concepts/consent/sca). |
-| `Enabled` | Consent was received to add the trusted beneficiary. Eligible account members can now initiate transfers to this trusted beneficiary.  |
+| `ConsentPending` | An eligible account member added a trusted beneficiary, either directly (with the dedicated mutation or through Web Banking) or when initiating a transfer.<br /><br />To finish adding the trusted beneficiary, an account member with the `canManageBeneficiaries` permission must <Term id="consent">consent</Term> with [Strong Customer Authentication (SCA)](/users/concepts/consent/sca).<br /><br />**Next steps**: The status moves to `Enabled` when consent is received, or to `Canceled` if it isn't. |
+| `Enabled` | Consent was received to add the trusted beneficiary. Eligible account members can now initiate transfers to this trusted beneficiary.<br /><br />**Next steps**: The beneficiary moves to `Canceled` if an eligible account member removes it. |
 | `Canceled` | Consent wasn't received to add the trusted beneficiary, or the trusted beneficiary was removed from the list by an eligible account member. |
 
 ## Standing Order statuses {#statuses-standing-orders}
@@ -101,8 +101,8 @@ flowchart LR
 
 | Status | Explanation |
 | --- | --- |
-| `ConsentPending` | Standing Order was scheduled but consent hasn't been received. |
-| `Enabled` | Consent for the Standing Order was received, the order is executed as scheduled indefinitely according to its configuration. |
+| `ConsentPending` | Standing Order was scheduled but consent hasn't been received.<br /><br />**Next steps**: The status moves to `Enabled` when consent is received, or to `Canceled` if consent is refused. |
+| `Enabled` | Consent for the Standing Order was received, the order is executed as scheduled indefinitely according to its configuration.<br /><br />**Next steps**: The Standing Order stays `Enabled` until it's canceled. |
 | `Canceled` | Either the Standing Order was canceled or consent was refused. |
 
 ## International outgoing transfer statuses {#international-outgoing}
@@ -125,6 +125,6 @@ flowchart LR
 
 | Status | Explanation |
 | --- | --- |
-| `Pending` | Status assigned when the transfer is initiated; the transfer retains the status `Pending` while the transactions associated with the transfer follow the standard transaction status flow |
+| `Pending` | Status assigned when the transfer is initiated; the transfer retains the status `Pending` while the transactions associated with the transfer follow the standard transaction status flow<br /><br />**Next steps**: The transfer moves to `Booked` when the funds arrive, or to `Rejected`. |
 | `Booked` | Funds arrived in the beneficiary's account |
 | `Rejected` | Transfer isn't executed for any of several reasons, including insufficient funds, lack of consent, and more |

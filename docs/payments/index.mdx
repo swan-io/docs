@@ -9,28 +9,41 @@ related:
   - /cards
 ---
 
-<p className="ia-lede">Send and receive money with Swan: credit transfers across SEPA and the world, direct debits, card payments, and merchant acquiring. Everything to move money, whether you integrate the API or operate from the Dashboard.</p>
+<p className="ia-lede">Send and receive money with Swan: <Term id="credit-transfer">credit transfers</Term> across SEPA and the world, <Term id="direct-debit">direct debits</Term>, card payments, and merchant acquiring. Everything to move money, whether you integrate the API or operate from the Dashboard.</p>
 
-## Concepts
+## Concepts {#concepts}
+
+A payment is a request to move money; it creates one or more <Term id="transactions">transactions</Term>, which are what credit and debit accounts.
 
 ```flowmap
 {
   "mode": "graph",
-  "layout": "spine",
+  "layout": "chain",
   "nodes": [
     { "id": "pay", "title": "Payment", "to": "/payments/concepts/transactions#payments", "desc": "A request to move money." },
-    { "id": "txn", "title": "Transactions", "to": "/payments/concepts/transactions#transactions", "desc": "The credits and debits it creates.", "branches": [
-      { "title": "Credit transfers", "to": "/payments/concepts/credit-transfers", "desc": "SEPA and world" },
-      { "title": "Direct debit", "to": "/payments/concepts/direct-debit", "desc": "pull by mandate" },
-      { "title": "Card payments", "to": "/payments/concepts/cards", "desc": "auth and clearing" },
-      { "title": "Verification of payee", "to": "/payments/concepts/verification-of-payee", "desc": "SEPA beneficiary check" },
-      { "title": "Merchants", "to": "/payments/concepts/merchants", "desc": "accept payments" }
-    ] }
+    { "id": "txn", "title": "Transactions", "to": "/payments/concepts/transactions#transactions", "desc": "The credits and debits it creates." }
   ]
 }
 ```
 
-## Find your path
+Each payment method has its own model, rules, and statuses, and <Term id="merchants">merchants</Term> accept <Term id="payments">payments</Term> on the other side.
+
+```flowmap
+{
+  "mode": "graph",
+  "layout": "spokes",
+  "nodes": [
+    { "id": "txn", "title": "Transactions", "to": "/payments/concepts/transactions", "desc": "The credits and debits that move money." },
+    { "title": "Credit transfers", "to": "/payments/concepts/credit-transfers", "desc": "SEPA and world" },
+    { "title": "Direct debit", "to": "/payments/concepts/direct-debit", "desc": "Pull by mandate" },
+    { "title": "Card payments", "to": "/payments/concepts/cards", "desc": "Authorization and clearing" },
+    { "title": "Verification of payee", "to": "/payments/concepts/verification-of-payee", "desc": "SEPA beneficiary check" },
+    { "title": "Merchants", "to": "/payments/concepts/merchants", "desc": "Accept payments" }
+  ]
+}
+```
+
+## Find your path {#find-your-path}
 
 Recommended reading order based on how you work with payments. Each path goes from basics to deeper integration.
 
@@ -57,7 +70,7 @@ Recommended reading order based on how you work with payments. Each path goes fr
       "sub": "Operate from the Dashboard",
       "items": [
         { "type": "Concept", "title": "Transactions", "to": "/payments/concepts/transactions", "desc": "What a transaction is, and how to read its status." },
-        { "type": "Guide", "title": "Export payments", "to": "/payments/guides/payment-operations/export", "desc": "Export payment data for reconciliation." },
+        { "type": "Guide", "title": "Export transaction data", "to": "/payments/guides/payment-operations/export", "desc": "Export transaction data for reconciliation." },
         { "type": "Guide", "title": "Generate a statement", "to": "/payments/guides/payment-operations/generate-transaction-statement", "desc": "Produce a transaction statement for a period." },
         { "type": "Concept", "title": "Card payments", "to": "/payments/concepts/cards", "desc": "How card transactions clear and settle." },
         { "type": "Ref", "title": "Card payment countries", "to": "/payments/reference/card-payment-countries", "desc": "Where card payments are supported." }

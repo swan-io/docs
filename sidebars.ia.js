@@ -428,8 +428,19 @@ module.exports = annotateAudience(annotate({
       ], { link: "payments/concepts/direct-debit/index" }),
       cat("Card payments", [
         doc("payments/concepts/cards/statuses", "Statuses"),
+        doc("payments/concepts/cards/authorization-and-clearing", "Authorization and clearing"),
+        doc("payments/concepts/cards/3ds", "3-D Secure (3DS)"),
+        doc("payments/concepts/cards/enriched-info", "Enriched transaction information"),
       ], { link: "payments/concepts/cards/index" }),
-      doc("payments/concepts/merchants/index", "Merchants"),
+      cat("Merchants", [
+        doc("payments/concepts/merchants/statuses", "Statuses"),
+        doc("payments/concepts/merchants/payments", "Merchant payments"),
+        doc("payments/concepts/merchants/online-cards", "Online cards"),
+        doc("payments/concepts/merchants/in-person-cards", "In-person cards"),
+        doc("payments/concepts/merchants/sepa-direct-debit", "SEPA Direct Debit"),
+        doc("payments/concepts/merchants/internal-direct-debit", "Internal Direct Debit"),
+        doc("payments/concepts/merchants/french-checks", "French checks"),
+      ], { link: "payments/concepts/merchants/index" }),
     ], "payments/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Credit transfers", [
@@ -451,27 +462,34 @@ module.exports = annotateAudience(annotate({
           doc("payments/guides/credit-transfers/international/initiate", "Initiate a transfer"),
           doc("payments/guides/credit-transfers/international/get-info", "Get transfer info"),
         ]),
-      ]),
+      ], { link: "payments/guides/credit-transfers/index" }),
       cat("Direct debit", [
         doc("payments/guides/direct-debit/add-mandate", "Add a mandate"),
         doc("payments/guides/direct-debit/enable-mandate", "Enable a mandate"),
         doc("payments/guides/direct-debit/suspend-mandate", "Suspend a mandate"),
         doc("payments/guides/direct-debit/update-mandate", "Update a mandate"),
         doc("payments/guides/direct-debit/return", "Return a direct debit"),
-      ]),
+      ], { link: "payments/guides/direct-debit/index" }),
       cat("Payment cards", [
         doc("payments/guides/cards/get-list", "Get card payments"),
         doc("payments/guides/cards/get-enriched-info", "Get enriched info"),
       ]),
       cat("Payment operations", [
-        doc("payments/guides/payment-operations/get-payment-id", "Get a payment ID"),
-        doc("payments/guides/payment-operations/get-payment-info", "Get payment info"),
+        doc("payments/guides/payment-operations/from-the-dashboard", "From the Dashboard"),
         doc("payments/guides/payment-operations/get-transaction-id", "Get a transaction ID"),
         doc("payments/guides/payment-operations/get-transaction-info", "Get transaction info"),
         doc("payments/guides/payment-operations/get-transaction-list", "Get a list of transactions"),
-        doc("payments/guides/payment-operations/generate-transaction-statement", "Generate a transaction statement"),
-        doc("payments/guides/payment-operations/export", "Export payments"),
-      ]),
+        doc("payments/guides/payment-operations/get-payment-id", "Get a payment ID"),
+        doc("payments/guides/payment-operations/get-payment-info", "Get payment info"),
+        cat("Generate a transaction statement", [
+          doc("payments/guides/payment-operations/generate-transaction-statement/from-the-dashboard", "From the Dashboard"),
+          doc("payments/guides/payment-operations/generate-transaction-statement/using-the-api", "Using the API"),
+        ], { link: "payments/guides/payment-operations/generate-transaction-statement/index" }),
+        cat("Export transaction data", [
+          doc("payments/guides/payment-operations/export/from-the-dashboard", "From the Dashboard"),
+          doc("payments/guides/payment-operations/export/using-the-api", "Using the API"),
+        ], { link: "payments/guides/payment-operations/export/index" }),
+      ], { link: "payments/guides/payment-operations/index" }),
       cat("Merchants", [
         doc("payments/guides/merchants/onboarding-overview", "Onboarding overview"),
         doc("payments/guides/merchants/missing-information", "Missing information"),
@@ -510,6 +528,7 @@ module.exports = annotateAudience(annotate({
             doc("payments/guides/merchants/in-person/cards/accept", "Accept payments"),
             doc("payments/guides/merchants/in-person/cards/initialize", "Initialize the terminal"),
             doc("payments/guides/merchants/in-person/cards/create-payments", "Create payments"),
+            doc("payments/guides/merchants/in-person/cards/stripe-sdk-errors", "Stripe SDK errors"),
           ], { link: "payments/guides/merchants/in-person/cards/index" }),
           cat("French checks", [
             doc("payments/guides/merchants/in-person/checks/accept", "Accept checks"),
@@ -536,7 +555,7 @@ module.exports = annotateAudience(annotate({
       doc("payments/reference/card-payment-countries", "Card payment countries"),
       doc("payments/reference/card-rejection-reasons", "Card rejection reasons"),
       doc("payments/reference/schemes", "Scheme tables"),
-      doc("payments/reference/transaction-fraud-types", "Transaction fraud types"),
+      doc("payments/reference/sepa", "SEPA countries and availability"),
     ], "payments/reference/index", "ia-type-ref"),
   ],
 

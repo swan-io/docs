@@ -23,15 +23,16 @@ This guide helps partner support teams troubleshoot incoming and outgoing credit
 
 | Who | What they do |
 | --- | --- |
-| Your user | Sends and receives transfers, gives consent, contacts the beneficiary or sender, and provides supporting documents. |
-| You (Partner Ops) | Identify and classify the transfer in the Dashboard, explain statuses to your user, gather evidence, and contact Swan Support when needed. |
-| Swan Support | Processes transfers, reviews flagged transactions, and investigates with banking partners when you provide evidence. |
+| Debtor | Sends the transfer and contacts their bank if the transfer is missing or rejected. |
+| Creditor | Receives the transfer and checks the account details or balance. |
+| Swan Support | Processes transfers and investigates cases with banking partners when you provide the required evidence. |
+| You (Partner Ops) | Identify the transfer, explain the visible status, gather the required evidence, and contact Swan when needed. |
 
 ---
 
 ## Transfer types
 
-Credit transfers are push payments: the debtor sends funds to a creditor. Troubleshooting depends on identifying the right type first.
+Credit transfers move funds from a debtor to a creditor. Troubleshooting depends on identifying the right type first.
 
 | Transfer type | What it's for | What to know for support |
 | --- | --- | --- |
@@ -39,7 +40,7 @@ Credit transfers are push payments: the debtor sends funds to a creditor. Troubl
 | SEPA Credit Transfer | EUR transfer within SEPA, sometimes called a regular transfer. | Settles within 48 business hours, typically 1 to 2 business days. Not processed on weekends or SEPA TARGET closing days. |
 | Swan Internal Credit Transfer | Transfer between two Swan accounts. | Almost as quick as instant. Both accounts are on Swan, so there's no external bank to chase. |
 | Standing order | Scheduled, recurring transfer within SEPA. | Can be instant or regular. Canceling stops future executions only. |
-| International Credit Transfer | Transfer outside the SEPA zone, in a non-euro currency. | Typically 1 to 5 business days depending on destination and rail. Can't have the status `Upcoming`. Creates a separate fee transaction. |
+| International Credit Transfer | Transfer outside the SEPA zone, in a non-euro currency. | Typically one to five business days depending on destination and rail. Can't have the status `Upcoming`. Creates a separate fee transaction. |
 
 :::caution Instant transfer limit
 
@@ -69,7 +70,7 @@ Check current coverage in [International Credit Transfers](/topics/payments/cred
 
 :::tip Integration: transfer statuses
 
-Ask your development team to surface transfer status, payment status, and rejection reasons inside your own product using Swan's API, so your team can investigate without opening the Dashboard. See [Credit transfers](/topics/payments/credit-transfers/). They can also test transfer scenarios using the Event Simulator in **Dashboard** > **Developers** > **Event Simulator**.
+Ask your development team to surface transfer status and transaction details inside your own product using Swan's API, so your team can investigate without opening the Dashboard. See [Credit transfers](/topics/payments/credit-transfers/). They can also test transfer scenarios using the Event Simulator in **Dashboard** > **Developers** > **Event Simulator**.
 
 :::
 
@@ -89,7 +90,7 @@ Ask your user for:
 - Execution date
 - Transfer reference, transaction label, or end-to-end reference
 
-Then find the transaction in **Dashboard** > **Data** > **Transactions**. The transaction detail page gives you the transaction ID, execution date, status, amount, payment product, debtor and creditor details, and any supporting documents.
+Then find the transaction in **Dashboard** > **Data** > **Transactions**. The transaction detail page gives you the transaction ID, execution date, status, amount, debtor and creditor details, and any supporting documents.
 
 For international transfers that aren't visible, direct your user to ask the sending institution for a SWIFT payment confirmation, usually called an MT103.
 
@@ -144,29 +145,31 @@ A `Booked` outgoing transfer means Swan processed and submitted it.
 
 ### Normal processing times
 
-:::info
+:::info Normal processing times
+
 Allow the normal processing time before escalating:
 
 - **SEPA Credit Transfer:** up to 48 business hours
 - **Instant SEPA Credit Transfer:** around 10 seconds
-- **International Credit Transfer:** up to 5 business days
+- **International Credit Transfer:** up to five business days
+
 :::
 
 See [Trace a transfer that wasn't received](#trace-a-transfer-that-wasnt-received) for the full procedure.
 
 ### If an outgoing transfer is `Rejected`
 
-First check what the rejection is about. [Here's a list of all the rejection reasons] (https://api-reference.swan.io/enums/rejected-reason-code/).
+First check what the rejection is about. [Here's a list of all the rejection reasons](https://api-reference.swan.io/enums/rejected-reason-code/).
 
 :::caution Don't disclose compliance reasons
 
-Never share the detail behind a compliance or regulatory rejection, even if your user pushes for it. If your user challenges the rejection or asks for details you can't share, submit a Swan Support request.
+If the transfer was rejected for compliance, tell the user that Swan doesn't have information about the rejection reason. Don't speculate or share internal compliance details. If the transfer was rejected for another reason, share only the reason shown in the Dashboard.
 
 :::
 
 For rejected outgoing transfers:
 
-- Retry the payment. If it still doesn't work, submit a Swan Support request with the transaction details.
+- Retry the transfer. If it still doesn't work, submit a Swan Support request with the transaction details.
 - If Instant SEPA fallback was activated, the transfer continues as a regular SEPA Credit Transfer and no action is needed. Two transactions appear in the history: the rejected instant transfer and the new regular one. This is expected and isn't a duplicate. See [Fallback mode](/topics/payments/credit-transfers/sepa/#instant-fallback).
 - If there was no fallback, your user needs to resubmit once they've addressed the reason.
 - For instant transfers, retrying as a regular SEPA Credit Transfer can help, because regular transfers have fewer real-time constraints.
@@ -225,11 +228,11 @@ The funds are available in the account. If your user can't see them, ask them to
 
 ### If an incoming transfer is `Rejected`
 
-- Funds return automatically to the sender's account within 3 business days.
+- Funds return automatically to the sender's account within three business days.
 - If the reason is compliance-related, don't share the detail.
 - The sender needs to correct the issue and resubmit.
 
-If funds haven't returned after 3 business days, submit a Swan Support request.
+If funds haven't returned after three business days, submit a Swan Support request.
 
 ### If an incoming transfer is `Pending`
 
@@ -245,13 +248,11 @@ If funds haven't returned after 3 business days, submit a Swan Support request.
 2. Ask your user for proof of transfer from the sending institution.
 3. Check the beneficiary details on the proof against the Swan account details.
 4. If they don't match, direct your user to ask the sender to check with their bank and resubmit with the correct details.
-5. If they match, instruct your user to ask the sender to contact their financial institution and open an investigation.
-
-If the sender's bank needs written confirmation from Swan that the money wasn't received, raise a support request in your Dashboard.
+5. If the debtor’s bank confirms that it credited the funds to the Swan account and the beneficiary details match, raise a Swan Support request with that confirmation and the transfer details. If the debtor’s bank cannot confirm that it credited the funds, direct the debtor to ask that bank to investigate.
 
 ### If an incoming International transfer isn't visible
 
-1. Confirm up to 5 business days have passed.
+1. Confirm up to five business days have passed.
 2. Direct your user to ask the sender for a SWIFT payment confirmation (an MT103).
 3. Check the sending and beneficiary details against the account.
 4. Submit a Swan Support request with the MT103 and the transfer details.
@@ -339,7 +340,7 @@ Returns and recalls are different things, and mixing them up sets the wrong expe
 | **Return** | Automatic reversal by a bank that can't process the transfer: closed account, wrong BIC, or technical error | The receiving bank, automatically | Funds back within 3 business days |
 | **Recall** | A request to reverse a completed transfer, usually sent to the wrong IBAN | The debtor, via their bank | Beneficiary responds within 15 business days. Not guaranteed |
 
-Recalls work the same way for SEPA Credit Transfers and Instant SEPA Credit Transfers. For international recalls, take longer as it requires further processing. 
+Recalls work the same way for SEPA Credit Transfers and Instant SEPA Credit Transfers. International recalls also work for international credit transfers, but they take longer and require manual processing through intermediary banks.
 
 ### Request a recall for an outgoing transfer
 
@@ -349,7 +350,7 @@ Recalls work the same way for SEPA Credit Transfers and Instant SEPA Credit Tran
 4. The beneficiary's bank notifies the beneficiary, who decides whether to accept.
 5. If they accept, funds are credited back to your user's account. If they refuse or don't respond within 15 business days, the recall closes.
 
-A separate recall transaction appears in the history, linked to the original transfer by the same payment ID. It doesn't replace the original.
+A separate recall transaction appears in the history, linked to the original transfer by the same transaction ID. It doesn't replace the original.
 
 ### Handle a recall request for an incoming transfer
 
@@ -392,7 +393,7 @@ Ask your development team to build cancellation into your product using Swan's A
 
 While Swan investigates:
 
-- Tell your user you're checking with Swan. Indicate in the request whether the request is urgent based on the user's need of the funds, if needed. 
+- Tell your user you're checking with Swan. Indicate any urgency when you raise a request with Swan so the team can better assess the user's criticality.
 - Share any timeframe Swan gives you.
 - Update your user regularly, even when there's nothing new to report.
 - If you don't understand the answer you receive, ask Swan to clarify before replying to your user.
@@ -415,7 +416,7 @@ Submit a Swan Support request if:
 Include in your request:
 
 - Account ID
-- Transaction or payment ID, if available
+- Transaction ID, if available
 - Direction: incoming or outgoing
 - Transfer type
 - Status and status details, if visible

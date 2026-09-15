@@ -157,6 +157,7 @@ module.exports = {
             "topics/accounts/closure/guide-close-limited",
             "topics/accounts/closure/guide-close-unlimited",
             "topics/accounts/closure/guide-get-closure-info",
+            "topics/accounts/closure/guide-get-suspension-info",
           ],
         },
         {

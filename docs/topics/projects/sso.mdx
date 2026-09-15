@@ -8,12 +8,12 @@ Single sign-on (SSO) lets your team sign in to the Swan Dashboard with your comp
 
 With SSO, your IT team manages Dashboard access centrally from your IdP: they assign and revoke access, and Swan roles are assigned automatically based on your IdP groups.
 
-SSO is self-serve: you configure it yourself, project by project, without Swan's intervention. Swan uses [Frontegg](https://frontegg.com) to power SSO, so part of the setup happens in the Frontegg admin portal. Activating SSO doesn't disrupt phone number sign-in for your other users.
+SSO is self-serve: you configure it yourself, project by project, without Swan's intervention. Swan's SSO provider powers the connection to your IdP, so part of the setup happens in the SSO provider's admin portal. Activating SSO doesn't disrupt phone number sign-in for your other users.
 
 ## How SSO works {#how-it-works}
 
 1. Your user opens the Swan Dashboard sign-in page, selects **Sign in with SSO**, and enters their company email address.
-2. Frontegg detects your SSO configuration based on the email domain and redirects the user to your IdP's sign-in page.
+2. The SSO provider detects your SSO configuration based on the email domain and redirects the user to your IdP's sign-in page.
 3. The user authenticates with their company credentials.
 4. The user is redirected back to the Swan Dashboard, signed in.
 
@@ -21,7 +21,7 @@ The first time a user signs in with SSO, Swan creates their Dashboard access aut
 
 ## Supported identity providers {#providers}
 
-Frontegg provides dedicated setup guides for Okta, Google Workspace, Microsoft Entra ID (Azure AD), OneLogin, Ping Identity, JumpCloud, and Rippling.
+The SSO provider's admin portal includes dedicated setup guides for Okta, Google Workspace, Microsoft Entra ID (Azure AD), OneLogin, Ping Identity, JumpCloud, and Rippling.
 
 You can also configure a custom SAML or OpenID Connect connection, so any IdP that supports SAML 2.0 works with Swan SSO.
 
@@ -44,7 +44,7 @@ Setup typically takes 15 to 30 minutes once your IT team has your IdP configurat
 3. Select **Start SSO setup**.
 4. Enter your IT administrator's email address, then select **Send invitation**.
 
-Your IT administrator receives an invitation email from Frontegg.
+Your IT administrator receives an invitation email from the SSO provider.
 
 :::info Pending invitations
 Only one invitation can be pending per project. While it's pending, you can resend it or change the email address, which cancels the previous invitation. Other Admins who open the SSO settings see the existing pending request.
@@ -58,20 +58,20 @@ Your IT administrator completes the following steps:
 2. Sign out of the Dashboard, then sign back in with **Sign in with SSO** using the invited company email address.
 3. Set a password and complete the one-time password verification if prompted.
 
-### Step 3: Configure your IdP in Frontegg {#setup-idp}
+### Step 3: Configure your IdP {#setup-idp}
 
-1. In the Dashboard, open **SSO configuration** in the upper-right menu (it replaces **Access management** for users signed in with SSO), then follow the redirect to the Frontegg admin portal.
+1. In the Dashboard, open **SSO configuration** in the upper-right menu (it replaces **Access management** for users signed in with SSO), then follow the redirect to the SSO provider's admin portal.
 2. Start a new SSO configuration and select your IdP.
-3. Follow the provider-specific guide Frontegg displays. Configure the application in your IdP with the values Frontegg generates, such as the ACS URL, entity ID, redirect URL, and certificate. Don't reuse example values.
+3. Follow the provider-specific guide the admin portal displays. Configure the application in your IdP with the values the admin portal generates, such as the ACS URL, entity ID, redirect URL, and certificate. Don't reuse example values.
 4. In your IdP admin console, assign the users and groups that need access to the Swan Dashboard, and confirm each group is mapped to the intended Swan role.
-5. Enter the value Frontegg requests, such as your IdP metadata URL, then select **Next**.
+5. Enter the value the admin portal requests, such as your IdP metadata URL, then select **Next**.
 
 ### Step 4: Verify your domain {#setup-domain}
 
 Domain verification is required before SSO can be activated.
 
 1. Select **Continue to claim domain**, then enter your company's email domain.
-2. Copy the DNS TXT record Frontegg generates, then add it to your domain's DNS settings.
+2. Copy the DNS TXT record the admin portal generates, then add it to your domain's DNS settings.
 
 DNS changes can take a while to propagate, so verification might not complete immediately.
 
@@ -85,22 +85,22 @@ If you change a user's group or role mapping, that user must sign out and sign i
 
 ## Enforce SSO {#enforce}
 
-Optionally, you can require all team members added to your SSO provider to sign in with SSO only. Phone number sign-in is then disabled for them. Enforcement applies per project, so repeat it for each project with SSO.
+Optionally, you can require all team members added to your IdP to sign in with SSO only. Phone number sign-in is then disabled for them. Enforcement applies per project, so repeat it for each project with SSO.
 
-1. Sign in with SSO and open the SSO settings from the upper-right menu.
+1. Sign in with SSO and open **SSO configuration** in the upper-right menu.
 2. Turn off **Sign-in with a phone number**.
 3. Select **Disable** to confirm.
 
 ## Manage users {#manage-users}
 
-- **Add users**: assign them to the Frontegg application in your IdP. Their Dashboard access is created the first time they sign in with SSO.
+- **Add users**: assign them to the Swan application in your IdP. Their Dashboard access is created the first time they sign in with SSO.
 - **Assign roles**: map your IdP groups to Swan roles during setup. Role changes apply the next time the user signs in.
 - **Remove users**: deactivate or unassign them in your IdP. Deactivating a user in your IdP doesn't revoke their phone number sign-in on Swan, so also remove their phone-based Dashboard access to revoke access completely.
 
 ## Notes and limitations {#limitations}
 
 - SSO is configured per project, not for your whole organization. You can have some projects with SSO and others without.
-- To use SSO on multiple projects, you must enable SCIM provisioning in Frontegg.
+- To use SSO on multiple projects, you must enable SCIM provisioning in the SSO provider's admin portal.
 - The **Sign in with SSO** option is visible to everyone on the Dashboard sign-in page, even before your setup is complete.
 - Session views differ by sign-in method: **Team management** lists phone number users and is only visible when signed in with a phone number, while **SSO configuration** lists SSO users and is only visible when signed in with SSO.
 
@@ -109,7 +109,7 @@ Optionally, you can require all team members added to your SSO provider to sign 
 | Issue | What to check |
 | --- | --- |
 | The IT administrator didn't receive the invitation | Confirm the email address is correct, then resend the invitation from the SSO settings. |
-| The IT administrator can't access Frontegg | Confirm the invitation was accepted and the initial sign-in and one-time password verification were completed. |
+| The IT administrator can't access the SSO provider's admin portal | Confirm the invitation was accepted and the initial sign-in and one-time password verification were completed. |
 | Users can't sign in with SSO | Confirm users are assigned to the IdP application and the claimed domain matches their company email domain. |
-| Domain verification is pending | Confirm the exact TXT record generated by Frontegg was added to the correct DNS zone, then allow time for DNS propagation. |
+| Domain verification is pending | Confirm the exact TXT record generated by the admin portal was added to the correct DNS zone, then allow time for DNS propagation. |
 | A user has the wrong Dashboard role | Check the IdP group membership and group-to-role mapping, then ask the user to sign out and sign in again. |

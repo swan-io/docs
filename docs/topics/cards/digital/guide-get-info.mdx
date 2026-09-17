@@ -11,21 +11,16 @@ You need a [project access token](../../../developers/using-api/authentication/i
 You can also use a [user access token](../../../developers/using-api/authentication/index.mdx#tokens-user) if the user is the cardholder, or an account member with both the `canManageAccountMembership` and `canManageCards` [permissions](../../accounts/memberships/index.mdx#permissions).
 :::
 
-:::tip Webhooks
-Subscribe to the `DigitalCard.Created` and `DigitalCard.Updated` webhooks to know when a digital card is created or changes status. Learn more about [tracking digital card changes](./index.mdx#tracking-status).
-:::
-
 ## Guide {#guide}
 
 1. Call the `digitalCard` query.
-1. Enter your digital card ID (line 2). If you're resolving a `DigitalCard.Created` or `DigitalCard.Updated` webhook event, use the event's `resourceId`. Learn more about [tracking digital card changes](./index#tracking-status).
+1. Enter your digital card ID (line 2). If you're resolving a `DigitalCard.Created` or `DigitalCard.Updated` webhook event, use the event's `resourceId`. Learn more about [tracking digital card changes](/topics/cards/digital/#tracking-status).
 1. Add the information you need. This sample returns the status of a card that's still pending: `ConsentPending`, `Pending`, or `Declined` (line 8). For a card that finished provisioning, replace the fragment with `... on CompleteDigitalCard` to get `Enabled`, `Suspended`, or `Canceled`.
 
 ## Query {#query}
 
 <a href="https://explorer.swan.io?query=cXVlcnkgZ2V0RGlnaXRhbENhcmQgewogIGRpZ2l0YWxDYXJkKGRpZ2l0YWxDYXJkSWQ6ICIkWU9VUl9ESUdJVEFMX0NBUkRfSUQiKSB7CiAgICBpZAogICAgdHlwZQogICAgY2FyZElkCiAgICAuLi4gb24gUGVuZGluZ0RpZ2l0YWxDYXJkIHsKICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-query getDigitalCard {
   digitalCard(digitalCardId: "$YOUR_DIGITAL_CARD_ID") {
     id
     type

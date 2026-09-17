@@ -285,6 +285,7 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/cards/digital/guide-add",
+            "topics/cards/digital/guide-get-info",
             "topics/cards/digital/guide-cancel",
           ],
         },

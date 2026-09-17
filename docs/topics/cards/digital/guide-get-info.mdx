@@ -1,0 +1,57 @@
+---
+title: Get digital card information
+---
+
+# Get digital card information
+
+Get information about a digital card with the API, including its status and the card it belongs to.
+
+:::tip Prerequisites
+You need a [project access token](/developers/using-api/authentication/#tokens-project) to call the query.
+You can also use a [user access token](/developers/using-api/authentication/#tokens-user) if the user is the cardholder, or an account member with both the `canManageAccountMembership` and `canManageCards` [permissions](/topics/accounts/memberships/#permissions).
+:::
+
+## Guide {#guide}
+
+1. Call the `digitalCard` query.
+1. Enter your digital card ID (line 2). If you're resolving a `DigitalCard.Created` or `DigitalCard.Updated` webhook event, use the event's `resourceId`. Learn more about [tracking digital card changes](/topics/cards/digital/#tracking-status).
+1. Add the information you need. In this example, `PendingDigitalCard` returns `ConsentPending`, `Pending`, or `Declined` (line 8). 
+
+You can also use `CompleteDigitalCard` which returns `Enabled`, `Suspended`, or `Canceled`.
+## Query {#query}
+
+<a href="https://explorer.swan.io?query=cXVlcnkgZ2V0RGlnaXRhbENhcmQgewogIGRpZ2l0YWxDYXJkKGRpZ2l0YWxDYXJkSWQ6ICIkWU9VUl9ESUdJVEFMX0NBUkRfSUQiKSB7CiAgICBpZAogICAgdHlwZQogICAgY2FyZElkCiAgICAuLi4gb24gUGVuZGluZ0RpZ2l0YWxDYXJkIHsKICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,8} showLineNumbers
+query getDigitalCard {
+  digitalCard(digitalCardId: "$YOUR_DIGITAL_CARD_ID") {
+    id
+    type
+    cardId
+    ... on PendingDigitalCard {
+      statusInfo {
+        status
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The payload shows a digital card the cardholder added to their wallet manually (line 5). It's still `Pending` (line 8) until the wallet finishes provisioning it.
+
+```json {5,8} showLineNumbers
+{
+  "data": {
+    "digitalCard": {
+      "id": "$YOUR_DIGITAL_CARD_ID",
+      "type": "Manual",
+      "cardId": "$YOUR_CARD_ID",
+      "statusInfo": {
+        "status": "Pending"
+      }
+    }
+  }
+}
+```

@@ -90,31 +90,14 @@ If a digital card is stuck in `Pending` status after manual provisioning (for ex
 :::
 
 ## Tracking digital card changes {#tracking-status}
-To receive notifications when a digital card is created or its status changes, subscribe to `DigitalCard.Created` and `DigitalCard.Updated` [webhooks](../../../developers/using-api/webhooks).
 
-`DigitalCard.Created` is triggered when the card is first created and before it becomes usable in a wallet. You should also subscribe to `DigitalCard.Updated` to track status changes.
+Subscribe to the `DigitalCard.Created` and `DigitalCard.Updated` [webhooks](../../../developers/using-api/webhooks.mdx#events-cards) to get notified when a digital card is created and each time its status changes.
+Both events are sent no matter how the card was added, including when a cardholder adds it to their wallet manually. This helps you keep your app in sync with the card's actual provisioning status.
 
-The resource ID in the event is a `digitalCardId` that can be used with the [query `digitalCard(digitalCardId: ...)`](https://api-reference.swan.io/queries/digital-card) to retrieve the latest digital card data.
+- `DigitalCard.Created` is sent when the digital card is created, before it can be used in a wallet.
+- `DigitalCard.Updated` is sent for every status change after that, such as `Enabled`, `Suspended`, or `Canceled`.
 
-## Query digital card information {#query}
-
-Retrieve digital card information.
-
-<a href="https://explorer.swan.io?
-query=cXVlcnkgZ2V0RGlnaXRhbENhcmQgewogIGRpZ2l0YWxDYXJkKGRpZ2l0YWxDYXJkSWQ6ICIkWU9VUl9ESUdJVEFMX0NBUkRfSUQiKSB7CiAgICBpZAogICAgdHlwZQogICAgY2FyZElkCiAgICAuLi4gb24gUGVuZGluZ0RpZ2l0YWxDYXJkIHsKICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0gIyBDb25zZW50UGVuZGluZyB8IFBlbmRpbmcgfCBEZWNsaW5lZAogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
-
-```graphql {2,3,5,13} showLineNumbers
-query getDigitalCard {
-  digitalCard(digitalCardId: "$YOUR_DIGITAL_CARD_ID") {
-    id
-    type
-    cardId
-    ... on PendingDigitalCard {
-      statusInfo { status }   # ConsentPending | Pending | Declined
-    }
-  }
-}
-```
+The event's `resourceId` is the digital card ID. Use it with the `digitalCard` query to [get the latest digital card information](./guide-get-info.mdx).
 
 ## Troubleshooting digital card provisioning {#troubleshooting}
 

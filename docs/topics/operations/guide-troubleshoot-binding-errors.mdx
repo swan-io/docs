@@ -11,8 +11,9 @@ For technical reference and API integration guides, see [Fix a user binding erro
 :::info Key takeaways
 
 - A binding error occurs when the details you provided for an invited account member don't match their sign-up details.
-- You can spot binding errors from your Dashboard. To fix them, direct an account member who has the `canManageAccountMembership` permission, usually the legal representative, to resolve the error in Web Banking.
-- Users can often fix two error types (`emailVerifiedMatchError` and `idVerifiedMatchError`) themselves. If the email doesn't match or the identification link has expired, raise a support request in your Dashboard.
+- You can spot binding errors from your Dashboard. To fix them, direct an account member who has the `canManageAccountMembership` permission, usually the legal representative, to resolve the error in your banking app.
+- Users can often fix two error types, `emailVerifiedMatchError` and `idVerifiedMatchError`, themselves. If the email doesn't match or the identification link has expired, [send them a new one through the Dashboard](/topics/operations/guide-user-identification/#help-a-user-who-cant-complete-identification).
+
 - The most important prevention tip: check spelling against the user's identity document, not their preferred name.
 
 :::
@@ -21,7 +22,7 @@ For technical reference and API integration guides, see [Fix a user binding erro
 
 ## Understand binding errors
 
-A binding error occurs when the information you provided when inviting an account member doesn't match the information they provided during sign-up. Until the error is resolved, the member can't perform sensitive operations. What they can see depends on your integration: some members may still view account and card information; others may see nothing at all.
+A binding error occurs when the information you provided when inviting an account member doesn't match the information they provided during sign-up. Until the error is resolved, the member can't perform sensitive operations. What the member can see depends on your integration. They may still be able to view account or card information, or they may not be able to access anything.
 
 Binding errors only occur during initial binding. Updating personal details on an `Enabled` membership doesn't cause a binding error.
 
@@ -45,19 +46,21 @@ Binding errors only occur during initial binding. Updating personal details on a
 
 Your Dashboard shows all mismatched information. The Dashboard doesn't let you correct membership data directly. Your user may be able to correct the mismatch themselves, depending on your integration. Check the integration setup before moving on.
 
-:::info Can't find it?
+:::info No `BindingUserError` status?
 
-If you don't find a `BindingUserError` status, the user may not have accepted the invitation and completed sign-up yet. This isn't a binding error. Raise a support request in your Dashboard for guidance.
+If you don't see a `BindingUserError` status, the user may not have accepted the invitation and completed the sign-up process yet. Check the `InvitationSent` status. If it shows that the invitation was sent, ask the user to accept the invitation they should have received. If they haven’t received it, the person who sent the invitation can resend the link.
 
 :::
 
 ---
 
-## Fix a binding error from Web Banking
+## Fix a binding error through your partner interface
 
-If the affected account has a member with the `canManageAccountMembership` permission (typically the account's legal representative), they can resolve binding errors directly in Web Banking. Share the [Resolve a user binding error](https://support.swan.io/hc/en-150/articles/20431032028829) article on support.swan.io with them for step-by-step instructions.
+Use your partner interface to correct the mismatched membership information. If your interface doesn't expose membership management, ask your development team to add this capability using Swan's Account Membership API.
 
-:::tip No API required
+If your integration doesn't provide a correction flow, direct an account member with the `canManageAccountMembership` permission, typically the legal representative, to resolve the error in Web Banking. Share the [Resolve a user binding error](https://support.swan.io/hc/en-150/articles/20431032028829) article on support.swan.io with them for step-by-step instructions.
+
+:::tip Resolving through Web Banking
 
 This is the recommended fix path for partners not using the Swan API. It remains an option for partners with API integrations where membership management isn't exposed to users.
 
@@ -88,7 +91,7 @@ If the user verifies a different email address than the one shown on their membe
 
 Tell your user that they need to complete their identity verification. Ask them to open the link they received by email or SMS to start.
 
-If the user's identification link has expired or is no longer accessible, raise a support request in your Dashboard to issue a new one. Include the account membership ID in your request.
+If the user's identification link has expired or is no longer accessible, [send them a new one through the Dashboard](/topics/operations/guide-user-identification/#help-a-user-who-cant-complete-identification).
 
 ---
 
@@ -112,19 +115,13 @@ Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests
 
 Include in your request:
 
-- Account ID and account membership ID
-- The specific error types
-- Resolution steps already taken
+- Account ID and account membership ID.
+- The specific error types.
+- Resolution steps already taken.
 
 ---
 
 ## Share these articles with your users
-
-Share these Support Center articles with users who have questions about account membership:
-
-- [Resolve a user binding error](https://support.swan.io/hc/en-150/articles/20431032028829-Resolve-a-user-binding-error): fixing the error in Web Banking, step by step.
-- [Add a member to your account](https://support.swan.io/hc/en-150/articles/17648698750877-Add-a-member-to-your-account): inviting a new member with correct details.
-- [Identification process overview](https://support.swan.io/hc/en-150/articles/22865683055133-Identification-process-overview): what to expect during identification.
 
 :::tip Help center content
 
@@ -132,3 +129,6 @@ You can also use these articles as a starting point to create your own FAQ or he
 
 :::
 
+- [Resolve a user binding error](https://support.swan.io/hc/en-150/articles/20431032028829-Resolve-a-user-binding-error): fixing the error in Web Banking, step by step.
+- [Add a member to your account](https://support.swan.io/hc/en-150/articles/17648698750877-Add-a-member-to-your-account): inviting a new member with correct details.
+- [Identification process overview](https://support.swan.io/hc/en-150/articles/22865683055133-Identification-process-overview): what to expect during identification.

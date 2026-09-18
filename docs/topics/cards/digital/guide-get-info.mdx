@@ -15,9 +15,8 @@ You can also use a [user access token](/developers/using-api/authentication/#tok
 
 1. Call the `digitalCard` query.
 1. Enter your digital card ID (line 2). If you're resolving a `DigitalCard.Created` or `DigitalCard.Updated` webhook event, use the event's `resourceId`. Learn more about [tracking digital card changes](/topics/cards/digital/#tracking-status).
-1. Add the information you need. In this example, `PendingDigitalCard` returns `ConsentPending`, `Pending`, or `Declined` (line 8). 
+1. Add the information you need. In this example, `PendingDigitalCard` returns `ConsentPending`, `Pending`, or `Declined` (line 8). For a card that's `Enabled`, `Suspended`, or `Canceled`, replace the fragment with `... on CompleteDigitalCard`. A card can be `Canceled` at any point, including when the cardholder doesn't consent.
 
-You can also use `CompleteDigitalCard` which returns `Enabled`, `Suspended`, or `Canceled`.
 ## Query {#query}
 
 <a href="https://explorer.swan.io?query=cXVlcnkgZ2V0RGlnaXRhbENhcmQgewogIGRpZ2l0YWxDYXJkKGRpZ2l0YWxDYXJkSWQ6ICIkWU9VUl9ESUdJVEFMX0NBUkRfSUQiKSB7CiAgICBpZAogICAgdHlwZQogICAgY2FyZElkCiAgICAuLi4gb24gUGVuZGluZ0RpZ2l0YWxDYXJkIHsKICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
@@ -39,7 +38,7 @@ query getDigitalCard {
 
 ## Payload {#payload}
 
-The payload shows a digital card the cardholder added to their wallet manually (line 5). It's still `Pending` (line 8) until the wallet finishes provisioning it.
+The payload shows a digital card the cardholder added to their wallet manually (line 5). It's still `Pending` (line 8) until provisioning succeeds and the status moves to `Enabled`, or fails and it moves to `Declined`.
 
 ```json {5,8} showLineNumbers
 {

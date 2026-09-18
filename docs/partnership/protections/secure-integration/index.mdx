@@ -1,0 +1,359 @@
+---
+title: Secure your integration
+description: Best practices and security guidelines for securing your Swan integration.
+---
+
+# Secure your integration
+
+When you build an integration that uses Swan services, you're responsible for protecting your integration, your users, and their data.
+
+This page describes common security practices to implement when building and operating your Swan integration. These guidelines aren't exhaustive. Implement additional controls and procedures that are appropriate for your architecture, technology, and risk profile.
+
+The sections are ordered from foundational integration controls to broader application, operational, and governance practices.
+
+Security controls are one part of fraud prevention. For guidance on preventing, reacting to, and reporting fraud, see [Fraud protection](/partnership/protections/fraud/). For examples of fraud patterns that may affect you or your users, see [Common types of fraud](/partnership/protections/fraud/types).
+
+:::caution Partner liability
+
+In the event of fraud, if evidence shows that your security measures didn't follow Swan's recommendations, you'll be liable for reimbursing your users for the resulting fraud.
+
+:::
+
+import TrustCenter from '../../partials/_trust-center.mdx';
+
+<TrustCenter />
+
+## Protect your integration {#protect}
+
+### Protect API credentials, private keys, and client secrets {#credentials}
+
+Protect all credentials that can authenticate your integration or authorize actions: OAuth client secrets, API keys, private keys (signing/mTLS), webhook secrets, access tokens, and refresh tokens. Store them only in an approved server-side secrets manager.
+
+Don't embed secrets in:
+
+- Browser or mobile applications
+- Source code repositories
+- Logs
+- Tickets
+- Chat messages
+
+You must:
+
+- Restrict access to credentials using the [principle of least privilege](https://csrc.nist.gov/glossary/term/least_privilege).
+- Maintain an inventory of active credentials.
+- Replace client secrets immediately after suspected compromise.
+- Remove credentials that are no longer required.
+
+### Secure webhook processing {#webhooks}
+
+Swan strongly recommends configuring a webhook secret and verifying the `x-swan-secret` HTTP header on every Swan webhook request before processing it.
+
+You must:
+
+- Reject requests with a missing or incorrect secret when a webhook secret is configured.
+- Record processed event IDs to prevent duplicate processing.
+- Apply [idempotent handling](/developers/using-api/idempotency) to state-changing actions.
+- Account for retries and out-of-order notifications.
+- Retrieve relevant details through the authenticated Swan API or Partner Dashboard when needed.
+
+Don't treat webhook notifications as the sole source of sensitive information. Use the authenticated API or Partner Dashboard to retrieve sensitive details.
+
+For more information, see [Webhooks](/developers/using-api/webhooks).
+
+### Protect OAuth access and refresh tokens {#oauth-tokens}
+
+Swan uses OAuth 2.0 and Bearer authentication. Treat user access tokens, project access tokens, and refresh tokens as sensitive credentials.
+
+You must:
+
+- Store tokens in a protected, server-side system.
+- Store tokens at the appropriate user or project level.
+- Never expose tokens in URLs, logs, or untrusted client-side storage.
+- Use user access tokens only for operations that require them, particularly sensitive operations.
+- Use project access tokens for server-to-server authentication and non-sensitive operations.
+- Use only exact, pre-approved redirect URIs configured in the Swan Partner Dashboard.
+- Query Swan's API to confirm the outcome of sensitive consent flows.
+
+:::caution Token lifetimes
+
+Swan access tokens are valid for one hour. User refresh tokens are single-use: store each one securely and replace it with the newly issued token after every refresh.
+
+:::
+
+For more information, see:
+
+- [Authentication](/developers/using-api/authentication/)
+- [Get a user access token](/developers/using-api/authentication/guide-get-token-user)
+- [Get a project access token](/developers/using-api/authentication/guide-get-token-project)
+
+### Protect API endpoints and integration flows {#endpoints}
+
+Protect your own endpoints as well as your calls to the Swan API.
+
+You must:
+
+- Implement server-side rate limiting.
+- Set request-size limits.
+- Monitor abnormal API use.
+- Keep Swan API calls on your [backend](/developers/#backend).
+- Use Swan [idempotency controls](/developers/using-api/idempotency) for supported state-changing operations.
+- Use only pre-approved redirect URIs.
+- Use current TLS.
+- Avoid sending sensitive data in URLs.
+
+Swan imposes [rate limits](/developers/#rate-limits) on its API, but you must also protect your own endpoints and integration flows.
+
+For more information, see:
+
+- [About the Swan API](/developers/)
+- [Idempotency](/developers/using-api/idempotency)
+
+## Protect users of your interface {#users}
+
+The controls in this section apply to interfaces and applications operated by you.
+
+For practical guidance on account takeover, phishing, card fraud, and other fraud patterns, see [Common types of fraud](/partnership/protections/fraud/types).
+
+### Use a strong password policy {#password-policy}
+
+If you use passwords to authenticate users, implement controls that protect against brute-force attacks, credential stuffing, and password disclosure.
+
+Your password policy needs to include:
+
+- A minimum password length of 12 characters
+- Support for long passphrases
+- Support for password managers and password paste functionality
+- Secure password generation when passwords are system-generated
+- A password change after first use or reset when the password was generated by your system
+- Rate limiting, progressive delays, and monitoring after repeated invalid authentication attempts
+- Account lockout controls that limit repeated login attempts without letting an attacker trigger lockouts to keep legitimate users out
+- Password reset or rotation after suspected compromise, credential exposure, or a high-risk account-recovery event
+- No routine password changes solely because a certain amount of time has passed
+- Storage using a modern password-hashing algorithm with a unique salt, such as Argon2id or bcrypt
+- Transmission only over a current Transport Layer Security (TLS) connection
+
+Password policies should prioritize length, uniqueness, and resistance to known-compromised credentials over mandatory composition rules.
+
+### Use multi-factor authentication for sensitive operations {#mfa}
+
+Even when strong passwords are used, attackers can obtain user credentials through [account takeover (ATO)](/partnership/protections/fraud/types#ato).
+
+Swan handles multi-factor authentication for account operations through its [Consent](/topics/users/consent/#sensitive) mechanisms. You need to implement your own authentication controls for sensitive operations handled through your own systems and applications.
+
+Use phishing-resistant methods such as FIDO2 or WebAuthn security keys and passkeys. Use authenticator-app codes only as a fallback.
+
+You must implement multi-factor authentication when users can:
+
+- View an account balance
+- View transactions
+- Send payments
+- Manage beneficiaries
+- Manage memberships
+
+Multi-factor authentication isn't required for cardholder-only access when the only sensitive data displayed is the card number or physical card PIN. These values are protected by Swan's consent mechanisms.
+
+For more information about fraud prevention and account takeover, see:
+
+- [Fraud protection](/partnership/protections/fraud/)
+- [Common types of fraud](/partnership/protections/fraud/types)
+
+### Protect user sessions {#sessions}
+
+Some attackers exploit weak session protection to impersonate a user, rather than attacking the authentication mechanisms directly. Implement controls to protect sessions against session prediction, session fixation, and session hijacking.
+
+You must:
+
+- Set an idle timeout and a separate absolute session lifetime.
+- Generate session IDs using a cryptographically secure random number generator.
+- Regenerate session IDs after authentication, password reset, and privilege changes.
+- Configure cookies with `Secure`, `HttpOnly`, and an appropriate `SameSite` attribute.
+- Use `SameSite=Lax` as the default.
+- Use `SameSite=Strict` where your application flows allow it.
+- Use session fingerprinting or device binding, meaning tying sessions or tokens to a specific device, where proportionate to the risk.
+- Invalidate sessions after a password reset or suspected account compromise.
+
+You must enforce a **five-minute** idle timeout when users can:
+
+- View an account balance
+- View transactions
+- Send payments
+- Manage cards
+- Manage beneficiaries
+- Manage memberships
+
+The five-minute requirement applies to sensitive interfaces you operate. Swan's [Time-to-live](/developers/#ttl) documentation describes the session behavior of Swan's own Partner Dashboard and Web Banking user interface.
+
+You may refresh session tokens while the page remains open, provided that the timeout is enforced when the user is no longer actively using the interface.
+
+## Build secure applications {#applications}
+
+Implement a secure development lifecycle for systems and applications that handle Swan services, users' data, or sensitive operations.
+
+Your development lifecycle should include:
+
+- Security requirements
+- Peer review for security-sensitive changes
+- Dependency management
+- Security testing proportionate to the risk
+
+Your applications must also implement the following controls where the relevant functionality exists:
+
+- Validate input on the server using allowlists and type, length, and range checks.
+- Use parameterized queries or equivalent safe data-access patterns to prevent injection.
+- Use context-appropriate output encoding.
+- Use a restrictive Content Security Policy (CSP) to reduce cross-site scripting risks.
+- Protect state-changing browser requests against cross-site request forgery.
+- Check authorization on every sensitive server-side action.
+- Don't rely on client-side checks alone for authorization.
+- Restrict outbound requests to prevent server-side request forgery, including requests to internal services and cloud metadata endpoints.
+- When storing or sending data, for example as JSON, and later reading it back into your system, use safe serialization and deserialization practices.
+- Don't process untrusted serialized objects with unsafe deserializers.
+- Use secure error handling that doesn't expose sensitive information.
+
+## Protect data stored by your systems {#data}
+
+Protect user data stored in your systems and applications.
+
+Implement controls appropriate to your architecture and the sensitivity of the data, including:
+
+- Data segregation mechanisms
+- Network access controls that prevent direct database access from untrusted networks
+- Logical access controls that limit access to authorized users and services
+- Encryption of sensitive data before storage
+- Automated deletion when data exceeds its maximum retention period
+- Truncation or masking of sensitive data in logs and cache files
+
+Avoid collecting and storing account data unless it's strictly necessary.
+
+Whenever possible, store object IDs instead of sensitive object values. For example, store a card ID rather than card numbers.
+
+If you need to keep account data in your systems, encrypt it before storage.
+
+For information about how Swan protects funds, see [Protecting funds](/partnership/protections/financial). For information about how Swan stores and protects user data, see [Data protection](/partnership/protections/data).
+
+## Separate Sandbox and Live environments {#environments}
+
+Pre-production environments, including development, testing, and User Acceptance Testing (UAT) environments, are usually less secure than production environments.
+
+Swan offers a Sandbox environment, as described in [Environments](/developers/#environments), to support the separation of pre-production and Live environments.
+
+You must implement controls that prevent pre-production resources from accessing Live resources or Live data.
+
+These controls may include:
+
+- Network or logical access controls that segregate resources processing Live data from resources processing Sandbox data.
+- Separate credentials and secrets for each environment.
+- Access-management procedures that separate responsibilities between pre-production and production environments.
+- Access restrictions that limit Live access to authorized personnel only.
+
+:::caution Never use Live data in pre-production
+
+Don't use Live data for development, testing, or UAT. Use the [Sandbox environment](/developers/#environments) with separate credentials for each environment.
+
+:::
+
+For more information about Swan's integration options and environments, see [Choose your integration](/topics/get-started/choose-integration).
+
+## Patch and harden your systems {#patch}
+
+Protect your systems and applications against software vulnerabilities and insecure configurations.
+
+Your processes should achieve two objectives:
+
+- Deploy security patches within an appropriate timeframe.
+- Configure systems and applications according to vendor hardening recommendations and industry security practices.
+
+### Manage software vulnerabilities {#vulnerabilities}
+
+You must:
+
+- Deploy system patches regularly.
+- Avoid deprecated or unsupported software.
+- Avoid vulnerable application dependencies.
+- Update application dependencies as part of the development lifecycle.
+- Use vulnerability scanners or perform intrusion testing to identify software vulnerabilities.
+
+Swan highly recommends that you mitigate:
+
+- Critical vulnerabilities within 30 days
+- Non-critical vulnerabilities within 90 days
+
+Vulnerability prioritization needs to consider more than severity alone. Where available, use the current version of the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/) and consider:
+
+- Active exploitation, including vulnerabilities listed in the [CISA Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog).
+- Exploit likelihood, including [Exploit Prediction Scoring System (EPSS)](https://www.first.org/epss/) where relevant.
+- Internet exposure.
+- Asset criticality.
+- The availability of mitigations.
+
+Actively exploited or externally exposed critical vulnerabilities should receive accelerated remediation.
+
+### Use secure configuration {#configuration}
+
+Define hardening standards using [OWASP's guidance on missing security hardening](https://ot.owasp.org/v/2025/the-top-10/missing-hardening/). Implement change-management and configuration-management procedures. Use configuration scanners or perform intrusion testing to identify insecure configurations.
+
+Your hardening standards should address the following areas, where applicable:
+
+- Removing or disabling default accounts, passwords, keys, and authentication credentials.
+- Configuring network rules and access-control lists with a deny-all default policy.
+- Disabling unnecessary services, protocols, daemons, and functions.
+- Disabling insecure protocols such as Telnet, rlogin, and FTP.
+- Enforcing strong authentication and authorization.
+- Maintaining audit trails.
+- Encrypting data at rest.
+- Encrypting data in transit, including through the use of TLS.
+- Using strong cryptographic algorithms, cipher suites, and modes of operation.
+- Protecting systems against malware.
+
+## Detect and respond to security events {#events}
+
+Attacks on your integration are easier to contain when you spot them early and already know who does what. Set up detection and response for security events affecting your systems, applications, Swan credentials, or your users' data.
+
+Your incident-response process should include:
+
+- Security monitoring mechanisms such as a Security Information and Event Management (SIEM) system, which centralizes and analyzes security logs and alerts.
+- A Security Operations Center (SOC), Computer Emergency Response Team (CERT), or Computer Security Incident Response Team (CSIRT) provider, or an equivalent internal team, to monitor, investigate, and respond to security incidents.
+- Formal incident-response roles and responsibilities.
+- Identification of regulatory requirements that apply to incident response.
+- Documented security incident-response procedures.
+- IT forensic procedures.
+
+Notify Swan promptly about any security incident that could affect:
+
+- Swan credentials
+- Swan APIs or services
+- User data
+- Swan account holders
+
+If you discover a potential vulnerability in Swan's APIs or services, follow the [vulnerability reporting process](/partnership/protections/report-vulnerability).
+
+## Assess and treat security risks {#risks}
+
+Controls are worth the effort when they're aimed at the risks you actually carry. Assess those risks deliberately, and revisit them as your integration grows.
+
+Your risk-management process should include:
+
+- Identifying the assets that need protection.
+- Defining a methodology to evaluate security risks.
+- Performing periodic security-risk assessments.
+- Maintaining a risk-assessment matrix.
+- Implementing internal control procedures.
+- Monitoring security advisories from technology providers and relevant security communities.
+
+## Maintain security awareness, supplier assurance, and resilience {#resilience}
+
+These last practices are what keep your integration secure over time: your staff, your suppliers, and your ability to recover when something breaks.
+
+These processes should be proportionate to the criticality of your service and should include:
+
+- Periodic security-awareness training for relevant staff, including phishing and credential-protection awareness.
+- Risk-based security assessment and oversight of third parties and suppliers that can access sensitive data, credentials, or production systems.
+- Tested backup, business-continuity, and disaster-recovery arrangements proportionate to the criticality of the service.
+
+## More resources {#resources}
+
+For additional application-security guidance, see:
+
+- [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/)
+- [OWASP Application Security Verification Standard](https://owasp.org/www-project-application-security-verification-standard/)
+- [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)

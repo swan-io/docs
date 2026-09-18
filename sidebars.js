@@ -640,6 +640,7 @@ module.exports = {
           collapsed: true,
           items: ["partnership/protections/fraud/types"],
         },
+        "partnership/protections/secure-integration/index",
         "partnership/protections/data",
         "partnership/protections/report-vulnerability",
       ],

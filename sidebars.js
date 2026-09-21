@@ -529,7 +529,10 @@ module.exports = {
           label: "Projects overview",
           link: { type: "doc", id: "topics/projects/index" },
           collapsed: true,
-          items: ["topics/projects/guide-activate"],
+          items: [
+            "topics/projects/guide-activate",
+            "topics/projects/sso",
+          ],
         },
       ],
     },

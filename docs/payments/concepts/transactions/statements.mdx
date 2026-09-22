@@ -1,0 +1,49 @@
+---
+title: Transaction statements
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/transactions
+  - /payments/concepts/transactions/statuses
+  - /payments/guides/payment-operations/generate-transaction-statement
+  - /payments/guides/payment-operations/get-transaction-info
+  - /accounts/concepts/account/statements
+  - /build/using-api/webhooks
+---
+
+# Transaction statements
+
+<p className="ia-lede">A transaction statement, or transaction confirmation, is a document proving that Swan executed a specific <code>Booked</code> <a href="/payments/concepts/transactions">transaction</a>. Generate one with the API, the Dashboard, or Web Banking, then download it within seven days.</p>
+
+import TransactionStatements from '../../../_shared/partials/_transaction-statements.mdx';
+
+<TransactionStatements />
+
+Transaction statements are not [account statements](/accounts/concepts/account/statements), which cover an account's activity over a period.
+
+## Eligible transactions {#eligible}
+
+You can [generate transaction statements](/payments/guides/payment-operations/generate-transaction-statement) for eligible `Booked` transactions with the API.
+Statements are also available from your Dashboard and, if you're using it, Swan's Web Banking interface.
+
+The following are eligible `Booked` transactions:
+
+- [SEPA Credit Transfers](/payments/concepts/credit-transfers/sepa) (incoming and outgoing)
+- [Instant SEPA Credit Transfers](/payments/concepts/credit-transfers/sepa#instant) (incoming and outgoing)
+- [International Credit Transfers](/payments/concepts/credit-transfers/international) (incoming and outgoing)
+
+:::info Confirm eligibility
+Call the `transaction` or `transactions` query to confirm transaction statement eligibility.
+Add the `statementCanBeGenerated` boolean, as shown in the [guide to get transaction information](/payments/guides/payment-operations/get-transaction-info).
+:::
+
+## Generation and download {#generate}
+
+After the statement is generated successfully with the API, you receive a `TransactionStatement.Generated` [webhook notification](/build/using-api/webhooks#events-transactions).
+When you receive the webhook notification, query the API to retrieve the URL to download the statement.
+You have **seven days** to download the statement before the link expires.
+
+## Statuses {#statuses}
+
+Transaction statements move through their own [transaction statement statuses](/payments/concepts/transactions/statuses#transactions-statements-statuses): `Pending`, `Generated`, `Failed`, and `Expired`.

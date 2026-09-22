@@ -412,7 +412,12 @@ module.exports = annotateAudience(annotate({
   paymentsSidebar: [
     doc("payments/index", "Payments overview"),
     top("Concepts", [
+      cat("Payments", [
+        doc("payments/concepts/payments/statuses", "Statuses"),
+      ], { link: "payments/concepts/payments/index" }),
       cat("Transactions", [
+        doc("payments/concepts/transactions/sequence-number", "Sequence number"),
+        doc("payments/concepts/transactions/statements", "Transaction statements"),
         doc("payments/concepts/transactions/statuses", "Statuses"),
       ], { link: "payments/concepts/transactions/index" }),
       cat("Credit transfers", [

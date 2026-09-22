@@ -1,0 +1,63 @@
+---
+title: Payments
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/payments/statuses
+  - /payments/concepts/transactions
+  - /payments/concepts/credit-transfers
+  - /payments/concepts/direct-debit
+  - /payments/concepts/cards
+---
+
+# Payments
+
+<p className="ia-lede">A <Term id="payments">payment</Term> is a request to move money. It groups the <a href="/payments/concepts/transactions">transactions</a> that actually credit and debit accounts.</p>
+
+The core of Swan's offer is facilitating the sending and receiving of payments.
+A payment is:
+
+import PaymentsDefinition from '../../../_shared/definitions/_payments.mdx';
+
+> <PaymentsDefinition />
+
+A single payment is a group of one or several [transactions](/payments/concepts/transactions), created asynchronously after the payment is initiated.
+In the API, you'll work primarily with transactions when seeking information about payments.
+
+## Types of payments {#payments-types}
+
+Swan executes several types of payments:
+
+* [Credit transfers](/payments/concepts/credit-transfers)
+* [Direct debit](/payments/concepts/direct-debit)
+* [Card payments](/payments/concepts/cards)
+* [French check payments](/payments/guides/merchants/in-person/checks) (merchant offer only)
+
+## Payment ID {#payments-id}
+
+Each payment has a **unique payment ID**.
+You can retrieve a payment ID (and other information about the payment) on your Dashboard or by running an API query.
+
+Payments move through their own [payment statuses](/payments/concepts/payments/statuses).
+
+## Push and pull payments {#payments-push-pull}
+
+The key difference between push and pull payments lies in **who initiates the payment**.
+
+**Push payments**, such as credit transfers, refer to transactions where the **debtor initiates the payment**.
+The debtor authorizes the sending of funds from their account to the creditor's account.
+In other words, the **debtor pushes the funds to the creditor**.
+
+**Pull payments**, such as direct debits and card payments, refer to transactions where the **creditor initiates collecting funds** from the debtor's account.
+The creditor requests a payment, and the debtor provides the necessary authorization for the transaction.
+In other words, the **creditor pulls the funds from the debtor**.
+
+## Payments and risk {#payments-risk}
+
+Push payments pose a **lower risk** for creditors and banks because debtors initiate these payments.
+The chance of insufficient funds is reduced, and debtors can only dispute push payments if they're the victim of theft or hacking.
+
+Pull payments pose a **higher risk** for creditors and banks.
+Regulations allow varying periods of time after a pull transaction during which the debtor can dispute.
+Additionally, since pull payments are initiated by the creditor and not the debtor, there is a higher risk of insufficient funds in the account.

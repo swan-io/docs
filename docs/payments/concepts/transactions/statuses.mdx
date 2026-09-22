@@ -5,36 +5,19 @@ audience:
   - ops
 related:
   - /payments/concepts/transactions
+  - /payments/concepts/transactions/statements
+  - /payments/concepts/payments/statuses
   - /accounts/concepts/account/balances
 ---
 
 # Transaction statuses
 
-The status flows for <Term id="payments">payments</Term>, <Term id="transactions">transactions</Term>, and transaction statements.
+<p className="ia-lede">The status flows for <a href="/payments/concepts/transactions">transactions</a> and <a href="/payments/concepts/transactions/statements">transaction statements</a>. A <a href="/payments/concepts/payments">payment</a> enters the transaction flow once it reaches the <code>Initiated</code> payment status.</p>
 
 ## Payment statuses {#payments-statuses}
 
-```mermaid
-%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
-flowchart LR
-    P((Payment<br/>requested)) -.-> I[Initiated]
-    P -.-> CP[ConsentPending]
-    CP -.-> RJ[Rejected]
-    P -.-> RJ
-    CP -.-> I
-    I -.-> RJ
-    subgraph F[Final status]
-        RJ
-    end
-    style P fill:#D4D3D5,stroke:#514F59
-    style F fill:#fffdf4,stroke:#cca922
-```
-
-| Payment status | Explanation |
-|---|---|
-| `ConsentPending` | Status only occurs when consent is required for the payment<br/><br/>**Next step**: Transaction flow blocked while waiting for <Term id="consent">consent</Term>; when consent is received, transaction flow resumes and payment status changes to `Initiated` |
-| `Initiated` | Payment successfully requested; enters the [transaction flow](#transactions-statuses) |
-| `Rejected` | Payment rejected, either directly after payment initiation or from the `Initiated` status |
+Payments have their own status flow before any transaction exists.
+Refer to [payment statuses](/payments/concepts/payments/statuses).
 
 ## Transaction statuses {#transactions-statuses}
 

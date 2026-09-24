@@ -1,0 +1,69 @@
+---
+title: Instant SEPA Credit Transfers
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/credit-transfers/sepa
+  - /payments/concepts/credit-transfers/statuses
+  - /payments/reference/sepa
+  - /payments/guides/credit-transfers/sepa/initiate-ct
+  - /accounts/guides/ibans/validate
+---
+
+# Instant SEPA Credit Transfers
+
+<p className="ia-lede">The speedy version of <Term id="credit-transfer">SEPA Credit Transfers</Term>: executed in 10 seconds, capped at €100,000, and available around the clock. A fallback mode decides what happens when an instant transfer can't go through.</p>
+
+## Key characteristics {#instant}
+
+Instant SEPA Credit Transfers have three key characteristics:
+
+1. A maximum execution time of 10 seconds.
+1. A maximum transaction amount of €100,000.00 (one hundred thousand euros).
+1. Availability 24 hours a day, 7 days a week, 365 days a year, including when [SEPA is unavailable](/payments/reference/sepa#sepa-availability) for other transaction types.
+
+:::note IBAN validation 
+Consider [validating IBANs](/accounts/guides/ibans/validate) before initiating instant transfers.
+:::
+
+## Fallback mode {#instant-fallback}
+
+Instant transfers aren't accepted everywhere, and sometimes, the networks time out or fail.
+
+Therefore, Swan implemented a `mode` for instant transfers allowing you to choose how to react if the instant transfer doesn't work as expected.
+There are three possible modes.
+
+| Mode | Description |
+| --- | --- |
+| `InstantWithoutFallback` | When an Instant SEPA Credit Transfer is rejected, the transaction is rejected and your user must initiate a new transaction themselves.<br /><br />In choosing `WithoutFallback`, you'll **abandon the transfer** if it can't be instant. |
+| `InstantWithFallback` | When an Instant SEPA Credit Transfer is rejected, the transfer is **reinitiated automatically** as a **regular** SEPA Credit Transfer instead, with the exceptions listed after this table.<br /><br />When a transfer falls back, two transactions appear on the transaction history. |
+| `Regular` | Use a regular, non-instant SEPA Credit Transfer from the beginning, which can take up to two business days to arrive (it's usually quicker, though). |
+
+**Fallback exceptions**: if the recipient's account can't be found, the account is closed, or the account holder is deceased, a regular transfer isn't initiated.
+
+When an instant transfer falls back to a regular transfer, you'll see two transactions on your transaction history by default: a rejected `SepaInstantCreditTransferOut` and a new `SepaCreditTransferOut`.
+When calling the `transactions` query, use the filter `includeRejectedWithFallback=false` so your users won't see the rejected instant transfer on their transaction history.
+
+## Transfer verification {#instant-verification}
+
+Every time a Swan user initiates an Instant SEPA Credit Transfer, Swan verifies the transfer in real-time.
+
+### Reachability {#instant-verification-reachability}
+
+Swan **confirms reachability**, meaning Swan makes sure the beneficiary's bank can accept the transfer.
+
+Swan uses the EBA-RT1 and TIPS Clearing and Settlement Mechanisms (CSM), which are two of the major CSMs for Instant SEPA Credit Transfers accounting for 90% of the total reachability.
+Instant SEPA Credit Transfers sent from Swan accounts can be sent to banks connected to either EBA-RT1 or TIPS, but they can't be sent if banks don't use at least one of these CSMs.
+
+Attempts to send Instant SEPA Credit Transfers to banks not connected to EBA-RT1 or TIPS are rejected with the reason `BeneficiaryBankNotReachable`.
+If you chose `InstantWithFallback` when setting up your transfer, we'll send it as a regular transfer.
+Otherwise, you'll need to initiate a new transfer.
+
+### Risk {#instant-verification-risk}
+
+All credit transfers pass through an automated risk assessment, explained in the [section about risk](/payments/concepts/credit-transfers/sepa#risk).
+Unlike regular transfers, however, if an instant transfer is flagged, it's `Rejected` immediately with the reason code `RegulatoryReason`.
+
+Swan can't guarantee an instant review, therefore removing the key element of an Instant SEPA Credit Transfer: instantaneity.
+If the `mode` `InstantWithFallback` was chosen when initiating the transfer, a new regular transfer is created automatically.

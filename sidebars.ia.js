@@ -420,11 +420,20 @@ module.exports = annotateAudience(annotate({
         doc("payments/concepts/transactions/statuses", "Statuses"),
       ], { link: "payments/concepts/transactions/index" }),
       cat("Credit transfers", [
-        doc("payments/concepts/credit-transfers/sepa", "SEPA Credit Transfers"),
-        doc("payments/concepts/credit-transfers/international", "International Credit Transfers"),
+        doc("payments/concepts/credit-transfers/beneficiaries", "Beneficiaries"),
+        doc("payments/concepts/credit-transfers/label-and-reference", "Label and reference"),
+        cat("SEPA Credit Transfers", [
+          doc("payments/concepts/credit-transfers/sepa/instant", "Instant transfers"),
+          doc("payments/concepts/credit-transfers/sepa/standing-orders", "Standing Orders"),
+          doc("payments/concepts/credit-transfers/sepa/r-transactions", "R-transactions"),
+        ], { link: "payments/concepts/credit-transfers/sepa/index" }),
+        cat("International Credit Transfers", [
+          doc("payments/concepts/credit-transfers/international/outgoing", "Outgoing transfers"),
+          doc("payments/concepts/credit-transfers/international/incoming", "Incoming transfers"),
+        ], { link: "payments/concepts/credit-transfers/international/index" }),
         doc("payments/concepts/credit-transfers/statuses", "Statuses"),
       ], { link: "payments/concepts/credit-transfers/index" }),
-      cat("Verification of payee (VoP)", [
+      cat("Verification of Payee (VoP)", [
         doc("payments/concepts/verification-of-payee/bulk-transfers", "Bulk credit transfers"),
         doc("payments/concepts/verification-of-payee/incoming-requests", "Incoming VoP requests"),
       ], { link: "payments/concepts/verification-of-payee/index" }),
@@ -435,21 +444,21 @@ module.exports = annotateAudience(annotate({
         doc("payments/concepts/direct-debit/statuses", "Statuses"),
       ], { link: "payments/concepts/direct-debit/index" }),
       cat("Card payments", [
-        doc("payments/concepts/cards/statuses", "Statuses"),
         doc("payments/concepts/cards/authorization-and-clearing", "Authorization and clearing"),
         doc("payments/concepts/cards/3ds", "3-D Secure (3DS)"),
         doc("payments/concepts/cards/enriched-info", "Enriched transaction information"),
+        doc("payments/concepts/cards/statuses", "Statuses"),
       ], { link: "payments/concepts/cards/index" }),
       cat("Merchants", [
         doc("payments/concepts/merchants/profiles", "Merchant profiles"),
         doc("payments/concepts/merchants/payment-methods", "Payment methods"),
-        doc("payments/concepts/merchants/statuses", "Statuses"),
         doc("payments/concepts/merchants/payments", "Merchant payments"),
         doc("payments/concepts/merchants/online-cards", "Online cards"),
         doc("payments/concepts/merchants/in-person-cards", "In-person cards"),
         doc("payments/concepts/merchants/sepa-direct-debit", "SEPA Direct Debit"),
         doc("payments/concepts/merchants/internal-direct-debit", "Internal Direct Debit"),
         doc("payments/concepts/merchants/french-checks", "French checks"),
+        doc("payments/concepts/merchants/statuses", "Statuses"),
       ], { link: "payments/concepts/merchants/index" }),
     ], "payments/concepts/index", "ia-type-concept"),
     top("Guides", [

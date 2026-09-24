@@ -1,0 +1,136 @@
+---
+title: SEPA Credit Transfers
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/credit-transfers
+  - /payments/concepts/credit-transfers/sepa/instant
+  - /payments/concepts/credit-transfers/sepa/standing-orders
+  - /payments/concepts/credit-transfers/sepa/r-transactions
+  - /payments/concepts/credit-transfers/statuses
+  - /payments/concepts/verification-of-payee
+  - /payments/guides/credit-transfers/sepa/initiate-ct
+---
+
+# SEPA Credit Transfers
+
+<p className="ia-lede">Transfer euros between accounts located in the Single Euro Payments Area (SEPA), as regular, instant, internal, or recurring transfers.</p>
+
+## Overview {#overview}
+
+Transfer euros between accounts located in the [Single Euro Payments Area (SEPA)](/payments/reference/sepa#sepa).
+
+:::info
+Swan automatically includes [Verification of Payee (VoP)](/payments/concepts/verification-of-payee) in all <Term id="credit-transfer">SEPA Credit Transfers</Term> to comply with the EU Instant Payments Regulation.
+:::
+
+Swan supports several types of credit transfers.
+Note the acronyms; while the documentation doesn't use them, the acronyms are sometimes present in the API and used in written and verbal communication.
+
+| Transfer type | Description | Acronym |
+| --- | --- | --- |
+| SEPA Credit Transfers | Transfers up to 1 cent less than a billion euros within SEPA that take up to 48 business hours to complete  | SCT |
+| [Instant SEPA Credit Transfers](/payments/concepts/credit-transfers/sepa/instant) | Transfers up to 100,000 euros within SEPA that are executed in 10 seconds | SCT Inst |
+| Swan Internal Credit Transfers | Transfers between two Swan accounts in the same project that are almost as quick as instant transfers | None |
+| [<Term id="standing-order">Standing Orders</Term>](/payments/concepts/credit-transfers/sepa/standing-orders) | Scheduled, recurring transfers within SEPA that can be instant or regular | None |
+
+If you see the acronym **ICT**, it probably refers to [International Credit Transfers](/payments/concepts/credit-transfers/international), not Swan Internal Credit Transfers.
+
+:::info Swan Internal Credit Transfers
+Swan Internal Credit Transfers are executed between two accounts in the **same Swan project**.
+
+Internal transfers are usually quicker than SEPA Credit Transfers.
+Otherwise, SEPA Credit Transfers and Internal Credit Transfers function almost identically within Swan, and both use the payment product SEPA Credit Transfer, displayed on your **Dashboard** > **Data** > **Accounts** > **Transactions** list.
+:::
+
+### Consent {#consent}
+
+Initiating credit transfers is a [sensitive operation](/users/reference/sensitive-operations) and requires <Term id="consent">consent</Term> from an account member with the `canInitiatePayments` [membership permission](/accounts/reference/memberships/membership-permissions#permissions).
+
+### Risk and credit transfers {#risk}
+
+All credit transfers pass through an automated risk assessment.
+If the automated assessment flags the transfer, it triggers a manual review by Swan.
+
+If one of your transactions is flagged, Swan might contact you for more information.
+Due to the manual review, flagged SEPA Credit Transfers take longer to execute.
+
+### Verifying beneficiaries {#beneficiary-verification}
+
+**IBAN verification** allows debtors to verify that credit transfers are sent to the right beneficiary before initiating the transfer, thus reducing errors and potential fraud.
+
+:::info Dutch IBANs only
+Swan allows IBAN verification for all transfers between accounts with **Dutch IBANs**, meaning **both** IBANs involved begin with `NL`.
+Refer to [Swan's roadmap](https://swanio.notion.site/Swan-Public-Roadmap-385e4b2e91b3409786a6c8e885654a22) to review other IBANs for which integrating IBAN verification is planned. 
+:::
+
+When performing IBAN verification, Swan confirms that the **beneficiary's name** matches the name **registered for the provided IBAN**.
+Swan notifies the debtor initiating the transfer with one of three results:
+
+- <Yes /> The information **matches**.
+- <No /> The information doesn't match at all, referred to as an **information mismatch**.
+- <No /> The information doesn't match, but it might be a **partial match** or **typo** (for example, `Alex` instead of `Alexa`).
+
+In the case of a total or partial mismatch, the debtor can update the beneficiary information accordingly before initiating their transfer.
+For a partial mismatch, the Swan API returns the field `nameSuggestion` with a suggestion to fix the mismatch or typo, but only if the external financial institution provides it as well.
+
+Additionally, Swan allows external financial institutions to verify that a Swan account **name** and **IBAN** match the information entered by the debtor when initiating the transfer.
+If there's an information mismatch or partial match, the financial institution can notify the debtor, who can then confirm their beneficiary details before sending the transfer.
+
+Swan also **validates the format** of all beneficiary IBANs.
+You can [check the format of your IBANs](/accounts/guides/ibans/validate) with the API before using them to send a transfer.
+
+### Invoice references {#invoice-references}
+
+You can include an optional invoice reference when you initiate a SEPA Credit Transfer, using the `labelType` and `label` fields.
+Refer to [invoice references](/payments/concepts/credit-transfers/label-and-reference#invoice-references) for the supported formats.
+
+### Transfer limitations {#limitations}
+
+1. Credit transfers can't be sent if [**account holder verification**](/accounts/concepts/account-holders/verification) is still **in progress**.
+While finalizing verification, the account's `paymentLevel` is `Limited` and the `initiateCreditTransfers` mutation returns an error.
+1. Swan accounts aren't designed to have a **negative balance**. Therefore, Swan checks an account's `Available` balance before executing credit transfers every time. If there isn't enough in the account, the transfer is rejected for insufficient funds.
+1. If you'd like to plan credit transfers in advance, you can do so **up to one year in the future** using the `requestedExecutionAt` input when initiating your transfer.
+
+#### Limited account restrictions {#limited-account-restrictions}
+
+Limited accounts have additional incoming transfer restrictions. Incoming SEPA Credit Transfers are automatically rejected if they:
+
+- Exceed €50.
+- Would cause the account balance to exceed €150.
+
+These restrictions apply while account holder verification is in progress and the account payment level is `Limited`.
+They are removed when the account holder verification status changes to `Verified` and the payment level changes to `Unlimited`.
+
+These restrictions primarily affect first transfers during account holder verification.
+
+Learn more about [limited account restrictions](/accounts/concepts/account/type-and-level#limited-account-restrictions).
+
+## Instant SEPA Credit Transfers {#instant}
+
+Instant transfers execute in 10 seconds, up to €100,000, around the clock. When an instant transfer can't go through, a fallback mode decides whether it becomes a regular transfer or is abandoned.
+Refer to [Instant SEPA Credit Transfers](/payments/concepts/credit-transfers/sepa/instant).
+
+## Standing Orders {#standing-orders}
+
+Standing Orders are scheduled, recurring credit transfers, sent as regular or instant transfers with a fixed amount or a target balance.
+Refer to [Standing Orders](/payments/concepts/credit-transfers/sepa/standing-orders).
+
+## R-transactions {#r-transactions}
+
+After a credit transfer is initiated, it can be returned or recalled in either direction. Each is a new <Term id="r-transaction">R-transaction</Term> linked to the original.
+Refer to [credit transfer R-transactions](/payments/concepts/credit-transfers/sepa/r-transactions).
+
+## In this section
+
+```flowmap
+{
+  "mode": "pathway",
+  "items": [
+    { "title": "Instant SEPA Credit Transfers", "to": "/payments/concepts/credit-transfers/sepa/instant", "desc": "Ten-second transfers, fallback mode, and real-time verification." },
+    { "title": "Standing Orders", "to": "/payments/concepts/credit-transfers/sepa/standing-orders", "desc": "Recurring transfers with a fixed amount or a target balance." },
+    { "title": "R-transactions", "to": "/payments/concepts/credit-transfers/sepa/r-transactions", "desc": "Returns and recalls, incoming and outgoing." }
+  ]
+}
+```

@@ -1,0 +1,70 @@
+---
+title: Credit transfer R-transactions
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/credit-transfers/sepa
+  - /payments/concepts/credit-transfers/statuses
+  - /payments/guides/credit-transfers/sepa/cancel-ct
+  - /payments/guides/payment-operations/get-transaction-info
+  - /accounts/concepts/account/statuses
+---
+
+# Credit transfer R-transactions
+
+<p className="ia-lede">After a <Term id="credit-transfer">SEPA Credit Transfer</Term> is initiated, it can be returned or recalled, in either direction. Each <Term id="r-transaction">R-transaction</Term> is a new transaction linked to the original's payment.</p>
+
+import RTransactionDefinition from '../../../../_shared/definitions/_r-transaction.mdx';
+
+> <RTransactionDefinition />
+
+After credit transfers are initiated, other transactions, such as R-transactions, can be linked to the credit transfer <Term id="transactions">transaction</Term>.
+
+## Returned {#returned}
+
+Outgoing credit transfers might be **returned to Swan** for several reasons, indicated in the `returnReason`.
+For example, the beneficiary account might be closed or not exist at all.
+Use the `transactions` query to [get information about transactions](/payments/guides/payment-operations/get-transaction-info), adding `returnReason` to `... on SEPACreditTransferTransaction`.
+
+When a transfer is returned, a `SepaCreditTransferOutReturn` transaction is created to credit the money back to the Swan account.
+
+Additionally, incoming credit transfers might need to be **returned to the debtor**.
+For example, the account owner might have refused to consent to the transfer after the money was credited to the Swan account.
+When Swan needs to return a transfer, a `SepaCreditTransferInReturn` transaction is created to debit the money from the Swan account.
+
+Incoming transfers to an account in `Closing` status are also returned, unless the account's booked balance is negative: Swan then accepts the transfer to settle the outstanding debt. The [account statuses](/accounts/concepts/account/statuses#statuses) page owns the closing rules.
+
+:::note Incoming transfers with wrong BIC 
+Some banks require the beneficiary's Bank Identifier Code (BIC) when sending a transfer.
+If the debtor's bank requires it and the debtor enters Swan's BIC incorrectly, the transfer is returned to the debtor.
+:::
+
+## Recalled {#recalled}
+
+Recalls typically occur when the debtor sends a transfer by mistake, but doesn't notice until it's too late to cancel the transfer or perform a return.
+
+Recalls **work the same way** for SEPA Credit Transfers and Instant SEPA Credit Transfers, except the word `Instant` is added to the transaction type for instant transfers (shown in \{curly brackets}).
+
+### Swan receives a recall request {#recalled-received}
+
+A debtor might ask their bank to recall their transfer to a Swan account.
+
+In this case, the debtor's bank sends Swan a recall request, after which Swan asks the Swan account holder if they accept the recall request.
+The Swan account holder has the choice to accept the recall request or not.
+If the Swan account holder accepts the recall request and their `Available` balance is sufficient to cover the amount, Swan debits the funds from the Swan account and sends them to the debtor.
+
+To do so, a `Sepa{Instant}CreditTransferInRecall` transaction is created with the status `Pending` to debit the money from the Swan account.
+After the funds are debited, the status changes to `Booked`.
+The `Sepa{Instant}CreditTransferInRecall` transaction is connected to the same payment ID as the original `Sepa{Instant}CreditTransferIn` transaction.
+
+### Swan requests a recall {#recalled-requested}
+
+A Swan user might ask Swan to recall a credit transfer.
+
+In this case, Swan sends the beneficiary's bank a recall request, asking that the original transaction amount be returned.
+The beneficiary's bank notifies the beneficiary of Swan's request, and the beneficiary has the choice to accept the recall request or not.
+If the beneficiary accepts the recall request, the funds are credited back to the original Swan account.
+
+To do so, a `Sepa{Instant}CreditTransferOutRecall` transaction is created with the status `Booked` to credit money to the Swan account. 
+The `Sepa{Instant}CreditTransferOutRecall` transaction is connected to the same payment ID as the original `Sepa{Instant}CreditTransferOut` transaction.

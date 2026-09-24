@@ -1,0 +1,107 @@
+---
+title: International Credit Transfers
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/credit-transfers
+  - /payments/concepts/credit-transfers/international/outgoing
+  - /payments/concepts/credit-transfers/international/incoming
+  - /payments/concepts/credit-transfers/statuses
+  - /payments/reference/international-transfers
+  - /payments/guides/credit-transfers/international/initiate
+---
+
+# International Credit Transfers
+
+<p className="ia-lede">Send and receive money almost anywhere in the world, in over 40 currencies, using local payment rails and the SWIFT network.</p>
+
+## Overview {#overview}
+
+Send and receive money almost anywhere in the world using a Swan <Term id="credit-transfer">International Credit Transfer</Term>.
+
+With Swan International Credit Transfers, you can:
+
+1. Exchange euros for a different currency, then transfer that money on either local rails or the SWIFT network.
+1. Transfer euros outside of the eurozone using the SWIFT network.
+1. Receive credit transfers initiated outside of the eurozone. You'll receive these transfers in euros as Swan doesn't store money in currency other than euros.
+
+:::tip Statuses
+International Credit Transfers follow the standard [credit transfer status flow](/payments/concepts/credit-transfers/statuses) with one exception: they can't have the status `Upcoming`.
+:::
+
+## Risk with international transfers {#risk}
+
+International transfers can introduce more significant risk than transfers that don't cross borders or change currencies.
+Additionally, since more legal jurisdictions are involved, Swan International Credit Transfers must follow regulations for multiple regions.
+
+Potential areas for increased risk and friction include: instability in the target region, diverging requirements for <Term id="consent">consent</Term> or identity documents, different reactions in the case of disputed <Term id="transactions">transactions</Term>, fluctuation in currency value and exchange rate, and more.
+
+Therefore, **Swan prioritizes a risk-based approach**, which applies to you and your end users.
+In addition to increased scrutiny in the transaction-review process, both automated and manual, Swan uses [dynamic forms](/payments/concepts/credit-transfers/international/outgoing#dynamic-forms) in the International Credit Transfer API.
+
+### Outgoing allowed countries {#risk-outgoing}
+
+Your users can send International Credit Transfers on **local rails** in **local currencies**.
+
+They can also send International Credit Transfers on the **SWIFT network** `swift_code` using United States Dollars `USD`, Euros `EUR`, or Great British Pounds `GBP`.
+Any attempt to send a SWIFT transfer in other currencies is rejected.
+
+Refer to the reference for the full list of [allowed countries, rails, and fee groups](/payments/reference/international-transfers).
+
+## Fees {#fees}
+
+There are fees for executing international transfers according to the non-euro currency selected.
+
+Each eligible currency is **assigned to a fee group**, numbered 1 through 4.
+Swan determined the groups based on how much it costs to execute a transfer with that currency.
+For example, it costs less to execute a transfer between euros and a currency in fee group 1 than with a currency in fee group 3.
+The [lists of allowed countries for outgoing transfers](/payments/reference/international-transfers) include each currency's fee group.
+
+The fees listed on this page are always paid by the **Swan user**.
+
+| Fee group | Outgoing transfer fee | Incoming transfer fee |
+| --- | --- | --- |
+| Group 1 | €5 + 0.6% | €5 (+ 0.6%) |
+| Group 2 | €5 + 1% | €5 (+ 1%) |
+| Group 3 | €5 + 2% | €5 (+ 2%) |
+| Group 4 | €5 + 5% | €5 (+ 5%) |
+
+- **Outgoing transfers**: an **additional** €5 fee is charged when sending **USD**, **GBP**, and **EUR** through SWIFT. For these currencies, the total fee is €10 + the percentage indicated in the table.
+- **Incoming transfers**: the additional fee percentage (in parentheses) only applies to transfers not already converted into euros.
+
+**Fees are charged in their own transaction**.
+Therefore, each International Credit Transfer **creates two transactions** on your transaction history: one for the transfer and one for fees.
+Fees and transfer transactions are created, booked, and rejected simultaneously.
+Both transactions have the same status.
+
+:::note Fees can vary
+This section shares Swan's **standard pricing**, which might vary based on your contract.
+:::
+
+## Outgoing transfers {#outgoing}
+
+Outgoing transfers go over local rails or SWIFT, exchange euros at a mid-market rate locked for one business day, and are capped at €100,000. The API collects beneficiary and transaction details through dynamic forms.
+Refer to [outgoing International Credit Transfers](/payments/concepts/credit-transfers/international/outgoing).
+
+### API dynamic forms {#dynamic-forms}
+
+The required fields change with the destination, so the queries must run in a set order before the mutation.
+Refer to [dynamic forms](/payments/concepts/credit-transfers/international/outgoing#dynamic-forms).
+
+## Incoming transfers {#incoming}
+
+Any debtor can send money to a Swan account through SWIFT, with intermediary banks converting to euros and deducting their fees along the way. Swan books the remaining amount immediately.
+Refer to [incoming International Credit Transfers](/payments/concepts/credit-transfers/international/incoming).
+
+## In this section
+
+```flowmap
+{
+  "mode": "pathway",
+  "items": [
+    { "title": "Outgoing transfers", "to": "/payments/concepts/credit-transfers/international/outgoing", "desc": "Rails, currency exchange, limits, rejections, and dynamic forms." },
+    { "title": "Incoming transfers", "to": "/payments/concepts/credit-transfers/international/incoming", "desc": "Intermediary BICs, the SWIFT fee flow, and what Swan books." }
+  ]
+}
+```

@@ -1,0 +1,202 @@
+---
+title: Card payment examples
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/cards
+  - /payments/concepts/cards/authorization-and-clearing
+  - /payments/concepts/cards/statuses
+---
+
+# Card payment examples
+
+<p className="ia-lede">Eight real <Term id="merchants">merchant</Term> flows, from a taxi ride to an in-flight purchase, showing how authorizations, debits, releases, and refunds combine on a cardholder's account.</p>
+
+Some merchants don't follow the classic [authorization and debit payment flow](/payments/concepts/cards/authorization-and-clearing).
+Discover alternative payment flows that work for different use cases.
+These are examples, not rules; merchants control their own flows and can make changes at any time.
+
+<Tabs>
+<TabItem value="taxi" label="Taxi" default>
+
+### Taxi and rideshare payments {#example-taxi}
+
+**Taxi** | Authorization + partial debit clearing
+
+Sometimes, a merchant authorizes a default amount, then debits the real amount later.
+
+Consider a cardholder using a taxi app:
+
+1. The cardholder orders a taxi on the app.
+1. The merchant requests an authorization of €50 to verify that the cardholder can cover the cost of the trip.
+1. About 1-3 days after the trip:
+    - The taxi company debits the account €37,50, creating a second transaction with the status `Booked`.
+    - The remainder of the total authorized amount after the `Booked` transaction is €12,50.
+1. 10 days after the trip, the remaining authorization amount is released.
+
+<a href={require("../../../images/payments/cards/auth-example-taxi.png").default} target="_blank">
+<img src={require("../../../images/payments/cards/auth-example-taxi.png").default} alt="Authorization and partial debit example using taxi app" />
+</a>
+
+</TabItem>
+
+<TabItem value="gas-station" label="Gas station">
+
+### Gas station payments {#example-gas-station}
+
+**Gas station** | Preauthorization + authorization + debit clearing
+
+Automated fuel dispensers make a preauthorization request to check if the card is valid and has enough money.
+
+Consider a cardholder filling up their gas tank:
+
+1. The cardholder enters their card in the gas station's point of sale.
+1. The merchant requests a preauthorization of €110.
+1. The cardholder fills their vehicle.
+1. The merchant authorizes the exact amount (€56,23) that was used and releases the preauthorization.
+1. A few days later, the merchant debits the account the exact amount (€56,23) and the authorization is released.
+
+If the merchant captures only part of the preauthorization instead of authorizing the exact amount, Swan releases the remaining preauthorized amount as soon as the partial capture arrives, because the merchant is a gas station or automated fuel dispenser.
+
+<a href={require("../../../images/payments/cards/auth-example-fuel.png").default} target="_blank">
+<img src={require("../../../images/payments/cards/auth-example-fuel.png").default} alt="Preauthorization, authorization, and debit example using gas station" />
+</a>
+
+:::tip
+This flow can also be used for hotel bookings that are made in advance, but not paid for until after the stay is over. 
+:::
+
+</TabItem>
+
+<TabItem value="online-shopping" label="Shopping">
+
+### Online shopping payments {#example-online-shopping}
+
+**Online shopping** | Multiple debit authorizations + debit clearing
+
+When ordering multiple packages online from a reseller-type website, it's common to authorize multiple debits at once.
+
+Consider a cardholder ordering two items fulfilled by different sellers:
+
+1. The cardholder orders two packages online.
+1. The merchant requests an authorization for the total amount (€83,98).
+1. The merchant debits the amount corresponding to the first package (€30,99) when the cardholder receives the package, which updates the authorization.
+1. The merchant debits the remaining amount (€52,99) when the second package is received. The authorization goes to €0 and is released.
+
+<a href={require("../../../images/payments/cards/auth-example-packages.png").default} target="_blank">
+<img src={require("../../../images/payments/cards/auth-example-packages.png").default} alt="Multiple debit authorizations at one time example using online shopping" />
+</a>
+
+</TabItem>
+
+<TabItem value="online-return" label="Online return">
+
+### Online return refunds {#example-online-return}
+
+**Online return** | Authorization + debit clearing + refund
+
+There are multiple ways to reimburse a payment.
+The most straightforward is for the merchant to refund the debit transaction (debit reversal).
+The merchant must be able to link the refund to the debit.
+
+Consider a cardholder who orders and returns a package, all online:
+
+1. The cardholder orders a package online.
+1. The merchant requests an authorization for the amount (€23,98).
+1. When the cardholder receives the package, the merchant debits the account the amount (€23,98) and the authorization is released.
+1. The cardholder returns the package, and the merchant reverses the debit on the account (€23,98).
+
+<a href={require("../../../images/payments/cards/auth-example-online-return.png").default} target="_blank">
+<img src={require("../../../images/payments/cards/auth-example-online-return.png").default} alt="Authorization, debit, and refund using online shopping returns" />
+</a>
+
+</TabItem>
+
+<TabItem value="instore-return" label="In-store return">
+
+### In-store return refunds {#example-instore-return}
+
+**In-store return** | Authorization + debit clearing + refund
+
+When items are returned in-store, they can be hard to link back to the debit.
+When a merchant needs to refund a customer but can't connect the refund transaction to the original debit, they create a new credit transaction.
+
+When merchants correctly reference the original debit authorization, Swan links both `CardOutCredit` and `CardOutDebitReversal` transactions to the same `paymentId` as the original authorization.
+
+Consider a cardholder buying then returning an item in-store:
+
+1. The cardholder buys an item in-store.
+1. The merchant requests an authorization for the amount (€39,99).
+1. A few days later, the merchant debits the account of the amount (€39,99) and the authorization is released.
+1. Within the merchant's return window, the cardholder returns the item and the merchant credits the account of the amount (€39,99).
+
+<a href={require("../../../images/payments/cards/auth-example-instore-return.png").default} target="_blank">
+<img src={require("../../../images/payments/cards/auth-example-instore-return.png").default} alt="Authorization, debit, and refund using in-store shopping returns" />
+</a>
+
+</TabItem>
+
+<TabItem value="canceled" label="Canceled">
+
+### Canceled transaction payments {#example-canceled}
+
+**Canceled transaction** | Authorization + release
+
+To cancel a transaction, some merchants release the authorization to free up the amount that was requested.
+
+Consider a cardholder placing an online order, then canceling it before the order ships:
+
+1. The cardholder orders a package online.
+1. The merchant requests an authorization for the amount (€23,98).
+1. The cardholder cancels the order before it ships, and the merchant releases the authorization.
+
+<a href={require("../../../images/payments/cards/auth-example-canceled.png").default} target="_blank">
+<img src={require("../../../images/payments/cards/auth-example-canceled.png").default} alt="Authorization and release example using a canceled transaction" />
+</a>
+
+</TabItem>
+
+<TabItem value="hotel" label="Hotel">
+
+### Hotel booking payments {#example-hotel}
+
+**Booking a hotel** | Multiple authorizations + debit clearing
+
+When booking a hotel room, the hotel performs a preauthorization request to confirm the card is valid and to reserve all or part of the funds.
+
+Consider a cardholder reserving a hotel room online:
+
+1. The cardholder enters their card details online to cover the room, but chooses the option without breakfast.
+1. The hotel requests a preauthorization of €300.
+1. When the cardholder arrives at the hotel, they ask to add breakfast to their booking.
+1. The hotel releases the first preauthorization and requests a second of €350.
+1. A few days later, the hotel debits the account the exact amount (€350) and the second preauthorization is released.
+
+<a href={require("../../../images/payments/cards/auth-example-hotel.png").default} target="_blank">
+<img src={require("../../../images/payments/cards/auth-example-hotel.png").default} alt="Multiple authorizations and debit example using booking a hotel" />
+</a>
+
+</TabItem>
+
+<TabItem value="airplane" label="Airplane">
+
+### In-flight offline payments {#example-airplane}
+
+**Purchase on airplane** | Debit clearing only
+
+In some situations, the merchant's point of sale isn't connected to the internet and the concerned card network.
+Certain payments are allowed offline, and these debits are done without a previous authorization.
+However, the cardholder can dispute the debit.
+
+Consider a cardholder making a purchase on an airplane (such as food or duty-free items):
+
+1. The cardholder uses their card to initiate a €100 purchase.
+1. When the merchant connects to the internet, they don't perform an authorization, but instead debit the amount directly.
+
+<a href={require("../../../images/payments/cards/auth-example-airplane.png").default} target="_blank">
+<img src={require("../../../images/payments/cards/auth-example-airplane.png").default} alt="Debit only example using purchasing offline on an airplane" />
+</a>
+
+</TabItem>
+</Tabs>

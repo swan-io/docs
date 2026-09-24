@@ -1,0 +1,164 @@
+---
+title: Merchant payment mandates
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/merchants
+  - /payments/concepts/merchants/sepa-direct-debit
+  - /payments/concepts/merchants/internal-direct-debit
+  - /payments/guides/merchants/online/sdd/declare
+  - /payments/guides/merchants/online/idd/declare
+  - /payments/concepts/direct-debit/received-mandates
+---
+
+# Merchant payment mandates
+
+<p className="ia-lede">A <Term id="payment-mandates">payment mandate</Term> is the debtor's written authorization for a <Term id="merchants">merchant</Term> to debit their account. Mandatory for SEPA Direct Debit and B2B Internal Direct Debit, recommended for Standard, and always declared to Swan by the partner.</p>
+
+A payment mandate is a written authorization from a debtor that allows a creditor to initiate a direct debit transaction from their account.
+Without a mandate, the creditor can't legally debit the debtor's account.
+
+Partners are responsible for obtaining and declaring payment mandates.
+You can either **include them in your Terms and Conditions** or **generate mandates** for debtors to sign with an electronic signature.
+
+| Payment method | Mandate requirement |
+| --- | --- |
+| [SEPA Direct Debit](/payments/concepts/merchants/sepa-direct-debit) (Core and B2B) | Mandatory for all transactions |
+| [Internal Direct Debit](/payments/concepts/merchants/internal-direct-debit) B2B | Mandatory |
+| Internal Direct Debit Standard | Optional but recommended |
+
+## SEPA Direct Debit mandates {#sdd}
+
+Payment mandates are mandatory for all <Term id="sdd">SEPA Direct Debit</Term> transactions.
+One payment mandate can cover as many debit transactions as needed between the debtor and the merchant, provided the mandate is `Recurrent`.
+
+### Declaring mandates {#sdd-declare}
+
+You must [declare mandates to Swan](/payments/guides/merchants/online/sdd/declare) using the API.
+You can declare them before or after they're signed.
+If you declare a mandate before it's signed, make sure the debtor signs it before you issue the first direct debit.
+
+When declaring a mandate, the combination of the Unique Mandate Reference (UMR) and the [SEPA Creditor Identifier (SCI)](/payments/concepts/merchants/sepa-direct-debit#sci) must be unique. 
+If the UMR and SCI have already been declared in another mandate, the API returns a `PaymentMandateReferenceAlreadyUsedRejection` and rejects the mandate declaration.
+
+:::note Using Swan's SCI
+If a merchant uses Swan's SCI, they must still ensure mandate references are unique to prevent conflicts with other merchants using the same SCI. Duplicate references will cause mandate declarations to be rejected by the API.
+:::
+
+After declaring the mandate, you might choose to upload it to your Dashboard as a PDF.
+This isn't mandatory but can be helpful if a debtor's bank requests a copy of the signed mandate.
+
+:::info B2B mandates
+B2B mandates must be declared to the debtor's bank.
+:::
+
+### Required information {#sdd-info}
+
+In addition to a clear description of payment rights, SEPA Direct Debit payment mandates must include the following information.
+Otherwise, the mandate is considered invalid.
+
+| Information | Description |
+| --- | --- |
+| Mandate title | Choose one of the following options:<ul><li>Core SEPA Direct Debit Mandate</li><li>B2B SEPA Direct Debit Mandate</li></ul> |
+| Mandate reference | <ul><li>Unique identifier for the mandate</li><li>Visible on the debtor's bank statement</li></ul> |
+| Payment type | Choose one of the following options:<ul><li>Recurrent</li><li>One-off</li></ul> |
+| Merchant (beneficiary) information | <ul><li>Merchant name</li><li>Merchant <Term id="account-holder">account holder</Term> address</li></ul> |
+| Debtor information | <ul><li>Debtor's <Term id="ibans">IBAN</Term></li><li>Debtor's address</li></ul> |
+
+### One-off mandates {#sdd-oneoff}
+
+Some mandates can only be used one time.
+
+When the sequence value is `OneOff` (instead of `Recurrent`), the received SEPA Direct Debit payment mandate is **canceled automatically** after the transaction is executed, regardless of the transaction status.
+
+## Internal Direct Debit mandates {#idd}
+
+:::caution Mandatory mandates
+Payment mandates are mandatory for B2B <Term id="direct-debit">Internal Direct Debit</Term> transactions.
+Mandates are optional but recommended for Standard.
+:::
+
+When the mandate is ready, [declare it to Swan](/payments/guides/merchants/online/idd/declare) through the API.
+
+### Required information {#idd-info}
+
+Internal Direct Debit payment mandates must include the following information.
+Otherwise, the mandate is considered invalid.
+
+| Information | Description |
+| --- | --- |
+| Mandate title | Choose one of the following options:<ul><li>Standard Internal Direct Debit Mandate</li><li>B2B Internal Direct Debit Mandate</li></ul> |
+| Mandate reference | Unique identifier for the mandate, visible on the debtor's bank statement |
+| Payment type | Choose one of the following options:<ul><li>Recurrent</li><li>One-off</li></ul> |
+| Merchant (beneficiary) information | <ul><li>Merchant name</li><li>Merchant account holder address</li></ul> |
+| Debtor information | Choose one of the following options:<ul><li>Debtor's account number</li><li>Debtor's IBAN</li></ul><br/>If the debtor doesn't have a Swan account upon creation of the mandate, include their identification information instead:<ul><li>Individual: given name, family name, and date of birth</li><li>Legal: name and SIREN</li></ul> |
+
+### Sample content {#idd-content}
+
+#### Mandate for a debtor with a Swan account {#idd-content-with-account}
+
+If the debtor has a Swan account, you can include the following content in the mandate or in your Terms and Conditions.
+
+> By confirming this mandate form, you authorize [merchant name] to send instructions to Swan to debit your account, in accordance with the instructions from Swan.
+>
+> This mandate is only intended for business-to-business transactions.
+>
+> You are not entitled to a refund from your bank after your account has been debited, but you are entitled to request your bank not to debit your account up until the day the payment is due.
+
+#### Mandate for a debtor without a Swan account {#idd-content-no-account}
+
+If the debtor does not have a Swan account when the mandate is generated, you might choose to include the following content in your Terms and Conditions.
+
+> By confirming this mandate form, you authorize [merchant name] to send instructions to Swan to debit the account that will be opened in your name at Swan once you agree to these Terms and Conditions and Swan to debit your account, in accordance with the instructions from Swan.
+>
+> This mandate is only intended for business-to-business transactions.
+>
+> You are not entitled to a refund from your bank after your account has been debited, but you are entitled to request your bank not to debit your account up until the day the payment is due.
+
+:::caution Timeline: debtor without Swan account
+The debtor must create a Swan account within **seven days** of signing the mandate.
+
+After the debtor creates their Swan account, you are responsible for sending them an updated PDF version of the signed mandate.
+The PDF must include the original signature date, and either their **Swan account number** or their **Swan BIC and IBAN**.
+:::
+
+### Signature {#idd-signature}
+
+Your clients need to sign the payment mandate for Swan to accept it.
+You can either use a qualified electronic signature or have your client check a Terms and Conditions checkbox.
+
+:::info Local requirements
+We recommend confirming local requirements as laws and regulations vary by location.
+:::
+
+#### Qualified electronic signature {#idd-signature-qes}
+
+Signing the payment mandate with a **qualified electronic signature** must meet the following criteria:
+
+1. The person who signed the mandate is **clearly identified**, often based on information included in your commercial contract with the debtor. They might also identify themselves by logging in to your platform.
+1. **Strong customer authentication** is complete. It must include two factors:
+    1. Personal identification number (PIN) or a password, and
+    1. One-time password (OTP) sent by a text message to the person's mobile phone.
+1. Complete **authorization** through the electronic signature.
+
+#### Terms and conditions checkbox {#idd-signature-checkbox}
+
+Your clients can also sign the payment mandate by **checking a Terms and Conditions checkbox**.
+Your client is already clearly identified by being logged in to your platform.
+
+### Received mandates {#idd-received}
+
+A **received direct debit mandate** is created after the debtor's account receives the `InternalDirectDebitOut` transaction.
+The process is different for B2B and Standard, and one-off mandates are also possible.
+
+| Received mandate type | Description |
+| --- | --- |
+| B2B | <ol><li>Mandate created with the status `ConsentInitiationPending`.</li><li>Before the debtor can <Term id="consent">consent</Term>, you must [declare the payment mandate](/payments/guides/merchants/online/idd/declare).</li><li>Debtor must consent, but only the first time the mandate is used.</li></ol> |
+| Standard | <ol><li>Mandate created after a first payment is accepted.</li><li>You must enable the mandate by using the debtor's user access token with `canInitiatePayments` permissions to call the `enableReceivedDirectDebitMandate` mutation.</li><li>Exception: if a mandate with the same `merchantIdentifier`, `reference`, and `accountId` already exists, a new mandate is not created.</li></ol> |
+
+### One-off mandates {#idd-oneoff}
+
+Some mandates can only be used one time.
+
+When the sequence value is `OneOff` (instead of `Recurrent`), the received internal direct debit payment mandate is canceled automatically after the transaction is executed, regardless of the transaction status.

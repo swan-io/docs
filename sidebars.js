@@ -69,6 +69,7 @@ module.exports = {
           items: [
             "topics/onboarding/account-holders/guide-add-additional-account",
             "topics/onboarding/account-holders/guide-get-status",
+            "topics/onboarding/account-holders/guide-update",
             "topics/onboarding/account-holders/guide-request-first-transfer",
             "topics/onboarding/account-holders/guide-export",
             "topics/onboarding/account-holders/sandbox",
@@ -284,6 +285,7 @@ module.exports = {
           collapsed: true,
           items: [
             "topics/cards/digital/guide-add",
+            "topics/cards/digital/guide-get-info",
             "topics/cards/digital/guide-cancel",
           ],
         },
@@ -527,7 +529,10 @@ module.exports = {
           label: "Projects overview",
           link: { type: "doc", id: "topics/projects/index" },
           collapsed: true,
-          items: ["topics/projects/guide-activate"],
+          items: [
+            "topics/projects/guide-activate",
+            "topics/projects/sso",
+          ],
         },
       ],
     },
@@ -558,6 +563,7 @@ module.exports = {
           items: [
             "topics/users/consent/guide-configure-notifications",
             "topics/users/consent/guide-create-multiconsent",
+            "topics/users/consent/guide-cancel",
             "topics/users/consent/guide-implement-s2s",
             "topics/users/consent/guide-integrate-sca",
           ],

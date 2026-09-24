@@ -101,7 +101,7 @@ You must:
 - Use current TLS.
 - Avoid sending sensitive data in URLs.
 
-Swan imposes [rate limits](/developers/#rate-limits) on its API, but you must also protect your own endpoints and integration flows.
+Swan applies its own [rate limits](/developers/#rate-limits), which protect Swan's API rather than your infrastructure.
 
 For more information, see:
 
@@ -110,7 +110,7 @@ For more information, see:
 
 ## Protect users of your interface {#users}
 
-The controls in this section apply to interfaces and applications operated by you.
+The controls in this section apply to interfaces and applications that you operate.
 
 For practical guidance on account takeover, phishing, card fraud, and other fraud patterns, see [Common types of fraud](/partnership/protections/fraud/types).
 
@@ -138,7 +138,7 @@ Password policies should prioritize length, uniqueness, and resistance to known-
 
 Even when strong passwords are used, attackers can obtain user credentials through [account takeover (ATO)](/partnership/protections/fraud/types#ato).
 
-Swan handles multi-factor authentication for account operations through its [Consent](/topics/users/consent/#sensitive) mechanisms. You need to implement your own authentication controls for sensitive operations handled through your own systems and applications.
+Swan handles multi-factor authentication for account operations through its [consent](/topics/users/consent/#sensitive) mechanisms. You need to implement your own authentication controls for sensitive operations handled through your own systems and applications.
 
 Use phishing-resistant methods such as FIDO2 or WebAuthn security keys and passkeys. Use authenticator-app codes only as a fallback.
 
@@ -150,7 +150,7 @@ You must implement multi-factor authentication when users can:
 - Manage beneficiaries
 - Manage memberships
 
-Multi-factor authentication isn't required for cardholder-only access when the only sensitive data displayed is the card number or physical card PIN. These values are protected by Swan's consent mechanisms.
+Multi-factor authentication isn't required for cardholder-only access when the only sensitive data displayed is the card number or physical card PIN. These values are protected by Swan's consent mechanisms. The five-minute idle timeout still applies to card operations.
 
 For more information about fraud prevention and account takeover, see:
 
@@ -181,9 +181,11 @@ You must enforce a **five-minute** idle timeout when users can:
 - Manage beneficiaries
 - Manage memberships
 
+Card operations appear in this list even though they're exempt from the [multi-factor authentication requirement](#mfa). The exemption covers authentication, not session length.
+
 The five-minute requirement applies to sensitive interfaces you operate. Swan's [Time-to-live](/developers/#ttl) documentation describes the session behavior of Swan's own Partner Dashboard and Web Banking user interface.
 
-You may refresh session tokens while the page remains open, provided that the timeout is enforced when the user is no longer actively using the interface.
+Refresh session tokens based on user activity, not on whether the page remains open. An open page with no user activity isn't grounds for refreshing a session. When a user has been inactive for five minutes, end the session.
 
 ## Build secure applications {#applications}
 
@@ -227,15 +229,13 @@ Avoid collecting and storing account data unless it's strictly necessary.
 
 Whenever possible, store object IDs instead of sensitive object values. For example, store a card ID rather than card numbers.
 
-If you need to keep account data in your systems, encrypt it before storage.
-
 For information about how Swan protects funds, see [Protecting funds](/partnership/protections/financial). For information about how Swan stores and protects user data, see [Data protection](/partnership/protections/data).
 
 ## Separate Sandbox and Live environments {#environments}
 
 Pre-production environments, including development, testing, and User Acceptance Testing (UAT) environments, are usually less secure than production environments.
 
-Swan offers a Sandbox environment, as described in [Environments](/developers/#environments), to support the separation of pre-production and Live environments.
+Swan offers a [Sandbox environment](/developers/#environments) to support the separation of pre-production and Live environments.
 
 You must implement controls that prevent pre-production resources from accessing Live resources or Live data.
 
@@ -273,20 +273,15 @@ You must:
 - Update application dependencies as part of the development lifecycle.
 - Use vulnerability scanners or perform intrusion testing to identify software vulnerabilities.
 
-Swan highly recommends that you mitigate:
+Assign severity using the current version of the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/). Swan highly recommends that you remediate vulnerabilities within the following timeframes:
 
-- Critical vulnerabilities within 30 days
-- Non-critical vulnerabilities within 90 days
+| Severity | Description | Remediate within |
+| --- | --- | --- |
+| Critical | A software vulnerability or misconfiguration that can be exploited with minimal user interaction and allows an attacker to gain full control of the system. | 14 days |
+| High | A software vulnerability or misconfiguration that allows an attacker to gain elevated privileges or access to sensitive data. | 30 days |
+| All others | Any remaining software vulnerability or misconfiguration. | 90 days |
 
-Vulnerability prioritization needs to consider more than severity alone. Where available, use the current version of the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/) and consider:
-
-- Active exploitation, including vulnerabilities listed in the [CISA Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog).
-- Exploit likelihood, including [Exploit Prediction Scoring System (EPSS)](https://www.first.org/epss/) where relevant.
-- Internet exposure.
-- Asset criticality.
-- The availability of mitigations.
-
-Actively exploited or externally exposed critical vulnerabilities should receive accelerated remediation.
+Severity alone isn't enough to set priority. Bring remediation forward for vulnerabilities that are actively exploited, listed in the [CISA Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog), internet-facing, or affecting critical assets. Where relevant, use the [Exploit Prediction Scoring System (EPSS)](https://www.first.org/epss/) to assess exploit likelihood, and factor in the availability of mitigations.
 
 ### Use secure configuration {#configuration}
 

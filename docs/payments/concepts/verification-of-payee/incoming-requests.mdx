@@ -2,14 +2,17 @@
 title: Incoming VoP requests
 audience:
   - dev
+  - ops
 related:
   - /payments/concepts/verification-of-payee
+  - /payments/concepts/verification-of-payee/bulk-transfers
   - /payments/guides/credit-transfers/sepa/verify-beneficiary
+  - /payments/concepts/credit-transfers/sepa
 ---
 
 # Incoming Verification of Payee requests
 
-Swan automatically responds to VoP requests from other Payment Service Providers (PSPs) when they verify details before sending transfers to Swan accounts.
+<p className="ia-lede">When another bank verifies a beneficiary before sending money to a Swan account, Swan answers automatically by matching the received name or identifier against the <Term id="account-holder">account holder</Term>'s registered details. Nothing to implement, but the matching rules decide what senders see.</p>
 
 :::info Regulatory requirement
 Under the [European Instant Payments Regulation (IPR)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202400886), all PSPs in the SEPA zone must offer VoP services for incoming transfers.
@@ -151,7 +154,7 @@ To ensure successful incoming transfers, your users must provide senders with th
 
 You may share [our end-user support article](https://support.swan.io/hc/en-150/articles/30680956306333-Verification-of-Payee-VoP) to assist with user training.
 
-**Example**: If a company's legal name is "MY COMPANY SAS" but they operate as "Awesome Company", senders can use either name. Swan's matching algorithm checks both the legal name and trade name to improve verification success. Similarly, if an <Term id="account-holder">account holder</Term>'s name is "Henri Charles Dupont," senders should use the complete name, not just "Henri Dupont."
+**Example**: If a company's legal name is "MY COMPANY SAS" but they operate as "Awesome Company", senders can use either name. Swan's matching algorithm checks both the legal name and trade name to improve verification success. Similarly, if an account holder's name is "Henri Charles Dupont," senders should use the complete name, not just "Henri Dupont."
 
 ### Updating trade names for VoP matching {#updating-trade-names}
 
@@ -213,9 +216,3 @@ Since VoP verification happens before the actual transfer, Swan cannot link inco
 ## Monitoring and logging {#monitoring}
 
 Starting Q4 2025, Swan will log VoP requests and results to compile statistics and improve the matching algorithm configuration if necessary.
-
-## Next steps {#next-steps}
-
-→ Learn how to [verify beneficiary details](/payments/guides/credit-transfers/sepa/verify-beneficiary) using the `verifyBeneficiary` mutation  
-→ Configure [bulk credit transfers with VoP](/payments/concepts/verification-of-payee/bulk-transfers) for high-volume use cases  
-→ Understand the complete VoP ecosystem with [Verification of Payee overview](/payments/concepts/verification-of-payee)

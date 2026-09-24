@@ -1,0 +1,47 @@
+---
+title: Received payment mandates
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/direct-debit
+  - /payments/concepts/direct-debit/received-instructions
+  - /payments/concepts/direct-debit/statuses
+  - /payments/guides/direct-debit/add-mandate
+  - /payments/reference/schemes
+---
+
+# Received payment mandates
+
+<p className="ia-lede">A received <Term id="payment-mandates">payment mandate</Term> is the debtor's formal authorization for a creditor to debit their Swan account. What the mandate requires from Swan and the debtor depends on whether it covers Core or B2B direct debits.</p>
+
+Prior to issuing <Term id="sdd">SEPA Direct Debit</Term> instructions, the creditor must obtain a formal authorization from the debtor to take money from the debtor's account.
+This formal authorization is a **received payment mandate**.
+Received payment mandates can be `OneOff`, valid for a single transaction, or `Recurrent`, for multiple transactions.
+
+Received payment mandates are created by creditors and authorized by debtors.
+Creating and authorizing mandates happens off of the SEPA network, and the [mandates must be declared](/payments/concepts/merchants/sepa-direct-debit#mandates-declare) to the SEPA network with two unique identifiers:
+
+1. **Unique Mandate Reference (UMR)**: Each received payment mandate has a unique reference number.
+1. **SEPA Creditor Identifier (SCI)**: Each creditor is identified on the SEPA network with their unique identifier.
+
+The combination of the SEPA Creditor Identifier and Unique Mandate Reference must be **unique across the SEPA network**, meaning one received payment mandate per creditor-debtor pair.
+Information about the received payment mandate is embedded in each SEPA Direct Debit instruction sent by the creditor bank to the debtor bank. 
+
+Received payment mandates are stored in the API's `receivedDirectDebitMandate` object.
+
+## Received mandate specifications {#mandates-specifications}
+
+The specifications of the received payment mandate depend on whether the mandate authorizes Core or B2B SEPA Direct Debit instructions.
+**All are signed by the debtor**; otherwise, requirements are different.
+
+| Direct debit type | Specifications |
+| --- | --- |
+| SEPA Direct Debit **Core** | <ol><li>Core received payment mandates don't need to be provided to Swan (or the creditor's bank).</li><li>Swan isn't required to verify a mandate's validity with the debtor.</li><li>The debtor is entitled to a refund of an authorized debit, no questions asked, according to the timeline listed in the [received direct debit scheme table](/payments/reference/schemes#received).</li></ol> |
+| SEPA Direct Debit **B2B** | <ol><li>B2B received payment mandates must be provided by the debtor to Swan.</li><li>Swan **must** verify the validity of the instruction against the mandate or mandate information received from the debtor.</li><li>The debtor isn't entitled to a refund of an authorized debit.</li></ol> |
+| Swan Internal Direct Debit **Standard** | <ol><li>Internal received payment mandates are handled within Swan.</li><li>Swan isn't required to verify a mandate's validity with the debtor.</li><li>The debtor is entitled to a refund of an authorized debit, no questions asked, according to the timeline listed in the [received direct debit scheme table](/payments/reference/schemes#received).</li></ol> |
+| Swan Internal Direct Debit **B2B** | <ol><li>Internal received payment mandates are handled within Swan.</li><li>Swan **must** check the validity of the instruction against the mandate or mandate information received from the debtor.</li><li>The debtor isn't entitled to a refund of an authorized debit.</li></ol> |
+
+## Received mandate statuses {#mandates-statuses}
+
+Received payment mandates move through their own [received mandate statuses](/payments/concepts/direct-debit/statuses#mandates-statuses).

@@ -1,0 +1,77 @@
+---
+title: Merchant profiles
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/merchants
+  - /payments/concepts/merchants/payment-methods
+  - /payments/concepts/merchants/statuses
+  - /payments/guides/merchants/profiles/request
+  - /payments/guides/merchants/profiles/update
+---
+
+# Merchant profiles
+
+<p className="ia-lede">A <Term id="merchant-profile">merchant profile</Term> holds the business, risk, and support information Swan reviews before an <Term id="account-holder">account holder</Term> can accept payments. Every merchant needs at least one, and every update goes through the same review.</p>
+
+import MerchantProfileDefinition from '../../../_shared/definitions/_merchant-profile.mdx';
+
+> <MerchantProfileDefinition />
+
+A **merchant profile** is a collection of business, risk, and support information that fulfills two primary requirements: 
+
+1. **Approve the account holder** as a merchant.
+1. **Facilitate accepting payments** with Swan. 
+
+If a Swan account holder wants to accept payments from customers, they must have at least one merchant profile.
+
+Your users can create merchant profiles during onboarding, but only if you've requested the feature for the account holder.
+Since merchants are considered high risk, merchant profiles should only be requested for account holders who qualify and will accept payments.
+Requesting merchant profiles for account holders that don't qualify may create false expectations about available features.
+
+## Profile information {#fields}
+
+To speed up **merchant profile enablement**, complete as many input fields as possible. A merchant profile contains the following information:
+
+<FieldRequirementsLegend />
+
+| Field | Requirement | Description |
+| :---: | :---: | --- |
+| **Business details** | <Req /> | Merchant's legal name and product type (`Goods`, `Services`, `VirtualGoods`, or `GiftAndDonations`). |
+| **Projected volumes** | <Req /> | Expected monthly payment volume and average order value, used to assess the business size and risk. |
+| **Link to the merchant's website or social network** | <Cnd /> | **Recommended**. Provides context on the merchant's activity and may be requested during the review. May be requested after a risk review if it wasn't provided before. |
+| **Payment frequency** | <Cnd /> | Defines whether payments are mainly one-off or recurring (e.g. subscriptions). |
+| **Logo** | <Opt /> | A `.png` file under 1 MB, displayed on the payment page and the mandate PDF. |
+| **Accent color** | <Opt /> | Hex code used to customize the payment page design and mandate. |
+| **Customer region** | <Cnd /> | Country or region where the merchant expects to receive payments. |
+| **Additional information** | <Cnd /> | Required only if custom information is needed. Specified in the `expectedMerchantProfileAdditionalInformation` field of the `ProjectInfo` object in the API. |
+| **Supporting documents** | <Cnd /> | Required only after a payment method risk review. Listed in the `paymentMethod` object in the API. |
+
+## Merchant profile statuses {#profile-statuses}
+
+A profile is created as `PendingReview` and is visible right away on your Dashboard. Swan's risk review then moves it to `Enabled` or `Rejected`. The full lifecycle and the rejection reasons are on the [merchant statuses](/payments/concepts/merchants/statuses#profile-statuses) page.
+
+## Updating merchant profiles {#profiles-update}
+
+You can [request a merchant profile update](/payments/guides/merchants/profiles/update) with the API mutation `requestMerchantProfileUpdate`.
+If you use Swan's Web Banking interface, merchants can request an update through their app.
+Request an update for the merchant's name, website, product type, expected monthly payment volume, expected average basket, and logo.
+
+Updating a merchant profile produces the following events:
+
+1. The [**merchant profile status**](#profile-statuses) doesn't change, remaining `Enabled`. The merchant continues to use their merchant profile with the existing information.
+1. The **update status** is `PendingReview`. Swan reviews the new information to ensure it meets requirements. 
+1. After Swan reviews and validates the update request, the update status changes to `Enabled` and the update is published to the merchant profile.
+1. If Swan rejects the update request, the merchant profile remains `Enabled` by default, unless Swan decides otherwise. 
+The merchant profile status doesn't change.
+
+When a merchant payment method is requested, Swan may need to request additional information even if the merchant profile is already `Enabled`.
+Swan will contact you or your user directly, based on your communication preferences.
+
+If you requested an update and your update status is `PendingReview`, but you need to **make another change**, submit a new update request.
+Swan reviews both requests, but only the most recent is made public. 
+
+:::caution Subject to review
+All update requests are reviewed by Swan according to the same [risk guidelines](/payments/concepts/merchants#risk) as a new merchant profile.
+:::

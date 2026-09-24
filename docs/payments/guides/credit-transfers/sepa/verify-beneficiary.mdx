@@ -4,7 +4,9 @@ audience:
   - dev
 related:
   - /payments/concepts/verification-of-payee
-  - /payments/guides/credit-transfers/sepa/incoming-vop-requests
+  - /payments/concepts/verification-of-payee/bulk-transfers
+  - /payments/guides/credit-transfers/sepa/update-vop-settings
+  - /payments/guides/credit-transfers/sepa/initiate-ct
 ---
 
 # Verify beneficiary details {#guide}
@@ -17,6 +19,17 @@ This mutation gives you full control to customize how verification results are p
 - You're planning to initiate an Instant SEPA Credit Transfer, SEPA Credit Transfer or Internal Credit Transfer.
 - Authentication required with a **user access token** or **project access token**.
 :::
+
+## How the custom flow works {#verification-flow}
+
+1. **Verify beneficiary**: Call the `verifyBeneficiary` mutation with the [beneficiary details](#step-1) to check against.
+2. **Receive the verification result**: Match, Close match, No match, or Verification not possible. A unique [`beneficiaryVerificationToken`](#step-3) is also returned.
+3. **Inform the end-user**: Display appropriate messaging and optional actions based on the [verification result](#step-2).
+4. **User proceeds**: The end-user can choose to proceed with the payment regardless of the result.
+5. **Use token**: Add the `beneficiaryVerificationToken` to the `CreditTransferInput` in [the `initiateCreditTransfers` mutation](/payments/guides/credit-transfers/sepa/initiate-ct).
+6. **User gives <Term id="consent">consent</Term>**: Complete the payment authorization.
+
+This is [Option 2: Custom verification](/payments/concepts/verification-of-payee#option-2). For single transfers, Swan can run the check for you instead.
 
 <details>
 
@@ -170,6 +183,55 @@ The mutation returns one of four possible verification results. **For an optimal
   }
 }
 ```
+
+### Custom UX examples {#custom-ux-examples}
+
+Examples of how to present VoP verification results in your web banking interface. You can decide the level of friction and optional actions to display.
+
+<Tabs>
+  <TabItem value="match" label="Match" id="custom-ux-match" default>
+    #### Custom UX: match result
+
+    **Recommended actions**: None required - proceed with payment
+    
+    ![VoP Match web banking screen](../../../../images/payments/credit-transfers/vop/PC_match.png)
+  </TabItem>
+  
+  <TabItem value="close" label="Close match" id="custom-ux-close">
+    #### Custom UX: close match result
+
+    **Recommended actions**: 
+    - Display the suggested name correction.
+    - Offer to update the beneficiary name.
+    - Allow proceeding with the original or suggested name.
+    
+    ![VoP Close match web banking screen](../../../../images/payments/credit-transfers/vop/PC_close_match.png)
+  </TabItem>
+  
+  <TabItem value="no-match" label="No match" id="custom-ux-no-match">
+    #### Custom UX: no match result
+
+    **Recommended actions**: 
+    - Clear warning about the mismatch.
+    - Option to edit the beneficiary details.
+    - Option to verify the IBAN with recipient.
+    - Allow proceeding with caution.
+    
+    ![VoP No match web banking screen](../../../../images/payments/credit-transfers/vop/PC_no_match.png)
+  </TabItem>
+  
+  <TabItem value="not-possible" label="Verification not possible" id="custom-ux-not-possible">
+    #### Custom UX: verification not possible result
+
+    **Recommended actions**: 
+    - Explain verification is unavailable.
+    - Suggest checking the IBAN format.
+    - Option to contact the recipient's bank.
+    - Allow proceeding with caution.
+    
+    ![Verification not possible web banking screen](../../../../images/payments/credit-transfers/vop/PC_no_verif.png)
+  </TabItem>
+</Tabs>
 
 ## Step 3: Use the verification token {#step-3}
 
@@ -325,16 +387,8 @@ For close matches, use the `VerifyBeneficiaryCloseMatch` inline fragment to retr
 
 ## Bulk credit transfers {#bulk-credit-transfers}
 
-For bulk credit transfers, verification tokens are required based on account type and account-level settings:
-
-- **Individual accounts**: Verification tokens are always required.
-- **Company accounts**: Verification tokens are optional by default, but can be made required through account settings.
-
-:::warning Breaking change for individual accounts
-If your integration supports individual account holders performing bulk credit transfers, you must implement the `verifyBeneficiary` mutation and provide verification tokens. Bulk transfers without tokens will be rejected for individual accounts.
-:::
-
-[Learn more about bulk credit transfers with VoP →](/payments/concepts/verification-of-payee/bulk-transfers)
+Bulk credit transfers can only use this custom flow.
+Whether the token is mandatory [depends on the account type and an account-level setting](/payments/concepts/verification-of-payee/bulk-transfers#account-settings): individual accounts always require it, and bulk transfers without tokens are rejected for them.
 
 ## Verification of Payee with Server-to-server (S2S) consent {#s2s-consent}
 

@@ -4,6 +4,8 @@ audience:
   - dev
   - ops
 related:
+  - /payments/concepts/merchants/profiles
+  - /payments/concepts/merchants/payment-methods
   - /payments/concepts/merchants/statuses
   - /payments/concepts/merchants/payments
   - /payments/guides/merchants/onboarding-overview
@@ -53,102 +55,13 @@ Review the [full list of merchant webhooks](/build/using-api/webhooks#events-mer
 
 ## Merchant profiles {#profiles}
 
-import MerchantProfileDefinition from '../../../_shared/definitions/_merchant-profile.mdx';
-
-> <MerchantProfileDefinition />
-
-A **merchant profile** is a collection of business, risk, and support information that fulfills two primary requirements: 
-
-1. **Approve the account holder** as a merchant.
-1. **Facilitate accepting payments** with Swan. 
-
-If a Swan account holder wants to accept payments from customers, they must have at least one merchant profile.
-
-Your users can create merchant profiles during onboarding, but only if you've requested the feature for the account holder.
-Since merchants are considered high risk, merchant profiles should only be requested for account holders who qualify and will accept payments.
-Requesting merchant profiles for account holders that don't qualify may create false expectations about available features.
-
-To speed up **merchant profile enablement**, complete as many input fields as possible. A merchant profile contains the following information:
-
-<FieldRequirementsLegend />
-
-| Field | Requirement | Description |
-| :---: | :---: | --- |
-| **Business details** | <Req /> | Merchant's legal name and product type (`Goods`, `Services`, `VirtualGoods`, or `GiftAndDonations`). |
-| **Projected volumes** | <Req /> | Expected monthly payment volume and average order value, used to assess the business size and risk. |
-| **Link to the merchant's website or social network** | <Cnd /> | **Recommended**. Provides context on the merchant's activity and may be requested during the review. May be requested after a risk review if it wasn't provided before. |
-| **Payment frequency** | <Cnd /> | Defines whether payments are mainly one-off or recurring (e.g. subscriptions). |
-| **Logo** | <Opt /> | A `.png` file under 1 MB, displayed on the payment page and the mandate PDF. |
-| **Accent color** | <Opt /> | Hex code used to customize the payment page design and mandate. |
-| **Customer region** | <Cnd /> | Country or region where the merchant expects to receive payments. |
-| **Additional information** | <Cnd /> | Required only if custom information is needed. Specified in the `expectedMerchantProfileAdditionalInformation` field of the `ProjectInfo` object in the API. |
-| **Supporting documents** | <Cnd /> | Required only after a payment method risk review. Listed in the `paymentMethod` object in the API. |
-
-
-### Merchant profile statuses {#profile-statuses}
-
-A profile is created as `PendingReview` and is visible right away on your Dashboard. Swan's risk review then moves it to `Enabled` or `Rejected`. The full lifecycle and the rejection reasons are on the [merchant statuses](/payments/concepts/merchants/statuses#profile-statuses) page.
-
-### Updating merchant profiles {#profiles-update}
-
-You can [request a merchant profile update](/payments/guides/merchants/profiles/update) with the API mutation `requestMerchantProfileUpdate`.
-If you use Swan's Web Banking interface, merchants can request an update through their app.
-Request an update for the merchant's name, website, product type, expected monthly payment volume, expected average basket, and logo.
-
-Updating a merchant profile produces the following events:
-
-1. The [**merchant profile status**](#profile-statuses) doesn't change, remaining `Enabled`. The merchant continues to use their merchant profile with the existing information.
-1. The **update status** is `PendingReview`. Swan reviews the new information to ensure it meets requirements. 
-1. After Swan reviews and validates the update request, the update status changes to `Enabled` and the update is published to the merchant profile.
-1. If Swan rejects the update request, the merchant profile remains `Enabled` by default, unless Swan decides otherwise. 
-The merchant profile status doesn't change.
-
-When a merchant payment method is requested, Swan may need to request additional information even if the merchant profile is already `Enabled`.
-Swan will contact you or your user directly, based on your communication preferences.
-
-If you requested an update and your update status is `PendingReview`, but you need to **make another change**, submit a new update request.
-Swan reviews both requests, but only the most recent is made public. 
-
-:::caution Subject to review
-All update requests are reviewed by Swan according to the same [risk guidelines](#risk) as a new merchant profile.
-:::
+A merchant profile holds the business, risk, and support information Swan reviews before an account holder can accept payments. Every merchant needs at least one.
+Refer to [merchant profiles](/payments/concepts/merchants/profiles) for the fields, statuses, and how updates are reviewed.
 
 ## Payment methods {#methods}
 
-import MerchantPaymentMethodDefinition from '../../../_shared/definitions/_merchant-payment-method.mdx';
-
-> <MerchantPaymentMethodDefinition />
-
-Your merchants can accept customer payments using several payment methods.
-
-Merchant payment methods are connected to a merchant profile. A single merchant profile can have multiple payment methods.
-To accept payments with Swan, there must be an `Enabled` merchant profile and at least one `Enabled` merchant payment method.
-
-To learn how to request payment methods, refer to the request payment method guides for [card payments](/payments/guides/merchants/online/cards/request), [SEPA Direct Debit](/payments/guides/merchants/online/sdd/request), [Internal Direct Debit](/payments/guides/merchants/online/idd/request), [in-person cards](/payments/guides/merchants/in-person/cards/request-method), and [French checks](/payments/guides/merchants/in-person/checks/request).
-You can request multiple methods in one API call.
-
-### Available payment methods {#methods-options}
-
-import OnlinePaymentMethods from '../../guides/merchants/partials/_online-list.mdx';
-
-<OnlinePaymentMethods />
-
-Merchant payment methods are enabled per Partner: Swan reviews your use case before your merchants can request them (see the pending-review note above). Rolling reserve, payment amount limits, and how the merchant's name appears on statements are described on the [merchant payments](/payments/concepts/merchants/payments) page.
-
-All merchant payment method requests are subject to a risk review and start with the status `PendingReview`. 
-As part of this process, Swan may need to request additional information from the merchant to complete the assessment.
-
-### Payment method statuses {#method-statuses}
-
-The full lifecycle, including `WaitingForInformation`, and the rejection reasons are on the [merchant statuses](/payments/concepts/merchants/statuses#method-statuses) page.
-
-### Versions {#methods-versions-statuses}
-
-Swan creates a **new version** of your payment method **every time an update is approved**.
-Only one version of a payment method can have the status `Enabled`.
-
-Swan manages the statuses for `Enabled` or `PendingReview` payment methods automatically.
-Therefore, you don't need to change the status before calling the API.
+A merchant payment method is one way a merchant can be paid, attached to their profile and enabled after Swan's review. A profile can have several, and each approved update creates a new version.
+Refer to [merchant payment methods](/payments/concepts/merchants/payment-methods) for the available methods, statuses, and versions.
 
 ## Account closing and suspension {#account-closing}
 
@@ -164,6 +77,8 @@ Learn more about the [account closure process](/accounts/concepts/closure/proces
 {
   "mode": "pathway",
   "items": [
+    { "title": "Merchant profiles", "to": "/payments/concepts/merchants/profiles", "desc": "The information Swan reviews, profile statuses, and updates." },
+    { "title": "Merchant payment methods", "to": "/payments/concepts/merchants/payment-methods", "desc": "Available methods, their statuses, and versions." },
     { "title": "Merchant statuses", "to": "/payments/concepts/merchants/statuses", "desc": "Profile, payment method, and merchant payment status machines, with rejection reasons." },
     { "title": "Merchant payments", "to": "/payments/concepts/merchants/payments", "desc": "The payment object, its balances, rolling reserve, limits, statement display, and payment links." },
     { "title": "Online cards", "to": "/payments/concepts/merchants/online-cards", "desc": "Card payments through payment links." },

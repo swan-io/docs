@@ -1,0 +1,58 @@
+---
+title: Received direct debit instructions
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/direct-debit
+  - /payments/concepts/direct-debit/received-mandates
+  - /payments/concepts/direct-debit/statuses
+  - /payments/concepts/direct-debit/r-transactions
+  - /accounts/concepts/account/balances
+---
+
+# Received direct debit instructions
+
+<p className="ia-lede">A direct debit instruction is the creditor bank's request to debit a Swan account on a given date. Swan checks it against the received mandate when it arrives, then again at execution time before moving the funds.</p>
+
+To start a <Term id="sdd">SEPA Direct Debit</Term> <Term id="transactions">transaction</Term>, the creditor's bank must send instructions to the debtor's payment services provider (in this case, Swan) before the scheduled transaction date.
+The date should be indicated in the instruction sent to Swan.
+
+After receiving instructions to debit an account, Swan checks the embedded [mandate](/payments/concepts/direct-debit/received-mandates) information to see if it's a new instruction, or if Swan already knows about the instruction.
+
+## New instruction {#received-instructions-new}
+
+If the **instruction is new to Swan**, the following events occur:
+
+1. Swan adds the SEPA Direct Debit received payment mandate:
+    - **Core**: Adds the mandate with the status `Enabled`.
+    - **B2B**: Adds the mandate with the status `ConsentInitiationPending`. After calling `enableReceivedDirectDebitMandate`, a consent is created and the status moves to `ConsentPending`. After the debtor consents to the mandate, the status changes to `Enabled`.
+1. Swan creates a `SepaDirectDebitOut` transaction with the status `Upcoming`.
+1. Swan executes the transaction on the requested date, indicated in the instruction, if all checks pass (refer to [execution date and time](#received-instructions-execution)).
+
+## Known instruction {#received-instructions-known}
+
+If the **instruction is known to Swan**, Swan checks the received payment mandate's status.
+
+1. If the mandate's status is `Enabled`, Swan creates a `SepaDirectDebitOut` transaction with the status `Upcoming`.
+1. If the mandate's status is `Canceled` or `Suspended`, Swan creates a `SepaDirectDebitOut` transaction with the status `Rejected`.
+
+## Execution date and time {#received-instructions-execution}
+
+At 06:00 Central European [Summer] Time (CET/CEST) on the date indicated in the SEPA Direct Debit instruction, Swan verifies a few details before executing the debit.
+
+If **either of the following is true**, the instructions are rejected. 
+The `SepaDirectDebitOut` transaction status changes to `Rejected`, and the reason is available in the `rejectedReasonCode` field with the API.
+
+- The status for the received payment mandate, the account, or the debtor's <Term id="ibans">IBAN</Term> is anything other than `Enabled`.
+- The debtor account's `Available` balance won't cover the instructed amount.
+
+If the received payment mandate's status is `Enabled` and the `Available` balance is sufficient to cover the instructed amount, the **transaction continues** and the following events occur:
+
+1. The amount is debited from the account.
+1. The account's [`Available` balance](/accounts/concepts/account/balances) is updated accordingly.
+1. The `SepaDirectDebitOut` transaction status changes to `Booked`.
+
+## Direct debit statuses {#direct-debit-statuses}
+
+Direct debit transactions move through their own [direct debit statuses](/payments/concepts/direct-debit/statuses#statuses).

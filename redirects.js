@@ -661,7 +661,7 @@ module.exports = [
   },
   {
     from: '/preview/vop/incoming-vop-requests',
-    to: '/payments/guides/credit-transfers/sepa/incoming-vop-requests',
+    to: '/payments/concepts/verification-of-payee/incoming-requests',
   },
   // In-person cards: preview → production
   {
@@ -1012,7 +1012,7 @@ module.exports = [
   { from: "/topics/payments/credit-transfers/sepa/vop/verification-of-payee", to: "/payments/concepts/verification-of-payee/" },
   { from: "/topics/payments/credit-transfers/sepa/vop/bulk-credit-transfers", to: "/payments/concepts/verification-of-payee/bulk-transfers" },
   { from: "/topics/payments/credit-transfers/sepa/vop/guide-verify-beneficiary", to: "/payments/guides/credit-transfers/sepa/verify-beneficiary" },
-  { from: "/topics/payments/credit-transfers/sepa/vop/incoming-vop-requests", to: "/payments/guides/credit-transfers/sepa/incoming-vop-requests" },
+  { from: "/topics/payments/credit-transfers/sepa/vop/incoming-vop-requests", to: "/payments/concepts/verification-of-payee/incoming-requests" },
   { from: "/topics/payments/credit-transfers/international", to: "/payments/concepts/credit-transfers/international" },
   { from: "/topics/payments/credit-transfers/international/guide-quote", to: "/payments/guides/credit-transfers/international/quote" },
   { from: "/topics/payments/credit-transfers/international/guide-beneficiary", to: "/payments/guides/credit-transfers/international/get-beneficiary-forms" },

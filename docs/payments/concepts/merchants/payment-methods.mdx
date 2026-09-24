@@ -1,0 +1,51 @@
+---
+title: Merchant payment methods
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/merchants
+  - /payments/concepts/merchants/profiles
+  - /payments/concepts/merchants/statuses
+  - /payments/concepts/merchants/payments
+  - /payments/guides/merchants
+---
+
+# Merchant payment methods
+
+<p className="ia-lede">A <Term id="merchant-payment-method">merchant payment method</Term> is one way a merchant can be paid, attached to their profile and reviewed by Swan before it's enabled. A merchant needs an enabled profile and at least one enabled method to accept payments.</p>
+
+import MerchantPaymentMethodDefinition from '../../../_shared/definitions/_merchant-payment-method.mdx';
+
+> <MerchantPaymentMethodDefinition />
+
+Your merchants can accept customer payments using several payment methods.
+
+Merchant payment methods are connected to a [merchant profile](/payments/concepts/merchants/profiles). A single merchant profile can have multiple payment methods.
+To accept payments with Swan, there must be an `Enabled` merchant profile and at least one `Enabled` merchant payment method.
+
+To learn how to request payment methods, refer to the request payment method guides for [card payments](/payments/guides/merchants/online/cards/request), [SEPA Direct Debit](/payments/guides/merchants/online/sdd/request), [Internal Direct Debit](/payments/guides/merchants/online/idd/request), [in-person cards](/payments/guides/merchants/in-person/cards/request-method), and [French checks](/payments/guides/merchants/in-person/checks/request).
+You can request multiple methods in one API call.
+
+## Available payment methods {#methods-options}
+
+import OnlinePaymentMethods from '../../guides/merchants/partials/_online-list.mdx';
+
+<OnlinePaymentMethods />
+
+Merchant payment methods are enabled per Partner: Swan reviews your use case before your merchants can request them (see the [pending review note](/payments/concepts/merchants#overview) on the Merchants hub). <Term id="rolling-reserve">Rolling reserve</Term>, payment amount limits, and how the merchant's name appears on statements are described on the [merchant payments](/payments/concepts/merchants/payments) page.
+
+All merchant payment method requests are subject to a [risk review](/payments/concepts/merchants#risk) and start with the status `PendingReview`. 
+As part of this process, Swan may need to request additional information from the merchant to complete the assessment.
+
+## Payment method statuses {#method-statuses}
+
+The full lifecycle, including `WaitingForInformation`, and the rejection reasons are on the [merchant statuses](/payments/concepts/merchants/statuses#method-statuses) page.
+
+## Versions {#methods-versions-statuses}
+
+Swan creates a **new version** of your payment method **every time an update is approved**.
+Only one version of a payment method can have the status `Enabled`.
+
+Swan manages the statuses for `Enabled` or `PendingReview` payment methods automatically.
+Therefore, you don't need to change the status before calling the API.

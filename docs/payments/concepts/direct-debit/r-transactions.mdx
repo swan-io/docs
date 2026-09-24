@@ -1,0 +1,61 @@
+---
+title: Direct debit R-transactions
+audience:
+  - dev
+  - ops
+related:
+  - /payments/concepts/direct-debit
+  - /payments/concepts/direct-debit/received-instructions
+  - /payments/concepts/direct-debit/statuses
+  - /payments/guides/direct-debit/return
+  - /payments/reference/schemes
+---
+
+# Direct debit R-transactions
+
+<p className="ia-lede">After an outgoing direct debit is instructed, it can be rejected, refunded, reversed, or canceled. Each of these <Term id="r-transaction">R-transactions</Term> is a new transaction linked to the original, which keeps its own status.</p>
+
+After direct debits are instructed, other transactions, such as R-transactions, can be linked to the direct debit <Term id="transactions">transaction</Term>. An R-transaction never changes the original transaction's status: a `Booked` direct debit stays `Booked`, and the return, refund, or reversal is a new transaction that references it.
+These only concern **outgoing** <Term id="sdd">SEPA Direct Debits</Term>.
+
+## Rejected {#rejected}
+
+If you need to request that an `Upcoming` SEPA Direct Debit (Core or B2B) instruction be `Rejected`, a qualified account member can contact Swan directly.
+Qualified account members are those with the `canInitiatePayments` membership permission.
+
+If your request to reject the transaction is accepted, the status changes from `Upcoming` to `Rejected`.
+`Rejected` transactions don't impact the account balance.
+
+## Refunded (Returned) {#refunded}
+
+**Core** SEPA Direct Debit transactions are refundable under two specific scenarios:
+
+1. Transactions are eligible for refunds for up to **8 calendar weeks** after execution, no questions asked.
+[Request these refunds](/payments/guides/direct-debit/return) with the API `returnTransaction` mutation.
+1. Transactions are eligible for refunds up to **13 months** after execution if there wasn't a valid mandate or if the payment wasn't authorized.
+Request a refund by [contacting Swan Support](https://support.swan.io/hc/en-150/requests/new) with all of the transaction details.
+
+:::note Execution
+Execution means the [transaction status](/payments/concepts/direct-debit/statuses#statuses) changed to `Booked`.
+:::
+
+If the refund is approved, a new `SepaDirectDebitOutReturn` transaction is created with the status `Booked`. The original transaction keeps its `Booked` status: the return is a separate transaction linked to it.
+
+:::caution B2B not eligible
+B2B SEPA Direct Debit transactions aren't eligible for refunds.
+:::
+
+## Reversed {#reversed}
+
+Creditors can reverse `Booked` SEPA Direct Debit transactions within a specific [time window](/payments/reference/schemes#received).
+In the case of a reversal, a new `SepaDirectDebitOutReversal` transaction is created with the status `Booked`.
+
+The reason the creditor bank reversed the transaction is indicated in `returnReason`.
+Use the `transactions` query to [get information about transactions](/payments/guides/payment-operations/get-transaction-info), adding `returnReason` to `... on SEPADirectDebitTransaction`.
+
+## Canceled {#canceled}
+
+Creditors can cancel `Upcoming` SEPA Direct Debit transactions.
+
+If a creditor cancels an `Upcoming` transaction, the status automatically changes to `Canceled`.
+`Canceled` transactions don't impact the account balance.

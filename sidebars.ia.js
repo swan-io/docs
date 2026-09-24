@@ -416,7 +416,6 @@ module.exports = annotateAudience(annotate({
         doc("payments/concepts/payments/statuses", "Statuses"),
       ], { link: "payments/concepts/payments/index" }),
       cat("Transactions", [
-        doc("payments/concepts/transactions/sequence-number", "Sequence number"),
         doc("payments/concepts/transactions/statements", "Transaction statements"),
         doc("payments/concepts/transactions/statuses", "Statuses"),
       ], { link: "payments/concepts/transactions/index" }),
@@ -427,8 +426,12 @@ module.exports = annotateAudience(annotate({
       ], { link: "payments/concepts/credit-transfers/index" }),
       cat("Verification of payee (VoP)", [
         doc("payments/concepts/verification-of-payee/bulk-transfers", "Bulk credit transfers"),
+        doc("payments/concepts/verification-of-payee/incoming-requests", "Incoming VoP requests"),
       ], { link: "payments/concepts/verification-of-payee/index" }),
       cat("Direct debit", [
+        doc("payments/concepts/direct-debit/received-mandates", "Received payment mandates"),
+        doc("payments/concepts/direct-debit/received-instructions", "Received instructions"),
+        doc("payments/concepts/direct-debit/r-transactions", "R-transactions"),
         doc("payments/concepts/direct-debit/statuses", "Statuses"),
       ], { link: "payments/concepts/direct-debit/index" }),
       cat("Card payments", [
@@ -438,6 +441,8 @@ module.exports = annotateAudience(annotate({
         doc("payments/concepts/cards/enriched-info", "Enriched transaction information"),
       ], { link: "payments/concepts/cards/index" }),
       cat("Merchants", [
+        doc("payments/concepts/merchants/profiles", "Merchant profiles"),
+        doc("payments/concepts/merchants/payment-methods", "Payment methods"),
         doc("payments/concepts/merchants/statuses", "Statuses"),
         doc("payments/concepts/merchants/payments", "Merchant payments"),
         doc("payments/concepts/merchants/online-cards", "Online cards"),
@@ -457,7 +462,7 @@ module.exports = annotateAudience(annotate({
           doc("payments/guides/credit-transfers/sepa/schedule-so", "Schedule a standing order"),
           doc("payments/guides/credit-transfers/sepa/cancel-so", "Cancel a standing order"),
           doc("payments/guides/credit-transfers/sepa/verify-beneficiary", "Verify a beneficiary (VoP)"),
-          doc("payments/guides/credit-transfers/sepa/incoming-vop-requests", "Incoming VoP requests"),
+          doc("payments/guides/credit-transfers/sepa/update-vop-settings", "Update VoP settings for bulk transfers"),
         ]),
         cat("International", [
           doc("payments/guides/credit-transfers/international/quote", "Get a quote"),

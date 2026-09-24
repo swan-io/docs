@@ -1,0 +1,145 @@
+---
+title: Update VoP settings for bulk transfers
+audience:
+  - dev
+related:
+  - /payments/concepts/verification-of-payee/bulk-transfers
+  - /payments/concepts/verification-of-payee
+  - /payments/guides/credit-transfers/sepa/verify-beneficiary
+  - /build/using-api/webhooks
+---
+
+# Update VoP settings for bulk transfers
+
+Let company account holders opt in to, or out of, mandatory <Term id="verification-of-payee">Verification of Payee</Term> for bulk <Term id="credit-transfer">credit transfers</Term> with the `updateAccountSettings` mutation.
+
+Refer to [bulk credit transfers with VoP](/payments/concepts/verification-of-payee/bulk-transfers) for the default requirement by account type and how the setting works.
+
+:::tip Prerequisites
+- The account belongs to a **company** account holder. Individual accounts always require VoP for bulk transfers and can't change the setting.
+- The user has both the `canViewAccount` and `canInitiatePayments` permissions.
+- The user's <Term id="account-membership">account membership</Term> is `Enabled`.
+- To make VoP mandatory, your integration must already call the [`verifyBeneficiary` mutation](/payments/guides/credit-transfers/sepa/verify-beneficiary) and pass verification tokens. Until it does, bulk transfers are limited to accounts that stay opted out.
+:::
+
+## Guide {#guide}
+
+1. Call the `updateAccountSettings` mutation.
+1. Add the `accountId` of the company account to update.
+1. Set `allowBulkCreditTransfersWithoutBeneficiaryVerification`.
+    - `false` requires VoP for bulk transfers (opt in). No <Term id="consent">consent</Term> needed.
+    - `true` makes VoP optional for bulk transfers (opt out). The user must consent through [Strong Customer Authentication (SCA)](/users/concepts/consent/sca).
+1. Add a `consentRedirectUrl`. It's required for the consent flow when opting out.
+1. Add the payload and rejections.
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlQWNjb3VudFNldHRpbmdzKCRpbnB1dDogVXBkYXRlQWNjb3VudFNldHRpbmdzSW5wdXQhKSB7CiAgdXBkYXRlQWNjb3VudFNldHRpbmdzKGlucHV0OiAkaW5wdXQpIHsKICAgIC4uLiBvbiBVcGRhdGVBY2NvdW50U2V0dGluZ3NTdWNjZXNzIHsKICAgICAgYWNjb3VudCB7CiAgICAgICAgc2V0dGluZ3MgewogICAgICAgICAgYWxsb3dCdWxrQ3JlZGl0VHJhbnNmZXJzV2l0aG91dEJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gQWNjb3VudE5vdEZvdW5kUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBBY2NvdW50SG9sZGVyTm90Rm91bmRSZWplY3Rpb24gewogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {5} showLineNumbers
+mutation UpdateAccountSettings {
+  updateAccountSettings(
+    input: {
+      accountId: "$YOUR_ACCOUNT_ID"
+      allowBulkCreditTransfersWithoutBeneficiaryVerification: false
+      consentRedirectUrl: "https://mycompany.com/consent"
+    }
+  ) {
+    ... on UpdateAccountSettingsSuccess {
+      account {
+        settings {
+          allowBulkCreditTransfersWithoutBeneficiaryVerification
+        }
+      }
+    }
+    ... on UpdateAccountSettingsConsentPending {
+      __typename
+      consent {
+        consentUrl
+      }
+    }
+    ... on AccountNotFoundRejection {
+      message
+    }
+    ... on ForbiddenRejection {
+      message
+    }
+    ... on AccountHolderNotFoundRejection {
+      message
+    }
+  }
+}
+```
+
+import Environments from '../../../../_shared/partials/_environments.mdx';
+
+<Environments />
+
+### Parameters {#parameters}
+
+- `accountId`: The company account ID to update.
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: 
+  - `true` = VoP optional for bulk transfers (opt out).
+  - `false` = VoP required for bulk transfers (opt in).
+- `consentRedirectUrl`: Required for the consent flow when opting out.
+
+### Success response {#success-response}
+
+For opt-in requests (no consent required).
+
+```json title="Payload" {7}
+{
+  "data": {
+    "updateAccountSettings": {
+      "__typename": "UpdateAccountSettingsSuccess",
+      "account": {
+        "settings": {
+          "allowBulkCreditTransfersWithoutBeneficiaryVerification": false
+        }
+      }
+    }
+  }
+}
+```
+
+For opt-out requests (consent required).
+
+```json title="Payload" {4,6}
+{
+  "data": {
+    "updateAccountSettings": {
+      "__typename": "UpdateAccountSettingsConsentPending",
+      "consent": {
+        "consentUrl": "https://identity.swan.io/consent?consentId=$YOUR_CONSENT_ID&env=Sandbox"
+      }
+    }
+  }
+}
+```
+
+### Error handling {#error-handling}
+
+The mutation can return several rejection types.
+
+| Rejection | Description |
+| --- | --- |
+| **AccountNotFoundRejection** | The provided account ID doesn't exist. |
+| **AccountHolderNotFoundRejection** | The account holder doesn't exist. |
+| **AccountHolderTypeNotEligibleRejection** | Only company account holders can modify this setting |
+| **AccountMembershipNotEligibleRejection** | User lacks required permissions (`canViewAccount` + `canInitiatePayments`) |
+| **AccountMembershipStatusNotEligibleRejection** | User's account membership must be `Enabled`. |
+| **ForbiddenRejection** | User not allowed or wrong context used |
+
+## Webhook notifications {#webhook-notifications}
+
+Subscribe to the `AccountSetting.Updated` [webhook](/build/using-api/webhooks) to receive notifications when the `allowBulkCreditTransfersWithoutBeneficiaryVerification` setting changes.
+
+Setting changes can be triggered by:
+- The user through the `updateAccountSettings` mutation.
+- A Swan agent following a user support request.
+
+This webhook helps you track account setting changes and maintain an audit trail for [dispute protection](/payments/concepts/verification-of-payee/bulk-transfers#dispute-preparation).
+
+## Sandbox testing {#sandbox-testing}
+
+VoP requirements in Sandbox match the Live environment behavior. Company accounts default to optional VoP but can modify settings with this mutation, while individual accounts always require VoP tokens for bulk transfers.

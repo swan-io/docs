@@ -5,7 +5,6 @@ audience:
   - ops
 related:
   - /payments/concepts/payments
-  - /payments/concepts/transactions/sequence-number
   - /payments/concepts/transactions/statements
   - /payments/concepts/transactions/statuses
   - /payments/reference/sepa
@@ -55,7 +54,19 @@ Transactions move through a set of [transaction statuses](/payments/concepts/tra
 
 ### Sequence number {#sequence-number}
 
-Every `Booked` transaction carries an incrementing [`sequenceNumber`](/payments/concepts/transactions/sequence-number) for ordering transactions and spotting gaps.
+Swan assigns a `sequenceNumber` to every `Booked` transaction.
+The number increments by 1 with each new booked transaction, giving you a reliable way to order transactions and spot any gaps.
+`sequenceNumber` returns `null` for all transaction statuses other than `Booked`.
+
+`sequenceNumber` is also used to order `Booked` transactions on [account statements](/accounts/concepts/account/statements).
+
+In the API, `sequenceNumber` lives in `BookedTransactionStatusInfo.balanceAfter`.
+The [guide to get transaction information](/payments/guides/payment-operations/get-transaction-info#query-single) shows how to request it.
+
+:::note Migration in progress
+`sequenceNumber` is populated for all newly Booked transactions.
+Backfilling older transactions is in progress, so historical transactions may not yet have a value.
+:::
 
 ### Transaction supporting documents {#transactions-supporting-documents}
 
@@ -93,7 +104,6 @@ Swan will verify that your offer is compliant.
 {
   "mode": "pathway",
   "items": [
-    { "title": "Sequence number", "to": "/payments/concepts/transactions/sequence-number", "desc": "Ordering Booked transactions and spotting gaps." },
     { "title": "Transaction statements", "to": "/payments/concepts/transactions/statements", "desc": "Proof that Swan executed a specific transaction." },
     { "title": "Statuses", "to": "/payments/concepts/transactions/statuses", "desc": "The transaction and transaction statement status flows." }
   ]

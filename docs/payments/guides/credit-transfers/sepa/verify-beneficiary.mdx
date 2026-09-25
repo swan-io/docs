@@ -9,11 +9,11 @@ related:
   - /payments/guides/credit-transfers/sepa/initiate-ct
 ---
 
-# Verify beneficiary details {#guide}
+# Verify a beneficiary {#guide}
 
 Use the `verifyBeneficiary` mutation to verify beneficiary details before initiating <Term id="credit-transfer">SEPA Credit Transfers</Term>.
 
-This mutation gives you full control to customize how verification results are presented to end-users. This is required for bulk credit transfers when verification tokens are mandatory for the account.
+With this mutation, you present the verification result to the end-user yourself. This is required for bulk credit transfers when verification tokens are mandatory for the account.
 
 :::tip Prerequisites
 - You're planning to initiate an Instant SEPA Credit Transfer, SEPA Credit Transfer or Internal Credit Transfer.
@@ -95,10 +95,11 @@ flowchart TD
 
 Call the mutation with the beneficiary details ([`beneficiaryInput`](https://api-reference.swan.io/inputs/beneficiary-input/)) you want to verify. The mutation returns a verification result and a 24-hour token for use in payment initiation.
 
-The `verifyBeneficiary` mutation accepts different types of beneficiary inputs:
+The `verifyBeneficiary` mutation accepts different types of beneficiary inputs.
+The beneficiary name can't exceed 70 characters.
 
-- **SEPA beneficiary** (`sepa`): For external SEPA Credit Transfers using <Term id="ibans">IBAN</Term> and name. The maximum length for the beneficiary name must be ≤ 70 characters.
-- **Swan account** (`swanAccount`): For internal transfers between Swan accounts. The maximum length for the beneficiary name must be ≤ 70 characters.
+- **SEPA beneficiary** (`sepa`): For external SEPA Credit Transfers using <Term id="ibans">IBAN</Term> and name.
+- **Swan account** (`swanAccount`): For internal transfers between Swan accounts.
 - **Trusted beneficiary** (`trustedBeneficiaryId`): For pre-verified beneficiaries saved in your account.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25NdXRhdGlvbiB7CiAgdmVyaWZ5QmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBiZW5lZmljaWFyeTogewogICAgICAgIHNlcGE6IHsgaWJhbjogIklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIsIG5hbWU6ICJDbG9zZU1hdGNoIiB9CiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuCiAgICAgIGV4cGlyZXNBdAogICAgICB2ZXJpZnlCZW5lZmljaWFyeVJlc3VsdCB7CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Tm90UG9zc2libGUgewogICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vTWF0Y2ggewogICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlDbG9zZU1hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
@@ -150,7 +151,7 @@ import Environments from '../../../../_shared/partials/_environments.mdx';
 
 ## Step 2: Handle verification results {#step-2}
 
-The mutation returns one of four possible verification results. **For an optimal user experience**, display the results and the recommended end-user action.
+The mutation returns one of four possible verification results. Display the result and the recommended action so the user can decide before consenting.
 
 | Result | Description | Recommended<br/>end-user action |
 | --- | --- | --- |
@@ -161,7 +162,7 @@ The mutation returns one of four possible verification results. **For an optimal
 
 #### Returned parameters
 - **`status`**: Verification result (see previous table).
-- **`beneficiaryVerificationToken`**: A unique token identifying the VoP result, valid for use in subsequent credit transfer initiations.
+- **`beneficiaryVerificationToken`**: A unique token identifying the <Term id="verification-of-payee">VoP</Term> result, valid for use in subsequent credit transfer initiations.
 - **`expiresAt`**: Token expiration timestamp (24 hours from generation).
 - **`nameSuggestion`**: Available for `CloseMatch` results only.
 
@@ -186,7 +187,7 @@ The mutation returns one of four possible verification results. **For an optimal
 
 ### Custom UX examples {#custom-ux-examples}
 
-Examples of how to present VoP verification results in your web banking interface. You can decide the level of friction and optional actions to display.
+Examples of how to present VoP verification results in your Web Banking interface. You can decide the level of friction and optional actions to display.
 
 <Tabs>
   <TabItem value="match" label="Match" id="custom-ux-match" default>
@@ -194,7 +195,7 @@ Examples of how to present VoP verification results in your web banking interfac
 
     **Recommended actions**: None required - proceed with payment
     
-    ![VoP Match web banking screen](../../../../images/payments/credit-transfers/vop/PC_match.png)
+    ![VoP Match Web Banking screen](../../../../images/payments/credit-transfers/vop/PC_match.png)
   </TabItem>
   
   <TabItem value="close" label="Close match" id="custom-ux-close">
@@ -205,7 +206,7 @@ Examples of how to present VoP verification results in your web banking interfac
     - Offer to update the beneficiary name.
     - Allow proceeding with the original or suggested name.
     
-    ![VoP Close match web banking screen](../../../../images/payments/credit-transfers/vop/PC_close_match.png)
+    ![VoP Close match Web Banking screen](../../../../images/payments/credit-transfers/vop/PC_close_match.png)
   </TabItem>
   
   <TabItem value="no-match" label="No match" id="custom-ux-no-match">
@@ -217,7 +218,7 @@ Examples of how to present VoP verification results in your web banking interfac
     - Option to verify the IBAN with recipient.
     - Allow proceeding with caution.
     
-    ![VoP No match web banking screen](../../../../images/payments/credit-transfers/vop/PC_no_match.png)
+    ![VoP No match Web Banking screen](../../../../images/payments/credit-transfers/vop/PC_no_match.png)
   </TabItem>
   
   <TabItem value="not-possible" label="Verification not possible" id="custom-ux-not-possible">
@@ -229,7 +230,7 @@ Examples of how to present VoP verification results in your web banking interfac
     - Option to contact the recipient's bank.
     - Allow proceeding with caution.
     
-    ![Verification not possible web banking screen](../../../../images/payments/credit-transfers/vop/PC_no_verif.png)
+    ![Verification not possible Web Banking screen](../../../../images/payments/credit-transfers/vop/PC_no_verif.png)
   </TabItem>
 </Tabs>
 
@@ -330,13 +331,13 @@ The same token can be used multiple times in the same initiation. This means you
 
 ## Saving beneficiaries during verification {#saving-beneficiaries}
 
-When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `save` to `true`. This will indicate that if the returned token is successfully used to initiate a credit transfer, a trusted beneficiary will be created.
+When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `save` to `true`. If the token is then used to initiate a credit transfer, Swan creates the trusted beneficiary.
 
 No trusted beneficiary is added when calling `verifyBeneficiary`, but your request to save it is contained within the token. The beneficiary is only saved after successful payment authorization, similar to the functionality described in [Add a beneficiary](/payments/guides/credit-transfers/sepa/add-beneficiary).
 
 ## Get a beneficiary verification result {#get-result}
 
-You can retrieve the beneficiary verification result from a <Term id="transactions">transaction</Term> by using the `beneficiaryVerificationResult` field available in `transaction` query, `transactions`, [`standingOrder`](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgc3RhbmRpbmdPcmRlcihzdGFuZGluZ09yZGVySWQ6ICIiKSB7CiAgICB0cmFuc2FjdGlvbnMgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICAgICAgICBpZAogICAgICAgICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblJlc3VsdCB7CiAgICAgICAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api), [`TrustedBeneficiary`](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgdHJ1c3RlZEJlbmVmaWNpYXJ5KGlkOiAiIikgewogICAgdHJhbnNhY3Rpb25zIHsKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgLi4uIG9uIFNFUEFDcmVkaXRUcmFuc2ZlclRyYW5zYWN0aW9uIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25SZXN1bHQgewogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgICAgbmFtZVN1Z2dlc3Rpb24KICAgICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api), [`account`](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgYWNjb3VudChhY2NvdW50SWQ6ICIiKSB7CiAgICB0cmFuc2FjdGlvbnMgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICAgICAgICBpZAogICAgICAgICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblJlc3VsdCB7CiAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api), and [`accounts`](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgYWNjb3VudHMgewogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICB0cmFuc2FjdGlvbnMgewogICAgICAgICAgZWRnZXMgewogICAgICAgICAgICBub2RlIHsKICAgICAgICAgICAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICAgICAgICAgICAgaWQKICAgICAgICAgICAgICAgIGJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uUmVzdWx0IHsKICAgICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICAgICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Tm9NYXRjaCB7CiAgICAgICAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vdFBvc3NpYmxlIHsKICAgICAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api) queries.
+You can retrieve the beneficiary verification result from a <Term id="transactions">transaction</Term> by using the `beneficiaryVerificationResult` field available in `transaction` query, `transactions`, [`standingOrder`](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgc3RhbmRpbmdPcmRlcihzdGFuZGluZ09yZGVySWQ6ICIiKSB7CiAgICB0cmFuc2FjdGlvbnMgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICAgICAgICBpZAogICAgICAgICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblJlc3VsdCB7CiAgICAgICAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api), [`trustedBeneficiary`](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgdHJ1c3RlZEJlbmVmaWNpYXJ5KGlkOiAiIikgewogICAgdHJhbnNhY3Rpb25zIHsKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgLi4uIG9uIFNFUEFDcmVkaXRUcmFuc2ZlclRyYW5zYWN0aW9uIHsKICAgICAgICAgICAgaWQKICAgICAgICAgICAgYmVuZWZpY2lhcnlWZXJpZmljYXRpb25SZXN1bHQgewogICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgICAgbmFtZVN1Z2dlc3Rpb24KICAgICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api), [`account`](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgYWNjb3VudChhY2NvdW50SWQ6ICIiKSB7CiAgICB0cmFuc2FjdGlvbnMgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICAgICAgICBpZAogICAgICAgICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblJlc3VsdCB7CiAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api), and [`accounts`](https://explorer.swan.io?query=cXVlcnkgTXlRdWVyeSB7CiAgYWNjb3VudHMgewogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICB0cmFuc2FjdGlvbnMgewogICAgICAgICAgZWRnZXMgewogICAgICAgICAgICBub2RlIHsKICAgICAgICAgICAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICAgICAgICAgICAgaWQKICAgICAgICAgICAgICAgIGJlbmVmaWNpYXJ5VmVyaWZpY2F0aW9uUmVzdWx0IHsKICAgICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeUNsb3NlTWF0Y2ggewogICAgICAgICAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Tm9NYXRjaCB7CiAgICAgICAgICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICAgICAgICAgIHN0YXR1cwogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vdFBvc3NpYmxlIHsKICAgICAgICAgICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgICAgICAgICAgc3RhdHVzCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api) queries.
 
 <a href="https://explorer.swan.io?query=cXVlcnkgR2V0QmVuZWZpY2lhcnlWZXJpZmljYXRpb25SZXN1bHQgewogIHRyYW5zYWN0aW9uKGlkOiAiJFlPVVJfVFJBTlNBQ1RJT05fSUQiKSB7CiAgICAuLi4gb24gU0VQQUNyZWRpdFRyYW5zZmVyVHJhbnNhY3Rpb24gewogICAgICBpZAogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblJlc3VsdCB7CiAgICAgICAgc3RhdHVzCiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Q2xvc2VNYXRjaCB7CiAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICBuYW1lU3VnZ2VzdGlvbgogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -392,7 +393,7 @@ Whether the token is mandatory [depends on the account type and an account-level
 
 ## Verification of Payee with Server-to-server (S2S) consent {#s2s-consent}
 
-You can initiate credit transfers using the server-to-server <Term id="consent">consent</Term> feature with <Term id="verification-of-payee">Verification of Payee</Term>.
+You can initiate credit transfers using the server-to-server consent feature with Verification of Payee.
 
 :::note Integration options
 Server-to-Server consent works with [both VoP integration options](/payments/concepts/verification-of-payee/integration-options).
@@ -416,5 +417,5 @@ Any other beneficiary name returns a `Match` result.
 - Beneficiary name "CloseMatch" returns a CloseMatch result.
 
 :::tip
-If a trusted beneficiary ID is used as input, the verification will be based on the Trusted Beneficiary name.
+If a trusted beneficiary ID is used as input, the verification will be based on the trusted beneficiary name.
 :::

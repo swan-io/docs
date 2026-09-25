@@ -15,7 +15,7 @@ related:
 
 # Merchants
 
-<p className="ia-lede">Merchants are account holders who accept <Term id="payments">payments</Term> from their customers, by card online or in person, by <Term id="direct-debit">direct debit</Term>, or by French check. They collect through <Term id="payment-link">payment links</Term> or invoices.</p>
+<p className="ia-lede"><Term id="merchants">Merchants</Term> are <Term id="account-holder">account holders</Term> who accept <Term id="payments">payments</Term> from their customers, by card online or in person, by <Term id="direct-debit">direct debit</Term>, or by French check. They collect through <Term id="payment-link">payment links</Term> or invoices.</p>
 
 import MerchantsDefinition from '../../../_shared/definitions/_merchants.mdx';
 
@@ -23,14 +23,14 @@ import MerchantsDefinition from '../../../_shared/definitions/_merchants.mdx';
 
 ## Overview {#overview}
 
-<Term id="merchants">Merchants</Term> are <Term id="account-holder">account holders</Term> who want to accept payments by card (online and in person), <Term id="sdd">SEPA Direct Debit</Term>, Internal Direct Debit, or French checks. They can do this either through a payment link or an invoice.
+Merchants are account holders who want to accept payments by card (online and in person), <Term id="sdd">SEPA Direct Debit</Term>, Internal Direct Debit, or French checks. They can do this either through a payment link or an invoice.
 This includes contractors, healthcare professionals, artisans, and business owners, among others.
 
 With a <Term id="merchant-profile">merchant profile</Term> and at least one active <Term id="merchant-payment-method">merchant payment method</Term>, you can help your merchants accept payments with Swan.
 
 :::info Pending review
 Before accepting payments, you need to complete a risk review.
-To get started, contact your dedicated PIM (Product Integration Manager), or use our Partner Support Request form available on your Dashboard.
+To get started, contact your dedicated PIM (Product Integration Manager), or use the Partner Support Request form on your Dashboard.
 :::
 
 ### Managing risk {#risk}
@@ -43,7 +43,7 @@ Both profiles and payment methods initially start with the status `PendingReview
 For payment methods, Swan may change the status to `WaitingForInformation` when additional details are needed. 
 In such cases, you'll receive these details within the `verificationRequirements` list. New information must be provided at the Merchant Profile level.
 
-To manage potential risk, Swan can change the <Term id="rolling-reserve">rolling reserve</Term> and the payment amount limit. If suspicious activity is detected, we can also **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
+To manage potential risk, Swan can change the <Term id="rolling-reserve">rolling reserve</Term> and the payment amount limit. If suspicious activity is detected, Swan can also **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
 Swan can also reinstate a profile or payment method by changing the status to `Enabled`.
 Finally, if Swan assigns the status `Rejected` to a profile or payment method, the decision is final and can't be reversed. 
 The user must submit a new request for the account holder, which Swan will review as a separate submission.
@@ -65,7 +65,9 @@ Refer to [merchant payment methods](/payments/concepts/merchants/payment-methods
 
 ## Account closing and suspension {#account-closing}
 
-When a merchant's account moves to `Closing`, Swan rejects the account's merchant profiles and payment methods with the reason `AccountClosed`, and cancels the merchant's `Upcoming` incoming SEPA Direct Debit <Term id="transactions">transactions</Term> (Core and B2B) that haven't yet been sent to the payment gateway, as well as upcoming check transactions. The corresponding merchant payments move to `Canceled`. Transactions already handed over for settlement complete normally, and returns, refunds, and chargebacks are still `Booked` on the account while it's `Closing`.
+When a merchant's account moves to `Closing`, Swan rejects the account's merchant profiles and payment methods with the reason `AccountClosed`.
+Swan also cancels the merchant's `Upcoming` incoming SEPA Direct Debit <Term id="transactions">transactions</Term> (Core and B2B) that haven't yet been sent to the payment gateway, as well as upcoming check transactions, and the corresponding merchant payments move to `Canceled`.
+Transactions already handed over for settlement complete normally. Returns, refunds, and chargebacks are still `Booked` on the account while it's `Closing`.
 
 On accounts in `Closing` or `Suspended` status, Swan rejects the creation of merchant profiles and payment methods, payment link initiation, merchant payments, and <Term id="payment-mandates">payment mandates</Term>. The rejection identifies the account status as the cause.
 

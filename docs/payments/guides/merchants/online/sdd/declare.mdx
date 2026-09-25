@@ -20,11 +20,11 @@ Each debtor must have their own payment mandate.
 - [B2B only] Debtor's account type: `Company`
 - Mandate includes a unique SEPA Creditor Identifier (SCI)
 - Mandate includes a Unique Mandate Reference (UMR)
+- A project access token, or a user access token with the `canManageAccountMembership` membership permission
 :::
 
 ## Guide {#guide}
 
-1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions, and confirm the prerequisites are met.
 1. Call the `addSepaDirectDebitPaymentMandate` mutation. You don't need <Term id="consent">consent</Term> from the debtor.
 1. Replace `$YOUR_PAYMENT_METHOD_ID` with the ID for your payment method, from your Dashboard (line 4).
 1. Choose `Recurrent` or `OneOff` (line 5).
@@ -33,7 +33,8 @@ Each debtor must have their own payment mandate.
 1. Add information about the debtor, including `name`, `IBAN`, and their `country` of residence (lines 9-11).
 1. Choose either Core or B2B in your [mandate name](/payments/concepts/merchants/mandates#sdd-info) (line 13).
 1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
-1. The payment mandate is ready to be created with the status `Enabled`. Creating the mandate is finalized after it's used for the first time.
+
+Swan creates the mandate with the status `Enabled`. It's finalized the first time it's used.
 
 :::info B2B
 For B2B, **declare the mandate to the debtor's bank** as well.

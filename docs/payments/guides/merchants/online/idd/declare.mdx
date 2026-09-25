@@ -19,18 +19,19 @@ Each debtor must have their own payment mandate.
 - Internal Direct Debit B2B payment method status: `Enabled`
 - Debtor and merchant have accounts in the same Swan projects
 - [B2B only] Debtor's account type: `Company`
+- A project access token, or a user access token with the `canManageAccountMembership` membership permission
 :::
 
 ## Declare a payment mandate {#declare}
 
-1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions, and confirm the prerequisites are met.
 1. Call the `addInternalDirectDebitPaymentMandate` mutation.
 1. Replace `$YOUR_DEBTOR_ACCOUNT_ID` and `$YOUR_PAYMENT_METHOD_ID` with IDs from your project (lines 4, 5).
 1. Choose either Standard or B2B in your [mandate name](/payments/concepts/merchants/mandates#idd-info) (line 6).
 1. Choose `Recurrent` or `OneOff`.
     - [`OneOff` payment mandates](/payments/concepts/merchants/mandates#idd-oneoff) can only be used once.
 1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
-1. The payment mandate is created with the status `Enabled`.
+
+Swan creates the mandate with the status `Enabled`.
 
 :::info B2B versus standard
 For Standard, merchants can start using the payment method to accept payments immediately.

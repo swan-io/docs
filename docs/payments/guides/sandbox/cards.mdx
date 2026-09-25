@@ -7,7 +7,7 @@ related:
   - /payments/guides/cards/get-list
 ---
 
-# Sandbox for card payments
+# Sandbox: card payments
 
 When testing your integration, you might need to simulate certain events with the [Event Simulator](/build/tools/event-simulator).
 
@@ -20,24 +20,26 @@ Use the Event Simulator to **test other events** related to card payments, such 
 Simulate a merchant requesting authorization for a card payment by entering testing data.
 
 1. Go to **Dashboard** > **Developers** > **Event Simulator**.
-1. Go to **Cards** (not shown).
+1. Go to **Cards**.
 1. Go to the tab for an **authorization request**.
 1. Enter required information: your Swan card ID and the amount you'd like to authorize.
 1. Enter any testing data you'd like to include in the simulation, such as a <Term id="merchants">merchant</Term> or terminal ID, a valid merchant category code, a location, and more.
 1. Change the transaction category, authorization type, outcome, and card type to test different situations.
 1. Click **Simulate**.
-1. After clicking **Simulate**, notice the status change to `Success`, meaning your authorization request was successful.
+
+The status changes to `Success`, and the simulated authorization appears on Swan's interfaces.
 
 ![Screenshot of Swan Dashboard authorization request page in event simulator](../../../images/payments/cards/sandbox-card-auth-request.png)
 
 ## Simulate a release {#simulate-release}
 
 1. Go to **Dashboard** > **Developers** > **Event Simulator**.
-1. Go to **Cards** (not shown).
+1. Go to **Cards**.
 1. Go to the tab for a **release**.
 1. Enter the transaction ID and choose the reason the authorization is being released.
 1. Click **Simulate**.
-1. After clicking **Simulate**, notice the status change to `Success`, meaning your authorization was executed successfully.
+
+The status changes to `Success`, and the authorization is released.
 
 ![Screenshot of Swan Dashboard authorization release page in event simulator](../../../images/payments/cards/sandbox-card-auth-release.png)
 
@@ -50,6 +52,7 @@ Some merchants send a clearing debit with no matching authorization, for example
 1. Go to the tab for a **debit without authorization**.
 1. Enter your Swan card ID, the amount, and any merchant information you'd like to include.
 1. Click **Simulate**.
-1. After clicking **Simulate**, notice the status change to `Success`. A `CardOutDebit` transaction is created with the status `Booked`, without a linked `CardOutAuthorization`.
+
+The status changes to `Success`, and a `CardOutDebit` transaction is created with the status `Booked`, without a linked `CardOutAuthorization`.
 
 You can also call the `simulateOutgoingCardDebitWithoutAuthorization` mutation in the [Testing API](/build/tools/testing-api) with the same information.

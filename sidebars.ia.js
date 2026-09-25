@@ -473,8 +473,8 @@ module.exports = annotateAudience(annotate({
           doc("payments/guides/credit-transfers/sepa/initiate-ct", "Initiate a credit transfer"),
           doc("payments/guides/credit-transfers/sepa/cancel-ct", "Cancel a credit transfer"),
           doc("payments/guides/credit-transfers/sepa/refund-ct", "Refund a credit transfer"),
-          doc("payments/guides/credit-transfers/sepa/schedule-so", "Schedule a standing order"),
-          doc("payments/guides/credit-transfers/sepa/cancel-so", "Cancel a standing order"),
+          doc("payments/guides/credit-transfers/sepa/schedule-so", "Schedule a Standing Order"),
+          doc("payments/guides/credit-transfers/sepa/cancel-so", "Cancel a Standing Order"),
           doc("payments/guides/credit-transfers/sepa/update-vop-settings", "Update VoP settings for bulk transfers"),
         ]),
         cat("International", [

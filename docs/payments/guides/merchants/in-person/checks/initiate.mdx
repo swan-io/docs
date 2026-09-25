@@ -14,15 +14,15 @@ Initiate accepting <Term id="payments">payments</Term> with French checks.
 - Debtor's account status: any except `Closing` or `Closed`
 - Merchant profile status: `Enabled`
 - Check payment method status: `Enabled`
+- A project access token, or a user access token with the `canManageAccountMembership` membership permission
 :::
 
 ## Guide {#guide}
 
-1. Confirm you have a project access token or, if you're an account member, a user access token with `CanManageAccountMembership` permissions.
 1. Call `initiateCheckMerchantPayment`, completing all mandatory fields: `amount`, `value`, `currency`, `CMC7`, `rlmcKey`, and `merchantProfileId` (lines 2-7).
-1. You can also include an optional **label** and **reference** (not shown), which are displayed in your transaction history and to the debtor.
+1. Optionally, add a `label` and `reference` (not shown). Both appear in the transaction history and to the debtor.
 1. Add the `InitiateCheckMerchantPaymentSuccessPayload` (line 10).
-1. Add `checkMerchantPayment` to the success payload (line 12)
+1. Add `checkMerchantPayment` to the success payload (line 12).
 1. Add the `fnciInfo` to the success payload (lines 15-21). Refer to the explanatory content to [learn about FNCI and their verification results](/payments/concepts/merchants/fnci).
 1. Add `CheckRejection` (line 24), then add the `fnciInfo` (lines 27-33).
 1. Add other rejections (not shown).

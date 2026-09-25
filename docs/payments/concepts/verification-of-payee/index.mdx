@@ -25,7 +25,7 @@ Required for all SEPA Credit Transfers and Instant SEPA Credit Transfers under t
 
 ## Overview {#overview}
 
-**Verification of Payee (VoP)** is a new European service that checks beneficiary details against account holder information before initiating SEPA Credit Transfers and Instant SEPA Credit Transfers. This service aims to reduce payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
+**Verification of Payee (VoP)** is a European service that checks beneficiary details against account holder information before initiating SEPA Credit Transfers and Instant SEPA Credit Transfers. This service aims to reduce payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
 
 ### Key benefits {#benefits}
 
@@ -52,13 +52,13 @@ The service is **free of charge** for Swan account holders as mandated by the re
 
 ## Swan's VoP capabilities {#swan-vop-capabilities}
 
-Swan provides comprehensive VoP support as both a requesting and responding PSP:
+Swan acts as both a requesting and a responding PSP:
 
 - **Outgoing VoP requests**: When your users send transfers to external accounts, Swan verifies beneficiary details with the receiving bank before processing the payment.
 - **Incoming VoP requests**: When other PSPs send transfers to Swan accounts, Swan automatically responds to their verification requests using account holder information.
 
-This page covers **outgoing VoP requests** that you can integrate into your application. Swan handles **incoming VoP requests** automatically without requiring any implementation from partners.
-Refer to [incoming VoP requests](/payments/concepts/verification-of-payee/incoming-requests) for how Swan matches the received details against the account holder.
+Swan handles **incoming VoP requests** automatically, without any implementation from partners. Refer to [incoming VoP requests](/payments/concepts/verification-of-payee/incoming-requests) for how Swan matches the received details against the account holder.
+For **outgoing VoP requests**, you choose an [integration option](/payments/concepts/verification-of-payee/integration-options).
 
 ## How VoP works {#how-vop-works}
 
@@ -126,7 +126,7 @@ Following the [European Payments Council (EPC)'s recommended matching rules](htt
 
 ### VoP results {#vop-results}
 
-The beneficiary's bank can return one of four verification results. **All results must be displayed to the end-user**. Swan will systematically display the VoP result and warning on the SCA consent screen.
+The beneficiary's bank can return one of four verification results. **All results must be displayed to the end-user**. Swan will systematically display the VoP result and warning on the SCA <Term id="consent">consent</Term> screen.
 
 <Tabs>
   <TabItem value="match" label="Match" id="vop-match" default>
@@ -200,7 +200,7 @@ Users can find complete VoP liability information in their Swan account's Terms 
 VoP applies to <Term id="standing-order">Standing Orders</Term> with two key differences:
 
 1. **Initial verification only**: VoP happens at the scheduling stage when creating the Standing Order.
-2. **Existing Standing Orders**: Previously authorized Standing Orders don't need to be verified - only new Standing Orders created on or after October 9, 2025, will require VoP.
+2. **Existing Standing Orders**: Standing Orders authorized before October 9, 2025 aren't verified. Every Standing Order created since then is.
 
 ## Integration options {#integration-flows}
 
@@ -209,7 +209,7 @@ Refer to [VoP integration options](/payments/concepts/verification-of-payee/inte
 
 ### Option 1: Default verification {#option-1}
 
-Swan runs the check when `initiateCreditTransfers` is called and shows the result on the <Term id="consent">consent</Term> screen. No development needed for single transfers.
+Swan runs the check when `initiateCreditTransfers` is called and shows the result on the consent screen. No development needed for single transfers.
 Refer to [Option 1: Default verification](/payments/concepts/verification-of-payee/integration-options#option-1).
 
 ### Option 2: Custom verification {#option-2}

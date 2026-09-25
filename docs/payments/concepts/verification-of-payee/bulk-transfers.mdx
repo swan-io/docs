@@ -33,7 +33,7 @@ This regulatory framework allows Swan to offer different default VoP requirement
 
 :::note Why these defaults?
 - Swan opts out company accounts by default to accelerate bulk file processing and reduce friction in high-volume business flows.
-- Individual accounts remain opted in for enhanced consumer protection, and this setting cannot be changed. 
+- Individual accounts remain opted in to protect consumers, and this setting can't be changed.
 - When multiple company accounts exist for the same <Term id="account-holder">account holder</Term>, all accounts are opted out by default regardless of any previous account settings.
 :::
 
@@ -55,8 +55,7 @@ To enable mandatory VoP for company accounts, you must first implement the `veri
 
 ### Changing VoP settings {#changing-settings}
 
-Company account holders change the setting with the `updateAccountSettings` mutation.
-The [guide to update VoP settings](/payments/guides/credit-transfers/sepa/update-vop-settings) shows the mutation, its parameters, responses, and rejections.
+Company account holders change the setting with the `updateAccountSettings` mutation, described under [updating account settings](#updating-settings).
 
 #### Requirements {#requirements}
 - Company account holder only.
@@ -68,15 +67,16 @@ The [guide to update VoP settings](/payments/guides/credit-transfers/sepa/update
 - Opting out (make VoP optional): User consent required through [SCA](/users/concepts/consent/sca).
 
 :::warning Integration requirement
-You must implement [the `updateAccountSettings` mutation](/payments/guides/credit-transfers/sepa/update-vop-settings) to allow company account holders to change their bulk transfer VoP requirements. Without this implementation, users cannot opt in or out of mandatory VoP and must use our [support request form](https://support.swan.io/hc/en-150) instead, creating friction and delays.
+You must implement [the `updateAccountSettings` mutation](/payments/guides/credit-transfers/sepa/update-vop-settings) to allow company account holders to change their bulk transfer VoP requirements. Without this implementation, users cannot opt in or out of mandatory VoP and must use Swan's [support request form](https://support.swan.io/hc/en-150) instead, creating friction and delays.
 :::
 
 ## Updating account settings {#updating-settings}
 
-The mutation, its parameters, both success payloads, the rejection table, the webhook, and Sandbox behavior moved to the [guide to update VoP settings for bulk transfers](/payments/guides/credit-transfers/sepa/update-vop-settings).
+Company account holders change the setting with the `updateAccountSettings` mutation.
+The [guide to update VoP settings for bulk transfers](/payments/guides/credit-transfers/sepa/update-vop-settings) shows the mutation, its parameters, both success payloads, the rejections, the webhook, and Sandbox behavior.
 
 ## Preparing for disputes {#dispute-preparation}
 
-Swan logs all VoP setting changes and verification history for dispute protection. These logs aren't currently available through the API, so we recommend you record these changes in your own systems. This audit trail helps determine liability if an end-user disputes a payment to the wrong beneficiary.
+Swan logs all VoP setting changes and verification history for dispute protection. These logs aren't currently available through the API, so record these changes in your own systems. This audit trail helps determine liability if an end-user disputes a payment to the wrong beneficiary.
 
 The `AccountSetting.Updated` [webhook](/payments/guides/credit-transfers/sepa/update-vop-settings#webhook-notifications) notifies you each time the setting changes, whether by the user or by a Swan agent after a support request.

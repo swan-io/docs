@@ -29,13 +29,6 @@ import InitiatePaymentsPrereqs from '../../partials/_initiate-payments-prereqs.m
 
 ### Guide {#guide}
 
-1. Call the `addReceivedSepaDirectDebitB2bMandate` mutation.
-1. Add the Unique Mandate Reference (`mandateReference`) and SEPA Creditor Identifier (`creditorIdentifier`). Both must follow the SEPA format (see the caution after this list).
-1. Add the creditor's name, plus your Swan <Term id="ibans">IBAN</Term> and consent redirect URL.
-1. Choose whether the mandate can be used once (`OneOff`) or multiple times (`Recurrent`).
-1. Add the `AddReceivedSepaDirectDebitB2bMandateSuccessPayload`, including the `consentUrl`.
-1. Add rejections (not shown).
-
 :::caution SEPA format validation
 Swan validates two fields against the SEPA format when a B2B mandate is submitted, and rejects values that don't comply:
 
@@ -44,6 +37,13 @@ Swan validates two fields against the SEPA format when a B2B mandate is submitte
 
 This validation prevents mandates with incorrect data, which would otherwise cause `MandateInvalid` rejections on the resulting SEPA Direct Debit B2B <Term id="transactions">transactions</Term>.
 :::
+
+1. Call the `addReceivedSepaDirectDebitB2bMandate` mutation.
+1. Add the Unique Mandate Reference (`mandateReference`) and SEPA Creditor Identifier (`creditorIdentifier`). Both must follow the SEPA format.
+1. Add the creditor's name, plus your Swan <Term id="ibans">IBAN</Term> and consent redirect URL.
+1. Choose whether the mandate can be used once (`OneOff`) or multiple times (`Recurrent`).
+1. Add the `AddReceivedSepaDirectDebitB2bMandateSuccessPayload`, including the `consentUrl`.
+1. Add rejections (not shown).
 
 ### Mutation {#mutation}
 

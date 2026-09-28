@@ -61,7 +61,7 @@ Collect the following information for each entity before calling the mutation.
 
 <FieldRequirementsLegend />
 
-On this page, <Cnd /> means the mutation accepts the call without the field, but Swan creates the onboarding with the status `Invalid` until you provide it.
+On this page, <Req /> means required to create the capital deposit case, and <Cnd /> means the mutation accepts the call without the field, but Swan creates the onboarding with the status `Invalid` until you provide it.
 
 For every account, the account name is optional.
 If you don't provide one, Swan uses `dépôt de capital — <holder name>` by default.
@@ -106,6 +106,8 @@ For company shareholders registered in France, use the `companyInfoRegistryData`
 Pass the results to the mutation to pre-fill company fields.
 :::
 
+For complete field-level requirements and required-document rules, refer to [company onboarding fields](../../onboarding/company/fields.mdx).
+
 **Each individual shareholder**
 
 | Data to prepare | Requirement | API field |
@@ -120,7 +122,7 @@ Pass the results to the mutation to pre-fill company fields.
 | Account name | <Opt /> | `shareholders[].individual.accountInfo.name` |
 | Redirect URL | <Req /> | `shareholders[].individual.oAuthRedirectParameters.redirectUrl` |
 
-For complete field-level requirements and required-document rules, refer to [company onboarding fields](../../onboarding/company/fields.mdx) and [individual onboarding fields](../../onboarding/individual/fields.mdx).
+For complete field-level requirements and required-document rules, refer to [individual onboarding fields](../../onboarding/individual/fields.mdx).
 
 ### Find valid legal form codes {#legal-forms}
 
@@ -576,9 +578,11 @@ Before asking your user to complete the flow, [get a list of required onboarding
 
 ## Step 4: Complete onboarding and KYC {#kyc}
 
-After your users [finalize their onboardings](../../onboarding/overview/guide-finalize.mdx), the KYC process for each entity begins with the identification of each account admin.
+After your users [finalize their onboardings](../../onboarding/overview/guide-finalize.mdx), the KYC process for each entity begins with the identification of each account admin (the first account membership, with `legalRepresentative: true`).
 
 ## Step 5: Upload required documents {#upload}
+
+For the list of required documents by stakeholder, who provides each one, and where it's attached, refer to the [capital deposits overview](../index.mdx#documents-list).
 
 After you create the case, the capital deposit case status is `WaitingForInitialRequirements`.
 The case stays in this status until all of the following are complete:
@@ -621,8 +625,6 @@ query GetCapitalDepositDocuments {
   }
 }
 ```
-
-For the list of required documents by stakeholder, refer to the [capital deposits overview](../index.mdx#documents-list).
 
 ## Rejections {#rejections}
 

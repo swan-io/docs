@@ -1,0 +1,31 @@
+---
+title: 1 October 2026
+type: release
+---
+
+## New features
+
+🏦 You can now create a [capital deposit case](/topics/capital-deposits/france/guide-create-case-v2/) with the new [`createCapitalDeposit`](https://api-reference.swan.io/mutations/create-capital-deposit) mutation, which uses the same input format as [Swan onboarding](/topics/onboarding/). A single call creates the onboarding for the company being incorporated and for each shareholder (company or individual), and returns one onboarding ID per entity. Check the guide for the full reference payload and step-by-step instructions.
+
+## Improvements
+
+👮 [Suspension reasons](/topics/accounts/#suspension-reasons) are now available in the API and your Dashboard. [Retrieve them](/topics/accounts/closure/guide-get-suspension-info) with the `suspensionReasons` field on [`AccountSuspendedStatus`](https://api-reference.swan.io/objects/account-suspended-status/), or view them on the account detail page in your Dashboard. When several reasons are active, all of them are displayed. The list is empty for accounts suspended before **September 21, 2026**.
+
+📊 CSV [transaction exports](/topics/payments/overview/guide-export/) are now safer to open in spreadsheet applications. Values in payment labels or references no longer run as formulas.
+
+🔎 The [capital deposit](/topics/capital-deposits/) case view in your Dashboard is redesigned to make each step clearer and shorten the time to certification. Each case now shows its current step, who's responsible, and the next required action at a glance.
+
+## API updates
+
+### Upcoming breaking changes
+
+🏦 The [`createCapitalDepositCase`](https://api-reference.swan.io/mutations/create-capital-deposit-case) mutation is **deprecated** in favor of [`createCapitalDeposit`](https://api-reference.swan.io/mutations/create-capital-deposit). Both mutations run in parallel during the migration period, so existing integrations aren't affected. Migrate before the end of Q4 2026: `createCapitalDepositCase` will be removed in Q1 2027.
+
+👮 On **November 2, 2026**, the `reasonInfo` field on [`AccountSuspendedStatus`](https://api-reference.swan.io/objects/account-suspended-status/) will be **deprecated**, joining the already deprecated `reason` field. Migrate to [`suspensionReasons`](/topics/accounts/closure/guide-get-suspension-info). Both deprecated fields stay available during the migration period.
+
+🌍 New [beneficiary details](/topics/payments/credit-transfers/international/#dynamic-forms) are mandatory for CHF and THB International Credit Transfers. When you [initiate a transfer](/topics/payments/credit-transfers/international/guide-initiate) and save a new beneficiary, or [add a trusted international beneficiary](/topics/payments/credit-transfers/international/guide-add-beneficiary), provide the following:
+
+- From **November 2, 2026**: `address.city` and `address.country` for CHF beneficiaries.
+- From **November 30, 2026**: `email` and `state` (in Thailand) for THB beneficiaries.
+
+These requirements apply to new and existing beneficiaries. If you saved a CHF or THB beneficiary without these details, create a new beneficiary with all required details before initiating the transfer. Otherwise, the transfer fails.

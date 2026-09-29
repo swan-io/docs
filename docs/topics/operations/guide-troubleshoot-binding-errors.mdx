@@ -11,9 +11,9 @@ For technical reference and API integration guides, see [Fix a user binding erro
 :::info Key takeaways
 
 - A binding error occurs when the details you provided for an invited account member don't match their sign-up details.
-- You can spot binding errors from your Dashboard. To fix them, direct an account member who has the `canManageAccountMembership` permission, usually the legal representative, to resolve the error in your banking app.
-- Users can often fix two error types, `emailVerifiedMatchError` and `idVerifiedMatchError`, themselves. If the email doesn't match or the identification link has expired, [send them a new one through the Dashboard](/topics/operations/guide-user-identification/#help-a-user-who-cant-complete-identification).
-
+- You can spot binding errors from your Dashboard. To fix them, correct the membership details from your partner interface. If your integration doesn't support that, direct an account member who has the `canManageAccountMembership` permission, usually the legal representative, to resolve the error in Web Banking.
+- Users can often fix three error types themselves: `emailVerifiedMatchError`, `idVerifiedMatchError`, and `phoneNumberMatchError`. If the identification link has expired, [share a new one](/topics/operations/guide-user-identification/#help-a-user-who-cant-complete-identification). If the email doesn't match, raise a Swan Support request.
+- The most important prevention tip: check spelling against the user's identity document, not their preferred name.
 - The most important prevention tip: check spelling against the user's identity document, not their preferred name.
 
 :::
@@ -48,7 +48,7 @@ Your Dashboard shows all mismatched information. The Dashboard doesn't let you c
 
 :::info No `BindingUserError` status?
 
-If you don't see a `BindingUserError` status, the user may not have accepted the invitation and completed the sign-up process yet. Check the `InvitationSent` status. If it shows that the invitation was sent, ask the user to accept it. If they haven’t received it, the person who sent the invitation can resend the link.
+If you don't see a `BindingUserError` status, the user may not have accepted the invitation and completed the sign-up process yet. Check the `InvitationSent` status. If it shows that the invitation was sent, ask the user to accept it. If they haven't received it, the person who sent the invitation can resend the link.
 
 :::
 
@@ -56,7 +56,7 @@ If you don't see a `BindingUserError` status, the user may not have accepted the
 
 ## Fix a binding error through your partner interface
 
-Use your partner interface to correct the mismatched membership information. If your interface doesn't expose membership management, ask your development team to add this capability using Swan's Account Membership API.
+Use your partner interface to correct the mismatched membership information. If your interface doesn't expose membership management, ask your development team to add this capability using the [Account Membership API](/topics/accounts/memberships/guide-fix-binding-error/).
 
 If your integration doesn't provide a correction flow, direct an account member with the `canManageAccountMembership` permission, typically the legal representative, to resolve the error in Web Banking. Share the [Resolve a user binding error](https://support.swan.io/hc/en-150/articles/20431032028829) article on support.swan.io with them for step-by-step instructions.
 
@@ -93,7 +93,7 @@ Tell your user that they need to complete their identity verification. Ask them 
 
 If the user's identification link has expired or is no longer accessible, [send them a new one through the Dashboard](/topics/operations/guide-user-identification/#help-a-user-who-cant-complete-identification).
 
-### Phone number mismatch (`mobilePhoneMatchError`)
+### Phone number mismatch (`phoneNumberMatchError`)
 
 This error occurs when the phone number the user signed up with doesn't match the number entered when their membership was created. This might be caused by a typo or by the user signing up with a completely different number.
 
@@ -101,7 +101,7 @@ First, confirm which phone number the user should use:
 
 - If the phone number on the membership is correct and both numbers belong to the same person, ask the user to update their sign-in number using Swan's [phone number update flow](https://link.swan.io/edit-phone). They must open the link on a mobile phone and complete the entire process. The binding error clears automatically after the number is updated.
 - If the number the user signed up with is correct, an account member with permission to manage memberships must update the phone number on the membership.
-- If either number belongs to someone else, don't ask the user to update their number. Raise a support request in your Dashboard.
+- If either number belongs to someone else, don't ask the user to update their number. Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new).
 
 ---
 
@@ -125,9 +125,9 @@ Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests
 
 Include in your request:
 
-- Account ID and account membership ID.
-- The specific error types.
-- Resolution steps already taken.
+- Account ID and account membership ID
+- The specific error types
+- Resolution steps already taken
 
 ---
 

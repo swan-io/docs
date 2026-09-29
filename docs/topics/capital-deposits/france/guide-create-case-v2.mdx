@@ -4,10 +4,10 @@ title: Create a capital deposit case
 
 # Create a capital deposit case
 
-Create a capital deposit case for a new company, initiating onboarding for both the main company and all shareholders in a single API call.
+Create a capital deposit case for a new company. One API call starts onboarding for the main company and all shareholders.
 
 :::caution Multi-step process
-This page explains step 1 of a **multi-step process**.
+This page covers the first part of a **multi-step process**: creating the case, completing onboarding, and uploading documents.
 Refer to the [France guide](./guide.mdx) for the whole process.
 :::
 
@@ -61,7 +61,9 @@ Collect the following information for each entity before calling the mutation.
 
 <FieldRequirementsLegend />
 
-On this page, <Req /> means required to create the capital deposit case, and <Cnd /> means the mutation accepts the call without the field, but Swan creates the onboarding with the status `Invalid` until you provide it.
+On this page, <Req /> means the mutation rejects the call without the field.
+<Cnd /> means the mutation accepts the call without the field, but Swan sets the onboarding status to `Invalid` until you provide it.
+Query `statusInfo.errors` on each onboarding before finalizing it, then update the onboarding with the missing values.
 
 For every account, the account name is optional.
 If you don't provide one, Swan uses `dépôt de capital — <holder name>` by default.
@@ -75,7 +77,7 @@ If you don't provide one, Swan uses `dépôt de capital — <holder name>` by de
 | Legal form code | <Cnd /> | `mainCompany.company.legalFormCode` |
 | Registration number | <Opt /> | `mainCompany.company.registrationNumber` |
 | Registered address | <Cnd /> | `mainCompany.company.address` |
-| Business activity | <Cnd /> | `businessActivity`, `businessActivityCode`, `businessActivityDescription` |
+| Business activity | <Cnd /> | `mainCompany.company.businessActivity`, `mainCompany.company.businessActivityCode`, `mainCompany.company.businessActivityDescription` |
 | Account admin | <Req /> | `mainCompany.accountAdmin` |
 | UBOs and legal representatives | <Cnd /> | `mainCompany.company.relatedIndividuals` |
 | Account name | <Opt /> | `mainCompany.accountInfo.name` |
@@ -93,7 +95,7 @@ The main company isn't incorporated yet, so its registration number is optional.
 | Legal form code | <Cnd /> | `shareholders[].company.company.legalFormCode` |
 | Registration number | <Cnd /> | `shareholders[].company.company.registrationNumber` |
 | Registered address | <Cnd /> | `shareholders[].company.company.address` |
-| Business activity | <Cnd /> | `businessActivity`, `businessActivityCode`, `businessActivityDescription` |
+| Business activity | <Cnd /> | `shareholders[].company.company.businessActivity`, `shareholders[].company.company.businessActivityCode`, `shareholders[].company.company.businessActivityDescription` |
 | Account admin | <Req /> | `shareholders[].company.accountAdmin` |
 | UBOs and legal representatives | <Cnd /> | `shareholders[].company.company.relatedIndividuals` |
 | Account name | <Opt /> | `shareholders[].company.accountInfo.name` |
@@ -146,7 +148,7 @@ query GetLegalForms {
 When a company is a shareholder of the company being incorporated, declare UBOs at both company levels:
 
 1. Declare the UBOs of the company shareholder in `shareholders[].company.company.relatedIndividuals`.
-1. Declare the ultimate individual UBOs of the main company in `mainCompany.company.relatedIndividuals`.
+1. Declare the individuals who ultimately own the main company, directly or through a company shareholder, in `mainCompany.company.relatedIndividuals`.
 
 The same individual can appear in both places, but calculate the ownership percentage relative to the entity being described.
 

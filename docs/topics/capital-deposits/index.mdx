@@ -103,88 +103,26 @@ These reason codes are derived from the same list as [account closure reason cod
 
 ## Required documents {#documents}
 
-Processing your capital shares deposit **requires several documents**.
-These can be uploaded using the API.
-Documents must meet Swan's requirements; otherwise, the document will be assigned the status `Refused` and you'll need to upload the document again.
+Swan needs several documents to process a capital deposit.
+Upload them with the API as soon as they're available: document upload runs in parallel with shareholder onboarding and KYC.
+Documents must meet Swan's requirements; otherwise, Swan assigns the status `Refused` and you need to upload the document again.
 
 ### List of required documents {#documents-list}
 
-All documents are **mandatory** unless marked _if requested_.
+Swan needs every document listed here.
+You upload some of them, Swan collects others during onboarding and identification, and the notary uploads the deposit certificate.
 
-<table>
-  <tr>
-    <th>Stakeholder </th>
-    <th>Document</th>
-    <th>API document type</th>
-  </tr>
-  <tr>
-    <td rowspan="2">Individual shareholders</td>
-    <td>Proof of address</td>
-    <td>
-      <code>ProofOfIndividualAddress</code>
-      <br />
-      <em>
-        Refer to <a href="../../partnership/document-center/proof-address">proof of address</a> for acceptable documents
-      </em>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Identity document proving the shareholder's identity (collected during identification)
-    </td>
-    <td>
-      <code>ProofOfIdentity</code>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="2">Company shareholders</td>
-    <td>
-      Proof of registration of the company
-    </td>
-    <td>
-      <code>RegisterExtract</code>
-      <br />
-      <em>
-        Refer to <a href="../../partnership/document-center/company-registration">proof of registration</a> for acceptable documents
-      </em>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Identity document proving the identity of the company shareholder's legal representative (collected during identification if they are an account member).
-    </td>
-    <td>
-      <code>ProofOfIdentity</code>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="4">Future company</td>
-    <td>Document available only after the notary validates the case, uploaded at a specific time during the capital deposit process</td>
-    <td>
-      <code>RegisterExtract</code>
-    </td>
-  </tr>
-  <tr>
-    <td>Draft of the articles of incorporation</td>
-    <td>
-      <code>ArticlesOfIncorporation</code>
-    </td>
-  </tr>
-  <tr>
-    <td>Lease agreement for official company address ∗</td>
-    <td>
-      <code>CompanyLeaseAgreement</code>
-    </td>
-  </tr>
-  <tr>
-    <td>Lease mandate from legal representative</td>
-    <td>
-      <code>PowerOfAttorney</code>
-      <br />
-      <em>Template available in French</em>
-    </td>
-  </tr>
-</table>
+| Stakeholder | Document | API document type | How it's collected | Attached to |
+| --- | --- | --- | --- | --- |
+| Individual shareholder | Proof of address ([acceptable documents](../../partnership/document-center/proof-address/index.mdx)) | `ProofOfIndividualAddress` | You upload it with `generateCapitalDepositDocumentUploadUrl` | `shareholders[].documents` |
+| Individual shareholder | Proof of identity | `ProofOfIdentity` | Swan collects it during identification, after the onboarding is finalized | Account holder's [supporting document collection](../accounts/documents/index.mdx) |
+| Company shareholder | Commercial registry extract issued within the last three months ([acceptable documents](../../partnership/document-center/company-registration/index.mdx)) | `RegisterExtract` | Swan collects it during company onboarding | Account holder's [supporting document collection](../accounts/documents/index.mdx) |
+| Company shareholder | Proof of identity of the legal representative | `ProofOfIdentity` | Swan collects it during identification, if the legal representative is the account admin | Account holder's [supporting document collection](../accounts/documents/index.mdx) |
+| Future company | Draft articles of incorporation | `ArticlesOfIncorporation` | You upload it with `generateCapitalDepositDocumentUploadUrl` | `capitalDepositCase.documents` |
+| Future company | Lease agreement for the registered office ∗ | `CompanyLeaseAgreement` | You upload it with `generateCapitalDepositDocumentUploadUrl` | `capitalDepositCase.documents` |
+| Future company | Power of attorney from the legal representative to Swan (template available in French) | `PowerOfAttorney` | You upload it with `generateCapitalDepositDocumentUploadUrl` | `capitalDepositCase.documents` |
+| Future company | Capital share deposit certificate | `CapitalShareDepositCertificate` | The notary uploads it | `capitalDepositCase.documents` |
+| Future company | Commercial registry extract (KBIS), issued after incorporation | `RegisterExtract` | You upload it with `generateCapitalDepositDocumentUploadUrl` after incorporation | `capitalDepositCase.documents` |
 
 <details>
   <summary>Specifications for **Future company** > **lease agreement** ∗</summary>

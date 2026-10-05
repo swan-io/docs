@@ -9,8 +9,8 @@ This guide helps partner support teams troubleshoot incoming and outgoing credit
 :::info Key takeaways
 
 - Start every investigation by identifying direction (IN or OUT), transfer type, and the transfer's status.
-- If a transfer isn't visible at all, check whether the debtor completed the consent step before assuming the transfer failed.
-- Rejected outgoing transfers (instant, standard, and international) have no impact on your balance as funds are re-credited immediately.
+- If an outgoing transfer isn't visible at all, it wasn't registered. Your user needs to initiate it again.
+- Rejected outgoing transfers (instant, standard, and international) have no impact on the account balance: the funds never leave the account.
 - Rejected incoming transfers take up to three business days to return for SEPA transactions and up to 10 business days for international ones.
 - Your users can download a transaction confirmation statement for `Booked` SEPA, Instant SEPA, and International Credit Transfers.
 - Before Swan can trace a `Booked` outgoing transfer, you need written proof from the beneficiary's bank that the money wasn't received. An account statement isn't enough.
@@ -117,7 +117,7 @@ Check [status.swan.io](https://status.swan.io) for a known incident overlapping 
 | Direction | Transfer type | Status or visibility | What you do |
 | --- | --- | --- | --- |
 | Outgoing | Instant SEPA | `Booked`, beneficiary says not received | Direct your user to ask the beneficiary to check with their bank. Get written proof of non-receipt before contacting Swan. |
-| Outgoing | Instant SEPA | `Rejected` | Explain the rejection reason. If a fallback was used, the transfer continues as a regular SEPA Credit Transfer. Otherwise funds return automatically. |
+| Outgoing | Instant SEPA | `Rejected` | Share the reason shown in the Dashboard, unless it's compliance-related. If a fallback was used, the transfer continues as a regular SEPA Credit Transfer. Otherwise funds return automatically. |
 | Outgoing | Instant SEPA | `Pending` | Unusual for an instant transfer. Submit a Swan Support request with the transaction details. |
 | Outgoing | SEPA | `Booked`, beneficiary says not received | Wait three to five business days from submission. If it's still missing, get written proof of non-receipt. |
 | Outgoing | SEPA or International | `Pending` | If a review is indicated, wait. If a technical pending status persists past the next business day, submit a Swan Support request. |
@@ -130,7 +130,7 @@ Check [status.swan.io](https://status.swan.io) for a known incident overlapping 
 
 ## Handle outgoing transfers
 
-Each payment method uses a different combination of statuses. Refer to the specific statuses for [credit transfers](../payments/credit-transfers/index.mdx#statuses) and [direct debits](../payments/direct-debit/index.mdx#statuses) for more information.
+For what each status means, see [credit transfer statuses](/topics/payments/credit-transfers/#statuses).
 
 ### If an outgoing transfer is `Booked` but the beneficiary says they didn't receive it
 
@@ -146,7 +146,6 @@ A `Booked` outgoing transfer means Swan processed and submitted it.
 
 ### Normal processing times
 
-:::info Normal processing times
 
 Allow the normal processing time before escalating:
 
@@ -154,23 +153,22 @@ Allow the normal processing time before escalating:
 - **Instant SEPA Credit Transfer:** around 10 seconds
 - **International Credit Transfer:** up to 10 business days
 
-:::
 
 See [Trace a transfer that wasn't received](#trace-a-transfer-that-wasnt-received) for the full procedure.
 
 ### If an outgoing transfer is `Rejected`
 
-First check what the rejection is about. [Here's a list of all the rejection reasons](https://api-reference.swan.io/enums/rejected-reason-code/).
+First, check the rejection reason. See the full [list of rejection reason codes](https://api-reference.swan.io/enums/rejected-reason-code).
 
 :::caution Don't disclose compliance reasons
 
-If the transfer was rejected for compliance, tell the user that Swan doesn't have information about the rejection reason. Don't speculate or share internal compliance details. If the transfer was rejected for another reason, share only the reason shown in the Dashboard.
+If the transfer was rejected for compliance, tell your user that you don't have information about the rejection reason. Don't speculate or share internal compliance details. If the transfer was rejected for another reason, share only the reason shown in the Dashboard.
 
 :::
 
 For rejected outgoing transfers:
 
-- Retry the transfer. If it still doesn't work, submit a Swan Support request with the transaction details.
+- The funds never leave the account, so there's nothing to return and no support request is needed.
 - If Instant SEPA fallback was activated, the transfer continues as a regular SEPA Credit Transfer and no action is needed. Two transactions appear in the history: the rejected instant transfer and the new regular one. This is expected and isn't a duplicate. See [Fallback mode](/topics/payments/credit-transfers/sepa/#instant-fallback).
 - If there was no fallback, your user needs to resubmit once they've addressed the reason.
 - For instant transfers, retrying as a regular SEPA Credit Transfer can help, because regular transfers have fewer real-time constraints.
@@ -229,11 +227,11 @@ The funds are available in the account. If your user can't see them, ask them to
 
 ### If an incoming transfer is `Rejected`
 
-- Funds return automatically to the sender's account within three business days.
+- Funds return automatically to the sender's account: within three business days for SEPA, up to 10 business days for International.
 - If the reason is compliance-related, don't share the detail.
 - The sender needs to correct the issue and resubmit.
 
-If funds haven't returned after three business days, submit a Swan Support request.
+If funds haven't returned after that time, submit a Swan Support request.
 
 ### If an incoming SEPA transfer isn't visible
 
@@ -241,7 +239,7 @@ If funds haven't returned after three business days, submit a Swan Support reque
 2. Ask your user for proof of transfer from the sending institution.
 3. Check the beneficiary details on the proof against the Swan account details.
 4. If they don't match, direct your user to ask the sender to check with their bank and resubmit with the correct details.
-5. If the debtor’s bank confirms that it credited the funds to the Swan account and the beneficiary details match, raise a Swan Support request with that confirmation and the transfer details. If the debtor’s bank cannot confirm that it credited the funds, direct the debtor to ask that bank to investigate.
+5. If the debtor's bank confirms that it credited the funds to the Swan account and the beneficiary details match, raise a Swan Support request with that confirmation and the transfer details. If the debtor's bank can't confirm that it credited the funds, direct the debtor to ask that bank to investigate.
 
 ### If an incoming International transfer isn't visible
 
@@ -286,7 +284,7 @@ Users might request a payment receipt or attestation for accounting purposes, or
 
 To download it:
 
-1. Go to **Dashboard > Data > Transactions**.
+1. Go to **Dashboard** > **Data** > **Transactions**.
 2. Open the transfer.
 3. Select **Transaction confirmation**.
 
@@ -333,24 +331,24 @@ Returns and recalls are different things, and mixing them up sets the wrong expe
 | **Return** | Automatic reversal by a bank that can't process the transfer: closed account, wrong BIC, or technical error | The receiving bank, automatically | Funds back within 3 business days |
 | **Recall** | A request to reverse a completed transfer, usually sent to the wrong IBAN | The debtor, via their bank | Beneficiary responds within 15 business days. Not guaranteed |
 
-Recalls work the same way for SEPA Credit Transfers and Instant SEPA Credit Transfers. International recalls also work for international credit transfers, but they take longer and require manual processing through intermediary banks.
+Recalls work the same way for SEPA Credit Transfers and Instant SEPA Credit Transfers. Recalls also work for International Credit Transfers, but they take longer, require manual processing through intermediary banks, and the outcome can't be predicted.
 
 ### Request a recall for an outgoing transfer
 
 1. Ask your user for the transaction ID, the reason, and supporting evidence.
-2. Submit a Swan Support request with the recall details as early as possible. Recalls have a submission deadline; up to 13 months post-settlement (for unauthorized/fraud) or 10 business days (for technical or duplicate errors).
+2. Submit a Swan Support request with the recall details as early as possible. Recalls have a submission deadline: up to 13 months after settlement for unauthorized or fraudulent transfers, or 10 business days for technical or duplicate errors.
 3. Swan sends a recall request to the beneficiary's bank.
 4. The beneficiary's bank notifies the beneficiary, who decides whether to accept.
 5. If they accept, funds are credited back to your user's account. If they refuse or don't respond within 15 business days, the recall closes.
 
-A separate recall transaction appears in the history, linked to the original transfer by the same transaction ID. It doesn't replace the original.
+A separate recall transaction appears in the history. It doesn't replace the original.
 
 ### Handle a recall request for an incoming transfer
 
 1. Swan asks your user whether they accept the recall. We proactively contact you or your user when we receive any recall request for incoming transfer. 
 2. Your user decides whether to accept or refuse.
 3. If they accept, Swan debits the funds and sends them to the debtor.
-4. If they refuse, the funds stay in the account and the response is automatically sent to the debtor's financial institution. 
+4. If they refuse, the funds stay in the account and the response is automatically sent to the debtor's financial institution.
 5. If they don't respond within 15 business days, the recall closes, and the funds stay in the account.
 
 ---
@@ -386,7 +384,7 @@ Ask your development team to build cancellation into your product using Swan's A
 
 While Swan investigates:
 
-- Tell your user you're checking with Swan. Indicate any urgency when you raise a request with Swan so the team can better assess the user's criticality.
+- Tell your user you're checking with Swan. When you raise the request, say how urgent it is so Swan can prioritize it.
 - Share any timeframe Swan gives you.
 - Update your user regularly, even when there's nothing new to report.
 - If you don't understand the answer you receive, ask Swan to clarify before replying to your user.

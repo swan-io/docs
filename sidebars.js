@@ -627,8 +627,9 @@ module.exports = {
           collapsed: true,
           items: ["partnership/overview/guide-orias"],
         },
-        "partnership/overview/rules-regulations",
         "partnership/overview/country-coverage",
+        "partnership/overview/restricted-businesses",
+        "partnership/overview/rules-regulations",
       ],
     },
     {

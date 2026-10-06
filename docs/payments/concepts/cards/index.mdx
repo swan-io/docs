@@ -13,39 +13,15 @@ related:
   - /cards
 ---
 
-# Card payments
-
-<p className="ia-lede">How card <Term id="transactions">transactions</Term> work at Swan: categories, authorization and clearing, 3-D Secure, international <Term id="payments">payments</Term>, fraud, and enriched merchant data.</p>
-
-## Overview {#overview}
-
-import CardsOverview from '../../../_shared/partials/_cards-overview.mdx';
-
-<CardsOverview />
-
-:::tip General cards section
-Refer to the [general cards section](/cards) for information about designing and issuing cards, as well as explanations of how virtual, physical, and digital cards work at Swan.
-:::
-
-### Card transactions {#transactions}
-
-Each card `transaction` object contains specific payment data in the [`CardTransaction` interface](https://api-reference.swan.io/objects/card-transaction/), including:
-
-- **Terminal ID**: unique identifier of the merchant's terminal in the Mastercard network
-- **Merchant ID**: unique identifier of the merchant in the Mastercard network
-- Merchant **name**
-- Merchant **city**
-- Merchant **postal code**
-- Merchant Category Code (**MCC**)
-- Original **amount** and **currency**
-
-:::info Netherlands Maestro fallback
 import MaestroLink from '../../../_shared/partials/_maestro.mdx';
 
-<MaestroLink />
-:::
+# Card payments
 
-### Transaction categories {#categories}
+<p className="ia-lede">How card <Term id="transactions">transactions</Term> work at Swan: categories, authorization and clearing, 3-D Secure, international <Term id="payments">payments</Term>, fraud, and enriched merchant data. For the cards themselves, from formats and issuing to settings, refer to the [Cards section](/cards).</p>
+
+## Card transactions {#transactions}
+
+Each card transaction carries the payment data of the [`CardTransaction` interface](https://api-reference.swan.io/objects/card-transaction/): the merchant's terminal ID, merchant ID, name, city, postal code, and Merchant Category Code (MCC), plus the original amount and currency.
 
 Card transactions are categorized based on where and how the payment was made.
 The `CardTransactionCategory` enum provides the following values:
@@ -56,47 +32,31 @@ The `CardTransactionCategory` enum provides the following values:
 - **Withdrawal**: ATM withdrawals.
 - **Other**: Transactions that don't fit the above categories, including non-standard merchant flows and technical retries.
 
-### Card transaction statuses {#statuses}
-
 Card transactions move through their own [card transaction statuses](/payments/concepts/cards/statuses).
+When a card payment is rejected, the account isn't charged, and the `reason` in the rejected transaction's `statusInfo` explains why: refer to the [card rejection reasons](/payments/reference/card-rejection-reasons) for the common codes and resolutions to share with your users.
 
-## Rejected card transactions {#rejected-card-transactions}
+:::info Netherlands Maestro fallback
+<MaestroLink />
+:::
 
-When a card payment is rejected, the account isn't charged. The `reason` in the rejected transaction's `statusInfo` explains why. Refer to the [card rejection reasons](/payments/reference/card-rejection-reasons) reference for the common codes and resolutions to share with your users.
+## Processing card payments {#processing}
+
+Card payments are first [authorized, then cleared](/payments/concepts/cards/authorization-and-clearing): the authorization reserves funds as a `Pending` transaction, and the clearing debits them a few days later, with several capture types and merchant flows.
+Online payments may also require [3-D Secure](/payments/concepts/cards/3ds) authentication before the authorization is accepted.
+After the transaction is created, Swan adds [enriched transaction information](/payments/concepts/cards/enriched-info) about the merchant.
 
 ## Contactless payments {#contactless}
 
-Contactless payments let users pay by tapping their physical card on the payment terminal instead of inserting it and entering a PIN.
-
-### Physical card contactless limits {#contactless-limits}
-
-To protect your users from fraud, physical cards have limits when used for contactless payments.
-These are the contactless payment limits for physical cards issued by Swan.
-
-| Limit type | Value | Description |
-|---|---|---|
-| Single payment limit   | €50   | Maximum amount for one contactless payment without using a PIN.|
-| Cumulative amount limit | €150  | Maximum total amount spent in consecutive contactless transactions before a PIN is required. |
-
-:::info Account balances
-[Digital wallet payments](/cards/concepts/digital) (like Apple Pay or Google Pay) bypass these limits because they use [Strong Customer Authentication (SCA)](/users/concepts/consent/sca) through a password or biometrics. 
-These payments **don't count** toward physical card contactless limits.
-:::
-
-### Resetting the contactless payment limit {#contactless-reset}
-
-To reset the cumulative spending (€150) limit, your user must perform a chip-and-PIN transaction by inserting their physical card into a payment terminal and entering their PIN.
+Physical cards have contactless limits before a PIN is required, and digital wallet payments bypass them.
+Refer to [contactless payments](/cards/concepts/physical#contactless) in the physical cards concept.
 
 ## Fraud and card transactions {#fraud}
 
 When a cardholder is a victim of fraud, they must declare it to Swan.
 If, after an internal investigation, the chargeback is admissible, Swan creates a new `InternalCreditTransferIn` credit transaction with the [status `Booked`](/payments/concepts/cards/statuses#statuses), which impacts the [account's booked balance](/accounts/concepts/account/balances).
-
 The chargeback transaction is linked to the same payment as the initial card transaction.
 
-import SuspicionOfFraud from '../../../_shared/partials/_card-fraud-suspicion.mdx';
-
-<SuspicionOfFraud />
+At the slightest suspicion of fraud, [block eCommerce payments on the card product](/cards/guides/lifecycle/update/using-the-api#guide), then block or cancel the affected cards.
 
 ## International card transactions {#international}
 
@@ -105,14 +65,7 @@ For a smoother user experience, both `international` and `nonMainCurrencyTransac
 
 Unless your Terms and Conditions state differently, a **2% fee** applies to international card transactions.
 [Mastercard's exchange rate](https://www.mastercard.com/content/mastercardcom/global/en/personal/get-support/convert-currency.html) applies to card transactions outside of [SEPA](/payments/reference/sepa#sepa).
-
-### Allowed and blocked countries {#countries}
-
 The [card payment countries](/payments/reference/card-payment-countries) reference lists where card payments are allowed or blocked.
-
-## Processing card payments {#processing}
-
-Card payments are first [authorized, then cleared](/payments/concepts/cards/authorization-and-clearing): the authorization reserves funds as a `Pending` transaction, and the clearing debits them a few days later, with several capture types and merchant flows. Online payments may also require [3-D Secure](/payments/concepts/cards/3ds) authentication before the authorization is accepted. After the transaction is created, Swan adds [enriched transaction information](/payments/concepts/cards/enriched-info) about the merchant.
 
 ## In this section
 

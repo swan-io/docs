@@ -578,6 +578,7 @@ module.exports = annotateAudience(annotate({
       doc("payments/reference/international-transfers", "International transfer countries and rails"),
       doc("payments/reference/card-payment-countries", "Card payment countries"),
       doc("payments/reference/card-rejection-reasons", "Card rejection reasons"),
+      doc("payments/reference/merchant-rejection-reasons", "Merchant rejection and return reasons"),
       doc("payments/reference/schemes", "Scheme tables"),
     ], "payments/reference/index", "ia-type-ref"),
   ],

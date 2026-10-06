@@ -5,6 +5,7 @@ audience:
   - ops
 related:
   - /payments/concepts/merchants
+  - /payments/reference/merchant-rejection-reasons
   - /payments/concepts/merchants/payments
   - /payments/concepts/merchants/statuses
   - /payments/guides/merchants/in-person/cards
@@ -115,26 +116,12 @@ import InPersonCardRefundLimitation from '../../guides/merchants/in-person/parti
 
 ## R-transactions {#r-transactions}
 
-### Rejected {#rejected}
+For in-person cards, <Term id="r-transaction">R-transactions</Term> are rejections and chargebacks.
 
 Card payments can be rejected for the following reasons:
 
-| Status reason | Explanation | Next steps |
-| --- | --- | --- |
-| `CardNotSupported` | The card doesn't support this type of purchase. | Ask the customer to use a different card. |
-| `RejectedByCardAcquirer` | The payment was declined by the acquirer due to fraud or risk rules. | Present this as a generic decline without sharing details. |
-| `RejectedByCardIssuer` | The card was declined by the issuer. It might be invalid, lost, stolen, or restricted. | Ask the customer to contact their card issuer. |
-| `SoftDecline3dsRequired` | The transaction requires 3D Secure authentication. | Retry with authentication. If already done, ask the customer to contact their issuer. |
-| `SoftDeclineCardDetailsInvalid` | The card number or expiry date is incorrect. | Ask the customer to retry with the correct details. |
-| `SoftDeclineCardExpired` | The card has expired. | Ask the customer to use a different card. |
-| `SoftDeclineCvcInvalid` | The CVC is incorrect. | Ask the customer to retry with the correct CVC. |
-| `SoftDeclineInsufficientFunds` | The card has insufficient funds. | Ask the customer to use a different payment method. |
-| `SoftDeclineInvalidPinAttemptsExceeded` | Too many incorrect PIN attempts. | Ask the customer to use a different card or payment method. |
-| `SoftDeclinePinInvalid` | The PIN entered is incorrect. | Ask the customer to retry with the correct PIN. |
-| `SoftDeclinePinRequired` | A PIN is required for this card. | Ask the customer to insert their card and enter their PIN. |
-| `SoftDeclineRejectedByCardIssuer` | The card was declined by the issuer. Possible causes include velocity limits or issuer downtime. | Retry the payment. If still declined, ask the customer to contact their issuer. |
-| `SoftDeclineSwanTechnicalErrorOccurred` | A technical error occurred while processing. Possible causes include an incorrect address, invalid amount, or processing failure. | Retry the payment. If it still fails, try again later. |
-| `SwanTechnicalErrorOccurred` | A technical error occurred on Swan's side. | Retry the payment. If the issue persists, contact Swan Support. |
+When a card payment is rejected, the cardholder's account is not charged.
+The [in-person card rejection reasons](/payments/reference/merchant-rejection-reasons#in-person-cards) list each code and the next step to share with your merchant.
 
 ## Chargebacks and disputes {#chargebacks}
 

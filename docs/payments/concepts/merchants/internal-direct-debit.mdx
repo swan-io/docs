@@ -5,6 +5,7 @@ audience:
   - ops
 related:
   - /payments/concepts/merchants
+  - /payments/reference/merchant-rejection-reasons
   - /payments/concepts/merchants/payments
   - /payments/concepts/merchants/statuses
   - /payments/guides/merchants/online/idd
@@ -76,19 +77,7 @@ Returns and refunds are only possible with **Standard** and can be requested up 
 
 When an Internal Direct Debit Standard transaction is **rejected**, the debtor's account is not debited.
 
-An Internal Direct Debit Standard transaction might be rejected for the following reasons:
-
-| Rejection reason | Explanation | Action |
-|---|---|---|
-| `AccountClosed` | The account is closed. | Contact the debtor to provide an active Swan account for the transaction. |
-| `AccountSuspended` | The account is suspended. | Contact the debtor to resolve the account suspension or wait until it's lifted before retrying. |
-| `AccountUnknown` | The IBAN provided doesn't match an existing account. | Verify the debtor's Swan account details and retry with correct information. |
-| `InsufficientFunds` | The debtor has insufficient funds to make the transaction. | Contact the debtor to add funds to their account, or schedule the payment for a later date. |
-| `MandateInvalid` | The payment mandate is invalid, possibly because it was canceled, incorrectly completed, or the B2B mandate wasn't declared. | Declare a new valid mandate with the debtor before initiating the direct debit. |
-| `ReasonNotSpecifiedByBank` | The debtor's bank can't disclose the rejection reason due to local data protection laws. | Contact Swan Support for more details. |
-| `ReasonNotSpecifiedByDebtor` | The payment was rejected at the debtor's request. | Contact the debtor to understand the issue and resolve it before retrying. |
-| `RegulatoryReason` | The payment was rejected for regulatory reasons not covered by other specific reason codes. | Contact Swan Support to understand the specific regulatory requirement and provide necessary documentation. |
-| `SwanRefused` | Swan refused the transaction due to risk management or compliance requirements. | Contact Swan Support to understand the specific reason and required next steps. |
+The [Internal Direct Debit reasons](/payments/reference/merchant-rejection-reasons#idd) list each code and the resolution to share with your merchant.
 
 Regardless of the reason, the merchant receives a notification and can attempt a new Internal Direct Debit at a later date.
 
@@ -96,15 +85,7 @@ Regardless of the reason, the merchant receives a notification and can attempt a
 
 When an Internal Direct Debit Standard transaction is **returned**, the debtor's account is debited the amount, but the payment is reversed and the funds return to the debtor's account. The original transaction stays `Booked`; Swan creates a new return transaction that debits the merchant's account.
 
-An Internal Direct Debit Standard transaction might be returned for the following reasons:
-
-| Return Reason | Explanation |
-|---|---|
-| `ReasonNotSpecifiedByBank` | The debtor's bank can't disclose the rejection reason due to local data protection laws. |
-| `ReasonNotSpecifiedByDebtor` | The payment was rejected at the debtor's request. |
-| `RefundRequestedByDebtor` | The payer has requested a refund. |
-| `RegulatoryReason` | The payment was returned for regulatory reasons not covered by other specific reason codes. |
-| `SwanTechnicalErrorOccurred` | A technical error prevented the processing of this direct debit. |
+The [Internal Direct Debit reasons](/payments/reference/merchant-rejection-reasons#idd) mark which codes apply to returns.
 
 Regardless of the reason, the merchant is notified about the return.
 They can investigate the reason for return and take whatever action is necessary, which might be refunding the payment or disputing the return with the debtor's bank.

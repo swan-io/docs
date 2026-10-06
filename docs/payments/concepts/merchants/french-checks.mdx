@@ -5,6 +5,7 @@ audience:
   - ops
 related:
   - /payments/concepts/merchants
+  - /payments/reference/merchant-rejection-reasons
   - /payments/concepts/merchants/payments
   - /payments/concepts/merchants/statuses
   - /payments/guides/merchants/in-person/checks
@@ -122,6 +123,8 @@ Refer to [French check verification (FNCI)](/payments/concepts/merchants/fnci) f
 
 ## R-transactions {#r-transactions}
 
+For checks, <Term id="r-transaction">R-transactions</Term> are rejections, returns, and cancelations.
+
 ### Rejected {#rejected}
 
 Checks can be rejected by Swan's check provider and **returned to the merchant by mail**, mailed to the account holder's address.
@@ -132,42 +135,14 @@ If they send the check without creating the new `CheckIn` transaction, the check
 
 Additionally, all checks not received by Swan's check provider within 30 days of being declared will be automatically `Rejected`.
 
-A check transaction can be rejected for the following reasons:
-
-| Rejection reason | Explanation | Action |
-| --- | --- | --- |
-| `AmountMismatch` | The amount on the check and the amount declared through the API don't match. | Verify and correct the amount to match the check exactly, then resubmit. |
-| `BeneficiaryMismatch` | The beneficiary name on the check and the name declared through the API don't match. | Verify and correct the beneficiary name to match the check exactly, then resubmit. |
-| `BeneficiaryMissingOrIncorrect` | The merchant's name is missing or incorrect. | Ensure the merchant's name is clearly written on the check and matches the declared information. |
-| `CheckNotReceived` | The check wasn't received by Swan's check provider. This reason doesn't appear until 30 days after the check was declared. | Send the physical check to Swan immediately. If already sent, contact Swan Support with tracking information. |
-| `CheckReceivedLate` | The check was received by Swan's check provider more than 30 days after it was declared, or the check was received as canceled. | Ensure checks are sent promptly (within 30 days of declaration) to avoid rejection. For late checks, declare and send a new check. |
-| `DateMissing` | There's no date on the check. | Ensure the check is dated before submission. Request a new properly dated check from the payer. |
-| `DateInvalid` | The date on the check is in the future or isn't valid. | Ensure the check has a clear, valid date that is not post-dated. Request a corrected check if needed. |
-| `DebtorNameMissing` | The debtor's name (your merchant's customer) is missing on the check. | Ensure the payer's name is clearly written on the check before submission. |
-| `InvalidOrMissingAmount` | No amount is written on the check, the format shows an invalid amount, or the amount is shared in the wrong format (numbers instead of letters). | Ensure the check has a clearly written amount in the correct format (both numbers and words) before submission. |
-| `SignatureMissing` | The debtor's signature is missing, or there was a problem with the signature. | Ensure the check is properly signed by the payer before depositing. Request a new signed check if needed. |
+The [check rejection reasons](/payments/reference/merchant-rejection-reasons#checks-rejected) list each code and the resolution to share with your merchant.
 
 ### Returned {#returned}
 
 Checks can be returned up to 10 business days after the transaction is `Booked`, and this window can be extended to 90 calendar days based on the reason for return.
 Checks aren't mailed back to the merchant.
 
-A check transaction might be returned for the following reasons:
-
-| Return reason                     | Explanation                                                                 |
-|---|---|
-| `AccountClosed` | The account is closed. |
-| `CheckBlocked` | The payer has blocked the check payment. |
-| `CheckOutdated` | The check is outdated. |
-| `DebtorDeceased` | The debtor is deceased. |
-| `EndorsementMissingOrInvalid` | The check payment can't be fulfilled because the beneficiary's signature on the check is missing or invalid. |
-| `Fraudulent` | The payment can't be fulfilled because it's a fraudulent check. |
-| `InsufficientFunds` | The payer has insufficient funds to fulfill the check payment. |
-| `LegalOrBankDecision` | The check payment can't be fulfilled because of a legal or banking issue on the payer's end. |
-| `MandatoryReferenceMissingOnCheck` | The check payment can't be fulfilled because a mandatory piece of information is missing on the check. |
-| `SignatureInvalid` | The check payment can't be fulfilled because the payer's signature is invalid. |
-| `SwanTechnicalErrorOccurred` | A technical error prevented the processing of this check. |
-| `TransactionDuplicated` | This transaction can't be fulfilled because it's a duplicate of another transaction. |
+The [check return reasons](/payments/reference/merchant-rejection-reasons#checks-returned) list each code.
 
 By the time a check is returned, the merchant's account has already been credited.
 Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `CheckInReturn` transaction is created automatically. The original `CheckIn` transaction stays `Booked`.

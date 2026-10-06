@@ -1,0 +1,149 @@
+---
+title: Merchant rejection and return reasons
+audience:
+  - dev
+  - ops
+related:
+  - /payments/reference
+  - /payments/concepts/merchants
+  - /payments/concepts/merchants/statuses
+  - /payments/concepts/merchants/online-cards
+  - /payments/concepts/merchants/in-person-cards
+  - /payments/concepts/merchants/sepa-direct-debit
+  - /payments/concepts/merchants/internal-direct-debit
+  - /payments/concepts/merchants/french-checks
+---
+
+# Merchant rejection and return reasons
+
+<p className="ia-lede">Why a <Term id="merchants">merchant</Term> <Term id="payments">payment</Term> was rejected or returned, by payment method, with the resolution to share with your merchant. The reason is in the <Term id="transactions">transaction</Term>'s <code>statusInfo</code>.</p>
+
+Rejected transactions never debit the payer.
+Returned transactions did debit the payer, then the payment was reversed: the original transaction stays `Booked` and Swan creates a return transaction that debits the merchant.
+How each method handles rejections, returns, and disputes is on the method's concept page, linked from each section.
+
+## Online cards {#online-cards}
+
+Rejection reasons for [online card payments](/payments/concepts/merchants/online-cards#rejected).
+
+| Rejection reason | Explanation | Resolution |
+| --- | --- | --- |
+| `AmountInvalid` | The amount entered is invalid for this payment. | Check that the amount is within the payment method's limits, then retry. |
+| `CardDetailsInvalid` | The card details provided are incorrect or incomplete. | Ask the customer to check the card number, expiry date, and CVC, then retry. |
+| `CardExpired` | The card has expired. | Ask the customer to use a card with a valid expiry date. |
+| `InvalidPinAttemptsExceeded` | Too many incorrect PIN attempts were made. | Ask the customer to contact their card issuer to unblock the card. |
+| `RejectedByCardIssuer` | The card issuer rejected the transaction. | Ask the customer to contact their card issuer. |
+| `SoftDecline3dsExpiration` | The 3-D Secure authentication session expired before completion. | Ask the customer to retry and complete the authentication within the time limit. |
+| `SoftDecline3dsFailure` | The 3-D Secure authentication failed. | Ask the customer to retry the authentication, or to contact their card issuer if it keeps failing. |
+| `SoftDecline3dsNotSupported` | The card doesn't support 3-D Secure authentication. | Ask the customer to use a card that supports 3-D Secure. |
+| `SoftDecline3dsRequired` | 3-D Secure authentication was required but not completed. | Ask the customer to retry and complete the authentication. |
+| `SoftDeclineCardAmountLimitsExceeded` | The transaction exceeds the card's spending limit. | Ask the customer to contact their card issuer, or split the payment. |
+| `SoftDeclineCardDetailsInvalid` | The card details provided are incorrect or incomplete. | Ask the customer to check the card number, expiry date, and CVC, then retry. |
+| `SoftDeclineCardExpired` | The card has expired. | Ask the customer to use a card with a valid expiry date. |
+| `SoftDeclineCardNotActivated` | The card hasn't been activated yet. | Ask the customer to activate the card with their issuer before retrying. |
+| `SoftDeclineCardNotSupported` | The card isn't supported for this type of transaction. | Ask the customer to use a different card. |
+| `SoftDeclineCvcCheckFailed` | The CVC verification failed. | Ask the customer to check the CVC and retry. |
+| `SoftDeclineCvcInvalid` | The CVC provided is invalid. | Ask the customer to check the CVC and retry. |
+| `SoftDeclineInsufficientFunds` | The card has insufficient funds. | Ask the customer to use a different card or payment method. |
+| `SoftDeclineRefundTimeLimitExceeded` | The refund couldn't be processed because the allowable time limit has passed. | Contact Swan through the [Partner Support Request form](https://supportform.swan.io/) to explore other refund options. |
+| `SoftDeclineRejectedByCardIssuer` | The card issuer declined the transaction. | Ask the customer to contact their card issuer. |
+| `SoftDeclineSwanTechnicalErrorOccurred` | A technical error prevented the processing of this card payment. | Retry. If the problem persists, contact Swan Support with the transaction reference. |
+| `SoftDeclineTransactionAmountIncorrect` | The transaction amount doesn't match the expected or authorized amount. | Check the amount against the authorization and retry. |
+| `SwanRefused` | Swan refused the transaction for risk management or compliance reasons. | Contact Swan Support to understand the reason and the next steps. |
+| `SwanTechnicalErrorOccurred` | A technical error prevented the processing of this card payment. | Retry. If the problem persists, contact Swan Support with the transaction reference. |
+
+## In-person cards {#in-person-cards}
+
+Rejection reasons for [in-person card payments](/payments/concepts/merchants/in-person-cards#rejected).
+
+| Rejection reason | Explanation | Resolution |
+| --- | --- | --- |
+| `CardNotSupported` | The card doesn't support this type of purchase. | Ask the customer to use a different card. |
+| `RejectedByCardAcquirer` | The acquirer declined the payment under fraud or risk rules. | Present this as a generic decline without sharing details. |
+| `RejectedByCardIssuer` | The issuer declined the card. It might be invalid, lost, stolen, or restricted. | Ask the customer to contact their card issuer. |
+| `SoftDecline3dsRequired` | The transaction requires 3-D Secure authentication. | Retry with authentication. If already done, ask the customer to contact their issuer. |
+| `SoftDeclineCardDetailsInvalid` | The card number or expiry date is incorrect. | Ask the customer to retry with the correct details. |
+| `SoftDeclineCardExpired` | The card has expired. | Ask the customer to use a different card. |
+| `SoftDeclineCvcInvalid` | The CVC is incorrect. | Ask the customer to retry with the correct CVC. |
+| `SoftDeclineInsufficientFunds` | The card has insufficient funds. | Ask the customer to use a different payment method. |
+| `SoftDeclineInvalidPinAttemptsExceeded` | Too many incorrect PIN attempts. | Ask the customer to use a different card or payment method. |
+| `SoftDeclinePinInvalid` | The PIN entered is incorrect. | Ask the customer to retry with the correct PIN. |
+| `SoftDeclinePinRequired` | A PIN is required for this card. | Ask the customer to insert their card and enter their PIN. |
+| `SoftDeclineRejectedByCardIssuer` | The issuer declined the card. Possible causes include velocity limits or issuer downtime. | Retry the payment. If still declined, ask the customer to contact their issuer. |
+| `SoftDeclineSwanTechnicalErrorOccurred` | A technical error occurred while processing. Possible causes include an incorrect address, invalid amount, or processing failure. | Retry the payment. If it still fails, try again later. |
+| `SwanTechnicalErrorOccurred` | A technical error occurred on Swan's side. | Retry the payment. If the issue persists, contact Swan Support. |
+
+## SEPA Direct Debit {#sdd}
+
+The same reasons apply to [rejected and returned SEPA Direct Debit transactions](/payments/concepts/merchants/sepa-direct-debit#r-transactions).
+
+| Reason | Explanation | Resolution |
+| --- | --- | --- |
+| `BankRefused` | The debtor's bank refused the payment. | Ask the debtor to check with their bank, or use another payment method. |
+| `DebtorAccountClosed` | The debtor's bank account is closed. | Ask the debtor for an active account. |
+| `DebtorAccountConsumer` | The debtor isn't a business account, and the transaction is an SDD B2B transaction. | Use the Core scheme instead of B2B, or ask the debtor for a business account. |
+| `DebtorAccountUnknown` | The IBAN provided doesn't match an existing account at the debtor's bank. | Check the debtor's IBAN and bank details, then retry. |
+| `DebtorDeceased` | The debtor is deceased. | Contact the debtor's legal representatives or estate to arrange an alternative payment. |
+| `InsufficientFunds` | The debtor has insufficient funds. | Ask the debtor to add funds, or schedule the payment for a later date. |
+| `MandateInvalid` | The payment mandate is invalid: canceled, incorrectly completed, or not declared (to Swan for B2B mandates, or to the debtor's bank). | Declare a new valid [mandate](/payments/concepts/merchants/mandates#sdd) with the debtor before initiating the direct debit. |
+| `ReasonNotSpecifiedByBank` | The debtor's bank can't disclose the reason under local data protection laws. | Ask the debtor to check with their bank, or use another payment method. |
+| `ReasonNotSpecifiedByDebtor` | The payment was refused at the debtor's request. | Ask the debtor what the issue is and resolve it before retrying. |
+| `RegulatoryReason` | The payment was refused for regulatory reasons not covered by another code. | Contact Swan Support to understand the requirement and provide the necessary documentation. |
+| `SwanRefused` | Swan refused the transaction for risk management or compliance reasons. | Contact Swan Support to understand the reason and the next steps. |
+| `TransactionDuplicated` | The transaction duplicates another transaction. | Check whether the original transaction was already processed before resubmitting. |
+| `TransactionOnAccountTypeNotAllowed` | Direct debits aren't allowed on this account type, for regulatory reasons. | Check that the debtor's account type supports direct debits, or use another payment method. |
+| `TransactionTypeNotAllowed` | The debtor's account is blocked for direct debits. | Ask the debtor to unblock their account, or use another payment method. |
+
+## Internal Direct Debit {#idd}
+
+Reasons for [rejected and returned Internal Direct Debit Standard transactions](/payments/concepts/merchants/internal-direct-debit#r-transactions). The B2B scheme has no returns.
+
+| Reason | Rejected | Returned | Explanation | Resolution |
+| --- | :---: | :---: | --- | --- |
+| `AccountClosed` | <Yes /> | <No /> | The debtor's account is closed. | Ask the debtor for an active Swan account. |
+| `AccountSuspended` | <Yes /> | <No /> | The debtor's account is suspended. | Ask the debtor to resolve the suspension, or wait until it's lifted before retrying. |
+| `AccountUnknown` | <Yes /> | <No /> | The IBAN provided doesn't match an existing account. | Check the debtor's Swan account details, then retry. |
+| `InsufficientFunds` | <Yes /> | <No /> | The debtor has insufficient funds. | Ask the debtor to add funds, or schedule the payment for a later date. |
+| `MandateInvalid` | <Yes /> | <No /> | The payment mandate is invalid: canceled, incorrectly completed, or the B2B mandate wasn't declared. | Declare a new valid [mandate](/payments/concepts/merchants/mandates#idd) with the debtor before initiating the direct debit. |
+| `ReasonNotSpecifiedByBank` | <Yes /> | <Yes /> | The debtor's bank can't disclose the reason under local data protection laws. | Contact Swan Support for more details. |
+| `ReasonNotSpecifiedByDebtor` | <Yes /> | <Yes /> | The payment was refused at the debtor's request. | Ask the debtor what the issue is and resolve it before retrying. |
+| `RefundRequestedByDebtor` | <No /> | <Yes /> | The debtor requested a refund. | None. The return settles the refund. |
+| `RegulatoryReason` | <Yes /> | <Yes /> | The payment was refused for regulatory reasons not covered by another code. | Contact Swan Support to understand the requirement and provide the necessary documentation. |
+| `SwanRefused` | <Yes /> | <No /> | Swan refused the transaction for risk management or compliance reasons. | Contact Swan Support to understand the reason and the next steps. |
+| `SwanTechnicalErrorOccurred` | <No /> | <Yes /> | A technical error prevented the processing of this direct debit. | Retry. If the problem persists, contact Swan Support with the transaction reference. |
+
+## French checks {#checks}
+
+Rejections and returns follow different rules for [check payments](/payments/concepts/merchants/french-checks#r-transactions): a rejected check is mailed back to the merchant, a returned check isn't.
+
+### Rejection reasons {#checks-rejected}
+
+| Rejection reason | Explanation | Resolution |
+| --- | --- | --- |
+| `AmountMismatch` | The amount on the check and the amount declared through the API don't match. | Correct the amount to match the check exactly, then resubmit. |
+| `BeneficiaryMismatch` | The beneficiary name on the check and the name declared through the API don't match. | Correct the beneficiary name to match the check exactly, then resubmit. |
+| `BeneficiaryMissingOrIncorrect` | The merchant's name is missing or incorrect. | Make sure the merchant's name is clearly written on the check and matches the declared information. |
+| `CheckNotReceived` | Swan's check provider didn't receive the check. This reason appears 30 days after the check was declared. | Send the physical check to Swan. If already sent, contact Swan Support with the tracking information. |
+| `CheckReceivedLate` | Swan's check provider received the check more than 30 days after it was declared, or received it as canceled. | Send checks within 30 days of declaration. For a late check, declare and send a new one. |
+| `DateMissing` | There's no date on the check. | Request a dated check from the payer. |
+| `DateInvalid` | The date on the check is in the future or isn't valid. | Request a check with a valid date that isn't post-dated. |
+| `DebtorNameMissing` | The debtor's name (the merchant's customer) is missing on the check. | Make sure the payer's name is clearly written on the check. |
+| `InvalidOrMissingAmount` | No amount is written on the check, or the amount is invalid or in the wrong format (numbers instead of letters). | Make sure the amount is written in both numbers and words. |
+| `SignatureMissing` | The debtor's signature is missing, or there was a problem with it. | Request a signed check from the payer. |
+
+### Return reasons {#checks-returned}
+
+| Return reason | Explanation |
+| --- | --- |
+| `AccountClosed` | The payer's account is closed. |
+| `CheckBlocked` | The payer blocked the check payment. |
+| `CheckOutdated` | The check is outdated. |
+| `DebtorDeceased` | The debtor is deceased. |
+| `EndorsementMissingOrInvalid` | The beneficiary's signature on the check is missing or invalid. |
+| `Fraudulent` | The check is fraudulent. |
+| `InsufficientFunds` | The payer has insufficient funds. |
+| `LegalOrBankDecision` | A legal or banking issue on the payer's side blocks the payment. |
+| `MandatoryReferenceMissingOnCheck` | A mandatory piece of information is missing on the check. |
+| `SignatureInvalid` | The payer's signature is invalid. |
+| `SwanTechnicalErrorOccurred` | A technical error prevented the processing of this check. |
+| `TransactionDuplicated` | The transaction duplicates another transaction. |

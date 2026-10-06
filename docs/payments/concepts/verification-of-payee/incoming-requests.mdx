@@ -20,11 +20,10 @@ Under the [European Instant Payments Regulation (IPR)](https://eur-lex.europa.eu
 
 ## How incoming VoP works {#how-it-works}
 
-When another PSP initiates a transfer to a Swan account, they first send a VoP request to verify the beneficiary details. Swan automatically processes these requests and returns a verification result.
-
-### Process overview {#process-overview}
-
 Swan operates as a responding PSP registered with the [EPC Directory Service (EDS)](https://www.europeanpaymentscouncil.eu/what-we-do/other-epc-activities/epc-directory-service).
+When another PSP prepares a transfer to a Swan account, it first sends a VoP request with the beneficiary details.
+Swan looks up the account, runs the [matching algorithm](#matching-algorithm), and returns a [verification result](#verification-outcomes).
+The requesting PSP shows the result to its customer, who decides whether to proceed.
 
 ```mermaid
 sequenceDiagram
@@ -35,82 +34,56 @@ sequenceDiagram
     PSP->>S: VoP request with beneficiary details
     S->>S: Account lookup and matching
     S-->>PSP: Verification result
-    
+
     Note over PSP: PSP shows result to their customer
-    
+
     PSP->>S: Transfer funds (optional)
     S->>AH: Funds received
-
-    %%{init: {
-        'theme': 'base',
-        'themeVariables': {
-            'primaryColor': '#6240b5',
-            'primaryTextColor': '#271a48',
-            'primaryBorderColor': '#4e3391',
-            'lineColor': '#a18cd3',
-            'secondaryColor': '#f8f7fc',
-            'tertiaryColor': '#ffffff',
-            'background': '#ffffff',
-            'mainBkg': '#ffffff',
-            'secondBkg': '#f8f7fc',
-            'tertiaryBkg': '#6240b5',
-            'activationBorderColor': '#4e3391',
-            'activationBkgColor': '#c0b3e1',
-            'sequenceNumberColor': '#ffffff',
-            'sectionBkgColor': '#f8f7fc',
-            'altSectionBkgColor': '#ffffff',
-            'gridColor': '#e5e7eb',
-            'disabledBkgColor': '#f3f4f6',
-            'disabledTextColor': '#9ca3af',
-            'fontSize': '16px',
-            'fontFamily': '"Inter", "Segoe UI", system-ui, sans-serif'
-        }
-    }}%%
 ```
 
-:::note No action required
-This process is automatic. Swan handles all incoming VoP requests; no implementation is required.
-:::
+Because verification happens before the transfer, Swan can't link an incoming transfer to the VoP request that preceded it.
+Transfers can still arrive after a No match result.
 
 ## Supported identification types {#identification-types}
 
-Swan supports the following payee identification types with a Swan [Bank Identifier Code (BIC)](/accounts/concepts/ibans/local):
+Swan supports the following payee identification types with a Swan [Bank Identifier Code (BIC)](/accounts/concepts/ibans/local).
 
-### Name {#name-type}
-The name of the legal entity or of the individual: `AccountHolderInfo.name`.
-
-### Tax number {#tax-number-type}
-The number assigned by a tax authority to identify an organisation:
-- **Company <Term id="ibans">IBAN</Term>**: `AccountHolder.registration.taxIdentificationNumber`.
-- **Individual IBAN**: Not applicable.
-
-### Company identification {#company-identification-type}
-The identification assigned to an organization by a national authority, such as a corporate registration number:
-- **Company IBAN**: `AccountHolder.registration`.
-- **Individual IBAN**: Not applicable.
-
-### SIREN {#siren-type}
-The SIREN number is a 9-digit code assigned by INSEE, the French National Institute for Statistics and Economic Studies, to identify an organisation in France:
-- **Company IBAN**: `AccountHolder.registration` (same as `company_identification`).
-- **Individual IBAN**: Not applicable.
+| Identification type | Definition | Company <Term id="ibans">IBAN</Term> | Individual IBAN |
+| --- | --- | --- | --- |
+| **Name** | Name of the legal entity or individual | `AccountHolderInfo.name` | `AccountHolderInfo.name` |
+| **Tax number** | Number assigned by a tax authority to identify an organization | `AccountHolder.registration.taxIdentificationNumber` | Not applicable |
+| **Company identification** | Identification assigned to an organization by a national authority, such as a corporate registration number | `AccountHolder.registration` | Not applicable |
+| **SIREN** | 9-digit code assigned by INSEE, the French National Institute for Statistics and Economic Studies, to identify an organization in France | `AccountHolder.registration` (same as company identification) | Not applicable |
 
 ## Matching algorithm {#matching-algorithm}
 
-Swan's matching algorithm checks several name variations, which raises the share of requests that match.
+Swan checks the received name against several variations of the account holder's registered names, then returns the best result to the requesting PSP.
+Checking variations raises the share of requests that match.
 
-### Company accounts {#company-matching}
+| Account type | Variations checked |
+| --- | --- |
+| **Company** | Legal name (`AccountHolderInfo.name`), trade name (`CompanyInfo.tradeName`), each of these + "Swan", and each of these + the project name (`ProjectInfo.name`) |
+| **Individual** | Name (`AccountHolderInfo.name`), name + "Swan", and name + the project name (`ProjectInfo.name`) |
 
-For company accounts, Swan checks the received name against six variations:
+ID numbers (tax number, company identification, SIREN) must match exactly.
+For example, a stored `DE136695976` doesn't match a received `136695976`, and a stored `9234.56.788` doesn't match `923456788`.
 
-1. Legal name (`AccountHolderInfo.name`)
-2. Trade name (`CompanyInfo.tradeName`)
-3. Legal name + "Swan"
-4. Trade name + "Swan"
-5. Legal name + Project name (`ProjectInfo.name`)
-6. Trade name + Project name
+### Verification outcomes {#verification-outcomes}
+
+Swan returns one of four possible results.
+Name similarity is measured with the Levenshtein distance.
+
+| Result type | When it occurs |
+| --- | --- |
+| **Match** | Exact name (100% similarity) or exact ID number |
+| **Close match** | Similar but not identical name (70-99% similarity) |
+| **No match** | Significantly different name (under 70% similarity) or different ID number |
+| **Impossible to match** | Account not found, unsupported ID type, or account with `Closed` or `Suspended` status |
+
+Requests for accounts in `Closing` status go through standard matching and return Match, Close match, or No match, in line with incoming <Term id="credit-transfer">credit transfers</Term>, which `Closing` accounts accept to settle outstanding debts. Only `Closed` and `Suspended` accounts return Impossible to match.
 
 <details>
-<summary>**Example**: Swan receives "Awesome Company" for an IBAN.</summary>
+<summary>**Example**: Swan receives "Awesome Company" for a company IBAN.</summary>
 
 | Received name | Swan checks against | Result type |
 | --- | --- | --- |
@@ -121,97 +94,29 @@ For company accounts, Swan checks the received name against six variations:
 | Awesome Company | Legal name + Project: "AWESOME COMPANY SAS FinanceApp" | No match (50%) |
 | Awesome Company | Trade name + Project: "Awesome Company FinanceApp" | No match (58%) |
 
-Swan checks all variations and returns the best matching result to the requesting PSP.
+Swan returns the best result: Match.
+Had the trade name not been registered, the best result would have been the Close match on the legal name.
 </details>
 
-### Individual accounts {#individual-matching}
+## Help senders match {#correct-information}
 
-For individual accounts, Swan checks the received name against three variations:
+Senders get the best result when they use the account holder's name exactly as registered with Swan.
+Ask your users to:
 
-1. Individual name (`AccountHolderInfo.name`)
-2. Individual name + "Swan"
-3. Individual name + Project name (`ProjectInfo.name`)
-
-**Example**: Swan receives "Henri Dubois" for an individual IBAN.
-
-| Received name | Swan checks against | Result type |
-| --- | --- | --- |
-| Henri Dubois | Individual name: "Henri Dubois" | Match (100%) |
-| Henri Dubois | Individual name + Swan: "Henri Dubois Swan" | Close match (71%) |
-| Henri Dubois | Individual name + Project: "Henri Dubois PayApp" | No match (63%) |
-
-Swan checks all variations and returns the best matching result to the requesting PSP.
-
-## Account holder information accuracy {#correct-information}
-
-To ensure successful incoming transfers, your users must provide senders with their exact account name and IBAN as they appear on their Swan account. Swan verifies incoming transfers against the legal name and details registered in the system.
-
-**Key points to communicate to your users:**
-- Use the complete legal name, including all registered middle names.
-- Ensure all names are spelled correctly.
-- For business accounts, use the full legal company name, not a trade or merchant name.
-- Consider sharing your trade name if it differs significantly from your legal name, as Swan's matching algorithm also checks trade names.
+- Use the complete legal name, including all registered middle names, spelled correctly.
+- For business accounts, use the full legal company name or the registered trade name, not an unregistered merchant name.
 
 Share [Swan's end-user support article](https://support.swan.io/hc/en-150/articles/30680956306333-Verification-of-Payee-VoP) to help train users.
 
-**Example**: If a company's legal name is "MY COMPANY SAS" but they operate as "Awesome Company", senders can use either name. Swan's matching algorithm checks both the legal name and trade name to improve verification success. Similarly, if an account holder's name is "Henri Charles Dupont," senders should use the complete name, not just "Henri Dupont."
+### Trade names {#updating-trade-names}
 
-### Updating trade names for VoP matching {#updating-trade-names}
-
-Swan's matching algorithm checks both the legal company name and the trade name. If an account holder's trade name is missing or incorrect, incoming VoP requests might not match successfully when senders use the trade name.
-
-To add or update a trade name, [contact Swan Support](https://support.swan.io/hc/en-150/requests/new):
-
-- **Single account holder**: Submit one ticket with the account holder ID and the trade name to add or update.
-- **Multiple account holders**: Submit one consolidated ticket with all account holder IDs and their corresponding trade names.
+Requests that use a trade name only match if that trade name is registered on the account holder.
+To add or update a trade name, [contact Swan Support](https://support.swan.io/hc/en-150/requests/new) with the account holder ID and the trade name.
+For several account holders, submit one consolidated ticket.
 
 :::info KYC review required
 Trade name updates require a KYC review by Swan's compliance team. Allow time for processing when planning updates.
 :::
-
-**Example**: If your client operates as "Tech Solutions Pro" but their legal name is "Tech Solutions Pro SARL", VoP requests using "Tech Solutions Pro" will only match successfully if the trade name is registered. Without a registered trade name, VoP requests will match against "Tech Solutions Pro SARL" only, which could result in a close match or no match depending on what the sender provides.
-
-## VoP matching and results {#matching-and-results}
-
-Swan returns verification results based on how closely the provided details match the account holder information. Understanding these results helps you anticipate what other PSPs experience when sending transfers to Swan accounts.
-
-### Verification outcomes {#verification-outcomes}
-
-Swan returns one of four possible results:
-
-| Result type | When it occurs | Matching approach |
-| --- | --- | --- |
-| **Match** | Exact or very close match (100% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
-| **Close match** | Similar but not identical (70-99% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span> |
-| **No match** | Significant differences (under 70% similarity for names) | <span style={{whiteSpace: 'nowrap'}}>Name: Levenshtein distance</span><br/><span style={{whiteSpace: 'nowrap'}}>ID numbers: Exact match</span> |
-| **Impossible to match** | Account not found, unsupported ID type, or account with `Closed` or `Suspended` status | Not applicable |
-
-Requests for accounts in `Closing` status go through standard matching and return Match, Close match, or No match, in line with incoming <Term id="credit-transfer">credit transfers</Term>, which `Closing` accounts accept to settle outstanding debts. Only `Closed` and `Suspended` accounts return Impossible to match.
-
-### Name matching examples {#name-examples}
-
-**Individual names:**
-- "Henri Dupont" vs "Henri Dupont" → Match (100% similarity)
-- "Henri Dupont" vs "Henri Dupond" → Close match (92% similarity)
-- "Henri Dupont" vs "Henry Dupond" → Close match (83% similarity)
-- "Henri Dupont" vs "Malika Ngoma" → No match (8% similarity)
-
-**Company names:**
-- "Awesome Company SAS" vs "Awesome Company SAS" → Match (100% similarity)
-- "Awesome Company" vs "Awesome Company SAS" → Close match (83% similarity)
-- "Awesome Co" vs "Awesome Company" → Close match (73% similarity)
-- "Different Business Ltd" vs "Awesome Company SAS" → No match (15% similarity)
-
-### ID number matching examples {#id-examples}
-
-ID numbers require exact matches:
-- Stored: "DE136695976", Received: "136695976" → **No match**
-- Stored: "9234.56.788", Received: "923456788" → **No match**
-- Stored: "DE136695976", Received: "DE136695976" → **Match**
-
-## What this means for transfers {#transfer-implications}
-
-Since VoP verification happens before the actual transfer, Swan cannot link incoming transfers to previous VoP requests. The requesting PSP decides whether to proceed based on the verification result - transfers can still arrive even after a "No match" result.
 
 ## Monitoring and logging {#monitoring}
 

@@ -14,12 +14,8 @@ Use the `enableReceivedDirectDebitMandate` mutation to:
 
 - Resume a `Suspended` mandate to its previous status (`Enabled` for Core, `ConsentPending`, or `Enabled` for B2B).
 - Initiate or re-initiate <Term id="consent">consent</Term> for a B2B mandate in `ConsentInitiationPending` status, moving it to `ConsentPending`. This occurs when a mandate is automatically created from a received instruction, after an update requiring consent, or when consent was previously refused or expired.
+If the debtor refuses or the consent expires, the mandate returns to `ConsentInitiationPending` so you can retry without recreating it; refer to [mandate statuses](/payments/concepts/direct-debit/statuses).
 
-:::info ConsentInitiationPending status
-The `ConsentInitiationPending` status indicates that a B2B mandate requires consent initiation.
-When you call `enableReceivedDirectDebitMandate`, a consent request is created, and the status moves to `ConsentPending`.
-If the debtor refuses or the consent expires, the mandate returns to `ConsentInitiationPending`, allowing them to retry without recreating the mandate.
-:::
 
 import InitiatePaymentsPrereqs from '../../partials/_initiate-payments-prereqs.mdx';
 

@@ -13,11 +13,12 @@ Get beneficiary information for a Swan <Term id="credit-transfer">International 
 
 Use the `internationalBeneficiaryDynamicForms` query to find out what information you'll need to include about your beneficiary, both in the transaction details query and when you initiate your transfer.
 
+import DynamicFieldsNote from './partials/_dynamic-fields-note.mdx';
+
 :::note Example only
 This example is for **illustrative purposes only** using United States Dollars (USD).
 
-The required key/value pairs change based on currency, country, and route.
-Additionally, the pairs aren't controlled by Swan and can change without advance notice.
+<DynamicFieldsNote />
 :::
 
 ## Step 1: Call query {#call-query-first}
@@ -105,7 +106,7 @@ query BeneficiaryDynamicForm {
 The query example results in the following payload, which provides several key/value pairs.
 
 :::note Partial payload
-Note this is a **partial payload** (signaled by the `...` on lines 6 and 118).
+This is a **partial payload** (signaled by the `...` on lines 6 and 118).
 It only includes the route `type` `FedwireLocal` to reduce the length, and **country codes were removed** and replaced with placeholders (lines 76-77).
 The full payload contains over 3,000 lines.
 
@@ -116,15 +117,7 @@ From this payload, note the following details:
 
 1. Locate your desired route `type`. This excerpt shows `FedwireLocal` (line 10).
 1. Locate `remainingFieldsToRefreshCount` to know how many dynamic fields you'll need to add in the next section (line 11).
-1. Locate all required key/value pairs. This excerpt contains key/value pairs on lines 14, 31, 42, 53, 70, 83, 94, and 105:
-    - `legalType`*
-    - `abartn`
-    - `accountNumber`
-    - `accountType`
-    - `address.country`*
-    - `address.city`
-    - `address.firstLine`
-    - `address.postCode`
+1. Locate all required key/value pairs. This excerpt contains key/value pairs on lines 14, 31, 42, 53, 70, 83, 94, and 105; step 5 compiles them.
 1. Identify key/value pairs where `"refreshDynamicFieldsOnChange": true`, needed for step 3 (lines 28, 80).
 
 <details>
@@ -350,8 +343,7 @@ This second query payload contains two important changes:
     - Additional key/value pairs can be added to the payload for all refreshable dynamic fields. This example only adds one key/value pair, but the quantity can change based on the information you provide.
 
 :::note Partial payload
-As with the payload in step 2, this is a **partial payload** (signaled by the `...` on lines 6 and 132).
-It only includes the route `type` `FedwireLocal` to reduce the length, and **country and state codes were removed** and replaced with placeholders (lines 77-78, 112-113).
+As in step 2, this is a partial payload (`...` on lines 6 and 132), with country and state codes replaced by placeholders (lines 77-78, 112-113).
 :::
 
 <details>
@@ -499,13 +491,9 @@ It only includes the route `type` `FedwireLocal` to reduce the length, and **cou
   </div>
 </details>
 
-## Step 5: Repeat {#repeat}
+If `remainingFieldsToRefreshCount` isn't zero, repeat steps 3 and 4 until it is.
 
-If `remainingFieldsToRefreshCount` is not equal to zero, **repeat steps three and four** to retrieve the rest of your required key/value pairs.
-
-Repeat until `"remainingFieldsToRefreshCount": 0`.
-
-## Step 6: Compile beneficiary input {#compile-input}
+## Step 5: Compile beneficiary input {#compile-input}
 
 For the next query, you'll need to provide all of the key/value pairs for your chosen route `type`.
 

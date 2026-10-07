@@ -3,6 +3,7 @@ title: SEPA Credit Transfers sandbox
 audience:
   - dev
 related:
+  - /payments/guides/credit-transfers/sepa/verify-beneficiary
   - /payments/concepts/credit-transfers/sepa
   - /payments/guides/credit-transfers/sepa/initiate-ct
 ---
@@ -15,7 +16,7 @@ import TestingApiSimulatorIntro from './partials/_testing-api-simulator-intro.md
 
 ## Simulate receiving a SEPA Credit Transfer {#simulate-sct-in}
 
-Simulating receiving a <Term id="credit-transfer">SEPA Credit Transfer</Term> creates a new <Term id="payments">payment</Term> as well as a `SepaCreditTransferIn` <Term id="transactions">transaction</Term>, which are both instantly visible on Swan's interfaces.
+Simulating receiving a <Term id="credit-transfer">SEPA Credit Transfer</Term> creates a new <Term id="payments">payment</Term> as well as a `SepaCreditTransferIn` <Term id="transactions">transaction</Term>.
 
 1. Go to **Dashboard** > **Developers** > **Event Simulator**.
 1. Go to **SEPA Credit Transfer**.
@@ -30,3 +31,18 @@ The status changes to `Success`, and the simulated transfer appears on Swan's in
 :::tip 
 Use the Event Simulator to **test other events** related to SEPA Credit Transfers, such as receiving an incoming transfer recall request, rejecting an outgoing transfer, and more.
 :::
+
+## Simulate Verification of Payee results {#simulate-vop}
+
+In Sandbox, the `verifyBeneficiary` mutation returns a simulated result based on the beneficiary name.
+VoP requirements otherwise match Live: company accounts default to optional VoP for bulk transfers and can [change the setting](/payments/guides/credit-transfers/sepa/update-vop-settings), while individual accounts always require it.
+
+| Name is exactly | Returns result |
+| --- | --- |
+| "Match" | `Match` |
+| "CloseMatch" | `CloseMatch` |
+| "NoMatch" | `NoMatch` |
+| "NotPossible" | `VerificationNotPossible` |
+
+Any other beneficiary name returns `Match`.
+If you pass a trusted beneficiary ID instead of a name, the simulation uses the trusted beneficiary's name.

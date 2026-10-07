@@ -3,6 +3,7 @@ title: Update VoP settings for bulk transfers
 audience:
   - dev
 related:
+  - /payments/guides/sandbox/sepa
   - /payments/concepts/verification-of-payee/bulk-transfers
   - /payments/concepts/verification-of-payee
   - /payments/guides/credit-transfers/sepa/verify-beneficiary
@@ -26,10 +27,8 @@ Refer to [bulk credit transfers with VoP](/payments/concepts/verification-of-pay
 
 1. Call the `updateAccountSettings` mutation.
 1. Add the `accountId` of the company account to update.
-1. Set `allowBulkCreditTransfersWithoutBeneficiaryVerification`.
-    - `false` requires VoP for bulk transfers (opt in). No <Term id="consent">consent</Term> needed.
-    - `true` makes VoP optional for bulk transfers (opt out). The user must consent through [Strong Customer Authentication (SCA)](/users/concepts/consent/sca).
-1. Add a `consentRedirectUrl`. It's required for the consent flow when opting out.
+1. Set `allowBulkCreditTransfersWithoutBeneficiaryVerification` to opt in (`false`) or out (`true`), as described under [Parameters](#parameters).
+1. Add a `consentRedirectUrl`.
 1. Add the payload and rejections.
 
 ## Mutation {#mutation}
@@ -78,9 +77,9 @@ import Environments from '../../../../_shared/partials/_environments.mdx';
 ### Parameters {#parameters}
 
 - `accountId`: The company account ID to update.
-- `allowBulkCreditTransfersWithoutBeneficiaryVerification`: 
-  - `true` = VoP optional for bulk transfers (opt out).
-  - `false` = VoP required for bulk transfers (opt in).
+- `allowBulkCreditTransfersWithoutBeneficiaryVerification`:
+  - `false` requires VoP for bulk transfers (opt in). No <Term id="consent">consent</Term> needed.
+  - `true` makes VoP optional for bulk transfers (opt out). The user must consent through [Strong Customer Authentication (SCA)](/users/concepts/consent/sca).
 - `consentRedirectUrl`: Required for the consent flow when opting out.
 
 ### Success response {#success-response}
@@ -139,7 +138,3 @@ Setting changes can be triggered by:
 - A Swan agent following a user support request.
 
 This webhook helps you track account setting changes and maintain an audit trail for [dispute protection](/payments/concepts/verification-of-payee/bulk-transfers#dispute-preparation).
-
-## Sandbox testing {#sandbox-testing}
-
-VoP requirements in Sandbox match the Live environment behavior. Company accounts default to optional VoP but can modify settings with this mutation, while individual accounts always require VoP tokens for bulk transfers.

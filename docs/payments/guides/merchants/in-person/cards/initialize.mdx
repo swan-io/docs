@@ -13,12 +13,15 @@ Set up a connection token provider, then discover and connect to the reader.
 
 ## Prerequisites {#prerequisites}
 
+import MerchantPrereqs from '../partials/_merchant-prereqs.mdx';
+
 You need all of the following to initialize your device.
 
 - The [Stripe Terminal SDK](./setup.mdx) installed in your app.
-- A **<Term id="merchant-profile">merchant profile</Term>** with the status **Enabled**. If you don't have one yet, [request a merchant profile](../../profiles/request.mdx) first.
+
+<MerchantPrereqs />
+
 - An **in-person card payment method** with the status **Enabled**. If you don't have one yet, [request the payment method](./request-method.mdx) first.
-- A project access token or a user access token with **Can manage memberships** rights.
 
 ## Step 1: Implement a connection token provider {#token-provider}
 
@@ -105,10 +108,6 @@ function App() {
   return <View />;
 }
 ```
-
-:::note
-Call `initialize` from a component nested inside `StripeTerminalProvider`, not from the component that contains the provider itself.
-:::
 
   </TabItem>
   <TabItem value="ios" label="iOS">
@@ -212,10 +211,6 @@ With the token provider configured, discover the device's reader and connect to 
 :::note Debug mode
 The Stripe Terminal SDK blocks reader connections in debug builds as a security measure.
 Use a simulated reader for development (see code examples below).
-:::
-
-:::info iOS Terms and Conditions
-On iOS, the first time a user connects to a reader, Apple's Terms and Conditions screen appears automatically. The user must accept to continue. This is handled by the SDK.
 :::
 
 <Tabs groupId="platform">
@@ -386,6 +381,8 @@ Query it after your payment method is **Enabled**.
 
 ## Troubleshooting {#troubleshooting}
 
+Common connection problems and how to resolve them.
+
 ### Firewall or restricted network {#firewall}
 
 If your app runs behind a firewall, configure it to allow access to the hosts required by Tap to Pay on iPhone.
@@ -405,7 +402,3 @@ To reset acceptance for testing:
 
 If the user closes the Terms and Conditions screen without accepting, the connection fails with `tapToPayReaderTOSAcceptanceFailed`.
 Prompt the user to accept and retry.
-
-## Next steps {#next-steps}
-
-→ [Create in-person card payments](./create-payments.mdx)

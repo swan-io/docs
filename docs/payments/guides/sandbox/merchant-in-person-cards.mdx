@@ -8,35 +8,17 @@ related:
 
 # Sandbox: In-person card payments
 
-When testing your integration, use the [Testing API](/build/tools/testing-api) to simulate in-person card payment events.
+import TestingApiIntro from './partials/_testing-api-intro.mdx';
+
+<TestingApiIntro />
+
+import MerchantPrereqs from './partials/_merchant-prereqs.mdx';
 
 :::tip Prerequisites
-- Merchant profile status: **Enabled**.
-- In-person card payment method status: **Enabled**.
-- [Simulate updating the statuses](./merchants.mdx) for your <Term id="merchant-profile">merchant profile</Term> and payment method if needed.
+<MerchantPrereqs method="In-person card" />
+
+In-person card payments use Stripe's test card numbers in Sandbox.
 :::
-
-## Simulate enabling the payment method {#enable-method}
-
-Use the existing `simulateMerchantPaymentMethodRequestOutcome` mutation to enable your in-person card payment method.
-
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gRW5hYmxlSW5QZXJzb25DYXJkTWV0aG9kIHsKICBzaW11bGF0ZU1lcmNoYW50UGF5bWVudE1ldGhvZFJlcXVlc3RPdXRjb21lKAogICAgaW5wdXQ6IHsKICAgICAgbWVyY2hhbnRQYXltZW50TWV0aG9kSWQ6ICIkWU9VUl9QQVlNRU5UX01FVEhPRF9JRCIKICAgICAgbWVyY2hhbnRQYXltZW50TWV0aG9kU3RhdHVzOiBFbmFibGVkCiAgICB9CiAgKSB7CiAgICBfX3R5cGVuYW1lCiAgICAuLi4gb24gUmVqZWN0aW9uIHsKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=test-api" className="explorer-badge">Open in API Explorer</a>
-
-```graphql
-mutation EnableInPersonCardMethod {
-  simulateMerchantPaymentMethodRequestOutcome(
-    input: {
-      merchantPaymentMethodId: "$YOUR_PAYMENT_METHOD_ID"
-      merchantPaymentMethodStatus: Enabled
-    }
-  ) {
-    __typename
-    ... on Rejection {
-      message
-    }
-  }
-}
-```
 
 ## Simulate a payment authorization {#authorize}
 
@@ -151,8 +133,3 @@ The following scenarios can't be simulated in Sandbox yet.
 
 - Chargebacks and disputes
 - Refunds
-
-## Test cards {#test-cards}
-
-In-person card payments use Stripe's test card numbers for Sandbox testing.
-Refer to [Stripe's testing documentation](https://docs.stripe.com/testing) for the full list of available test cards.

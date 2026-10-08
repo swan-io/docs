@@ -18,17 +18,10 @@ related:
 
 ## Overview {#about}
 
-Cards are the most common way for customers worldwide to pay.
 Swan supports most major card schemes, including Visa, Mastercard, and *Cartes Bancaires* (CB) in France.
 American Express isn't supported.
 
-Merchants can use payment links to accept <Term id="payments">payments</Term> from cardholders anywhere.
-Typical implementations of payment links include:
-- Adding a payment link to an invoice.
-- Sharing a payment link with a QR code.
-- Sending a payment link by email or SMS.
-
-Collect rent, share invoices, and accept customer payments through a Swan merchant account.
+Merchants accept these <Term id="payments">payments</Term> through [payment links](/payments/concepts/merchants/payments#links), shared on an invoice, as a QR code, or by email or SMS.
 
 In the API, online card acceptance is represented by `OnlineCard`-prefixed types, distinct from in-person card acceptance, which uses `InPersonCard`-prefixed types.
 
@@ -47,24 +40,20 @@ There are **four transaction types** for merchant card payments.
 Authorizations aren't included in a transaction type.
 Instead, they're represented at the payment level, visible through the payment object status `Authorized` and payment object balance `totalAuthorized`.
 
-| Transaction type | Explanation | Impacted account balance |
+| Transaction type | Explanation | Impacted [account balance](/accounts/concepts/account/balances) |
 |---|---|:---:|
 | `CardInCredit` | Captured payment that first impacts the merchant's `Upcoming` balance, then their `Booked` balance. | `Upcoming`<br />`Booked` |
 | `CardInCreditReversal` | Refunded payment that first impacts the merchant's `Pending` balance, then their `Booked` balance. | `Pending`<br />`Booked` |
 | `CardInCreditChargeback` | Disputed payment that immediately impacts the merchant's `Booked` balance. | `Booked` |
 | `CardInCreditChargebackReversal` | Disputed payment for which the dispute is overturned, impacting the merchant's `Booked` balance. | `Booked` |
 
-:::info Balances
-The impacted balances are Swan's standard [account balances](/accounts/concepts/account/balances), which aren't related to the [payment object balances](/payments/concepts/merchants/payments#balances).
-:::
-
 ### Payment object statuses {#payments-statuses}
 
-Online card payments use the full [merchant payment machine](/payments/concepts/merchants/statuses#payments-statuses), including `Authorized`. For online cards, `Initiated` means the customer submitted their card details through the payment link but the payment isn't authorized yet; `Rejected` means the issuer or Swan denied the authorization; `Canceled` voids the authorization so the funds can't be captured. Refunds and disputes can cover some or all of the amount.
+Online card payments use the full [merchant payment machine](/payments/concepts/merchants/statuses#payments-statuses), including `Authorized`. For online cards, `Initiated` means the customer submitted their card details through the payment link but the payment isn't authorized yet.
 
 ### Payment object balances {#payments-balances}
 
-All [payment object balances](/payments/concepts/merchants/payments#balances) apply to online card payments. Cancelations must occur before the amount is captured, and when capture is automatic, `totalCaptured` always equals `totalAuthorized`.
+All [payment object balances](/payments/concepts/merchants/payments#balances) apply to online card payments, with no method-specific behavior.
 
 ## Rolling reserve {#rolling-reserve}
 

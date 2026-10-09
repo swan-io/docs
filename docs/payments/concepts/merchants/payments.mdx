@@ -16,12 +16,8 @@ related:
 
 ## Payment object {#object}
 
-Merchant payments include **one or more transactions**.
-For example, one payment might include both a capture and refund transaction.
-
-These transactions are **grouped together** in the **merchant payment object**.
-Swan recommends using the merchant payment object in your integration to help <Term id="merchants">merchants</Term> match orders, invoices, and sales to the correct object.
-This provides better traceability and can help reconcile issues more efficiently.
+One payment can include several transactions, such as a capture and a refund, grouped in the **merchant payment object**.
+Swan recommends using this object in your integration to help <Term id="merchants">merchants</Term> match orders, invoices, and sales to the correct payment.
 
 The transaction types created for each payment method, and the account balances they impact, are described on each method's page: [online cards](/payments/concepts/merchants/online-cards#payments-transaction-types), [in-person cards](/payments/concepts/merchants/in-person-cards#transaction-types), and [French checks](/payments/concepts/merchants/french-checks#payments-transaction-types).
 
@@ -67,27 +63,13 @@ The same payment object follows different operational rules depending on the pay
 
 ## Rolling reserve {#rolling-reserve}
 
-Rolling reserve is a policy Swan applies to merchant transactions to **protect the merchant and Swan** against various risk factors, primarily insufficient funds and attempted fraud.
-The reserved amount acts as a safety net to cover potential loss for both Swan and the merchant.
-
-Rolling reserve is expressed as a **percentage over a period of time** (example: "100% of the payment amount over 5 business days"). The exact amount and duration vary by payment method and merchant risk profile, and some methods don't require a rolling reserve at all.
-
-For the indicated period of time, the amount isn't part of the merchant's [available account balance](/accounts/concepts/account/balances), after which the funds are released to the merchant and can be used.
-
-The default reserve for each payment method is in the [rules by payment method](#rules) table.
+Swan applies [rolling reserve](/accounts/concepts/funding/rolling-reserve) to merchant transactions as a **percentage of the payment over a period of time** (example: "100% of the payment amount over 5 business days").
+The amount and duration vary by payment method and merchant risk profile, and some methods don't require a rolling reserve at all; the defaults are in the [rules by payment method](#rules) table.
+For the indicated period, the amount isn't part of the merchant's [available account balance](/accounts/concepts/account/balances), after which it's released to the merchant.
 
 :::info Webhooks
-Subscribe to the relevant <Term id="webhooks">webhooks</Term> to stay informed about updates:
-- **Rolling reserve value, payment amount limit, and payment methods**: 
-  subscribe to the [merchant payment methods webhooks](/build/using-api/webhooks#events-merchants-payment-methods).  
-
-- **Merchant profile changes**:
-  subscribe to the [merchant profile webhooks](/build/using-api/webhooks#events-merchants-profiles).  
-
-- **Transaction-level rolling reserve releases**:
-  the `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [webhooks](/build/using-api/webhooks#events-transactions) notify you when the rolling reserve of an individual transaction is updated or released.  
-
-Use both merchant and transaction webhooks to cover account-level and transaction-level updates.
+The [merchant payment method webhooks](/build/using-api/webhooks#events-merchants-payment-methods) notify you when a method's rolling reserve value or payment amount limit changes.
+The `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released` [transaction webhooks](/build/using-api/webhooks#events-transactions) notify you when an individual transaction's reserve is updated or released.
 :::
 
 ## Payment amount limit {#payment-limit}

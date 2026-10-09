@@ -16,7 +16,6 @@ related:
 
 <p className="ia-lede">A <Term id="payment-mandates">payment mandate</Term> is the debtor's written authorization for a <Term id="merchants">merchant</Term> to debit their account. Mandatory for SEPA Direct Debit and B2B Internal Direct Debit, recommended for Standard, and always declared to Swan by the partner.</p>
 
-A payment mandate is a written authorization from a debtor that allows a creditor to initiate a direct debit transaction from their account.
 Without a mandate, the creditor can't legally debit the debtor's account.
 
 Partners are responsible for obtaining and declaring payment mandates.
@@ -30,8 +29,7 @@ You can either **include them in your Terms and Conditions** or **generate manda
 
 ## SEPA Direct Debit mandates {#sdd}
 
-Payment mandates are mandatory for all <Term id="sdd">SEPA Direct Debit</Term> transactions.
-One payment mandate can cover as many debit transactions as needed between the debtor and the merchant, provided the mandate is `Recurrent`.
+One <Term id="sdd">SEPA Direct Debit</Term> payment mandate can cover as many debit transactions as needed between the debtor and the merchant, provided the mandate is `Recurrent`.
 
 ### Declaring mandates {#sdd-declare}
 
@@ -40,11 +38,7 @@ You can declare them before or after they're signed.
 If you declare a mandate before it's signed, make sure the debtor signs it before you issue the first direct debit.
 
 When declaring a mandate, the combination of the Unique Mandate Reference (UMR) and the [SEPA Creditor Identifier (SCI)](/payments/concepts/merchants/sepa-direct-debit#sci) must be unique. 
-If the UMR and SCI have already been declared in another mandate, the API returns a `PaymentMandateReferenceAlreadyUsedRejection` and rejects the mandate declaration.
-
-:::note Using Swan's SCI
-If a merchant uses Swan's SCI, they must still ensure mandate references are unique to prevent conflicts with other merchants using the same SCI. Duplicate references will cause mandate declarations to be rejected by the API.
-:::
+If the UMR and SCI have already been declared in another mandate, the API returns a `PaymentMandateReferenceAlreadyUsedRejection` and rejects the declaration; merchants using Swan's SCI share it with other merchants, so their references must be unique too.
 
 After declaring the mandate, you might choose to upload it to your Dashboard as a PDF.
 This isn't mandatory but can be helpful if a debtor's bank requests a copy of the signed mandate.
@@ -68,18 +62,11 @@ Otherwise, the mandate is considered invalid.
 
 ### One-off mandates {#sdd-oneoff}
 
-Some mandates can only be used one time.
-
 When the sequence value is `OneOff` (instead of `Recurrent`), the received SEPA Direct Debit payment mandate is **canceled automatically** after the transaction is executed, regardless of the transaction status.
 
 ## Internal Direct Debit mandates {#idd}
 
-:::caution Mandatory mandates
-Payment mandates are mandatory for B2B <Term id="direct-debit">Internal Direct Debit</Term> transactions.
-Mandates are optional but recommended for Standard.
-:::
-
-When the mandate is ready, [declare it to Swan](/payments/guides/merchants/online/idd/declare) through the API.
+When the <Term id="direct-debit">Internal Direct Debit</Term> mandate is ready, [declare it to Swan](/payments/guides/merchants/online/idd/declare) through the API.
 
 ### Required information {#idd-info}
 
@@ -158,7 +145,5 @@ The process is different for B2B and Standard, and one-off mandates are also pos
 | Standard | <ol><li>Mandate created after a first payment is accepted.</li><li>You must enable the mandate by using the debtor's user access token with `canInitiatePayments` permissions to call the `enableReceivedDirectDebitMandate` mutation.</li><li>Exception: if a mandate with the same `merchantIdentifier`, `reference`, and `accountId` already exists, a new mandate is not created.</li></ol> |
 
 ### One-off mandates {#idd-oneoff}
-
-Some mandates can only be used one time.
 
 When the sequence value is `OneOff` (instead of `Recurrent`), the received internal direct debit payment mandate is canceled automatically after the transaction is executed, regardless of the transaction status.

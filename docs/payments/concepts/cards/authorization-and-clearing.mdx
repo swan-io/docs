@@ -24,7 +24,6 @@ Some merchants don't follow this classic flow: refer to [card payment examples](
 
 When a Swan cardholder initiates a payment, the merchant asks Swan, as well as Mastercard, for a payment **authorization**.
 An authorization is permission from the cardholder's issuing institution to debit the account.
-For example, they might ask Swan to check that the cardholder has enough money to cover the purchase.
 If the account's `Available` balance doesn't cover the requested amount, Swan can accept a **partial authorization** for the available amount: a €110 fuel preauthorization against a €55 `Available` balance is authorized for €55.
 
 Authorizations occur predominantly online, requiring the merchant to be connected to the internet and card network.
@@ -38,17 +37,15 @@ Swan **shares the authorization decision** with you through [payment control](/b
 Therefore, the Partner (you), Swan, and Mastercard all work together to accept (authorize) or reject all card transactions.
 
 When an authorization is **accepted** by Swan, Mastercard, **and** you, the transaction is created with the status `Pending`.
-The account's `Available` balance and the <Term id="cards">card</Term>'s spending limit are updated accordingly.
+The account's `Available` balance and the <Term id="cards">card</Term>'s spending limit follow the authorization: they're updated when it's accepted, debited, released, or expires.
 
 If an authorization is **refused** by Swan, Mastercard, **or** you, the transaction is created with the status `Rejected`.
 The `reasonCode` explains why the authorization was refused.
 
 ### Expiration {#authorization-expiration}
 
-Authorizations are valid for a set amount of time.
-
 At Swan, authorizations are valid for 10 days, and preauthorizations are valid for 30 days.
-After the validity period, the balance that hasn't been debited is `Released` and the card's spending limit updated accordingly.
+After the validity period, the balance that hasn't been debited is `Released`.
 
 At gas stations and automated fuel dispensers (merchant category codes 5541 and 5542), Swan releases the remaining preauthorized amount **immediately** when it receives a partial capture, without waiting for an authorization advice from the acquirer. The funds aren't blocked for the rest of the validity period.
 
@@ -72,10 +69,9 @@ This also applies if a debit occurs after the authorization expires.
 
 ### Initiating a debit transaction {#clearing-debit}
 
-When a merchant requests debit on a card, Swan receives the information asynchronously and creates a new `CardOutDebit` transaction with the status `Booked`.
-This transaction impacts the account's `Booked` balance.
+When a merchant requests debit on a card, Swan receives the information asynchronously and creates a new `CardOutDebit` transaction with the [status `Booked`](/payments/concepts/cards/statuses#statuses).
 
-When a debit transaction is linked to an authorization, the corresponding `Pending` `CardOutAuthorization` transaction is updated with the remaining amount to be debited, and the card's spending limit is updated accordingly.
+When a debit transaction is linked to an authorization, the corresponding `Pending` `CardOutAuthorization` transaction is updated with the remaining amount to be debited.
 If the updated authorization amount is equal to or less than zero, the status changes to `Released`; otherwise, the status remains `Pending`.
 
 :::note Request the release of a deposit
@@ -86,15 +82,13 @@ Share the [Swan Support Center article](https://support.swan.io/hc/en-150/articl
 ### Clearing a credit transaction {#clearing-credit}
 
 When a merchant requests credit on a card, Swan receives the information asynchronously and creates a new `CardOutCredit` transaction with the status `Booked`.
-This transaction impacts the account's `Booked` balance.
 
 If the credit request is to reverse a previous debit transaction, a new `CardOutDebitReversal` transaction is created linked to the original debit payment.
 If the merchant correctly references the original debit authorization, both transactions share the original `paymentId`.
 
 ## Capture types {#capture-types}
 
-Capture refers to the process of completing a transaction and moving the funds from the customer's account to the merchant's account after authorization.
-At Swan, you might encounter various capture types, including those described in the following table.
+Capture is the merchant's side of clearing. You might encounter the following capture types.
 
 | Capture type | Explanation | Example |
 | --- | --- | --- |

@@ -13,9 +13,7 @@ related:
 
 <p className="ia-lede">Eight real <Term id="merchants">merchant</Term> flows, from a taxi ride to an in-flight purchase, showing how authorizations, debits, releases, and refunds combine on a cardholder's account.</p>
 
-Some merchants don't follow the classic [authorization and debit payment flow](/payments/concepts/cards/authorization-and-clearing).
-Discover alternative payment flows that work for different use cases.
-These are examples, not rules; merchants control their own flows and can make changes at any time.
+These are examples, not rules: merchants control their own flows, and not all of them follow the classic [authorization and debit flow](/payments/concepts/cards/authorization-and-clearing).
 
 <Tabs>
 <TabItem value="taxi" label="Taxi" default>
@@ -57,15 +55,11 @@ Consider a cardholder filling up their gas tank:
 1. The merchant authorizes the exact amount (€56,23) that was used and releases the preauthorization.
 1. A few days later, the merchant debits the account the exact amount (€56,23) and the authorization is released.
 
-If the merchant captures only part of the preauthorization instead of authorizing the exact amount, Swan releases the remaining preauthorized amount as soon as the partial capture arrives, because the merchant is a gas station or automated fuel dispenser.
+A partial capture at a fuel merchant releases the rest [immediately](/payments/concepts/cards/authorization-and-clearing#authorization-expiration), without waiting for the preauthorization to expire.
 
 <a href={require("../../../images/payments/cards/auth-example-fuel.png").default} target="_blank">
 <img src={require("../../../images/payments/cards/auth-example-fuel.png").default} alt="Preauthorization, authorization, and debit example using gas station" />
 </a>
-
-:::tip
-This flow can also be used for hotel bookings that are made in advance, but not paid for until after the stay is over. 
-:::
 
 </TabItem>
 
@@ -96,7 +90,6 @@ Consider a cardholder ordering two items fulfilled by different sellers:
 
 **Online return** | Authorization + debit clearing + refund
 
-There are multiple ways to reimburse a payment.
 The most straightforward is for the merchant to refund the debit transaction (debit reversal).
 The merchant must be able to link the refund to the debit.
 
@@ -122,7 +115,7 @@ Consider a cardholder who orders and returns a package, all online:
 When items are returned in-store, they can be hard to link back to the debit.
 When a merchant needs to refund a customer but can't connect the refund transaction to the original debit, they create a new credit transaction.
 
-When merchants correctly reference the original debit authorization, Swan links both `CardOutCredit` and `CardOutDebitReversal` transactions to the same `paymentId` as the original authorization.
+Refer to [clearing a credit transaction](/payments/concepts/cards/authorization-and-clearing#clearing-credit) for how refunds are linked to the original payment.
 
 Consider a cardholder buying then returning an item in-store:
 
@@ -185,8 +178,7 @@ Consider a cardholder reserving a hotel room online:
 
 **Purchase on airplane** | Debit clearing only
 
-In some situations, the merchant's point of sale isn't connected to the internet and the concerned card network.
-Certain payments are allowed offline, and these debits are done without a previous authorization.
+Some points of sale can't reach the card network and are allowed to debit [offline](/payments/concepts/cards/authorization-and-clearing#authorization), without a prior authorization.
 However, the cardholder can dispute the debit.
 
 Consider a cardholder making a purchase on an airplane (such as food or duty-free items):

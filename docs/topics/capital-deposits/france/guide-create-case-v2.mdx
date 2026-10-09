@@ -8,7 +8,7 @@ Create a capital deposit case for a new company. One API call starts onboarding 
 
 :::caution Multi-step process
 This page covers the first part of a **multi-step process**: creating the case, completing onboarding, and uploading documents.
-Refer to the [France guide](./guide.mdx) for the whole process.
+Refer to the [Dashboard guide](/topics/capital-deposits/guide-dashboard) for the whole process.
 :::
 
 ## Overview {#overview}
@@ -22,11 +22,11 @@ A single call creates:
 - One onboarding for each individual shareholder, if any.
 
 Provide all shareholder data in the initial request. This mutation is designed for one complete submission.
-You can update a [company](../../onboarding/company/guide-update.mdx) or [individual](../../onboarding/individual/guide-update.mdx) onboarding to make corrections, but updates aren't the intended path for building a case incrementally.
+You can update a [company](/topics/onboarding/company/guide-update) or [individual](/topics/onboarding/individual/guide-update) onboarding to make corrections, but updates aren't the intended path for building a case incrementally.
 
 ## What's new {#whats-new}
 
-`createCapitalDeposit` replaces the monolithic `onboardingInfo` block from `createCapitalDepositCase` with structured, per-entity inputs aligned with the standard [Swan onboarding](../../onboarding/index.mdx) format.
+`createCapitalDeposit` replaces the monolithic `onboardingInfo` block from `createCapitalDepositCase` with structured, per-entity inputs aligned with the standard [Swan onboarding](/topics/onboarding/) format.
 
 | Deprecated (`createCapitalDepositCase`) | New (`createCapitalDeposit`) |
 | --- | --- |
@@ -108,7 +108,7 @@ For company shareholders registered in France, use the `companyInfoRegistryData`
 Pass the results to the mutation to pre-fill company fields.
 :::
 
-For complete field-level requirements and required-document rules, refer to [company onboarding fields](../../onboarding/company/fields.mdx).
+For complete field-level requirements and required-document rules, refer to [company onboarding fields](/topics/onboarding/company/fields).
 
 **Each individual shareholder**
 
@@ -124,7 +124,7 @@ For complete field-level requirements and required-document rules, refer to [com
 | Account name | <Opt /> | `shareholders[].individual.accountInfo.name` |
 | Redirect URL | <Req /> | `shareholders[].individual.oAuthRedirectParameters.redirectUrl` |
 
-For complete field-level requirements and required-document rules, refer to [individual onboarding fields](../../onboarding/individual/fields.mdx).
+For complete field-level requirements and required-document rules, refer to [individual onboarding fields](/topics/onboarding/individual/fields).
 
 ### Find valid legal form codes {#legal-forms}
 
@@ -610,7 +610,7 @@ A successful mutation doesn't mean every onboarding is ready to be finalized.
 :::caution Check every onboarding status
 Always check `statusInfo.status` on `companyOnboarding` and on each `shareholders[].onboarding`.
 Swan can create an onboarding with the status `Invalid` when a required field is missing.
-[Get information about the onboarding](../../onboarding/overview/guide-get-info.mdx), read the `errors` array, and fix the issue before finalization.
+[Get information about the onboarding](/topics/onboarding/overview/guide-get-info), read the `errors` array, and fix the issue before finalization.
 :::
 
 Example of a case created with an invalid onboarding:
@@ -637,16 +637,16 @@ Example of a case created with an invalid onboarding:
 
 :::info Required documents per onboarding
 The documents needed to complete an onboarding depend on the entity and context.
-Before asking your user to complete the flow, [get a list of required onboarding documents](../../onboarding/overview/guide-get-list.mdx).
+Before asking your user to complete the flow, [get a list of required onboarding documents](/topics/onboarding/overview/guide-get-list).
 :::
 
 ## Step 4: Complete onboarding and KYC {#kyc}
 
-After your users [finalize their onboardings](../../onboarding/overview/guide-finalize.mdx), the KYC process for each entity begins with the identification of each account admin (the first account membership, with `legalRepresentative: true`).
+After your users [finalize their onboardings](/topics/onboarding/overview/guide-finalize), the KYC process for each entity begins with the identification of each account admin (the first account membership, with `legalRepresentative: true`).
 
 ## Step 5: Upload required documents {#upload}
 
-For the list of required documents by stakeholder, who provides each one, and where it's attached, refer to the [capital deposits overview](../index.mdx#documents-list).
+For the list of required documents by stakeholder, who provides each one, and where it's attached, refer to the [capital deposits overview](/topics/capital-deposits/#documents-list).
 
 After you create the case, the capital deposit case status is `WaitingForInitialRequirements`.
 The case stays in this status until all of the following are complete:
@@ -659,10 +659,10 @@ Document upload and KYC happen in parallel, so you don't need to wait for shareh
 Start uploading as soon as the documents are available.
 
 When all conditions are met, the case transitions to `PendingInternalReview`.
-For the full lifecycle and status transitions, refer to the [capital deposits overview](../index.mdx#case-statuses).
+For the full lifecycle and status transitions, refer to the [capital deposits overview](/topics/capital-deposits/#case-statuses).
 
 The case and each shareholder have a `documents` array with pre-assigned document IDs and types.
-Query the case for the document IDs. Then [upload each document](./guide-upload-documents.mdx) using the two-step signed URL flow.
+Query the case for the document IDs. Then [upload each document](/topics/capital-deposits/guide-upload-documents) using the two-step signed URL flow.
 
 ### Query {#documents-query}
 

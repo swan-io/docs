@@ -188,35 +188,27 @@ module.exports = {
       ],
     },
     {
+  type: "category",
+  label: "Capital deposits",
+  collapsible: false,
+  collapsed: false,
+  items: [
+    {
       type: "category",
       label: "Capital deposits",
-      collapsible: false,
-      collapsed: false,
+      link: { type: "doc", id: "topics/capital-deposits/index" },
+      collapsed: true,
       items: [
-        {
-          type: "category",
-          label: "Capital deposits",
-          link: { type: "doc", id: "topics/capital-deposits/index" },
-          collapsed: true,
-          items: [
-            "topics/capital-deposits/guide-update-shareholder-amount",
-            "topics/capital-deposits/guide-update-company",
-            "topics/capital-deposits/guide-cancel",
-          ],
-        },
-        {
-          type: "category",
-          label: "🇫🇷 France",
-          link: { type: "doc", id: "topics/capital-deposits/france/guide" },
-          collapsed: true,
-          items: [
-            "topics/capital-deposits/france/guide-create-case-v2",
-            "topics/capital-deposits/france/guide-create-case",
-            "topics/capital-deposits/france/guide-upload-documents",
-          ],
-        },
+        "topics/capital-deposits/guide-dashboard",
+        "topics/capital-deposits/guide-create-case",
+        "topics/capital-deposits/guide-upload-documents",
+        "topics/capital-deposits/guide-update-company",
+        "topics/capital-deposits/guide-update-shareholder-amount",
+        "topics/capital-deposits/guide-cancel",
       ],
     },
+  ],
+},
     {
       type: "category",
       label: "Cards",

@@ -42,7 +42,7 @@ module.exports = [
   { from: "/guide/control-card-usage", to: "/topics/payments/cards/sandbox" },
   {
     from: "/guide/create-a-capital-deposit",
-    to: "/topics/capital-deposits/france/guide",
+    to: "/topics/capital-deposits/",
   },
   { from: "/guide/create-a-new-account", to: "/topics/onboarding/#links" },
   { from: "/guide/fund-an-account", to: "/topics/accounts/funding/" },

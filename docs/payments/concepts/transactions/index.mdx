@@ -16,17 +16,12 @@ related:
 
 <p className="ia-lede">Every financial operation at Swan is a <a href="/payments/concepts/payments">payment</a> made of one or more <Term id="transactions">transactions</Term>. The payment is the request to move money. The transactions are what actually credit and debit accounts.</p>
 
-## Payments {#payments}
-
-Every transaction belongs to a [payment](/payments/concepts/payments): the request to move money that groups one or more transactions.
-
 ## Transactions {#transactions}
 
 import TransactionsDefinition from '../../../_shared/definitions/_transactions.mdx';
 
 > <TransactionsDefinition />
 
-A single payment is a group of **one** or **several transactions**.
 All transactions go through a **scoring service** to determine if the transaction is compliant and if the [account's `Available` balance](/accounts/concepts/account/balances) is sufficient to cover the transaction.
 
 Transactions are created asynchronously after a payment is initiated.
@@ -37,20 +32,13 @@ For example, two transactions are required if you try to send a single SEPA Cred
 * Transaction #1: Funds sent with an outgoing SCT to the SEPA network.
 * Transaction #2: Funds returned with a separate transaction from the target bank.
 
-:::info Netherlands Maestro fallback
-import MaestroLink from '../../../_shared/partials/_maestro.mdx';
-
-<MaestroLink />
-:::
+Some Dutch terminals complete card transactions through the [Netherlands Maestro fallback](/payments/concepts/cards#transactions), which returns masked Maestro card information.
 
 ### Transaction ID {#transactions-id}
 
 Each transaction has a **unique transaction ID**.
 
-You can filter your Dashboard transactions list with a full transaction ID to locate an exact transaction.
-Retrieve a transaction ID along with other transaction information by querying the API or directly on your Dashboard.
-
-Transactions move through a set of [transaction statuses](/payments/concepts/transactions/statuses#transactions-statuses) that directly impact [account balances](/accounts/concepts/account/balances).
+Retrieve it with the API or on your Dashboard, where you can filter the transactions list by full ID.
 
 ### Sequence number {#sequence-number}
 
@@ -81,16 +69,8 @@ Users can request a [transaction statement](/payments/concepts/transactions/stat
 
 ### Sharing transaction information {#transactions-sharing-info}
 
-The European Union's [revised Payment Services Directive (PSD2)](https://eur-lex.europa.eu/legal-content/EN/LSU/?uri=celex:32015L2366) regulates how banking interfaces can display transactions.
-To **display or share a user's sensitive information**, you need a **recent <Term id="consent">consent</Term>** from that user.
-
-At the user level, you might need to act on behalf of a user with a **user access token** to access an account's online payment transactions.
-The **user must consent** to this action by performing a [Strong Customer Authentication (SCA)](/users/concepts/consent).
-Each SCA is valid for 180 days, so if the user's most recent SCA is older than 180 days, they'll need to consent again.
-
-At the project level, when acting on your own behalf, you can view a list of your project's transactions anytime with a **project access token**.
-However, if you need to share information with a user, that **user must consent**.
-Again, if they haven't consented within 180 days, they'll need to perform a new SCA.
+The European Union's [revised Payment Services Directive (PSD2)](https://eur-lex.europa.eu/legal-content/EN/LSU/?uri=celex:32015L2366) regulates how banking interfaces can display transactions: to display or share a user's transactions, you need a recent <Term id="consent">consent</Term> from that user.
+With a **user access token**, the user performs a [Strong Customer Authentication (SCA)](/users/concepts/consent), valid for 180 days. With a **project access token** you can list your project's transactions anytime, but sharing them with a user still requires that user's SCA within the last 180 days.
 
 :::caution Swan frontend
 Swan's frontend complies with PSD2 requirements.

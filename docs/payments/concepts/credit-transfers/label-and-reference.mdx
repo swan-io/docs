@@ -24,20 +24,19 @@ Whether your label and reference entries are visible on other financial institut
 ## Custom label {#label-custom}
 
 - Optional field where you can name your transaction.
+- Up to 140 characters.
 - According to SEPA, this label is for remittance information (`RemittanceInfo`), or payment details.
 - If left empty, the default value for Web Banking is `Transfer to {beneficiary}`. However, nothing is sent to the beneficiary's bank.
 - This value is displayed in your Swan transaction history.
-- Your **beneficiary probably sees** this reference, though it's impossible to know because every app is different.
 - Called `label` in the API `transaction` object.
 
 ## Reference {#reference}
 
 - Optional field intended to provide a way for you to include a reference number or code.
 - According to SEPA, this reference should be used for the end-to-end identification reference (`EndToEndId`) used to uniquely identify a transaction from start to finish.
-- Only characters 0-9 and a-z are allowed in this field. The total number of characters allowed can change, so refer to your transfer form for the character maximum.
+- Up to 35 characters from `a-z`, `A-Z`, `0-9`, and `- ? . + , / ' : ( )` plus spaces. It can't start or end with `/` and can't contain `//`.
 - If left empty, there is no default value. The reference field is mandatory for SEPA inter-bank exchanges, so Swan populates an empty field with something similar to your transaction ID.
 - This value will be included in the details of a transaction in your transaction history, but not displayed in the main list.
-- Your **beneficiary probably sees** this reference, though it's impossible to know because every app is different.
 - Called `reference` in the API `transaction` object.
 
 ## External reference {#reference-external}
@@ -49,7 +48,6 @@ Whether your label and reference entries are visible on other financial institut
 ## Invoice references {#invoice-references}
 
 You can include an **optional** [invoice reference](/payments/guides/credit-transfers/sepa/initiate-ct#invoice-reference) when you initiate a SEPA Credit Transfer using the `labelType` and `label` fields.
-Use `labelType` to specify the format of the invoice reference, and provide the specific value of the reference in the `label` field.
 
 The `labelType` can be one of the following:
 

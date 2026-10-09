@@ -18,41 +18,15 @@ related:
 
 ## Overview {#overview}
 
-Send and receive money almost anywhere in the world using a Swan <Term id="credit-transfer">International Credit Transfer</Term>.
-
 With Swan International Credit Transfers, you can:
 
 1. Exchange euros for a different currency, then transfer that money on either local rails or the SWIFT network.
 1. Transfer euros outside of the eurozone using the SWIFT network.
 1. Receive credit transfers initiated outside of the eurozone. You'll receive these transfers in euros as Swan doesn't store money in currency other than euros.
 
-:::tip Statuses
-Outgoing International Credit Transfers have their own [status flow](/payments/concepts/credit-transfers/statuses#international-outgoing), which never includes `Upcoming`.
-:::
-
 ## Risk with international transfers {#risk}
 
-International transfers can introduce more significant risk than transfers that don't cross borders or change currencies.
-Additionally, since more legal jurisdictions are involved, Swan International Credit Transfers must follow regulations for multiple regions.
-
-Areas of increased risk and friction include:
-
-- Instability in the target region.
-- Diverging requirements for <Term id="consent">consent</Term> or identity documents.
-- Different handling of disputed <Term id="transactions">transactions</Term>.
-- Fluctuation in currency value and exchange rate.
-
-Therefore, **Swan prioritizes a risk-based approach**, which applies to you and your end users.
-In addition to increased scrutiny in the transaction-review process, both automated and manual, Swan uses [dynamic forms](/payments/concepts/credit-transfers/international/outgoing#dynamic-forms) in the International Credit Transfer API.
-
-### Outgoing allowed countries {#risk-outgoing}
-
-Your users can send International Credit Transfers on **local rails** in **local currencies**.
-
-They can also send International Credit Transfers on the **SWIFT network** `swift_code` using United States Dollars `USD`, Euros `EUR`, or Great British Pounds `GBP`.
-Any attempt to send a SWIFT transfer in other currencies is rejected.
-
-Refer to the reference for the full list of [allowed countries, rails, and fee groups](/payments/reference/international-transfers).
+International transfers cross borders, currencies, and jurisdictions, so Swan applies a risk-based approach: closer transaction review, both automated and manual, and [dynamic forms](/payments/concepts/credit-transfers/international/outgoing#dynamic-forms) in the International Credit Transfer API.
 
 ## Fees {#fees}
 
@@ -61,7 +35,6 @@ There are fees for executing international transfers according to the non-euro c
 Each eligible currency is **assigned to a fee group**, numbered 1 through 4.
 Swan determined the groups based on how much it costs to execute a transfer with that currency.
 For example, it costs less to execute a transfer between euros and a currency in fee group 1 than with a currency in fee group 3.
-The [lists of allowed countries for outgoing transfers](/payments/reference/international-transfers) include each currency's fee group.
 
 The fees listed on this page are always paid by the **Swan user**.
 
@@ -78,7 +51,6 @@ The fees listed on this page are always paid by the **Swan user**.
 **Fees are charged in their own transaction**.
 Therefore, each International Credit Transfer **creates two transactions** on your transaction history: one for the transfer and one for fees.
 Fees and transfer transactions are created, booked, and rejected simultaneously.
-Both transactions have the same status.
 
 :::note Fees can vary
 This section shares Swan's **standard pricing**, which might vary based on your contract.
@@ -87,12 +59,8 @@ This section shares Swan's **standard pricing**, which might vary based on your 
 ## Outgoing transfers {#outgoing}
 
 Outgoing transfers go over local rails or SWIFT, exchange euros at a mid-market rate locked for one business day, and are capped at €100,000. The API collects beneficiary and transaction details through dynamic forms.
-Refer to [outgoing International Credit Transfers](/payments/concepts/credit-transfers/international/outgoing).
-
-### API dynamic forms {#dynamic-forms}
-
-The required fields change with the destination, so the queries must run in a set order before the mutation.
-Refer to [dynamic forms](/payments/concepts/credit-transfers/international/outgoing#dynamic-forms).
+Local rails carry local currencies; the `swift_code` rail carries `USD`, `EUR`, and `GBP` only. Refer to [allowed countries, rails, and fee groups](/payments/reference/international-transfers).
+Refer to [outgoing International Credit Transfers](/payments/concepts/credit-transfers/international/outgoing) and their [status flow](/payments/concepts/credit-transfers/statuses#international-outgoing), which never includes `Upcoming`.
 
 ## Incoming transfers {#incoming}
 

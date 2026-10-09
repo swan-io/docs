@@ -16,8 +16,8 @@ related:
 
 <p className="ia-lede">Any debtor can send money to a Swan account through SWIFT using Swan's existing BICs. Intermediary banks convert the amount to euros and deduct their fees along the way, and Swan books whatever remains immediately.</p>
 
-Debtors can send <Term id="credit-transfer">credit transfers</Term> to Swan accounts, regardless of the debtor's account currency.
 Swan's existing [Bank Identifier Codes (BICs)](/accounts/concepts/ibans/local) are connected to SWIFT, so Swan users don't need an additional <Term id="ibans">IBAN</Term> to receive SWIFT transfers.
+A `Limited` account can't receive International Credit Transfers: refer to [limited account restrictions](/accounts/concepts/account/type-and-level#limited-account-restrictions).
 
 <details>
   <summary>Swan and intermediary bank details for incoming transfers</summary>
@@ -28,7 +28,6 @@ Swan's existing [Bank Identifier Codes (BICs)](/accounts/concepts/ibans/local) a
 
 ## Intermediary BIC by incoming currency {#incoming-intermediary-bic}
 
-The intermediary BIC to use depends on the incoming currency.
 Use the 11-character BIC (with `XXX`) when the sending bank requires it.
 
 | Intermediary BIC | Incoming currencies |
@@ -41,8 +40,6 @@ Use the 11-character BIC (with `XXX`) when the sending bank requires it.
 If the incoming currency isn't listed, contact Swan support before sharing account details with the debtor.
 
 ## Standard flow {#incoming-flow}
-
-Consider the following image:
 
 ![Visual depiction of standard International Credit Transfer flow exactly as described in numbered list](../../../../images/payments/international-incoming-flow.png)
 
@@ -61,17 +58,6 @@ Consider the following image:
 1. Swan books the incoming SWIFT transfer's remaining amount (€850) immediately to the Swan user's account.
 1. Swan charges a €5 processing fee separately from the transfer.
 
-## Limited account restrictions {#incoming-limited-account-restrictions}
-
-Limited accounts have restrictions on incoming International Credit Transfers to ensure regulatory compliance.
-
-- Any incoming International Credit Transfer, regardless of its amount, on a limited account is automatically rejected.
-
-These restrictions apply while the <Term id="account-holder">account holder</Term> is completing verification and the account remains in `Limited` status.
-They are removed when the account holder verification status changes to `Verified` and the payment level changes to `Unlimited`.
-
-Learn more about [limited account transfer restrictions](/accounts/concepts/account/type-and-level#limited-account-restrictions).
-
 ## SWIFT details {#incoming-swift}
 
 Incoming International Credit Transfers sent on SWIFT can be sent with one of the following specifications:
@@ -84,23 +70,18 @@ Incoming International Credit Transfers sent on SWIFT can be sent with one of th
 
 When Swan receives an incoming International Credit Transfer, Swan books it immediately and creates an `InternationalCreditTransferTransaction` type (step 8 in the [standard flow](#incoming-flow)).
 
-Use the `transactions` query with the ID for your International Credit Transfer to [get information](/payments/guides/credit-transfers/international/get-info).
+Use the `transaction` query with the ID of your International Credit Transfer to [get information](/payments/guides/credit-transfers/international/get-info).
 
 ## Notifications {#incoming-notifications}
 
-Subscribe to the `Transaction.Booked` [webhook](/build/using-api/webhooks#events-transactions) to be notified any time a transaction is created.
+Subscribe to the `Transaction.Booked` [webhook](/build/using-api/webhooks#events-transactions) to be notified any time an incoming transfer is booked.
 The notification's `resourceId` is the incoming transaction's ID.
 The [notification content](/build/using-api/webhooks#event-handling-info) section of the webhooks reference shows the payload.
 
 ## Currency exchange {#incoming-currency-exchange}
 
-Transferring money internationally requires **currency exchange**.
-Think of currency exchange as the cost of selling one currency to purchase another.
-
 For incoming transfers, you can view the `exchangeRate` in the `InternationalCreditTransferTransaction` type, created when the [transaction is booked](#incoming-booked).
 
 Other currency exchange information isn't available for incoming transfers.
 
-Typically, incoming transfers arrive in euros.
-If Swan performs the currency exchange, the additional fees in parentheses listed in the [fees table for incoming transfers](/payments/concepts/credit-transfers/international#fees) are charged.
-For example, if Swan receives a transfer in United States Dollars, 0.6% of the received amount is charged along with the standard €5 fee.
+Incoming transfers usually arrive already in euros. If Swan performs the exchange, the [incoming fee percentage](/payments/concepts/credit-transfers/international#fees) applies on top of the €5 fee.

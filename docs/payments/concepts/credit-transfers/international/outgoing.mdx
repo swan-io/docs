@@ -44,28 +44,18 @@ Find the exchange rate, as well as [fees](/payments/concepts/credit-transfers/in
 
 ## Transfer limits {#transfer-limits}
 
-A maximum transaction limit of **€100,000.00** (one hundred thousand euros) applies to all outgoing International Credit Transfers. The payment rail used or currency exchange doesn't impact the maximum transaction limit.
-
-:::caution Transfer limit and rejection
-All outgoing International Credit Transfers exceeding **€100,000.00** will be rejected.
-:::
-
-## Outgoing transaction statuses {#outgoing-statuses}
-
-Outgoing International Credit Transfers cycle through their own [outgoing transfer statuses](/payments/concepts/credit-transfers/statuses#international-outgoing).
+A maximum of **€100,000.00** (one hundred thousand euros) applies to every outgoing International Credit Transfer, whichever rail or currency: transfers above it are rejected.
 
 ## Rejected transactions {#outgoing-r-transactions}
 
+Outgoing International Credit Transfers move through [their own statuses](/payments/concepts/credit-transfers/statuses#international-outgoing): `Pending`, then `Booked` or `Rejected`.
 An outgoing International Credit Transfer might be **rejected** for several reasons, including:
 - The transfer exceeds the [maximum transaction amount limit](#transfer-limits). 
 - Some of the account or bank details are incorrect.
 - The account is closed.
 - A required mandate was never provided.
 
-However, a common reason for all rejections is **insufficient funds**.
-
-For all outgoing International Credit Transfers, Swan checks the account balance to make sure there is enough money to cover both the transfer amount and the fees.
-If there isn't enough money in the account to **cover both the transfer amount and the fees**, the transfer will be **rejected** for insufficient funds.
+The most common reason is insufficient funds: Swan checks that the `Available` balance covers both the transfer amount and the fees.
 
 If a transfer is **rejected**, fees aren't charged.
 If a transfer is **returned**, fees are also refunded.
@@ -83,7 +73,7 @@ participant S as Swan
     S ->> S: Generates quote
     S ->> U: Requests consent
     U ->> P: Consents to transfer
-    P ->> S: Creates transfer and fee transactions
+    S ->> S: Creates transfer and fee transactions
     S ->> S: Processes and initiates transfer
 ```
 
@@ -96,20 +86,12 @@ For example, the required information will be different for a beneficiary in Ind
 
 ### Integrating dynamic forms {#dynamic-forms-integrate}
 
-Dynamic forms make this feature **more challenging to integrate** for your custom integrations.
-
 In your integration, you should only request the most basic information per query, as shown in the API Explorer.
 Specific logic is then required to retrieve the correct key/value pairs according to the information submitted in the dynamic fields.
 
 The concept of **refreshable dynamic fields** is illustrated in the [guide to get beneficiary information](/payments/guides/credit-transfers/international/get-beneficiary-forms). 
 
-:::caution If they're more complex, why use dynamic forms?
-
-Dynamic forms allow Swan to **collect only required information** from your end users, collected in the format of key/value pairs.
-Some locations require a few key/value pairs while others might require 10 or more.
-
-Since the required information changes frequently and is outside of Swan's control, **dynamic forms provide the best way** to only collect the correct information, which also minimizes risk and ensures secure transactions.
-:::
+Dynamic forms collect only what the destination requires, as key/value pairs: some destinations need a few, others ten or more, and the requirements change frequently outside Swan's control.
 
 ### Query and mutation order {#dynamic-forms-order}
 

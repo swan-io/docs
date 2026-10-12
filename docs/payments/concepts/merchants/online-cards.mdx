@@ -21,7 +21,7 @@ related:
 Swan supports most major card schemes, including Visa, Mastercard, and *Cartes Bancaires* (CB) in France.
 American Express isn't supported.
 
-Merchants accept these <Term id="payments">payments</Term> through [payment links](/payments/concepts/merchants/payments#links), shared on an invoice, as a QR code, or by email or SMS.
+Merchants accept these <Term id="payments">payments</Term> through [payment links](/payments/concepts/merchants/payments#links).
 
 In the API, online card acceptance is represented by `OnlineCard`-prefixed types, distinct from in-person card acceptance, which uses `InPersonCard`-prefixed types.
 
@@ -31,14 +31,15 @@ import MerchantsOnlyCards from './partials/_merchants-only-cards.mdx';
 
 ## Merchant card payments {#payments}
 
-Merchant card payments group one or more <Term id="transactions">transactions</Term> in the shared [merchant payment object](/payments/concepts/merchants/payments#object), which is how Swan recommends matching orders, invoices, and sales to the correct payment.
+Online card payments follow the shared [merchant payment object](/payments/concepts/merchants/payments#object).
 
 ### Card transaction types {#payments-transaction-types}
 
 There are **four transaction types** for merchant card payments.
 
-Authorizations aren't included in a transaction type.
-Instead, they're represented at the payment level, visible through the payment object status `Authorized` and payment object balance `totalAuthorized`.
+import CardAuthorizations from './partials/_card-authorizations.mdx';
+
+<CardAuthorizations />
 
 | Transaction type | Explanation | Impacted [account balance](/accounts/concepts/account/balances) |
 |---|---|:---:|

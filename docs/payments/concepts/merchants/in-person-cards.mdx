@@ -16,19 +16,13 @@ related:
 
 <p className="ia-lede">Turn a smartphone into a card terminal with Tap to Pay: terms of service, transaction types and settlement by <Term id="credit-transfer">credit transfer</Term>, limits, refunds, rejection reasons, and disputes.</p>
 
-For many businesses, accepting card payments in person is a must-have.
-Retail stores, health professionals, home care providers, taxi drivers, and contractors all need to accept card payments on the go.
-
-With Swan's API, <Term id="merchants">merchants</Term> can turn their smartphone into a card terminal.
-They accept <Term id="payments">payments</Term> through a terminal app.
+With Swan's API, <Term id="merchants">merchants</Term> turn their smartphone into a card terminal and accept <Term id="payments">payments</Term> through a terminal app built on the [Stripe Terminal SDK](/payments/guides/merchants/in-person/cards/setup#install-sdk).
+It suits businesses that take card payments on the go: retail stores, health professionals, home care providers, taxi drivers, and contractors.
+Payments follow the shared [merchant payment object](/payments/concepts/merchants/payments#object).
 
 import MerchantsOnlyCards from './partials/_merchants-only-cards.mdx';
 
 <MerchantsOnlyCards />
-
-## Merchant card payments {#merchant-card-payments}
-
-In-person merchant card payments group one or more transactions in the shared [merchant payment object](/payments/concepts/merchants/payments#object), which is how Swan recommends matching orders, invoices, and sales to the correct payment.
 
 ## Terms of service {#terms-of-service}
 
@@ -42,22 +36,18 @@ Replace `[PARTNER NAME]` with your company name.
 
 ## Card transaction types {#transaction-types}
 
-There are **four transaction types** for in-person merchant card payments.
+There are **four transaction types** for in-person merchant card payments, all settled through a separate [credit transfer](#settlement).
 
-:::info Statuses specific to in-person card payments
-These statuses are specific to in-person card payments.
-Other payment methods might behave differently.
-:::
+import CardAuthorizations from './partials/_card-authorizations.mdx';
 
-Authorizations aren't a transaction type.
-Instead, they appear at the payment level through the payment object status `Authorized` and the balance `totalAuthorized`.
+<CardAuthorizations />
 
 | Transaction type | Explanation | Possible statuses |
 | --- | --- | --- |
-| `CardInCredit` | Captured payment that will be settled through a separate credit transfer. | `Upcoming`, `Settled` |
-| `CardInCreditReversal` | Refunded payment that will be settled through a separate credit transfer. | `Upcoming`, `Settled` |
-| `CardInCreditChargeback` | Disputed payment that will be settled through a separate credit transfer. | `Upcoming`, `Settled` |
-| `CardInCreditChargebackReversal` | Overturned dispute that will be settled through a separate credit transfer. | `Upcoming`, `Settled` |
+| `CardInCredit` | Captured payment. | `Upcoming`, `Settled` |
+| `CardInCreditReversal` | Refunded payment. | `Upcoming`, `Settled` |
+| `CardInCreditChargeback` | Disputed payment. | `Upcoming`, `Settled` |
+| `CardInCreditChargebackReversal` | Overturned dispute. | `Upcoming`, `Settled` |
 
 ### Settled status {#settled-status}
 
@@ -84,8 +74,7 @@ This could change if Swan's monitoring systems detect suspicious patterns.
 
 The minimum amount to create a payment intent is **€0.50**.
 
-In-person card payments are **not subject to a maximum payment amount limit** by default.
-This could change if Swan's monitoring systems detect suspicious patterns.
+In-person card payments have **no maximum payment amount limit** by default, subject to the same monitoring as the [rolling reserve](#rolling-reserve).
 
 ## Settlement process {#settlement}
 
@@ -93,8 +82,8 @@ For in-person card payments, the settlement is a credit transfer.
 
 1. When the merchant payment is created, underlying transactions are created as `Upcoming`.
 1. When the settlement arrives as a credit transfer, the transactions are updated to `Settled`.
-1. The credit transfer is immediately `Booked`. It affects the balance and makes the corresponding funds available. Card transactions don't affect any account balances.
-1. Transactions captured on a given day are `Settled` within **one business day**. No rolling reserve applies to the settlement credit transfer.
+1. The credit transfer is immediately `Booked` and makes the funds available.
+1. Transactions captured on a given day are `Settled` within **one business day**.
 
 :::info Delayed settlements
 In rare cases, a settlement can be delayed.
@@ -122,7 +111,7 @@ For in-person cards, <Term id="r-transaction">R-transactions</Term> are rejectio
 When a card payment is rejected, the cardholder's account is not charged.
 The [in-person card rejection reasons](/payments/reference/merchant-rejection-reasons#in-person-cards) list each code and the next step to share with your merchant.
 
-## Chargebacks and disputes {#chargebacks}
+### Chargebacks and disputes {#chargebacks}
 
 import CardDisputes from './partials/_card-disputes.mdx';
 

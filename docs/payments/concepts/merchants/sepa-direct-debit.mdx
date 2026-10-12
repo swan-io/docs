@@ -10,6 +10,7 @@ related:
   - /payments/concepts/merchants/statuses
   - /payments/guides/merchants/online/sdd
   - /payments/concepts/direct-debit
+  - /accounts/concepts/billing/fees
 ---
 
 # SEPA Direct Debit for merchants
@@ -18,15 +19,9 @@ related:
 
 ## Overview {#overview}
 
-Merchants can accept payments with SEPA Direct Debit.
-
 import DirectDebitCrossLinks from '../../guides/merchants/partials/_direct-debit-other.mdx';
 
 <DirectDebitCrossLinks />
-
-:::note SEPA transaction fees
-Refer to [billing](/accounts/concepts/billing/fees#fees-swan-standard) for information about fees associated with merchant SEPA Direct Debit transactions.
-:::
 
 ## Direct debit payments {#payments}
 
@@ -34,23 +29,22 @@ Merchant direct debit payments follow the shared [merchant payment object](/paym
 
 ### Payment object statuses {#payments-statuses}
 
-SEPA Direct Debit payments never use the `Authorized` status: from `Initiated`, a payment is `Captured`, `Rejected`, or `Canceled`, and a `Captured` payment can still be `Refunded` by the merchant or `Disputed` by the customer. Refunds and disputes cover the full amount. The [merchant statuses](/payments/concepts/merchants/statuses#payments-statuses) page has the diagram and definitions.
+SEPA Direct Debit payments never use `Authorized`, and refunds and disputes cover the full amount. The [merchant statuses](/payments/concepts/merchants/statuses#payments-statuses-by-method) page has the machine and the table by method.
 
 ### Payment object balances {#payments-balances}
 
-The balances used for SEPA Direct Debit payments are `availableToCancel`, `totalCanceled`, `totalCaptured`, `availableToRefund`, `totalRefunded`, and `totalDisputed`. For SEPA Direct Debit, `availableToCancel` is the pending amount that can still be canceled: cancelations must be requested by the day before the scheduled execution and within the [cutoff time](#canceling). The [merchant payments](/payments/concepts/merchants/payments#balances) page defines each balance.
+The balances used for SEPA Direct Debit payments are `availableToCancel`, `totalCanceled`, `totalCaptured`, `availableToRefund`, `totalRefunded`, and `totalDisputed`. For SEPA Direct Debit, `availableToCancel` is the pending amount that can still be [canceled](#canceling). The [merchant payments](/payments/concepts/merchants/payments#balances) page defines each balance.
 
 ## Schemes: Core and B2B {#schemes}
 
 Swan offers two SEPA Direct Debit schemes: `Core` and `B2B`.
-You can choose to use one or both schemes according to your use case.
 
 The [SEPA Direct Debit scheme table](/payments/reference/schemes#sdd) compares eligible account types, refunds, returns, mandate requirements, and timelines for Core and B2B.
 
 ## SEPA Creditor Identifier (SCI) {#sci}
 
-SEPA Creditor Identifiers (SCIs) are unique reference codes that identify each creditor participating in a SEPA Direct Debit scheme.
-These identifiers are unique to each merchant and help banks sort transactions by merchant to ensure those transactions are routed correctly.
+A SEPA Creditor Identifier (SCI) is the reference code that identifies a creditor on the SEPA Direct Debit scheme, so banks can route transactions to the right creditor.
+Merchants using Swan's SCI share it; a merchant can also use their own (see [SCI options](#sci-options)).
 
 SCIs are composed of several elements, including:
 
@@ -63,23 +57,16 @@ For example, `FR12ABC0123456789` is an SCI from France (`FR`) with the check num
 
 ### SCI options {#sci-options}
 
-Swan provides an SCI, and merchants can also choose to use their own.
-
-Both meet all SCI requirements.
-It's important to note, however, that **Swan's provided SCI always mentions Swan**, which appears on a user's transaction history.
-
-Merchants might prefer to **use their own SCI for a more customized user experience**.
-Users would see the merchant's name instead of Swan on their transaction history, **reducing friction** and the risk of transactions looking suspicious to users.
-The merchant's bank would also see the label Swan in disputes, so having the merchant name appear instead could also **ease bank relations**.
+Swan provides an SCI, and merchants can use their own instead; both meet SCI requirements.
+The SCI decides the name shown: with Swan's SCI, **Swan** appears on the debtor's transaction history and in dispute exchanges between banks; with the merchant's own SCI, the **merchant's name** appears instead. The [statement display](/payments/concepts/merchants/payments#statement-display-sdd) table summarizes both.
 
 Merchants can **change their SCI** from Swan's to a personal SCI.
-[Update their profile](/payments/guides/merchants/online/sdd/update) by calling the `requestMerchantPaymentMethodsUpdate` mutation.
+[Update the payment method](/payments/guides/merchants/online/sdd/update) by calling the `requestMerchantPaymentMethodsUpdate` mutation.
 
 Regardless of the type of SCI, it's good practice to **include your merchant's name** in the `label` field for all SEPA Direct Debit transactions.
 
 :::note Personal SCI
-If a merchant in France expresses interest in using their own SCI but they don't have one, Swan can help them get their identifier.
-Open a support request with Swan to start the process.
+If a merchant in France wants their own SCI but doesn't have one, Swan can help them get it: open a [Partner Support Request](https://supportform.swan.io/).
 :::
 
 ## Rolling reserve {#rolling-reserve}
@@ -96,12 +83,12 @@ Merchants can cancel SEPA Direct Debit payments using the [`cancelMerchantPaymen
 To understand if a payment is cancelable, check its `availableToCancel` balance.
 Only the full amount can be canceled.
 
-Payments can only be canceled before transactions are sent to the SEPA payment gateway, respecting the current cutoff times:
+Payments can only be canceled before transactions are sent to the SEPA payment gateway, on the business day before execution:
 
-- **SDD Core**: Payments can be canceled until approximately **11:00 Central European [Summer] Time (CET/CEST)**
-- **SDD B2B**: Payments can be canceled until approximately **10:00 Central European [Summer] Time (CET/CEST)**
+- **SDD Core**: until approximately **11:00 Central European [Summer] Time (CET/CEST)**
+- **SDD B2B**: until approximately **10:00 Central European [Summer] Time (CET/CEST)**
 
-After these cutoff times, the payment can't be canceled and will proceed to settlement.
+After the cutoff, the payment proceeds to settlement.
 
 ## Payment mandates {#mandates}
 
@@ -120,24 +107,15 @@ import DayTimeStandard from '../../../_shared/partials/_day-time.mdx';
 
 ## R-transactions {#r-transactions}
 
-:::caution R-transaction availability
-Refunds are only possible with **SDD Core** and can be requested up to 8 calendar weeks after due date and time.
-Returns are possible for **both** SDD Core and SDD B2B.
-:::
+Refunds are only possible with **SDD Core**, up to 8 calendar weeks after the due date and time. Returns are possible for both Core and B2B.
+
+import DdRejected from './partials/_dd-rejected.mdx';
+import DdReturned from './partials/_dd-returned.mdx';
 
 ### Rejected {#rejected}
 
-When an SDD transaction is **rejected**, the debtor's account is not debited.
-
-The [SEPA Direct Debit reasons](/payments/reference/merchant-rejection-reasons#sdd) list each code and the resolution to share with your merchant.
-
-When an SDD transaction is rejected, regardless of the reason, the merchant receives a notification and can attempt a new SDD at a later date.
+<DdRejected method="SEPA Direct Debit" reasonsHref="/payments/reference/merchant-rejection-reasons#sdd" reasonsLabel="SEPA Direct Debit reasons" />
 
 ### Returned {#returned}
 
-When an SDD transaction is **returned**, the debtor's account is debited the amount, but the payment is reversed and the funds return to the debtor's account. The original transaction stays `Booked`; Swan creates a new return transaction that debits the merchant's account.
-
-The [same reasons](/payments/reference/merchant-rejection-reasons#sdd) apply to returns.
-
-When an SDD transaction is returned, regardless of the reason, the merchant is notified about the return.
-They can investigate the reason for return and take whatever action is necessary, which might be refunding the payment or disputing the return with the debtor's bank.
+<DdReturned method="SEPA Direct Debit" reasonsHref="/payments/reference/merchant-rejection-reasons#sdd" reasonsLabel="same reasons" reasonsVerb="apply to returns" />

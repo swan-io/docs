@@ -190,25 +190,29 @@ module.exports = {
     {
   type: "category",
   label: "Capital deposits",
-  collapsible: false,
-  collapsed: false,
+  link: {
+    type: "doc",
+    id: "topics/capital-deposits/index",
+  },
+  collapsible: true,
+  collapsed: true,
   items: [
-  "topics/capital-deposits/guide-dashboard",
-  {
-    type: "doc",
-    id: "topics/capital-deposits/france/guide-create-case-v2",
-    label: "Create a capital deposit case (V2)",
-  },
-  {
-    type: "doc",
-    id: "topics/capital-deposits/guide-create-case",
-    label: "Create a capital deposit case (V1)",
-  },
-  "topics/capital-deposits/guide-upload-documents",
-  "topics/capital-deposits/guide-update-company",
-  "topics/capital-deposits/guide-update-shareholder-amount",
-  "topics/capital-deposits/guide-cancel",
-],
+    {
+      type: "doc",
+      id: "topics/capital-deposits/france/guide-create-case-v2",
+      label: "Create a capital deposit case (V2)",
+    },
+    "topics/capital-deposits/guide-upload-documents",
+    "topics/capital-deposits/guide-update-company",
+    "topics/capital-deposits/guide-update-shareholder-amount",
+    "topics/capital-deposits/guide-dashboard",
+    "topics/capital-deposits/guide-cancel",
+    {
+      type: "doc",
+      id: "topics/capital-deposits/guide-create-case",
+      label: "Create a capital deposit case (V1)",
+    },
+  ],
 },
     {
       type: "category",

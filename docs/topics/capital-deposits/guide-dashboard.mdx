@@ -6,7 +6,7 @@ title: Manage a capital deposit case
 
 Use the Partner Dashboard to monitor and manage a capital deposit case from creation through funds release.
 
-Your clients complete their tasks through your partner experience. They do not normally use the Partner Dashboard. This guide explains what each Dashboard stage means, what actions are available to you, and what information you may need to request from your clients.
+Your users complete their tasks through your partner experience. They don't use the Partner Dashboard. This guide explains what each Dashboard stage means, what actions are available to you, and what information you may need to request from your users.
 
 For API implementation details, see:
 
@@ -18,9 +18,9 @@ For API implementation details, see:
 
 | Actor | Responsibility |
 | --- | --- |
-| **You, the partner** | Monitor the case, review Dashboard requests, upload or replace documents, and follow up with your clients. |
-| **Company administrator** | Complete company onboarding, provide requested company information, register the company, and obtain the KBIS. |
-| **Shareholder** | Complete onboarding and verification, provide requested information, and transfer their capital contribution. |
+| **You, the partner** | Monitor the case, review Dashboard requests, upload or replace documents, and follow up with your users. |
+| **Account administrator** (admin) | Complete company onboarding, provide requested company information, register the company, and obtain the KBIS. |
+| **Shareholder** | Complete onboarding and verification, provide requested information, and transfer their capital deposit. |
 | **Swan** | Review the case, documents, shareholder verification, and company information. |
 | **Notary** | Issue the capital share deposit certificate, review the KBIS, and transfer the capital to the company account. |
 
@@ -30,18 +30,18 @@ The Partner Dashboard groups the capital deposit process into six stages:
 
 | Stage | What happens | Main responsibility |
 | --- | --- | --- |
-| **1. Case creation** | The case, company onboarding, shareholder onboardings, and initial documents are collected. | You, the company administrator, and shareholders |
-| **2. Shareholder KYC & Funding** | Shareholders complete verification and transfer their capital contributions. | Shareholders |
+| **1. Case creation** | The case, company onboarding, shareholder onboardings, and initial documents are collected. | You, the account admin, and shareholders |
+| **2. Shareholder KYC & Funding** | Shareholders complete verification and transfer their capital. | Shareholders |
 | **3. Case review** | Swan reviews the case, documents, verification, and capital transfers. | Swan |
 | **4. Notary certification** | The notary reviews the case and issues the capital share deposit certificate. | Notary |
-| **5. Company registration and KBIS** | The company is registered and the KBIS is provided. | Company administrator and partner |
+| **5. Company registration and KBIS** | The company is registered and the KBIS (in France) is provided. | Account admin and partner |
 | **6. Final review and funds release** | Swan completes the final company verification and the notary transfers the capital to the company account. | Swan and notary |
 
 The Dashboard highlights the current stage and shows when action is required.
 
 :::caution Additional information may be requested
 
-Swan may request additional information from a company administrator or shareholder during onboarding, verification, case review, or final company KYC.
+Swan may request additional information from an account admin or shareholder during onboarding, verification, case review, or final company KYC.
 
 When the Dashboard shows `Action needed`, review the request and communicate it to the relevant user through your partner experience.
 
@@ -57,7 +57,7 @@ The case includes:
 
 - The future company
 - Company and individual shareholders
-- Capital contribution amounts
+- Capital deposit amounts
 - Company onboarding
 - Shareholder onboarding
 - Required documents
@@ -74,19 +74,19 @@ These activities can take place in parallel.
 
 Monitor the case creation stage and make sure that:
 
-- The company administrator can complete company onboarding.
+- The account admin can complete company onboarding.
 - Each shareholder can complete shareholder onboarding.
 - The required company documents are collected.
 - The Dashboard does not show any unresolved action.
-- Your clients know which task they need to complete next.
+- Your users know which task they need to complete next.
 
 Upload documents as soon as they become available.
 
 For the technical case-creation process, see [Create a capital deposit case](/topics/capital-deposits/france/guide-create-case-v2).
 
-### What your clients need to do
+### What your users need to do
 
-The company administrator needs to complete the future company's onboarding.
+The account admin needs to complete the future company's onboarding.
 
 Each shareholder needs to complete their shareholder onboarding.
 
@@ -129,13 +129,13 @@ Monitor each shareholder's progress and follow up when a task remains incomplete
 
 You may need to ask a shareholder to:
 
-- Complete identity verification
-- Provide proof of address
-- Provide another document or piece of information
-- Correct information submitted during onboarding
-- Transfer their capital contribution
+- Complete [identity verification](/topics/users/identifications/#levels-processes). For shareholder accounts, the identification level is PVID. 
+- Provide proof of address.
+- Provide another document or piece of information.
+- Correct information submitted during onboarding.
+- Transfer their capital.
 
-Do not assume that shareholder KYC is complete immediately after onboarding. Swan may request additional information after a shareholder has completed onboarding and identity verification.
+Don't assume that shareholder KYC is complete immediately after onboarding. Swan may request additional information after a shareholder has completed onboarding and identity verification.
 
 ### Additional information during shareholder KYC
 
@@ -150,6 +150,26 @@ The request may concern:
 - Supporting documents
 - Other information needed to complete verification
 
+### If a shareholder is `WaitingForInformation`
+
+During shareholder KYC, the shareholder's account holder status may be `WaitingForInformation`.
+
+The status includes a list of verification requirements. The list may contain one or more of:
+
+- `FirstTransferRequired`
+- `SupportingDocumentsRequired`
+- `UboDetailsRequired`
+- `LegalRepresentativeDetailsRequired`
+- `OrganizationDetailsRequired`
+- `TaxIdRequired`
+- `Other`
+
+Review the requirements to identify whether the shareholder or partner needs to act.
+
+If `SupportingDocumentsRequired` appears, check the list of requested documents and ask the shareholder to provide them.
+
+The shareholder's status remains `WaitingForInformation` until the required information, documents, or transfer have been provided and Swan has completed its review.
+
 When the Dashboard shows that action is required:
 
 1. Review the request.
@@ -159,24 +179,65 @@ When the Dashboard shows that action is required:
 5. Upload or submit the information through the supported process.
 6. Continue monitoring the shareholder's progress.
 
+### Shareholder onboarding and dedicated payment accounts
+
+Each shareholder must complete their onboarding before Swan creates their dedicated payment account.
+
+Once a shareholder's onboarding is finalized, Swan opens a **dedicated payment account** for that shareholder. These accounts are:
+
+- **Limited in purpose and duration**: they can only be used to receive the shareholder's capital deposit funds.
+- **Monitored**: Swan controls incoming transfers before forwarding the funds to the notary.
+- **Automatically closed**: Swan closes the accounts when the capital deposit is completed.
+
+Shareholders must transfer their share of the capital deposit to this dedicated payment account. These are the only accounts they should use to transfer their capital.
+
 ### Capital transfers
 
-Each shareholder needs to transfer their capital contribution from a bank account held in their own name to their dedicated Swan account.
+Each shareholder must transfer their share of the capital deposit themselves, from a bank account held in their own name to their dedicated Swan account.
 
-The transfer needs to:
+The shareholder needs their new Swan account IBAN to make the transfer.
+
+The transfer must:
 
 - Come from an account held in the shareholder's name.
-- Use an accepted bank account.
-- Match the shareholder's expected capital contribution.
+- Use a bank account accepted by Swan.
+- Match the shareholder's expected capital deposit amount.
 
 A transfer from an unsupported account or for the wrong amount may be rejected or returned.
 
+### Transfer timing
+
+The timing of the transfer depends on the shareholder's KYC flow:
+
+- **During KYC verification**: if Swan requests a first transfer, the shareholder may already have transferred their share of the capital deposit. Their new Swan account IBAN is made available at that point.
+- **During the funding stage**: if no first transfer is requested, the shareholder is prompted to transfer their share of the capital deposit once their IBAN is available.
+
+Shareholders can use either of the following [transfer methods](/topics/payments/credit-transfers/sepa/):
+
+- **Instant SEPA Credit Transfer**: funds arrive immediately.
+- **SEPA Credit Transfer**: funds arrive according to standard interbank processing times.
+
 Your partner experience should provide shareholders with:
 
-- Their Swan IBAN
-- The expected transfer amount
-- The transfer instructions
-- The status of their transfer
+- Their new Swan account IBAN.
+- The expected capital deposit amount.
+- The transfer instructions.
+- The status of their transfer.
+
+:::tip Recommended practice
+
+Configure your partner experience to send each shareholder an automated email or notification when their new Swan account IBAN becomes available.
+
+This should include:
+
+- The shareholder's new Swan account IBAN.
+- The expected capital deposit amount.
+- The transfer instructions.
+- A link or instructions for checking the transfer status.
+
+This helps them complete their transfer without waiting for manual follow-up.
+
+:::
 
 ### When this stage is complete
 
@@ -185,20 +246,22 @@ The Shareholder KYC & Funding stage is complete when:
 - All shareholders have completed the required onboarding.
 - All shareholders have completed the required verification.
 - Required shareholder documents have been submitted.
-- All shareholders have transferred their capital contributions.
+- All shareholders have transferred their share of the capital.
 - Swan has accepted the required information and transfers.
 
 :::caution Cancellation after shareholder transfers
 
-Once all shareholder capital transfers are complete, you can no longer cancel the capital deposit through the API.
+Once all shareholder capital transfers are complete, you can no longer cancel the capital deposit case through the API.
 
-Contact Swan if cancellation is still required.
+Contact Swan if you need to request cancellation after this point.
 
 :::
 
 ## Step 3: Case review
 
 ### What happens
+
+**Dashboard status:** `PendingInternalReview`
 
 Swan reviews the complete case, including:
 
@@ -208,11 +271,15 @@ Swan reviews the complete case, including:
 - Shareholder capital transfers
 - The future company's business activity and legal structure
 
-The case can return to an earlier stage if Swan needs a correction or additional information.
+This review typically takes around one business day. It may take longer if Swan requests corrections, additional information, or a new shareholder capital transfer.
+
+The case can return to an earlier stage if Swan needs a correction or additional information. Once the requested information or correction has been provided, Swan reviews the case again.
+
+If everything is in order, Swan validates the case and sends it to the notary.
 
 ### If the Dashboard shows `Action needed`
 
-Review the case progress and Documents section to identify the required action.
+Review the case progress and **Documents** section to identify the required action.
 
 The request may concern:
 
@@ -231,14 +298,14 @@ The refused document appears in the Documents section with the reason for the re
 You need to:
 
 1. Review the refusal reason.
-2. Identify the company administrator or shareholder who needs to act.
-3. Ask that person to provide a corrected document.
+2. Identify the account admin or shareholder who needs to act.
+3. Ask that person to provide the corrected document.
 4. Upload the replacement document from the Dashboard, when that action is available.
 5. Continue monitoring the case until Swan completes the next review.
 
-A document replacement does not complete the review by itself. Swan needs to review and accept the replacement before the case can continue.
+A document replacement doesn't complete the review by itself. Swan needs to review and accept the replacement before the case can continue.
 
-For technical upload instructions, see [Upload required documents](/topics/capital-deposits/guide-upload-documents).
+Refer to [Upload required documents](/topics/capital-deposits/guide-upload-documents) for technical upload instructions.
 
 ### If Swan requests other information
 
@@ -252,9 +319,11 @@ When this happens:
 - The user needs to provide the requested information through your partner experience.
 - You need to submit or upload the information through the supported process.
 
+Once the required information has been provided, the case returns to Swan for another review.
+
 ### If a capital transfer is returned
 
-Swan may return a shareholder's capital transfer if it does not meet the transfer requirements.
+Swan may return a shareholder's capital transfer if it doesn't meet the transfer requirements.
 
 When this happens:
 
@@ -264,7 +333,9 @@ When this happens:
 4. Ask the shareholder to make a new valid transfer.
 5. Continue monitoring the case until the replacement transfer is received.
 
-The case returns to the shareholder funding stage while the correction is completed.
+The case returns to `WaitingForInitialRequirements`, which corresponds to the Shareholder KYC & Funding stage, while the correction is completed.
+
+Once the new valid transfer has been received, the case returns to Swan for review.
 
 ### When this stage is complete
 
@@ -274,6 +345,8 @@ The case moves to Notary certification when:
 - Required documents have been accepted.
 - Capital transfers meet the requirements.
 - No additional information is outstanding.
+
+Swan then validates the case and sends it to the notary.
 
 ## Step 4: Notary certification
 
@@ -287,9 +360,9 @@ You can view and download the certificate from the capital deposits section of t
 
 ### What you need to do
 
-Monitor the Notary certification stage and make sure that the company administrator knows when the certificate is available.
+Monitor the Notary certification stage and make sure that the account admin knows when the certificate is available.
 
-The company administrator uses the certificate to register the company with the relevant French business registry.
+The account admin uses the certificate to register the company with the relevant French business registry.
 
 ### If the notary identifies a problem
 
@@ -297,19 +370,19 @@ If the notary identifies a missing document, incorrect information, or another i
 
 Review any action communicated by Swan and provide the requested information through the supported process.
 
-Do not treat the case as ready for company registration until the certificate is available.
+Don't treat the case as ready for company registration until the certificate is available.
 
 ## Step 5: Company registration and KBIS
 
 ### What happens
 
-The company administrator uses the capital share deposit certificate to register the company with the relevant French business registry.
+The account admin uses the capital share deposit certificate to register the company with the relevant French business registry.
 
-Once the company is registered, the company administrator obtains the KBIS, which is the official company registration extract.
+Once the company is registered, the account admin obtains the KBIS, which is the official company registration extract.
 
 ### What you need to do
 
-Ask the company administrator to provide the KBIS through your partner experience.
+Ask the account admin to provide the KBIS through your partner experience.
 
 Upload the KBIS through the Partner Dashboard when that action is available.
 
@@ -336,7 +409,7 @@ When this happens:
 1. The Dashboard shows that action is required.
 2. The refused KBIS appears in the Documents section.
 3. The refusal reason explains what needs to be corrected.
-4. The company administrator provides a corrected KBIS.
+4. The account admin provides a corrected KBIS.
 5. You upload the replacement through the Dashboard or supported upload process.
 6. You continue monitoring the case until the replacement is accepted.
 
@@ -366,7 +439,7 @@ Swan's final company verification includes:
 1. Reviewing the KBIS uploaded in Step 5.
 2. Retrieving the company's UBO declaration from the French registry.
 
-The company account-holder status may show `WaitingForInformation` while Swan processes this information. This status does not always mean that action is required from you or your user.
+The company account holder status may show `WaitingForInformation` while Swan processes this information. This status doesn't always mean that action is required from you or your user.
 
 There are three possible situations.
 
@@ -395,7 +468,7 @@ The request may concern:
 - Legal representative details
 - Other information about the organization
 
-You need to communicate the request to the company administrator and collect the requested information through your partner experience.
+You need to communicate the request to the account admin and collect the requested information through your partner experience.
 
 Upload the requested documents through the Dashboard or the supported document-upload process.
 
@@ -403,11 +476,11 @@ Upload the requested documents through the Dashboard or the supported document-u
 
 The capital deposit case and the company account have separate statuses.
 
-The capital deposit case reaches `Completed` when the notary's transfer arrives in the company account. This status does not confirm that the company account is active.
+The capital deposit case reaches `Completed` when the notary's transfer arrives in the company account. This status doesn't confirm that the company account is active.
 
 Swan may still need to complete the company's final KYC review.
 
-Before telling the company administrator that the account is open, check the company account status separately.
+Before telling the account admin that the account is open, check the company account status separately.
 
 The company account is active only after the company KYC review is complete.
 
@@ -418,7 +491,7 @@ Check both outcomes separately:
 - The capital deposit case shows `Completed`.
 - The company account status shows that the account is active.
 
-Your partner experience should communicate these outcomes separately so that the company administrator knows whether the funds have arrived and whether the account is ready to use.
+Your partner experience should communicate these outcomes separately so that the account admin knows whether the funds have arrived and whether the account is ready to use.
 
 ## Cancellation
 

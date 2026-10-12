@@ -5,8 +5,11 @@ title: Upload required documents
 # Upload required documents
 
 :::caution Multi-step process
-This page explains how to upload documents for steps 4 and 8 of a **multi-step process**.
-Refer to the [Dashboard guide](/topics/capital-deposits/guide-dashboard) for the whole process.
+
+This page explains how to upload documents for a capital deposit case using the API.
+
+Refer to the [Dashboard guide](/topics/capital-deposits/guide-dashboard) for the whole operational process.
+
 :::
 
 ## Step 1: Generate upload URL  {#generate-url}
@@ -17,6 +20,8 @@ Use the `generateCapitalDepositDocumentUploadUrl` mutation to generate an upload
 1. Enter all required information: `documentId`,`capitalDepositCaseId`, and `filename`.
 1. Add the `GenerateSupportingDocumentUploadUrlSuccessPayload` with the `uploadUrl`.
 1. Add other optional messages to the payload, either for validation or in case of rejection.
+
+Before generating an upload URL, retrieve the pre-assigned document ID from the capital deposit case or shareholder record. Use that ID when uploading the document.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gZ2VuZXJhdGVVcGxvYWRVcmwgewogIGdlbmVyYXRlQ2FwaXRhbERlcG9zaXREb2N1bWVudFVwbG9hZFVybCgKICAgIGlucHV0OiB7CiAgICAgIGRvY3VtZW50SWQ6ICIkWU9VUl9ET0NVTUVOVF9JRCIKICAgICAgY2FwaXRhbERlcG9zaXRDYXNlSWQ6ICIkWU9VUl9DQVBJVEFMREVQT1NJVENBU0VfSUQiCiAgICAgIGZpbGVuYW1lOiAiJEZJTEVfTkFNRSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBHZW5lcmF0ZUNhcGl0YWxEZXBvc2l0RG9jdW1lbnRVcGxvYWRVcmxTdWNjZXNzUGF5bG9hZCB7CiAgICAgIHVwbG9hZFVybAogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -41,7 +46,7 @@ mutation generateUploadUrl {
 Retrieve the generated `uploadUrl` in the payload.
 
 :::caution Upload URL expires
-The `uploadUrl` is **only valid for seven days**, after which you'd need to generate a new URL.
+The `uploadUrl` is **only valid for seven days**. If the URL expires, generate a new one before uploading the document.
 :::
 
 ```graphql {4} showLineNumbers
@@ -68,3 +73,11 @@ curl --upload-file $YOUR_FILE https://$UPLOAD_URL
 
 Repeat steps 1-3 to upload additional documents, as needed.
 You can also change the documents you already uploaded as long as the [document status](/topics/capital-deposits/#documents-statuses) remains `Uploaded`.
+
+## Replace a refused document
+
+If Swan refuses a document, review the refusal reason in the Dashboard or through the API. Correct the document and upload a replacement using the same process.
+
+After the replacement is uploaded, the document status returns to `Uploaded` while Swan reviews it again.
+
+You can replace a document while its status is `Uploaded`. Don't replace documents that have already reached `Validated`.

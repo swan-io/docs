@@ -14,9 +14,6 @@ related:
 
 <p className="ia-lede">Two compliant ways to meet the <Term id="verification-of-payee">Verification of Payee</Term> requirement. With the default option Swan runs the check and shows the result on its <Term id="consent">consent</Term> screen. With the custom option you call the mutation yourself and control what the user sees.</p>
 
-Swan offers two ways to meet the VoP requirement.
-Both are compliant. The difference is who runs the verification step and how much control you have over what the user sees.
-
 | | Option 1: Default verification | Option 2: Custom verification |
 | --- | --- | --- |
 | **Who runs the check** | Swan, when `initiateCreditTransfers` is called | You, by calling `verifyBeneficiary` before initiating |
@@ -34,11 +31,13 @@ Both are compliant. The difference is who runs the verification step and how muc
 | **Bulk Credit Transfers** | <Unsupported /> | <Supported /> | [Depends on the account](/payments/concepts/verification-of-payee/bulk-transfers) |
 | **Standing Orders** | <Supported /> | <Unsupported /> | Required at initiation stage |
 
+:::note Server-to-server consent
+Both options work with [server-to-server consent](/users/concepts/consent/server-to-server).
+:::
+
 ## Option 1: Default verification {#option-1}
 
-For single credit transfers, you don't have to do anything - Swan will run the VoP check at the initiation of the credit transfer and display the VoP result in the consent screen.
-
-Option 1 is [not available for Bulk Credit Transfers](#payment-support). Instead, **Option 2** is designed to handle high-volume payments efficiently and aligns with standard market practices.
+For single credit transfers there's nothing to implement: Swan runs the check inside `initiateCreditTransfers` and shows the result on its consent screen.
 
 <div style={{textAlign: 'center'}}>
 

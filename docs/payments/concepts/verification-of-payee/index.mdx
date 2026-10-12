@@ -23,23 +23,7 @@ import VerificationOfPayeeDefinition from '../../../_shared/definitions/_verific
 Required for all SEPA Credit Transfers and Instant SEPA Credit Transfers under the [European Instant Payments Regulation (IPR)](https://www.ecb.europa.eu/paym/integration/retail/instant_payments/html/instant_payments_regulation.en.html) published in March 2024, for all Payment Service Providers (PSPs) in the Eurozone offering SEPA Credit Transfers.
 :::
 
-## Overview {#overview}
-
-**Verification of Payee (VoP)** is a European service that checks beneficiary details against account holder information before initiating SEPA Credit Transfers and Instant SEPA Credit Transfers. This service aims to reduce payment fraud and errors by confirming that the beneficiary details match the account holder registered with the beneficiary's bank.
-
-### Key benefits {#benefits}
-
-For your integration:
-- **Reduced disputes**: Prevent misdirected payments and end-user support tickets.
-- **Better user experience**: Build trust through transparent payment verification.
-- **Operational efficiency**: Fewer payment failures and reversals to handle.
-
-For your end-users:
-- **Fraud protection**: Ensure the funds go to the intended recipient.
-- **Error prevention**: Catch typos and formatting issues early.
-- **Payment confidence**: Know transfers will reach the intended recipient.
-
-### Geographic scope and timeline {#coverage}
+## Geographic scope and timeline {#coverage}
 
 VoP applies to all countries in the SEPA region. Payment Service Providers (PSPs) have varying implementation timelines based on their location:
 
@@ -52,51 +36,18 @@ The service is **free of charge** for Swan account holders as mandated by the re
 
 ## Swan's VoP capabilities {#swan-vop-capabilities}
 
-Swan acts as both a requesting and a responding PSP:
+Swan acts as both a requesting and a responding PSP.
 
-- **Outgoing VoP requests**: When your users send transfers to external accounts, Swan verifies beneficiary details with the receiving bank before processing the payment.
-- **Incoming VoP requests**: When other PSPs send transfers to Swan accounts, Swan automatically responds to their verification requests using account holder information.
-
-Swan handles **incoming VoP requests** automatically, without any implementation from partners. Refer to [incoming VoP requests](/payments/concepts/verification-of-payee/incoming-requests) for how Swan matches the received details against the account holder.
-For **outgoing VoP requests**, you choose an [integration option](/payments/concepts/verification-of-payee/integration-options).
+- **Outgoing**: Swan verifies the beneficiary with the receiving bank before processing the transfer; you choose an [integration option](/payments/concepts/verification-of-payee/integration-options).
+- **Incoming**: Swan answers other PSPs' requests automatically from the account holder's details, nothing to implement; refer to [incoming VoP requests](/payments/concepts/verification-of-payee/incoming-requests).
 
 ## How VoP works {#how-vop-works}
 
 ### High-level flow {#high-level-flow}
 
-VoP happens before sending money to a beneficiary, through this process:
-
-1. **VoP required**: All SEPA Credit Transfers and Instant SEPA Credit Transfers must be verified before authorization.
-2. **Verification request**: Swan sends a VoP request to the beneficiary's bank with the <Term id="ibans">IBAN</Term> and beneficiary name.
-3. **Verification response**: The beneficiary's bank responds with the verification result.
-4. **Result displayed**: VoP result and associated warnings are shown to the end-user.
+Swan sends the beneficiary's bank the <Term id="ibans">IBAN</Term> and the name. Following the [EPC's recommended matching rules](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2024-10/EPC288-23%20v1.0%20EPC%20Recommendations%20for%20the%20Matching%20Processes%20under%20the%20VOP%20Scheme%20Rulebook_0.pdf), the name is the first and last name of a natural person (individual), or the legal or commercial name of a legal person (company).
 
 ```mermaid
-    %%{init: {
-        'theme': 'base',
-        'themeVariables': {
-            'primaryColor': '#6240b5',
-            'primaryTextColor': '#271a48',
-            'primaryBorderColor': '#4e3391',
-            'lineColor': '#a18cd3',
-            'secondaryColor': '#f8f7fc',
-            'tertiaryColor': '#ffffff',
-            'background': '#ffffff',
-            'mainBkg': '#ffffff',
-            'secondBkg': '#f8f7fc',
-            'tertiaryBkg': '#6240b5',
-            'activationBorderColor': '#4e3391',
-            'activationBkgColor': '#c0b3e1',
-            'sequenceNumberColor': '#ffffff',
-            'sectionBkgColor': '#f8f7fc',
-            'altSectionBkgColor': '#ffffff',
-            'gridColor': '#e5e7eb',
-            'disabledBkgColor': '#f3f4f6',
-            'disabledTextColor': '#9ca3af',
-            'fontSize': '16px',
-            'fontFamily': '"Inter", "Segoe UI", system-ui, sans-serif'
-        }
-    }}%%
 sequenceDiagram
     participant EU as End-user
     participant P as Partner
@@ -122,16 +73,12 @@ For outgoing VoP requests, results are determined solely by the **beneficiary's 
 If a result seems unexpected, the beneficiary's bank made that determination based on their own matching logic.
 :::
 
-Following the [European Payments Council (EPC)'s recommended matching rules](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2024-10/EPC288-23%20v1.0%20EPC%20Recommendations%20for%20the%20Matching%20Processes%20under%20the%20VOP%20Scheme%20Rulebook_0.pdf), the name is the first and last name of a natural person (individual), or the legal or commercial name of a legal person (company).
-
 ### VoP results {#vop-results}
 
 The beneficiary's bank can return one of four verification results. **All results must be displayed to the end-user**. Swan will systematically display the VoP result and warning on the SCA <Term id="consent">consent</Term> screen.
 
 <Tabs>
   <TabItem value="match" label="Match" id="vop-match" default>
-    #### Match result
-
     **Result**: Exact match found between provided details and account holder information
     
     **End-user action**: Safe to proceed with transfer
@@ -143,8 +90,6 @@ The beneficiary's bank can return one of four verification results. **All result
   </TabItem>
   
   <TabItem value="close" label="Close match" id="vop-close">
-    #### Close match result
-
     **Result**: Close match with suggested correction from beneficiary's bank
     
     **End-user action**: Review suggested name correction before proceeding
@@ -156,8 +101,6 @@ The beneficiary's bank can return one of four verification results. **All result
   </TabItem>
   
   <TabItem value="no-match" label="No match" id="vop-no-match">
-    #### No match result
-
     **Result**: No match found between provided details and account holder information
     
     **End-user action**: Verify beneficiary details carefully before proceeding
@@ -169,9 +112,7 @@ The beneficiary's bank can return one of four verification results. **All result
   </TabItem>
   
   <TabItem value="not-possible" label="Verification not possible" id="vop-not-possible">
-    #### Verification not possible result
-
-    **Result**: IBAN verification failed. Check the IBAN format, try again, or contact the recipient's bank if the issue persists.
+    **Result**: The beneficiary couldn't be verified, for example because of an invalid IBAN format.
     
     **End-user action**: Verify beneficiary details carefully before proceeding
     
@@ -182,13 +123,9 @@ The beneficiary's bank can return one of four verification results. **All result
   </TabItem>
 </Tabs>
 
-:::tip VoP enables informed decisions
-Verification of Payee provides verification results so end-users can make informed decisions, but doesn't block payments from proceeding.
-:::
-
 ### User liability with Verification of Payee {#user-liability}
 
-Users who authorize a transfer after receiving a Close match, No match, or Verification not possible warning accept the associated risks:
+VoP informs the user; it never blocks the payment. Users who authorize a transfer after a Close match, No match, or Verification not possible warning accept the associated risks:
 
 - The user bears responsibility if funds reach the wrong account.
 - Refunds are not available for misdirected transfers.
@@ -204,26 +141,13 @@ VoP applies to <Term id="standing-order">Standing Orders</Term> with two key dif
 
 ## Integration options {#integration-flows}
 
-Swan offers two compliant ways to meet the VoP requirement.
-Refer to [VoP integration options](/payments/concepts/verification-of-payee/integration-options) for the comparison, the supported payment types, and both flows.
-
-### Option 1: Default verification {#option-1}
-
-Swan runs the check when `initiateCreditTransfers` is called and shows the result on the consent screen. No development needed for single transfers.
-Refer to [Option 1: Default verification](/payments/concepts/verification-of-payee/integration-options#option-1).
-
-### Option 2: Custom verification {#option-2}
-
-You call `verifyBeneficiary` before initiating, show the result in your own interface, and pass the token to the transfer. Required for bulk transfers.
-Refer to [Option 2: Custom verification](/payments/concepts/verification-of-payee/integration-options#option-2).
+Swan offers two compliant ways to meet the requirement. With [default verification](/payments/concepts/verification-of-payee/integration-options#option-1), Swan runs the check inside `initiateCreditTransfers` and shows the result on the consent screen: nothing to implement for single transfers. With [custom verification](/payments/concepts/verification-of-payee/integration-options#option-2), you call `verifyBeneficiary` first and show the result yourself; required for bulk transfers.
+Refer to [VoP integration options](/payments/concepts/verification-of-payee/integration-options) for the comparison and the supported payment types.
 
 ## Bulk credit transfers {#bulk-credit-transfers}
 
-Bulk credit transfers require [Option 2](/payments/concepts/verification-of-payee/integration-options#option-2). Whether a verification token is mandatory depends on the account type and an account-level setting: individual accounts always require it, and company accounts can opt in or out.
-
-### Default requirements by account type {#bulk-requirements-summary}
-
-The defaults, the setting, and who can change it are on [bulk credit transfers with VoP](/payments/concepts/verification-of-payee/bulk-transfers#bulk-requirements).
+Bulk credit transfers require [custom verification](/payments/concepts/verification-of-payee/integration-options#option-2). Whether the token is mandatory depends on the account type and an account-level setting.
+Refer to [bulk credit transfers with VoP](/payments/concepts/verification-of-payee/bulk-transfers#bulk-requirements) for the defaults and who can change them.
 
 ## In this section
 

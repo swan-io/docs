@@ -14,7 +14,7 @@ import CancelCase from './partials/_cancel-case.mdx';
 
 :::caution Early-stage cancellation
 
-You can cancel a capital deposit case through the API only during the early stage of the process. The mutation is rejected once the case has progressed beyond `WaitingForInitialRequirements` or a shareholder has completed their capital transfer.
+You can cancel a capital deposit case through the API only during the early stage of the process. The mutation is rejected once the case has progressed beyond `WaitingForInitialRequirements` or all shareholders have completed their capital transfers.
 
 :::
 
@@ -71,7 +71,7 @@ The payload confirms the capital deposit case status changed to `Canceled` and r
 ## What happens after cancellation {#after-cancellation}
 
 When you cancel a capital deposit case, all associated accounts are automatically closed: shareholder accounts and the future company account.
-These accounts receive the [closure reason code](/topics/accounts/closure/#closure-reason-codes) `CapitalDepositWithdrawn`.
+These accounts receive a [closure reason code](/topics/accounts/closure/#closure-reason-codes).
 
 You can subscribe to the [`CapitalDepositCaseEvent.Canceled` webhook](/developers/using-api/webhooks#events-capital-deposits) to receive notifications when a capital deposit case is canceled.
 The [cancelation reason code](/topics/capital-deposits/#cancelation-reason-codes) is also available directly on the capital deposit case, in the `CapitalDepositCaseCanceledStatusInfo` type.

@@ -21,7 +21,7 @@ The main actions are:
 
 - Create a capital deposit case
 - Create the company and shareholder accounts
-- Complete identity and account-holder verification
+- Complete identity and account holder verification
 - Upload the required documents
 - Transfer the capital funds
 - Register the company
@@ -113,7 +113,7 @@ As of June 2026, Swan migrated these cases to the new cancellation reason codes.
 | `RefusedIbanCountry` | The country associated with the IBAN isn't supported. |
 | `CompanyRegistrationCountryNotSupported` | The company's country of registration isn't supported. |
 | `BusinessInactiveOrNotRegistered` | The company is inactive or not registered. |
-| `UnsupportedLegalForm` | The legal form cannot be onboarded by Swan. |
+| `UnsupportedLegalForm` | Swan can't onboard this legal form. |
 | `TCViolation` | The account holder violated the terms and conditions. |
 | `CapitalDepositWithdrawn` | The capital deposit was withdrawn. |
 | `CapitalDepositRefusedByNotary` | The notary refused the capital deposit case. |
@@ -192,7 +192,7 @@ A shareholder is an individual or legal entity that deposits funds in exchange f
 
 To deposit funds, each shareholder opens a temporary Swan payment account.
 
-Each shareholder needs to complete the [onboarding](/topics/onboarding/), [identification](/topics/users/identifications/), and [account-holder verification](/topics/onboarding/account-holders/#verification-process) processes.
+Each shareholder needs to complete the [onboarding](/topics/onboarding/), [identification](/topics/users/identifications/), and [account holder verification](/topics/onboarding/account-holders/#verification-process) processes.
 
 Once the required steps are complete, the shareholder receives an IBAN to use for the capital transfer.
 
@@ -230,7 +230,7 @@ flowchart LR
 | Shareholder status | Explanation |
 | --- | --- |
 | `PendingOnboarding` | The shareholder was created and needs to complete onboarding before continuing. |
-| `WaitingForVerification` | Account-holder verification is not complete. This status is bypassed when the account-holder status is already `Verified`. |
+| `WaitingForVerification` | [Account holder verification](/topics/onboarding/account-holders/#verification-process) is not complete. This status is bypassed when the account holder status is already `Verified`. |
 | `WaitingForTransfer` | The shareholder needs to transfer the full expected capital deposit amount to their Swan account. The transfer needs to come from an account held in the shareholder's name and needs to be a [SEPA Credit Transfer](/topics/payments/credit-transfers/sepa/). |
 | `CapitalTransferred` | The shareholder's capital has been received, but the rest of the capital deposit case still needs to be completed. |
 | `CapitalFundsWiredToNotary` | The shareholder's funds have been transferred to the notary, but the rest of the capital deposit case still needs to be completed. |
@@ -297,10 +297,10 @@ See [Update a capital deposit company](/topics/capital-deposits/guide-update-com
 
 ## Cancel a capital deposit {#cancel}
 
-You can cancel an ongoing capital deposit when cancellation is still available.
+You can cancel an ongoing capital deposit when cancellation is still available, which is any time before all the capital transfers are made. 
 
 import CancelCase from "./partials/_cancel-case.mdx";
 
-When a capital deposit case is canceled, associated shareholder accounts may also be closed.
+When a capital deposit case is canceled, associated shareholder accounts will also be closed.
 
 See [Cancel a capital deposit](/topics/capital-deposits/guide-cancel).

@@ -61,12 +61,14 @@ Following this process, the card will be either completely unblocked or remain s
 | --- | --- | --- | --- | --- |
 | **True** | Correct | Accepted | None | Card is completely unblocked |
 | | Incorrect | Rejected | `InvalidPin` | Card remains suspended |
+| | Correct | Rejected | None | Card remains suspended |
 | **False** | Correct | Rejected | `TransactionNotAuthorizedForCardholder` | Card is completely unblocked |
 | | Incorrect | Rejected | `InvalidPin` | Card remains active (2 attempts left before suspension) |
 
+
 #### Special case: Pending unblocking after calling `resumePhysicalCard`
 
-If the cardholder has called the `resumePhysicalCard` mutation but hasn't finished unblocking, either because they haven't entered their PIN yet, or because the payment terminal they used doesn't support unblocking:
+If the cardholder has called the `resumePhysicalCard` mutation but hasn't finished unblocking their card, either because they haven't entered their PIN yet, or because the payment terminal they used doesn't support unblocking:
 
 - The system rejects any transaction attempt (correct or incorrect PIN).
 - The rejection reason is `InvalidPinAttemptsExceeded`.  

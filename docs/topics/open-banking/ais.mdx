@@ -85,6 +85,12 @@ For complex cases involving multi-project users, submit a [Partner support reque
 
 ## Transaction field mapping {#field-mapping}
 
+:::caution Breaking change on 12 November 2026
+From 12 November 2026, `extra.additional_information` returns the transaction's `originTransactionId` instead of its `paymentId`. The Payment ID is no longer available through AIS.
+
+If you reconcile fee transactions or read the Payment ID from this field, update your integration before that date. For questions, submit a [Partner support request form](https://partner-support.swan.io/hc/en-gb/requests/new).
+:::
+
 The table below maps Swan's internal transaction fields to the external fields exposed through Salt Edge, following the Berlin Group standard.
 
 | Internal field (Swan) | External field (Salt Edge) | Notes |
@@ -97,7 +103,7 @@ The table below maps Swan's internal transaction fields to the external fields e
 | `statusInfo.valueDate` when `Booked`, otherwise `updatedAt` | `value_date` | Date in `YYYY-MM-DD` format. When the transaction is not booked, this refers to the `updatedAt` date. |
 | `label` | `remittance_information.unstructured` | Transaction label or description. Swan defaults to something like `Transfer to/from X` if the input was empty when initiating a SEPA Credit Transfer. |
 | `reference` | `remittance_information.structured` | Structured payment reference. |
-| `paymentId` | `extra.additional_information` | Not the same as the transaction ID. A payment can have multiple transactions, for example for fees. |
+| `originTransactionId` | `extra.additional_information` | ID of the origin transaction linked to this transaction, not the Payment ID. Lets accounting tools, such as DATEV in Germany, link a fee transaction back to the transaction that generated it. |
 | For SCTs: `creditor.name`. Else if user is on the credit side: `account.holder.info.name`. Else: `counterparty`. | `creditor_details.name` | Creditor or recipient name. |
 | `creditor.IBAN` | `creditor_details.account.iban` | Optional. Always served when the transaction is a SEPA Credit Transfer or the user is on the credit side. |
 | `creditor.currency` | `creditor_details.account.currency` | Optional. Only served when the user is on the credit side. |

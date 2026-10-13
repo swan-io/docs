@@ -68,7 +68,7 @@ If you provide `accountAdmin` information through the API and include the onboar
 | `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-### Birth information
+### Birth information {#birth-information}
 
 **Related field:** `accountAdmin.birthInfo`
 
@@ -77,7 +77,11 @@ If you provide `accountAdmin` information through the API and include the onboar
 | `birthDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Opt /> ¹</span> | <NA /> | <NA /> | <NA /> | <NA /> | <NA /> |
+
+¹ `postalCode` is only for people born in France. Don't provide it otherwise.
+
+All birth fields are optional in the API. If you don't prefill them, the account admin is asked at sign-up.
 
 ### Financial information
 
@@ -107,9 +111,9 @@ If you provide `accountAdmin` information through the API and include the onboar
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <Req /> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> |
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <Req /> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
 
-¹ `taxIdentificationNumber` is required if any of the following conditions are true:
+² `taxIdentificationNumber` is required if any of the following conditions are true:
 
 - `accountAdmin.address.country` is different from `accountInfo.country`.
 - `accountAdmin.address.country` is Germany, Italy, or Belgium.
@@ -121,9 +125,9 @@ If you provide `accountAdmin` information through the API and include the onboar
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `isUnitedStatesPerson` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> |
 
-² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+³ `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
 
 ### User device information
 
@@ -155,7 +159,7 @@ If you use Swan's no-code Web Banking, the following fields are collected during
 
 - `accountAdmin.firstName`, `lastName`, `nationality`.
 - `accountAdmin.address`: `addressLine1`, `city`, `country`, `postalCode`.
-- `accountAdmin.birthInfo`: `birthDate`, `city`, `country`, `postalCode`.
+- `accountAdmin.birthInfo`: `birthDate`, `city`, `country`. `postalCode` is only collected when the account country is France and `country` is France.
 - `accountAdmin.unitedStatesTaxInfo`.
 
 ## API mapping

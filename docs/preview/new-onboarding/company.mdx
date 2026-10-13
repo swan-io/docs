@@ -66,18 +66,22 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 | `birthDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Opt /> ¹</span> | <NA /> | <NA /> | <NA /> | <NA /> | <NA /> |
+
+¹ `postalCode` is only for people born in France. Don't provide it otherwise.
+
+All birth fields are optional in the API. If you don't prefill them, the account admin is asked at sign-up.
 
 ### United States tax information (`accountAdmin.unitedStatesTaxInfo`)
 
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `isUnitedStatesPerson` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> |
-| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
+| `isUnitedStatesPerson` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> |
 
-¹ `isUnitedStatesPerson` is required if the `companyType` is `SelfEmployed`.
+² `isUnitedStatesPerson` is required if the `companyType` is `SelfEmployed`.
 
-² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+³ `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
 
 ### User device information (`accountAdmin.userDeviceInfo`)
 
@@ -97,7 +101,7 @@ These fields are hidden from end users. Provide them through your backend integr
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `name` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `registrationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> |
+| `registrationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> |
 | `registrationDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `legalFormCode` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `businessActivity` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
@@ -113,7 +117,7 @@ These fields are hidden from end users. Provide them through your backend integr
 
 `acquisitionChannel` is hidden from end users. Provide it through your backend integration only.
 
-³ `registrationNumber` is required if `company.address.country` is not Germany.
+⁴ `registrationNumber` is required if `company.address.country` is not Germany.
 
 **Available options**
 
@@ -135,10 +139,10 @@ Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query
 
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁴</span> |
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> |
 | `vatNumber` | <Opt /> | <Opt /> | <Req /> | <Opt /> | <Opt /> | <Opt /> |
 
-⁴ `company.taxIdentificationNumber` is required if any of the following conditions are true:
+⁵ `company.taxIdentificationNumber` is required if any of the following conditions are true:
 
 - `accountInfo.country` is Germany, Italy, or Spain.
 - `company.address.country` is different from `accountInfo.country`.
@@ -172,11 +176,11 @@ Each individual must have a `type` that determines which additional fields are r
 | `firstName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `lastName` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `sex` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `nationality` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁵</span> |
+| `nationality` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> |
 | `email` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `preferredFirstName` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-⁵ `nationality` is required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+⁶ `nationality` is required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 
 **Available options**
 
@@ -187,35 +191,35 @@ Each individual must have a `type` that determines which additional fields are r
 
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `addressLine1` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> | <Req /> |
+| `addressLine1` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> |
 | `addressLine2` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-| `city` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> | <Req /> |
+| `city` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> |
 | `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁶</span> | <Req /> | <Req /> |
+| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Opt /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> |
 | `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
-⁶ In France and the Netherlands, `addressLine1`, `city`, and `postalCode` are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+⁷ In France and the Netherlands, `addressLine1`, `city`, and `postalCode` are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 
 #### Birth information (`relatedIndividuals[i].birthInfo`)
 
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `birthDate` | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `city` | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `birthDate` | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <Req /> | <Req /> | <Req /> | <Req /> |
+| `city` | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <NA /> | <NA /> | <NA /> | <NA /> | <NA /> |
+| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <NA /> | <NA /> | <NA /> | <NA /> | <NA /> |
 
-⁷ In Germany, `birthDate` and `city` are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+⁸ In Germany, `birthDate` and `city` are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 
-⁸ `postalCode` is required if `birthInfo.country` is `FRA`. Don't provide it otherwise.
+⁹ `postalCode` is required if `birthInfo.country` is `FRA`. Don't provide it otherwise.
 
 #### Tax information
 
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> |
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> |
 
-⁹ `taxIdentificationNumber` is required if all of the following are true:
+¹⁰ `taxIdentificationNumber` is required if all of the following are true:
 
 - `type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 - One of the following:
@@ -227,9 +231,9 @@ Each individual must have a `type` that determines which additional fields are r
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `isUnitedStatesPerson` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> |
 
-¹⁰ `unitedStatesTaxIdentificationNumber` is required if `relatedIndividuals[i].unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+¹¹ `unitedStatesTaxIdentificationNumber` is required if `relatedIndividuals[i].unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
 
 #### Legal Representative fields
 
@@ -246,13 +250,13 @@ The `ultimateBeneficialOwner` object is required if `type` is `UltimateBeneficia
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `ultimateBeneficialOwner.qualificationType` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `ultimateBeneficialOwner.ownership.type` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> |
-| `ultimateBeneficialOwner.ownership.totalPercentage` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> |
-| `ultimateBeneficialOwner.controlTypes` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> |
+| `ultimateBeneficialOwner.ownership.type` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> |
+| `ultimateBeneficialOwner.ownership.totalPercentage` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> |
+| `ultimateBeneficialOwner.controlTypes` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹³</span> |
 
-¹¹ `ownership.type` and `ownership.totalPercentage` are required if `qualificationType` is `Ownership`.
+¹² `ownership.type` and `ownership.totalPercentage` are required if `qualificationType` is `Ownership`.
 
-¹² `controlTypes` is required if `qualificationType` is `Control`.
+¹³ `controlTypes` is required if `qualificationType` is `Control`.
 
 **Available options**
 
@@ -298,7 +302,7 @@ If you use Swan-hosted onboarding, the following fields are collected during the
 
 - `accountAdmin.firstName`, `lastName`, `nationality`.
 - `accountAdmin.address`: `addressLine1`, `city`, `country`, `postalCode`.
-- `accountAdmin.birthInfo`: `birthDate`, `city`, `country`, `postalCode`.
+- `accountAdmin.birthInfo`: `birthDate`, `city`, `country`. `postalCode` is only collected when the account country is France and `country` is France.
 - `company.relatedCompanies`: `entityName`, `registrationCountry`, `registrationNumber`, `roles`.
 
 ## API mapping

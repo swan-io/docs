@@ -203,17 +203,19 @@ Each individual must have a `type` that determines which additional fields are r
 | `birthDate` | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `city` | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <Req /> | <Req /> |
 | `country` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `postalCode` | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁷</span> | <Req /> |
+| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <NA /> | <NA /> | <NA /> | <NA /> | <NA /> |
 
-⁷ In Germany (for `birthDate`, `city`, `postalCode`) and Spain (for `postalCode` only), these fields are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+⁷ In Germany, `birthDate` and `city` are required if `type` is `LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`.
+
+⁸ `postalCode` is required if `birthInfo.country` is `FRA`. Don't provide it otherwise.
 
 #### Tax information
 
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁸</span> |
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> |
 
-⁸ `taxIdentificationNumber` is required if all of the following are true:
+⁹ `taxIdentificationNumber` is required if all of the following are true:
 
 - `type` is `UltimateBeneficialOwner` or `LegalRepresentativeAndUltimateBeneficialOwner`.
 - One of the following:
@@ -225,9 +227,9 @@ Each individual must have a `type` that determines which additional fields are r
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `isUnitedStatesPerson` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ⁹</span> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> |
 
-⁹ `unitedStatesTaxIdentificationNumber` is required if `relatedIndividuals[i].unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+¹⁰ `unitedStatesTaxIdentificationNumber` is required if `relatedIndividuals[i].unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
 
 #### Legal Representative fields
 
@@ -244,13 +246,13 @@ The `ultimateBeneficialOwner` object is required if `type` is `UltimateBeneficia
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `ultimateBeneficialOwner.qualificationType` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `ultimateBeneficialOwner.ownership.type` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> |
-| `ultimateBeneficialOwner.ownership.totalPercentage` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹⁰</span> |
-| `ultimateBeneficialOwner.controlTypes` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> |
+| `ultimateBeneficialOwner.ownership.type` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> |
+| `ultimateBeneficialOwner.ownership.totalPercentage` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹¹</span> |
+| `ultimateBeneficialOwner.controlTypes` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹²</span> |
 
-¹⁰ `ownership.type` and `ownership.totalPercentage` are required if `qualificationType` is `Ownership`.
+¹¹ `ownership.type` and `ownership.totalPercentage` are required if `qualificationType` is `Ownership`.
 
-¹¹ `controlTypes` is required if `qualificationType` is `Control`.
+¹² `controlTypes` is required if `qualificationType` is `Control`.
 
 **Available options**
 

@@ -72,7 +72,11 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 | `birthDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Opt /> ¹</span> | <NA /> | <NA /> | <NA /> | <NA /> | <NA /> |
+
+¹ `postalCode` is only for people born in France. Don't provide it otherwise.
+
+All birth fields are optional in the API. If you don't prefill them, the account admin is asked at sign-up.
 
 <CountryCodeBirth />
 
@@ -100,9 +104,9 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <Req /> |
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <Req /> |
 
-¹ `taxIdentificationNumber` is required if any of the following conditions are true:
+² `taxIdentificationNumber` is required if any of the following conditions are true:
 
 - `accountAdmin.address.country` is different from `accountInfo.country`.
 - `accountAdmin.address.country` is Germany, Italy, or Belgium.
@@ -112,9 +116,9 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 | Field | 🇫🇷<br/>France | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain | 🇧🇪<br/>Belgium |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `isUnitedStatesPerson` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> |
 
-² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+³ `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
 
 ### User device information (`accountAdmin.userDeviceInfo`)
 
@@ -142,7 +146,7 @@ If you use Swan-hosted onboarding, the following fields are collected during the
 
 - `accountAdmin.firstName`, `lastName`, `nationality`.
 - `accountAdmin.address`: `addressLine1`, `city`, `country`, `postalCode`.
-- `accountAdmin.birthInfo`: `birthDate`, `city`, `country`, `postalCode`.
+- `accountAdmin.birthInfo`: `birthDate`, `city`, `country`. `postalCode` is only collected when the account country is France and `country` is France.
 - `accountAdmin.unitedStatesTaxInfo`.
 
 ## API mapping

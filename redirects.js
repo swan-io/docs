@@ -42,8 +42,11 @@ module.exports = [
   { from: "/guide/control-card-usage", to: "/topics/payments/cards/sandbox" },
   {
     from: "/guide/create-a-capital-deposit",
-    to: "/topics/capital-deposits/france/guide",
+    to: "/topics/capital-deposits/",
   },
+  { from: "/topics/capital-deposits/france/guide", to: "/topics/capital-deposits/guide-dashboard" },
+  { from: "/topics/capital-deposits/france/guide-create-case", to: "/topics/capital-deposits/guide-create-case" },
+  { from: "/topics/capital-deposits/france/guide-upload-documents", to: "/topics/capital-deposits/guide-upload-documents" },
   { from: "/guide/create-a-new-account", to: "/topics/onboarding/#links" },
   { from: "/guide/fund-an-account", to: "/topics/accounts/funding/" },
   {

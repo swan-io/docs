@@ -14,24 +14,13 @@ When your <Term id="merchant-payment-method">merchant payment method</Term> has 
 Subscribe to the `MerchantPaymentMethod.Updated` <Term id="webhooks">webhook</Term> to know when the status of the payment method changes.
 :::
 
-## Guide {#guide}
-
-1. See which information is missing by checking the verification requirements.
-1. Check if your project requires additional information.
-1. Update the <Term id="merchant-profile">merchant profile</Term> with the missing information.
-1. Get the supporting documents collection ID.
-1. Upload documents.
-1. Request a collection review.
-
-### Step 1: See which information is missing {#step-1}
-
-To find the missing information, check the verification requirements associated with the `WaitingForInformation` status.
+## Step 1: See which information is missing {#step-1}
 
 There are three types of verification requirements: **fields**, **supporting document purposes**, and **additional information**.
 
 Additional information is only required for some projects. (See [step 2](#step-2).)
 
-#### Query {#query-requirements}
+### Query {#query-requirements}
 
 <a href="https://explorer.swan.io?query=cXVlcnkgR2V0UGF5bWVudE1ldGhvZFJlcXVpcmVtZW50cyB7CiAgbWVyY2hhbnRQYXltZW50TWV0aG9kKGlkOiAiJE1FUkNIQU5UX1BBWU1FTlRfTUVUSE9EX0lEIikgewogICAgaWQKICAgIHN0YXR1c0luZm8gewogICAgICBfX3R5cGVuYW1lCiAgICAgIHN0YXR1cwogICAgICAKICAgICAgLi4uIG9uIFdhaXRpbmdGb3JJbmZvcm1hdGlvbk1lcmNoYW50UGF5bWVudE1ldGhvZFN0YXR1c0luZm8gewogICAgICAgIHZlcmlmaWNhdGlvblJlcXVpcmVtZW50cyB7CiAgICAgICAgICAuLi4gb24gTWVyY2hhbnRSZXF1aXJlbWVudHMgewogICAgICAgICAgICBmaWVsZHMKICAgICAgICAgIH0KICAgICAgICAgIC4uLiBvbiBTdXBwb3J0aW5nRG9jdW1lbnRSZXF1aXJlbWVudHMgewogICAgICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRQdXJwb3NlcwogICAgICAgICAgfQogICAgICAgICAgLi4uIG9uIEFkZGl0aW9uYWxJbmZvcm1hdGlvblJlcXVpcmVtZW50cyB7CiAgICAgICAgICAgIGFkZGl0aW9uYWxJbmZvcm1hdGlvbgogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -65,7 +54,7 @@ import Environments from '../../../_shared/partials/_environments.mdx';
 
 <Environments />
 
-#### Payload {#payload-requirements}
+### Payload {#payload-requirements}
 
 ```json {} showLineNumbers
 {
@@ -93,11 +82,11 @@ import Environments from '../../../_shared/partials/_environments.mdx';
 }
 ```
 
-### Step 2: Check if this project requires additional information {#step-2}
+## Step 2: Check if this project requires additional information {#step-2}
 
 Use the `projectInfo` query to check if this applies to your project. 
 
-#### Query {#query-additional-info}
+### Query {#query-additional-info}
 
 <a href="https://explorer.swan.io?query=cXVlcnkgQ2hlY2tJZkFkZGl0aW9uYWxJbmZvcm1hdGlvbkFwcGxpZXMgewogIHByb2plY3RJbmZvIHsKICAgIGV4cGVjdGVkTWVyY2hhbnRQcm9maWxlQWRkaXRpb25hbEluZm9ybWF0aW9uCiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -109,7 +98,7 @@ query CheckIfAdditionalInformationApplies {
 }
 ```
 
-#### Payload {#payload-additional-info}
+### Payload {#payload-additional-info}
 
 ```json {} showLineNumbers
 {
@@ -123,11 +112,11 @@ query CheckIfAdditionalInformationApplies {
 }
 ```
 
-### Step 3: Update the merchant profile with the missing information {#step-3}
+## Step 3: Update the merchant profile with the missing information {#step-3}
 
 For verification requirements indicated under `fields` and `additionalInformation`, provide them by requesting a merchant profile update.
 
-#### Mutation {#mutation-update}
+### Mutation {#mutation-update}
 
 1. Add the required fields to the input.
 1. If your project requires additional information, add it here.
@@ -182,7 +171,7 @@ mutation RequestMerchantProfileUpdate {
 }
 ```
 
-#### Payload {#payload-update}
+### Payload {#payload-update}
 
 The new provided values appear under `requestMerchantProfileUpdate`. The values will only be reflected on the merchant profile after the request is approved by Swan.
 
@@ -211,7 +200,7 @@ The new provided values appear under `requestMerchantProfileUpdate`. The values 
 }
 ```
 
-### Step 4: Get the supporting documents collection ID {#step-4}
+## Step 4: Get the supporting documents collection ID {#step-4}
 
 When supporting documents are required by a payment method, the merchant profile has a supporting documents collection with the `WaitingForDocument` status.
 
@@ -220,10 +209,10 @@ Query the merchant profile to get the collection ID and see which documents are 
 :::tip Document purposes
 A purpose indicates what's needed (for example, `CompanyRegistration`). The `acceptableSupportingDocumentTypes` field lists which document types can satisfy each purpose.
 
-For more details about required documents, refer to the [Document Center](/accounts/reference/onboarding/country-requirements).
+For the documents accepted per purpose and country, refer to [country requirements](/accounts/reference/onboarding/country-requirements).
 :::
 
-#### Query {#query-documents}
+### Query {#query-documents}
 
 1. Call the `merchantProfile` query with your merchant profile ID (line 2).
 1. Add the `supportingDocumentCollections` field to your query (line 3).
@@ -262,7 +251,7 @@ query GetSupportingDocumentCollection {
 }
 ```
 
-#### Payload {#payload-documents}
+### Payload {#payload-documents}
 
 ```json {} showLineNumbers
 {
@@ -301,20 +290,18 @@ query GetSupportingDocumentCollection {
 }
 ```
 
-### Step 5: Upload documents {#step-5}
+## Step 5: Upload documents {#step-5}
 
 There are two ways to upload documents:
 
-#### Option 1: Generate upload URL with the API {#option-1}
-
-Supporting documents work the same way as for onboarding and <Term id="transactions">transactions</Term>.
+### Option 1: Generate upload URL with the API {#option-1}
 
 Use the collection ID from the previous step to generate the supporting document upload link.
 
 Refer to the guide: [Upload a supporting document for an onboarding](/accounts/guides/documents/upload-onboarding).
 Then [request a review for the collection](/accounts/guides/documents/request-collection-review).
 
-#### Option 2: Use Web Banking {#option-2}
+### Option 2: Use Web Banking {#option-2}
 
 Direct users to Swan's Web Banking interface to upload their documents.
 Use the `supportingDocumentCollectionUrl` field from the supporting document collection (step 4) to get the upload form link. Share the link with your users so they can upload their documents directly in Web Banking.

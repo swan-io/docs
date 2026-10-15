@@ -8,19 +8,15 @@ related:
 
 # Update a merchant profile
 
-You can [request an update to a merchant profile](/payments/concepts/merchants/profiles#profiles-update) with the API.
-If you use **Swan's Web Banking interface**, merchants can request an update through their app.
-
-Request an update for the merchant's name, website, product type, expected monthly payment volume, expected average basket, and logo.
-**All updates are reviewed by Swan**.
+Request an update to a <Term id="merchant-profile">merchant profile</Term> with the `requestMerchantProfileUpdate` mutation.
+Swan [reviews every update](/payments/concepts/merchants/profiles#profiles-update) before publishing it to the profile; the same page covers updates made from Web Banking.
 
 ## Guide {#guide}
 
 1. Call the `requestMerchantProfileUpdate` mutation. You don't need <Term id="consent">consent</Term>.
 1. Include **only** the information you wish to update.
-    - Possible fields: `merchantName`, `productType`, `expectedMonthlyMerchantProcessingVolume`, `expectedAverageBasket`.
-1. Configure the success payload to display the updated information in case you need to verify it.
-1. Add relevant payload and rejection details (not shown) to your mutation.
+    - Possible fields: `merchantName`, `productType`, `expectedMonthlyMerchantProcessingVolume`, `expectedAverageBasket`, `merchantWebsiteUrl`, `socialNetworkUrl`, `supportWebsiteUrl`, `termsAndConditionsUrl`, `customerRegion`, `paymentFrequency`, `merchantLogo`, and `additionalInformation`. `accentColor` can also be updated here, and is applied immediately without review.
+1. Add the updated fields to the success payload so you can verify them, plus the rejection details you need (not shown).
     - In the following example, the `expectedAverageBasket`, or expected average transaction, changed from €50 to €75 (line 5). Therefore, request the updated basket in the success payload (lines 12-14).
 
 ## Mutation {#mutation}

@@ -14,10 +14,9 @@ related:
 
 Use the `verifyBeneficiary` mutation to verify beneficiary details before initiating <Term id="credit-transfer">SEPA Credit Transfers</Term>.
 
-With this mutation, you present the verification result to the end-user yourself. This is required for bulk credit transfers when [verification tokens are mandatory for the account](/payments/concepts/verification-of-payee/bulk-transfers#account-settings).
+This is [Option 2: Custom verification](/payments/concepts/verification-of-payee/integration-options#option-2): you show the result to the user yourself. It's required for bulk credit transfers when [tokens are mandatory for the account](/payments/concepts/verification-of-payee/bulk-transfers#account-settings); for single transfers, Swan can [run the check for you](/payments/concepts/verification-of-payee/integration-options#option-1).
 
 :::tip Prerequisites
-- You're planning to initiate an Instant SEPA Credit Transfer, SEPA Credit Transfer or Internal Credit Transfer.
 - Authentication required with a **user access token** or **project access token**.
 :::
 
@@ -30,18 +29,16 @@ With this mutation, you present the verification result to the end-user yourself
 5. **Use token**: Add the `beneficiaryVerificationToken` to the `CreditTransferInput` in [the `initiateCreditTransfers` mutation](/payments/guides/credit-transfers/sepa/initiate-ct).
 6. **User gives <Term id="consent">consent</Term>**: Complete the payment authorization.
 
-This is [Option 2: Custom verification](/payments/concepts/verification-of-payee/integration-options#option-2). For single transfers, Swan can run the check for you instead.
-
 ## Step 1: Call verifyBeneficiary {#step-1}
 
-Call the mutation with the beneficiary details ([`beneficiaryInput`](https://api-reference.swan.io/inputs/beneficiary-input/)) you want to verify. The mutation returns a verification result and a token for use in payment initiation.
+Call the mutation with the beneficiary details ([`beneficiaryInput`](https://api-reference.swan.io/inputs/beneficiary-input/)) you want to verify.
 
 The `verifyBeneficiary` mutation accepts different types of beneficiary inputs.
 The beneficiary name can't exceed 70 characters.
 
 - **SEPA beneficiary** (`sepa`): For external SEPA Credit Transfers using <Term id="ibans">IBAN</Term> and name.
 - **Swan account** (`swanAccount`): For internal transfers between Swan accounts.
-- **Trusted beneficiary** (`trustedBeneficiaryId`): For pre-verified beneficiaries saved in your account.
+- **Trusted beneficiary** (`trustedBeneficiaryId`): For a <Term id="trusted-beneficiary">trusted beneficiary</Term> already saved on the account.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gQmVuZWZpY2lhcnlWZXJpZmljYXRpb25NdXRhdGlvbiB7CiAgdmVyaWZ5QmVuZWZpY2lhcnkoCiAgICBpbnB1dDogewogICAgICBiZW5lZmljaWFyeTogewogICAgICAgIHNlcGE6IHsgaWJhbjogIklUMjNQMDMwMDIwMzI4MDYzMjEyMzU1Mzc0OCIsIG5hbWU6ICJDbG9zZU1hdGNoIiB9CiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBiZW5lZmljaWFyeVZlcmlmaWNhdGlvblRva2VuCiAgICAgIGV4cGlyZXNBdAogICAgICB2ZXJpZnlCZW5lZmljaWFyeVJlc3VsdCB7CiAgICAgICAgLi4uIG9uIFZlcmlmeUJlbmVmaWNpYXJ5Tm90UG9zc2libGUgewogICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU5vTWF0Y2ggewogICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICAgIC4uLiBvbiBWZXJpZnlCZW5lZmljaWFyeU1hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIHN0YXR1cwogICAgICAgIH0KICAgICAgICAuLi4gb24gVmVyaWZ5QmVuZWZpY2lhcnlDbG9zZU1hdGNoIHsKICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgIG5hbWVTdWdnZXN0aW9uCiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgICAgc3RhdHVzCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
@@ -92,7 +89,7 @@ import Environments from '../../../../_shared/partials/_environments.mdx';
 
 ## Step 2: Handle verification results {#step-2}
 
-The mutation returns one of four possible verification results. Display the result and the recommended action so the user can decide before consenting.
+The mutation returns one of the four [VoP results](/payments/concepts/verification-of-payee#vop-results). Display the result and the recommended action so the user can decide before consenting.
 
 | Result | Description | Recommended<br/>end-user action |
 | --- | --- | --- |
@@ -267,9 +264,7 @@ When you initiate a credit transfer using a token, the same membership rights ap
 
 ## Saving beneficiaries during verification {#saving-beneficiaries}
 
-When you verify a SEPA Beneficiary or a swanAccount, you can set the boolean `save` to `true`. If the token is then used to initiate a credit transfer, Swan creates the trusted beneficiary.
-
-No trusted beneficiary is added when calling `verifyBeneficiary`, but your request to save it is contained within the token. The beneficiary is only saved after successful payment authorization, similar to the functionality described in [Add a beneficiary](/payments/guides/credit-transfers/sepa/add-beneficiary).
+When you verify a SEPA beneficiary or a Swan account, you can set `save` to `true`. Nothing is saved when `verifyBeneficiary` returns: the request travels inside the token. When the token is used to initiate a credit transfer, Swan creates the trusted beneficiary in `ConsentPending`; it becomes `Enabled` once the user consents to the payment, as with [Add a beneficiary](/payments/guides/credit-transfers/sepa/add-beneficiary). Refer to [trusted beneficiary statuses](/payments/concepts/credit-transfers/statuses#beneficiaries-statuses).
 
 ## Get a beneficiary verification result {#get-result}
 
@@ -296,7 +291,3 @@ query GetBeneficiaryVerificationResult {
   }
 }
 ```
-
-:::note Server-to-server consent
-You can initiate credit transfers with [server-to-server consent](/users/concepts/consent/server-to-server) and Verification of Payee. It works with [both integration options](/payments/concepts/verification-of-payee/integration-options).
-:::

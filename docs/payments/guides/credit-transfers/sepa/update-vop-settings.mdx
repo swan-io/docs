@@ -17,10 +17,10 @@ Let company account holders opt in to, or out of, mandatory <Term id="verificati
 Refer to [bulk credit transfers with VoP](/payments/concepts/verification-of-payee/bulk-transfers) for the default requirement by account type and how the setting works.
 
 :::tip Prerequisites
-- The account belongs to a **company** account holder. Individual accounts always require VoP for bulk transfers and can't change the setting.
+- The account belongs to a **company** account holder.
 - The user has both the `canViewAccount` and `canInitiatePayments` permissions.
 - The user's <Term id="account-membership">account membership</Term> is `Enabled`.
-- To make VoP mandatory, your integration must already call the [`verifyBeneficiary` mutation](/payments/guides/credit-transfers/sepa/verify-beneficiary) and pass verification tokens. Until it does, bulk transfers are limited to accounts that stay opted out.
+- To make VoP mandatory, your integration must already call the [`verifyBeneficiary` mutation](/payments/guides/credit-transfers/sepa/verify-beneficiary) and pass verification tokens.
 :::
 
 ## Guide {#guide}
@@ -84,7 +84,7 @@ import Environments from '../../../../_shared/partials/_environments.mdx';
 
 ### Success response {#success-response}
 
-For opt-in requests (no consent required).
+Opt in (`false`):
 
 ```json title="Payload" {7}
 {
@@ -101,7 +101,7 @@ For opt-in requests (no consent required).
 }
 ```
 
-For opt-out requests (consent required).
+Opt out (`true`):
 
 ```json title="Payload" {4,6}
 {
@@ -118,23 +118,21 @@ For opt-out requests (consent required).
 
 ### Error handling {#error-handling}
 
-The mutation can return several rejection types.
-
 | Rejection | Description |
 | --- | --- |
 | **AccountNotFoundRejection** | The provided account ID doesn't exist. |
 | **AccountHolderNotFoundRejection** | The account holder doesn't exist. |
-| **AccountHolderTypeNotEligibleRejection** | Only company account holders can modify this setting |
-| **AccountMembershipNotEligibleRejection** | User lacks required permissions (`canViewAccount` + `canInitiatePayments`) |
+| **AccountHolderTypeNotEligibleRejection** | Only company account holders can modify this setting. |
+| **AccountMembershipNotEligibleRejection** | User lacks required permissions (`canViewAccount` + `canInitiatePayments`). |
 | **AccountMembershipStatusNotEligibleRejection** | User's account membership must be `Enabled`. |
-| **ForbiddenRejection** | User not allowed or wrong context used |
+| **AccountMembershipNotFoundRejection** | The user has no membership on this account. |
+| **AccountTypeNotEligibleRejection** | The account type isn't eligible for this setting. |
+| **ForbiddenRejection** | User not allowed or wrong context used. |
+| **ValidationRejection** | An input contains invalid data. |
+| **InternalErrorRejection** | Unexpected server error. |
 
 ## Webhook notifications {#webhook-notifications}
 
 Subscribe to the `AccountSetting.Updated` [webhook](/build/using-api/webhooks) to receive notifications when the `allowBulkCreditTransfersWithoutBeneficiaryVerification` setting changes.
 
-Setting changes can be triggered by:
-- The user through the `updateAccountSettings` mutation.
-- A Swan agent following a user support request.
-
-This webhook helps you track account setting changes and maintain an audit trail for [dispute protection](/payments/concepts/verification-of-payee/bulk-transfers#dispute-preparation).
+Changes come from this mutation or from a Swan agent after a support request; record them for [dispute preparation](/payments/concepts/verification-of-payee/bulk-transfers#dispute-preparation).

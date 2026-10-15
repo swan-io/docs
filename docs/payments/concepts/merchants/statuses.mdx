@@ -60,7 +60,7 @@ A merchant profile can be rejected for the following reasons, available in the `
 | `AccountClosed` | The corresponding account is `Closed`. |
 
 :::info For Partners only
-These rejection reasons are intended for Partners and shouldn't be displayed to end users.
+The rejection reasons on this page, for profiles and for payment methods, are intended for Partners and shouldn't be displayed to end users.
 If you need more details about a specific rejection, contact Swan.
 :::
 
@@ -96,7 +96,7 @@ style U fill:#dfedf2,stroke:#4d8296, stroke-width:3px
 
 | Payment method status | Explanation |
 |---|---|
-| `PendingReview` | The payment method is under review by Swan. While a profile is `PendingReview`, you can still request payment methods.<br /><br />**Next steps**: If the request doesn't meet Swan's requirements or is considered a risk, the status moves to `Rejected`. If Swan needs more information, it moves to `WaitingForInformation`. Otherwise, it moves to `Enabled`. |
+| `PendingReview` | The payment method is under review by Swan.<br /><br />**Next steps**: If the request doesn't meet Swan's requirements or is considered a risk, the status moves to `Rejected`. If Swan needs more information, it moves to `WaitingForInformation`. Otherwise, it moves to `Enabled`. |
 | `WaitingForInformation` | More information is needed before Swan can review the payment method. The `verificationRequirements` list shows what the Partner must provide to trigger a new review. [Provide the missing information](/payments/guides/merchants/missing-information), then request a new review with the `requestSupportingDocumentCollectionReview` mutation.<br /><br />**Next steps**: After all required information is submitted, the status returns to `PendingReview` for a new review. |
 | `Enabled` | The payment method is active. Use `Enabled` payment methods to accept payments. Updates to payment methods can only occur when they're `Enabled`.<br /><br />**Next steps**: Swan can move the payment method to `Suspended` for review. You can move it to `Disabled` with the `disableMerchantPaymentMethod` mutation. |
 | `Suspended` | **Swan** assigns this status when the merchant's use of the payment method needs a review. The payment method can't be `Enabled` again until the review is complete.<br /><br />**Next steps**: After the review, the status returns to `Enabled` or moves to `Rejected`. You can also move it to `Disabled`. |
@@ -120,18 +120,9 @@ A merchant payment method can be rejected for the following reasons, available i
 | `SwanTechnicalErrorOccurred` | An error occurred on Swan's side. |
 | `AccountClosed` | The corresponding account is `Closed`. |
 
-:::info For Partners only
-These rejection reasons are intended for Partners and shouldn't be displayed to end users.
-If you need more details about a specific rejection, contact Swan.
-:::
-
 ## Merchant payment statuses {#payments-statuses}
 
-The [merchant payment object](/payments/concepts/merchants/payments) has distinct statuses to follow a payment's lifecycle.
-All payments begin in the `Initiated` status.
-From `Initiated`, a payment may be directly `Captured`, `Canceled` by the merchant, or `Rejected` by Swan or another participant in the payment scheme, such as the customer's payment service provider.
-**For card payments**, the flow may proceed from `Initiated` to `Authorized` before being either `Captured` or `Canceled`.
-**After capture**, a payment may still be `Refunded` by the merchant or `Disputed` by the customer, depending on the payment method.
+The [merchant payment object](/payments/concepts/merchants/payments) has distinct statuses to follow a payment's lifecycle. Which statuses each method uses is in the [table by payment method](#payments-statuses-by-method).
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -168,9 +159,9 @@ flowchart LR
 |---|---|
 | `Initiated` | The payment object has been created, but the payment is not yet authorized or guaranteed.<br /><br />**Next steps**: The payment moves to `Authorized` (card payments only), `Captured`, `Rejected`, or `Canceled`. |
 | `Authorized` | Applies only to card payments. The payment has been authorized by the customer's bank. The funds are guaranteed but not yet captured.<br /><br />**Next steps**: The payment moves to `Captured`, or to `Canceled` if the authorization is voided. |
-| `Canceled` | The payment was canceled. Funds can no longer be captured. This is a final status. |
+| `Canceled` | The merchant canceled the payment before capture. Funds can no longer be captured. This is a final status. |
 | `Rejected` | The payment was rejected by Swan or another participant in the payment scheme before the funds were captured. This is a final status. |
-| `Captured` | The payment is successfully authorized (for card payments) or processed (for all other payment methods), and the funds are debited from the customer's account. This can be the final status of a successful payment flow.<br /><br />**Next steps**: The customer can dispute the payment (`Disputed`) or the merchant can refund it (`Refunded`), depending on the payment method. |
+| `Captured` | The funds are captured (card payments) or the debit is processed (all other methods) and debited from the customer's account. This can be the final status of a successful payment.<br /><br />**Next steps**: The customer can dispute the payment (`Disputed`) or the merchant can refund it (`Refunded`), depending on the payment method. |
 | `Refunded` | The payment was reversed by the merchant either for the full amount or partially depending on the payment method. This is a final status. |
 | `Disputed` | The customer disputed the payment with their bank either for the full amount or partially depending on the payment method. This is a final status. |
 

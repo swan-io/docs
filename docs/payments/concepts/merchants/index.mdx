@@ -24,32 +24,18 @@ import MerchantsDefinition from '../../../_shared/definitions/_merchants.mdx';
 ## Overview {#overview}
 
 Merchants include contractors, healthcare professionals, artisans, and business owners, among others.
-With a <Term id="merchant-profile">merchant profile</Term> and at least one active <Term id="merchant-payment-method">merchant payment method</Term>, you can help your merchants accept payments with Swan.
 
-:::info Pending review
-Before accepting payments, you need to complete a risk review.
+:::info Enablement per Partner
+Merchant payment methods are enabled per Partner: Swan reviews your use case before your merchants can request them.
 To get started, use the [Partner Support Request form](https://supportform.swan.io/).
 :::
 
 ### Managing risk {#risk}
 
-Accepting payments from customers comes with risk, and Swan prioritizes a **risk-based approach**.
+Swan reviews every merchant profile, profile update, and payment method request; profiles and payment methods both start as `PendingReview`. When Swan needs more information on a payment method, it moves to `WaitingForInformation` and the missing items are listed in `verificationRequirements`; you provide them at the merchant profile level.
 
-Swan reviews all requests for merchant profiles, profile updates, and payment methods. 
-Both profiles and payment methods initially start with the status `PendingReview`.
-
-For payment methods, Swan may change the status to `WaitingForInformation` when additional details are needed. 
-In such cases, you'll receive these details within the `verificationRequirements` list. New information must be provided at the Merchant Profile level.
-
-To manage potential risk, Swan can change the <Term id="rolling-reserve">rolling reserve</Term> and the payment amount limit. If suspicious activity is detected, Swan can also **change the status** of both **profiles and payment methods** to `Suspended` or `Rejected`.
-Swan can also reinstate a profile or payment method by changing the status to `Enabled`.
-Finally, if Swan assigns the status `Rejected` to a profile or payment method, the decision is final and can't be reversed. 
-The user must submit a new request for the account holder, which Swan will review as a separate submission.
-
-### Webhooks {#webhooks}
-
-Subscribe to numerous <Term id="webhooks">webhooks</Term> to facilitate your merchant integrations.
-Review the [full list of merchant webhooks](/build/using-api/webhooks#events-merchants), or subscribe to them directly from your **Dashboard** > **Developers** > **Webhooks**.
+To manage risk, Swan can change the <Term id="rolling-reserve">rolling reserve</Term> and payment amount limit, suspend or reject a profile or payment method, or reinstate it. The [merchant statuses](/payments/concepts/merchants/statuses) page has each status machine, the rejection reasons, and why a `Rejected` decision is final.
+The [merchant webhooks](/build/using-api/webhooks#events-merchants) notify you of every profile and payment-method status change.
 
 ## Merchant profiles {#profiles}
 

@@ -16,8 +16,6 @@ related:
 
 <p className="ia-lede">A <Term id="payment-mandates">payment mandate</Term> is the debtor's written authorization for a <Term id="merchants">merchant</Term> to debit their account. Mandatory for SEPA Direct Debit and B2B Internal Direct Debit, recommended for Standard, and always declared to Swan by the partner.</p>
 
-Without a mandate, the creditor can't legally debit the debtor's account.
-
 Partners are responsible for obtaining and declaring payment mandates.
 You can either **include them in your Terms and Conditions** or **generate mandates** for debtors to sign with an electronic signature.
 
@@ -62,7 +60,7 @@ Otherwise, the mandate is considered invalid.
 
 ### One-off mandates {#sdd-oneoff}
 
-When the sequence value is `OneOff` (instead of `Recurrent`), the received SEPA Direct Debit payment mandate is **canceled automatically** after the transaction is executed, regardless of the transaction status.
+When the sequence value is `OneOff` (instead of `Recurrent`), the received payment mandate, SEPA or internal, is **canceled automatically** after the transaction is executed, regardless of the transaction status.
 
 ## Internal Direct Debit mandates {#idd}
 
@@ -82,6 +80,8 @@ Otherwise, the mandate is considered invalid.
 | Debtor information | Choose one of the following options:<ul><li>Debtor's account number</li><li>Debtor's IBAN</li></ul><br/>If the debtor doesn't have a Swan account upon creation of the mandate, include their identification information instead:<ul><li>Individual: given name, family name, and date of birth</li><li>Legal: name and SIREN</li></ul> |
 
 ### Sample content {#idd-content}
+
+Two variants, depending on whether the debtor already has a Swan account.
 
 #### Mandate for a debtor with a Swan account {#idd-content-with-account}
 
@@ -131,8 +131,7 @@ Signing the payment mandate with a **qualified electronic signature** must meet 
 
 #### Terms and conditions checkbox {#idd-signature-checkbox}
 
-Your clients can also sign the payment mandate by **checking a Terms and Conditions checkbox**.
-Your client is already clearly identified by being logged in to your platform.
+Because your client is already identified by being logged in to your platform, a Terms and Conditions checkbox is enough to sign the mandate.
 
 ### Received mandates {#idd-received}
 
@@ -146,4 +145,4 @@ The process is different for B2B and Standard, and one-off mandates are also pos
 
 ### One-off mandates {#idd-oneoff}
 
-When the sequence value is `OneOff` (instead of `Recurrent`), the received internal direct debit payment mandate is canceled automatically after the transaction is executed, regardless of the transaction status.
+One-off Internal Direct Debit mandates follow the [same rule as SEPA one-off mandates](#sdd-oneoff).

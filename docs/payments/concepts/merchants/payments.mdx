@@ -33,7 +33,7 @@ Use these balances to check what happened on a payment and what you can still do
 | Payment object balance | Explanation |
 |---|---|
 | `totalAuthorized` | The total authorized amount for this merchant payment. |
-| `availableToCancel` | The authorized amount that can be released. Refer to this balance to verify whether the payment can be canceled. Cancelations must be done before the amount is captured, or earlier in the payment's lifecycle for some payment methods. |
+| `availableToCancel` | The amount that can still be canceled: for cards, the authorized amount not yet captured. Check this balance before canceling; the per-method cutoff is in the [rules table](#rules). |
 | `totalCanceled` | The total amount canceled for this merchant payment. |
 | `availableToCapture` | The amount available for merchants to capture if the capture isn't automatic. |
 | `totalCaptured` | The amount captured by the merchant. For card payments with automatic capture, `totalCaptured` is always equal to `totalAuthorized`. |
@@ -41,7 +41,7 @@ Use these balances to check what happened on a payment and what you can still do
 | `totalRefunded` | The total amount refunded for this merchant payment. |
 | `totalDisputed` | The total amount of this merchant payment disputed by the customer. |
 
-Some balances behave differently by payment method: [SEPA Direct Debit](/payments/concepts/merchants/sepa-direct-debit#payments-balances) uses `availableToCancel` for the pending amount that can still be canceled before the cutoff, and [French checks](/payments/concepts/merchants/french-checks#payments-balances) never use the authorization, capture, or refund balances.
+Some balances behave differently by payment method; see the balances section of [SEPA Direct Debit](/payments/concepts/merchants/sepa-direct-debit#payments-balances) and [French checks](/payments/concepts/merchants/french-checks#payments-balances).
 
 :::info Account balances
 Payment object balances aren't related to Swan's standard [account balances](/accounts/concepts/account/balances), which the underlying transactions impact.
@@ -59,7 +59,7 @@ The same payment object follows different operational rules depending on the pay
 | [SEPA Direct Debit B2B](/payments/concepts/merchants/sepa-direct-debit) | 100% over 3 business days | 20:00 CET/CEST on the settlement date | About 10:00 CET/CEST, the day before execution | Not possible | Returns possible |
 | [Internal Direct Debit Standard](/payments/concepts/merchants/internal-direct-debit) | Determined by a merchant profile risk assessment | 18:00 CET/CEST on the settlement date (D+1 if sent before 12:00) | 12:00 CET/CEST, one business day before execution | Up to 8 calendar weeks after due date | Returns possible |
 | [Internal Direct Debit B2B](/payments/concepts/merchants/internal-direct-debit) | Not required | 18:00 CET/CEST on the settlement date (D+1 if sent before 12:00) | 12:00 CET/CEST, one business day before execution | Not possible | Not possible |
-| [French checks](/payments/concepts/merchants/french-checks) | 100% over 10 interbank business days | 2 to 3 business days after arrival at the check processing center | Receipt by the check processing center | Not possible | Returns up to 10 business days after `Booked`, extendable to 90 calendar days |
+| [French checks](/payments/concepts/merchants/french-checks) | 100% over 10 interbank business days | 2 to 3 business days after arrival at Swan's check provider | Receipt by Swan's check provider | Not possible | Returns up to 10 business days after `Booked`, extendable to 90 calendar days |
 
 ## Rolling reserve {#rolling-reserve}
 
@@ -74,8 +74,7 @@ The `TransactionRollingReserve.Updated` and `TransactionRollingReserve.Released`
 
 ## Payment amount limit {#payment-limit}
 
-For security and risk management, Swan may apply a **payment amount limit** to a single card, SEPA Direct Debit, or check payment.
-This limit defines the maximum amount a user can spend in one transaction.
+Swan may apply a **payment amount limit** to a single card, SEPA Direct Debit, or check payment.
 If a payment **exceeds this limit**, the API returns a `ForbiddenRejection` error.
 
 To query this limit, use the `paymentAmountLimit` field at the `merchantPaymentMethod` level in the API.
@@ -98,7 +97,7 @@ For SEPA Direct Debit, the name displayed on the debtor's statement depends on t
 | SCI option | Statement displays | Notes |
 | --- | --- | --- |
 | Swan's SCI | **Swan** | Default option. |
-| Merchant's own SCI | **Merchant's name** | Requires [updating the merchant payment method](/payments/guides/merchants/online/sdd/update) through the API. French merchants can request an SCI through the [Partner Support Request form](https://supportform.swan.io/).|
+| Merchant's own SCI | **Merchant's name** | Requires [updating the merchant payment method](/payments/guides/merchants/online/sdd/update). How to obtain a personal SCI is under [SCI options](/payments/concepts/merchants/sepa-direct-debit#sci-options). |
 
 ## Payment links {#links}
 
@@ -106,8 +105,7 @@ import PaymentLinkDefinition from '../../../_shared/definitions/_payment-link.md
 
 > <PaymentLinkDefinition />
 
-Payment links redirect customers to a Swan-hosted payment page where a customer can choose from the merchant's eligible enabled payment methods.
-These optimized payment pages are customizable with the merchant's name, logo, and accent color.
+The payment page can carry the merchant's name, logo, and accent color.
 
 Your merchants can create links to share with their customers by email or text message.
 They could also include a QR code on an invoice, scannable by the customer with their mobile device.

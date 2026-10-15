@@ -12,8 +12,8 @@ related:
 Send money around the world using an <Term id="credit-transfer">International Credit Transfer</Term>.
 
 :::tip Prerequisites
-1. You ran the queries to get beneficiary information and transaction details, and have your key/value pairs ready to add to the mutation.
-1. Optional: You ran the `internationalCreditTransferQuote` query to understand how much you'll pay.
+1. Optional: [get a quote](/payments/guides/credit-transfers/international/quote) for the exchange rate and fees.
+1. Get the required key/value pairs for your [beneficiary](/payments/guides/credit-transfers/international/get-beneficiary-forms), then for your [transaction details](/payments/guides/credit-transfers/international/get-transaction-forms). The queries [must run in this order](/payments/concepts/credit-transfers/international/outgoing#dynamic-forms-order).
 1. You have a [user access token](/build/using-api/authentication#tokens-user).
 :::
 
@@ -86,10 +86,8 @@ import Environments from '../../../../_shared/partials/_environments.mdx';
 
 ## Payload {#payload}
 
-When the mutation succeeds, the payload returns every field you selected.
-
 This International Credit Transfer was initiated with the status `ConsentPending` (line 9).
-Swan sends the `consentUrl` (line 12) to your user by text message, unless your project is configured differently.
+Send the `consentUrl` (line 12) to your user. Swan also delivers the consent link by text message by default; refer to [notification preferences](/users/concepts/consent#notifications).
 
 ```json {9,12} showLineNumbers
 {
@@ -105,8 +103,7 @@ Swan sends the `consentUrl` (line 12) to your user by text message, unless your 
           "consent": {
             "consentUrl": "https://identity.swan.io/consent?consentId=$CONSENT_ID&env=Sandbox"
           }
-        },
-        "updatedAt": "2023-10-27T10:18:18.897Z"
+        }
       }
     }
   }

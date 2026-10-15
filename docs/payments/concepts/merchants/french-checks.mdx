@@ -15,17 +15,12 @@ related:
 
 <p className="ia-lede">Accept French checks as a <Term id="merchants">merchant</Term>: eligible banks, the fields to declare, check <Term id="transactions">transactions</Term>, cancelation, settlement, FNCI verification, and <Term id="r-transaction">R-transactions</Term>.</p>
 
-Merchants can accept <Term id="payments">payments</Term> using French checks if the debtor's bank is located in **mainland France** and the following **territories**: Guadeloupe, French Guiana, Martinique, Mayotte, Reunion, Saint Martin, and Saint Barthelemy. 
-New Caledonia, French Polynesia, and Wallis and Futuna aren't currently supported.
-
 ## About French checks for merchants {#about}
 
-While paper checks aren't the most convenient or secure payment method, they are still a valid way to exchange money.
-Some users prefer checks, and merchants can accept French checks if they activate this payment method for accepting payments.
+Merchants can accept <Term id="payments">payments</Term> using French checks if the debtor's bank is located in **mainland France** and the following **territories**: Guadeloupe, French Guiana, Martinique, Mayotte, Reunion, Saint Martin, and Saint Barthelemy.
+New Caledonia, French Polynesia, and Wallis and Futuna aren't currently supported.
 
-Checks must be **unique**, with a different CMC7 code and RLMC key for each check.
-If a check is canceled or rejected, however, the same check can be resubmitted.
-Checks aren't sent back to the <Term id="account-holder">account holder</Term> unless they're rejected.
+Checks must be **unique**: a different CMC7 code and RLMC key for each check.
 
 :::caution Beneficiary name
 The beneficiary name on the check must match the **account holder name** or the **<Term id="merchant-profile">merchant profile</Term> name** exactly.
@@ -47,51 +42,43 @@ When declaring checks with the API, there are five mandatory API fields:
     - Series 2: interbank codes; 12 digits
     - Series 3: account number; 12 digits
 1. `rlmcKey` (Recomposition de la Ligne Magnétique du Chèque): 2-digit code calculated based on the CMC7.
-1. `merchantProfileId`: your developers should enter the merchant's profile ID number.
+1. `merchantProfileId`: the merchant profile's ID.
 
 
 ## Merchant check payments {#payments}
-Merchant check payments group one or more transactions in the shared [merchant payment object](/payments/concepts/merchants/payments#object), which is how Swan recommends matching orders, invoices, and sales to the correct payment.
+
+Merchant check payments follow the shared [merchant payment object](/payments/concepts/merchants/payments#object).
 
 ### Check transaction types {#payments-transaction-types}
 
 There are **two transaction types** for merchant check payments.
 
-| Transaction type | Explanation | Impacted account balance |
+| Transaction type | Explanation | Impacted [account balance](/accounts/concepts/account/balances) |
 | :--- | :--- | :--- |
 | `CheckIn`        | Captured payment that first impacts the merchant's `Upcoming` balance, and then their `Booked` balance. | `Upcoming`<br />`Booked`   |
 | `CheckInReturn`  | Disputed payment that immediately impacts the merchant's `Booked` balance.                           | `Booked`                 |
 
-:::info Balances
-The impacted balances are Swan's standard [account balances](/accounts/concepts/account/balances), which aren't related to the payment object balances explained later on this page.
-:::
-
 ### Payment object statuses {#payments-statuses}
 
-Check payments never use the `Authorized` or `Refunded` statuses: from `Initiated`, a check is `Captured`, `Rejected`, or `Canceled`, and a `Captured` check can still be `Disputed`. The [merchant statuses](/payments/concepts/merchants/statuses#payments-statuses) page has the diagram; the consequences specific to checks are:
+Checks never use `Authorized` or `Refunded` (see the [statuses by payment method](/payments/concepts/merchants/statuses#payments-statuses-by-method)). What each status means for a check:
 
 | Check payment object status | Explanation |
 |---|---|
 | `Initiated` | Merchant submitted the check information to Swan, but the check hasn't been processed yet. |
 | `Captured` | Check was accepted and funds were made available in the merchant's account. This can be a final status if the customer doesn't dispute the payment. |
-| `Rejected` | Check was rejected by Swan's check provider. Rejected checks are returned to the merchant by mail, using the account holder's address. |
-| `Canceled` | Check was canceled by the merchant before reaching Swan's check provider. If received, the check is returned to the merchant by mail, using the account holder's address. |
-| `Disputed` | The customer disputed the payment or the bank returned it after capture, for example due to insufficient funds. Disputed checks aren't returned to the merchant. |
+| `Rejected` | Swan's check provider rejected the check; it's [mailed back](#rejected) to the merchant. |
+| `Canceled` | The merchant canceled the check before Swan's check provider received it. A canceled check that still arrives is rejected with `CheckReceivedLate` and mailed back. |
+| `Disputed` | The customer disputed the payment or their bank returned it after capture, for example for insufficient funds. |
 
 ### Payment object balances {#payments-balances}
 
-The [payment object balances](/payments/concepts/merchants/payments#balances) behave as follows for checks.
+The [payment object balances](/payments/concepts/merchants/payments#balances) behave as follows for checks. `totalAuthorized`, `availableToCapture`, `availableToRefund`, and `totalRefunded` are always zero: checks aren't authorized, captured manually, or refunded.
 
 | Check payment object balance | Explanation |
 |---|---|
-| `totalAuthorized` | Not used for checks; this balance is always zero. |
-| `availableToCancel` | Use this balance to verify whether the payment can be canceled. Cancelations must occur before Swan's check provider receives the check. |
-| `totalCanceled` | The total amount canceled for this merchant payment. |
-| `availableToCapture` | Not used for checks; this balance is always zero. |
-| `totalCaptured` | The amount captured by the merchant. This corresponds to the full payment amount after the check is successfully processed. |
-| `availableToRefund` | Checks cannot be refunded; this balance is always zero. |
-| `totalRefunded` | Checks cannot be refunded; this balance is always zero. |
-| `totalDisputed` | The total amount of this merchant payment disputed by the customer or returned by their bank. |
+| `availableToCancel` | Use this balance to verify whether the payment can be [canceled](#canceling). |
+| `totalCaptured` | The full payment amount, once the check is processed. |
+| `totalDisputed` | The amount disputed by the customer or returned by their bank. |
 
 
 ## Rolling reserve {#rolling-reserve}
@@ -108,13 +95,11 @@ Merchants can cancel check payments using the [`cancelMerchantPayment`](https://
 To understand if a payment is cancelable, check its `availableToCancel` balance.
 Only the full amount can be canceled.
 
-Checks can be canceled up until the point when they're received by the check processing center.
-The exact timing depends on postal services, so cancelation availability varies.
-Once the check processing center receives the check, it can't be canceled.
+Checks can be canceled while the `CheckIn` transaction is `Upcoming`, that is, until Swan's check provider receives the check; the exact window depends on postal delays. A canceled check never affects the account balance.
 
 ## Settlement date and booked time {#settlement}
 
-Checks are booked 2-3 business days after they arrive at the check processing center.
+Checks are booked 2 to 3 business days after they arrive at Swan's check provider.
 
 ## FNCI and verifying checks {#fnci}
 
@@ -123,15 +108,13 @@ Refer to [French check verification (FNCI)](/payments/concepts/merchants/fnci) f
 
 ## R-transactions {#r-transactions}
 
-For checks, <Term id="r-transaction">R-transactions</Term> are rejections, returns, and cancelations.
+For checks, <Term id="r-transaction">R-transactions</Term> are rejections and returns.
 
 ### Rejected {#rejected}
 
-Checks can be rejected by Swan's check provider and **returned to the merchant by mail**, mailed to the account holder's address.
-They'll receive helpful information about why the check has been rejected, and then they can **fix and resend the rejected checks**.
+Swan's check provider rejects a check and **mails it back** to the account holder's address, with the reason, so the merchant can fix and resend it.
 
-**Before resending the rejected check**, the merchant should create a new `CheckIn` transaction.
-If they send the check without creating the new `CheckIn` transaction, the check **remains rejected** and will be returned to the merchant again.
+A rejected or canceled check can be declared again: **create a new `CheckIn` transaction before resending it**. A check resent without a new `CheckIn` stays rejected and is mailed back again.
 
 Additionally, all checks not received by Swan's check provider within 30 days of being declared will be automatically `Rejected`.
 
@@ -144,11 +127,4 @@ Checks aren't mailed back to the merchant.
 
 The [check return reasons](/payments/reference/merchant-rejection-reasons#checks-returned) list each code.
 
-By the time a check is returned, the merchant's account has already been credited.
-Therefore, when Swan is notified that a `Booked` check has gone unpaid, a `CheckInReturn` transaction is created automatically. The original `CheckIn` transaction stays `Booked`.
-
-### Canceled {#canceled}
-
-Merchants can cancel a check payment while its transaction is `Upcoming`, unless the check processing center has already received the check.
-In this case of a canceled check, the status switches automatically to `Canceled`.
-This transaction won't impact the account's available balance.
+Because the merchant's account was already credited, Swan automatically creates a `CheckInReturn` transaction that debits it; the original `CheckIn` stays `Booked`.

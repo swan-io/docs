@@ -16,19 +16,18 @@ Get transaction IDs with the `transactions` query. To find them on your Dashboar
 ## Guide {#guide}
 
 1. Call the `transactions` query.
-1. Check the boxes for `edges` and `node`.
-1. Under `node`, check the boxes for `id`, `createdAt`, and `label`.
-    * `label` often contains a name, which might be helpful.
+1. Add `edges` > `node` > `id`, `createdAt`, and `label`.
+    * `label` often contains a name, as in the sample.
     * `createdAt` could help you identify the transaction ID you're searching for if you know when the transaction was created.
-    * Additionally, you might choose to get only the `first` 10 IDs on the list, use [pagination](/build/using-api/pagination) to filter further, or add a `totalCount`.
+    * Add `first` to cap the list (the sample asks for 10), use [pagination](/build/using-api/pagination) to go further, or add a `totalCount`.
 
 ### Query {#query}
 
-<a href="https://explorer.swan.io?query=cXVlcnkgR2V0VHJhbnNhY3Rpb25JZCB7CiAgdHJhbnNhY3Rpb25zIHsKICAgIGVkZ2VzIHsKICAgICAgbm9kZSB7CiAgICAgICAgaWQKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBsYWJlbAogICAgICB9CiAgICB9CiAgICB0b3RhbENvdW50CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0VHJhbnNhY3Rpb25JZCB7CiAgdHJhbnNhY3Rpb25zKGZpcnN0OiAxMCkgewogICAgZWRnZXMgewogICAgICBub2RlIHsKICAgICAgICBpZAogICAgICAgIGNyZWF0ZWRBdAogICAgICAgIGxhYmVsCiAgICAgIH0KICAgIH0KICAgIHRvdGFsQ291bnQKICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {2,5-7,10} showLineNumbers
 query GetTransactionId {
-  transactions {
+  transactions(first: 10) {
     edges {
       node {
         id
@@ -39,7 +38,6 @@ query GetTransactionId {
     totalCount
   }
 }
-
 ```
 
 import Environments from '../../../_shared/partials/_environments.mdx';
@@ -66,7 +64,7 @@ import Environments from '../../../_shared/partials/_environments.mdx';
             "createdAt": "2023-03-30T13:24:39.477Z",
             "label": "Transfer from Sasha Oliveira"
           }
-        },
+        }
       ],
       "totalCount": 2
     }

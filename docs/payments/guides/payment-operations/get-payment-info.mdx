@@ -12,8 +12,8 @@ related:
 
 You can query information about a single <Term id="payments">payment</Term> and multiple payments **using the API**.
 
-:::tip Prerequisites
-You need a **project access token** to run these queries.
+:::tip Access token
+With a **project access token**, the `payments` query returns all the project's payments. With a **user access token**, it returns the payments that user initiated.
 :::
 
 ## Multiple payments {#guide-multiple}
@@ -22,9 +22,7 @@ This sample queries the project's `Rejected` payments.
 
 1. Call the `payments` query.
 1. Add all the information you'd like to review.
-    * The sample query uses several `payments` query options, including filtering for only `Rejected` payments.
-1. Add optional messages to the success payload, either for validation or in case of rejection.
-    * The sample query adds a more thorough `Rejected` payload.
+1. Add `... on PaymentRejected` to get the rejection `reason` (lines 9-12).
 
 ### Query {#query-multiple}
 
@@ -89,7 +87,7 @@ Review all `Rejected` payments for your project and the reason for rejection.
             },
             "updatedAt": "2023-03-30T14:12:18.989Z"
           }
-        },
+        }
       ],
       "totalCount": 2
     }
@@ -102,7 +100,6 @@ Review all `Rejected` payments for your project and the reason for rejection.
 1. Call the `payment` query.
 1. Enter the [payment ID](/payments/guides/payment-operations/get-payment-id) for the payment you're querying.
 1. Add all the information you'd like to review. The sample query uses several `payment` query options.
-1. Add optional messages to the success payload, either for validation or in case of rejection.
 
 ### Query {#query-single}
 
@@ -135,12 +132,9 @@ query PaymentInfo {
     updatedAt
   }
 }
-
 ```
 
 ### Payload {#payload-single}
-
-View all the requested information about the single payment.
 
 ```json showLineNumbers
 {

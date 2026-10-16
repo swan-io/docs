@@ -70,19 +70,28 @@ If a card was blocked because the PIN was entered incorrectly 3 times, the cardh
     :::
 1. The cardholder consents to the operation.
     - After receiving consent, the [physical card status](/cards/concepts/physical/statuses) returns from `Suspended` to its previous status, `ToActivate`. If the card is in the [renewal process](/cards/concepts/physical/statuses#renew-statuses), the status returns to `Renewed`.
-1. The cardholder enters their original PIN at an ATM ([reminder: a card's PIN never changes](/cards/concepts/physical/pin)).
+1. The cardholder enters their original PIN at an ATM or a compatible payment terminal ([reminder: a card's PIN never changes](/cards/concepts/physical/pin)).
 
 :::info View PIN
 - You can display the cardholder's PIN [with the API](/cards/guides/physical/view-info#view-pin).
 - If you use Swan's Web Banking interface, the [cardholder can view their PIN](https://support.swan.io/hc/en-150/articles/16423151195677-View-card-numbers-and-PIN#h_01HND9G193R7CQV275TSGZ59RC) themselves.
 :::
 
-### Finalizing card unblocking at an ATM {#unblock-atm}
+### Finalizing card unblocking at an ATM or payment terminal {#unblock-atm}
 
-To unblock their card, the cardholder must insert it into an ATM and enter their original PIN. They don't need to withdraw money.
+To unblock their card, the cardholder must insert it and enter their original PIN:
+
+- **ATM**: They don't need to withdraw money.
+- **Payment terminal**: They complete a purchase with chip and PIN. The card is unblocked only if the transaction is accepted.
+
+:::note Compatible payment terminals
+Finishing the unblocking at a payment terminal depends on the terminal running the issuer's PIN-reset script on the card's chip during the chip-and-PIN transaction.
+Whether a terminal can run that script is a per-terminal EMV capability: Swan can't check it in advance or provide a list of compatible terminals.
+ATMs are always online and reliably run the script, so recommend an ATM to cardholders who want a guaranteed result.
+:::
 
 The success of this process depends on two factors:
-- Whether the cardholder has withdrawal permissions.
+- Whether the cardholder has withdrawal permissions (ATM) or the purchase is accepted (payment terminal).
 - Whether they enter the correct PIN.
 
 Following this process, the card is either completely unblocked or remains suspended.
@@ -90,14 +99,16 @@ Following this process, the card is either completely unblocked or remains suspe
 | Withdrawal permission | PIN entered | Transaction outcome | Rejection reason | Card status change |
 | --- | --- | --- | --- | --- |
 | <Yes /> | Correct | Accepted | None | Card is completely unblocked |
+| | Correct | Rejected for another reason, such as insufficient funds at a payment terminal | Varies | Card remains suspended |
 | | Incorrect | Rejected | `InvalidPin` | Card remains suspended |
 | <No /> | Correct | Rejected | `TransactionNotAuthorizedForCardholder` | Card is completely unblocked |
 | | Incorrect | Rejected | `InvalidPin` | Card remains active (2 attempts left before suspension) |
 
-#### Special case: Pending unblocking after `resumePhysicalCard`
+#### Special case: Pending unblocking after `resumePhysicalCard` {#unblock-pending}
 
-If the cardholder has called the `resumePhysicalCard` mutation but hasn't completed the ATM step, and the payment terminal doesn't support PIN resets:
+After the cardholder consents to `resumePhysicalCard`, the card leaves `Suspended`, but the chip still holds the exhausted PIN try counter until a terminal runs the PIN-reset script.
+If the cardholder pays at a terminal that can't run it before finishing the step at an ATM or a compatible terminal:
 
-- The system rejects any transaction attempt (correct or incorrect PIN).
-- The rejection reason is `InvalidPinAttemptsExceeded`.
-- The card becomes `Suspended` again.
+- The transaction is rejected whether the PIN entered is correct or not.
+- The rejection reason is `InvalidPinAttemptsExceeded`. Here, it reports the counter left over from the original three incorrect attempts, not new incorrect attempts.
+- The card becomes `Suspended` again with the reason `IncorrectPinCodeAttemptsExceeded`, and the 24-hour wait starts over from this rejection.

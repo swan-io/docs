@@ -135,7 +135,6 @@ flowchart LR
     I -.-> RJ[Rejected]
     I -.-> CN[Canceled]
     A -.-> CN[Canceled]
-    CP -.-> RF[Refunded]
     CP -.-> D[Disputed]
 
     subgraph FR[Funds received]
@@ -145,7 +144,6 @@ flowchart LR
     subgraph F[Final status]
         RJ
         CN
-        RF
         D
     end
 
@@ -161,15 +159,13 @@ flowchart LR
 | `Authorized` | Applies only to card payments. The payment has been authorized by the customer's bank. The funds are guaranteed but not yet captured.<br /><br />**Next steps**: The payment moves to `Captured`, or to `Canceled` if the authorization is voided. |
 | `Canceled` | The merchant canceled the payment before capture. Funds can no longer be captured. This is a final status. |
 | `Rejected` | The payment was rejected by Swan or another participant in the payment scheme before the funds were captured. This is a final status. |
-| `Captured` | The funds are captured (card payments) or the debit is processed (all other methods) and debited from the customer's account. This can be the final status of a successful payment.<br /><br />**Next steps**: The customer can dispute the payment (`Disputed`) or the merchant can refund it (`Refunded`), depending on the payment method. |
-| `Refunded` | The payment was reversed by the merchant either for the full amount or partially depending on the payment method. This is a final status. |
-| `Disputed` | The customer disputed the payment with their bank either for the full amount or partially depending on the payment method. This is a final status. |
-
-The `MerchantPaymentStatus` enum also includes `PartiallyDisputed`, returned when a customer disputes only part of a payment.
+| `Captured` | The funds are captured (card payments) or the debit is processed (all other methods) and debited from the customer's account. This can be the final status of a successful payment.<br /><br />**Next steps**: The customer can dispute the payment (`Disputed` or `PartiallyDisputed`), depending on the payment method. Refunds don't change the status: they show in the payment's [balances](/payments/concepts/merchants/payments#balances) (`totalRefunded`) and as new transactions. |
+| `Disputed` | The customer disputed the payment with their bank for the full amount. This is a final status. |
+| `PartiallyDisputed` | The customer disputed only part of the payment with their bank. |
 
 ### Statuses by payment method {#payments-statuses-by-method}
 
-| Payment method | `Authorized` | `Refunded` | `Disputed` | Notes |
+| Payment method | `Authorized` | Refunds | `Disputed` | Notes |
 | --- | :---: | :---: | :---: | --- |
 | [Online cards](/payments/concepts/merchants/online-cards) | <Yes /> | <Yes /> | <Yes /> | Refunds and disputes can cover some or all of the amount. |
 | [In-person cards](/payments/concepts/merchants/in-person-cards) | <Yes /> | <Yes /> | <Yes /> | Refunds aren't self-service: merchants request them from Swan Support. |

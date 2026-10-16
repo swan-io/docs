@@ -17,7 +17,7 @@ import Prereqs from './partials/_prereqs.mdx';
 
 :::tip Prerequisites
 <Prereqs />
-- You have a [project access token](/build/using-api/authentication#get-token-project).
+- You have a [project access token](/build/using-api/authentication#tokens-project).
 - Subscribe to the `TransactionStatement.Generated` [webhook](/build/using-api/webhooks#events-transactions).
 :::
 
@@ -65,12 +65,7 @@ import Environments from '../../../../_shared/partials/_environments.mdx';
 
 ### Step 2: Get transaction statement ID {#api-get-id}
 
-Get the `transactionStatement` > `id` from the success payload (line 7).
-
-:::warning
-This is the only way to get the `transactionStatement` > `id`.
-Copy it immediately to use in step 3.
-:::
+Store the `transactionStatement` > `id` from the success payload (line 7): you need it in step 3, and no query lists statements.
 
 ```json {7} showLineNumbers
 {
@@ -92,7 +87,7 @@ Copy it immediately to use in step 3.
 
 ### Step 3: Retrieve download URL {#api-retrieve-url}
 
-After generating the transaction statement, you receive a `TransactionStatement.Generated` webhook notification letting you know the statement can be downloaded by URL.
+When the `TransactionStatement.Generated` webhook arrives, retrieve the download URL:
 
 1. Call the `transactionStatement` query.
 1. Add the `transactionStatement` > `id`.
@@ -120,11 +115,7 @@ query GetStatementUrl {
 
 ### Step 4: Download statement {#api-download}
 
-Use the `url` to download the statement within **seven days** of generation.
-
-1. Copy the `url` from the payload (line 10).
-1. Paste the `url` into your preferred browser.
-1. The document downloads automatically after you press enter.
+Download the statement from `url` (line 10) within **seven days** of generation; `expiresAt` (line 9) gives the exact deadline.
 
 ```json {10} showLineNumbers
 {

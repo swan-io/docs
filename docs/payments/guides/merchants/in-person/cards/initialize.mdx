@@ -15,8 +15,6 @@ Set up a connection token provider, then discover and connect to the reader.
 
 import MerchantPrereqs from '../partials/_merchant-prereqs.mdx';
 
-You need all of the following to initialize your device.
-
 <MerchantPrereqs />
 
 - The [Stripe Terminal SDK](./setup.mdx) installed in your app.
@@ -25,7 +23,6 @@ You need all of the following to initialize your device.
 ## Step 1: Implement a connection token provider {#token-provider}
 
 The Stripe Terminal SDK requires a connection token to connect to the reader.
-You obtain this token from Swan's API using the `requestTerminalConnectionToken` mutation.
 The SDK handles token refresh automatically. Do not cache the token yourself.
 
 ### Get a connection token from Swan {#get-token}
@@ -72,7 +69,6 @@ import Environments from '../../../../../_shared/partials/_environments.mdx';
 #### Wire up the token provider on React Native {#wire-provider-react-native}
 
 Pass your `tokenProvider` function as a prop to `StripeTerminalProvider`.
-The function must return a connection token fetched from Swan's API.
 
 ```tsx
 import { StripeTerminalProvider } from '@stripe/stripe-terminal-react-native';
@@ -204,8 +200,6 @@ if (!Terminal.isInitialized()) {
 </Tabs>
 
 ## Step 2: Discover and connect to the reader {#connect-reader}
-
-With the token provider configured, discover the device's reader and connect to it.
 
 :::note Debug mode
 The Stripe Terminal SDK blocks reader connections in debug builds as a security measure.

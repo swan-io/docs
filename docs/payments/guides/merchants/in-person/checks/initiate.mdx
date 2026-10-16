@@ -8,10 +8,10 @@ related:
 
 # Initiate a transaction with French checks
 
-Initiate accepting <Term id="payments">payments</Term> with French checks.
+Declare each check your merchant receives so Swan can verify it against the FNCI register and process the <Term id="payments">payment</Term>.
 
 :::tip Prerequisites
-- Debtor's account status: any except `Closing` or `Closed`
+- Merchant's account status: any except `Closing`, `Suspended`, or `Closed`
 - Merchant profile status: `Enabled`
 - Check payment method status: `Enabled`
 - A project access token, or a user access token with the `canManageAccountMembership` membership permission
@@ -19,11 +19,11 @@ Initiate accepting <Term id="payments">payments</Term> with French checks.
 
 ## Guide {#guide}
 
-1. Call `initiateCheckMerchantPayment`, completing all mandatory fields: `amount`, `value`, `currency`, `CMC7`, `rlmcKey`, and `merchantProfileId` (lines 2-7).
-1. Optionally, add a `label` and `reference` (not shown). Both appear in the transaction history and to the debtor.
+1. Call `initiateCheckMerchantPayment`, completing all mandatory fields: `amount` (`value` and `currency`), `cmc7`, `rlmcKey`, and `merchantProfileId` (lines 2-7).
+1. Optionally, add a `label` (shown on the merchant's bank statement; defaults to `Check N°` followed by the first 7 characters of the CMC7) and a `reference` (not shown).
 1. Add the `InitiateCheckMerchantPaymentSuccessPayload` (line 10).
 1. Add `checkMerchantPayment` to the success payload (line 12).
-1. Add the `fnciInfo` to the success payload (lines 15-21). Refer to the explanatory content to [learn about FNCI and their verification results](/payments/concepts/merchants/fnci).
+1. Add the `fnciInfo` to the success payload (lines 15-21). Refer to [French check verification (FNCI)](/payments/concepts/merchants/fnci) for the results and what to do with them.
 1. Add `CheckRejection` (line 24), then add the `fnciInfo` (lines 27-33).
 1. Add other rejections (not shown).
 
@@ -69,7 +69,6 @@ mutation InitiateCheckPayment {
     }
   }
 }
-
 ```
 
 import Environments from '../../../../../_shared/partials/_environments.mdx';
@@ -100,19 +99,6 @@ Note the `colorCode` `GREEN`, meaning the merchant can continue processing this 
 
 ## Next steps {#next}
 
-At this stage, the <Term id="transactions">transaction</Term> has been initiated and the following events occur:
-
-1. **Swan**:
-    1. Confirms that the check amount does not exceed €10,000.
-    1. Verifies that the field formats are consistent with the check provider's specifications.
-    1. Creates a `checkIn` transaction with the status `Upcoming`. `checkIn` transactions retain the status `Upcoming` until the check amount is credited to the Swan settlement account.
-1. **Merchant**:
-    1. Writes their Swan account number on the back of each check.
-    1. Sends the check or checks to Swan's check provider by physical mail. They **must be received** within 30 days of the `initiateCheckMerchantPayment` mutation call.
-1. **Swan's check provider**:
-    1. [Processes the check](/payments/concepts/merchants/french-checks#settlement), after which the status changes to `Booked`. This can take a few business days.
-
-After a check is `Booked`, the [rolling reserve](/payments/concepts/merchants/french-checks#rolling-reserve) window starts.
-After the rolling reserve window, the check amount is added to the account's available balance.
-
-If funds are insufficient for the check deposit, a `checkInReturn` will appear on your transaction history.
+Swan creates a `CheckIn` <Term id="transactions">transaction</Term> with the status `Upcoming`.
+The merchant writes their Swan account number on the back of the check, signs it, and mails it to Swan's check provider, which must receive it within 30 days of this call.
+Booking, the [rolling reserve](/payments/concepts/merchants/french-checks#rolling-reserve), and returns follow the [French checks](/payments/concepts/merchants/french-checks#settlement) rules.

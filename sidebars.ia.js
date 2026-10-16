@@ -491,7 +491,7 @@ module.exports = annotateAudience(annotate({
         doc("payments/guides/direct-debit/enable-mandate", "Enable a mandate"),
         doc("payments/guides/direct-debit/suspend-mandate", "Suspend a mandate"),
         doc("payments/guides/direct-debit/update-mandate", "Update a mandate"),
-        doc("payments/guides/direct-debit/return", "Return a direct debit"),
+        doc("payments/guides/direct-debit/return", "Request a refund"),
       ], { link: "payments/guides/direct-debit/index" }),
       cat("Payment cards", [
         doc("payments/guides/cards/get-list", "Get card payments"),

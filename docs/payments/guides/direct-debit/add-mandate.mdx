@@ -12,7 +12,7 @@ related:
 Add <Term id="sdd">SEPA Direct Debit</Term> B2B (Business-to-Business) received <Term id="payment-mandates">payment mandates</Term> [with the API](#api) or by [sending a link](#link) to an account member so they can register the mandate themselves.
 
 :::caution B2B mandates only
-This guide is for SEPA <Term id="direct-debit">Direct Debit</Term> B2B mandates only. These mandates are required to authorize a company to debit an account. If an account member completes a non-B2B Direct Debit mandate, their creditor will handle its registration automatically.
+This guide covers SEPA <Term id="direct-debit">Direct Debit</Term> B2B mandates only. Core mandates don't need to be provided to Swan; refer to the [received mandate specifications](/payments/concepts/direct-debit/received-mandates#mandates-specifications).
 :::
 
 When **Swan receives** [new SEPA Direct Debit instructions](/payments/concepts/direct-debit/received-instructions#received-instructions-new), the corresponding mandate is added **automatically**.
@@ -32,10 +32,10 @@ import InitiatePaymentsPrereqs from '../../partials/_initiate-payments-prereqs.m
 :::caution SEPA format validation
 Swan validates two fields against the SEPA format when a B2B mandate is submitted, and rejects values that don't comply:
 
-- `creditorIdentifier` must follow the [SEPA Creditor Identifier (SCI)](/payments/concepts/merchants/sepa-direct-debit#sci) structure: an ISO two-letter country code, a two-digit checksum, a creditor business activity code, and a national identification feature.
+- `creditorIdentifier` must be a valid [SEPA Creditor Identifier (SCI)](/payments/concepts/merchants/sepa-direct-debit#sci).
 - `mandateReference` must be a valid SEPA mandate reference of up to 35 characters.
 
-This validation prevents mandates with incorrect data, which would otherwise cause `MandateInvalid` rejections on the resulting SEPA Direct Debit B2B <Term id="transactions">transactions</Term>.
+Otherwise, the resulting SEPA Direct Debit B2B <Term id="transactions">transactions</Term> are rejected with `MandateInvalid`.
 :::
 
 1. Call the `addReceivedSepaDirectDebitB2bMandate` mutation.
@@ -125,7 +125,7 @@ Send a link to an account member with the `canInitiatePayments` [membership perm
 1. Click the account you need.
 1. Go to the **Received Direct Debit Mandates** tab.
 1. Click **Copy SDD B2B mandate form link**.
-1. Share the link with an account member with the `canInitiatePayments` membership permission.
+1. Share the link with the account member.
 
 ![Screenshot of the B2B mandate registration page](../../../images/payments/direct-debit/SDD_mandate_copy_link.png)
 

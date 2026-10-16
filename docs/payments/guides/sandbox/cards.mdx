@@ -9,15 +9,11 @@ related:
 
 # Sandbox: card payments
 
-When testing your integration, you might need to simulate certain events with the [Event Simulator](/build/tools/event-simulator).
+import TestingApiSimulatorIntro from './partials/_testing-api-simulator-intro.mdx';
 
-:::tip 
-Use the Event Simulator to **test other events** related to card payments, such as receiving incoming and outgoing card payments, reversing incoming and outgoing card payments, and more.
-:::
+<TestingApiSimulatorIntro />
 
 ## Simulate an authorization request {#simulate-authorization}
-
-Simulate a merchant requesting authorization for a card payment by entering testing data.
 
 1. Go to **Dashboard** > **Developers** > **Event Simulator**.
 1. Go to **Cards**.
@@ -45,7 +41,7 @@ The status changes to `Success`, and the authorization is released.
 
 ## Simulate a debit without authorization {#simulate-debit-without-authorization}
 
-Some merchants send a clearing debit with no matching authorization, for example [offline or forced transactions](/payments/concepts/cards/authorization-and-clearing#authorization). Your integration must handle these debits, and you can reproduce them in the Sandbox.
+Some merchants send a clearing debit with no matching authorization, for example [offline or forced transactions](/payments/concepts/cards/authorization-and-clearing#authorization). Your integration must handle these debits.
 
 1. Go to **Dashboard** > **Developers** > **Event Simulator**.
 1. Go to **Cards** > **Card Transactions**.
@@ -62,3 +58,7 @@ You can also call the `simulateOutgoingCardDebitWithoutAuthorization` mutation i
 The Event Simulator can't link a `CardOutCredit` transaction to an existing payment.
 To test refunds, match the simulated credit to the original transaction yourself using the time, merchant, and amount.
 Learn how credits clear in [authorization and clearing](/payments/concepts/cards/authorization-and-clearing#clearing-credit).
+
+:::tip 
+Use the Event Simulator to **test other events** related to card payments, such as receiving incoming and outgoing card payments, reversing incoming and outgoing card payments, and more.
+:::

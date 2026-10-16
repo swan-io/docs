@@ -6,7 +6,7 @@ related:
   - /payments/concepts/merchants
 ---
 
-# Sandbox: Merchant card payments
+# Sandbox: online card payments
 
 import TestingApiIntro from './partials/_testing-api-intro.mdx';
 
@@ -103,28 +103,8 @@ mutation SimulateOnlineCardBooking {
 }
 ```
 
-## Simulate releasing merchant card payment {#simulate-release}
+## Simulate releasing rolling reserve {#simulate-release}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVSZWxlYXNlIHsKICBzaW11bGF0ZVJlbGVhc2VSZXNlcnZlZEJhbGFuY2UoCiAgICBpbnB1dDogeyB0cmFuc2FjdGlvbklkOiAiJFRSQU5TQUNUSU9OX0lEIiB9CiAgKSB7CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gVHJhbnNhY3Rpb25Ob3RGb3VuZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICB0cmFuc2FjdGlvbklkCiAgICB9CiAgICAuLi4gb24gUmVsZWFzZVJlc2VydmVkQmFsYW5jZVN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICB0cmFuc2FjdGlvbklkCiAgICB9CiAgfQp9Cg%3D%3D&tab=test-api" className="explorer-badge">Open in API Explorer</a>
+import SimulateReleaseRollingReserve from './partials/_simulate-release-rolling-reserve.mdx';
 
-```graphql {3} showLineNumbers
-mutation SimulateRelease {
-  simulateReleaseReservedBalance(
-    input: { transactionId: "$TRANSACTION_ID" }
-  ) {
-    ... on ForbiddenRejection {
-      __typename
-      message
-    }
-    ... on TransactionNotFoundRejection {
-      __typename
-      message
-      transactionId
-    }
-    ... on ReleaseReservedBalanceSuccessPayload {
-      __typename
-      transactionId
-    }
-  }
-}
-```
+<SimulateReleaseRollingReserve />

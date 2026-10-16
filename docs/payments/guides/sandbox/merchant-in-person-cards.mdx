@@ -86,10 +86,7 @@ mutation SimulateInPersonRejection {
 | `americanExpress` | <Yes /> | <No /> |
 | `discover` | <Yes /> | <No /> |
 
-Available rejection reasons (Visa only): 
-`RejectedByCardIssuer` 
-`SoftDeclineRejectedByCardIssuer`
-`SoftDeclineInsufficientFunds`.
+Available rejection reasons (Visa only): `RejectedByCardIssuer`, `SoftDeclineRejectedByCardIssuer`, `SoftDeclineInsufficientFunds`.
 
 :::info Finding the merchant payment
 The simulation returns a `paymentIntentId`, not a merchant payment ID.
@@ -98,11 +95,8 @@ To find the associated merchant payment, use the `externalReference` or `referen
 
 ## Simulate settlement {#settlement}
 
-After simulating a successful authorization, transactions are created as `Upcoming`.
-Use `simulateIncomingInPersonCardSettlement` to simulate the settlement process.
-
-The simulation creates a `Booked` <Term id="credit-transfer">credit transfer</Term> for the total amount and moves all included transactions to `Settled`.
-Each settled transaction is linked to the credit transfer through the `settlementTransactionId` field.
+Use `simulateIncomingInPersonCardSettlement` to settle the `Upcoming` transactions created by a successful authorization.
+As in the [settlement process](/payments/concepts/merchants/in-person-cards#settlement), the simulation books one <Term id="credit-transfer">credit transfer</Term> for their total amount and moves them to `Settled`.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVJblBlcnNvblNldHRsZW1lbnQgewogIHNpbXVsYXRlSW5jb21pbmdJblBlcnNvbkNhcmRTZXR0bGVtZW50KAogICAgaW5wdXQ6IHsKICAgICAgbWVyY2hhbnRQYXltZW50SWRzOiBbCiAgICAgICAgIiRZT1VSX01FUkNIQU5UX1BBWU1FTlRfSURfMSIKICAgICAgICAiJFlPVVJfTUVSQ0hBTlRfUEFZTUVOVF9JRF8yIgogICAgICBdCiAgICB9CiAgKSB7CiAgICAuLi4gb24gU2ltdWxhdGVJbmNvbWluZ0luUGVyc29uQ2FyZFNldHRsZW1lbnRTdWNjZXNzUGF5bG9hZCB7CiAgICAgIG1lcmNoYW50UGF5bWVudHMgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=test-api" className="explorer-badge">Open in API Explorer</a>
 

@@ -14,19 +14,16 @@ This guide doesn’t cover accepting payments from cards issued by other provide
 
 :::info Key takeaways
 
-- Check whether the payment is recorded in the Dashboard.
-- If the payment is recorded, check its status and rejection reason before taking further action.
+- Check whether the payment appears in the Dashboard and, if it does, review its status and rejection reason.
 - A declined card payment isn’t debited from the user’s account.
-- Some issues can be resolved by the user, while others require the merchant or Swan.
-- Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) in your Dashboard when the issue persists, affects multiple users, or requires Swan to investigate.
-
+- The user may be able to resolve some issues; others need the merchant, your development team, or Swan Support.
 :::
 
 ---
 
 ## What a declined card payment means
 
-A card payment can fail before Swan receives the authorization request or while Swan is authorizing it. If Swan records the transaction, check its status and rejection reason in the Dashboard.
+A card payment can fail before Swan receives the authorization request or while Swan is processing it. If a transaction appears in the Dashboard, check its status and rejection reason there.
 
 A declined payment isn’t debited from the user’s account. This differs from:
 
@@ -34,11 +31,9 @@ A declined payment isn’t debited from the user’s account. This differs from:
 - `Booked`, when the payment has been completed and debited.
 - `Released`, when an authorization has ended without a debit and the held amount becomes available again.
 
-If a transaction stays `Pending` or appears stuck instead of progressing as expected, use the lifecycle guidance in [Card payments](/topics/payments/cards/) and raise a support request in your Dashboard when you need Swan to investigate. This guide focuses on declined payments.
+If a transaction stays `Pending` or seems stuck, see [Card payments](/topics/payments/cards/) for lifecycle guidance. Raise a support request in your Dashboard when you need Swan to investigate.
 
-This guide uses **Declined** to describe a card payment that was `Rejected`.
-
-### Quick triage
+In this guide **Declined** means the transaction status is `Rejected`.
 
 ### Quick triage
 
@@ -47,7 +42,7 @@ This guide uses **Declined** to describe a card payment that was `Rejected`.
 | The payment isn’t recorded | Direct the user to confirm the payment details and check with the merchant. If the merchant confirms that its side is working and the issue appears related to the Swan card, raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) in your Dashboard. |
 | The payment is recorded | Go to [Step 3: Check the rejection reason](#step-3-check-the-rejection-reason) and follow the path for the recorded rejection reason. |
 | The rejection reason is `PartnerRefused` or `PartnerTechnicalErrorOccurred` | Route the issue to your development team for a technical investigation of your Payment Control integration. |
-| The rejection reason indicates a Swan technical error | Direct the user to retry the payment once. If it still fails, raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) in your Dashboard with the transaction details and checks already completed. |
+| The rejection reason indicates a Swan technical error | Direct the user to retry the payment once. If it still fails, raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) in your Dashboard with the transaction details and make note of what you've already checked. |
 
 ---
 
@@ -55,9 +50,9 @@ This guide uses **Declined** to describe a card payment that was `Rejected`.
 
 ### Step 1: Confirm the scope
 
-Confirm that the issue concerns a user paying with a Swan-issued card.
+Confirm that the payment was made using a Swan-issued card.
 
-If the issue concerns accepting card payments into a Swan account using Swan’s merchant features, see [Merchant card payments](/topics/merchants/online/cards/). These payments use different payment objects, statuses, and rejection reasons.
+If you’re troubleshooting payments accepted into a Swan account through Swan’s merchant features, see [Merchant card payments](/topics/merchants/online/cards/). These payments use different payment objects, statuses, and rejection reasons.
 
 ### Step 2: Find the transaction
 
@@ -70,12 +65,12 @@ If the issue concerns accepting card payments into a Swan account using Swan’s
 If the payment isn’t listed:
 
 1. Ask your user to confirm the date, amount, currency, merchant, and payment method.
-1. Ask your user to check with the merchant whether the merchant received or rejected the authorization.
+1. Ask the user to check whether the merchant received or rejected the authorization.
 1. If the merchant confirms that their side is working and the issue appears to be related to the Swan card, raise a support request in your Dashboard with the merchant’s confirmation.
 
-### Step 3: Explain the rejection reason, the required checks, and the action for the user.
+### Step 3: Check the rejection reason
 
-Use the rejection reason to select the relevant path. Don’t infer the reason from the user’s description alone.
+Use the reason shown in the transaction details to identify the relevant checks and the next steps. Don’t guess based on what the user has described.
 
 #### The account or membership isn’t eligible
 
@@ -83,28 +78,25 @@ Check that the account and account membership are active. If the account or memb
 
 #### The card isn’t active, is suspended, or is permanently blocked
 
-Check the actual card state in the Dashboard or in your partner product:
+Check the card’s status in the Dashboard or your product:
 
-- If the card hasn’t been activated, ask the user to complete your card-activation flow. If your product doesn’t update the card state correctly, report the issue to your development team so they can investigate the card-activation integration and correct the API implementation. See [Activate your physical card](https://support.swan.io/hc/en-150/articles/18133322807453-Activate-your-physical-card).
-- If the card is suspended, check whether the user or an account member with the `canManageCards` permissions can unsuspend it through your product’s card-management flow. If your project uses Swan’s Web Banking, the user can unsuspend the card there. If your product manages cards through the API, direct the user to your own card-management flow.
-- If the card is permanently blocked, it can’t be reactivated. Ask the user to use another active card or follow your replacement-card process.
-- If the card was blocked after incorrect PIN attempts, ask the user to follow [Unblock your card after three incorrect PIN attempts](https://support.swan.io/hc/en-150/articles/16351372133789-Unblock-your-card-after-three-incorrect-PIN-attempts). The user may need to wait 24 hours before starting the unblocking process.
+- If the card isn’t activated, ask the user to activate it. If your product shows the wrong status, ask your development team to check the integration and API implementation. See [Activate your physical card](https://support.swan.io/hc/en-150/articles/18133322807453-Activate-your-physical-card).
+- If it’s suspended, the user or an account member with `canManageCards` permission can unsuspend it in your product. If you use Swan Web Banking, they can do it there.
+- If it's blocked after incorrect PIN attempts, ask the user to follow [Unblock your card after three incorrect PIN attempts](https://support.swan.io/hc/en-150/articles/16351372133789-Unblock-your-card-after-three-incorrect-PIN-attempts). They may need to wait 24 hours before starting the unblocking process.
 
-For the technical implementation, see [Block and unblock physical cards](/topics/cards/physical/guide-block-unblock). This reference covers both API actions and the user unblocking flow, so use the part that matches the action required.
+For the technical implementation, see [Block and unblock physical cards](/topics/cards/physical/guide-block-unblock). This covers both API actions and the user unblocking flow.
 
 :::caution Card state terminology
 
-`CardSuspended` and `CardPermanentlyBlocked` are rejection reason codes, not card status values. Check the actual card state before advising the user to unsuspend or replace a card.
+`CardSuspended` and `CardPermanentlyBlocked` are rejection reason codes, not card statuses. Check the card's actual status before advising the user to unsuspend or replace a card.
 
 :::
 
-#### The user doesn’t have enough available funds or has reached a limit
+#### The user doesn’t have enough funds or has reached a limit
 
-Check the user’s available balance and the applicable card or transaction limits.
+Check the user’s available balance and card or transaction limits. Use the rejection reason in the transaction details to confirm why the payment failed; don’t assume it’s `InsufficientFunds`.
 
-Don’t assume that every limit-related decline uses `InsufficientFunds`. Use the [rejection reason](/topics/payments/cards/#rejected-card-transactions) shown in the transaction details and check the current rejection reason reference before explaining the cause.
-
-If the user has enough available funds but a configured limit has been reached, explain whether the user needs to wait, split the payment, or ask an account member with the `canManageCards` permissions to adjust the individual card setting within the permitted limit. Don’t change the global card product setup to resolve one user’s decline.
+If a limit was reached, the user may need to wait or split the payment. An account member with `canManageCards` permission can adjust the individual card setting within the allowed limit. Don’t change global card product settings to fix one user’s decline.
 
 #### A card setting doesn’t allow the payment
 
@@ -115,53 +107,49 @@ Check the individual card’s usage settings, including:
 - eCommerce payments
 - Withdrawals
 
-Direct the user to your partner product’s card-management flow if they need to change an individual card setting. An account member can make the change only if their membership has the `canManageCards` permission. Swan’s Web Banking may be available as an alternative. If the card settings shown in your product don’t match the values returned by the API, report the issue to your development team so they can investigate the integration and correct the interface.
-Don’t change a global card product setting to resolve a single user’s decline. Only involve your development team in a product-wide configuration change when the change needs to apply to all cards using that card product.
+Direct the user to your product’s card settings to change an individual card. Only account members with `canManageCards` permission can make the change. Swan Web Banking may also be an option.
+
+If your product’s settings don’t match the API, ask your development team to check the integration. Change card product settings only when the update should apply to all cards, not to fix one user’s decline.
 
 #### The PIN or contactless verification wasn’t completed
 
-Use the rejection reason to distinguish between an incorrect PIN, a missing PIN, and a contactless reset:
-
-- For `PinInvalid`, ask the user to retry once with the correct PIN. The user shouldn’t keep retrying an unknown PIN because repeated incorrect attempts can block the physical card.
-- For `PinRequired`, ask the user to insert the card and enter the PIN.
-- For `PinRequiredForFurtherTransaction`, ask the user to insert the card and enter the correct PIN to restore contactless payments. This doesn’t mean the card is blocked after incorrect PIN attempts.
+Use the rejection reason to choose the right guidance.
+- For `PinInvalid`, ask the user to try once with the correct PIN. Repeated guesses can block the card.
+- For `PinRequired`, ask the user to insert the card and enter their PIN.
+- For `PinRequiredForFurtherTransaction`, ask the user to insert the card and enter their PIN to restore contactless payments. This doesn’t mean the card is blocked.
 - For `InvalidPinAttemptsExceeded`, share [Unblock your card after three incorrect PIN attempts](https://support.swan.io/hc/en-150/articles/16351372133789-Unblock-your-card-after-three-incorrect-PIN-attempts).
 
-For contactless limits, share [Spending limits](https://support.swan.io/hc/en-150/articles/18989382227357-Spending-limits) with your user.
+For contactless limits, share [Spending limits](https://support.swan.io/hc/en-150/articles/18989382227357-Spending-limits).
 
 #### The card details are incorrect
 
-Ask your user to check the card number, expiry date, and CVC entered with the merchant. Ask the user to retry once. If the details are correct and the payment still fails, ask the user to contact the merchant.
+Ask the user to check the card number, expiry date, and CVC they gave the merchant, then try once more. If the details are correct and the payment still fails, have them contact the merchant.
 
-Raise a support request in your Dashboard only when the payment continues to fail and the merchant confirms that its side is working correctly.
+If the payment still fails and the merchant confirms its systems are working, raise a support request in your Dashboard.
 
 #### 3D Secure wasn’t completed
 
-For an online payment, the merchant may need to start or complete a 3D Secure flow.
+For an online payment, the merchant may need to start or complete 3D Secure (3DS) verification.
 
 Ask your user to:
 
 1. Retry the payment.
-1. Complete the 3D Secure verification when prompted.
+1. Complete the 3DS verification when prompted.
 1. Contact the merchant if the verification step doesn’t appear or the payment is rejected again.
 
-If the rejection reason indicates that the merchant needs to resubmit the authorization, the merchant needs to check its 3D Secure implementation. Don’t assume that every 3D Secure error is caused by the merchant.
-
-Share [3D Secure (3DS)](https://support.swan.io/hc/en-150/articles/24666354955933-3-D-Secure-3DS) with your user when they need user-facing guidance.
+If the rejection reason says the authorization must be resubmitted, ask the merchant to check their 3DS implementation. If the issue persists, raise a support request in the Dashboard. 
 
 #### The digital card or wallet isn’t active
 
-First, check the payment type and rejection reason in the transaction details.
+Use the payment type and rejection reason in the transaction details to identify which of the following applies. 
 
 If the payment used Apple Pay or Google Pay:
 
-- Ask the user to confirm that the card is still present and active in their wallet.
-- Share [Set up Apple Pay](https://support.swan.io/hc/en-150/articles/18221327969053-Set-up-Apple-Pay) or [Set up Google Pay](https://support.swan.io/hc/en-150/articles/18221312563741-Set-up-Google-Pay) if they need to enroll the card again.
+- Check that the card is still present and active in the user’s wallet.
+- If the user needs to add the card again, share [Set up Apple Pay](https://support.swan.io/hc/en-150/articles/18221327969053-Set-up-Apple-Pay) or [Set up Google Pay](https://support.swan.io/hc/en-150/articles/18221312563741-Set-up-Google-Pay).
 - Ask the user to retry the payment.
 
-If the rejection reason indicates an issuer or network refusal, ask the user to check with the merchant and use another payment method if needed. Raise a support request in your Dashboard only when the issue persists after the merchant confirms that its side is working correctly.
-
-#### A country restriction applies
+If the rejection reason is an issuer or network refusal, ask the user to check with the merchant or try another payment method. If the issue persists and the merchant confirms their systems are working, raise a support request in your Dashboard.
 
 :::caution Restricted countries
 
@@ -171,11 +159,13 @@ A country restriction can’t be removed by changing an individual card setting.
 
 #### Swan returned a technical error
 
-Ask your user to retry the payment once. Check whether the same issue affects other users or cards. Record the transaction details and error information, then raise a support request in your Dashboard if the issue continues.
+Ask the user to retry once, and check whether other users or cards are affected. If the issue continues, record the transaction details and error message in a support request.
 
-### Step 4: Escalate persistent or widespread issues
+---
 
-Raise a support request in your Dashboard when:
+## Contact Swan Support
+
+Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) in your Dashboard when:
 
 - The rejection reason indicates a Swan technical error and retrying once hasn’t resolved the issue.
 - The same issue affects multiple users or cards.
@@ -183,11 +173,7 @@ Raise a support request in your Dashboard when:
 - The transaction isn’t recorded, the merchant confirms that its side is working, and the issue appears to be related to the Swan card.
 - The rejection reason is unfamiliar and the next action remains unclear after checking the relevant documentation.
 
----
-
-## Contact Swan Support
-
-Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) in your Dashboard and include the following information:
+Make sure to include the following information:
 
 - Account ID.
 - Account membership ID, when relevant.

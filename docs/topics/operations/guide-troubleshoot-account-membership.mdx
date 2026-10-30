@@ -1,0 +1,104 @@
+---
+title: Troubleshoot account memberships
+---
+
+# Troubleshoot account memberships
+
+This guide helps partner support teams identify, resolve, and prevent account membership issues.
+
+---
+
+## Account member permissions
+
+Choose what each account member can see and do to an account on a member-by-member basis via the following Swan API field. Set these fields to either `true` or `false` to allow or deny permission.
+
+| Field | Description
+| ----- | -----------
+| `canViewAccount` | View account balances and transactions history
+| `canManageBeneficiaries` | Add or cancel beneficiaries
+| `canInitiatePayments` | Initiate credit transfers
+| `canManageAccountMembership` | Invite, update, suspend or resume memberships
+| `canManageCards` | Manage cards for themselves or to the memberships they manages
+
+Change these permissions via the Swan API mutation [`updateAccountMembership`](https://api-reference.swan.io/mutations/update-account-membership).
+
+For example, to set `canInitiatePayments` to false:
+
+```graphql title="Setting canInitiatePayments" {5} showLineNumbers
+mutation UpdateMembership {
+  updateAccountMembership(
+    input: {
+      accountMembershipId: "YOUR_MEMBERSHIP_ID"
+      canInitiatePayments: false
+      consentRedirectUrl: "https://your-redirect-url.com"
+    }
+  ) {
+    ... on UpdateAccountMembershipSuccessPayload {
+      accountMembership {
+        id
+        canInitiatePayments
+      }
+    }
+  }
+}
+```
+
+```json title="Payload" {6} showLineNumbers
+{
+  "data": {
+    "updateAccountMembership": {
+      "accountMembership": {
+        "id": "YOUR_MEMBERSHIP_ID",
+        "canInitiatePayments": false
+      }
+    }
+  }
+}
+```
+
+For more information, see [Membership permissions](/topics/accounts/memberships/#permissions) 
+
+---
+
+## Inviting account members
+
+:::note
+You'll require:
+- the `canManageAccountMembership` permission
+- The new member's email as the authentication factor
+:::
+
+Use the Swan API or the Web Banking interface to create a single new account membership or multiple new memberships. The members will need to accept invitations via an email.
+
+### Swan API
+
+To add a single account, use the mutation [`addAccountMembership`](https://api-reference.swan.io/mutations/add-account-membership/) via the [Add a membership](topics/accounts/memberships/guide-add-one) guide.
+
+To add multiple accounts, use the mutation [`addAccountMemberships`](https://api-reference.swan.io/mutations/add-account-memberships/) via the [Add multiple memberships](topics/accounts/memberships/guide-add-multiple) guide.
+
+### Web banking interface
+
+Invite members directly via the app. See [Add a member to your account](https://support.swan.io/hc/en-150/articles/17648698750877-Add-a-member-to-your-account)
+
+For more information, see [Inviting members](/topics/accounts/memberships/#invite) 
+
+---
+
+## Failed invitations
+
+### Via the Swan API
+
+There are several ways invitations fail via [`AddAccountMembershipPayload`](https://api-reference.swan.io/unions/add-account-membership-payload/). When receiving an error message, validate and fix the mutation.
+
+| Type | Description
+| ---- | -----------
+| `BadAccountStatusRejection` | The account status is not valid
+| `ForbiddenRejection`| -
+| `InvalidPhoneNumberRejection`| Incorrect phone number format
+| `MissingPhoneNumberRestrictionRejection` | The phone number is missing and the account membership has advanced permissions
+| `PermissionCannotBeGrantedRejection` | -
+| `ValidationRejection` | -
+
+### Failed delivery or user error
+
+Apart from these failures, invited member may not receive, or fail to see the invitation email. Resend it using the [`sendAccountMembershipInviteNotification`](https://api-reference.swan.io/mutations/send-account-membership-invite-notification/) mutation. See [Resend membership invitation notification](topics/accounts/memberships/guide-resend-invitation).

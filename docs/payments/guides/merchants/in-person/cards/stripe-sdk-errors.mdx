@@ -45,13 +45,13 @@ The most common causes are:
 
 To troubleshoot:
 
-1. Check whether your `Application.onCreate()` initializes any third-party SDKs that might crash in a background process context.
+1. Check whether your `Application.onCreate()` initializes any third-party SDKs that might crash in a background process context. Guard it with `TapToPay.isInTapToPayProcess()` (Stripe Terminal Android 4.4.0 and later) so those SDKs don't initialize in the dedicated Tap to Pay process.
 1. Review the device's battery optimization settings.
 1. Refer to [dontkillmyapp.com](https://dontkillmyapp.com) for device-specific guidance on preventing Android from killing background processes.
 
 ## PIN collection failed: accessibility services enabled {#pin-accessibility}
 
-The full error message is `PIN collection failed due to insecure environment: Accessibility services are enabled, turn off and retry the payment`.
+The SDK returns the error `TAP_TO_PAY_INSECURE_ENVIRONMENT` with the message `PIN collection failed due to insecure environment: Accessibility services are enabled, turn off and retry the payment`.
 
 The Stripe Terminal SDK blocks PIN collection if any accessibility service is active on the device, because these services can read screen content or intercept touch events.
 
@@ -65,7 +65,7 @@ The most common culprits are:
 
 To resolve the error:
 
-1. Go to **Settings** > **Accessibility** > **Downloaded apps** on the device and disable any active services.
+1. Go to **Settings** > **Accessibility** > **Downloaded apps** (or **Installed apps**, depending on the device) and disable any active services.
 1. Retry the payment.
 
 For password managers specifically, the user can switch to a manager that uses Android's native Autofill framework, which doesn't require an accessibility service.

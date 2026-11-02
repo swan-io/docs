@@ -15,7 +15,7 @@ related:
 
 <p className="ia-lede">After an outgoing direct debit is instructed, it can be rejected, refunded, reversed, or canceled. Each of these <Term id="r-transaction">R-transactions</Term> is a new transaction linked to the original, which keeps its own status.</p>
 
-These only concern **outgoing** <Term id="sdd">SEPA Direct Debits</Term>.
+These concern **outgoing** <Term id="sdd">SEPA Direct Debits</Term> and Internal Direct Debits: the Swan account is the debtor.
 
 ## Rejected {#rejected}
 
@@ -26,17 +26,17 @@ If your request to reject the transaction is accepted, the status changes from `
 
 ## Refunded (Returned) {#refunded}
 
-**Core** SEPA Direct Debit transactions are refundable under two specific scenarios:
+**SEPA Core** and **Internal Standard** direct debit transactions are refundable under two specific scenarios:
 
 1. Transactions are eligible for refunds for up to **8 calendar weeks** after execution (the transaction is [`Booked`](/payments/concepts/direct-debit/statuses#statuses)), no questions asked.
 [Request these refunds](/payments/guides/direct-debit/return) with the API `returnTransaction` mutation.
 1. Transactions are eligible for refunds up to **13 months** after execution if there wasn't a valid mandate or if the payment wasn't authorized.
 Request a refund by [contacting Swan Support](https://support.swan.io/hc/en-150/requests/new) with all of the transaction details.
 
-If the refund is approved, a new `SepaDirectDebitOutReturn` transaction is created with the status `Booked`.
+If the refund is approved, a new `SepaDirectDebitOutReturn` or `InternalDirectDebitOutReturn` transaction is created with the status `Booked`.
 
 :::caution B2B not eligible
-B2B SEPA Direct Debit transactions aren't eligible for refunds.
+B2B direct debits (SEPA and Internal) aren't eligible for refunds.
 :::
 
 ## Reversed {#reversed}

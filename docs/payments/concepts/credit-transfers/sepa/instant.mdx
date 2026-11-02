@@ -47,13 +47,10 @@ Every time a Swan user initiates an Instant SEPA Credit Transfer, Swan verifies 
 
 ### Reachability {#instant-verification-reachability}
 
-Swan **confirms reachability**, meaning Swan makes sure the beneficiary's bank can accept the transfer.
+Swan sends Instant SEPA Credit Transfers through the EBA-RT1 and TIPS Clearing and Settlement Mechanisms (CSMs).
+Since the end of 2021, every PSP adhering to the SCT Inst scheme is reachable in TIPS, and the Instant Payments Regulation requires euro-area PSPs to receive instant transfers since 9 January 2025 and to send them since 9 October 2025 (non-euro PSPs: 9 January 2027 and 9 July 2027).
 
-Swan uses the EBA-RT1 and TIPS Clearing and Settlement Mechanisms (CSM), which are two of the major CSMs for Instant SEPA Credit Transfers accounting for 90% of the total reachability.
-Instant SEPA Credit Transfers sent from Swan accounts can be sent to banks connected to either EBA-RT1 or TIPS, but they can't be sent if banks don't use at least one of these CSMs.
-
-Attempts to send Instant SEPA Credit Transfers to banks not connected to EBA-RT1 or TIPS are rejected with the reason `BeneficiaryBankNotReachable`.
-[Fallback mode](#instant-fallback) applies.
+If the beneficiary's bank still can't accept an instant transfer, the transfer is rejected with the reason `BeneficiaryBankNotReachable` and [fallback mode](#instant-fallback) applies.
 
 ### Risk {#instant-verification-risk}
 

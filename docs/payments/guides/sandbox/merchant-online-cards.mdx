@@ -61,7 +61,7 @@ mutation CardPaymentLink {
 
 Enter the `id` from the `createMerchantPaymentLink` success payload.
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVPbmxpbmVDYXJkUGF5bWVudFJlY2VwdGlvbiB7CiAgc2ltdWxhdGVJbmNvbWluZ09ubGluZUNhcmRBdXRob3JpemF0aW9uKAogICAgaW5wdXQ6IHsKICAgICAgcGF5bWVudExpbmtJZDogIiRQQVlNRU5UX0xJTktfSUQiCiAgICAgIGF1dGhvcml6YXRpb246IHsgc3RhdHVzOiBBdXRob3JpemVkIH0KICAgICAgdGhyZWVEUzogeyBzdGF0dXM6IFN1Y2Nlc3NmdWwgfQogICAgICBjYXJkRGV0YWlsczogewogICAgICAgIHNjaGVtZTogVmlzYQogICAgICAgIGNhdGVnb3J5OiBDb21tZXJjaWFsCiAgICAgICAgdHlwZTogQ3JlZGl0CiAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICB9CiAgfQp9Cg%3D%3D&tab=test-api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVPbmxpbmVDYXJkUGF5bWVudFJlY2VwdGlvbiB7CiAgc2ltdWxhdGVJbmNvbWluZ09ubGluZUNhcmRBdXRob3JpemF0aW9uKAogICAgaW5wdXQ6IHsKICAgICAgcGF5bWVudExpbmtJZDogIiRQQVlNRU5UX0xJTktfSUQiCiAgICAgIGF1dGhvcml6YXRpb246IHsgc3RhdHVzOiBBdXRob3JpemVkIH0KICAgICAgdGhyZWVEUzogeyBzdGF0dXM6IFN1Y2Nlc3NmdWwgfQogICAgICBjYXJkRGV0YWlsczogewogICAgICAgIHNjaGVtZTogVmlzYQogICAgICAgIGNhdGVnb3J5OiBDb21tZXJjaWFsCiAgICAgICAgdHlwZTogQ3JlZGl0CiAgICAgICAgY291bnRyeTogIkZSQSIKICAgICAgfQogICAgfQogICkgewogICAgLi4uIG9uIFNpbXVsYXRlSW5jb21pbmdPbmxpbmVDYXJkQXV0aG9yaXphdGlvblN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50SWQKICAgICAgcGF5bWVudExpbmtJZAogICAgICBjYXJkTWFuZGF0ZUlkCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgIH0KICB9Cn0K&tab=test-api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {4} showLineNumbers
 mutation SimulateOnlineCardPaymentReception {
@@ -78,6 +78,12 @@ mutation SimulateOnlineCardPaymentReception {
       }
     }
   ) {
+    ... on SimulateIncomingOnlineCardAuthorizationSuccessPayload {
+      __typename
+      paymentId
+      paymentLinkId
+      cardMandateId
+    }
     ... on InternalErrorRejection {
       __typename
     }
@@ -87,7 +93,8 @@ mutation SimulateOnlineCardPaymentReception {
 
 ## Simulate booking merchant card payment {#simulate-book}
 
-Use the `transactionId` returned by the authorization simulation above, or find it in your Dashboard.
+The authorization simulation returns the `paymentId`, not the transaction ID: the transaction is created asynchronously.
+Get it with `merchantPayment(id: $PAYMENT_ID) { transactions(first: 10) { edges { node { id } } } }`, or find it in your Dashboard, then use it here.
 
 <a href="https://explorer.swan.io?query=bXV0YXRpb24gU2ltdWxhdGVPbmxpbmVDYXJkQm9va2luZyB7CiAgc2ltdWxhdGVJbmNvbWluZ09ubGluZUNhcmRCb29raW5nKAogICAgaW5wdXQ6IHsgdHJhbnNhY3Rpb25JZDogIiRUUkFOU0FDVElPTl9JRCIgfQogICkgewogICAgLi4uIG9uIFNpbXVsYXRlSW5jb21pbmdPbmxpbmVDYXJkQm9va2luZ1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgfQogIH0KfQo%3D&tab=test-api" className="explorer-badge">Open in API Explorer</a>
 

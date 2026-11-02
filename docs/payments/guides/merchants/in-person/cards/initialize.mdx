@@ -59,7 +59,7 @@ mutation GetConnectionToken {
 
 import Environments from '../../../../../_shared/partials/_environments.mdx';
 
-<Environments />
+<Environments note="In Sandbox, in-person card payments run on Stripe's test mode." />
 
 ### Wire up the provider {#wire-provider}
 
@@ -201,9 +201,9 @@ if (!Terminal.isInitialized()) {
 
 ## Step 2: Discover and connect to the reader {#connect-reader}
 
-:::note Debug mode
-The Stripe Terminal SDK blocks reader connections in debug builds as a security measure.
-Use a simulated reader for development (see code examples below).
+:::note Android debug builds
+On Android, the production Tap to Pay reader refuses debuggable apps and devices with developer options enabled.
+Discover with `isSimulated = true` in debug builds and `false` in release builds.
 :::
 
 <Tabs groupId="platform">
@@ -321,7 +321,8 @@ val discoverCancelable: Cancelable? = null
 val tapToPayReaderListener: TapToPayReaderListener? = null
 
 fun onDiscoverReaders() {
-  val config = TapToPayDiscoveryConfiguration(isSimulated = false)
+  val isApplicationDebuggable = 0 != (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE)
+  val config = TapToPayDiscoveryConfiguration(isSimulated = isApplicationDebuggable)
 
   discoverCancelable = Terminal.getInstance().discoverReaders(
     config,

@@ -30,7 +30,7 @@ Swan enriches card transactions with the following data (as availability allows)
 | `isSubscription` | Subscription indicator boolean | `Yes`, `No`, `null` |
 | `contactEmail`<br />`contactPhone`<br />`contactWebsite` | Merchant contact details | example[@]carrefour.fr<br />+330500550055<br />`https://www.carrefour.fr` |
 | `city`<br />`country`<br />`postalCode`<br />`latitude`<br />`longitude` | Location details | Paris<br />France (FRA)<br />75000<br />48.864716<br />2.349014 |
-| `carbonFootprint` | Carbon footprint in grams of CO2 equivalent | 0.00546 grams |
+| `carbonFootprint` | Carbon footprint in micrograms of CO2 equivalent (the Dashboard converts it to grams) | `1500000` (1.5 kg) |
 
 ## Displaying enriched info {#enriched-display}
 
@@ -49,6 +49,8 @@ The following image is sample enriched information as displayed on the Dashboard
 Swan calculates a transaction's carbon footprint based on the amount spent and the merchant's business category. The calculation maps to official [Statistical Classification of Economic Activities (NACE)](https://ec.europa.eu/eurostat/web/nace) European Union categories, using published carbon footprint data from [Eurostat air emissions intensities by NACE Rev. 2 activity](https://ec.europa.eu/eurostat/databrowser/view/env_ac_aeint_r2/default/table?lang=en).
 
 [Triple](https://www.jointriple.com/) provides the calculation. It covers all CO2 equivalents, uses the latest Eurostat ratios (2023 data as of April 2025), and doesn't yet vary by merchant country.
+
+The API returns `carbonFootprint` in micrograms of CO2 equivalent; the Dashboard displays the same value in grams.
 
 ## Webhooks and enriched info {#enriched-webhooks}
 

@@ -16,7 +16,7 @@ Each debtor must have their own payment mandate.
 :::tip Prerequisites
 - Debtor's account status: any except `Closing` or `Closed`
 - Merchant profile status: `Enabled`
-- Internal Direct Debit B2B payment method status: `Enabled`
+- The Internal Direct Debit payment method the mandate is attached to (Standard or B2B): `Enabled`
 - Debtor and merchant have accounts in the same Swan project
 - [B2B only] Debtor's account type: `Company`
 - A project access token, or a user access token with the `canManageAccountMembership` membership permission
@@ -26,7 +26,7 @@ Each debtor must have their own payment mandate.
 
 1. Call the `addInternalDirectDebitPaymentMandate` mutation.
 1. Replace `$YOUR_DEBTOR_ACCOUNT_ID` and `$YOUR_PAYMENT_METHOD_ID` with IDs from your project (lines 4, 5).
-1. Choose either Standard or B2B in your [mandate name](/payments/concepts/merchants/mandates#idd-info) (line 6).
+1. The scheme comes from the `paymentMethodId` you pass (a Standard or B2B payment method); `name` (line 6) is only a label, such as the [mandate title](/payments/concepts/merchants/mandates#idd-info).
 1. Choose `Recurrent` or `OneOff` (line 7).
     - [`OneOff` payment mandates](/payments/concepts/merchants/mandates#idd-oneoff) can only be used once.
 1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
@@ -90,7 +90,7 @@ mutation AddPaymentMandate {
 
 import Environments from '../../../../../_shared/partials/_environments.mdx';
 
-<Environments />
+<Environments note="Merchant features are enabled per project in Sandbox too: without access, the API returns a rejection." />
 
 ### Payload {#payload-declare}
 

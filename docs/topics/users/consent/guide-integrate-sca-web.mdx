@@ -1,0 +1,111 @@
+---
+title: Integrate Strong Customer Authentication in a web app
+---
+
+import ScaOpenRules from './_sca-open-rules.mdx';
+
+# Integrate Strong Customer Authentication in a web app
+
+Learn how to run Strong Customer Authentication (SCA) from your web app, for both signing in (OAuth) and consenting to sensitive operations.
+
+Swan opens SCA in the user's browser. Your web app redirects the user to a Swan URL, Swan handles authentication, then Swan redirects the user back to a URL you own.
+
+<ScaOpenRules />
+
+## How it works {#how-it-works}
+
+1. Your server gets a Swan URL: the authorization URL for sign-in, or the `consentUrl` returned by a sensitive operation.
+1. Your web app redirects the user to that URL in the current tab.
+1. The user completes SCA on Swan's page.
+1. Swan redirects the user to your redirect URL with query parameters.
+1. Your server checks the result with the Swan API, then shows the user the next step.
+
+## Sign in with OAuth {#sign-in}
+
+Follow the [Get a user access token](/developers/using-api/authentication/guide-get-token-user) guide to build the authorization URL and exchange the code.
+
+On the web, send the user to the authorization URL with a plain redirect:
+
+```js showLineNumbers
+// Server: build the URL, then redirect the user's browser to it
+app.get("/auth", (req, reply) => {
+  const params = new URLSearchParams({
+    client_id: "$YOUR_CLIENT_ID",
+    response_type: "code",
+    redirect_uri: "https://my-company.com/auth/callback", // registered in your Dashboard
+    scope: "openid offline",
+    state: generateUserState(req),
+  });
+  return reply.redirect(`https://oauth.swan.io/oauth2/auth?${params}`);
+});
+```
+
+Swan sends the user back to `redirect_uri` with `code` and `state` in the query string. Check that `state` matches before exchanging the code.
+
+## Consent to a sensitive operation {#consent}
+
+This example uses the `viewCardNumbers` mutation. The same flow applies to every [sensitive operation](/topics/users/consent/#sensitive).
+
+### Step 1: Get the consent URL {#consent-url}
+
+Call the mutation with a user access token, setting `consentRedirectUrl` to a page on your site.
+
+```js showLineNumbers
+app.post("/cards/:cardId/numbers", async (req, reply) => {
+  const { consentUrl } = await swanClient.viewCardNumbers({
+    input: {
+      cardId: req.params.cardId,
+      consentRedirectUrl: "https://my-company.com/cards/callback",
+    },
+  });
+  return reply.json({ consentUrl });
+});
+```
+
+### Step 2: Redirect the user {#consent-redirect}
+
+In the browser, redirect in the current tab.
+
+```js showLineNumbers
+const { consentUrl } = await fetch("/cards/123/numbers", { method: "POST" }).then((r) => r.json());
+window.location.assign(consentUrl);
+```
+
+### Step 3: Handle the redirect back {#consent-callback}
+
+After SCA, Swan redirects the user to `consentRedirectUrl` and adds these query parameters:
+
+- `consentId`.
+- `env`: `Sandbox` or `Live`.
+- `status`: `Accepted`, `CustomerRefused`, `OperationCommitting`, `Created`, `Started`, `Expired`, `Failed`, or `Canceled`.
+- `resourceId`, if the consent only impacts one resource.
+
+The `status` parameter is informational. Always confirm the consent with the API before acting on it.
+
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0Q29uc2VudFN0YXR1cyB7IGNvbnNlbnQoaWQ6ICIkWU9VUl9DT05TRU5UX0lEIikgeyBpZCBzdGF0dXMgdXBkYXRlZEF0IH0gfQ%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql showLineNumbers
+query GetConsentStatus {
+  consent(id: "$YOUR_CONSENT_ID") {
+    id
+    status
+    updatedAt
+  }
+}
+```
+
+```js showLineNumbers
+app.get("/cards/callback", async (req, reply) => {
+  const { consent } = await swanClient.getConsentStatus({ id: req.query.consentId });
+  if (consent.status !== "Accepted") {
+    return reply.redirect("/cards?error=consent");
+  }
+  return reply.redirect("/cards?numbers=shown");
+});
+```
+
+## Good to know {#good-to-know}
+
+- Consent links time out 20 minutes after being opened. Request a new `consentUrl` if the user comes back later.
+- For card numbers, the `consentUrl` only works in the browser where SCA was completed, and the information stays visible for five minutes.
+- Use the `state` parameter on OAuth redirects to protect against Cross-Site Request Forgery (CSRF).

@@ -91,7 +91,7 @@ mutation InitiateIdd {
 
 import Environments from '../../../../../_shared/partials/_environments.mdx';
 
-<Environments />
+<Environments note="Merchant features are enabled per project in Sandbox too: without access, the API returns a rejection." />
 
 ## Payload {#payload}
 
@@ -118,10 +118,7 @@ Note the `id` (line 6) for your Internal Direct Debit payment and the status `In
 1. At this point, two transactions are created automatically and sequentially:
     1. First, an incoming Internal Direct Debit (`InternalDirectDebitIn`) is created in the merchant's account with the status `Upcoming`.
     1. Then, an outgoing Internal Direct Debit (`InternalDirectDebitOut`) is created in the debtor's account with the status `Upcoming`.
-1. On the [settlement date](/payments/concepts/merchants/internal-direct-debit#settlement), Swan confirms the transaction can be completed, meaning the following must be true:
-   1. Debtor's Swan account status: `Enabled` (any status except `Closing` or `Closed` is enough to initiate, not to settle).
-   1. Direct debit payment mandate status: `Enabled`.
-   1. Debtor's available balance is enough to cover the transaction.
+1. On the settlement date, Swan runs the [settlement checks](/payments/concepts/merchants/internal-direct-debit#settlement) on the debtor's account, the mandate, and the available balance.
 1. Then, Swan updates the status for both the `InternalDirectDebitIn` and `InternalDirectDebitOut` to `Booked`.
 
 :::info Payment received

@@ -35,7 +35,7 @@ On the **back of the check**, the merchant must write their Swan account number 
 
 When declaring checks with the API, there are five mandatory API fields:
 
-1. `amount`: monetary amount of the check (can't exceed €10,000).
+1. `amount`: monetary amount of the check. It can't exceed €10,000: checks above this amount are refused at initiation.
 1. `currency`: `EUR` (only euros are supported).
 1. `CMC7` (Caractères Magnétiques Codés à 7 bâtonnets): 31-digit code composed of 3 series of numbers.
     - Series 1: check number; 7 digits
@@ -87,13 +87,14 @@ The [payment object balances](/payments/concepts/merchants/payments#balances) be
 
 ## Payment amount limit {#payment-limit}
 
-Swan may apply a [payment amount limit](/payments/concepts/merchants/payments#payment-limit) to a single check payment. If a payment exceeds this limit, the API returns a `ForbiddenRejection` error. To query the limit, use the `paymentAmountLimit` field at the `merchantPaymentMethod` level when you [request the payment method](/payments/guides/merchants/in-person/checks/request).
+Swan may also set a lower per-method [`paymentAmountLimit`](/payments/concepts/merchants/payments#payment-limit) for a merchant. If a payment exceeds this limit, the API returns a `ForbiddenRejection` error. To query the limit, use the `paymentAmountLimit` field at the `merchantPaymentMethod` level when you [request the payment method](/payments/guides/merchants/in-person/checks/request).
 
 ## Canceling payments {#canceling}
 
 Merchants can cancel check payments using the [`cancelMerchantPayment`](https://api-reference.swan.io/mutations/cancel-merchant-payment/) mutation.
 To understand if a payment is cancelable, check its `availableToCancel` balance.
 Only the full amount can be canceled.
+If you pass `amount`, it must equal the payment amount; a lower amount returns `MerchantPaymentNotPartiallyCancellableRejection`.
 
 Checks can be canceled while the `CheckIn` transaction is `Upcoming`, that is, until Swan's check provider receives the check; the exact window depends on postal delays. A canceled check never affects the account balance.
 

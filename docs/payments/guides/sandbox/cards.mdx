@@ -45,13 +45,14 @@ Some merchants send a clearing debit with no matching authorization, for example
 
 1. Go to **Dashboard** > **Developers** > **Event Simulator**.
 1. Go to **Cards** > **Card Transactions**.
-1. Go to the tab for a **debit without authorization**.
-1. Enter your Swan card ID, the amount, and any merchant information you'd like to include.
+1. Go to the **Debit Without Authorization** tab.
+1. Enter the card ID, the amount in euros, and the card format (**Virtual** or **Physical**).
 1. Click **Simulate**.
 
 The status changes to `Success`, and a `CardOutDebit` transaction is created with the status `Booked`, without a linked `CardOutAuthorization`.
 
-You can also call the `simulateOutgoingCardDebitWithoutAuthorization` mutation in the [Testing API](/build/tools/testing-api) with the same information.
+You can also call the `simulateOutgoingCardDebitWithoutAuthorization` mutation in the [Testing API](/build/tools/testing-api).
+It takes the card ID and amount, and optionally `originalAmount`, `cardType`, `operationType` (defaults to `RemoteDebit`), and nested `merchant` details; the success payload carries the `transactionId`, and input errors return `ForbiddenRejection`.
 
 ## Match a simulated credit to its payment {#simulate-credit}
 

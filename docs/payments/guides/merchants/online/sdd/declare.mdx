@@ -16,7 +16,7 @@ Each debtor must have their own payment mandate.
 :::tip Prerequisites
 - Debtor's account status, if the debtor has a Swan account: any except `Closing` or `Closed`
 - Merchant profile status: `Enabled`
-- SEPA Direct Debit B2B payment method status: `Enabled`
+- The SEPA Direct Debit payment method the mandate is attached to (Core or B2B): `Enabled`
 - [B2B only] Debtor's account type: `Company`
 - Mandate includes a unique SEPA Creditor Identifier (SCI)
 - Mandate includes a Unique Mandate Reference (UMR)
@@ -31,11 +31,11 @@ Each debtor must have their own payment mandate.
     - [`OneOff` payment mandates](/payments/concepts/merchants/mandates#sdd-oneoff) can only be used once.
 1. Choose the language and signature date for the mandate (lines 6-7).
 1. Add information about the debtor, including `name`, `IBAN`, and their `country` of residence (lines 9-11).
-1. Choose either Core or B2B in your [mandate name](/payments/concepts/merchants/mandates#sdd-info) (line 13).
+1. The scheme comes from the `paymentMethodId` you pass (a Core or B2B payment method); `name` (line 13) is only a label, such as the [mandate title](/payments/concepts/merchants/mandates#sdd-info).
 1. Add validations and rejections that are helpful for you, as well as optional information such as a `reference` for your internal use.
 1. B2B only: also [declare the mandate to the debtor's bank](/payments/concepts/merchants/mandates#sdd-declare).
 
-Swan creates the mandate with the status `Enabled`. It's finalized the first time it's used.
+Swan creates the mandate with the status `Enabled`; you can use it immediately. `executedAt` records the last transaction executed against it.
 
 ## Mutation {#mutation}
 
@@ -114,7 +114,7 @@ mutation AddSddMandate {
 
 import Environments from '../../../../../_shared/partials/_environments.mdx';
 
-<Environments />
+<Environments note="Merchant features are enabled per project in Sandbox too: without access, the API returns a rejection." />
 
 ## Payload {#payload}
 

@@ -56,20 +56,24 @@ Internal Direct Debit transactions are **booked at 18:00 Central European [Summe
 
 For both B2B and Standard, the settlement date is the day after initiation (D+1) if transactions are sent before **12:00 CET/CEST**.
 
+On the settlement date, Swan checks that the debtor's account is `Enabled`, the payment mandate is `Enabled`, and the debtor's available balance covers the amount.
+If any check fails, both transactions are `Rejected` with the matching reason (`AccountClosed`, `MandateInvalid`, `InsufficientFunds`): refer to [rejection reasons](/payments/reference/merchant-rejection-reasons#idd).
+Otherwise, both transactions move to `Booked`.
+
 import DayTimeStandard from '../../../_shared/partials/_day-time.mdx';
 
 <DayTimeStandard />
 
 ## R-transactions {#r-transactions}
 
-Returns and refunds are only possible with **Standard**, up to 8 calendar weeks after the due date and time.
+Rejections happen for both schemes; returns and refunds are only possible with **Standard**, up to 8 calendar weeks after the due date and time.
 
 import DdRejected from './partials/_dd-rejected.mdx';
 import DdReturned from './partials/_dd-returned.mdx';
 
 ### Rejected {#rejected}
 
-<DdRejected method="Internal Direct Debit Standard" reasonsHref="/payments/reference/merchant-rejection-reasons#idd" reasonsLabel="Internal Direct Debit reasons" />
+<DdRejected method="Internal Direct Debit" reasonsHref="/payments/reference/merchant-rejection-reasons#idd" reasonsLabel="Internal Direct Debit reasons" />
 
 ### Returned {#returned}
 

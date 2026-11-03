@@ -30,7 +30,7 @@ You can request several payment methods in one API call.
 - [In-person cards](/payments/concepts/merchants/in-person-cards): [request guide](/payments/guides/merchants/in-person/cards/request-method)
 - [French checks](/payments/concepts/merchants/french-checks): [request guide](/payments/guides/merchants/in-person/checks/request)
 
-Merchant payment methods are [enabled per Partner](/payments/concepts/merchants#overview) before your merchants can request them. <Term id="rolling-reserve">Rolling reserve</Term>, payment amount limits, and how the merchant's name appears on statements are described on the [merchant payments](/payments/concepts/merchants/payments) page.
+Merchant profile requests and merchant payment methods are both [enabled per Partner](/payments/concepts/merchants#overview) before your merchants can request them. <Term id="rolling-reserve">Rolling reserve</Term>, payment amount limits, and how the merchant's name appears on statements are described on the [merchant payments](/payments/concepts/merchants/payments) page.
 
 Every request is subject to Swan's [risk review](/payments/concepts/merchants#risk) and starts as `PendingReview`. Swan may ask for more information before deciding, even if the merchant profile is already `Enabled`, contacting you or your user according to your communication preferences.
 
@@ -43,5 +43,5 @@ The full lifecycle, including `WaitingForInformation`, and the rejection reasons
 Swan creates a **new version** of your payment method **every time an update is approved**.
 Only one version of a payment method can have the status `Enabled`.
 
-Swan manages the statuses for `Enabled` or `PendingReview` payment methods automatically.
-Therefore, you don't need to change the status before calling the API.
+When you call `requestMerchantPaymentMethodsUpdate`, the current version stays `Enabled` (or `PendingReview`) while Swan reviews the update as a new `PendingReview` version; you don't need to disable it first.
+Updates are only accepted on `Enabled` or `PendingReview` methods; other statuses return `MerchantPaymentMethodWrongStatusRejection`.

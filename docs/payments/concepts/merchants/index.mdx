@@ -26,7 +26,7 @@ import MerchantsDefinition from '../../../_shared/definitions/_merchants.mdx';
 Merchants include contractors, healthcare professionals, artisans, and business owners, among others.
 
 :::info Enablement per Partner
-Merchant payment methods are enabled per Partner: Swan reviews your use case before your merchants can request them.
+Merchant profile requests and merchant payment methods are both enabled per Partner: Swan reviews your use case before your merchants can request them. Projects without access get an API rejection.
 To get started, use the [Partner Support Request form](https://supportform.swan.io/).
 :::
 
@@ -49,11 +49,11 @@ Refer to [merchant payment methods](/payments/concepts/merchants/payment-methods
 
 ## Account closing and suspension {#account-closing}
 
-When a merchant's account moves to `Closing`, Swan rejects the account's merchant profiles and payment methods with the reason `AccountClosed`.
+When a merchant's account moves to `Closing`, Swan rejects the account's merchant profiles with the reason `AccountClosed` and disables their payment methods.
 Swan also cancels the merchant's `Upcoming` incoming SEPA Direct Debit <Term id="transactions">transactions</Term> (Core and B2B) that haven't yet been sent to the payment gateway, as well as upcoming check transactions, and the corresponding merchant payments move to `Canceled`.
 Transactions already handed over for settlement complete normally. Returns, refunds, and chargebacks are still `Booked` on the account while it's `Closing`.
 
-On accounts in `Closing` or `Suspended` status, Swan rejects the creation of merchant profiles and payment methods, payment link initiation, merchant payments, and <Term id="payment-mandates">payment mandates</Term>. The rejection identifies the account status as the cause.
+On accounts in `Closing` or `Suspended` status, Swan rejects the creation of merchant profiles and payment methods, payment link initiation, merchant payments, and <Term id="payment-mandates">payment mandates</Term>. The API returns a rejection, typically `ForbiddenRejection`; payment links on a closing account return `MerchantProfileWrongStatusRejection`, because the profile is already `Rejected`. The rejection message doesn't always name the account status. Merchant payments canceled this way show `Canceled` with no reason field.
 
 Learn more about the [account closure process](/accounts/concepts/closure/processes) and [account statuses](/accounts/concepts/account/statuses#statuses).
 

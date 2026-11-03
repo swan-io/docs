@@ -85,7 +85,7 @@ mutation BeneficiaryVerificationMutation {
 
 import Environments from '../../../../_shared/partials/_environments.mdx';
 
-<Environments />
+<Environments note={<>In Sandbox, the verification result is simulated from the beneficiary name: refer to the <a href="/payments/guides/sandbox/sepa#simulate-vop">Sandbox guide</a>.</>} />
 
 ## Step 2: Handle verification results {#step-2}
 
@@ -96,7 +96,7 @@ The mutation returns one of the four [VoP results](/payments/concepts/verificati
 | `Match` | Exact match found between the provided details and <Term id="account-holder">account holder</Term> information. | Safe to proceed with the transfer. |
 | `CloseMatch` | Close match with suggested correction from the beneficiary's bank. | Consider the suggested name correction before proceeding. |
 | `NoMatch` | No match found between the provided details and account holder information. | Verify beneficiary details carefully before proceeding. |
-| `VerificationNotPossible` | The beneficiary couldn't be verified, for example because of an invalid IBAN format. | Verify beneficiary details carefully before proceeding. |
+| `VerificationNotPossible` | The beneficiary couldn't be verified, for example because of an invalid IBAN format or because the beneficiary's bank didn't answer in time. | Verify beneficiary details carefully before proceeding. |
 
 #### Returned parameters
 - **`status`**: Verification result (see previous table).

@@ -33,7 +33,7 @@ Use these balances to check what happened on a payment and what you can still do
 | Payment object balance | Explanation |
 |---|---|
 | `totalAuthorized` | The total authorized amount for this merchant payment. |
-| `availableToCancel` | The amount that can still be canceled: for cards, the authorized amount not yet captured. Check this balance before canceling; the per-method cutoff is in the [rules table](#rules). |
+| `availableToCancel` | The amount that can still be canceled: for online cards, the authorized amount not yet captured. Check this balance before canceling; the per-method cutoff is in the [rules table](#rules). In-person card payments are captured immediately, so they can't be canceled. |
 | `totalCanceled` | The total amount canceled for this merchant payment. |
 | `availableToCapture` | The amount available for merchants to capture if the capture isn't automatic. |
 | `totalCaptured` | The amount captured by the merchant. For card payments with automatic capture, `totalCaptured` is always equal to `totalAuthorized`. |
@@ -53,8 +53,8 @@ The same payment object follows different operational rules depending on the pay
 
 | Payment method | Rolling reserve (default) | Booked or settled | Cancel before | Refunds | Returns and disputes |
 | --- | --- | --- | --- | --- | --- |
-| [Online cards](/payments/concepts/merchants/online-cards) | 100% over 5 business days | Business day after capture, 18:00 UTC | Capture | Some or all of the amount | Chargebacks open a dispute |
-| [In-person cards](/payments/concepts/merchants/in-person-cards) | None by default | Settled by <Term id="credit-transfer">credit transfer</Term> within one business day | Capture | Not available through the API: merchants request them from Swan Support | Chargebacks open a dispute; act through Swan Support |
+| [Online cards](/payments/concepts/merchants/online-cards) | 100% over 5 business days | Business day after capture, 18:00 UTC | Capture | Not available through the API: merchants request them from Swan Support | Chargebacks open a dispute |
+| [In-person cards](/payments/concepts/merchants/in-person-cards) | None by default | Settled by <Term id="credit-transfer">credit transfer</Term> within one business day | Not applicable (immediate capture) | Not available through the API: merchants request them from Swan Support | Chargebacks open a dispute; act through Swan Support |
 | [SEPA Direct Debit Core](/payments/concepts/merchants/sepa-direct-debit) | Determined by a <Term id="merchant-profile">merchant profile</Term> risk assessment | 20:00 CET/CEST on the settlement date | About 11:00 CET/CEST, the day before execution | Up to 8 calendar weeks after due date | Returns possible |
 | [SEPA Direct Debit B2B](/payments/concepts/merchants/sepa-direct-debit) | 100% over 3 business days | 20:00 CET/CEST on the settlement date | About 10:00 CET/CEST, the day before execution | Not possible | Returns possible |
 | [Internal Direct Debit Standard](/payments/concepts/merchants/internal-direct-debit) | Determined by a merchant profile risk assessment | 18:00 CET/CEST on the settlement date (D+1 if sent before 12:00) | 12:00 CET/CEST, one business day before execution | Up to 8 calendar weeks after due date | Returns possible |

@@ -82,8 +82,9 @@ Otherwise, the mandate is considered invalid.
 ### Sample content {#idd-content}
 
 Two variants, depending on whether the debtor already has a Swan account.
+The samples are B2B mandate texts. For a Standard mandate, drop the business-to-business sentence and the no-refund sentence: Standard debtors keep the eight-week refund right.
 
-#### Mandate for a debtor with a Swan account {#idd-content-with-account}
+#### Mandate for a debtor with a Swan account (B2B mandate) {#idd-content-with-account}
 
 If the debtor has a Swan account, you can include the following content in the mandate or in your Terms and Conditions.
 
@@ -93,7 +94,7 @@ If the debtor has a Swan account, you can include the following content in the m
 >
 > You are not entitled to a refund from your bank after your account has been debited, but you are entitled to request your bank not to debit your account up until the day the payment is due.
 
-#### Mandate for a debtor without a Swan account {#idd-content-no-account}
+#### Mandate for a debtor without a Swan account (B2B mandate) {#idd-content-no-account}
 
 If the debtor does not have a Swan account when the mandate is generated, you might choose to include the following content in your Terms and Conditions.
 
@@ -135,13 +136,13 @@ Because your client is already identified by being logged in to your platform, a
 
 ### Received mandates {#idd-received}
 
-A **received direct debit mandate** is created after the debtor's account receives the `InternalDirectDebitOut` transaction.
+A **received direct debit mandate** is created when the debtor's account receives the `InternalDirectDebitOut` transaction.
 The process is different for B2B and Standard, and one-off mandates are also possible.
 
 | Received mandate type | Description |
 | --- | --- |
 | B2B | <ol><li>Mandate created with the status `ConsentInitiationPending`.</li><li>Before the debtor can <Term id="consent">consent</Term>, you must [declare the payment mandate](/payments/guides/merchants/online/idd/declare).</li><li>Debtor must consent, but only the first time the mandate is used.</li></ol> |
-| Standard | <ol><li>Mandate created after a first payment is accepted.</li><li>You must enable the mandate by using the debtor's user access token with `canInitiatePayments` permissions to call the `enableReceivedDirectDebitMandate` mutation.</li><li>Exception: if a mandate with the same `merchantIdentifier`, `reference`, and `accountId` already exists, a new mandate is not created.</li></ol> |
+| Standard | <ol><li>Mandate created `Enabled` on the debtor's account when the first `InternalDirectDebitOut` transaction is created; no debtor consent or enablement is needed.</li><li>Exception: if a mandate with the same `merchantIdentifier`, `reference`, and `accountId` already exists, a new mandate is not created.</li></ol> |
 
 ### One-off mandates {#idd-oneoff}
 

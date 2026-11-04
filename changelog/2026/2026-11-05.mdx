@@ -5,24 +5,24 @@ type: release
 
 ## New features
 
-💳 `inAppProvisioningData` has a new `googleWallet` argument to support **Google Unified Push Provisioning**. It's available in production on request, once your Google console is set up with Swan. Swan will update the partner guide for [in-app provisioning](/topics/cards/digital/#integration) with full integration instructions.
+💳 `inAppProvisioningData` has a new `googleWallet` argument to support Google's **[Unified Push Provisioning API](https://developers.google.com/pay/issuers/apis/push-provisioning/early-access)**. It's available in production on request, once your Google Console is set up with Swan. We'll update the [provisioning guide](/topics/cards/digital/#integration) with instructions on how to integrate.
 
 ## Improvements
 
-🔎 You can now view and filter [merchant payment methods](/topics/merchants/) from your Dashboard. Open the new **Payment methods** tab under **Dashboard** > **Merchants**, then filter by status, type, or merchant ID.
+🔎 You can now view and filter [merchant payment methods](/topics/merchants/) from your Dashboard. Open the new **Payment methods** tab under **Dashboard** > **Merchants**, then filter by status, type, or merchant profile ID.
 
 ## API updates
 
 ### Breaking changes
 
-🇫🇷 For French companies, Swan no longer prefills ultimate beneficial owners (UBOs) and individual legal representatives from the company registry, to limit the personal data it shares. Collect them from your user and send them in the onboarding yourself. Company information is still retrieved, including companies acting as legal representatives.
+🇫🇷 For French companies, Swan no longer prefills ultimate beneficial owners (UBOs) or individual legal representatives from the company registry, to limit the sharing of personal data. Instead, collect this information from your users and submit it during onboarding. Swan continues to retrieve company details, including the legal name, trade name, legal form, registration date, company type, VAT number, and business address.
 
 - [Legacy onboarding](/preview/new-onboarding/legacy-onboarding/company#retrieve-data): UBOs and individual legal representatives are no longer prefilled.
-- [Current onboarding](/preview/new-onboarding#company-registry-data): `companyInfoRegistryData` returns `relatedIndividuals` empty. `relatedCompanies` is still returned.
+- [Current onboarding](/preview/new-onboarding#company-registry-data): `companyInfoRegistryData` returns an empty `relatedIndividuals` array and still returns `relatedCompanies`. Collect UBOs and individual legal representatives from your user and send them in `company.relatedIndividuals`.
 
 ### Upcoming breaking changes
 
-📅 On **1 December 2026**, `inAppProvisioningData` will refuse a Google Pay digital card queried without `googleWallet`, returning `BAD_USER_INPUT`, as Google ends legacy push provisioning at the end of December. If you [add cards to Google Wallet](/topics/cards/digital/guide-add) from your own app, migrate to Unified Push Provisioning before this date. Apple Pay and manual provisioning aren't affected.
+📅 From **1 December 2026**, `inAppProvisioningData` will refuse a Google Pay digital card queried without `googleWallet`, returning `BAD_USER_INPUT`, as Google ends legacy push provisioning at the end of December. If you [add cards to Google Wallet](/topics/cards/digital/guide-add) from your own app, migrate to the Unified Push Provisioning API before this date. Apple Pay and manual provisioning aren't affected.
 
 ### Reminders
 

@@ -561,6 +561,7 @@ module.exports = [
   { from: "/topics/cards/digital", to: "/cards/concepts/digital" },
   { from: "/topics/cards/digital/guide-add", to: "/cards/guides/digital/add" },
   { from: "/topics/cards/digital/guide-cancel", to: "/cards/guides/digital/cancel" },
+  { from: "/topics/cards/digital/guide-get-info", to: "/cards/guides/digital/get-info" },
   { from: "/topics/cards/digital/sandbox", to: "/cards/guides/sandbox-digital" },
   {
     from: "/topics/accounts/overview/guide-close",

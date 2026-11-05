@@ -1,8 +1,10 @@
 ---
-title: Integrate Strong Customer Authentication (SCA)
+title: Integrate Strong Customer Authentication in a mobile app
 ---
 
-# Integrate Strong Customer Authentication (SCA)
+import ScaOpenRules from './_sca-open-rules.mdx';
+
+# Integrate Strong Customer Authentication in a mobile app
 
 If you want to embed Swan into your own mobile app, you'll need to integrate Strong Customer Authentication (SCA) using in-app browsers.
 
@@ -10,10 +12,9 @@ By default, when a user performs SCA in a mobile app, Swan opens the smartphone'
 
 With SCA integration, you can embed an in-app browser directly into your mobile app so SCA opens within the application. Once SCA is complete, the user closes the in-app browser and remains inside your mobile app.
 
-:::danger In-app browser required
-For security reasons, all links **must open** in in-app browsers.<br />
-Therefore, **never use WebViews** to open URLs (`consentUrl` or `oAuthUrl`).
-:::
+<ScaOpenRules />
+
+Building a web app instead? Read [Integrate Strong Customer Authentication in a web app](/topics/users/consent/guide-integrate-sca-web).
 
 ## When to use SCA integration {#when-to-use}
 
@@ -161,11 +162,6 @@ openBrowser("https://my-company-api.com/auth").catch((error) => {
 This six-step process describes an ideal path for your users to consent.
 This example uses the action of creating a card.
 
-It's important that, when clicked, **consent links respect one of the following behaviors**:
-
-- Option 1: The link opens a pop-up that redirects the user to another page. Upon redirect, the pop-up closes automatically.
-- Option 2: The link opens within the same page, then redirects the user to the rest of the flow.
-
 ### 4.1 Create card button {#configure-consent-button}
 
 First, the user clicks a **Create a card** button in your app.
@@ -236,7 +232,7 @@ During redirection, Swan adds these query parameters to the URL.
 
 - `consentId`.
 - `env`: `Sandbox` or `Live`.
-- `status`: `Accepted`, `CustomerRefused`, `OperationCommitting`, `CredentialRefused`, `Created`, `Started`, `Expired`, `Failed`, or `Canceled`.
+- `status`: `Accepted`, `CustomerRefused`, `OperationCommitting`, `Created`, `Started`, `Expired`, `Failed`, or `Canceled`.
   - _Including the status doesn't replace the need to query Swan's API to confirm the consent._
 - `resourceId` (if the consent only impacts one resource).
 

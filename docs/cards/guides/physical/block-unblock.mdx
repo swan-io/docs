@@ -31,6 +31,10 @@ mutation BlockPhysicalCard {
 }
 ```
 
+import Environments from '../../../_shared/partials/_environments.mdx';
+
+<Environments />
+
 ## Unblock a physical card {#unblock}
 
 To unblock a physical card with the `resumePhysicalCard` mutation, you must:
@@ -69,7 +73,7 @@ If a card was blocked because the PIN was entered incorrectly 3 times, the cardh
     If the `resumePhysicalCard` mutation is called before 24 hours pass, it returns an error.
     :::
 1. The cardholder consents to the operation.
-    - After receiving consent, the [physical card status](/cards/concepts/physical/statuses) returns from `Suspended` to its previous status, `ToActivate`. If the card is in the [renewal process](/cards/concepts/physical/statuses#renew-statuses), the status returns to `Renewed`.
+    - After receiving consent, the [physical card status](/cards/concepts/physical/statuses) returns from `Suspended` to its previous status. Resuming also re-activates the [renewal schedule](/cards/concepts/physical/statuses#renew-suspended): if the card is close to renewal (between the 10-week and 8-week checkpoints), it moves to `ToRenew`. If you resume after the 8-week checkpoint, the card returns to `Activated` and is `Canceled` when it expires.
 1. The cardholder enters their original PIN at an ATM or a compatible payment terminal ([reminder: a card's PIN never changes](/cards/concepts/physical/pin)).
 
 :::info View PIN

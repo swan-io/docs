@@ -6,7 +6,7 @@ title: Manage account closures
 
 This guide helps partner support teams handle account closure requests: what to check, who can request closure, what to tell your user, and when to contact Swan.
 
-For user-facing instructions, see [Account closure process](https://support.swan.io/hc/en-150/articles/14642306196765-Account-closure-process) on [support.swan.io](https://support.swan.io).
+For user-facing instructions, share [Account closure process](https://support.swan.io/hc/en-150/articles/14642306196765-Account-closure-process).
 
 For the technical implementation, see [Account closure](/topics/accounts/closure/).
 
@@ -26,7 +26,7 @@ Changing the legal representative doesn't require closing the account. See [Chan
 
 Swan accounts go through two statuses during closure:
 
-- `Closing`: The closure process is underway. See [what changes when closure begins](/topics/accounts/closure/#when-the-closure-process-begins).
+- `Closing`: The closure process is underway. See [what changes when closure begins](/topics/accounts/closure/#closure-begins).
 - `Closed`: The account has closed after meeting all four closure conditions.
 
 :::caution Closure is permanent
@@ -50,7 +50,7 @@ The account moves automatically to `Closed` once it meets all four conditions:
 
 | Actor | How they can request closure | Do you need to contact Swan? |
 | --- | --- | --- |
-| Your user's legal representative | The legal representative can request closure through your app if your integration supports it. Otherwise, retrieve the account closure link from the account section in your Dashboard and share it with them. In both cases, the legal representative must consent to the closure. See [Direct the legal representative to close the account themselves](#direct-the-legal-representative-to-close-the-account-themselves). | Usually no. Unless the legal representative can't close the account using the link. |
+| Your user's legal representative | The legal representative can request closure through your app if your integration supports it. Otherwise, retrieve the account closure link from the account section in your Dashboard and share it with them. In both cases, the legal representative must consent to the closure. See [Direct the legal representative to close the account themselves](#direct-the-legal-representative-to-close-the-account-themselves). | Usually no, unless the legal representative can't close the account using the link. |
 | You (Partner) | You can request closure for an approved partner reason. For a `Limited` account, you don't need to provide evidence from the legal representative. For an `Unlimited` account, you need their written consent or must wait for the 60-day notice period. See [Request partner-initiated closure](#request-partner-initiated-closure). | No, if you send an account closure link and the legal representative completes it.<br /><br />Yes, if you request closure (partner-initiated) or on the legal representative's behalf. Raise a support request in your Dashboard and include their written consent if you have it. |
 | Swan | Swan can close an account in compliance or regulatory situations. | Not applicable. Swan initiates the closure. |
 | A third party (liquidator, notary) | Swan verifies the third party's authority before acting. See [Handle a third-party closure request](#handle-a-third-party-closure-request). | Yes. |
@@ -119,7 +119,7 @@ If a user contacts you to request account closure, direct the legal representati
 To retrieve and share the account closure link:
 
 1. Go to **Dashboard** > **Data** > **Accounts** and open the account.
-1. Click to copy the account closure link.
+1. In the **Close account** tile, click to copy the account closure link.
 1. Send the link to the legal representative registered on the account.
 
 Only the legal representative registered on the account can use the account closure link. If the user who contacts you isn't the legal representative, ask them to forward the link to the legal representative.
@@ -219,7 +219,7 @@ To check the status of an account closure, go to **Dashboard** > **Data** > **Ac
 
 :::info Integration: Closure status in your app
 
-Your development team can subscribe to the `Account.Closing` and `Account.Closed` webhooks to surface closure status in your own tools. See [Account closure](/topics/accounts/closure/).
+Your development team can subscribe to the `Account.Closing` and `Account.Closed` [webhooks](/developers/using-api/webhooks/#events-accounts) to surface closure status in your own tools. See [Account closure](/topics/accounts/closure/).
 
 :::
 
@@ -227,9 +227,9 @@ While the account is `Closing`, your user can still access Web Banking and send 
 
 To help your user move remaining funds out of their account, see [Initiate a credit transfer](/topics/payments/credit-transfers/sepa/guide-initiate-ct/).
 
-Closing the main IBAN also automatically cancels all virtual IBANs associated with it.
+When the account enters `Closing`, Swan cancels all of its virtual IBANs.
 
-See [what changes when closure begins](/topics/accounts/closure/#when-the-closure-process-begins) for information about canceled resources, incoming payments, and the actions your user needs to take.
+See [what changes when closure begins](/topics/accounts/closure/#closure-begins) for information about canceled resources, incoming payments, and the actions your user needs to take.
 
 :::caution Outgoing SEPA Direct Debits require action
 
@@ -246,7 +246,7 @@ Swan can't cancel outgoing SEPA Direct Debit mandates. Your user needs to provid
 You can view the closure reason code for a closed account in your Dashboard:
 
 1. Go to **Dashboard** > **Data** > **Accounts**.
-1. Select the relevant account to view its closure reason.
+1. Select the relevant account to view its [closure reason code](/topics/accounts/closure/#closure-reason-codes).
 
 ### Request a closure confirmation letter
 
@@ -268,7 +268,7 @@ Raise a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests
 | A negative balance is blocking closure. | The account ID and IBAN, the negative balance amount, confirmation that your user has been asked to settle the balance, and any relevant context. |
 | An account is `Suspended` and needs to be closed. | The account ID or IBAN and the reason for the closure request. |
 | The legal representative is facing technical issues while trying to close the account themselves. | The account ID or IBAN, a description of the issue, and any relevant screenshots or error details. |
-| You're requesting a closure, for example, a churned user. | The account ID or IBAN, the partner closure reason, the payment level, the legal representative's written consent where applicable, and an explanation of why the legal representative can't complete the closure themselves. |
+| You're requesting a partner-initiated closure (for example, for a churned user). | The account ID or IBAN, the partner closure reason, the payment level, the legal representative's written consent where applicable, and an explanation of why the legal representative can't complete the closure themselves. |
 | A third party, such as a liquidator or notary, requests closure. | The account ID or IBAN, the type of third party, and any authority documentation they provided. |
 | You need a closure confirmation letter. | The account ID or IBAN and confirmation that your user needs evidence that the account is closed. |
 | You need to close more than 20 accounts. | A list of account IDs or IBANs, the payment level for each account, the partner closure reason, and evidence of legal representative consent where applicable. |

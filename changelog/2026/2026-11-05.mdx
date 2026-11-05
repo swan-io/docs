@@ -1,0 +1,33 @@
+---
+title: 5 November 2026
+type: release
+---
+
+## New features
+
+💳 `inAppProvisioningData` has a new `googleWallet` argument to support Google's **[Unified Push Provisioning API](https://developers.google.com/pay/issuers/apis/push-provisioning/early-access)**. It's available in production on request, once your Google Console is set up with Swan. We'll update the [provisioning guide](/topics/cards/digital/#integration) with instructions on how to integrate.
+
+## Improvements
+
+🔎 You can now view and filter [merchant payment methods](/topics/merchants/) from your Dashboard. Open the new **Payment methods** tab under **Dashboard** > **Merchants**, then filter by status, type, or merchant profile ID.
+
+## API updates
+
+### Breaking changes
+
+🇫🇷 For French companies, Swan no longer prefills ultimate beneficial owners (UBOs) or individual legal representatives from the company registry, to limit the sharing of personal data. Instead, collect this information from your users and submit it during onboarding. Swan continues to retrieve company details, including the legal name, trade name, legal form, registration date, company type, VAT number, and business address.
+
+- [Legacy onboarding](/preview/new-onboarding/legacy-onboarding/company#retrieve-data): UBOs and individual legal representatives are no longer prefilled.
+- [Current onboarding](/preview/new-onboarding#company-registry-data): `companyInfoRegistryData` returns an empty `relatedIndividuals` array and still returns `relatedCompanies`. Collect UBOs and individual legal representatives from your user and send them in `company.relatedIndividuals`.
+
+### Upcoming breaking changes
+
+📅 From **1 December 2026**, `inAppProvisioningData` will refuse a Google Pay digital card queried without `googleWallet`, returning `BAD_USER_INPUT`, as Google ends legacy push provisioning at the end of December. If you [add cards to Google Wallet](/topics/cards/digital/guide-add) from your own app, migrate to the Unified Push Provisioning API before this date. Apple Pay and manual provisioning aren't affected.
+
+### Reminders
+
+👀 On **12 November 2026**, three changes [announced on 15 October](/changelog/15-october-2026#upcoming-breaking-changes) take effect:
+
+- Territory codes (for example, `REU`) are no longer accepted in country fields. Use the country code instead (`FRA`).
+- New birth date rules apply to legal representatives, account admins, and ultimate beneficial owners.
+- The Account Information Service (AIS) returns the Origin Transaction ID instead of the Payment ID in `extra.additional_information`.

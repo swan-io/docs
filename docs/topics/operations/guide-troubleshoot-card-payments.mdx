@@ -32,7 +32,7 @@ A declined payment isn't debited from the user's account. This differs from:
 - `Booked`, when the payment has been completed and debited.
 - `Released`, when an authorization has ended without a debit and the held amount becomes available again.
 
-If a transaction stays `Pending` or seems stuck, see [Card payments](/topics/payments/cards/) for lifecycle guidance. Raise a support request in your Dashboard when you need Swan to investigate.
+If a transaction stays `Pending` or seems stuck, see [Card payments](/topics/payments/cards/) for lifecycle guidance. Submit a support request in your Dashboard when you need Swan to investigate.
 
 In this guide, "declined" means the transaction status is `Rejected`.
 
@@ -73,11 +73,15 @@ If the payment isn't listed:
 
 Use the reason shown in the transaction details to identify the relevant checks and the next steps. Don't guess based on what the user has described.
 
-#### The account or membership isn't eligible (`AccountMembershipRefused`)
+#### The account or membership isn't eligible
+
+Rejection reasons: `AccountClosed`, `AccountSuspended`, `AccountHolderDeceased`, `AccountMembershipRefused`.
 
 Check that the account and account membership are active. If the account or membership status prevents payments, follow the relevant account or membership procedure instead of changing the card settings.
 
-#### The card isn't active, is suspended, or is permanently blocked (`CardNotActivated`, `CardSuspended`, `CardPermanentlyBlocked`)
+#### The card isn't active, is suspended, or is permanently blocked
+
+Rejection reasons: `CardNotActivated`, `CardSuspended`, `CardPermanentlyBlocked`, `CardExpired`, `CardOutOfOrder`.
 
 Check the card's status in the Dashboard or your product:
 
@@ -93,13 +97,17 @@ For the technical implementation, see [Block and unblock physical cards](/topics
 
 :::
 
-#### The user doesn't have enough funds or has reached a limit (`InsufficientFunds` or `TransactionAmountLimitExceeded` )
+#### The user doesn't have enough funds or has reached a limit
+
+Rejection reasons: `InsufficientFunds`, `TransactionAmountLimitExceeded`, `PeriodAmountLimitExceeded`, `PeriodTransactionNumberLimitExceeded`.
 
 Check the user's available balance and card or transaction limit. Use the rejection reason in the transaction details to confirm why the payment failed.
 
 If a limit was reached, the user may need to wait or split the payment. An account member with `canManageCards` permission can adjust the individual card setting within the allowed limit. Don't change global card product settings to fix one user's decline.
 
-#### A card setting doesn't allow the payment (`TransactionTypeNotAllowed`)
+#### A card setting doesn't allow the payment
+
+Rejection reasons: `TransactionTypeNotAllowed`, `InPersonTransactionsNotAuthorized`, `TransactionCurrencyIncorrect`.
 
 Check the individual card's usage settings, including:
 
@@ -120,6 +128,8 @@ A country restriction can't be removed by changing an individual card setting. D
 
 #### The PIN or contactless verification wasn't completed
 
+Rejection reasons: `PinInvalid`, `PinRequired`, `PinRequiredForFurtherTransaction`, `InvalidPinAttemptsExceeded`.
+
 Use the rejection reason to choose the right guidance.
 
 - For `PinInvalid`, ask the user to try once with the correct PIN. Repeated guesses can block the card.
@@ -129,13 +139,17 @@ Use the rejection reason to choose the right guidance.
 
 For contactless limits, share [Spending limits](https://support.swan.io/hc/en-150/articles/18989382227357-Spending-limits).
 
-#### The card details are incorrect (`InvalidExpirationDate` or `InvalidSecurityNumber`)
+#### The card details are incorrect
+
+Rejection reasons: `InvalidExpirationDate`, `InvalidSecurityNumber`.
 
 Ask the user to check the card number, expiry date, and CVC they gave the merchant, then try once more. If the details are correct and the payment still fails, have them contact the merchant.
 
 If the payment still fails and the merchant confirms its systems are working, submit a support request in your Dashboard.
 
-#### 3D Secure wasn't completed (`ThreeDsError`)
+#### 3D Secure wasn't completed
+
+Rejection reasons: `ThreeDsError`, `MerchantShouldResubmitAuthorization`.
 
 For an online payment, the merchant may need to start or complete 3D Secure (3DS) verification.
 
@@ -147,7 +161,9 @@ Ask your user to:
 
 If the rejection reason is `MerchantShouldResubmitAuthorization`, the merchant didn't use 3DS. Ask the merchant to check their 3DS implementation. If the issue persists, submit a support request in the Dashboard.
 
-#### The digital card or wallet isn't active (`DigitalCardDeactivated` or `DigitalCardTokenInvalid`)
+#### The digital card or wallet isn't active
+
+Rejection reasons: `DigitalCardDeactivated`, `DigitalCardSuspended`, `DigitalCardTokenInvalid`, `DigitalCardEnrollmentInvalid`, `DigitalCardRefusal`.
 
 Use the payment type and rejection reason in the transaction details to identify which of the following applies.
 
@@ -159,7 +175,9 @@ If the payment used Apple Pay or Google Pay:
 
 If the rejection reason is `DigitalCardRefusal`, the digital card issuer rejected the transaction. Ask the user to check with the merchant or try another payment method. If the issue persists and the merchant confirms their systems are working, submit a support request in your Dashboard.
 
-#### Swan returned a technical error (`SwanTechnicalErrorOccurred`)
+#### Swan returned a technical error
+
+Rejection reasons: `SwanTechnicalErrorOccurred`, `SwanTimeout`, `SwanOffline`.
 
 Ask the user to retry once, and check whether other users or cards are affected. If the issue continues, record the transaction details and error message in a support request.
 

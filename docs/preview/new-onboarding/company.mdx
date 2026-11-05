@@ -50,7 +50,7 @@ Although many `accountAdmin` fields are optional during onboarding, they are req
 **Available options**
 
 - `preferredLanguage`: `de`, `en`, `es`, `fi`, `fr`, `it`, `nl`, `pt`.
-- `typeOfRepresentation`: `LegalRepresentative`, `PowerOfAttorney`.
+- `typeOfRepresentation`: `LegalRepresentative`, `PowerOfAttorney`. For self-employed companies, only `LegalRepresentative` is valid.
 
 ### Address (`accountAdmin.address`)
 
@@ -87,7 +87,7 @@ All birth fields are optional in the API. If you don't prefill them, the account
 | `isUnitedStatesPerson` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
 | `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> |
 
-² `isUnitedStatesPerson` is required if the `companyType` is `SelfEmployed`.
+² `isUnitedStatesPerson` is required if the company is self-employed (based on its `company.legalFormCode`).
 
 ³ `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
 
@@ -140,7 +140,7 @@ These fields are hidden from end users. Provide them through your backend integr
 - `acquisitionChannel`: `InboundOrganic`, `InboundReferral`, `OutboundSales`, `OutboundAccountingFirm`.
 
 :::tip Legal forms
-Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query to retrieve all legal forms for a given country, translated based on the `Accept-Language` header. Each legal form includes a `code` you can use as the `legalFormCode` value. If the requested language is unavailable, the query falls back to the country's default language.
+Use the [`legalForms`](https://api-reference.swan.io/queries/legal-forms/) query to retrieve all legal forms for a given country, translated based on the `Accept-Language` header. Each legal form includes a `code` you can use as the `legalFormCode` value. If the requested language is unavailable, the query falls back to the country's default language. Swan uses the legal form to decide if the company is self-employed, which means `accountAdmin.typeOfRepresentation` must be `LegalRepresentative`.
 :::
 
 ### Tax information

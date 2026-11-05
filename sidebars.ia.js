@@ -394,6 +394,7 @@ module.exports = annotateAudience(annotate({
       cat("Digital", [
         doc("cards/guides/digital/add", "Add to a wallet"),
         doc("cards/guides/digital/transition-provisioning", "Transition to in-app provisioning"),
+        doc("cards/guides/digital/get-info", "Get digital card information"),
         doc("cards/guides/digital/cancel", "Cancel a digital card"),
       ], { link: "cards/guides/digital/index" }),
       cat("Sandbox", [

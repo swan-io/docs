@@ -271,3 +271,22 @@ openBrowser(consentUrl).catch((error) => {
   console.error(error);
 });
 ```
+
+## Security recommendations {#security}
+
+The examples on this page are deliberately minimal. In production, treat the deep link as a public channel: any app on the device can register your custom URL scheme, and anyone can send your user a crafted link.
+
+**Do**
+
+- Redirect to your app with a short-lived, single-use code, and have the app exchange it for its session over HTTPS.
+- Bind that code to the app that started sign-in with a [PKCE](https://datatracker.ietf.org/doc/html/rfc7636) verifier, so an intercepted code is useless.
+- Only handle a callback while a sign-in started by your app is in progress.
+- Store the session identifier in the device's secure storage (Keychain on iOS, Keystore on Android).
+- Keep Swan tokens on your server, refresh them there, and revoke them when the user logs out.
+- Confirm the consent status by querying Swan's API from your server.
+
+**Don't**
+
+- Don't put a session identifier or a token in the deep link.
+- Don't store the session identifier in `AsyncStorage` or other unencrypted storage.
+- Don't trust the query parameters of a callback without checking them on your server.

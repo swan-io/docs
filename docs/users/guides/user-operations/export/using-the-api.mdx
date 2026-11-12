@@ -16,17 +16,22 @@ Export the user data available on the Dashboard as a `.csv` file, programmatical
 ## Guide {#guide}
 
 1. Call the `exportUserData` mutation.
-1. Add your `email`. A link to download the `.csv` export is sent to the email address you provide.
-1. Optionally, add `filters` to narrow the export: user status, nationality, identification level, preferred notification channel, mobile phone number, birthdate, or a search string.
-1. Add the success payload and rejections.
+1. Optionally, add your `email` (line 4). A link to download the `.csv` export is sent to the email address you provide. If you don't include an email, the download link is only available from the Dashboard.
+1. Optionally, add `filters` (line 5) to narrow the export: user status, nationality, identification level, preferred notification channel, mobile phone number, birthdate, or a search string.
+1. Add the success payload, including the `exportId` (line 10), and rejections.
 
 ## Mutation {#mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0VXNlcnMgewogIGV4cG9ydFVzZXJEYXRhKGlucHV0OiB7IGVtYWlsOiAiJFlPVVJfRU1BSUxfQUREUkVTUyIgfSkgewogICAgLi4uIG9uIEV4cG9ydERhdGFTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZXhwb3J0SWQKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtU2ltdWx0YW5lb3VzRXhwb3J0c1JlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIE1heGltdW1EYWlseUV4cG9ydHNSZWFjaGVkUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRXhwb3J0VXNlcnMgewogIGV4cG9ydFVzZXJEYXRhKAogICAgaW5wdXQ6IHsKICAgICAgZW1haWw6ICIkWU9VUl9FTUFJTF9BRERSRVNTIgogICAgICBmaWx0ZXJzOiB7IHN0YXR1czogQWN0aXZlIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBFeHBvcnREYXRhU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGV4cG9ydElkCiAgICB9CiAgICAuLi4gb24gTWF4aW11bVNpbXVsdGFuZW91c0V4cG9ydHNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBNYXhpbXVtRGFpbHlFeHBvcnRzUmVhY2hlZFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {2,5} showLineNumbers
+```graphql {4,5,10} showLineNumbers
 mutation ExportUsers {
-  exportUserData(input: { email: "$YOUR_EMAIL_ADDRESS" }) {
+  exportUserData(
+    input: {
+      email: "$YOUR_EMAIL_ADDRESS"
+      filters: { status: Active }
+    }
+  ) {
     ... on ExportDataSuccessPayload {
       __typename
       exportId
@@ -42,6 +47,15 @@ mutation ExportUsers {
   }
 }
 ```
+
+### Mutation fields {#mutation-input}
+
+<FieldRequirementsLegend />
+
+| Field | Type | | Description |
+| --- | --- | --- | --- |
+| `email` | `String` | <Opt /> | Email address that receives the link to download the export. |
+| `filters` | `ExportUserDataFilters` | <Opt /> | Filters to narrow the export. |
 
 ## Payload {#payload}
 

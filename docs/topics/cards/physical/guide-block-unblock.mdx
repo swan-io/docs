@@ -51,12 +51,7 @@ A cardholder can unblock their card at either an ATM or a compatible payment ter
 
 **At a compatible payment terminal:** the cardholder inserts the card and enters their original PIN to complete a purchase. If the PIN is correct, the card is unblocked even if the purchase itself is rejected.
 
-The success of this process depends on three factors:
-- Whether withdrawals are enabled in the [card settings](../index.mdx#settings) (`withdrawal`).
-- Whether the cardholder enters the correct PIN.
-- Whether the transaction is successful.
-
-Following this process, the card will either be unblocked or remain suspended.
+Whether the card is unblocked depends only on whether the cardholder enters the correct PIN. The transaction itself can still be rejected, for example if withdrawals are disabled in the [card settings](../index.mdx#settings) (`withdrawal`), but this doesn't affect the unblocking.
 
 | Withdrawals enabled | PIN entered | Transaction outcome | Rejection reason | Card status change |
 | --- | --- | --- | --- | --- |
@@ -66,6 +61,7 @@ Following this process, the card will either be unblocked or remain suspended.
 | **False** | Correct | Rejected | `TransactionTypeNotAllowed` | Card is unblocked |
 | **False** | Incorrect | Rejected | `PinInvalid` | Card remains suspended |
 
+The **Withdrawals enabled** column applies to ATMs only. Payments at a terminal aren't withdrawals, so this setting doesn't affect them.
 
 #### Special case: Pending unblocking after calling `resumePhysicalCard` {#unblock-pin-pending}
 

@@ -19,7 +19,7 @@ Use this mutation to send the invitation yourself with an API-only integration, 
 :::tip Prerequisites
 - You must authenticate with a user access token associated with an existing account member who has the `canManageAccountMembership` permission. Only account members with that permission can send invitation notifications.
 - The <Term id="account-membership">account membership</Term> status must be `InvitationSent`.
-- You can send up to five invitation emails per day per membership.
+- You can send up to five invitation emails per membership per calendar day. The original invitation counts toward the limit.
 :::
 
 ## Guide {#guide}
@@ -110,7 +110,7 @@ The mutation can return several rejection reasons if the request can't be comple
 | `AccountMembershipNotFoundRejection` | The account membership ID doesn't exist. |
 | `AccountMembershipStatusNotEligibleRejection` | The account membership status must be `InvitationSent` to send an invitation notification. |
 | `AccountMembershipCustomInvitationCannotBeCreatedRejection` | The invitation link can't be created for this account membership. |
-| `MaximumDailyInvitationsReachedRejection` | You've reached the maximum of five invitation emails per day for this membership. |
+| `MaximumDailyInvitationsReachedRejection` | You've reached the maximum of five invitation emails per calendar day for this membership, the original invitation included. |
 | `UserNotAllowedToManageAccountMembershipRejection` | The authenticated user doesn't have the `canManageAccountMembership` permission. |
 | `UserNotAllowedToSendAccountMembershipInvitationRejection` | The user's account membership status must be `Enabled` to send invitations. |
 | `InternalErrorRejection` | An unexpected server error occurred on Swan's side. |

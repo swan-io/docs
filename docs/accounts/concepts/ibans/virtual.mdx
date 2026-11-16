@@ -31,3 +31,21 @@ If you use [Swan's Web Banking frontend](https://swan-io.github.io/swan-partner-
 :::note Example
 Use virtual IBANs to make paying invoices with credit transfers smoother by providing a different virtual IBAN to each client. You'll know exactly who is paying you, plus when and how much, simplifying reconciliation.
 :::
+
+## Refusing SEPA Direct Debits {#refuse-sdd}
+
+To refuse all SEPA Direct Debits received on an account, call the [`denySdd`](https://api-reference.swan.io/mutations/deny-sdd/) mutation.
+It applies to the account's main IBAN and to all of its virtual IBANs.
+To accept SEPA Direct Debits again, call the [`allowSdd`](https://api-reference.swan.io/mutations/allow-sdd/) mutation.
+
+The `blockSDD` field is `true` on the account and on each virtual IBAN while they refuse SEPA Direct Debits.
+
+## Virtual IBAN statuses {#statuses}
+
+Each virtual IBAN has a `status`.
+
+| Status | Explanation |
+| --- | --- |
+| `Enabled` | The virtual IBAN accepts incoming SEPA payments. |
+| `Suspended` | The virtual IBAN temporarily refuses incoming SEPA payments. |
+| `Canceled` | The virtual IBAN permanently refuses incoming SEPA payments. |

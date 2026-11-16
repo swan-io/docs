@@ -23,7 +23,6 @@ flowchart LR
     S -.-> CD
     S -.-> OC[OperationCommitting]
     OC --> A[Accepted]
-    S --> A
     S -.-> CR[CustomerRefused]
     S -.-> E[Expired]
     OC -.-> FA[Failed]
@@ -46,12 +45,12 @@ flowchart LR
 | Consent status | Explanation |
 |---|---|
 | `Created` | A sensitive operation was initiated, triggering the creation of a consent request automatically. The user who needs to consent hasn't opened the consent URL yet.<br /><br />**Next steps**:<ul><li>When the user opens the consent URL, the status moves to `Started`.</li><li>If the consent is canceled, the status moves to `Canceled`.</li></ul> |
-| `Started` | The user opened the consent URL but hasn't consented yet.<br /><br />**Next steps**:<ul><li>If the user consents successfully, the status moves to `Accepted` (multi-consents pass through `OperationCommitting` first).</li><li>If the user refuses to consent, the status moves to `CustomerRefused`.</li><li>If the user doesn't consent within the validity window, the status moves to `Expired`.</li><li>If the consent is canceled, the status moves to `Canceled`.</li></ul> |
+| `Started` | The user opened the consent URL but hasn't consented yet.<br /><br />**Next steps**:<ul><li>If the user consents successfully, the status moves to `OperationCommitting`.</li><li>If the user refuses to consent, the status moves to `CustomerRefused`.</li><li>If the user doesn't consent within the validity window, the status moves to `Expired`.</li><li>If the consent is canceled, the status moves to `Canceled`.</li></ul> |
 | `Accepted` | The user consented successfully. |
 | `Canceled` | Consent requests can be `Canceled` by you or your user as long as the consent has the status `Created` or `Started`. `Canceled` also applies to child consents when a preceding child consent `Failed`. Canceling a parent multi-consent also cancels all its child consents. |
 | `CustomerRefused` | The user refused to consent to the sensitive operation. |
 | `Expired` | The user opened the consent URL, but didn't consent within the 20-minute validity window. This also applies if the user tries to consent but can't manage to complete a valid consent within the 20 minutes. When a parent multi-consent expires, all its child consents also expire. |
-| `OperationCommitting`<br />*(multi-consent only)* | A multi-consent was executed, and one or more child consents are still in progress.<br /><br />**Next steps**:<ul><li>If consent is provided for all child consents, meaning all child consents have the status `Accepted`, the status of the multi-consent changes to `Accepted`.</li><li>If a single child consent has the status `Failed`, the multi-consent is also assigned the status `Failed`.</li></ul> |
+| `OperationCommitting` | The user consented, and the operation is committing. For a multi-consent, one or more child consents are still in progress.<br /><br />**Next steps**:<ul><li>If the operation completes, the status moves to `Accepted`. For a multi-consent, this means all child consents have the status `Accepted`.</li><li>If a technical error occurs during execution, the status moves to `Failed`. For a multi-consent, this means a single child consent has the status `Failed`.</li></ul> |
 | `Failed` | The user successfully accepted the consent, but a technical error occurred during execution. As a result, the operation didn't complete, and the user must retry.<br /><br />For multi-consents, this status means a child consent `Failed`. Any child consents already `Accepted` remain valid, while unexecuted child consents are `Canceled`. |
 
 The `ConsentStatus` enum also includes `CredentialRefused`, which is deprecated and no longer supported.

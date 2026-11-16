@@ -30,6 +30,19 @@ All account statements have a `period` attribute.
 You can [generate account statements](/accounts/guides/account-operations/generate-statement) for a period of up to three months with the `generateAccountStatement` mutation.
 These statements always have `period` = `Custom`.
 
+## Statement statuses {#statuses}
+
+Each account statement has a status, returned in `statusInfo`.
+
+| Status | Explanation |
+| --- | --- |
+| `Pending` | The statement is being generated. |
+| `Generated` | The statement is ready to download. The `url` field contains the download link. |
+| `Failed` | Statement generation failed. Double-check your account ID and generate a new statement. |
+| `Voided` | The statement has been voided. A voided statement `url` is still available for reference. |
+
+The `status` field and its `StatementStatus` enum (`Available`, `Failed`, and `Pending`) are deprecated. Use `statusInfo` instead.
+
 ## Producing custom statements {#statements-custom}
 
 You can also access the raw data and produce custom statements.
@@ -38,14 +51,14 @@ For example, you might:
 
 - Need to offer a format Swan doesn't support.
 - Want to customize the style.
-- Prefer to use a different timezone than Central European [Summer] Time (CET/CEST).
+- Prefer to use a different time range or timezone than Swan's monthly statements, which use UTC +1.
 
 Even if you use custom statements, Swan generates statements each month.
 If audited, Swan's account statement is the official version.
 
 :::caution Custom statement approval
 As a regulated financial institution, account statements fall under compliance rules.
-You might need to get your custom statements approved. Use the [Partner Support Request form](https://supportform.swan.io/) before releasing a custom account statement.
+You might need to get your custom statements approved. Use the [Partner support request form](https://partner-support.swan.io/hc/en-gb/requests/new) before releasing a custom account statement.
 :::
 
 ## Transaction statements {#transaction-statements}

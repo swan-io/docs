@@ -16,8 +16,8 @@ Swan opens SCA in the user's browser. Your web app redirects the user to a Swan 
 
 1. Your server gets a Swan URL: the authorization URL for sign-in, or the `consentUrl` returned by a sensitive operation.
 1. Your web app redirects the user to that URL in the current tab.
-1. The user completes SCA on Swan's page.
-1. Swan redirects the user to your redirect URL with query parameters.
+1. The user completes SCA. On a phone, they do it in the same tab. On a computer, Swan's page asks for their phone number, sends them an SMS with a link, and shows a "Check your phone" message while they confirm or cancel on the phone.
+1. Swan redirects the tab to your redirect URL with query parameters. On a computer, this happens automatically once the user finishes on their phone; the user doesn't need to do anything in the tab.
 1. Your server checks the result with the Swan API, then shows the user the next step.
 
 ## Sign in with OAuth {#sign-in}
@@ -107,5 +107,5 @@ app.get("/cards/callback", async (req, reply) => {
 ## Good to know {#good-to-know}
 
 - Consent links time out 20 minutes after being opened. Request a new `consentUrl` if the user comes back later.
-- For card numbers, the `consentUrl` only works in the browser where SCA was completed, and the information stays visible for five minutes.
+- For card numbers, the `consentUrl` only works in the browser where it was opened, even if the user confirms SCA on their phone. The same URL doesn't work in another browser or in a private window. The information stays visible for five minutes.
 - Use the `state` parameter on OAuth redirects to protect against Cross-Site Request Forgery (CSRF).

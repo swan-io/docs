@@ -169,7 +169,7 @@ module.exports = [
   { from: "/guide/control-card-usage", to: "/payments/guides/sandbox/cards" },
   {
     from: "/guide/create-a-capital-deposit",
-    to: "/accounts/guides/capital-deposits/deposit-capital",
+    to: "/accounts/guides/capital-deposits",
   },
   { from: "/guide/create-a-new-account", to: "/accounts/guides/onboarding#links" },
   { from: "/guide/fund-an-account", to: "/accounts/concepts/funding" },

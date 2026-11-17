@@ -815,6 +815,22 @@ module.exports = [
     to: "/accounts/guides/capital-deposits/upload-documents",
   },
   {
+    from: "/topics/capital-deposits/france/guide-create-case-v2",
+    to: "/accounts/guides/capital-deposits/create-case-v2",
+  },
+  {
+    from: "/topics/capital-deposits/guide-dashboard",
+    to: "/accounts/guides/capital-deposits/deposit-capital",
+  },
+  {
+    from: "/topics/capital-deposits/guide-create-case",
+    to: "/accounts/guides/capital-deposits/create-case",
+  },
+  {
+    from: "/topics/capital-deposits/guide-upload-documents",
+    to: "/accounts/guides/capital-deposits/upload-documents",
+  },
+  {
     from: "/topics/capital-deposits/guide-cancel",
     to: "/accounts/guides/capital-deposits/cancel",
   },

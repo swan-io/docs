@@ -18,9 +18,9 @@ import CancelCase from './partials/_cancel-case.mdx';
 <CancelCase />
 :::
 
-:::note Past the API window
-After shareholders [transfer their capital funds](/accounts/guides/capital-deposits/deposit-capital#transfer-capital-funds), the case can no longer be canceled with the API.
-You can still contact Swan and ask to cancel the case.
+:::caution Early-stage cancelation
+You can cancel a capital deposit case through the API only during the early stage of the process: the mutation is rejected once the case has progressed beyond `WaitingForInitialRequirements`.
+After shareholders [transfer their capital funds](/accounts/guides/capital-deposits/deposit-capital#transfer-capital-funds), the case can no longer be canceled with the API, but you can still raise a support request in your Dashboard to cancel it.
 :::
 
 ## Guide {#steps}
@@ -76,7 +76,7 @@ The payload confirms the capital deposit case status changed to `Canceled` and r
 ## What happens after cancelation {#after-cancellation}
 
 When you cancel a capital deposit case, all associated accounts are automatically closed: shareholder accounts and the future company account.
-These accounts receive the [closure reason code](/accounts/concepts/closure/reason-codes) `CapitalDepositWithdrawn`.
+These accounts receive a [closure reason code](/accounts/concepts/closure/reason-codes).
 
 You can subscribe to the [`CapitalDepositCaseEvent.Canceled` webhook](/build/using-api/webhooks#events-capital-deposits) to receive notifications when a capital deposit case is canceled.
 The [cancelation reason code](/accounts/reference/capital-deposits#cancelation-reason-codes) is also available directly on the capital deposit case, in the `CapitalDepositCaseCanceledStatusInfo` type.

@@ -12,8 +12,8 @@ related:
 Generate an upload URL and send the <Term id="supporting-documents">supporting documents</Term> required to complete a France <Term id="capital-deposit">capital deposit</Term> case.
 
 :::caution Multi-step process
-This page explains how to upload documents for steps 2 and 8 of a **multi-step process**.
-Refer to the guide to [deposit capital in France](/accounts/guides/capital-deposits/deposit-capital) for the whole process.
+This page explains how to upload documents for a capital deposit case using the API.
+Refer to [Manage a capital deposit case](/accounts/guides/capital-deposits/deposit-capital) for the whole operational process.
 :::
 
 ## Step 1: Generate upload URL  {#generate-url}
@@ -48,7 +48,7 @@ mutation generateUploadUrl {
 Retrieve the generated `uploadUrl` in the payload.
 
 :::caution Upload URL expires
-The `uploadUrl` is only valid for seven days, after which you'd need to generate a new URL.
+The `uploadUrl` is only valid for seven days. If the URL expires, generate a new one before uploading the document.
 :::
 
 ```json {4} showLineNumbers
@@ -75,3 +75,11 @@ curl --upload-file $YOUR_FILE https://$UPLOAD_URL
 
 Repeat steps 1-3 to upload additional documents, as needed.
 You can also change the documents you already uploaded as long as the [document status](/accounts/concepts/capital-deposits/statuses#documents) remains `Uploaded`.
+
+## Replace a refused document {#replace-refused}
+
+If Swan refuses a document, review the [refusal reason](/accounts/reference/capital-deposits#document-refusal-reasons) in the Dashboard or through the API. Correct the document and upload a replacement using the same process.
+
+After the replacement is uploaded, the document status returns to `Uploaded` while Swan reviews it again.
+
+You can replace a document while its status is `Uploaded`. Don't replace documents that have already reached `Validated`.

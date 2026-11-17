@@ -25,19 +25,19 @@ Capital deposit cases canceled before 2 April 2026 were migrated retroactively t
 
 | Reason code | Explanation |
 | --- | --- |
-| `KYCIssue` | Documents missing, incorrect, or no reply. |
-| `ForbiddenActivity` | Prohibited business sectors. |
+| `KYCIssue` | Documents are missing or incorrect, or the requested information wasn't sent. |
+| `ForbiddenActivity` | The company operates in a prohibited business sector. |
 | `DuplicateOnboarding` | A second account was created by mistake. |
-| `DeniedCountryResidency` | High-risk UBO or resident. |
-| `RefusedIbanCountry` | The account holder was assigned the wrong IBAN country, or the IBAN country isn't allowed. |
-| `CompanyRegistrationCountryNotSupported` | Swan doesn't support the company registration country. |
+| `DeniedCountryResidency` | A beneficial owner (UBO) or resident is located in a restricted country. |
+| `RefusedIbanCountry` | The country associated with the IBAN isn't supported. |
+| `CompanyRegistrationCountryNotSupported` | The company's country of registration isn't supported. |
 | `BusinessInactiveOrNotRegistered` | The company is inactive or not registered. |
-| `UnsupportedLegalForm` | Swan can't onboard the legal form. |
-| `TCViolation` | Terms and Conditions violation. |
-| `CapitalDepositWithdrawn` | The capital deposit has been withdrawn. |
+| `UnsupportedLegalForm` | Swan can't onboard this legal form. |
+| `TCViolation` | The account holder violated the terms and conditions. |
+| `CapitalDepositWithdrawn` | The capital deposit was withdrawn. |
 | `CapitalDepositRefusedByNotary` | The notary refused the capital deposit case. |
-| `ComplianceReason` | Cancelation for compliance reasons. |
-| `RegulatoryRequirement` | Cancelation required by regulation. |
+| `ComplianceReason` | The case was canceled for compliance reasons. |
+| `RegulatoryRequirement` | The case was canceled because of a regulatory requirement. |
 
 These reason codes come from the dedicated `CapitalDepositCaseCancellationReasonType` enum.
 Most values are shared with [account closure reason codes](/accounts/concepts/closure/reason-codes), which apply at the account level.
@@ -77,89 +77,29 @@ These reason codes come from the dedicated `DocumentReasonCode` enum.
 
 ## List of required documents {#documents-list}
 
-All documents are mandatory. The lease agreement marked with an asterisk (∗) has alternatives; refer to the specifications for **Future company** > **lease agreement**.
+The following table lists the documents that may be required. You upload some documents, Swan collects others during onboarding and <Term id="identification">identification</Term>, and the notary uploads the capital share deposit certificate.
 
-<table>
-  <tr>
-    <th>Stakeholder </th>
-    <th>Document</th>
-    <th>API document type</th>
-  </tr>
-  <tr>
-    <td rowspan="2">Individual shareholders</td>
-    <td>Proof of address</td>
-    <td>
-      <code>ProofOfIndividualAddress</code>
-      <br />
-      Refer to <a href="/accounts/reference/onboarding/proof-of-address">proof of address</a> for acceptable documents.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Identity document proving the shareholder's identity (collected during <Term id="identification">identification</Term>)
-    </td>
-    <td>
-      <code>ProofOfIdentity</code>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="2">Company shareholders</td>
-    <td>
-      Proof of registration of the company
-    </td>
-    <td>
-      <code>RegisterExtract</code>
-      <br />
-      Refer to <a href="/accounts/reference/onboarding/country-requirements">proof of registration</a> for acceptable documents.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Identity document proving the identity of the company shareholder's <Term id="legal-representative">legal representative</Term> (collected during identification if they are an account member).
-    </td>
-    <td>
-      <code>ProofOfIdentity</code>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="4">Future company</td>
-    <td>Document available only after the notary validates the case, uploaded at a specific time during the capital deposit process</td>
-    <td>
-      <code>RegisterExtract</code>
-    </td>
-  </tr>
-  <tr>
-    <td>Draft of the articles of incorporation</td>
-    <td>
-      <code>ArticlesOfIncorporation</code>
-    </td>
-  </tr>
-  <tr>
-    <td>Lease agreement for official company address ∗</td>
-    <td>
-      <code>CompanyLeaseAgreement</code>
-    </td>
-  </tr>
-  <tr>
-    <td>Lease mandate from legal representative</td>
-    <td>
-      <code>PowerOfAttorney</code>
-      <br />
-      Template available in French
-    </td>
-  </tr>
-</table>
+| Stakeholder | Document | API document type | How it is collected | Attached to |
+| --- | --- | --- | --- | --- |
+| Individual shareholder | [Proof of address](/accounts/reference/onboarding/proof-of-address) | `ProofOfIndividualAddress` | You upload it with `generateCapitalDepositDocumentUploadUrl`. | `shareholders[].documents` |
+| Individual shareholder | Proof of identity | `ProofOfIdentity` | Swan collects it during identification after onboarding is finalized. | The account holder's [supporting document collection](/accounts/concepts/documents) |
+| Company shareholder | Commercial registry extract issued within the last three months | `RegisterExtract` | Swan collects it during company onboarding. | The account holder's [supporting document collection](/accounts/concepts/documents) |
+| Company shareholder | Proof of identity for the <Term id="legal-representative">legal representative</Term> | `ProofOfIdentity` | Swan collects it during identification when the legal representative is the account administrator. | The account holder's [supporting document collection](/accounts/concepts/documents) |
+| Future company | Draft articles of incorporation | `ArticlesOfIncorporation` | You upload it with `generateCapitalDepositDocumentUploadUrl`. | `capitalDepositCase.documents` |
+| Future company | Lease agreement for the registered office | `CompanyLeaseAgreement` | You upload it with `generateCapitalDepositDocumentUploadUrl`. | `capitalDepositCase.documents` |
+| Future company | Power of attorney from the legal representative to Swan | `PowerOfAttorney` | You upload it with `generateCapitalDepositDocumentUploadUrl`. | `capitalDepositCase.documents` |
+| Future company | Capital share deposit certificate | `CapitalShareDepositCertificate` | The notary uploads it. | `capitalDepositCase.documents` |
+| Future company | Commercial registry extract, or KBIS, issued after incorporation | `RegisterExtract` | You upload it with `generateCapitalDepositDocumentUploadUrl` after incorporation. | `capitalDepositCase.documents` |
 
-<details>
-  <summary>Specifications for **Future company** > **lease agreement** ∗</summary>
-  <div>
-    <p>If a future company doesn't have a company lease agreement as proof of the official company address, other elements are required according to their situation.
-      All identity documents must be in full color and include the front and back of the document.</p>
-    | Official company address is... | Elements required |
+### Registered office without a lease agreement {#without-lease}
+
+If the future company doesn't have a lease agreement as proof of its official company address, send the documents required for its situation.
+
+All identity documents need to be in full color and include the front and back of the document.
+
+| Official company address | Additional documents |
 | --- | --- |
-| Legal representative's address | <ul><li>Business address affidavit ("domiciliation statement") from the legal representative</li><li>If the legal representative isn't a shareholder:<ul><li>Identity document for the legal representative</li><li>Proof of address for the legal representative</li></ul></li></ul> |
-| Legal representative's address, but they're renting or hosted by someone else | <ul><li>Business address affidavit ("domiciliation statement") from the host</li><li>If the legal representative isn't a shareholder:<ul><li>Identity document for the legal representative</li><li>Identity document for the host</li><li>Proof of address for the host</li></ul></li></ul> |
-| Another company's office address | <ul><li>KBIS of host company issued within the last three months</li><li>Business address affidavit ("domiciliation statement") from the host company's legal representative</li><li>Identity document for the legal representative who provided the business address affidavit</li></ul> |
-  </div>
-</details>
+| The legal representative's address | Business address affidavit (domiciliation statement) from the legal representative. If the legal representative isn't a shareholder, also send their identity document and proof of address. |
+| The legal representative's address, but the representative rents the property or is hosted by someone else | Business address affidavit (domiciliation statement) from the host. If the legal representative isn't a shareholder, also send the legal representative's identity document, the host's identity document, and the host's proof of address. |
+| Another company's office address | KBIS for the host company issued within the last three months, a business address affidavit (domiciliation statement) from the host company's legal representative, and the identity document of the legal representative who gave the affidavit. |
 

@@ -22,7 +22,7 @@ The redesigned onboarding API replaces the previous mutations and queries. It us
 | **Input structure** | Flat input with all fields at root level. | Nested structure with `accountInfo`, `accountAdmin`, and `company` objects. |
 | **Data requirements** | Limited data collection. | New fields to strengthen risk assessment and compliance. |
 | **Response types** | Generic `Onboarding` type for all responses. | Typed `IndividualAccountHolderOnboarding` and `CompanyAccountHolderOnboarding`. |
-| **Registry data** | Automatically populates empty onboarding fields. | Dedicated query; no auto-population. |
+| **Registry data** | Automatically populates empty company fields. | Dedicated query; no auto-population. |
 
 ### Authentication patterns
 
@@ -82,7 +82,7 @@ The input uses a nested structure with three required objects:
 
 - `accountInfo`: Account-level details (`country`, `name`).
 - `accountAdmin`: Personal information of the person opening the account (`email`, `firstName`, `lastName`, `typeOfRepresentation`, etc.). This may or may not be the company's legal representative.
-- `company`: Company details (`registrationNumber`, `name`, `legalForm`, `ultimateBeneficialOwners`, `representatives`, etc.).
+- `company`: Company details (`registrationNumber`, `name`, `legalFormCode`, `relatedIndividuals`, `relatedCompanies`, etc.).
 
 ```graphql
 input CreateCompanyAccountHolderOnboardingInput {
@@ -124,7 +124,7 @@ Single-onboarding queries return a payload union that includes the `AccountHolde
 
 ### Company registry data
 
-A new dedicated query retrieves company information from official registries, enabling pre-fill capabilities for smoother onboarding. Currently available for companies registered in **France (`FRA`) only**. This replaces the previous behavior where empty onboarding fields were automatically populated with registry data.
+A new dedicated query retrieves company information from the National Business Register (RNE), enabling pre-fill capabilities for smoother onboarding. Currently available for companies registered in **France (`FRA`) only**. This replaces the previous behavior where empty onboarding fields were automatically populated with registry data.
 
 | New query | Authentication |
 |---|---|
@@ -138,46 +138,35 @@ The new API **does not** automatically populate onboarding fields with registry 
 
 #### Query
 
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0Q29tcGFueVJlZ2lzdHJ5RGF0YSB7IGNvbXBhbnlJbmZvUmVnaXN0cnlEYXRhKGlucHV0OiB7IHJlZ2lzdHJhdGlvbk51bWJlcjogIjEyMzQ1Njc4OSIsIHJlc2lkZW5jeUFkZHJlc3NDb3VudHJ5OiBGUkEgfSkgeyBuYW1lIHRyYWRlTmFtZSBsZWdhbEZvcm1Db2RlIHJlZ2lzdHJhdGlvbkRhdGUgdmF0TnVtYmVyIGFkZHJlc3MgeyBhZGRyZXNzTGluZTEgY2l0eSBwb3N0YWxDb2RlIGNvdW50cnkgfSByZWxhdGVkQ29tcGFuaWVzIHsgZW50aXR5TmFtZSByZWdpc3RyYXRpb25OdW1iZXIgcmVnaXN0cmF0aW9uQ291bnRyeSByb2xlcyB9IH0gfQ%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
 ```graphql
 query GetCompanyRegistryData {
   companyInfoRegistryData(
-    input: {
-      registrationNumber: "123456789"
-      residencyAddressCountry: FRA
-    }
+    input: { registrationNumber: "123456789", residencyAddressCountry: FRA }
   ) {
-    ... on CompanyInfoRegistryDataSuccessPayload {
-      companyInfo {
-        name
-        legalForm
-        registrationDate
-        address {
-          addressLine1
-          city
-          postalCode
-          country
-        }
-        ultimateBeneficialOwners {
-          firstName
-          lastName
-        }
-        representatives {
-          ... on OnboardingIndividualRepresentative {
-            firstName
-            lastName
-            roles
-          }
-        }
-      }
-    }
-    ... on CompanyRegistryNotFoundRejection {
-      message
-      registrationNumber
+    name
+    tradeName
+    legalFormCode
+    registrationDate
+    vatNumber
+    address {
+      addressLine1
+      city
+      postalCode
       country
+    }
+    relatedCompanies {
+      entityName
+      registrationNumber
+      registrationCountry
+      roles
     }
   }
 }
 ```
+
+The query returns company information and companies acting as legal representatives (`relatedCompanies`). `relatedIndividuals` is always empty, so collect UBOs and individual legal representatives from your user. When no company is found, the query returns `null`.
 
 ## Field reference
 
@@ -186,7 +175,7 @@ For country-specific requirements and available options, see:
 - [Individual onboarding fields](/topics/onboarding/individual/fields)
 - [Company onboarding fields](/topics/onboarding/company/fields)
 
-French company onboardings support pre-fill via the `companyInfoRegistryData` query for company, representative, and UBO fields.
+French company onboardings support pre-fill via the `companyInfoRegistryData` query for company fields and companies acting as legal representatives.
 
 ## Response types
 

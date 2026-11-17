@@ -113,9 +113,10 @@ Update your response parsing to handle the new type names and field structure.
 
 This step applies only if you onboard French companies. If you don't, skip to Step 6.
 
-Previously, Swan auto-populated empty onboarding fields with data from the French National Business Register (RNE). The current API doesn't.
+Previously, Swan auto-populated empty company fields with data from the French National Business Register (RNE). The current API doesn't.
 
 Instead, call the `companyInfoRegistryData` query with the company's `registrationNumber` and `residencyAddressCountry`, then pass the results to the create or update mutation.
+The query doesn't return UBOs or individual legal representatives. Collect them from your user and send them in `company.relatedIndividuals`.
 
 ### Step 6: Test in Sandbox
 
@@ -153,7 +154,7 @@ Before going live with the current API, validate the following scenarios in Sand
 1. Create a company onboarding with `relatedIndividuals` (at least one legal representative and one UBO).
 1. Update an existing onboarding to confirm nested input structure works correctly.
 1. Finalize an onboarding and confirm the typed response (`IndividualAccountHolderOnboarding` or `CompanyAccountHolderOnboarding`).
-1. For French companies: call `companyInfoRegistryData` and use the results to pre-fill the create mutation.
+1. For French companies: call `companyInfoRegistryData` and use the results to pre-fill company fields in the create mutation.
 1. Test public onboarding mutations if you use public onboarding links.
 1. Confirm that [webhook payloads](/developers/using-api/webhooks) for `Onboarding.Created` and `Onboarding.Updated` still match your expectations.
 1. Verify error handling for new rejection types (`OnboardingNotFoundRejection`, `OnboardingAlreadyFinalizedRejection`, `OnboardingNotReadyForFinalizationRejection`).

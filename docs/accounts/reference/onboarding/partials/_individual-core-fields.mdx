@@ -51,6 +51,14 @@ import AccountAdminSignupInfo from './_account-admin-signup-info.mdx';
 | `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `state` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 
+import CountryCodeAddress from './_country-code-address.mdx';
+
+<CountryCodeAddress />
+
+import IneligibleTerritory from './_ineligible-territory.mdx';
+
+<IneligibleTerritory />
+
 ### Birth information {#birth}
 
 **Related field:** `accountAdmin.birthInfo`
@@ -60,7 +68,15 @@ import AccountAdminSignupInfo from './_account-admin-signup-info.mdx';
 | `birthDate` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `city` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
 | `country` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
-| `postalCode` | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> | <Opt /> |
+| `postalCode` | <span style={{whiteSpace: "nowrap"}}><Opt /> ¹</span> | <NA /> | <NA /> | <NA /> | <NA /> | <NA /> |
+
+¹ `postalCode` is only for people born in France. Don't provide it otherwise.
+
+All birth fields are optional in the API. If you don't prefill them, the account admin is asked at sign-up.
+
+import CountryCodeBirth from './_country-code-birth.mdx';
+
+<CountryCodeBirth />
 
 ### Financial information {#financial}
 
@@ -90,9 +106,9 @@ import AccountAdminSignupInfo from './_account-admin-signup-info.mdx';
 
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <Req /> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ¹</span> |
+| `taxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <Req /> | <Req /> | <Req /> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
 
-¹ `taxIdentificationNumber` is required if any of the following conditions are true:
+² `taxIdentificationNumber` is required if any of the following conditions are true:
 
 - `accountAdmin.address.country` is different from `accountInfo.country`.
 - `accountAdmin.address.country` is Germany, Italy, or Belgium.
@@ -104,9 +120,9 @@ import AccountAdminSignupInfo from './_account-admin-signup-info.mdx';
 | Field | 🇫🇷<br/>France | 🇧🇪<br/>Belgium | 🇩🇪<br/>Germany | 🇮🇹<br/>Italy | 🇳🇱<br/>Netherlands | 🇪🇸<br/>Spain |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | `isUnitedStatesPerson` | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> | <Req /> |
-| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ²</span> |
+| `unitedStatesTaxIdentificationNumber` | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> | <span style={{whiteSpace: "nowrap"}}><Cnd /> ³</span> |
 
-² `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
+³ `unitedStatesTaxIdentificationNumber` is required if `accountAdmin.unitedStatesTaxInfo.isUnitedStatesPerson` is `true`.
 
 ### User device information {#device}
 

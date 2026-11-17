@@ -18,8 +18,9 @@ function renderWith(source, files = {}, dir = "/repo/docs/x") {
 describe("badge mappings", () => {
   it("maps every field-requirement / support badge to its text", () => {
     const out = render(
-      "<Req /> <Opt /> <Cnd /> <Yes /> <No /> <Supported /> <Unsupported />"
+      "<Req /> <Opt /> <Cnd /> <NA /> <Yes /> <No /> <Supported /> <Unsupported />"
     );
+    expect(out).toContain("Not applicable");
     expect(out).toContain("**(required)**");
     expect(out).toContain("(optional)");
     expect(out).toContain("Conditional");

@@ -35,6 +35,7 @@ import { frontmatterFromMarkdown } from "mdast-util-frontmatter";
 const BADGE = {
   Opt: () => [text("(optional)")],
   Cnd: () => [text("Conditional")],
+  NA: () => [text("Not applicable")],
   Yes: () => [text("Yes")],
   No: () => [text("No")],
   Supported: () => [text("Available")],
@@ -266,7 +267,7 @@ function renderElement(node, ctx) {
       blocks: [
         paragraph([
           text(
-            "Field requirements: (required) fields must be completed; conditional fields are required only in specific situations; (optional) fields aren't required and may have a default value."
+            "Field requirements: (required) fields must be completed; conditional fields are required only in specific situations; (optional) fields aren't required and may have a default value; not applicable fields aren't used."
           ),
         ]),
       ],

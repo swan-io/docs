@@ -253,6 +253,7 @@ module.exports = annotateAudience(annotate({
           doc("accounts/guides/closure/get-closure-info/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/closure/get-closure-info/using-the-api", "Using the API"),
         ], { link: "accounts/guides/closure/get-closure-info/index" }),
+        doc("accounts/guides/closure/get-suspension-info", "Get suspension information"),
       ], { link: "accounts/guides/closure/index" }),
       cat("Documents", [
         cat("Upload onboarding documents", [

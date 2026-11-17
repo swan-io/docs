@@ -855,6 +855,10 @@ module.exports = [
     to: "/accounts/guides/closure/get-closure-info",
   },
   {
+    from: "/topics/accounts/closure/guide-get-suspension-info",
+    to: "/accounts/guides/closure/get-suspension-info",
+  },
+  {
     from: "/topics/accounts/ibans",
     to: "/accounts/concepts/ibans",
   },

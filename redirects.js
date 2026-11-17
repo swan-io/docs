@@ -731,6 +731,10 @@ module.exports = [
     to: "/accounts/guides/account-holders/get-verification-status",
   },
   {
+    from: "/topics/onboarding/account-holders/guide-update",
+    to: "/accounts/guides/account-holders/update",
+  },
+  {
     from: "/topics/onboarding/account-holders/guide-request-first-transfer",
     to: "/accounts/guides/account-holders/request-first-transfer",
   },

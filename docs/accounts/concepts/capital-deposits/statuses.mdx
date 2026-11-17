@@ -52,14 +52,14 @@ flowchart TD
 
 | Case status | Explanation |
 | --- | --- |
-| `WaitingForInitialRequirements` | The case has been initiated and is waiting for shareholder verification, fund transfers, document uploads, and completion of company onboarding.<br/><br/>**Next steps**: When all initial requirements are met, the status moves to `PendingInternalReview`. |
+| `WaitingForInitialRequirements` | The case is waiting for shareholder verification, capital transfers, document uploads, and completion of company onboarding.<br/><br/>**Next steps**: When all required capital deposit documents are `Uploaded`, every shareholder has passed <Term id="kyc">KYC</Term> verification and reached `CapitalTransferred`, and the main company onboarding is completed, the status moves to `PendingInternalReview`. |
 | `PendingInternalReview` | Swan is reviewing the information and documents provided.<br/><br/>**Next steps**:<ul><li>If Swan needs more details or corrections, the status moves to `WaitingForAdditionalInformation`.</li><li>If the review passes, the status moves to `WaitingForNotaryShareDepositCertificate`.</li></ul> |
-| `WaitingForAdditionalInformation` | After review, Swan has requested additional details or corrections from the customer and is awaiting their response.<br/><br/>**Next steps**: When the customer responds, the status returns to `PendingInternalReview`. |
-| `WaitingForNotaryShareDepositCertificate` | Notary reviews the deposited funds and submitted documents, then creates the certificate and uploads it to Swan.<br/><br/>**Next steps**: When the certificate is uploaded, the status moves to `WaitingForRegisterExtract`. |
-| `WaitingForRegisterExtract` | The end user uploads their register extract for notary review.<br/><br/>**Next steps**: When the register extract is uploaded, the status moves to `WaitingForNotaryTransfer`. |
-| `WaitingForNotaryTransfer` | Notary reviews the register extract.<br/><br/>**Next steps**:<ul><li>If the notary approves, the status moves to `Completed`.</li><li>If the document is rejected by either Swan or the notary, the case moves back to `WaitingForRegisterExtract`.</li></ul> |
+| `WaitingForAdditionalInformation` | Swan has requested additional information or corrections and is waiting for a response.<br/><br/>**Next steps**: When the customer responds, the status returns to `PendingInternalReview`. |
+| `WaitingForNotaryShareDepositCertificate` | The notary reviews the deposited funds and submitted documents before issuing the capital share deposit certificate and uploading it to Swan.<br/><br/>**Next steps**: When the certificate is uploaded, the status moves to `WaitingForRegisterExtract`. |
+| `WaitingForRegisterExtract` | You upload the company's KBIS (register extract) for review.<br/><br/>**Next steps**: When the register extract is uploaded, the status moves to `WaitingForNotaryTransfer`. |
+| `WaitingForNotaryTransfer` | The notary reviews the KBIS.<br/><br/>**Next steps**:<ul><li>If the notary approves, the status moves to `Completed`.</li><li>If the document is rejected by either Swan or the notary, the case moves back to `WaitingForRegisterExtract`.</li></ul> |
 | `Canceled` | The case was canceled before completion by either you or Swan. A [cancelation reason code](/accounts/reference/capital-deposits#cancelation-reason-codes) is available in the `CapitalDepositCaseCanceledStatusInfo` type. |
-| `Completed` | Notary reviewed and approved all elements and transferred the funds to the new company; the process is complete. |
+| `Completed` | The notary approved the case and transferred the funds to the company account. This status confirms that the capital deposit case is complete, but it doesn't confirm that the company account is active. |
 
 ## Shareholder statuses {#shareholders}
 

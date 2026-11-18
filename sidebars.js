@@ -292,6 +292,28 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Dispute cases",
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "Dispute cases overview",
+          link: { type: "doc", id: "topics/dispute-cases/index" },
+          collapsed: true,
+          items: [
+            "topics/dispute-cases/guide-create-fraud",
+            "topics/dispute-cases/guide-update-fraud",
+            "topics/dispute-cases/guide-upload-documents",
+            "topics/dispute-cases/guide-submit",
+            "topics/dispute-cases/guide-cancel",
+            "topics/dispute-cases/guide-get-info",
+          ],
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Merchants",
       collapsible: false,
       collapsed: false,

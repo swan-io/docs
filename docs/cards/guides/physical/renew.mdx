@@ -12,6 +12,7 @@ related:
 
 <Term id="cards-physical">Physical cards</Term> expire three years after they are printed.
 They're then automatically renewed for another three years unless the card is [canceled](/cards/guides/physical/cancel).
+To stop a physical card from renewing without canceling it, refer to [Stop the automatic renewal](#cancel-renewal).
 
 If you want the renewed physical card to be delivered to a new address, call the `confirmPhysicalCardRenewal` mutation at least 8 weeks before the last day of the card's expiry month.
 If no action is taken, the renewed card is shipped to the original delivery address.
@@ -119,10 +120,26 @@ The payload confirms that the physical card expires on `09/26` (line 6), and its
 To stop a physical card from renewing automatically, without canceling it, call the `cancelPhysicalCardRenewal` mutation while the card is in the `ToRenew` status.
 The card remains active until its expiry date, then expires rather than being renewed and reissued.
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbCB7CiAgY2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbChpbnB1dDogeyBjYXJkSWQ6ICIkWU9VUl9DQVJEX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICAuLi4gb24gUGh5c2ljYWxDYXJkV3JvbmdTdGF0dXNSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGN1cnJlbnRTdGF0dXMKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+:::info Before you stop a renewal
+- The card must be in `ToRenew` status when you call the mutation. If it isn't, Swan returns a `PhysicalCardWrongStatusRejection`.
+- The card stays active until its expiry date. It isn't canceled immediately.
+- This differs from the `cancelPhysicalCard` mutation ([Cancel physical cards](/cards/guides/physical/cancel)), which cancels the card immediately and can't be reversed.
+- Subscribe to the `Card.Updated` [webhook](/build/using-api/webhooks#events-cards) to know when a card enters `ToRenew` status.
+:::
 
-```graphql {2} showLineNumbers
-mutation CancelPhysicalCardRenewal {
+### Guide {#cancel-renewal-guide}
+
+1. Call the `cancelPhysicalCardRenewal` mutation.
+1. Add the `cardId` for the physical card whose renewal you're canceling (line 2).
+1. Add the `CancelPhysicalCardRenewalSuccessPayload`, including any information you'd like to review (line 3).
+1. Add rejections (not shown).
+
+### Mutation {#cancel-renewal-mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsUmVuZXdhbCB7CiAgY2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbChpbnB1dDogeyBjYXJkSWQ6ICIkWU9VUl9DQVJEX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsUGh5c2ljYWxDYXJkUmVuZXdhbFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwaHlzaWNhbENhcmQgewogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgc3RhdHVzCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,3} showLineNumbers
+mutation CancelRenewal {
   cancelPhysicalCardRenewal(input: { cardId: "$YOUR_CARD_ID" }) {
     ... on CancelPhysicalCardRenewalSuccessPayload {
       __typename
@@ -132,12 +149,26 @@ mutation CancelPhysicalCardRenewal {
         }
       }
     }
-    ... on PhysicalCardWrongStatusRejection {
-      __typename
-      currentStatus
-    }
   }
 }
 ```
 
-If the card isn't in the `ToRenew` status, the mutation returns a `PhysicalCardWrongStatusRejection`.
+### Payload {#cancel-renewal-payload}
+
+The physical card stays in `ToRenew` status (line 7).
+It stays active until its expiry date, then expires instead of being renewed.
+
+```json {7} showLineNumbers
+{
+  "data": {
+    "cancelPhysicalCardRenewal": {
+      "__typename": "CancelPhysicalCardRenewalSuccessPayload",
+      "physicalCard": {
+        "statusInfo": {
+          "status": "ToRenew"
+        }
+      }
+    }
+  }
+}
+```

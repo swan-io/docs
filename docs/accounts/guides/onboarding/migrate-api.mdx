@@ -108,6 +108,7 @@ The current API returns typed responses instead of the generic `Onboarding` type
 
 - Individual mutations return `IndividualAccountHolderOnboarding`.
 - Company mutations return `CompanyAccountHolderOnboarding`.
+- The `onboardingUrl` field is only returned in the create or update mutation response when the **Public links** toggle is enabled in the Dashboard. The previous API returned the URL regardless of the toggle, so enable it under **Settings** > **Onboarding** > **Onboarding links** before going live if you rely on sharing public links.
 - The `finalizeAccountHolderOnboarding` mutation returns a `FinalizeAccountHolderOnboardingPayload`. On success, the payload contains a `FinalizeAccountHolderOnboardingSuccessPayload` with an `onboarding` field of type `AccountHolderOnboarding` (union).
 
 Update your response parsing to handle the new type names and field structure.
@@ -161,3 +162,4 @@ Before going live with the current API, validate the following scenarios in Sand
 - Test public onboarding mutations if you use public onboarding links.
 - Confirm that [webhook payloads](/build/using-api/webhooks) for `Onboarding.Created` and `Onboarding.Updated` still match your expectations.
 - Verify error handling for new rejection types (`OnboardingNotFoundRejection`, `OnboardingAlreadyFinalizedRejection`, `OnboardingNotReadyForFinalizationRejection`).
+- If you use Swan's no-code onboarding interface, confirm the mutation response returns `onboardingUrl`, which Swan returns only when **Public links** is enabled in your Dashboard.

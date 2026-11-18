@@ -1,0 +1,82 @@
+---
+title: Submit a dispute case
+description: Send a dispute case to Swan for investigation
+---
+
+# Submit a dispute case
+
+Submit a dispute case **with the API** to send it to Swan.
+Swan only starts investigating once the case is submitted.
+After that, the case can't be changed.
+
+:::tip Prerequisites
+- The case is a `Draft` with all required details. For a fraud dispute case, that's `fraudDetails`, plus the victim for a transfer-only case.
+- You have a [project access token](/developers/using-api/authentication/guide-get-token-project), or a [user access token](/developers/using-api/authentication/guide-get-token-user) for a user with the right [permissions](./index.mdx#permissions).
+:::
+
+## Guide {#guide}
+
+1. Call the `submitDisputeCase` mutation.
+1. Add the `disputeCaseId` (line 2).
+1. Add the success payload (lines 3-10).
+1. Add rejections. This example shows `DisputeCaseIncompleteRejection` (lines 15-19), which lists the fields to add before submitting. See all [rejections](./index.mdx#rejections).
+
+Swan checks the transactions again when you submit.
+For example, a transaction might have left the reporting window, or been submitted in another case, since you created the draft.
+
+Submitting is safe to retry: if the case is already `Submitted`, it's returned unchanged.
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gU3VibWl0RGlzcHV0ZUNhc2UgewogIHN1Ym1pdERpc3B1dGVDYXNlKGlucHV0OiB7IGRpc3B1dGVDYXNlSWQ6ICIkRElTUFVURV9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gU3VibWl0RGlzcHV0ZUNhc2VTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZGlzcHV0ZUNhc2UgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBEaXNwdXRlQ2FzZVN1Ym1pdHRlZFN0YXR1c0luZm8gewogICAgICAgICAgICBzdWJtaXR0ZWRBdAogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIERpc3B1dGVDYXNlSW5jb21wbGV0ZVJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgICBtaXNzaW5nRmllbGRzIHsKICAgICAgICBwYXRoCiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,18} showLineNumbers
+mutation SubmitDisputeCase {
+  submitDisputeCase(input: { disputeCaseId: "$DISPUTE_CASE_ID" }) {
+    ... on SubmitDisputeCaseSuccessPayload {
+      __typename
+      disputeCase {
+        id
+        statusInfo {
+          status
+          ... on DisputeCaseSubmittedStatusInfo {
+            submittedAt
+          }
+        }
+      }
+    }
+    ... on DisputeCaseIncompleteRejection {
+      __typename
+      message
+      missingFields {
+        path
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The case is `Submitted` (line 8).
+Share the case `id` (line 6) with your user, so they can quote it when they follow up with Swan.
+
+```json title="Payload" {8} showLineNumbers
+{
+  "data": {
+    "submitDisputeCase": {
+      "__typename": "SubmitDisputeCaseSuccessPayload",
+      "disputeCase": {
+        "id": "$DISPUTE_CASE_ID",
+        "statusInfo": {
+          "status": "Submitted",
+          "submittedAt": "2026-12-03T10:00:00.000Z"
+        }
+      }
+    }
+  }
+}
+```
+
+Swan then opens a support ticket. For card payments in a fraud dispute case, Swan also sends the cardholder a declaration to sign.
+To withdraw a submitted case, ask in the ticket.

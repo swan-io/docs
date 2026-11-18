@@ -1,0 +1,69 @@
+---
+title: Cancel a dispute case
+description: Discard a draft dispute case you no longer need
+---
+
+# Cancel a dispute case
+
+Cancel a draft dispute case **with the API** when you no longer need it.
+For example, the draft was created by mistake, a network retry created a duplicate, or your user decides not to report the transactions.
+
+You can only cancel drafts.
+To withdraw a submitted case, ask in the case's support ticket.
+
+:::tip Prerequisites
+- The case is a `Draft`.
+- You have a [project access token](/developers/using-api/authentication/guide-get-token-project), or a [user access token](/developers/using-api/authentication/guide-get-token-user) for a user with the right [permissions](./index.mdx#permissions).
+:::
+
+## Guide {#guide}
+
+1. Call the `cancelDisputeCase` mutation.
+1. Add the `disputeCaseId` (line 2).
+1. Add the success payload (lines 3-10).
+1. Add [rejections](./index.mdx#rejections) (not shown).
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ2FuY2VsRGlzcHV0ZUNhc2UgewogIGNhbmNlbERpc3B1dGVDYXNlKGlucHV0OiB7IGRpc3B1dGVDYXNlSWQ6ICIkRElTUFVURV9DQVNFX0lEIiB9KSB7CiAgICAuLi4gb24gQ2FuY2VsRGlzcHV0ZUNhc2VTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZGlzcHV0ZUNhc2UgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBEaXNwdXRlQ2FzZUNhbmNlbGVkU3RhdHVzSW5mbyB7CiAgICAgICAgICAgIGNhbmNlbGVkQXQKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {2,10} showLineNumbers
+mutation CancelDisputeCase {
+  cancelDisputeCase(input: { disputeCaseId: "$DISPUTE_CASE_ID" }) {
+    ... on CancelDisputeCaseSuccessPayload {
+      __typename
+      disputeCase {
+        id
+        statusInfo {
+          status
+          ... on DisputeCaseCanceledStatusInfo {
+            canceledAt
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+The case is `Canceled` (line 8).
+It's kept, but can't be updated or submitted.
+
+```json title="Payload" {8} showLineNumbers
+{
+  "data": {
+    "cancelDisputeCase": {
+      "__typename": "CancelDisputeCaseSuccessPayload",
+      "disputeCase": {
+        "id": "$DISPUTE_CASE_ID",
+        "statusInfo": {
+          "status": "Canceled",
+          "canceledAt": "2026-12-03T10:00:00.000Z"
+        }
+      }
+    }
+  }
+}
+```

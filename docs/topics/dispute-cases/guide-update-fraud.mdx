@@ -1,0 +1,80 @@
+---
+title: Update a fraud dispute case
+description: Change a fraud dispute case before you submit it
+---
+
+# Update a fraud dispute case
+
+Update a fraud dispute case **with the API** while it's a draft.
+For example, add fraud details your user gives you later, add the victim, or change the transactions.
+Once a case is submitted, it can't be changed.
+
+:::tip Prerequisites
+- The case is a `Draft`.
+- You have a [project access token](/developers/using-api/authentication/guide-get-token-project), or a [user access token](/developers/using-api/authentication/guide-get-token-user) for a user who [can report the transactions](./index.mdx#fraud-permissions).
+:::
+
+## Guide {#guide}
+
+1. Call the `updateDraftFraudDisputeCase` mutation.
+1. Add the `disputeCaseId` (line 4).
+1. Add the inputs you want to change (lines 5-6).
+   Each input you send replaces the stored one, so send a complete `fraudDetails` even to change one field.
+   Inputs you leave out don't change. Send `null` to clear one, except `transactionIds`.
+1. Add the success payload (lines 9-19).
+1. Add [rejections](./index.mdx#rejections) (not shown).
+
+This example removes the card payments from a case and names the victim of the remaining transfer.
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVXBkYXRlRnJhdWREaXNwdXRlQ2FzZSB7CiAgdXBkYXRlRHJhZnRGcmF1ZERpc3B1dGVDYXNlKAogICAgaW5wdXQ6IHsKICAgICAgZGlzcHV0ZUNhc2VJZDogIiRESVNQVVRFX0NBU0VfSUQiCiAgICAgIHRyYW5zYWN0aW9uSWRzOiBbIiRUUkFOU0ZFUl9UUkFOU0FDVElPTl9JRCJdCiAgICAgIHZpY3RpbUFjY291bnRNZW1iZXJzaGlwSWQ6ICIkVklDVElNX0FDQ09VTlRfTUVNQkVSU0hJUF9JRCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBVcGRhdGVEcmFmdEZyYXVkRGlzcHV0ZUNhc2VTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZGlzcHV0ZUNhc2UgewogICAgICAgIGlkCiAgICAgICAgLi4uIG9uIEZyYXVkRGlzcHV0ZUNhc2UgewogICAgICAgICAgaGFzVmljdGltCiAgICAgICAgICBmcmF1ZENhcmREZXRhaWxzIHsKICAgICAgICAgICAgaXNMb3N0T3JTdG9sZW4KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdXBkYXRlZEF0CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4-6} showLineNumbers
+mutation UpdateFraudDisputeCase {
+  updateDraftFraudDisputeCase(
+    input: {
+      disputeCaseId: "$DISPUTE_CASE_ID"
+      transactionIds: ["$TRANSFER_TRANSACTION_ID"]
+      victimAccountMembershipId: "$VICTIM_ACCOUNT_MEMBERSHIP_ID"
+    }
+  ) {
+    ... on UpdateDraftFraudDisputeCaseSuccessPayload {
+      __typename
+      disputeCase {
+        id
+        ... on FraudDisputeCase {
+          hasVictim
+          fraudCardDetails {
+            isLostOrStolen
+          }
+        }
+        updatedAt
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+When you change `transactionIds`, Swan removes details that no longer apply.
+Here, `fraudCardDetails` is now `null` (line 8) because the case no longer includes card payments.
+
+Each update also resets the draft's 30-day expiry.
+
+```json title="Payload" {8} showLineNumbers
+{
+  "data": {
+    "updateDraftFraudDisputeCase": {
+      "__typename": "UpdateDraftFraudDisputeCaseSuccessPayload",
+      "disputeCase": {
+        "id": "$DISPUTE_CASE_ID",
+        "hasVictim": true,
+        "fraudCardDetails": null,
+        "updatedAt": "2026-12-03T09:30:00.000Z"
+      }
+    }
+  }
+}
+```

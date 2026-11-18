@@ -30,6 +30,7 @@ flowchart TD
     PIR --> WFAI[WaitingForAdditionalInformation]
     PIR --> WNSC[WaitingForNotaryShareDepositCertificate<br/><em>Notary reviews</em>]
     WFAI --> PIR
+    PIR -.->|Transfer returned| WIR
     
     WNSC --> WRE[WaitingForRegisterExtract]
     WRE --> WNT[WaitingForNotaryTransfer<br/><em>Notary reviews</em>]
@@ -53,7 +54,7 @@ flowchart TD
 | Case status | Explanation |
 | --- | --- |
 | `WaitingForInitialRequirements` | The case is waiting for shareholder verification, capital transfers, document uploads, and completion of company onboarding.<br/><br/>**Next steps**: When all required capital deposit documents are `Uploaded`, every shareholder has passed <Term id="kyc">KYC</Term> verification and reached `CapitalTransferred`, and the main company onboarding is completed, the status moves to `PendingInternalReview`. |
-| `PendingInternalReview` | Swan is reviewing the information and documents provided.<br/><br/>**Next steps**:<ul><li>If Swan needs more details or corrections, the status moves to `WaitingForAdditionalInformation`.</li><li>If the review passes, the status moves to `WaitingForNotaryShareDepositCertificate`.</li></ul> |
+| `PendingInternalReview` | Swan is reviewing the information and documents provided.<br/><br/>**Next steps**:<ul><li>If Swan needs more details or corrections, the status moves to `WaitingForAdditionalInformation`.</li><li>If Swan returns a shareholder's capital transfer, the status returns to `WaitingForInitialRequirements`.</li><li>If the review passes, the status moves to `WaitingForNotaryShareDepositCertificate`.</li></ul> |
 | `WaitingForAdditionalInformation` | Swan has requested additional information or corrections and is waiting for a response.<br/><br/>**Next steps**: When the customer responds, the status returns to `PendingInternalReview`. |
 | `WaitingForNotaryShareDepositCertificate` | The notary reviews the deposited funds and submitted documents before issuing the capital share deposit certificate and uploading it to Swan.<br/><br/>**Next steps**: When the certificate is uploaded, the status moves to `WaitingForRegisterExtract`. |
 | `WaitingForRegisterExtract` | You upload the company's KBIS (register extract) for review.<br/><br/>**Next steps**: When the register extract is uploaded, the status moves to `WaitingForNotaryTransfer`. |

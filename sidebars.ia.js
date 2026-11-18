@@ -53,6 +53,7 @@ module.exports = annotateAudience(annotate({
       doc("get-started/set-up-swan/step-by-step", "Step-by-step"),
       doc("get-started/set-up-swan/connect-mobile", "Connect mobile"),
       doc("get-started/set-up-swan/create-project", "Create your project"),
+      doc("get-started/set-up-swan/sso", "Single sign-on (SSO)"),
       doc("get-started/set-up-swan/swan-access", "Swan access"),
       doc("get-started/set-up-swan/data-model", "Data model"),
       doc("get-started/set-up-swan/glossary", "Glossary"),

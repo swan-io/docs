@@ -88,6 +88,8 @@ module.exports = [
   { from: "/topics/get-started/step-by-step", to: "/get-started/set-up-swan/step-by-step" },
   { from: "/topics/projects", to: "/get-started/set-up-swan/create-project" },
   { from: "/topics/projects/guide-activate", to: "/get-started/set-up-swan/create-project" },
+  // DOC-1913 — SSO page mirrored from live
+  { from: "/topics/projects/sso", to: "/get-started/set-up-swan/sso" },
   // end batch 3A
   // DOC-1814 cutover — batch 2: partnership → become-a-partner
   { from: "/partnership", to: "/get-started/become-a-partner" },

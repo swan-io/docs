@@ -90,6 +90,10 @@ module.exports = [
   { from: "/topics/projects/guide-activate", to: "/get-started/set-up-swan/create-project" },
   // DOC-1913 — SSO page mirrored from live
   { from: "/topics/projects/sso", to: "/get-started/set-up-swan/sso" },
+  // DOC-1834: live's Partner operations section (docs/topics/operations),
+  // each guide beside its technical counterpart (mirrored 16 November 2026).
+  { from: "/topics/operations/guide-user-identification", to: "/users/guides/user-operations/manage-identification" },
+  { from: "/topics/operations/guide-reset-passcode", to: "/users/guides/user-operations/troubleshoot-passcode-reset" },
   // DOC-1834: live's Open Banking section (docs/topics/open-banking), now a
   // Payments concept (mirrored 16 November 2026).
   { from: "/topics/open-banking", to: "/payments/concepts/open-banking" },

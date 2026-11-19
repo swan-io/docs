@@ -631,6 +631,8 @@ module.exports = annotateAudience(annotate({
           doc("users/guides/user-operations/get-info/identifications", "Identifications"),
           doc("users/guides/user-operations/get-info/latest-identification", "Latest identification"),
         ], { link: "users/guides/user-operations/get-info/index" }),
+        doc("users/guides/user-operations/manage-identification", "Manage user identification"),
+        doc("users/guides/user-operations/troubleshoot-passcode-reset", "Troubleshoot passcode resets"),
       ]),
       cat("Consent", [
         doc("users/guides/consent/create-multiconsent", "Create a multi-consent"),

@@ -565,6 +565,7 @@ module.exports = {
             "topics/users/consent/guide-cancel",
             "topics/users/consent/guide-implement-s2s",
             "topics/users/consent/guide-integrate-sca",
+            "topics/users/consent/guide-integrate-sca-web",
           ],
         },
         {

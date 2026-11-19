@@ -2,6 +2,7 @@
 title: Get a user access token
 ---
 import UseImmediately from './_use-uat-immediately.mdx';
+import ScaOpenRules from '../../../topics/users/consent/_sca-open-rules.mdx';
 
 # Get a user access token
 
@@ -82,7 +83,7 @@ https://oauth.swan.io/oauth2/auth?response_type=code&client_id=$YOUR_CLIENT_ID&r
 | `onboardingId`<br/>(line 11) |  Avoids asking the customer to enter their own residence address if they provide that information during onboarding. |
 | `email` | If you include the `email` parameter, it triggers an [email verification](../../../topics/accounts/memberships/index.mdx#invite) flow automatically. If you include the parameter *and* the email address, it triggers the email verification flow with the email address pre-filled.<br /><br />Email addresses must be **encoded**, for example `email=jules%40email.com`. |
 | `identificationLevel`<br/>(line 13) |  Indicate your preferred [identification level](../../../topics/users/identifications/index.mdx#levels-processes): `PVID`, `QES`, `Expert` or `Auto`.<br /><br />Swan recommends setting `Auto` as your preferred identification level when guiding users through an identification flow, reengaging them to complete it, or inviting account members.<br /><br /> `Auto` allows Swan to direct your users to the best identification flow for their situation.  If your project is configured to [bypass identification](../../../topics/accounts/memberships/index.mdx#remove-identification), eligible users will automatically skip it.<br /><br /> If you use the `Auto` identification level, make sure you include the `onboardingId` (line 11) or the `accountMembershipId` (line 12) in the authorization URL.|
-| `phoneNumber`<br />`firstName`<br />(line 14)<br/>`lastName`<br />(line 15)<br/>`birthDate`<br />`birthCity`<br />`birthCountry`<br />`nationality`<br />`language`<br />`birthPlacePostalCode`<br />`residencyAddress`<br />`residencyAddressCity`<br />`residencyAddressCountry`<br />`residencyAddressPostalCode` |  Avoids asking the customer to enter this information during user registration.<br /><br />Required formats: <ul><li>`phoneNumber`: **encoded**, including the plus `+` sign in the country code *(`phoneNumber=%2B3312345678901`, where `%2B` represents the plus sign)*</li><li>`birthDate`: YYYY-MM-DD *(year-month-day)*</li><li>`birthCountry` and `residencyAddressCountry`: ISO 3166-1 alpha-3 country code *(France = `FRA`)*. Swan ignores territory codes, such as `REU` for Réunion, and asks the user to enter the country.</li><li>`nationality`: ISO 3166-1 alpha-3 nationality code *(France = `FRA`)*</li><li>`birthPlacePostalCode`: only needed when `birthCountry` is France and the account is in France. Don't send it otherwise. If all other birth parameters are prefilled, the user skips the birth screen.</li><li>`language`: ISO 639-1 (alpha 2) *(Spanish = `es`)*</li></ul> |
+| `phoneNumber`<br />`firstName`<br />(line 14)<br/>`lastName`<br />(line 15)<br/>`birthDate`<br />`birthCity`<br />`birthCountry`<br />`nationality`<br />`language`<br />`birthPlacePostalCode`<br />`residencyAddress`<br />`residencyAddressCity`<br />`residencyAddressCountry`<br />`residencyAddressPostalCode` |  Avoids asking the customer to enter this information during user registration.<br /><br />Required formats: <ul><li>`phoneNumber`: **encoded**, including the plus `+` sign in the country code *(`phoneNumber=%2B3312345678901`, where `%2B` represents the plus sign)*</li><li>`birthDate`: YYYY-MM-DD *(year-month-day)*. The user must be 18 or older, except account members.</li><li>`birthCountry` and `residencyAddressCountry`: ISO 3166-1 alpha-3 country code *(France = `FRA`)*. Swan ignores territory codes, such as `REU` for Réunion, and asks the user to enter the country.</li><li>`nationality`: ISO 3166-1 alpha-3 nationality code *(France = `FRA`)*</li><li>`birthPlacePostalCode`: only needed when `birthCountry` is France and the account is in France. Don't send it otherwise. If all other birth parameters are prefilled, the user skips the birth screen.</li><li>`language`: ISO 639-1 (alpha 2) *(Spanish = `es`)*</li></ul> |
 
 ### 2.2 Receive approval from user {#code-approve}
 
@@ -93,13 +94,9 @@ When clicked, the URL opens an authorization page explaining how to connect with
 - If the user is on a **mobile device**, they validate their phone number with a 6-digit code sent by Swan in a text message.
 - If the user is using a **computer**, they enter their phone number, then receive a link on their mobile phone that opens a browser.
 
-:::info Displaying authorization page
-You can choose to display the authorization page in **fullscreen** or as a **native popup**.
-A native popup is more challenging to implement but provides a better user experience.
+<ScaOpenRules />
 
-Note that you **can't use webviews or iFrames**.
-Read about why in the overview of the [integrate Strong Customer Authentication](../../../topics/users/consent/guide-integrate-sca.mdx#overview) guide.
-:::
+For a full example, read the SCA guide for [web apps](/topics/users/consent/guide-integrate-sca-web) or [mobile apps](/topics/users/consent/guide-integrate-sca).
 
 ### 2.3 Receive authorization code {#code-receive}
 

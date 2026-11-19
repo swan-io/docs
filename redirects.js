@@ -90,6 +90,11 @@ module.exports = [
   { from: "/topics/projects/guide-activate", to: "/get-started/set-up-swan/create-project" },
   // DOC-1913 — SSO page mirrored from live
   { from: "/topics/projects/sso", to: "/get-started/set-up-swan/sso" },
+  // DOC-1834: live's Open Banking section (docs/topics/open-banking), now a
+  // Payments concept (mirrored 16 November 2026).
+  { from: "/topics/open-banking", to: "/payments/concepts/open-banking" },
+  { from: "/topics/open-banking/ais", to: "/payments/concepts/open-banking/ais" },
+  { from: "/topics/open-banking/pis", to: "/payments/concepts/open-banking/pis" },
   // end batch 3A
   // DOC-1814 cutover — batch 2: partnership → become-a-partner
   { from: "/partnership", to: "/get-started/become-a-partner" },

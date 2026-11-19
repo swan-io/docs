@@ -471,6 +471,10 @@ module.exports = annotateAudience(annotate({
         doc("payments/concepts/merchants/fnci", "French check verification (FNCI)"),
         doc("payments/concepts/merchants/statuses", "Statuses"),
       ], { link: "payments/concepts/merchants/index" }),
+      cat("Open Banking", [
+        doc("payments/concepts/open-banking/ais", "Account Information Service (AIS)"),
+        doc("payments/concepts/open-banking/pis", "Payment Initiation Service (PIS)"),
+      ], { link: "payments/concepts/open-banking/index" }),
     ], "payments/concepts/index", "ia-type-concept"),
     top("Guides", [
       cat("Credit transfers", [

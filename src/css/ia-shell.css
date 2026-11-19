@@ -280,7 +280,9 @@ li.ia-type-ref > .menu__list-item-collapsible:focus-within::after {
 .ia-path-option { display: block; padding: 1.35rem; border: 1px solid var(--ia-line); border-radius: var(--ia-radius); background: var(--ia-surface); color: inherit; text-decoration: none; transition: border-color 0.15s, box-shadow 0.15s; }
 .ia-path-option:hover { border-color: var(--ia-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.05); text-decoration: none; }
 .ia-path-option__name { display: block; font-family: var(--ifm-heading-font-family); font-weight: 600; font-size: 1.25rem; margin: 0.6rem 0 0.35rem; color: var(--ifm-heading-color); }
-.ia-path-option__desc { display: block; color: var(--ia-ink-2); margin-bottom: 0.6rem; }
+/* overflow-wrap: a long API name in <code> has no break point and pushed the card
+   wider than a phone screen on six chooser pages. */
+.ia-path-option__desc { display: block; color: var(--ia-ink-2); margin-bottom: 0.6rem; overflow-wrap: anywhere; }
 .ia-path-option__meta { display: block; font-family: var(--ifm-font-family-monospace); font-size: 0.85rem; color: var(--ia-ink-3); }
 .ia-shared-list { padding-left: 1.25rem; color: var(--ia-ink-2); }
 
@@ -707,6 +709,14 @@ a.flowmap-spine-node:hover { background: var(--ifm-background-surface-color); te
 [data-ia-tip]:focus-visible::after {
   opacity: 1; transform: translateY(0);
   transition-delay: var(--ia-tip-delay, 0.32s);
+}
+/* Phone and tablet layout: the bubble keeps its box while invisible, and a
+   240px box that starts near the right edge made the whole page scroll
+   sideways (432 of 514 pages at 360px, measured 16 November 2026). A hover
+   tooltip has no trigger on touch, so the box is dropped at the mobile
+   breakpoint. */
+@media (max-width: 996px) {
+  [data-ia-tip]::after { display: none; }
 }
 
 /* Opt-in glossary term (<Term>). Dotted underline + tooltip; inherits text

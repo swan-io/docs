@@ -45,6 +45,7 @@ module.exports = annotateAudience(annotate({
         doc("get-started/become-a-partner/protections/data-protection", "Data protection (GDPR)"),
         doc("get-started/become-a-partner/protections/financial-protections", "Financial protections"),
         doc("get-started/become-a-partner/protections/fraud-obligations", "Fraud obligations"),
+        doc("get-started/become-a-partner/protections/secure-integration", "Secure your integration"),
       ], { link: "get-started/become-a-partner/protections/index" }),
     ], "get-started/become-a-partner/index"),
     top("Set up Swan", [

@@ -101,6 +101,8 @@ module.exports = [
   { from: "/partnership/protections/report-vulnerability", to: "/get-started/become-a-partner/protections#vulnerability-disclosure" },
   { from: "/partnership/protections/fraud", to: "/get-started/become-a-partner/protections/fraud-obligations" },
   { from: "/partnership/protections/fraud/types", to: "/get-started/become-a-partner/protections/fraud-obligations#types" },
+  // DOC-1878 — secure integration page mirrored from live
+  { from: "/partnership/protections/secure-integration", to: "/get-started/become-a-partner/protections/secure-integration" },
   { from: "/partnership/contact", to: "/get-started/get-help" },
   { from: "/partnership/document-center/company-registration", to: "/accounts/reference/onboarding/country-requirements" },
   { from: "/partnership/document-center/company-registration/france", to: "/accounts/reference/onboarding/country-requirements/france" },

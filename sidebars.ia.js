@@ -65,6 +65,9 @@ module.exports = annotateAudience(annotate({
       doc("get-started/integration-by-segment/expense-management", "Expense management"),
       doc("get-started/integration-by-segment/meal-cards", "Meal cards"),
     ]),
+    top("Partner operations", [
+      doc("get-started/partner-operations/navigate-dashboard", "Navigate your Dashboard"),
+    ], "get-started/partner-operations/index"),
     top("Resources & support", [
       extLink("Status", "https://status.swan.io/", '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />'),
       extLink("Trust Center", "https://trust.swan.io/", '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />'),

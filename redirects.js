@@ -92,6 +92,8 @@ module.exports = [
   { from: "/topics/projects/sso", to: "/get-started/set-up-swan/sso" },
   // DOC-1834: live's Partner operations section (docs/topics/operations),
   // each guide beside its technical counterpart (mirrored 16 November 2026).
+  { from: "/topics/operations", to: "/get-started/partner-operations" },
+  { from: "/topics/operations/guide-navigate-dashboard", to: "/get-started/partner-operations/navigate-dashboard" },
   { from: "/topics/operations/guide-account-verification", to: "/accounts/guides/account-holders/manage-verification" },
   { from: "/topics/operations/guide-change-account-admin-legal-representative", to: "/accounts/guides/memberships/admin-change-requests" },
   { from: "/topics/operations/guide-troubleshoot-binding-errors", to: "/accounts/guides/memberships/troubleshoot-binding-errors" },

@@ -37,6 +37,7 @@ module.exports = annotateAudience(annotate({
     doc("get-started/index", "Get started overview"),
     top("Become a partner", [
       doc("get-started/become-a-partner/country-coverage", "Country coverage"),
+      doc("get-started/become-a-partner/restricted-businesses", "Restricted businesses"),
       doc("get-started/become-a-partner/licence-regulatory-status", "Licence and regulatory status"),
       doc("get-started/become-a-partner/orias-registration", "ORIAS registration"),
       doc("get-started/become-a-partner/rates-billing", "Rates and billing"),

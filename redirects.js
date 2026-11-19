@@ -96,6 +96,8 @@ module.exports = [
   { from: "/partnership/overview/country-coverage", to: "/get-started/become-a-partner/country-coverage" },
   { from: "/partnership/overview/guide-orias", to: "/get-started/become-a-partner/orias-registration" },
   { from: "/partnership/overview/rules-regulations", to: "/get-started/become-a-partner/brand-communication" },
+  // DOC-1928 — restricted businesses split into its own page, as on live
+  { from: "/partnership/overview/restricted-businesses", to: "/get-started/become-a-partner/restricted-businesses" },
   { from: "/partnership/protections/data", to: "/get-started/become-a-partner/protections/data-protection" },
   { from: "/partnership/protections/financial", to: "/get-started/become-a-partner/protections/financial-protections" },
   { from: "/partnership/protections/report-vulnerability", to: "/get-started/become-a-partner/protections#vulnerability-disclosure" },
@@ -505,7 +507,7 @@ module.exports = [
   },
   {
     from: "/help/faq/kyc-and-verification-process/which-types-of-businesses-does-swan-restrict",
-    to: "/get-started/become-a-partner/licence-regulatory-status#restricted-businesses",
+    to: "/get-started/become-a-partner/restricted-businesses",
   },
   {
     from: "/help/faq/kyc-and-verification-process/why-do-my-users-need-to-go-through-kyc",

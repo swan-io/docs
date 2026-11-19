@@ -1,0 +1,37 @@
+---
+title: 15 October 2026
+type: release
+---
+
+## Improvements
+
+🌍 **The birth postal code is now only required in France.**
+
+- [Company onboarding](/accounts/reference/onboarding/company-onboarding-fields#related-individuals): for ultimate beneficial owners and legal representatives, it's no longer required when the account country isn't France.
+- [User sign-up](/users/concepts/user/sign-up#identification-steps): it's only asked when the user was born in France. You no longer need to collect or [prefill `birthPlacePostalCode`](/build/using-api/authentication#url-parameters-optional) for users born outside France.
+
+Birth date, city, and country are unchanged.
+
+## API updates
+
+### Upcoming breaking changes
+
+🌍 From 12 November 2026, territory codes (for example, `REU` for Réunion) will no longer be accepted in country fields such as birth, address, ID document issuing, and company registration. Use the corresponding country code instead (`FRA`). Existing records will be updated accordingly.
+
+Onboardings where the account holder lives [in an area where Swan doesn't offer accounts](/get-started/become-a-partner/country-coverage) will be `Invalid`. Other country fields, like card delivery addresses, aren't affected. For more details, refer to the [individual](/accounts/reference/onboarding/individual-onboarding-fields#address) and [company](/accounts/reference/onboarding/company-onboarding-fields#company-address) onboarding fields.
+
+🐣 From 12 November 2026, onboardings will apply **new birth date rules for legal representatives, account admins, and ultimate beneficial owners.**
+
+- Account admins of [company](/accounts/reference/onboarding/company-onboarding-fields#admin-birth) and [individual](/accounts/reference/onboarding/individual-onboarding-fields#birth) accounts must be 18 or older. This also applies to verification renewals and [account admin changes](/accounts/guides/memberships/change-admin).
+- [Legal representatives](/accounts/reference/onboarding/company-onboarding-fields#related-individuals) (`LegalRepresentative` or `LegalRepresentativeAndUltimateBeneficialOwner`) must be 18 or older. A legal representative under 18 will be rejected. There's no maximum age.
+- Ultimate beneficial owners (`UltimateBeneficialOwner`) can be any age, including minors. This also applies to verification renewals.
+
+A birth date in the future is still rejected. Account members aren't affected.
+
+🔝 At the end of November 2026, **funding limits will be removed**. They belong to a product Swan no longer offers. The following are deprecated accordingly:
+
+- Mutation: `addFundingLimitSettingsChangeRequest`.
+- Queries: `fundingLimitSettingsChangeRequests`, `AccountHolder.fundingLimitSettings`, and `AccountHolder.fundingLimitSettingsChangeRequests`.
+- Simulation: `updateFundingLimitSettingsChangeRequest`.
+
+🔌 From 12 November 2026, the **Account Information Service (AIS)** will replace the Payment ID with the **Origin Transaction ID**. In AIS transaction responses, the `extra.additional_information` field will return the Origin Transaction ID (`originTransactionId`) instead of the Payment ID (`paymentId`). This change simplifies the reconciliation of fee transactions in accounting tools, such as DATEV in Germany. The Payment ID will no longer be available through AIS. If your integration relies on it, submit a [Partner support request form](https://partner-support.swan.io/hc/en-gb/requests/new). See the [AIS field mapping](/payments/concepts/open-banking/ais#field-mapping).

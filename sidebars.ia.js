@@ -187,6 +187,7 @@ module.exports = annotateAudience(annotate({
         doc("accounts/guides/account-holders/update", "Update account holder information"),
         doc("accounts/guides/account-holders/request-first-transfer", "Request a first transfer"),
         doc("accounts/guides/account-holders/verification-renewal", "Manage verification renewal"),
+        doc("accounts/guides/account-holders/manage-verification", "Manage account verification"),
         cat("Export account holder data", [
           doc("accounts/guides/account-holders/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/account-holders/export/using-the-api", "Using the API"),
@@ -210,10 +211,12 @@ module.exports = annotateAudience(annotate({
         doc("accounts/guides/memberships/resume", "Resume member"),
         doc("accounts/guides/memberships/resend-invitation", "Send or resend invitation"),
         doc("accounts/guides/memberships/fix-binding-error", "Fix binding error"),
+        doc("accounts/guides/memberships/troubleshoot-binding-errors", "Troubleshoot binding errors"),
         cat("Change administrator", [
           doc("accounts/guides/memberships/change-admin/from-support-center", "From Support Center"),
           doc("accounts/guides/memberships/change-admin/using-the-api", "Using the API"),
         ], { link: "accounts/guides/memberships/change-admin/index" }),
+        doc("accounts/guides/memberships/admin-change-requests", "Handle administrator change requests"),
         cat("Export memberships", [
           doc("accounts/guides/memberships/export/from-the-dashboard", "From the Dashboard"),
           doc("accounts/guides/memberships/export/using-the-api", "Using the API"),
@@ -258,6 +261,7 @@ module.exports = annotateAudience(annotate({
           doc("accounts/guides/closure/get-closure-info/using-the-api", "Using the API"),
         ], { link: "accounts/guides/closure/get-closure-info/index" }),
         doc("accounts/guides/closure/get-suspension-info", "Get suspension information"),
+        doc("accounts/guides/closure/manage-closures", "Manage account closures"),
       ], { link: "accounts/guides/closure/index" }),
       cat("Documents", [
         cat("Upload onboarding documents", [

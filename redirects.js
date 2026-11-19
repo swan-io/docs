@@ -92,6 +92,10 @@ module.exports = [
   { from: "/topics/projects/sso", to: "/get-started/set-up-swan/sso" },
   // DOC-1834: live's Partner operations section (docs/topics/operations),
   // each guide beside its technical counterpart (mirrored 16 November 2026).
+  { from: "/topics/operations/guide-account-verification", to: "/accounts/guides/account-holders/manage-verification" },
+  { from: "/topics/operations/guide-change-account-admin-legal-representative", to: "/accounts/guides/memberships/admin-change-requests" },
+  { from: "/topics/operations/guide-troubleshoot-binding-errors", to: "/accounts/guides/memberships/troubleshoot-binding-errors" },
+  { from: "/topics/operations/guide-manage-account-closures", to: "/accounts/guides/closure/manage-closures" },
   { from: "/topics/operations/guide-user-identification", to: "/users/guides/user-operations/manage-identification" },
   { from: "/topics/operations/guide-reset-passcode", to: "/users/guides/user-operations/troubleshoot-passcode-reset" },
   // DOC-1834: live's Open Banking section (docs/topics/open-banking), now a

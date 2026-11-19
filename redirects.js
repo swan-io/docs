@@ -96,6 +96,10 @@ module.exports = [
   { from: "/topics/operations/guide-change-account-admin-legal-representative", to: "/accounts/guides/memberships/admin-change-requests" },
   { from: "/topics/operations/guide-troubleshoot-binding-errors", to: "/accounts/guides/memberships/troubleshoot-binding-errors" },
   { from: "/topics/operations/guide-manage-account-closures", to: "/accounts/guides/closure/manage-closures" },
+  { from: "/topics/operations/guide-manage-mandates", to: "/payments/guides/direct-debit/manage-mandates" },
+  { from: "/topics/operations/guide-troubleshoot-transfers", to: "/payments/guides/credit-transfers/troubleshoot-transfers" },
+  { from: "/topics/operations/guide-troubleshoot-card-payments", to: "/payments/guides/cards/troubleshoot-declined-payments" },
+  { from: "/topics/operations/guide-card-disputes-chargebacks", to: "/payments/guides/cards/disputes-and-chargebacks" },
   { from: "/topics/operations/guide-user-identification", to: "/users/guides/user-operations/manage-identification" },
   { from: "/topics/operations/guide-reset-passcode", to: "/users/guides/user-operations/troubleshoot-passcode-reset" },
   // DOC-1834: live's Open Banking section (docs/topics/open-banking), now a

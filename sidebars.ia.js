@@ -500,6 +500,7 @@ module.exports = annotateAudience(annotate({
           doc("payments/guides/credit-transfers/international/initiate", "Initiate a transfer"),
           doc("payments/guides/credit-transfers/international/get-info", "Get transfer info"),
         ]),
+        doc("payments/guides/credit-transfers/troubleshoot-transfers", "Troubleshoot transfers"),
       ], { link: "payments/guides/credit-transfers/index" }),
       cat("Direct debit", [
         doc("payments/guides/direct-debit/add-mandate", "Add a mandate"),
@@ -507,10 +508,13 @@ module.exports = annotateAudience(annotate({
         doc("payments/guides/direct-debit/suspend-mandate", "Suspend a mandate"),
         doc("payments/guides/direct-debit/update-mandate", "Update a mandate"),
         doc("payments/guides/direct-debit/return", "Request a refund"),
+        doc("payments/guides/direct-debit/manage-mandates", "Manage mandates"),
       ], { link: "payments/guides/direct-debit/index" }),
       cat("Payment cards", [
         doc("payments/guides/cards/get-list", "Get card payments"),
         doc("payments/guides/cards/get-enriched-info", "Get enriched info"),
+        doc("payments/guides/cards/troubleshoot-declined-payments", "Troubleshoot declined payments"),
+        doc("payments/guides/cards/disputes-and-chargebacks", "Disputes and chargebacks"),
       ]),
       cat("Payment operations", [
         doc("payments/guides/payment-operations/from-the-dashboard", "From the Dashboard"),

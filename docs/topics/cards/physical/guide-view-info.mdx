@@ -2,6 +2,8 @@
 title: View sensitive information
 ---
 
+import ScaOpenRules from '../../users/consent/_sca-open-rules.mdx';
+
 # View sensitive information
 
 :::note Information not visible
@@ -12,7 +14,11 @@ If information fails to become visible despite having the appropriate permission
 
 View the physical card numbers, which is different from the virtual card numbers, by calling the `viewPhysicalCardNumbers` mutation which returns a consent.
 When you do this, make sure you are authenticated with a user access token using the name of the card's account member.
-Then a `consentUrl` is returned, inviting the user to start the Strong Customer Authentication with Swan.
+Then a `consentUrl` is returned, inviting the user to start Strong Customer Authentication (SCA) with Swan.
+
+<ScaOpenRules />
+
+For the full redirect flow with a code example, read [Integrate Strong Customer Authentication in a web app](/topics/users/consent/guide-integrate-sca-web).
 
 import AfterConsent from '../partials/_after-consent.mdx';
 
@@ -21,9 +27,9 @@ import AfterConsent from '../partials/_after-consent.mdx';
 ![Swan card with information masked and revealed](../../../images/topics/cards/cards-view-info.png)
 
 :::info Store `consentId`
-To avoid repeating the Strong Customer Authentication each time the client wants to reveal the card numbers, the same `consentUrl` can be called anytime for five minutes after the consent.
-We advise you to store the `consentId` on your side and run a consent query to check the consent status is `Accepted` and the `updateAt` is less than five minutes, before reusing the `consentUrl`.
-The `consentUrl` only works in the cardholder's browser where the consent was completed.
+To avoid repeating the Strong Customer Authentication (SCA) each time the client wants to reveal the card numbers, the same `consentUrl` can be called anytime for five minutes after the consent.
+We advise you to store the `consentId` on your side and run a consent query to check the consent status is `Accepted` and the `updatedAt` is less than five minutes, before reusing the `consentUrl`.
+The `consentUrl` only works in the cardholder's browser where the `consentUrl` was opened, even if the cardholder confirms SCA on their phone.
 :::
 
 ## View PIN {#view-pin}

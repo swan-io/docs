@@ -1,0 +1,24 @@
+---
+title: 19 November 2026
+type: release
+---
+
+## New features
+
+📚 Your operations team can now answer more day-to-day questions on its own with our [Partner Operations guides](/topics/operations/). They cover common account and payment tasks, such as verifying accounts, identifying users, managing SEPA Direct Debit mandates, and handling card disputes and chargebacks. The newest guides show how to [manage account closures](/topics/operations/guide-manage-account-closures/) and [troubleshoot declined card payments](/topics/operations/guide-troubleshoot-card-payments/), including when to raise a [Partner support request](https://partner-support.swan.io/hc/en-gb/requests/new).
+
+To search these guides from your own AI tools, connect them to the [Swan Docs MCP server](/developers/tools/mcp-servers#documentation-server).
+
+## API updates
+
+### Upcoming breaking changes
+
+📄 From **14 December 2026**, the account statement API will stop returning its deprecated fields, and statement generation will reject the old `statementType` input. If you read or generate account statements through the API, move to the replacement fields before this date. These changes apply to the [`accountStatement`](https://api-reference.swan.io/queries/account-statement/) query, [`Account.statements`](https://api-reference.swan.io/objects/account/), and the [`generateAccountStatement`](https://api-reference.swan.io/mutations/generate-account-statement/) mutation:
+
+- `fees` is replaced by `feeCredits` and `feeDebits`.
+- `status` is replaced by the `statusInfo` object.
+- `type` is replaced by `format`.
+- The statement download `url`, previously in the `type` object, is only available in `statusInfo`.
+- The `statementType` input of `generateAccountStatement` is replaced by `format`. Requests that still send `statementType` will be rejected.
+
+🔐 From **31 December 2026**, Swan's consent and authentication pages will stop working in iframes and popups. If your app opens these pages in an iframe or a popup, open them in the user's current browser tab instead, then use the redirect URL to bring the user back to your app. Follow the guide to [integrate Strong Customer Authentication (SCA) in a web app](/topics/users/consent/guide-integrate-sca-web/).

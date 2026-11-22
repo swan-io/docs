@@ -16,18 +16,18 @@ Schedule a Standing Order to send money on a recurring basis using the SEPA netw
 The example schedules a fixed monthly Standing Order.
 
 1. Call the `scheduleStandingOrder` mutation.
-1. Add all required information, including `period`, account ID, your redirect URL, your `beneficiary`, and whether or not the IBAN belongs to you (lines 4-14).
+1. Add all required information, including `period`, account ID, your redirect URL, and your `beneficiary` (lines 4-13).
     - For `period`, choose Monthly.
     - Add the `amount` object with your fixed `value` and its `currency`.
     - Don't add the `targetAvailableBalance` object.
-1. Add the consent URL to the success payload (line 29): `statusInfo` > `StandingOrderConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add the consent URL to the success payload (line 28): `statusInfo` > `StandingOrderConsentPendingStatusInfo` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
 
 ### Mutation {#fixed-mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gRml4ZWRNb250aGx5IHsKICBzY2hlZHVsZVN0YW5kaW5nT3JkZXIoCiAgICBpbnB1dDogewogICAgICBwZXJpb2Q6IE1vbnRobHkKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBsYWJlbDogIllvdXIgY3VzdG9tIGxhYmVsIgogICAgICBmaXJzdEV4ZWN1dGlvbkRhdGU6ICIyMDI0LTA5LTIxVCIKICAgICAgbGFzdEV4ZWN1dGlvbkRhdGU6ICIyMDI1LTAxLTAxVCIKICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgaWJhbjogIk5MNzlSQUJPNzExNDUwNzI4MyIKICAgICAgICBuYW1lOiAiQ2F0aGFyaWpuZSBKYW5zc2VuIgogICAgICAgIGlzTXlPd25JYmFuOiBmYWxzZQogICAgICAgIHNhdmU6IGZhbHNlCiAgICAgIH0KICAgICAgcmVmZXJlbmNlOiAiWW91ciBjdXN0b20gcmVmZXJlbmNlIgogICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgfQogICkgewogICAgLi4uIG9uIFNjaGVkdWxlU3RhbmRpbmdPcmRlclN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBzdGFuZGluZ09yZGVyIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFN0YW5kaW5nT3JkZXJDb25zZW50UGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBpZAogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludmFsaWRBcmd1bWVudFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29kZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gRml4ZWRNb250aGx5IHsKICBzY2hlZHVsZVN0YW5kaW5nT3JkZXIoCiAgICBpbnB1dDogewogICAgICBwZXJpb2Q6IE1vbnRobHkKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBsYWJlbDogIllvdXIgY3VzdG9tIGxhYmVsIgogICAgICBmaXJzdEV4ZWN1dGlvbkRhdGU6ICIyMDI0LTA5LTIxVCIKICAgICAgbGFzdEV4ZWN1dGlvbkRhdGU6ICIyMDI1LTAxLTAxVCIKICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgaWJhbjogIk5MNzlSQUJPNzExNDUwNzI4MyIKICAgICAgICBuYW1lOiAiQ2F0aGFyaWpuZSBKYW5zc2VuIgogICAgICAgIHNhdmU6IGZhbHNlCiAgICAgIH0KICAgICAgcmVmZXJlbmNlOiAiWW91ciBjdXN0b20gcmVmZXJlbmNlIgogICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgfQogICkgewogICAgLi4uIG9uIFNjaGVkdWxlU3RhbmRpbmdPcmRlclN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBzdGFuZGluZ09yZGVyIHsKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIHN0YXR1cwogICAgICAgICAgLi4uIG9uIFN0YW5kaW5nT3JkZXJDb25zZW50UGVuZGluZ1N0YXR1c0luZm8gewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBpZAogICAgICB9CiAgICB9CiAgICAuLi4gb24gRm9yYmlkZGVuUmVqZWN0aW9uIHsKICAgICAgX190eXBlbmFtZQogICAgICBtZXNzYWdlCiAgICB9CiAgICAuLi4gb24gSW50ZXJuYWxFcnJvclJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludmFsaWRBcmd1bWVudFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgY29kZQogICAgICBtZXNzYWdlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-14,16-17,20,25,28} showLineNumbers
+```graphql {4-13,15-16,19,24,27} showLineNumbers
 mutation FixedMonthly {
   scheduleStandingOrder(
     input: {
@@ -40,7 +40,6 @@ mutation FixedMonthly {
       sepaBeneficiary: {
         iban: "NL79RABO7114507283"
         name: "Catharijne Janssen"
-        isMyOwnIban: false
         save: false
       }
       reference: "Your custom reference"
@@ -95,19 +94,19 @@ The payload shows the Standing Order created with the status `ConsentPending` (l
 The example schedules a daily target balance Standing Order.
 
 1. Call the `scheduleStandingOrder` mutation.
-1. Add all required information, including `period`, account ID, amount with `currency` and `value`, your redirect URL, your `beneficiary`, and whether or not the IBAN belongs to you (lines 4-14).
+1. Add all required information, including `period`, account ID, amount with `currency` and `value`, your redirect URL, and your `beneficiary` (lines 4-13).
     - For `period`, choose Daily.
     - Add the `targetAvailableBalance` object with your target balance `value` and its `currency`.
     - Don't add the `amount` object.
-1. Add the consent URL to the success payload (line 29): `statusInfo` > `StandingOrderConsentPendingStatusInfo` > `consent` > `consentUrl`.
-1. Add your `targetAvailableBalance` information to the payload (lines 33-35)
+1. Add the consent URL to the success payload (line 28): `statusInfo` > `StandingOrderConsentPendingStatusInfo` > `consent` > `consentUrl`.
+1. Add your `targetAvailableBalance` information to the payload (lines 32-34)
 1. Add rejections (not shown).
 
 ### Mutation {#target-mutation}
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gVGFyZ2V0RGFpbHkgewogIHNjaGVkdWxlU3RhbmRpbmdPcmRlcigKICAgIGlucHV0OiB7CiAgICAgIHBlcmlvZDogRGFpbHkKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBsYWJlbDogIllvdXIgY3VzdG9tIGxhYmVsIgogICAgICBmaXJzdEV4ZWN1dGlvbkRhdGU6ICIyMDI0LTA5LTIxVCIKICAgICAgbGFzdEV4ZWN1dGlvbkRhdGU6ICIyMDI1LTAxLTAxVCIKICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgaWJhbjogIkRFODg1MDAxMDUxNzE1Nzk4MzM3MzEiCiAgICAgICAgbmFtZTogIlJhZSBTY2htaWR0IgogICAgICAgIGlzTXlPd25JYmFuOiBmYWxzZQogICAgICAgIHNhdmU6IGZhbHNlCiAgICAgIH0KICAgICAgcmVmZXJlbmNlOiAiWW91ciBjdXN0b20gcmVmZXJlbmNlIgogICAgICB0YXJnZXRBdmFpbGFibGVCYWxhbmNlOiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBTY2hlZHVsZVN0YW5kaW5nT3JkZXJTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgc3RhbmRpbmdPcmRlciB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBTdGFuZGluZ09yZGVyQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgaWQKICAgICAgICB0YXJnZXRBdmFpbGFibGVCYWxhbmNlIHsKICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnZhbGlkQXJndW1lbnRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvZGUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gVGFyZ2V0RGFpbHkgewogIHNjaGVkdWxlU3RhbmRpbmdPcmRlcigKICAgIGlucHV0OiB7CiAgICAgIHBlcmlvZDogRGFpbHkKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY29uc2VudFJlZGlyZWN0VXJsOiAiJFlPVVJfUkVESVJFQ1RfVVJMIgogICAgICBsYWJlbDogIllvdXIgY3VzdG9tIGxhYmVsIgogICAgICBmaXJzdEV4ZWN1dGlvbkRhdGU6ICIyMDI0LTA5LTIxVCIKICAgICAgbGFzdEV4ZWN1dGlvbkRhdGU6ICIyMDI1LTAxLTAxVCIKICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgaWJhbjogIkRFODg1MDAxMDUxNzE1Nzk4MzM3MzEiCiAgICAgICAgbmFtZTogIlJhZSBTY2htaWR0IgogICAgICAgIHNhdmU6IGZhbHNlCiAgICAgIH0KICAgICAgcmVmZXJlbmNlOiAiWW91ciBjdXN0b20gcmVmZXJlbmNlIgogICAgICB0YXJnZXRBdmFpbGFibGVCYWxhbmNlOiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBTY2hlZHVsZVN0YW5kaW5nT3JkZXJTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgc3RhbmRpbmdPcmRlciB7CiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBTdGFuZGluZ09yZGVyQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgaWQKICAgICAgICB0YXJnZXRBdmFpbGFibGVCYWxhbmNlIHsKICAgICAgICAgIGN1cnJlbmN5CiAgICAgICAgICB2YWx1ZQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIEZvcmJpZGRlblJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogICAgLi4uIG9uIEludGVybmFsRXJyb3JSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICAgIC4uLiBvbiBJbnZhbGlkQXJndW1lbnRSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIGNvZGUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4-14,16-17,20,25,28,33-35} showLineNumbers
+```graphql {4-13,15-16,19,24,27,32-34} showLineNumbers
 mutation TargetDaily {
   scheduleStandingOrder(
     input: {
@@ -120,7 +119,6 @@ mutation TargetDaily {
       sepaBeneficiary: {
         iban: "DE88500105171579833731"
         name: "Rae Schmidt"
-        isMyOwnIban: false
         save: false
       }
       reference: "Your custom reference"

@@ -88,12 +88,12 @@ This process is particularly useful for Google Wallet, where cardholders might b
 
 First, retrieve the `digitalCardId` of the digital card in `Pending` status:
 
-<a href="https://explorer.swan.io?query=cXVlcnkgR2V0UGVuZGluZ0RpZ2l0YWxDYXJkIHsKICBjYXJkKGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiKSB7CiAgICBkaWdpdGFsQ2FyZHMoZmlsdGVyczogeyB3YWxsZXRJZDogIiRZT1VSX1dBTExFVF9JRCIsIHN0YXR1czogIlBlbmRpbmciIH0pIHsKICAgICAgZWRnZXMgewogICAgICAgIG5vZGUgewogICAgICAgICAgLi4uIG9uIFBlbmRpbmdEaWdpdGFsQ2FyZCB7CiAgICAgICAgICAgIGlkCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgR2V0UGVuZGluZ0RpZ2l0YWxDYXJkIHsKICBjYXJkKGNhcmRJZDogIiRZT1VSX0NBUkRfSUQiKSB7CiAgICBkaWdpdGFsQ2FyZHMoZmlsdGVyczogeyB3YWxsZXRQcm92aWRlcklkOiAiJFlPVVJfV0FMTEVUX1BST1ZJREVSX0lEIiwgc3RhdHVzOiAiUGVuZGluZyIgfSkgewogICAgICBlZGdlcyB7CiAgICAgICAgbm9kZSB7CiAgICAgICAgICAuLi4gb24gUGVuZGluZ0RpZ2l0YWxDYXJkIHsKICAgICAgICAgICAgaWQKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql showLineNumbers
 query GetPendingDigitalCard {
   card(cardId: "$YOUR_CARD_ID") {
-    digitalCards(filters: { walletId: "$YOUR_WALLET_ID", status: "Pending" }) {
+    digitalCards(filters: { walletProviderId: "$YOUR_WALLET_PROVIDER_ID", status: "Pending" }) {
       edges {
         node {
           ... on PendingDigitalCard {
@@ -112,15 +112,16 @@ query GetPendingDigitalCard {
 Please contact us through our Partner Support Request form available on your Dashboard before integrating `activateDigitalCard` into your app. This mutation requires Apple Pay and/or Google Pay certification.
 :::
 
-Use the `activateDigitalCard` mutation to activate the pending digital card:
+Use the `activateDigitalCard` mutation to activate the pending digital card. The activation requires the cardholder's consent: send them to the `consentUrl` returned in the digital card's status information.
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gQWN0aXZhdGVEaWdpdGFsQ2FyZCB7CiAgYWN0aXZhdGVEaWdpdGFsQ2FyZChpbnB1dDogeyBkaWdpdGFsQ2FyZElkOiAiJFlPVVJfRElHSVRBTF9DQVJEX0lEIiB9KSB7CiAgICAuLi4gb24gQWN0aXZhdGVEaWdpdGFsQ2FyZFN1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBkaWdpdGFsQ2FyZCB7CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBEaWdpdGFsQ2FyZEVuYWJsZWRTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogICAgLi4uIG9uIFJlamVjdGlvbiB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgbWVzc2FnZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQWN0aXZhdGVEaWdpdGFsQ2FyZCB7CiAgYWN0aXZhdGVEaWdpdGFsQ2FyZCgKICAgIGlucHV0OiB7CiAgICAgIGRpZ2l0YWxDYXJkSWQ6ICIkWU9VUl9ESUdJVEFMX0NBUkRfSUQiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgIH0KICApIHsKICAgIC4uLiBvbiBBY3RpdmF0ZURpZ2l0YWxDYXJkU3VjY2Vzc1BheWxvYWQgewogICAgICBfX3R5cGVuYW1lCiAgICAgIGRpZ2l0YWxDYXJkIHsKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIERpZ2l0YWxDYXJkQ29uc2VudFBlbmRpbmdTdGF0dXNJbmZvIHsKICAgICAgICAgICAgX190eXBlbmFtZQogICAgICAgICAgICBjb25zZW50IHsKICAgICAgICAgICAgICBjb25zZW50VXJsCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICAgIC4uLiBvbiBSZWplY3Rpb24gewogICAgICBfX3R5cGVuYW1lCiAgICAgIG1lc3NhZ2UKICAgIH0KICB9Cn0K&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4} showLineNumbers
+```graphql {4,5} showLineNumbers
 mutation ActivateDigitalCard {
   activateDigitalCard(
     input: {
       digitalCardId: "$YOUR_DIGITAL_CARD_ID"
+      consentRedirectUrl: "$YOUR_REDIRECT_URL"
     }
   ) {
     ... on ActivateDigitalCardSuccessPayload {
@@ -128,8 +129,11 @@ mutation ActivateDigitalCard {
       digitalCard {
         id
         statusInfo {
-          ... on DigitalCardEnabledStatusInfo {
+          ... on DigitalCardConsentPendingStatusInfo {
             __typename
+            consent {
+              consentUrl
+            }
           }
         }
       }

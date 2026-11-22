@@ -27,12 +27,12 @@ Send a SEPA Credit Transfer to a beneficiary within the SEPA network.
 1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 10-11).
 1. For `mode`, choose `Regular` to send a basic SEPA Credit Transfer.
 1. Add the `InitiateCreditTransfersSuccessPayload` payload.
-1. Add the consent URL to the success payload (line 28): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add the consent URL to the success payload (line 27): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gU2VwYURlZmF1bHQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJVDIzUDAzMDAyMDMyODA2MzIxMjM1NTM3NDgiCiAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgICBzYXZlOiBmYWxzZQogICAgICAgIH0KICAgICAgICBtb2RlOiBSZWd1bGFyCiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBheW1lbnRDb25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gU2VwYURlZmF1bHQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJVDIzUDAzMDAyMDMyODA2MzIxMjM1NTM3NDgiCiAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICB9CiAgICAgICAgbW9kZTogUmVndWxhcgogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgcGF5bWVudCB7CiAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBQYXltZW50Q29uc2VudFBlbmRpbmcgewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4,6,10-11,15,19,25,28} showLineNumbers
+```graphql {4,6,10-11,14,18,24,27} showLineNumbers
 mutation SepaDefault {
   initiateCreditTransfers(
     input: {
@@ -44,7 +44,6 @@ mutation SepaDefault {
         sepaBeneficiary: {
           iban: "IT23P0300203280632123553748"
           name: "Francesca Verrilli"
-          isMyOwnIban: false
           save: false
         }
         mode: Regular
@@ -155,12 +154,12 @@ Send an Instant SEPA Credit Transfer to a beneficiary within the SEPA network.
 1. For this use case, add information about your `sepaBeneficiary`, including their name and IBAN (lines 10-11).
 1. For `mode`, choose `InstantWithFallback`, which begins as an instant transfer but falls back to a regular transfer if instant isn't available.
 1. Add the `InitiateCreditTransfersSuccessPayload` payload.
-1. Add the consent URL to the success payload (line 28): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add the consent URL to the success payload (line 27): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gU2VwYUluc3RhbnQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJVDIzUDAzMDAyMDMyODA2MzIxMjM1NTM3NDgiCiAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgICBzYXZlOiBmYWxzZQogICAgICAgIH0KICAgICAgICBtb2RlOiBJbnN0YW50V2l0aEZhbGxiYWNrCiAgICAgIH0KICAgIH0KICApIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBheW1lbnRDb25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gU2VwYUluc3RhbnQgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiB7CiAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICBzZXBhQmVuZWZpY2lhcnk6IHsKICAgICAgICAgIGliYW46ICJJVDIzUDAzMDAyMDMyODA2MzIxMjM1NTM3NDgiCiAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICB9CiAgICAgICAgbW9kZTogSW5zdGFudFdpdGhGYWxsYmFjawogICAgICB9CiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgcGF5bWVudCB7CiAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBQYXltZW50Q29uc2VudFBlbmRpbmcgewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4,6,10-11,15,19,25,28} showLineNumbers
+```graphql {4,6,10-11,14,18,24,27} showLineNumbers
 mutation SepaInstant {
   initiateCreditTransfers(
     input: {
@@ -172,7 +171,6 @@ mutation SepaInstant {
         sepaBeneficiary: {
           iban: "IT23P0300203280632123553748"
           name: "Francesca Verrilli"
-          isMyOwnIban: false
           save: false
         }
         mode: InstantWithFallback
@@ -266,14 +264,14 @@ You can send a mix of SEPA Credit Transfers, Instant SEPA Credit Transfers, and 
     - `amount`, meaning you can send a different amount to each beneficiary (in euros).
     - `sepaBeneficiary` or `swanAccountBeneficiary` object.
     - `mode` (optional), meaning you can send instant and regular transfers with the same API call.
-    - The example blocks (lines 9-16, 19-26, and 29-35) model different configurations.
+    - The example blocks (lines 9-15, 18-24, and 27-33) model different configurations.
 1. Add the `InitiateCreditTransfersSuccessPayload` payload.
-1. Add the consent URL to the success payload (line 49): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
+1. Add the consent URL to the success payload (line 47): `statusInfo` > `PaymentConsentPending` > `consent` > `consentUrl`.
 1. Add rejections (not shown).
 
-<a href="https://explorer.swan.io?query=bXV0YXRpb24gTXVsdGlwbGVUcmFuc2ZlcnMgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiBbCiAgICAgICAgewogICAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMjAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICAgIHNlcGFCZW5lZmljaWFyeTogewogICAgICAgICAgICBpYmFuOiAiSVQyM1AwMzAwMjAzMjgwNjMyMTIzNTUzNzQ4IgogICAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgICBpc015T3duSWJhbjogZmFsc2UKICAgICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICAgIH0KICAgICAgICAgIG1vZGU6IEluc3RhbnRXaXRoRmFsbGJhY2sKICAgICAgICB9CiAgICAgICAgewogICAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMTAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICAgIHNlcGFCZW5lZmljaWFyeTogewogICAgICAgICAgICBpYmFuOiAiR0I2MUJBUkMyMDAzNTM2ODc2NjE3OCIKICAgICAgICAgICAgbmFtZTogIkRpbGxvbiBCeXJuZSIKICAgICAgICAgICAgaXNNeU93bkliYW46IGZhbHNlCiAgICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgICB9CiAgICAgICAgICBtb2RlOiBSZWd1bGFyCiAgICAgICAgfQogICAgICAgIHsKICAgICAgICAgIGFtb3VudDogeyB2YWx1ZTogIjEwMCIsIGN1cnJlbmN5OiAiRVVSIiB9CiAgICAgICAgICBzd2FuQWNjb3VudEJlbmVmaWNpYXJ5OiB7CiAgICAgICAgICAgIGFjY291bnROdW1iZXI6ICIyMTA3NzUyMjc2MSIKICAgICAgICAgICAgbmFtZTogIkhlbnJpIER1cG9udCIKICAgICAgICAgICAgc2F2ZTogZmFsc2UKICAgICAgICAgIH0KICAgICAgICAgIG1vZGU6IFJlZ3VsYXIKICAgICAgICB9CiAgICAgIF0KICAgIH0KICApIHsKICAgIC4uLiBvbiBJbml0aWF0ZUNyZWRpdFRyYW5zZmVyc1N1Y2Nlc3NQYXlsb2FkIHsKICAgICAgX190eXBlbmFtZQogICAgICBwYXltZW50IHsKICAgICAgICBjcmVhdGVkQXQKICAgICAgICBpZAogICAgICAgIHN0YXR1c0luZm8gewogICAgICAgICAgLi4uIG9uIFBheW1lbnRDb25zZW50UGVuZGluZyB7CiAgICAgICAgICAgIF9fdHlwZW5hbWUKICAgICAgICAgICAgY29uc2VudCB7CiAgICAgICAgICAgICAgY29uc2VudFVybAogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gTXVsdGlwbGVUcmFuc2ZlcnMgewogIGluaXRpYXRlQ3JlZGl0VHJhbnNmZXJzKAogICAgaW5wdXQ6IHsKICAgICAgaWRlbXBvdGVuY3lLZXk6ICIkWU9VUl9JREVNUE9URU5DWV9LRVkiCiAgICAgIGNvbnNlbnRSZWRpcmVjdFVybDogIiRZT1VSX1JFRElSRUNUX1VSTCIKICAgICAgYWNjb3VudElkOiAiJFlPVVJfQUNDT1VOVF9JRCIKICAgICAgY3JlZGl0VHJhbnNmZXJzOiBbCiAgICAgICAgewogICAgICAgICAgYW1vdW50OiB7IHZhbHVlOiAiMjAwIiwgY3VycmVuY3k6ICJFVVIiIH0KICAgICAgICAgIHNlcGFCZW5lZmljaWFyeTogewogICAgICAgICAgICBpYmFuOiAiSVQyM1AwMzAwMjAzMjgwNjMyMTIzNTUzNzQ4IgogICAgICAgICAgICBuYW1lOiAiRnJhbmNlc2NhIFZlcnJpbGxpIgogICAgICAgICAgICBzYXZlOiBmYWxzZQogICAgICAgICAgfQogICAgICAgICAgbW9kZTogSW5zdGFudFdpdGhGYWxsYmFjawogICAgICAgIH0KICAgICAgICB7CiAgICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgICAgc2VwYUJlbmVmaWNpYXJ5OiB7CiAgICAgICAgICAgIGliYW46ICJHQjYxQkFSQzIwMDM1MzY4NzY2MTc4IgogICAgICAgICAgICBuYW1lOiAiRGlsbG9uIEJ5cm5lIgogICAgICAgICAgICBzYXZlOiBmYWxzZQogICAgICAgICAgfQogICAgICAgICAgbW9kZTogUmVndWxhcgogICAgICAgIH0KICAgICAgICB7CiAgICAgICAgICBhbW91bnQ6IHsgdmFsdWU6ICIxMDAiLCBjdXJyZW5jeTogIkVVUiIgfQogICAgICAgICAgc3dhbkFjY291bnRCZW5lZmljaWFyeTogewogICAgICAgICAgICBhY2NvdW50TnVtYmVyOiAiMjEwNzc1MjI3NjEiCiAgICAgICAgICAgIG5hbWU6ICJIZW5yaSBEdXBvbnQiCiAgICAgICAgICAgIHNhdmU6IGZhbHNlCiAgICAgICAgICB9CiAgICAgICAgICBtb2RlOiBSZWd1bGFyCiAgICAgICAgfQogICAgICBdCiAgICB9CiAgKSB7CiAgICAuLi4gb24gSW5pdGlhdGVDcmVkaXRUcmFuc2ZlcnNTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgcGF5bWVudCB7CiAgICAgICAgY3JlYXRlZEF0CiAgICAgICAgaWQKICAgICAgICBzdGF0dXNJbmZvIHsKICAgICAgICAgIC4uLiBvbiBQYXltZW50Q29uc2VudFBlbmRpbmcgewogICAgICAgICAgICBfX3R5cGVuYW1lCiAgICAgICAgICAgIGNvbnNlbnQgewogICAgICAgICAgICAgIGNvbnNlbnRVcmwKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
-```graphql {4,6,9-16,19-26,29-35,40,46,49} showLineNumbers
+```graphql {4,6,9-15,18-24,27-33,38,44,47} showLineNumbers
 mutation MultipleTransfers {
   initiateCreditTransfers(
     input: {
@@ -286,7 +284,6 @@ mutation MultipleTransfers {
           sepaBeneficiary: {
             iban: "IT23P0300203280632123553748"
             name: "Francesca Verrilli"
-            isMyOwnIban: false
             save: false
           }
           mode: InstantWithFallback
@@ -296,7 +293,6 @@ mutation MultipleTransfers {
           sepaBeneficiary: {
             iban: "GB61BARC20035368766178"
             name: "Dillon Byrne"
-            isMyOwnIban: false
             save: false
           }
           mode: Regular

@@ -90,14 +90,19 @@ If a cardholder shares their PIN, Swan can't take responsibility for fraud assoc
 
 ### Choosing a card's PIN {#pin-choose}
 
-To allow your cardholders to **choose their PIN**, set the `choosePin` paramater to `true` when [printing physical cards](./guide-print.mdx).
-You can set this paramater with the `printPhysicalCard` and `addCards` mutations.
+To allow your cardholders to **choose their PIN**, set the `choosePin` parameter to `true` when [printing physical cards](./guide-print.mdx).
+You can set this parameter with the `printPhysicalCard` and `addCards` mutations.
 
-If you don't add the `choosePin` paramater, or you set it to `false`, Swan assigns a PIN randomly.
+If you don't add the `choosePin` parameter, or you set it to `false`, Swan assigns a PIN randomly.
 A card's PIN **can't be changed**.
 
-You can [print a physical card](./guide-print.mdx#print-with-virtual) for another account member with the `addCards` mutation, allowing the member cardholder to choose their PIN by setting the `choosePin` paramater to `true`.
+You can [print a physical card](./guide-print.mdx#print-with-virtual) for another account member with the `addCards` mutation, allowing the member cardholder to choose their PIN by setting the `choosePin` parameter to `true`.
 Swan sends a text message to the member cardholder's mobile number used for Swan containing a link to choose their PIN.
+
+The `printPhysicalCard` mutation works differently.
+If you set `choosePin` to `true` with `printPhysicalCard`, the **cardholder must consent themselves**.
+They choose their PIN on the consent screen, right after they consent.
+If another account member consents for them, the API returns a `User_NotAllowedToChoosePhysicalCardPINError` error.
 
 Alternatively, you can use the `addCard` mutation to [add only the virtual card](../virtual/guide-add.mdx#add-one).
 Then, the cardholder can request their own physical card and choose their PIN.

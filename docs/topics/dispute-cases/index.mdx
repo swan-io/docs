@@ -8,6 +8,10 @@ description: Report disputed transactions to Swan with dispute cases
 A **dispute case** reports transactions that a user disputes, so Swan can investigate them.
 It groups the transactions with the details Swan needs.
 
+:::info Available from 7 December 2026
+Dispute cases are available from 7 December 2026. Until then, ask your users to report fraud with a [Swan Support request](https://supportform.swan.io/).
+:::
+
 ## Overview {#overview}
 
 Every dispute case has a type.
@@ -17,7 +21,7 @@ For now, the only type is **fraud**. Other types, such as commercial disputes, m
 | --- | --- | --- |
 | `Fraud` | `FraudDisputeCase` | A user didn't make a payment, or made it after being tricked. See [fraud dispute cases](#fraud). |
 
-In the API, each type implements the `DisputeCase` interface.
+In the API, each type implements the `DisputeCase` interface, so new types can be added without breaking changes.
 Each type has its own mutations to create and update a case, because each type asks for different details.
 Submitting, canceling, and retrieving cases work the same for every type.
 
@@ -62,19 +66,33 @@ Each case has a supporting document collection, created with the draft.
 Upload documents to it before you submit. After submission, send documents through the support ticket.
 
 The collection follows the case: `WaitingForDocument` while it's a draft, `PendingReview` once submitted, and `Canceled` if the draft is canceled or expires.
-You don't need to request a review.
+You don't need to request a review: `requestSupportingDocumentCollectionReview` isn't available for these collections.
+
+### Document purposes {#documents-purposes}
+
+For fraud dispute cases, use these purposes. None are required.
+
+| Purpose | Use for |
+| --- | --- |
+| `PoliceReport` | Receipt of a police complaint. |
+| `FraudEvidence` | Evidence of fraud, such as messages, emails, screenshots, or call logs. |
+| `DisputeCorrespondence` | Messages with the merchant, the beneficiary, or the beneficiary's bank about the disputed transactions. |
+| `Other` | Any other relevant document. |
+
+You don't need to upload a fraud declaration. For card payments, Swan sends the cardholder a pre-filled declaration through the support ticket after the case is submitted.
 
 ## Permissions {#permissions}
 
-Dispute cases must be enabled for your project.
-
 - **Project access tokens** can see and act on every case on your project's accounts.
-- **User access tokens** can see and act on cases the user created, or on every case on the account if the user is the account administrator with `canViewAccount`. The user needs an `Enabled` account membership on the account.
+- **User access tokens** can see and act on cases the user created. If the user is the account administrator with the `canViewAccount` [membership permission](/topics/accounts/memberships/#permissions), they can see and act on every case on the account.
+  The user's account membership must have the status `Enabled`.
 
-In the Dashboard, project members need these permissions, granted by default to the Support, Manager, and Admin roles:
+In the Dashboard, team members need these permissions:
 
 - `<env>_dataDisputeCase_read` to read cases.
 - `<env>_dataDisputeCase_write` to create, update, submit, and cancel cases.
+
+Whether a team member has them depends on their Dashboard role.
 
 Each type has its own rules for who can report a transaction. See [who can report fraud](#fraud-permissions).
 
@@ -83,22 +101,22 @@ Anything outside a user's rights returns a not-found rejection, `null`, or an em
 ## Rejections {#rejections}
 
 If any check fails, nothing changes and the first failure is returned.
-Missing access to dispute cases returns `FORBIDDEN`, and malformed input returns `BAD_USER_INPUT`.
+A Dashboard member without the [dispute case permissions](#permissions) gets `FORBIDDEN`, and malformed input returns `BAD_USER_INPUT`.
 
 | Rejection | What to do |
 | --- | --- |
 | `DisputeCaseTransactionsNotFoundRejection` | Remove the listed transactions. They don't exist or you can't report them. |
 | `DisputeCaseTransactionsNotReportableRejection` | Remove the listed transactions. Their type or status can't be reported. |
 | `DisputeCaseTransactionsOutsideReportingWindowRejection` | Remove the listed transactions. They're outside the reporting window. |
-| `DisputeCaseTransactionsLimitExceededRejection` | Split the transactions into cases of 100 or fewer. |
+| `DisputeCaseTransactionsLimitExceededRejection` | Keep up to 100 transactions in this case and report the rest in another case. |
 | `DisputeCaseMultipleAccountsRejection` | Create one case per account. |
 | `DisputeCaseMultipleCardHoldersRejection` | Create one case per cardholder. |
 | `DisputeCaseDetailsNotApplicableRejection` | Remove the listed fields. For example, `fraudCardDetails` on a transfer-only case. |
 | `AccountMembershipNotFoundRejection` | Check `victimAccountMembershipId`. It must be on the case's account, and you must be allowed to name it. |
 | `DisputeCaseIncompleteRejection` | Add the listed fields, then submit again. |
 | `DisputeCaseTransactionsAlreadyReportedRejection` | Remove the listed transactions, or follow up on the existing case. |
-| `DisputeCaseWrongStatusRejection` | The case is no longer a draft. Create a new case if needed. |
-| `DisputeCaseNotFoundRejection` | Check the case ID and your permissions. |
+| `DisputeCaseWrongStatusRejection` | The case is no longer a draft. Submitted cases can't be changed, and canceled or expired cases can't be reused, so create a new case. |
+| `DisputeCaseNotFoundRejection` | The case doesn't exist, or you don't have access to it. |
 
 ## Fraud dispute cases {#fraud}
 
@@ -115,13 +133,24 @@ Fraud dispute cases can be created in three ways. They all create the same case.
 | Channel | Who reports |
 | --- | --- |
 | **API** | Your backend, on behalf of a user. See the [guides](#guides). |
-| **Dashboard** | Your operations team, on behalf of a user, with the fraud report form. For card fraud, see [Card disputes and chargebacks](/topics/operations/guide-card-disputes-chargebacks/). |
-| **Web Banking** | Your users, for themselves, with the fraud report form. They open it from Web Banking or from a link you share. |
+| **Dashboard** | Your operations team, on behalf of a user, with the **Fraud report** form. For card fraud, see [Card disputes and chargebacks](/topics/operations/guide-card-disputes-chargebacks/). |
+| **Web Banking** | Your users, for themselves, with the **Fraud report** form. They open it from Web Banking or from a link you share. |
 
 :::info When not to use a fraud dispute case
 Fraud dispute cases are for completed transactions.
-For attempted fraud with no transaction, a compromised account, an urgent account suspension, or a new fraud pattern, contact Swan through the [partner support form](https://partner-support.swan.io/hc/en-gb/requests/new).
+If a user suspects fraud but no transaction has gone through, ask them to submit a [Swan Support request](https://supportform.swan.io/). For example, someone else has access to their account.
+For an urgent account suspension or a new fraud pattern, submit a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new).
 :::
+
+### Report fraud with the API {#fraud-flow}
+
+1. [Create a fraud dispute case](./guide-create-fraud.mdx) with the transactions and the details you have.
+1. [Update it](./guide-update-fraud.mdx) as your user gives you more details (optional).
+1. [Upload documents](./guide-upload-documents.mdx), such as a police report (optional).
+1. [Submit it](./guide-submit.mdx). Swan only receives the case at this step.
+
+If you don't need a draft anymore, [cancel it](./guide-cancel.mdx).
+To check a case's status or find a draft to resume, [get dispute case information](./guide-get-info.mdx).
 
 ### Reportable transactions {#reportable}
 
@@ -153,8 +182,9 @@ If an incident spans several accounts or cardholders, create one case for each.
 The victim is the account member the fraud was committed against.
 They don't need to be the person reporting.
 
-- **Case with card transactions**: the victim is the cardholder. Swan sets it for you.
-- **Transfer-only case**: send the victim's `victimAccountMembershipId`. It's required to submit.
+- **Case with card transactions**: the victim is the cardholder. Swan sets it for you, so don't send `victimAccountMembershipId`.
+- **Transfer-only case**: send the victim's [account membership](/topics/accounts/memberships/) ID as `victimAccountMembershipId`. It's required to submit.
+  If you don't store membership IDs, query the account's `memberships` to find the victim.
 
 The victim can be in any status, for example suspended after an account takeover.
 If transfers in a card-and-transfer incident were made against someone other than the cardholder, report the transfers in a separate case.
@@ -190,34 +220,34 @@ Swan analysts can reclassify a case during the investigation, but the reported v
 `fraudCardDetails` (lost or stolen card, merchant contacted) is only accepted if the case includes a card payment.
 `fraudTransferDetails` (recipient or their bank contacted) is only accepted if it includes a transfer.
 
-**Document purposes**: `PoliceReport`, `FraudEvidence`, `DisputeCorrespondence`, `CardFraudDeclaration`, and `Other`. None are required.
-
 ### Who can report fraud {#fraud-permissions}
 
-With a project access token, you can report any reportable transaction on your project's accounts.
+These rules add to the general [permissions](#permissions).
 
-With a user access token, the user needs an `Enabled` account membership on the account, and one of the following:
+**Project access token**: you can report any reportable transaction on your project's accounts.
+Dashboard team members don't need any account membership permissions.
 
-| User | Can report |
+**User access token**: what the user needs depends on what they report. See [membership permissions](/topics/accounts/memberships/#permissions).
+
+| To report | The user needs |
 | --- | --- |
-| Account administrator with `canViewAccount` | Any reportable transaction |
-| Cardholder | Transactions on their own cards |
-| Member with `canViewAccount`, `canManageCards`, and `canManageAccountMembership` | Card transactions |
-| Member with `canViewAccount` and `canInitiatePayments` | Transfers |
+| Their own card transactions | To hold the card (`Card.accountMembership` is theirs) |
+| Their own transfers | `canViewAccount` and `canInitiatePayments` |
+| Someone else's card transactions or transfers | `canViewAccount` and `canManageAccountMembership`. They don't need `canManageCards` or `canInitiatePayments`. |
+| Any reportable transaction on the account | To be the account administrator (`legalRepresentative: true`) with `canViewAccount`. They don't need `canManageCards` or `canInitiatePayments`. |
 
-To name someone else as the victim, the user needs `canManageAccountMembership`. Otherwise, they can only name themselves.
+A user reporting their own card payments and transfers in one case needs both: to hold the card, and `canViewAccount` and `canInitiatePayments`.
+
+To name someone else as the victim, the user needs `canManageAccountMembership`, even if they're the account administrator. Otherwise, they can only name themselves.
 They can see `victimAccountMembership` only for their own membership, or with `canManageAccountMembership`.
 `hasVictim` tells you whether a case has a victim, even when you can't see who it is.
 
-## Guides {#guides}
+With a project access token, you can name any account membership on the case's account as the victim.
 
-**Fraud dispute cases**
+## Guides {#guides}
 
 - [Create a fraud dispute case](./guide-create-fraud.mdx)
 - [Update a fraud dispute case](./guide-update-fraud.mdx)
-
-**All dispute cases**
-
 - [Upload documents to a dispute case](./guide-upload-documents.mdx)
 - [Submit a dispute case](./guide-submit.mdx)
 - [Cancel a dispute case](./guide-cancel.mdx)

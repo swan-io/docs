@@ -100,9 +100,8 @@ You can [print a physical card](./guide-print.mdx#print-with-virtual) for anothe
 Swan sends a text message to the member cardholder's mobile number used for Swan containing a link to choose their PIN.
 
 The `printPhysicalCard` mutation works differently.
-If you set `choosePin` to `true` with `printPhysicalCard`, the **cardholder must consent themselves**.
-They choose their PIN on the consent screen, right after they consent.
-Another account member can't consent for them.
+If you set `choosePin` to `true`, **only the cardholder can call `printPhysicalCard`**, because they choose their PIN when they consent.
+If another account member calls it, the API returns an error with the code `User_NotAllowedToChoosePhysicalCardPINError` instead of a rejection, and doesn't print the card.
 
 Alternatively, you can use the `addCard` mutation to [add only the virtual card](../virtual/guide-add.mdx#add-one).
 Then, the cardholder can request their own physical card and choose their PIN.

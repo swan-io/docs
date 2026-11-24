@@ -12,7 +12,7 @@ For card transactions outside the SEPA area, the disputed amount is the euro equ
 - Swan processes chargebacks for **fraud disputes** and **ATM withdrawal** cases only. Your users need to resolve all other commercial disputes directly with the merchant.
 - Fraud disputes require a **signed fraudulent usage declaration**. A police report is strongly recommended.
 - Chargebacks for ATM withdrawal disputes can take between **50 and 90 calendar days**.
-- The number one cause of delays is **incomplete evidence** when submitting the Swan Support request.
+- The number one cause of delays is **incomplete evidence** when reporting the dispute.
 - A fee of up to **€50** may apply to fraud refunds, under the General Terms and Conditions (T&C's).
 :::
 
@@ -31,14 +31,24 @@ Don't use the cardholder fraud reimbursement process for merchant-side chargebac
 
 :::caution Prerequisite
 Only transactions with a `Booked` status can be disputed. `Pending` card authorizations can't be disputed.
+For fraud, card payments that are `Deferred` on deferred-debit cards can also be reported. See [reportable transactions](/topics/dispute-cases/#reportable).
 :::
 
 ## Follow the cardholder dispute process
 
+:::info Available from 7 December 2026
+Fraud dispute cases are available from 7 December 2026. Until then, ask your users to report fraud with a [Swan Support request](https://supportform.swan.io/).
+:::
+
+:::tip Report fraud from your backend
+You can also create fraud dispute cases with the API. Submitting a case opens the support ticket for you.
+See [Fraud dispute cases](/topics/dispute-cases/#fraud).
+:::
+
 | Step | Who | What happens |
 | :--- | :--- | :--- |
 | **1** | **Your user** | Reports an issue to your team with all relevant details. |
-| **2** | **You** | Help your user gather the correct evidence, then submit a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) with all evidence attached. |
+| **2** | **You** | Help your user gather the correct evidence. For fraud, submit a [fraud dispute case](/topics/dispute-cases/#fraud) with the evidence attached. For ATM withdrawal disputes, submit a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) with all evidence attached. |
 | **3** | **Swan** | Reviews the evidence and determines whether the dispute is related to fraud. If fraud, they'll be reimbursed as per regulatory obligations. |
 
 Not all disputes are eligible for a chargeback. Swan assesses each case based on the dispute type, the evidence, and the applicable regulatory and card network rules. If a dispute isn't eligible, Swan informs your user the outcome and any alternative steps they can take.
@@ -47,18 +57,14 @@ Not all disputes are eligible for a chargeback. Swan assesses each case based on
 
 | Type | What it covers | Refund eligibility |
 | :--- | :--- | :--- |
-| **Fraud** | Unauthorized transactions where card credentials were compromised, stolen, or used without the cardholder's authorization | Swan reviews the evidence and confirms whether the fraud claim is eligible for reimbursement. |
+| **Fraud** | Transactions the cardholder didn't authorize, for example after their card credentials were compromised or stolen, or transactions they made after being tricked by a fraudster | Swan reviews the evidence and confirms whether the fraud claim is eligible for reimbursement. |
 | **ATM withdrawal** | Disputes where your user didn't receive the expected cash amount, or the amount debited doesn't match the amount received | Eligible for ATM withdrawal disputes above €50 only. |
 
 For all other commercial dispute types, your user needs to resolve the issue directly with the merchant. Swan doesn't process chargebacks for other commercial scenarios.
 
-:::caution Phishing payments
-If your user was tricked into authorizing a payment through phishing or a fake website, this is typically a commercial dispute, not fraud, even if it feels like fraud to your user. Submit a [Swan Support request](https://partner-support.swan.io/hc/en-gb/requests/new) to confirm the classification before you advise your user to contact the merchant. Swan confirms the appropriate next steps.
-:::
-
 ## Resolve card fraud disputes
 
-Fraud dispute timelines can vary depending on how complex the case is and whether Swan requests additional evidence. There is no set time for a resolution. If you haven't received an update after 10 business days, submit a follow-up on the existing Swan Support request. Swan can't speed up the card network's processes, so it's important to manage expectations with your users from the start.
+Fraud dispute timelines can vary depending on how complex the case is and whether Swan requests additional evidence. There is no set time for a resolution. If you haven't received an update after 10 business days, follow up on the case's support ticket. Swan can't speed up the card network's processes, so it's important to manage expectations with your users from the start.
 
 ### Check the filing deadline
 
@@ -68,6 +74,7 @@ Before gathering evidence, confirm your user is still within the eligible window
 - **Professional transactions**: **8 weeks** from the debit date.
 
 Disputes submitted after this window aren't eligible for a reimbursement under card network rules.
+Your user can still report the fraud to Swan for up to 13 months after the transaction: reporting and reimbursement eligibility are separate.
 
 ### Cancel the card
 
@@ -75,16 +82,22 @@ The card needs to be permanently canceled, not just suspended. This prevents fur
 
 Direct your user to cancel the card themselves: see [Block your card](https://support.swan.io/hc/en-150/articles/18538920070045) on support.swan.io. If your product doesn't yet offer card cancellation in-app, ask your development team to add this capability using Swan's [Cards API](/topics/cards/). If your user can't cancel the card and it needs blocking immediately, submit a Swan Support request.
 
-If your user has multiple disputed transactions on the same card, include all of them in a single support request.
+If your user has multiple disputed transactions on the same card, include all of them in a single fraud dispute case.
 
 ### Gather the required evidence
 
-Once the card is canceled and the deadline is confirmed, collect the following evidence for the support request.
+Once the card is canceled and the deadline is confirmed, collect the following evidence for the fraud dispute case.
+
+:::info Attach documents to the fraud dispute case
+If you report fraud with a [fraud dispute case](/topics/dispute-cases/#fraud), you can attach documents to it before submitting it.
+After submission, send further documents through the case's support ticket.
+See [Upload documents to a dispute case](/topics/dispute-cases/guide-upload-documents).
+:::
 
 | Required evidence | Details |
 | :--- | :--- |
 | **Police report** | Filed with local authorities. Strongly recommended for all fraud claims. In France, your user can submit the official Perceval online fraud declaration as an alternative to a police report, or in addition to one. |
-| **Signed fraudulent usage declaration** | Swan provides this form. Your user signs it to declare they didn't authorize the transactions. Direct your user to the [support article](https://support.swan.io/hc/en-150/articles/17099978406045) for the PDF in English and French. |
+| **Signed fraudulent usage declaration** | Your user signs it to declare they didn't authorize the transactions. After the fraud dispute case is submitted, Swan sends a pre-filled declaration for each card concerned through the support ticket. Your user signs it and returns it through the ticket. |
 | **Government online fraud declaration** (if applicable) | For online fraud where your user still has their card, Swan may also ask them to complete the official government fraud declaration form and send the receipt. This is separate from the Swan form. Swan requests it during the investigation if it applies, your user doesn't need to submit it proactively. |
 | **Transaction details** | Date, amount, and merchant name for each disputed transaction. |
 | **Screenshots** (optional) | From the banking app or account statement showing the disputed transactions. |
@@ -94,7 +107,7 @@ A fee of up to **€50** may apply to fraud refunds, under the T&Cs. Swan tells 
 :::
 
 :::info 3DS-authenticated transactions
-In your support request, include whether the disputed transactions used 3DS authentication. When a transaction was completed with 3DS authentication, the cardholder authenticated the payment at the time. This raises the question of whether the transaction was unauthorized, and Swan may need additional evidence.
+In the fraud dispute case description, include whether the disputed transactions used 3DS authentication. When a transaction was completed with 3DS authentication, the cardholder authenticated the payment at the time. This raises the question of whether the transaction was unauthorized, and Swan may need additional evidence.
 :::
 
 ## Resolve ATM withdrawal disputes

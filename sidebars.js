@@ -663,7 +663,11 @@ module.exports = {
           label: "Fraud protection",
           link: { type: "doc", id: "partnership/protections/fraud/index" },
           collapsed: true,
-          items: ["partnership/protections/fraud/types"],
+          items: [
+            "partnership/protections/fraud/types",
+            "partnership/protections/fraud/support-playbook",
+            "partnership/protections/fraud/quick-reference",
+          ],
         },
         "partnership/protections/secure-integration/index",
         "partnership/protections/data",

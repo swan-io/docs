@@ -45,26 +45,27 @@ If a card was blocked because the PIN was entered incorrectly 3 times, the **car
 
 ### Finalizing card unblocking at an ATM or a compatible payment terminal {#unblock-pin-finalize}
 
-A cardholder can unblock their card at either an ATM or a compatible payment terminal. The two paths have different requirements.
+A cardholder can unblock their card at an ATM or at a compatible payment terminal. A compatible payment terminal is one that supports PIN resets. In both places, whether the card is unblocked depends only on whether the cardholder enters the correct PIN. The transaction itself can still be rejected, but this doesn't affect the unblocking. To learn what each rejection reason means, see [Rejected card transactions](../../payments/cards/index.mdx#rejected-card-transactions).
 
-**At an ATM:** the cardholder inserts the card and enters their original PIN. They don't need to withdraw money.
-
-**At a compatible payment terminal:** the cardholder inserts the card and enters their original PIN to complete a purchase. If the PIN is correct, the card is unblocked even if the purchase itself is rejected.
-
-Whether the card is unblocked depends only on whether the cardholder enters the correct PIN. The transaction itself can still be rejected, for example if withdrawals are disabled in the [card settings](../index.mdx#settings) (`withdrawal`), but this doesn't affect the unblocking.
+**At an ATM:** the cardholder inserts the card and enters their original PIN. They don't need to withdraw money. If withdrawals are disabled in the [card settings](../index.mdx#settings) (`withdrawal`), the withdrawal is rejected, but the card is still unblocked.
 
 | Withdrawals enabled | PIN entered | Transaction outcome | Rejection reason | Card status change |
 | --- | --- | --- | --- | --- |
 | **True** | Correct | Accepted | None | Card is unblocked |
 | **True** | Incorrect | Rejected | `PinInvalid` | Card remains suspended |
-| **True** | Correct | Rejected | Any reason other than `PinInvalid` (for example, `InsufficientFunds`) | Card is unblocked |
 | **False** | Correct | Rejected | `TransactionTypeNotAllowed` | Card is unblocked |
 | **False** | Incorrect | Rejected | `PinInvalid` | Card remains suspended |
 
-The **Withdrawals enabled** column applies to ATMs only. Payments at a terminal aren't withdrawals, so this setting doesn't affect them.
+**At a compatible payment terminal:** the cardholder inserts the card and enters their original PIN to complete a purchase. If the PIN is correct, the card is unblocked even if the purchase itself is rejected.
+
+| PIN entered | Transaction outcome | Rejection reason | Card status change |
+| --- | --- | --- | --- |
+| Correct | Accepted | None | Card is unblocked |
+| Correct | Rejected | Any reason other than `PinInvalid` (for example, `InsufficientFunds`) | Card is unblocked |
+| Incorrect | Rejected | `PinInvalid` | Card remains suspended |
 
 #### Special case: Pending unblocking after calling `resumePhysicalCard` {#unblock-pin-pending}
 
 After the cardholder has consented to `resumePhysicalCard`, they must still complete the PIN-unblocking step at an ATM or a compatible payment terminal.
 
-If they use the card at a payment terminal that doesn't support PIN resets before completing that step, the transaction may be rejected with `InvalidPinAttemptsExceeded`, regardless of whether the PIN is correct. The card may then be suspended again.
+If they use the card at a payment terminal that doesn't support PIN resets before completing that step, the transaction is rejected with `InvalidPinAttemptsExceeded`. This happens even if the PIN is correct, and the card becomes `Suspended` again.

@@ -52,9 +52,9 @@ A cardholder can unblock their card at an ATM or at a compatible payment termina
 | Withdrawals enabled | PIN entered | Transaction outcome | Rejection reason | Card status change |
 | --- | --- | --- | --- | --- |
 | **True** | Correct | Accepted | None | Card is unblocked |
-| **True** | Incorrect | Rejected | `PinInvalid` | Card remains suspended |
+| **True** | Incorrect | Rejected | `PinInvalid` | Card isn't unblocked yet. The cardholder must try again with the correct PIN. |
 | **False** | Correct | Rejected | `TransactionTypeNotAllowed` | Card is unblocked |
-| **False** | Incorrect | Rejected | `PinInvalid` | Card remains suspended |
+| **False** | Incorrect | Rejected | `PinInvalid` | Card isn't unblocked yet. The cardholder must try again with the correct PIN. |
 
 **At a compatible payment terminal:** the cardholder inserts the card and enters their original PIN to complete a purchase. If the PIN is correct, the card is unblocked even if the purchase itself is rejected.
 
@@ -62,7 +62,7 @@ A cardholder can unblock their card at an ATM or at a compatible payment termina
 | --- | --- | --- | --- |
 | Correct | Accepted | None | Card is unblocked |
 | Correct | Rejected | Any reason other than `PinInvalid` (for example, `InsufficientFunds`) | Card is unblocked |
-| Incorrect | Rejected | `PinInvalid` | Card remains suspended |
+| Incorrect | Rejected | `PinInvalid` | Card isn't unblocked yet. The cardholder must try again with the correct PIN. |
 
 #### Special case: Pending unblocking after calling `resumePhysicalCard` {#unblock-pin-pending}
 

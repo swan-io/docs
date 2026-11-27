@@ -14,7 +14,7 @@ When Swan receives an incoming International Credit Transfer, Swan books it imme
 
 ## Query {#query}
 
-<a href="https://explorer.swan.io?query=cXVlcnkgSW5jb21pbmdJbnRlcm5hdGlvbmFsQ3JlZGl0VHJhbnNmZXIgewogIHRyYW5zYWN0aW9uKGlkOiAiJElOQ09NSU5HX1RSQU5TQUNUSU9OX0lEIikgewogICAgLi4uIG9uIEludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlclRyYW5zYWN0aW9uIHsKICAgICAgYW1vdW50IHsKICAgICAgICBjdXJyZW5jeQogICAgICAgIHZhbHVlCiAgICAgIH0KICAgICAgY291bnRlcnBhcnR5CiAgICAgIGN1cnJlbmN5RXhjaGFuZ2UgewogICAgICAgIGV4Y2hhbmdlUmF0ZQogICAgICB9CiAgICAgIGRlYnRvciB7CiAgICAgICAgY3VycmVuY3kKICAgICAgICBkZXRhaWxzIHsKICAgICAgICAgIGtleQogICAgICAgICAgdmFsdWUKICAgICAgICB9CiAgICAgICAgbmFtZQogICAgICAgIHJvdXRlCiAgICAgIH0KICAgICAgaW5zdHJ1Y3RlZEFtb3VudCB7CiAgICAgICAgY3VycmVuY3kKICAgICAgICB2YWx1ZQogICAgICB9CiAgICAgIGludGVybWVkaWFyeUJhbmtGZWVzIHsKICAgICAgICBjdXJyZW5jeQogICAgICAgIHZhbHVlCiAgICAgIH0KICAgICAgc2lkZQogICAgfQogIH0KfQo%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+<a href="https://explorer.swan.io?query=cXVlcnkgSW5jb21pbmdJbnRlcm5hdGlvbmFsQ3JlZGl0VHJhbnNmZXIgewogIHRyYW5zYWN0aW9uKGlkOiAiJElOQ09NSU5HX1RSQU5TQUNUSU9OX0lEIikgewogICAgLi4uIG9uIEludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlclRyYW5zYWN0aW9uIHsKICAgICAgYW1vdW50IHsKICAgICAgICBjdXJyZW5jeQogICAgICAgIHZhbHVlCiAgICAgIH0KICAgICAgY291bnRlcnBhcnR5CiAgICAgIGN1cnJlbmN5RXhjaGFuZ2UgewogICAgICAgIGV4Y2hhbmdlUmF0ZQogICAgICB9CiAgICAgIGRlYnRvciB7CiAgICAgICAgLi4uIG9uIEludGVybmF0aW9uYWxDcmVkaXRUcmFuc2ZlckluRGVidG9yIHsKICAgICAgICAgIG5hbWUKICAgICAgICAgIGFjY291bnROdW1iZXIKICAgICAgICAgIGJpYwogICAgICAgIH0KICAgICAgfQogICAgICBpbnN0cnVjdGVkQW1vdW50IHsKICAgICAgICBjdXJyZW5jeQogICAgICAgIHZhbHVlCiAgICAgIH0KICAgICAgaW50ZXJtZWRpYXJ5QmFua0ZlZXMgewogICAgICAgIGN1cnJlbmN5CiAgICAgICAgdmFsdWUKICAgICAgfQogICAgICBzaWRlCiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
 
 ```graphql {2} showLineNumbers
 query IncomingInternationalCreditTransfer {
@@ -29,13 +29,11 @@ query IncomingInternationalCreditTransfer {
         exchangeRate
       }
       debtor {
-        currency
-        details {
-          key
-          value
+        ... on InternationalCreditTransferInDebtor {
+          name
+          accountNumber
+          bic
         }
-        name
-        route
       }
       instructedAmount { #amount the debtor sent in their original currency when initiating the transfer
         currency
@@ -55,7 +53,7 @@ query IncomingInternationalCreditTransfer {
 
 Review the information provided in the payload about the incoming International Credit Transfer.
 
-```json {6,10,13,28,32,36,40} showLineNumbers
+```json {6,10,13-15,19,23,27,31} showLineNumbers
 {
   "data": {
     "transaction": {
@@ -68,39 +66,29 @@ Review the information provided in the payload about the incoming International 
         "exchangeRate": "1.05263"
       },
       "debtor": {
-        "currency": "GBP",
-        "details": [
-          {
-            "key": "legalType",
-            "value": "BUSINESS"
-          },
-          {
-            "key": "Iban",
-            "value": "GB12345678901234567890"
-          }
-        ],
         "name": "My debtor",
-        "route": "SwiftCode",
-        "instructedAmount": {
-            "currency": "GBP",
-            "value": "1000.00"
-            },
-            "intermediaryBankFees": [
-                {
-                    "value": "50.00",
-                    "currency": "GBP"
-                },
-                {
-                    "value": "100.00",
-                    "currency": "EUR"
-                },
-				{
-                    "value": "50.00",
-                    "currency": "EUR"
-                    }
-                ],
-            "side": "credit"
-      }
+        "accountNumber": "GB12345678901234567890",
+        "bic": "$DEBTOR_BIC"
+      },
+      "instructedAmount": {
+        "currency": "GBP",
+        "value": "1000.00"
+      },
+      "intermediaryBankFees": [
+        {
+          "currency": "GBP",
+          "value": "50.00"
+        },
+        {
+          "currency": "EUR",
+          "value": "100.00"
+        },
+        {
+          "currency": "EUR",
+          "value": "50.00"
+        }
+      ],
+      "side": "Credit"
     }
   }
 }

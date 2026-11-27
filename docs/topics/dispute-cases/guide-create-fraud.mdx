@@ -1,0 +1,98 @@
+---
+title: Create a fraud dispute case
+description: Start a fraud dispute case from the transactions a user reports as fraudulent
+---
+
+# Create a fraud dispute case
+
+Create a fraud dispute case **with the API** when one of your users reports fraud.
+The case starts as a draft, so you can add details and documents before you [submit it](./guide-submit.mdx).
+Swan doesn't receive the case until it's submitted.
+
+:::tip Prerequisites
+- You have a [project access token](/developers/using-api/authentication/guide-get-token-project), or a [user access token](/developers/using-api/authentication/guide-get-token-user) for a user who [can report the transactions](./index.mdx#fraud-permissions).
+- You have the IDs of the [reportable transactions](./index.mdx#reportable) from one incident.
+:::
+
+## Guide {#guide}
+
+1. Call the `draftFraudDisputeCase` mutation.
+1. Add the `transactionIds` (line 4). This is the only required input.
+1. Add the `fraudDetails` you have (lines 5-13). They're required to submit. See [fraud details](./index.mdx#fraud-details).
+1. Add `fraudCardDetails` if the case includes card payments, and `fraudTransferDetails` if it includes transfers (lines 14-15).
+1. For a transfer-only case, add the `victimAccountMembershipId` (not shown). See [victim](./index.mdx#victim).
+1. Optionally, add your own `externalReference` (line 16).
+1. Add the success payload (line 19).
+1. Add [rejections](./index.mdx#rejections) (not shown).
+
+## Mutation {#mutation}
+
+<a href="https://explorer.swan.io?query=bXV0YXRpb24gQ3JlYXRlRnJhdWREaXNwdXRlQ2FzZSB7CiAgZHJhZnRGcmF1ZERpc3B1dGVDYXNlKAogICAgaW5wdXQ6IHsKICAgICAgdHJhbnNhY3Rpb25JZHM6IFsiJENBUkRfVFJBTlNBQ1RJT05fSUQiLCAiJFRSQU5TRkVSX1RSQU5TQUNUSU9OX0lEIl0KICAgICAgZnJhdWREZXRhaWxzOiB7CiAgICAgICAgcmVwb3J0ZWRSZWFzb246IFVuYXV0aG9yaXplZAogICAgICAgIHJlcG9ydGVkVHlwb2xvZ3k6IEltcGVyc29uYXRpb25PclBoaXNoaW5nCiAgICAgICAgZGVzY3JpcHRpb246ICJJIGVudGVyZWQgbXkgY2FyZCBkZXRhaWxzIG9uIGEgZmFrZSBkZWxpdmVyeSB3ZWJzaXRlLiBUaGUgbmV4dCBkYXksIEkgc2F3IGEgY2FyZCBwYXltZW50IGFuZCBhIHRyYW5zZmVyIEkgZGlkbid0IG1ha2UuIgogICAgICAgIGRpc2NvdmVyZWRBdDogIjIwMjYtMTItMDEiCiAgICAgICAgZnJhdWRzdGVyQ2hhbm5lbHM6IFtTbXMsIFdlYnNpdGVdCiAgICAgICAgc2hhcmVkSW5mb3JtYXRpb25XaXRoRnJhdWRzdGVyOiBbQ2FyZERldGFpbHMsIFZlcmlmaWNhdGlvbkNvZGVdCiAgICAgICAgaGFzRmlsZWRQb2xpY2VDb21wbGFpbnQ6IHRydWUKICAgICAgfQogICAgICBmcmF1ZENhcmREZXRhaWxzOiB7IGlzTG9zdE9yU3RvbGVuOiBmYWxzZSwgaGFzQ29udGFjdGVkTWVyY2hhbnQ6IGZhbHNlIH0KICAgICAgZnJhdWRUcmFuc2ZlckRldGFpbHM6IHsgaGFzQ29udGFjdGVkQmFua09yQmVuZWZpY2lhcnk6IHRydWUgfQogICAgICBleHRlcm5hbFJlZmVyZW5jZTogIiRZT1VSX1JFRkVSRU5DRSIKICAgIH0KICApIHsKICAgIC4uLiBvbiBEcmFmdEZyYXVkRGlzcHV0ZUNhc2VTdWNjZXNzUGF5bG9hZCB7CiAgICAgIF9fdHlwZW5hbWUKICAgICAgZGlzcHV0ZUNhc2UgewogICAgICAgIGlkCiAgICAgICAgc3RhdHVzSW5mbyB7CiAgICAgICAgICBzdGF0dXMKICAgICAgICAgIC4uLiBvbiBEaXNwdXRlQ2FzZURyYWZ0U3RhdHVzSW5mbyB7CiAgICAgICAgICAgIGV4cGlyZXNBdAogICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBzdXBwb3J0aW5nRG9jdW1lbnRDb2xsZWN0aW9uIHsKICAgICAgICAgIGlkCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9Cg%3D%3D&tab=api" className="explorer-badge">Open in API Explorer</a>
+
+```graphql {4-5,14-16,22,30} showLineNumbers
+mutation CreateFraudDisputeCase {
+  draftFraudDisputeCase(
+    input: {
+      transactionIds: ["$CARD_TRANSACTION_ID", "$TRANSFER_TRANSACTION_ID"]
+      fraudDetails: {
+        reportedReason: Unauthorized
+        reportedTypology: ImpersonationOrPhishing
+        description: "I entered my card details on a fake delivery website. The next day, I saw a card payment and a transfer I didn't make."
+        discoveredAt: "2026-12-01"
+        fraudsterChannels: [Sms, Website]
+        sharedInformationWithFraudster: [CardDetails, VerificationCode]
+        hasFiledPoliceComplaint: true
+      }
+      fraudCardDetails: { isLostOrStolen: false, hasContactedMerchant: false }
+      fraudTransferDetails: { hasContactedBankOrBeneficiary: true }
+      externalReference: "$YOUR_REFERENCE"
+    }
+  ) {
+    ... on DraftFraudDisputeCaseSuccessPayload {
+      __typename
+      disputeCase {
+        id
+        statusInfo {
+          status
+          ... on DisputeCaseDraftStatusInfo {
+            expiresAt
+          }
+        }
+        supportingDocumentCollection {
+          id
+        }
+      }
+    }
+  }
+}
+```
+
+## Payload {#payload}
+
+Save the case `id` (line 6) and the supporting document collection `id` (line 12).
+You need them to [upload documents](./guide-upload-documents.mdx) and submit the case.
+
+```json title="Payload" {6,12} showLineNumbers
+{
+  "data": {
+    "draftFraudDisputeCase": {
+      "__typename": "DraftFraudDisputeCaseSuccessPayload",
+      "disputeCase": {
+        "id": "$DISPUTE_CASE_ID",
+        "statusInfo": {
+          "status": "Draft",
+          "expiresAt": "2026-12-31T10:15:00.000Z"
+        },
+        "supportingDocumentCollection": {
+          "id": "$COLLECTION_ID"
+        }
+      }
+    }
+  }
+}
+```
+
+:::caution Retrying after a network error
+Creating a case isn't idempotent, so a retry can create a second draft.
+Before retrying, [check for an existing draft](./guide-get-info.mdx#account) with the same transactions.
+:::
